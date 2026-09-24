@@ -1,8 +1,7 @@
 Inicio para en Huawei
-
 #
 ssl policy policy1
- pki-domain default
+ pki-domain default-----------------
  ssl minimum version tls1.2
  cipher-suite exclude key-exchange rsa
  cipher-suite exclude cipher mode cbc
@@ -22,34 +21,3 @@ http
   http server ip-block reactive 10
   server-source LoopBack0
 #
-
-2. Navegar a tu carpeta del proyecto desde WSL
-WSL monta automáticamente los discos de Windows en /mnt/c/. Para ir directamente a tu carpeta de trabajo de RESTCONF ejecuta:
-
-Bash
-cd /mnt/c/Users/Nigel/Documents/Ansible/Huawei/RESTCONF
-
-Pasos para el certificado
-
-# 1. Crear carpeta para los certificados
-#mkdir -p Certificados && cd Certificados
-
-# 2. Generar la CA Raíz (4096 bits, validez de 10 años)
-openssl genrsa -out CA_Axis.key 4096
-openssl req -x509 -new -nodes -key CA_Axis.key -sha256 -days 3650 -out CA_Axis.crt -subj "/CN=Axis Redes CA"
-
-# 3. Generar la clave privada y CSR para el Router (RSA 3072 bits)
-ROUTER_IP="10.139.50.128"
-NOMBRE_EQUIPO="128"
-PASSWORD_PFX="HuaweiPass123!"
-
-openssl genrsa -out "${NOMBRE_EQUIPO}.key" 3072
-openssl req -new -key "${NOMBRE_EQUIPO}.key" -out "${NOMBRE_EQUIPO}.csr" -subj "/CN=${ROUTER_IP}"
-
-# 4. Firmar el certificado con la CA Raíz (SHA-256)
-openssl x509 -req -in "${NOMBRE_EQUIPO}.csr" -CA CA_Axis.crt -CAkey CA_Axis.key -CAcreateserial -out "${NOMBRE_EQUIPO}.crt" -days 730 -sha256
-
-# 5. Empaquetar en formato PFX (PKCS#12) para Huawei
-openssl pkcs12 -export -out "${NOMBRE_EQUIPO}.pfx" -inkey "${NOMBRE_EQUIPO}.key" -in "${NOMBRE_EQUIPO}.crt" -certfile CA_Axis.crt -passout "pass:${PASSWORD_PFX}"
-
-echo "✅ Certificado PFX generado exitosamente en: $(pwd)/${NOMBRE_EQUIPO}.pfx"
