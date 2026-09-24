@@ -5,14 +5,15 @@ excel_path = 'Report_500.xlsx'
 df = pd.read_excel(excel_path)
 
 # Filtrar por colegios P2P y Estado Router 'Activo'
-Activos = df[ 
-    (df['ESTADO ROUTER'].str.strip().str.upper() == 'ACTIVO')
-]
+# Activos = df[ 
+#     (df['ESTADO ROUTER'].str.strip().str.upper() == 'ACTIVO')
+# ]
 
 # Construir la estructura YAML
 yaml_content = ["routers:"]
 
-for _, row in Activos.iterrows():
+# for _, row in Activos.iterrows():
+for _, row in df.iterrows():
     nombre = int(row['N°'])
     # Limpiar el prefijo /32 de la IP Loopback
     host = str(row['ASIGNACION IP LOOPBACK /32']).replace('/32', '').strip()
@@ -30,4 +31,5 @@ for _, row in Activos.iterrows():
 with open("inventario-c.yml", "w") as f:
     f.write("\n\n".join(yaml_content))
 
-print(f"¡Proceso completado! Se exportaron {len(Activos)} colegios activos a 'inventario-c.yml'.")
+# print(f"¡Proceso completado! Se exportaron {len(Activos)} colegios activos a 'inventario-c.yml'.")
+print(f"¡Proceso completado! Se exportaron {len(df)} colegios activos a 'inventario-c.yml'.")

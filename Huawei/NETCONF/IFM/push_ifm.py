@@ -6,12 +6,26 @@ CONFIG_XML = """
     <ifm xmlns="urn:huawei:yang:huawei-ifm">
       <interfaces>
         <interface>
-          <name>Vlanif10</name>
-            <ip-statistics-enable xmlns="urn:huawei:yang:huawei-ifm-ip-statistics">
-              <unified-mode>
-                <ip-enable>disable</ip-enable>
-              </unified-mode>
-            </ip-statistics-enable>
+          <name>GE0/0/0.300</name>
+            <ipv4 xmlns="urn:huawei:yang:huawei-ip">
+              <addresses>
+            <!-- PASO 1: Eliminar la IP vieja -->
+                <address xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+                         nc:operation="delete">
+                  <ip>10.50.28.2</ip>
+                  <mask>255.255.255.128</mask>
+                  <type>main</type>
+                </address>
+
+            <!-- PASO 2: Agregar la IP nueva -->
+                <address xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
+                         nc:operation="create">
+                  <ip>10.50.28.13</ip>
+                  <mask>255.255.255.128</mask>
+                  <type>main</type>
+                </address>
+              </addresses>
+            </ipv4>
         </interface>
       </interfaces>
     </ifm>

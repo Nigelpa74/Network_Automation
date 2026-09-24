@@ -5,21 +5,7 @@ from ncclient import manager
 
 FILTER = """
 <filter type="subtree">
-  <devm xmlns="urn:huawei:yang:huawei-devm">
-    <ports>
-      <port>
-        <position/>
-        <admin-state/>
-        <optical-module xmlns="urn:huawei:yang:huawei-pic">
-          <vendor-pn/>
-          <wavelength/>
-          <transmission-distance/>
-          <manufacture-date/>
-          <serial-number/>
-        </optical-module>
-      </port>
-    </ports>
-  </devm>
+  <ifm xmlns="urn:huawei:yang:huawei-ifm"/>
 </filter>
 """
 
@@ -33,16 +19,16 @@ def huawei_connect(router):
         device_params={'name': "huaweiyang"},
         allow_agent=False,
         look_for_keys=False,
-        timeout=20
+        timeout=100
     )
 
-def get_devm(router):
+def get_ifm(router):
     nombre = router["nombre"]
     try:
         with huawei_connect(router) as m:
             print(f"[{nombre}] Sesion ID: {m._session.id}")
 
-            reply = m.get(filter=FILTER)
+            reply = m.get_config(source="running", filter=FILTER)
 
             xml_bonito = xml.dom.minidom.parseString(
                 str(reply)
@@ -52,8 +38,8 @@ def get_devm(router):
             )
 
             #os.makedirs("outputs", exist_ok=True)
-            archivo = f"{nombre}_devm.xml"
-            #archivo = f"outputs/{nombre}_devm.xml"
+            archivo = f"{nombre}_ifm.xml"
+            #archivo = f"outputs/{nombre}_ifm.xml"
             with open(archivo, "w") as f:
                 f.write(xml_bonito)
 
@@ -62,7 +48,7 @@ def get_devm(router):
     except Exception as e:
         print(f"[{nombre}] ❌ Error: {e}")
 
-def cargar_inventario(archivo="inventario-m.yml"):
+def cargar_inventario(archivo="inventario-c.yml"):
     with open(archivo) as f:
         data = yaml.safe_load(f)
     return data["routers"]
@@ -70,4 +56,4 @@ def cargar_inventario(archivo="inventario-m.yml"):
 if __name__ == '__main__':
     routers = cargar_inventario()
     for router in routers:
-        get_devm(router)
+        get_ifm(router)
