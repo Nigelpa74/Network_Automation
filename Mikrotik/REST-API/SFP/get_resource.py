@@ -17,7 +17,7 @@ def consultar_mikrotik_resource(router, ca_cert_global):
     ca_cert = router.get("ca_cert", ca_cert_global)
 
     # Endpoint HTTPS de la REST API RouterOS v7+ ## ACA SE MODIFICA LO QUE QUIERES OBTENER
-    url = f"https://{host}:{port}/rest/ip/neighbor"
+    url = f"https://{host}:{port}/rest/interface/ethernet"
 
     try:
         resp = requests.get(

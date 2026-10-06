@@ -1,10 +1,11 @@
+import os
 import yaml
 import xml.dom.minidom
 from ncclient import manager
 
 FILTER = """
 <filter type="subtree">
-  <aaa xmlns="urn:huawei:yang:huawei-aaa"/>
+  <hwtacacs xmlns="urn:huawei:yang:huawei-hwtacacs"/>
 </filter>
 """
 
@@ -18,16 +19,16 @@ def huawei_connect(router):
         device_params={'name': "huaweiyang"},
         allow_agent=False,
         look_for_keys=False,
-        timeout=60
+        timeout=20
     )
 
-def get_aaa(router):
+def get_hwtacacs(router):
     nombre = router["nombre"]
     try:
         with huawei_connect(router) as m:
             print(f"[{nombre}] Sesion ID: {m._session.id}")
 
-            reply = m.get_config(source="running", filter=FILTER)
+            reply = m.get(filter=FILTER)
 
             xml_bonito = xml.dom.minidom.parseString(
                 str(reply)
@@ -36,12 +37,18 @@ def get_aaa(router):
                 line for line in xml_bonito.split("\n") if line.strip()
             )
 
-            print(xml_bonito)
+            #os.makedirs("outputs", exist_ok=True)
+            archivo = f"{nombre}_hwtacacs.xml"
+            #archivo = f"outputs/{nombre}_hwtacacs.xml"
+            with open(archivo, "w") as f:
+                f.write(xml_bonito)
+
+            print(f"[{nombre}] ✅ Guardado en {archivo}")
 
     except Exception as e:
         print(f"[{nombre}] ❌ Error: {e}")
 
-def cargar_inventario(archivo="inventario.yml"):
+def cargar_inventario(archivo="inventario-m.yml"):
     with open(archivo) as f:
         data = yaml.safe_load(f)
     return data["routers"]
@@ -49,4 +56,4 @@ def cargar_inventario(archivo="inventario.yml"):
 if __name__ == '__main__':
     routers = cargar_inventario()
     for router in routers:
-        get_aaa(router)
+        get_hwtacacs(router)
