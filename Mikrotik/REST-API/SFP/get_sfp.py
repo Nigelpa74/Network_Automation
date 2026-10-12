@@ -5,42 +5,53 @@ from requests.auth import HTTPBasicAuth
 import yaml
 
 
-def consultar_mikrotik_resource(router, ca_cert_global):
-    """Consulta la REST API de un MikroTik individual vía HTTPS."""
+def consultar_mikrotik_sfp_monitor(router, ca_cert_global, interface_name="sfp-sfpplus1"):
+    """Consulta la información DDM/DOM de un SFP en MikroTik vía POST en la REST API."""
     nombre = router["nombre"]
     host = router["host"]
     user = router["user"]
     password = router["password"]
     port = router.get("port", 443)
 
-    # Permite especificar una CA particular por router o usar la global
     ca_cert = router.get("ca_cert", ca_cert_global)
 
-    # Endpoint HTTPS de la REST API RouterOS v7+ ## ACA SE MODIFICA LO QUE QUIERES OBTENER
-    url = f"https://{host}:{port}/rest/interface/ethernet"
+    # Endpoint de REST API para ejecutar el comando 'monitor' sobre la interfaz ethernet/sfp
+    url = f"https://{host}:{port}/rest/interface/ethernet/monitor"
+
+    # Payload equivalente a: /interface ethernet monitor <interface_name> once
+    payload = {
+        "numbers": interface_name,
+        "once": True
+    }
+
+    headers = {
+        "Content-Type": "application/json"
+    }
 
     try:
-        resp = requests.get(
+        # Se cambia requests.get por requests.post
+        resp = requests.post(
             url,
             auth=HTTPBasicAuth(user, password),
-            verify=ca_cert,  # Valida el certificado contra la CA especificada
+            json=payload,         # Pasa los datos como JSON en el body
+            headers=headers,
+            verify=ca_cert,
             timeout=10,
         )
         resp.raise_for_status()
 
         data = resp.json()
-        print(f"[{nombre}] ({host}) ✅ Datos obtenidos correctamente.")
+        print(f"[{nombre}] ({host}) ✅ Datos SFP obtenidos correctamente para {interface_name}.")
         return {
             "nombre": nombre,
             "host": host,
+            "interfaz": interface_name,
             "estado": "exitoso",
             "datos": data,
         }
 
     except requests.exceptions.SSLError as e:
-        print(
-            f"[{nombre}] ({host}) ❌ Error SSL/TLS: Verifica la CA o el SAN."
-        )
+        print(f"[{nombre}] ({host}) ❌ Error SSL/TLS: Verifica la CA o el SAN.")
         return {
             "nombre": nombre,
             "host": host,
@@ -49,7 +60,7 @@ def consultar_mikrotik_resource(router, ca_cert_global):
         }
 
     except requests.exceptions.HTTPError as e:
-        print(f"[{nombre}] ({host}) ❌ Error HTTP: {resp.status_code}")
+        print(f"[{nombre}] ({host}) ❌ Error HTTP: {resp.status_code} - {resp.text}")
         return {
             "nombre": nombre,
             "host": host,
@@ -77,21 +88,23 @@ def cargar_inventario(archivo="inventario-mikrotik-m.yml"):
 
 if __name__ == "__main__":
     INVENTARIO_FILE = "inventario-mikrotik-m.yml"
-    SALIDA_JSON = "resultado_mikrotik_resources.json"
-    MAX_WORKERS = 5  # Número de consultas simultáneas
+    SALIDA_JSON = "resultado_mikrotik_sfp.json"
+    MAX_WORKERS = 5
+
+    # Especifica el nombre de la interfaz SFP a monitorear (ej. 'sfp-sfpplus1', 'sfp1', etc.)
+    PUERTO_SFP = "sfp-sfpplus1"
 
     routers, ca_global = cargar_inventario(INVENTARIO_FILE)
 
     print(
-        f"🚀 Consultando {len(routers)} equipos MikroTik vía REST API (HTTPS) con {MAX_WORKERS} workers...\n"
+        f"🚀 Consultando métricas SFP ({PUERTO_SFP}) en {len(routers)} equipos MikroTik vía REST API...\n"
     )
 
     resultados = []
 
-    # Ejecución paralela usando ThreadPoolExecutor
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         futures = [
-            executor.submit(consultar_mikrotik_resource, router, ca_global)
+            executor.submit(consultar_mikrotik_sfp_monitor, router, ca_global, PUERTO_SFP)
             for router in routers
         ]
 
@@ -99,11 +112,9 @@ if __name__ == "__main__":
             resultado = future.result()
             resultados.append(resultado)
 
-    # Ordenar resultados por el campo 'nombre'
     resultados_ordenados = sorted(resultados, key=lambda x: x["nombre"])
 
-    # Guardar la consolidación completa en un archivo JSON estructurado
     with open(SALIDA_JSON, "w", encoding="utf-8") as f:
         json.dump(resultados_ordenados, f, indent=2, ensure_ascii=False)
 
-    print(f"\n🎉 Proceso finalizado. Reporte consolidado guardado en: {SALIDA_JSON}")
+    print(f"\n🎉 Proceso finalizado. Reporte SFP guardado en: {SALIDA_JSON}")

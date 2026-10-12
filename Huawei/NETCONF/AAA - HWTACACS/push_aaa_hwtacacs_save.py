@@ -85,21 +85,21 @@ CONFIG_XML = """
               <type>accounting</type>
               <priority>master</priority>
               <is-mux-mode-enable>false</is-mux-mode-enable>
-              <ip-address>172.17.1.20</ip-address>
+              <ip-address>172.17.10.20</ip-address>
               <port>49</port>
             </server-host>
             <server-host>
               <type>authentication</type>
               <priority>master</priority>
               <is-mux-mode-enable>false</is-mux-mode-enable>
-              <ip-address>172.17.1.20</ip-address>
+              <ip-address>172.17.10.20</ip-address>
               <port>49</port>
             </server-host>
             <server-host>
               <type>authorization</type>
               <priority>master</priority>
               <is-mux-mode-enable>false</is-mux-mode-enable>
-              <ip-address>172.17.1.20</ip-address>
+              <ip-address>172.17.10.20</ip-address>
               <port>49</port>
             </server-host>
           </server-hosts>
