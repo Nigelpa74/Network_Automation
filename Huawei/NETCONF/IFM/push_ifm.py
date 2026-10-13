@@ -9,18 +9,18 @@ CONFIG_XML = """
           <name>GE0/0/0.300</name>
             <ipv4 xmlns="urn:huawei:yang:huawei-ip">
               <addresses>
-            <!-- PASO 1: Eliminar la IP vieja -->
+            <!-- Eliminar la IP vieja -->
                 <address xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
                          nc:operation="delete">
-                  <ip>10.50.28.2</ip>
+                  <ip>10.50.37.14</ip>
                   <mask>255.255.255.128</mask>
                   <type>main</type>
                 </address>
 
-            <!-- PASO 2: Agregar la IP nueva -->
+            <!-- Agregar la IP nueva -->
                 <address xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"
                          nc:operation="create">
-                  <ip>10.50.28.13</ip>
+                  <ip>10.50.37.30</ip>
                   <mask>255.255.255.128</mask>
                   <type>main</type>
                 </address>
@@ -95,7 +95,7 @@ def push_ifm(router):
     except Exception as e:
         print(f"[{nombre}] ❌ Error: {e}")
 
-def cargar_inventario(archivo="inventario-c.yml"):
+def cargar_inventario(archivo="inventario-especial.yml"):
     with open(archivo) as f:
         data = yaml.safe_load(f)
     return data["routers"]
