@@ -1,0 +1,357 @@
+module zxr10-gre {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/gre'
+            ;
+  prefix gre ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe gre.This netconf module contains '
+            + 'managed object definitions of gre_tunnel and gre keepalive mode.'
+              ;
+  revision 2021-03-26 {
+    description 'Remove leaf node:/configuration/gre/keys/key.'+"\n"
+              + 'Add choice node:/configuration/gre/keys/key, case node:/config'
+              + 'uration/gre/keys/key/plain-key,/configuration/gre/keys/key/cip'
+              + 'her-key.'
+                ;
+  }
+  revision 2019-01-03 {
+    description 'Modify status of leaf node: /configuration/gre/gre-tunnels/gre'
+              + '-tunnel/keepalive/period-in-ms,from "current" to "obsolete" '+"\n"
+              + 'Modify range of leaf node:  /configuration/gre/gre-tunnels/gre'
+              + '-tunnel/keepalive/period , from 0-32767 to 1-32767.'
+                ;
+  }
+  revision 2018-12-10 {
+    description 'Add multipoint gre for /configuration/gre/gre-tunnels/gre-tunn'
+              + 'el/mode'
+                ;
+  }
+  revision 2017-06-06 {
+    description 'Add leaf node /configuration/gre/gre-tunnels/gre-tunnel/sequen'
+              + 'ce.'+"\n"
+              + 'Add feature for /configuration/gre/gre-tunnels/gre-tunnel/sequ'
+              + 'ence.'
+                ;
+  }
+  revision 2017-02-27 {
+    description 'Add leaf node : /gre:configuration/gre:gre/gre:gre-tunnels/gre'
+              + ':gre-tunnel/gre:keepalive/gre:period-in-ms; Modify range of le'
+              + 'af node:  /gre:configuration/gre:gre/gre:gre-tunnels/gre:gre-t'
+              + 'unnel/gre:keepalive/gre:period , from 1-32767 to 0-32767</desc'
+              + 'ription>'
+                ;
+  }
+  revision 2015-04-16 {
+    description 'set madatory for nodes:'+"\n"
+              + '/gre:configuration/gre:gre/gre:gre-tunnels/gre:gre-tunnel/gre:'
+              + 'vrfs/gre:vrf'+"\n"
+              + '/gre:configuration/gre:gre/gre:gre-tunnels/gre:gre-tunnel/gre:'
+              + 'keys/gre:key'+"\n"
+              + '/gre:configuration/gre:gre/gre:gre-tunnels/gre:gre-tunnel/gre:'
+              + 'src_interfaces/gre:src_interfacename'+"\n"
+              + 'set presence for nodes:'+"\n"
+              + '/gre:configuration/gre:gre/gre:gre-tunnels/gre:gre-tunnel/gre:'
+              + 'vrfs'+"\n"
+              + '/gre:configuration/gre:gre/gre:gre-tunnels/gre:gre-tunnel/gre:'
+              + 'keys'+"\n"
+              + '/gre:configuration/gre:gre/gre:gre-tunnels/gre:gre-tunnel/gre:'
+              + 'src_interfaces'
+                ;
+  }
+  revision 2014-12-31 {
+    description 'Delete the value of reset  and add the value of default for no'
+              + 'de /gre:configuration/gre:gre/gre:gre_kpmod/gre:kp_mode'
+                ;
+  }
+  revision 2014-02-17 {
+    description 'Modify the reset value for each node.'+"\n"
+              + 'Modify the node type of mode.'+"\n"
+              + 'Add feature for GRE keepalive mode function.'
+                ;
+  }
+  revision 2014-01-20 {
+    description 'Initial version.'
+                ;
+  }
+  feature gre-keepalive-mode {
+    description 'This flag identifies gre keepalive mode function is or not sup'
+              + 'ported.'
+                ;
+  }
+  feature gre-sequence-feature {
+    description 'This flag identifies gre sequence function is or not supported.'
+                ;
+  }
+  container configuration {
+    description 'Configuration node'
+                ;
+    container gre {
+      description 'This node is entry for GRE tunnel configuration .'
+                  ;
+      container gre_kpmod {
+        if-feature gre-keepalive-mode ;
+        description 'GRE keepalive mode gloable configuration.this function is '
+                  + 'valid for xgw now.'
+                    ;
+        leaf kp_mode {
+          description 'Config keepalive mode (gloable variable.This nodes decid'
+                    + 'es to send keepalive packets by ROSNG or XGW)'
+                      ;
+          type uint8 {
+            range 0..1 {
+              description '0:kp_mode gloable disable
+1:kp_mode gloable enable'
+                          ;
+            }
+          }
+          default 0 ;
+        }
+      }
+      container gre-tunnels {
+        description 'This node is entry for GRE tunnel configuration .The nodes'
+                  + ' contains in ipv6-tunnel are tunnel option.Config these no'
+                  + 'de to buid a ipv6 tunnel.'
+                    ;
+        list gre-tunnel {
+          description 'Config GRE tunnel option'
+                      ;
+          key gre_ifname ;
+          leaf gre_ifname {
+            description 'Config GRE interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf mode {
+            description 'Config GRE tunnel mode'
+                        ;
+            type enumeration {
+              enum ip {
+                value 1 ;
+                description 'GRE over IP'
+                            ;
+              }
+              enum ipv6 {
+                value 6 ;
+                description 'GRE over IPv6'
+                            ;
+              }
+              enum ds-lite-static {
+                value 9 ;
+                description 'Static dual stack lite tunnel'
+                            ;
+              }
+              enum ds-lite-dynamic {
+                value 10 ;
+                description 'Dynamic dual stack lite tunnel'
+                            ;
+              }
+              enum multipoint {
+                value 2 ;
+                description 'Multipoint gre'
+                            ;
+              }
+            }
+          }
+          leaf bfd {
+            description 'Config GRE bfd function'
+                        ;
+            type empty ;
+          }
+          leaf checksum {
+            description 'Config GRE tunnel checksum'
+                        ;
+            type empty ;
+          }
+          leaf sequence {
+            if-feature gre-sequence-feature ;
+            description 'Config GRE tunnel sequence'
+                        ;
+            type empty ;
+          }
+          leaf cleardf {
+            description 'Config GRE clear DF flag'
+                        ;
+            type empty ;
+          }
+          leaf dscp {
+            description 'Config GRE tunnel dscp'
+                        ;
+            type uint8 {
+              range 0..63 {
+                description '0-63:valid value'
+                            ;
+              }
+            }
+          }
+          choice source {
+            description 'Config GRE tunnel source address'
+                        ;
+            case ipv4 {
+              description 'GRE tunnel source IPv4 address type'
+                          ;
+              container ip_src_addr {
+                description 'GRE tunnel source IPv4 address'
+                            ;
+                leaf ip_source {
+                  description 'GRE tunnel source IPv4 address value'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+              }
+            }
+            case ipv6 {
+              description 'GRE tunnel source IPv6 address type'
+                          ;
+              container ipv6_src_addr {
+                description 'GRE tunnel source IPv6 address'
+                            ;
+                leaf ipv6_source {
+                  description 'GRE tunnel source ipv6 address value'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+              }
+            }
+            case interface {
+              description 'Config interface name as tunnel source'
+                          ;
+              container src_interfaces {
+                description 'GRE tunnel source interface'
+                            ;
+                presence 'tunnel src interface'
+                         ;
+                leaf src_interfacename {
+                  description 'GRE source interface name'
+                              ;
+                  type ncd:ifname ;
+                  mandatory true ;
+                }
+              }
+            }
+          }
+          choice destination {
+            description 'GRE tunnel destination address'
+                        ;
+            case ipv4 {
+              description 'GRE tunnel destination IPv4 address type'
+                          ;
+              container ip_dest_addr {
+                description 'GRE tunnel destination IPv4 address'
+                            ;
+                leaf ip_destination {
+                  description 'GRE tunnel destination IPv4 address value'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+              }
+            }
+            case ipv6 {
+              description 'GRE tunnel destination IPv6 address type'
+                          ;
+              container ipv6_dst_addr {
+                description 'GRE tunnel destination IPv6 address'
+                            ;
+                leaf ipv6_destination {
+                  description 'GRE tunnel destination IPv6 address value'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+              }
+            }
+          }
+          container keepalive {
+            description 'Config GRE tunnel keepalive option'
+                        ;
+            presence 'keepalive choice'
+                     ;
+            leaf period {
+              description 'Config GRE tunnel keepalve period'
+                          ;
+              type uint16 {
+                range 1..32767 ;
+              }
+              units s ;
+              mandatory true ;
+            }
+            leaf retry {
+              description 'Config GRE tunnel keepalive try times'
+                          ;
+              type uint16 {
+                range 3..255 ;
+              }
+              mandatory true ;
+            }
+            leaf period-in-ms {
+              status obsolete {
+                ncd:revise-date 2019-01-03 ;
+              }
+              description 'Config GRE tunnel keepalve period ms'
+                          ;
+              type uint16 {
+                range 0..999 ;
+              }
+              units ms ;
+            }
+          }
+          container keys {
+            description 'Config GRE tunnel tunnel key'
+                        ;
+            presence 'tunnel key'
+                     ;
+            choice key {
+              description 'Config GRE tunnel tunnel key'
+                          ;
+              case plain {
+                description 'Plain key.'
+                            ;
+                leaf plain-key {
+                  description 'GRE tunnel key plain value.'
+                              ;
+                  type string {
+                    length 1..10 ;
+                  }
+                }
+              }
+              case cipher {
+                description 'Cipher key.'
+                            ;
+                leaf cipher-key {
+                  description 'GRE tunnel key cipher value.'
+                              ;
+                  type string {
+                    length 64 ;
+                  }
+                }
+              }
+              ncd:revise-date 2021-03-26 ;
+            }
+          }
+          container vrfs {
+            description 'Config GRE tunnel VRF'
+                        ;
+            presence 'tunnel vrf'
+                     ;
+            leaf vrf {
+              description 'GRE tunnel vrf name'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+              mandatory true ;
+            }
+          }
+        }
+      }
+    }
+  }
+}

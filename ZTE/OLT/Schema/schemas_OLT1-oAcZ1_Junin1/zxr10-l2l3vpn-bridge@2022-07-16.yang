@@ -1,0 +1,111 @@
+module zxr10-l2l3vpn-bridge {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/l2l3vpn-bridge'
+            ;
+  prefix l2l3vpn-bridge ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation'+"\n"
+        + ''+"\n"
+        + '   Nanjing Institute of ZTE Corporation'+"\n"
+        + ''+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China'+"\n"
+        + ''+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the bridge of layer2-layer3 VPN m'
+            + 'anage.'
+              ;
+  revision 2022-07-16 {
+    description 'set list virtual-links-self-bridging.
+add leaf interface.'
+                ;
+  }
+  revision 2013-12-10 {
+    description 'Add a Dependency relationship on "zxr10-netconf-defs" for "zxr'
+              + '10-l2l3vpn-bridge".'+"\n"
+              + 'Add the devicetype for leaf src-interface.'+"\n"
+              + 'Add the devicetype for leaf dst-interface.'+"\n"
+              + 'Add the "if-filter-id" for src-interface.'+"\n"
+              + 'Add the "if-filter-id" for dst-interface.'
+                ;
+  }
+  revision 2013-10-08 {
+    description "Change the type of leaf service from enumeration to empty.
+\nC"
+              + "hange the name of leaf src-ulei into src-interface.
+\nChange t"
+              + "he name of leaf dst-ulei into dst-interface.
+\nChange the leng"
+              + "th of leaf src-interface from 1..32 to 1..31.
+\nChange the len"
+              + "gth of leaf dst-interface from 1..32 to 1..31.
+\nChange the na"
+              + "me of list virtual-link into virtual-links.
+\nAdd new contiane"
+              + "r virtual-link, set list virtual-links become it's sub list.
+\n"
+              + "Delete the \"mandatory true\" of leaf src-interface."
+                ;
+  }
+  revision 2013-06-20 {
+    description 'The initial version'
+                ;
+  }
+  feature selfbridge ;
+  container configuration {
+    description 'Describe the configuration of the bridge of layer2-layer3 VPN'
+                ;
+    container l2l3vpn-bridge {
+      description 'Describe the parameters to be configured'
+                  ;
+      container bridge-service {
+        description 'configure bridge service parameters'
+                    ;
+        leaf service {
+          description 'Enable the bridge of layer2-layer3 VPN'
+                      ;
+          type empty ;
+        }
+      }
+      container virtual-link {
+        description 'Describe the parameters of the virtual link between the la'
+                  + 'yer2-VPN and layer3-VPN'
+                    ;
+        list virtual-links {
+          description 'The virtual link between the layer2-VPN and layer3-VPN'
+                      ;
+          key src-interface ;
+          unique dst-interface ;
+          leaf src-interface {
+            description 'The source interface of the virtual link'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf dst-interface {
+            description 'The destination interface of the virtual link'
+                        ;
+            type ncd:ifname ;
+            mandatory true ;
+          }
+        }
+        list virtual-links-self-bridging {
+          description 'The virtual link self bridging between the layer2-VPN an'
+                    + 'd layer3-VPN'
+                      ;
+          key interface ;
+          unique interface ;
+          leaf interface {
+            if-feature selfbridge ;
+            description 'The interface of the virtual link self bridging'
+                        ;
+            type ncd:ifname ;
+          }
+        }
+      }
+    }
+  }
+}

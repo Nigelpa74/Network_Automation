@@ -1,0 +1,71 @@
+module zxr10-pss-rtm {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pss-rtm'
+            ;
+  prefix pss-rtm ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the routing table management(rtm).'
+              ;
+  revision 2021-06-11 {
+    description 'Add all project to support fib-high-threshold.'
+                ;
+  }
+  revision 2019-12-11 {
+    description 'Add new project label of 6100/6700/65V5 to support fib-high-th'
+              + 'reshold.'
+                ;
+  }
+  revision 2019-06-28 {
+    description 'This Netconf module provides commonly used textual conventions'
+              + ' for RTM.'+"\n"
+              + 'It is initial version.'
+                ;
+  }
+  feature fib-high-threshold ;
+  container configuration {
+    description 'This module config rtm configuration.'
+                ;
+    container alarm-config {
+      description 'This module config rtm alarm configuration.'
+                  ;
+      container ipv4-fib-high-threshold {
+        if-feature fib-high-threshold ;
+        description 'IPv4 FIB alarm threshold configuration.'
+                    ;
+        presence ipv4-fib-high-threshold ;
+        leaf warning-threshold {
+          description 'Maximum IPv4 FIB threshold to set.'
+                      ;
+          type uint8 {
+            range 1..100 ;
+          }
+          mandatory true ;
+        }
+      }
+      container ipv6-fib-high-threshold {
+        if-feature fib-high-threshold ;
+        description 'IPv6 FIB alarm threshold configuration.'
+                    ;
+        presence ipv6-fib-high-threshold ;
+        leaf warning-threshold {
+          description 'Maximum IPv6 FIB threshold to set.'
+                      ;
+          type uint8 {
+            range 1..100 ;
+          }
+          mandatory true ;
+        }
+      }
+    }
+  }
+}

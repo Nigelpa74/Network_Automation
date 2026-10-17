@@ -1,0 +1,83 @@
+module ctc-hardware {
+
+    namespace "urn:ctc:yang:ctc-hardware";
+    prefix "ctc-hw";
+    import ietf-hardware {
+        prefix "hw";
+    }
+    description "对IETF硬件模型的补充";
+    revision 2018-06-26 {
+        description
+            "CTC OAN SDN Yang Module V1.0";
+    }
+    augment "/hw:hardware/hw:component" {
+        leaf slot-number {
+            type int32;
+            description "设备卡槽属性
+             The numbering of the slots on the euqipment,
+             usually starts form 1, each slot is capable for
+             one line card";
+        }
+        leaf card-type {
+            type string;
+            description 
+                "板卡类型属性（上联板、主控、EPON线卡、
+                 10G-EPON线卡、GPON线卡、XG-PON线卡、G/XG双模线卡、
+                 以太网业务线卡、电源）
+                 Type of line cards, for use in PON system,
+                 the type can be 'uplink', 'main control',
+                 'EPON line card', '10G-EPON line card',
+                 'GPON line card', 'XG-PON line card',
+                 'G/XG PON duo mode line card',
+                 'ethernet line card', 'power' etc.";
+        }
+        leaf is-hot-pluggable-to-parent {
+            type boolean;
+            config false;
+
+            description 
+                "硬件组件针对其上Parent而言是否支持热插拔
+                 (可选，如不涉及可以不创建该Leaf)
+                 The capability of the hardware component that
+                 whether is hot-pluggable to its parent node";
+        }
+        leaf is-hot-pluggable-to-child {
+            type boolean;
+            config false;
+
+            description 
+                "硬件组件针对其下Child而言是否支持热插拔
+                 (可选，如不涉及可以不创建该Leaf)
+                 The capability of the hardware component that
+                 whether is hot-pluggable to its child node";
+        }
+        leaf cage-module-type {
+            type enumeration {
+                enum SFP;
+                enum XFP;
+            }
+            description "光模块形态（SFP/XFP形态等）";
+        }
+        leaf trx-module-type {
+            type enumeration {
+                enum 10GE-electric;
+                enum GE-electric;
+                enum GE-optical;
+                enum asymmetrical-10G-EPON;
+                enum symmetrical-10G-EPON;
+                enum EPON;
+                enum GPON;
+                enum XG-PON;
+                enum XGS-PON;
+                enum G/XG-dual-mode;
+                enum 10GE-optical;
+            }
+
+            description "光模块类型（EPON、对称10G-EPON、
+             非对称10G-EPON、GPON、XG-PON、XGS-PON、GPON/XG-PON双模、
+             GE光口、GE电口、10GE光口、10GE电口等类型）";
+        }
+
+
+    }
+}

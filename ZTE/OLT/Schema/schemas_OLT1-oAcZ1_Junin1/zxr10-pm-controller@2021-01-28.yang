@@ -1,0 +1,2486 @@
+module zxr10-pm-controller {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-controller'
+            ;
+  prefix pm-controller ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2021-01-28 {
+    description 'Modify the range of holdtime value.'
+                ;
+  }
+  revision 2021-01-13 {
+    description 'add laser-status invalid mode.'
+                ;
+  }
+  revision 2019-07-25 {
+    description 'leaf loopback add loopback-external for cposs ce1s and e1s.'
+                ;
+  }
+  revision 2019-01-28 {
+    description 'add optical-attenuation, power-adjust relative, pulse-width, f'
+              + 'iber-length, sample-time, loss-threshold, fiber-end-threshold,'
+              + ' reflect-threshold, refractivity, reverse-refractivity'
+                ;
+  }
+  revision 2018-09-06 {
+    description 'add alarm-insert, error-insert-bip8, trace-1-value and so on.'
+                ;
+  }
+  revision 2018-06-12 {
+    description 'add error-inserts for controllers node.'
+                ;
+  }
+  revision 2018-05-23 {
+    description 'add frame-mode for cpos node.'
+                ;
+  }
+  revision 2018-04-10 {
+    description 'add the configurations in OTN-controller mode.'
+                ;
+  }
+  revision 2016-08-19 {
+    description 'modify the range of link-delay-up and link-delay-down from 0 t'
+              + 'o 600000.'
+                ;
+  }
+  revision 2016-08-10 ;
+  revision 2016-05-25 {
+    description 'add trace-64-value for j0 and j0ex node'
+                ;
+  }
+  revision 2016-03-15 {
+    description 'modify description for sdh-threshold'
+                ;
+  }
+  revision 2015-09-06 {
+    description 'add contain sdh-thresholds'
+                ;
+  }
+  container configuration {
+    container pm-controller {
+      container controllers {
+        container cposs {
+          list cpos {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type string ;
+            }
+            leaf shutdown {
+              description 'This command disables the physical units of an CPOS '
+                        + 'interface.'
+                          ;
+              type empty ;
+            }
+            leaf holdtime {
+              description 'This command configures the port hold-time.'
+                          ;
+              type uint16 {
+                range 0..3600 {
+                  description 'Range: 0-3600.'
+                              ;
+                }
+              }
+              units second ;
+              default 120 ;
+            }
+            leaf frame-mode {
+              description 'frame mode.'
+                          ;
+              type enumeration {
+                enum SDH {
+                  value 0 ;
+                  description 'The STM-N board is SDH .'
+                              ;
+                }
+                enum SONET {
+                  value 1 ;
+                  description 'The OC-N baord is SONET.'
+                              ;
+                }
+              }
+              default SDH ;
+              ncd:revise-date 2018-05-23 ;
+            }
+            leaf loopback {
+              description 'Configures the loopback mode.'
+                          ;
+              type enumeration {
+                enum cancel {
+                  value 0 ;
+                  description 'Cancel loopback mode.'
+                              ;
+                }
+                enum outer {
+                  value 1 ;
+                  description 'Line loopback mode.'
+                              ;
+                }
+                enum inner {
+                  value 2 ;
+                  description 'Inner loopback mode.'
+                              ;
+                }
+                enum external {
+                  value 3 ;
+                  description 'External loopback mode.'
+                              ;
+                }
+              }
+              default cancel ;
+            }
+            leaf clock-mode {
+              description 'This command configures a send clock source.'
+                          ;
+              type enumeration {
+                enum internal {
+                  value 1 ;
+                  description 'Select clock from local.'
+                              ;
+                }
+                enum line {
+                  value 2 ;
+                  description 'Select clock from line.'
+                              ;
+                }
+              }
+              default internal ;
+            }
+            leaf threshold-error-packet {
+              description 'This commands sets an alarm threshold for error pack'
+                        + 'ets received over an interface.'
+                          ;
+              type uint16 {
+                range 1..65535 {
+                  description 'The number of error packets.'
+                              ;
+                }
+              }
+              default 3 ;
+            }
+            container laser-status {
+              leaf status {
+                description 'Open/close laser or set recover mode of ALS status.'
+                            ;
+                type enumeration {
+                  enum on {
+                    value 1 ;
+                    description 'open laser.'
+                                ;
+                  }
+                  enum off {
+                    value 2 ;
+                    description 'close laser.'
+                                ;
+                  }
+                  enum auto-recovery {
+                    value 3 ;
+                    description 'set recover mode is auto-recovery.'
+                                ;
+                  }
+                  enum manual-recovery {
+                    value 4 ;
+                    description 'set recover mode is manual-recovery.'
+                                ;
+                  }
+                  enum invalid {
+                    value 0 ;
+                    description 'The invalid value of laser-status mode.'
+                                ;
+                  }
+                }
+                default on ;
+              }
+              leaf period {
+                description 'Start period of automatic.'
+                            ;
+                type uint16 {
+                  range 20..600 {
+                    description 'Range: 20-600.'
+                                ;
+                  }
+                }
+                units second ;
+                default 100 ;
+              }
+              leaf pulsewidth {
+                description 'Start pulse wide of automatic.'
+                            ;
+                type uint8 {
+                  range 1..20 {
+                    description 'Range: 1-20.'
+                                ;
+                  }
+                }
+                units second ;
+                default 2 ;
+              }
+              leaf testpulsewidth {
+                description 'Start pulse wide of testing.'
+                            ;
+                type uint8 {
+                  range 50..200 {
+                    description 'Range: 50-200.'
+                                ;
+                  }
+                }
+                units second ;
+                default 90 ;
+              }
+            }
+            container alarm-insert {
+              leaf alarm-insert-hp {
+                description 'High order path alarm insert'
+                            ;
+                type empty ;
+              }
+              leaf alarm-insert-ms {
+                description 'Multiplex section alarm insert'
+                            ;
+                type empty ;
+              }
+            }
+          }
+        }
+        container ce1s {
+          list ce1 {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type string ;
+            }
+            leaf framing {
+              description 'Configures the framimg format of a ce1 interface in '
+                        + 'framing mode. For an unframing ce1, this command is '
+                        + 'not supported.'
+                          ;
+              type enumeration {
+                enum no-crc4 {
+                  value 1 ;
+                  description 'E1 frame without CRC4.'
+                              ;
+                }
+                enum crc4 {
+                  value 2 ;
+                  description 'E1 frame with CRC4.'
+                              ;
+                }
+              }
+              default no-crc4 ;
+            }
+            leaf pcm {
+              description 'Configures the PCM configuration for the frame forma'
+                        + 't of a ce1 interface in framing mode.'
+                          ;
+              type enumeration {
+                enum 31 {
+                  value 1 ;
+                  description 'Pcm 31.'
+                              ;
+                }
+                enum 30 {
+                  value 2 ;
+                  description 'Pcm 30.'
+                              ;
+                }
+              }
+              default 31 ;
+            }
+            leaf shutdown {
+              description 'This command disables the physical units of an CE1 i'
+                        + 'nterface.'
+                          ;
+              type empty ;
+            }
+            leaf itf-type {
+              description 'Configures the type of the characters padded between'
+                        + ' frames for a ce1 interface.'
+                          ;
+              type enumeration {
+                enum 0xff {
+                  value 1 ;
+                  description 'Itf-type 0xff.'
+                              ;
+                }
+                enum 0x7e {
+                  value 2 ;
+                  description 'Itf-type 0x7e.'
+                              ;
+                }
+              }
+              default 0x7e ;
+            }
+            leaf linecode {
+              description 'Configures the line code format of a ce1 interface.'
+                          ;
+              type enumeration {
+                enum hdb3 {
+                  value 0 ;
+                  description 'High density bipolar of order 3.'
+                              ;
+                }
+                enum ami {
+                  value 1 ;
+                  description 'Alternate mark inversion.'
+                              ;
+                }
+              }
+              default hdb3 ;
+            }
+            leaf holdtime {
+              description 'This command configures the port hold-time.'
+                          ;
+              type uint16 {
+                range 0..3600 {
+                  description 'Range: 0-3600.'
+                              ;
+                }
+              }
+              units second ;
+              default 120 ;
+            }
+            leaf loopback {
+              description 'Configures the loopback mode.'
+                          ;
+              type enumeration {
+                enum cancel {
+                  value 0 ;
+                  description 'Cancel loopback mode.'
+                              ;
+                }
+                enum outer {
+                  value 1 ;
+                  description 'Line loopback mode.'
+                              ;
+                }
+                enum inner {
+                  value 2 ;
+                  description 'Inner loopback mode.'
+                              ;
+                }
+                enum external {
+                  value 3 ;
+                  description 'External loopback mode.'
+                              ;
+                }
+              }
+              default cancel ;
+            }
+            leaf threshold-error-packet {
+              description 'This commands sets an alarm threshold for error pack'
+                        + 'ets received over an interface.'
+                          ;
+              type uint16 {
+                range 1..65535 {
+                  description 'The number of error packets.'
+                              ;
+                }
+              }
+              default 3 ;
+            }
+          }
+        }
+        container link-delays {
+          list link-delay {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type string ;
+            }
+            leaf link-delay-down {
+              description 'This command delays an interface to be down, and sup'
+                        + 'presses the interface to be down from up in a short '
+                        + 'time. This prevents extra costs, route convergence, '
+                        + 'and unnecessary network topology changes due to freq'
+                        + 'uent physical status changes of the interface in a s'
+                        + 'hort time.'
+                          ;
+              type uint32 {
+                range 0..600000 {
+                  description 'Range: 0-600000.'
+                              ;
+                }
+              }
+              units millisecond ;
+              default 0 ;
+            }
+            leaf link-delay-up {
+              description 'This command delays an interface to be up, and suppr'
+                        + 'esses the interface to be up from down in a short ti'
+                        + 'me. This prevents extra costs, route convergence, an'
+                        + 'd unnecessary network topology changes due to freque'
+                        + 'nt physical status changes of the interface in a sho'
+                        + 'rt time.'
+                          ;
+              type uint32 {
+                range 0..600000 {
+                  description 'Range: 0-600000.'
+                              ;
+                }
+              }
+              units millisecond ;
+              default 0 ;
+            }
+          }
+        }
+        container dampings {
+          list damp-status {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            leaf status {
+              description 'Port damping status.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 1 ;
+                  description 'Port damping disable.'
+                              ;
+                }
+                enum enable {
+                  value 2 ;
+                  description 'Port damping enable'
+                              ;
+                }
+              }
+              default enable ;
+            }
+          }
+          list damping {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            leaf max-suppress-time {
+              description 'Max suppress time(max-suppress-time > half-life).'
+                          ;
+              type uint16 {
+                range 2..600 {
+                  description 'Range: 2-600.'
+                              ;
+                }
+              }
+              units second ;
+              default 20 ;
+            }
+            leaf suppress-threshold {
+              description 'Suppress threshold(suppress > reuse).'
+                          ;
+              type uint16 {
+                range 2..10000 {
+                  description 'Range: 2-10000.'
+                              ;
+                }
+              }
+              default 2000 ;
+            }
+            leaf reuse-threshold {
+              description 'Reuse threshold(suppress > reuse).'
+                          ;
+              type uint16 {
+                range 1..2000 {
+                  description 'Range: 1-2000.'
+                              ;
+                }
+              }
+              default 1000 ;
+            }
+            leaf halflife {
+              description 'Half life(max-suppress-time > half-life).'
+                          ;
+              type uint8 {
+                range 1..100 {
+                  description 'Range: 1-100.'
+                              ;
+                }
+              }
+              units second ;
+              default 5 ;
+            }
+          }
+        }
+        container frame-subce1s {
+          list frame-subce1 {
+            key 'if-name channelgroup'
+                ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            leaf channelgroup {
+              description 'ID of the generated channel of the current ce1.'
+                          ;
+              type uint32 {
+                range 1..31 {
+                  description 'range: 1-31.'
+                              ;
+                }
+              }
+            }
+            leaf timeslots {
+              description 'Time slot usage in a framing channel.'
+                          ;
+              type ncd:range ;
+              mandatory true ;
+            }
+          }
+        }
+        container unframe-subce1s {
+          list unframe-subce1 {
+            key 'if-name channelgroup'
+                ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            leaf channelgroup {
+              description 'This command configures a non-framing channel, and g'
+                        + 'enerates a visible interface used by protocol stacks'
+                        + '.'
+                          ;
+              type uint32 {
+                range 1 ;
+              }
+            }
+          }
+        }
+        container frame-sube1s {
+          list map {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            leaf au-type {
+              description 'Map au type'
+                          ;
+              type enumeration {
+                enum au4 {
+                  value 0 ;
+                  description 'map au4'
+                              ;
+                }
+              }
+            }
+            list au4 {
+              key au4-number ;
+              leaf au4-number {
+                description 'Au4 number'
+                            ;
+                type uint8 {
+                  range 1 ;
+                }
+              }
+              list tug3 {
+                key tug3-number ;
+                leaf tug3-number {
+                  description 'Tug3 number'
+                              ;
+                  type uint8 {
+                    range 1..3 ;
+                  }
+                }
+                list tug2 {
+                  key tug2-number ;
+                  leaf tug2-number {
+                    description 'Tug2 number'
+                                ;
+                    type uint8 {
+                      range 1..7 ;
+                    }
+                  }
+                  list e1 {
+                    key e1-number ;
+                    leaf e1-number {
+                      description 'E1 number'
+                                  ;
+                      type uint8 {
+                        range 1..3 ;
+                      }
+                    }
+                    list frame-sube1 {
+                      key channelgroup ;
+                      leaf channelgroup {
+                        description 'ID of the generated channel of the current'
+                                  + ' e1.'
+                                    ;
+                        type uint32 {
+                          range 1..31 {
+                            description 'Range: 1-31.'
+                                        ;
+                          }
+                        }
+                      }
+                      leaf timeslots {
+                        description 'Time slot usage in a framing channel.'
+                                    ;
+                        type ncd:range ;
+                        mandatory true ;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        container unframe-sube1s {
+          list map {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            leaf au-type {
+              description 'Map au type'
+                          ;
+              type enumeration {
+                enum au4 {
+                  value 0 ;
+                  description 'map type'
+                              ;
+                }
+              }
+            }
+            list au4 {
+              key au4-number ;
+              leaf au4-number {
+                description 'Au4 number'
+                            ;
+                type uint8 {
+                  range 1 ;
+                }
+              }
+              list tug3 {
+                key tug3-number ;
+                leaf tug3-number {
+                  description 'Tug3 number'
+                              ;
+                  type uint8 {
+                    range 1..3 ;
+                  }
+                }
+                list tug2 {
+                  key tug2-number ;
+                  leaf tug2-number {
+                    description 'Tug2 number'
+                                ;
+                    type uint8 {
+                      range 1..7 ;
+                    }
+                  }
+                  list e1 {
+                    key e1-number ;
+                    leaf e1-number {
+                      description 'E1 number'
+                                  ;
+                      type uint8 {
+                        range 1..3 ;
+                      }
+                    }
+                    list unframe-sube1 {
+                      key channelgroup ;
+                      leaf channelgroup {
+                        type uint32 {
+                          range 1 ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        container flags {
+          container j0-j0exs {
+            list j0-j0ex {
+              key if-name ;
+              leaf if-name {
+                description 'Interface name.'
+                            ;
+                type string ;
+              }
+              container j0 {
+                leaf trace-mode {
+                  description 'Trace mode.'
+                              ;
+                  type enumeration {
+                    enum trace-1 {
+                      value 1 ;
+                    }
+                    enum trace-16 {
+                      value 2 ;
+                    }
+                    enum trace-64 {
+                      value 3 ;
+                    }
+                  }
+                }
+                leaf trace-1-value {
+                  description 'J0 description.'
+                              ;
+                  type ncd:hex {
+                    length 0..255 ;
+                  }
+                }
+                leaf trace-16-value {
+                  description 'J0 description.'
+                              ;
+                  type ncd:string-with-blank {
+                    length 1..15 {
+                      description 'Range: 1-15.'
+                                  ;
+                    }
+                  }
+                }
+                leaf trace-64-value {
+                  description 'J0 description.'
+                              ;
+                  type ncd:string-with-blank {
+                    length 1..62 {
+                      description 'Range: 1-62.'
+                                  ;
+                    }
+                  }
+                }
+              }
+              container j0ex {
+                leaf trace-mode {
+                  description 'Trace mode.'
+                              ;
+                  type enumeration {
+                    enum trace-1 {
+                      value 1 ;
+                    }
+                    enum trace-16 {
+                      value 2 ;
+                    }
+                    enum trace-64 {
+                      value 3 ;
+                    }
+                  }
+                }
+                leaf trace-1-value {
+                  description 'J0ex description.'
+                              ;
+                  type ncd:hex {
+                    length 0..255 ;
+                  }
+                }
+                leaf trace-16-value {
+                  description 'J0ex description.'
+                              ;
+                  type ncd:string-with-blank {
+                    length 1..15 {
+                      description 'Range: 1-15.'
+                                  ;
+                    }
+                  }
+                }
+                leaf trace-64-value {
+                  description 'J0ex description.'
+                              ;
+                  type ncd:string-with-blank {
+                    length 1..62 {
+                      description 'Range: 1-62.'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          container c2-c2ex-j1-j1exs {
+            list map {
+              key if-name ;
+              leaf if-name {
+                description 'Interface name'
+                            ;
+                type string ;
+              }
+              leaf au-type {
+                description 'Map au type'
+                            ;
+                type enumeration {
+                  enum au4 {
+                    value 0 ;
+                    description 'map au4'
+                                ;
+                  }
+                }
+              }
+              list c2-c2ex-j1-j1ex {
+                key au4 ;
+                leaf au4 {
+                  description 'Au4 number'
+                              ;
+                  type uint8 {
+                    range 1 ;
+                  }
+                }
+                leaf c2 {
+                  description 'This command sets the channel signal flag of a h'
+                            + 'igher-order channel.'
+                              ;
+                  type uint16 {
+                    range '0..5 | 18..28 | 32 | 207 | 254'
+                          ;
+                  }
+                  default 2 ;
+                }
+                leaf c2ex {
+                  description 'This command sets the opposite channel signal fl'
+                            + 'ag expected by a higher-order channel.'
+                              ;
+                  type uint16 {
+                    range '0..5 | 18..28 | 32 | 207 | 254'
+                          ;
+                  }
+                  default 2 ;
+                }
+                container j1 {
+                  leaf trace-mode {
+                    description 'Trace mode.'
+                                ;
+                    type enumeration {
+                      enum trace-1 {
+                        value 1 ;
+                      }
+                      enum trace-16 {
+                        value 2 ;
+                      }
+                      enum trace-64 {
+                        value 3 ;
+                      }
+                    }
+                  }
+                  leaf trace-1-value {
+                    description 'J1 description.'
+                                ;
+                    type ncd:hex {
+                      length 0..255 ;
+                    }
+                  }
+                  leaf trace-16-64-value {
+                    description 'J1 description.'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..62 {
+                        description 'Range: 1-62.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+                container j1ex {
+                  leaf trace-mode {
+                    description 'Trace mode.'
+                                ;
+                    type enumeration {
+                      enum trace-1 {
+                        value 1 ;
+                      }
+                      enum trace-16 {
+                        value 2 ;
+                      }
+                      enum trace-64 {
+                        value 3 ;
+                      }
+                    }
+                  }
+                  leaf trace-1-value {
+                    description 'J1ex description.'
+                                ;
+                    type ncd:hex {
+                      length 0..255 ;
+                    }
+                  }
+                  leaf trace-16-64-value {
+                    description 'J1ex description.'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..62 {
+                        description 'Range: 1-62.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          container j2-j2ex-v5-v5exs {
+            list map {
+              key if-name ;
+              leaf if-name {
+                description 'Interface name'
+                            ;
+                type string ;
+              }
+              leaf au-type {
+                description 'Map au type'
+                            ;
+                type enumeration {
+                  enum au4 {
+                    value 0 ;
+                    description 'map au4'
+                                ;
+                  }
+                }
+              }
+              list au4 {
+                key au4-number ;
+                leaf au4-number {
+                  description 'Au4 number'
+                              ;
+                  type uint8 {
+                    range 1 ;
+                  }
+                }
+                list tug3 {
+                  key tug3-number ;
+                  leaf tug3-number {
+                    description 'Tug3 number'
+                                ;
+                    type uint8 {
+                      range 1..3 ;
+                    }
+                  }
+                  list tug2 {
+                    key tug2-number ;
+                    leaf tug2-number {
+                      description 'Tug2 number'
+                                  ;
+                      type uint8 {
+                        range 1..7 ;
+                      }
+                    }
+                    list e1 {
+                      key e1-number ;
+                      leaf e1-number {
+                        description 'E1 number'
+                                    ;
+                        type uint8 {
+                          range 1..3 ;
+                        }
+                      }
+                      leaf v5 {
+                        description 'This command configures the v5 value of lo'
+                                  + 'wer-order path.'
+                                    ;
+                        type uint16 {
+                          range 0..7 ;
+                        }
+                      }
+                      leaf v5ex {
+                        description 'This command configures the expected value'
+                                  + ' of the opposite v5.'
+                                    ;
+                        type uint16 {
+                          range 0..7 ;
+                        }
+                      }
+                      container j2 {
+                        leaf trace-mode {
+                          description 'Trace mode.'
+                                      ;
+                          type enumeration {
+                            enum trace-1 {
+                              value 1 ;
+                            }
+                            enum trace-16 {
+                              value 2 ;
+                            }
+                            enum trace-64 {
+                              value 3 ;
+                            }
+                          }
+                        }
+                        leaf trace-1-value {
+                          description 'J2 description.'
+                                      ;
+                          type ncd:hex {
+                            length 0..255 ;
+                          }
+                        }
+                        leaf trace-16-64-value {
+                          description 'J2 description'
+                                      ;
+                          type ncd:string-with-blank {
+                            length 1..62 {
+                              description 'Range: 1-62.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                      container j2ex {
+                        leaf trace-mode {
+                          description 'Trace mode.'
+                                      ;
+                          type enumeration {
+                            enum trace-1 {
+                              value 1 ;
+                            }
+                            enum trace-16 {
+                              value 2 ;
+                            }
+                            enum trace-64 {
+                              value 3 ;
+                            }
+                          }
+                        }
+                        leaf trace-1-value {
+                          description 'J2ex description.'
+                                      ;
+                          type ncd:hex {
+                            length 0..255 ;
+                          }
+                        }
+                        leaf trace-16-64-value {
+                          description 'J2ex description.'
+                                      ;
+                          type ncd:string-with-blank {
+                            length 1..62 {
+                              description 'Range: 1-62.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        container e1s {
+          list map {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            leaf au-type {
+              description 'Map au type'
+                          ;
+              type enumeration {
+                enum au4 {
+                  value 0 ;
+                  description 'map au4'
+                              ;
+                }
+              }
+            }
+            list au4 {
+              key au4-number ;
+              leaf au4-number {
+                description 'Au4 number'
+                            ;
+                type uint8 {
+                  range 1 ;
+                }
+              }
+              list tug3 {
+                key tug3-number ;
+                leaf tug3-number {
+                  description 'Tug3 number'
+                              ;
+                  type uint8 {
+                    range 1..3 ;
+                  }
+                }
+                list tug2 {
+                  key tug2-number ;
+                  leaf tug2-number {
+                    description 'Tug2 number'
+                                ;
+                    type uint8 {
+                      range 1..7 ;
+                    }
+                  }
+                  list e1 {
+                    key e1-number ;
+                    leaf e1-number {
+                      description 'E1 number'
+                                  ;
+                      type uint8 {
+                        range 1..3 ;
+                      }
+                    }
+                    leaf loopback {
+                      description 'Configures the loopback mode.'
+                                  ;
+                      type enumeration {
+                        enum cancel {
+                          value 0 ;
+                          description 'Cancel loopback mode.'
+                                      ;
+                        }
+                        enum outer {
+                          value 1 ;
+                          description 'Line loopback mode.'
+                                      ;
+                        }
+                        enum inner {
+                          value 2 ;
+                          description 'Inner loopback mode.'
+                                      ;
+                        }
+                        enum external {
+                          value 3 ;
+                          description 'External loopback mode.'
+                                      ;
+                        }
+                      }
+                      default cancel ;
+                    }
+                    leaf framing {
+                      description 'This command configures the frame format of '
+                                + 'an e1 of a lower-order path. Non-e1 does not'
+                                + ' support this configuration.'
+                                  ;
+                      type enumeration {
+                        enum no-crc4 {
+                          value 1 ;
+                          description 'E1 frame without CRC4.'
+                                      ;
+                        }
+                        enum crc4 {
+                          value 2 ;
+                          description 'E1 frame with CRC4.'
+                                      ;
+                        }
+                      }
+                      default no-crc4 ;
+                    }
+                    leaf pcm {
+                      description 'Configures the PCM configuration for the fra'
+                                + 'me format of a e1 interface in framing mode.'
+                                  ;
+                      type enumeration {
+                        enum 31 {
+                          value 1 ;
+                          description 'PCM 31.'
+                                      ;
+                        }
+                        enum 30 {
+                          value 2 ;
+                          description 'PCM 30.'
+                                      ;
+                        }
+                      }
+                      default 31 ;
+                    }
+                    leaf alarm-insert {
+                      description 'Configure alarm insert'
+                                  ;
+                      type empty ;
+                    }
+                    leaf error-insert-bip8 {
+                      description 'Configure error insert'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        container thresholds {
+          list threshold {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type string ;
+            }
+            leaf sd-ber {
+              description 'Configure the degrade threshold of signal for interf'
+                        + 'ace.'
+                          ;
+              type uint8 {
+                range 5..8 {
+                  description 'Sd-ber value.'
+                              ;
+                }
+              }
+              default 6 ;
+            }
+            leaf sf-ber {
+              description 'Configure the failure threshold of signal for interf'
+                        + 'ace.'
+                          ;
+              type uint8 {
+                range 4..8 {
+                  description 'Sf-ber value.'
+                              ;
+                }
+              }
+              default 4 ;
+            }
+          }
+        }
+        container sdh-thresholds {
+          list sdh-threshold {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type string ;
+            }
+            leaf b1-sf-ber {
+              description 'Configure regeneration segment signal failure thresh'
+                        + 'old'
+                          ;
+              type uint8 {
+                range 4..8 {
+                  description 'Range: 4-8'
+                              ;
+                }
+              }
+            }
+            leaf b1-sd-ber {
+              description 'Configure regeneration segment signal degradation th'
+                        + 'reshold'
+                          ;
+              type uint8 {
+                range 5..8 {
+                  description 'Range: 5-8'
+                              ;
+                }
+              }
+            }
+            leaf b3-sf-ber {
+              description 'Configure high order channel signal failure threshold'
+                          ;
+              type uint8 {
+                range 4..8 {
+                  description 'Range: 4-8'
+                              ;
+                }
+              }
+            }
+            leaf b3-sd-ber {
+              description 'Configure high order channel signal degradation thre'
+                        + 'shold'
+                          ;
+              type uint8 {
+                range 5..8 {
+                  description 'Range: 5-8'
+                              ;
+                }
+              }
+            }
+          }
+        }
+        container error-inserts {
+          list error-insert {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type string ;
+            }
+            leaf error-insert-b1 {
+              description 'Insert error b1.'
+                          ;
+              type empty ;
+            }
+            leaf error-insert-b2 {
+              description 'Insert error b2.'
+                          ;
+              type empty ;
+            }
+          }
+          ncd:revise-date 2018-06-12 ;
+        }
+      }
+      container ce1-Subchannelizations {
+        list ce1-Subchannelization {
+          description 'CE1 interface mode.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type string ;
+          }
+          leaf crc {
+            description 'Configures CRC mode of a interface.'
+                        ;
+            type enumeration {
+              enum crc16 {
+                value 1 ;
+                description 'CRC 16.'
+                            ;
+              }
+              enum crc32 {
+                value 2 ;
+                description 'CRC 32.'
+                            ;
+              }
+            }
+            default crc32 ;
+          }
+        }
+      }
+      container cpos-Subchannelizations {
+        list cpos-Subchannelization {
+          description 'CPOS interface mode.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type string ;
+          }
+          leaf crc {
+            description 'Configures CRC mode of a interface.'
+                        ;
+            type enumeration {
+              enum crc16 {
+                value 1 ;
+                description 'CRC 16.'
+                            ;
+              }
+              enum crc32 {
+                value 2 ;
+                description 'CRC 32.'
+                            ;
+              }
+            }
+            default crc32 ;
+          }
+        }
+      }
+      container otn-controllers {
+        description 'OTN-controller mode.'
+                    ;
+        list client {
+          description 'Mapping of client signal.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type string ;
+          }
+          choice client-type {
+            case mapping-cgei {
+              container cgei {
+                description 'CGigabit ethernet interface.'
+                            ;
+                leaf none {
+                  description 'Signal transfered directly, not mapped in OTU.'
+                              ;
+                  type empty ;
+                }
+                leaf odu4 {
+                  description 'Optical channel data unit-4.'
+                              ;
+                  type empty ;
+                }
+              }
+            }
+            case mapping-xgei {
+              container xgei {
+                description 'XGigabit ethernet interface.'
+                            ;
+                leaf none {
+                  description 'Signal transfered directly, not mapped in OTU.'
+                              ;
+                  type empty ;
+                }
+                leaf odu1e {
+                  description 'Extended optical channel data unit-1.'
+                              ;
+                  type empty ;
+                }
+                leaf odu2e {
+                  description 'Extended optical channel data unit-2.'
+                              ;
+                  type empty ;
+                }
+                container odu2 {
+                  description 'Optical channel data unit-2.'
+                              ;
+                  presence odu2 ;
+                  leaf optical-channel {
+                    description 'Optical channel data unit-2'
+                                ;
+                    type enumeration {
+                      enum standard-gfp-f {
+                        value 1 ;
+                        description 'Standard GFP-F mapping into ODU2, accordin'
+                                  + 'g to ITUT-G-sup43, section 6.2'
+                                    ;
+                      }
+                      enum non-standard-gfp-f {
+                        value 2 ;
+                        description 'Non-standard GFP-F mapping into ODU2, acco'
+                                  + 'rding to ITUT-G-sup43, section 7.3'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+            case mapping-xgwei {
+              container xgwei {
+                description 'XGigabit wan ethernet interface.'
+                            ;
+                leaf none {
+                  description 'Signal transfered directly, not mapped in OTU.'
+                              ;
+                  type empty ;
+                }
+                container odu2 {
+                  description 'Optical channel data unit-2.'
+                              ;
+                  presence odu2 ;
+                  leaf optical-channel {
+                    description 'Optical channel data unit-2'
+                                ;
+                    type enumeration {
+                      enum amp {
+                        value 3 ;
+                        description 'Asynchronous mapping procedure'
+                                    ;
+                      }
+                      enum bmp {
+                        value 4 ;
+                        description 'Bit-synchronous mapping procedure'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+            case mapping-oc-192 {
+              container oc-192 {
+                description 'Packet Over SONET/SDH.'
+                            ;
+                leaf none {
+                  description 'Signal transfered directly, not mapped in OTU.'
+                              ;
+                  type empty ;
+                }
+                container odu2 {
+                  description 'Optical channel data unit-2.'
+                              ;
+                  presence odu2 ;
+                  leaf optical-channel {
+                    description 'Optical channel data unit-2'
+                                ;
+                    type enumeration {
+                      enum amp {
+                        value 3 ;
+                        description 'Asynchronous mapping procedure'
+                                    ;
+                      }
+                      enum bmp {
+                        value 4 ;
+                        description 'Bit-synchronous mapping procedure'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        list otn-controller {
+          description 'OTN interface mode.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type string ;
+          }
+          container odu {
+            description 'Optical channel data unit.'
+                        ;
+            container report {
+              description 'Enable alarms to the console.'
+                          ;
+              leaf all {
+                description 'All odu alarm report'
+                            ;
+                type empty ;
+              }
+              leaf odu-bei {
+                description 'Backward error indication alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-bdi {
+                description 'Backward defect indication alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-iae {
+                description 'Incoming alignment error alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-ais {
+                description 'Alarm indication signal alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-lck {
+                description 'Data unit locked alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-oci {
+                description 'Data unit open connection indication alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-ptim {
+                description 'PM type identifier mismatch alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-sdber {
+                description 'Transport unit signal degrade alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-tim {
+                description 'Trace identifier mismatch alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-ssf {
+                description 'Transport unit signal fail alarm'
+                            ;
+                type empty ;
+              }
+            }
+            container threshold {
+              description 'Configure the threshold for interface.'
+                          ;
+              container pm-deg {
+                description 'ODU path signal degrade.'
+                            ;
+                presence pm-deg ;
+                leaf bit-error-rate {
+                  description 'Bit-error-rate negative exponent of base 10'
+                              ;
+                  type uint8 {
+                    range 3..9 {
+                      description Bit-error-rate ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+              container pm-ssf {
+                description 'ODU path signal fail.'
+                            ;
+                presence pm-ssf ;
+                leaf bit-error-rate {
+                  description 'Bit-error-rate negative exponent of base 10'
+                              ;
+                  type uint8 {
+                    range 3..9 {
+                      description Bit-error-rate ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+            container tti {
+              description 'Configure the trail trace identifier.'
+                          ;
+              container expected {
+                description 'Configure expected TTI string.'
+                            ;
+                container dapi {
+                  description 'Destination access point identifier.'
+                              ;
+                  presence dapi ;
+                  leaf dapi-tti-string {
+                    description 'The dapi TTI string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..15 {
+                        description 'The dapi TTI string (max be 15 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container operator {
+                  description 'Operator specific identifier.'
+                              ;
+                  presence operator ;
+                  leaf operator-specific-identifier {
+                    description 'Operator specific identifier string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..32 {
+                        description 'Operator specific identifier string (max b'
+                                  + 'e 32 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container sapi {
+                  description 'Source access point identifier.'
+                              ;
+                  presence sapi ;
+                  leaf sapi-tti-string {
+                    description 'The sapi TTI string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..15 {
+                        description 'The sapi TTI string (max be 15 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+              container sent {
+                description 'Configure transmit TTI string.'
+                            ;
+                container dapi {
+                  description 'Destination access point identifier.'
+                              ;
+                  presence dapi ;
+                  leaf dapi-tti-string {
+                    description 'The dapi TTI string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..15 {
+                        description 'The dapi TTI string (max be 15 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container operator {
+                  description 'Operator specific identifier.'
+                              ;
+                  presence operator ;
+                  leaf operator-specific-identifier {
+                    description 'Operator specific identifier string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..32 {
+                        description 'Operator specific identifier string (max b'
+                                  + 'e 32 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container sapi {
+                  description 'Source access point identifier.'
+                              ;
+                  presence sapi ;
+                  leaf sapi-tti-string {
+                    description 'The sapi TTI string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..15 {
+                        description 'The sapi TTI string (max be 15 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+            leaf tti-processing {
+              description 'Enable trail trace identifier mismatch alarm'
+                          ;
+              type empty ;
+            }
+          }
+          container otn {
+            description 'Optical transport network.'
+                        ;
+            container delay {
+              description 'Delay time.'
+                          ;
+              container clear {
+                description 'Alarm clear delay time.'
+                            ;
+                leaf alarm-filter-time {
+                  description 'Alarm elimination filter delay time(ms)'
+                              ;
+                  type uint32 {
+                    range 200..300000 {
+                      description 'Alarm elimination filter delay time(ms)'
+                                  ;
+                    }
+                  }
+                  units ms ;
+                  default 255 ;
+                }
+              }
+              container trigger {
+                description 'Alarm trigger delay time.'
+                            ;
+                leaf delay-time-trigger {
+                  description 'Alarm elimination filter delay time(ms)'
+                              ;
+                  type uint32 {
+                    range 20..10000 {
+                      description 'Alarm filter delay time(ms)'
+                                  ;
+                    }
+                  }
+                  units ms ;
+                  default 255 ;
+                }
+              }
+            }
+            container if-down {
+              description 'Configure otn alarms which will trigger port down.'
+                          ;
+              leaf otu-tim {
+                description 'Otu trace identifier mismatch alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-bei {
+                description 'Otu backward error indication alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-bdi {
+                description 'Otu backward defect indication alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-iae {
+                description 'Otu incoming alignment error alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-ais {
+                description 'Otu alarm indication signal alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-lof {
+                description 'Otu loss of transport unit frame'
+                            ;
+                type empty ;
+              }
+              leaf otu-los {
+                description 'Otu loss of transport unit signal'
+                            ;
+                type empty ;
+              }
+              leaf otu-sd {
+                description 'Otu transport unit signal degrade alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-sf {
+                description 'Otu transport unit signal fail alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-lom {
+                description 'Otu loss of multiframe alignment signal alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-biae {
+                description 'Otu backward incoming alignment error alam'
+                            ;
+                type empty ;
+              }
+              leaf otu-pre-fec-ber {
+                description 'Otu pre-fec error rate alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-post-fec-ber {
+                description 'Otu post-fec error rate alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-bei {
+                description 'Odu backward error indication alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-bdi {
+                description 'Odu backward defect indication alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-iae {
+                description 'Odu incoming alignment error alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-ais {
+                description 'Odu alarm indication signal alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-lck {
+                description 'Odu data unit locked alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-oci {
+                description 'Odu data unit open connection indication alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-ptim {
+                description 'Odu PM type identifier mismatch alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-sdber {
+                description 'Odu transport unit signal degrade alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-tim {
+                description 'Odu trace identifier mismatch alarm'
+                            ;
+                type empty ;
+              }
+              leaf odu-ssf {
+                description 'Odu transport unit signal fail alarm'
+                            ;
+                type empty ;
+              }
+            }
+          }
+          container otu {
+            description 'Optical channel transport unit.'
+                        ;
+            container fec {
+              description 'Configure the forward error correction mode.'
+                          ;
+              leaf fec-type {
+                description 'FEC type'
+                            ;
+                type enumeration {
+                  enum none {
+                    value 0 ;
+                    description 'No FEC'
+                                ;
+                  }
+                  enum standard {
+                    value 1 ;
+                    description 'Standard FEC, according to G.709'
+                                ;
+                  }
+                  enum efec-i-4 {
+                    value 2 ;
+                    description 'Enhanced FEC, according to G.957.1 I.4'
+                                ;
+                  }
+                  enum efec-i-7 {
+                    value 3 ;
+                    description 'Enhanced FEC, according to G.957.1 I.7'
+                                ;
+                  }
+                }
+                default standard ;
+              }
+              leaf scramble {
+                description 'Set scramble/descramble mode'
+                            ;
+                type enumeration {
+                  enum post-fec {
+                    value 0 ;
+                    description 'Transmission scrambling is performed after FEC'
+                              + ' insertion'
+                                ;
+                  }
+                  enum pre-fec {
+                    value 1 ;
+                    description 'Transmission scrambling is performed before FE'
+                              + 'C insertion'
+                                ;
+                  }
+                }
+                default post-fec ;
+              }
+            }
+            container report {
+              description 'Enable alarms to the console.'
+                          ;
+              leaf all {
+                description 'All otu alarm report'
+                            ;
+                type empty ;
+              }
+              leaf otu-tim {
+                description 'Trace identifier mismatch alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-bei {
+                description 'Backward error indication alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-bdi {
+                description 'Backward defect indication alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-iae {
+                description 'Incoming alignment error alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-ais {
+                description 'Alarm indication signal alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-lof {
+                description 'Loss of transport unit frame'
+                            ;
+                type empty ;
+              }
+              leaf otu-los {
+                description 'Loss of transport unit signal'
+                            ;
+                type empty ;
+              }
+              leaf otu-sd {
+                description 'Transport unit signal degrade alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-sf {
+                description 'Transport unit signal fail alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-lom {
+                description 'Loss of multiframe alignment signal alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-biae {
+                description 'Backward incoming alignment error alam'
+                            ;
+                type empty ;
+              }
+              leaf otu-pre-fec-ber {
+                description 'Pre-fec error rate alarm'
+                            ;
+                type empty ;
+              }
+              leaf otu-post-fec-ber {
+                description 'Post-fec error rate alarm'
+                            ;
+                type empty ;
+              }
+            }
+            container threshold {
+              description 'Configure the threshold for interface.'
+                          ;
+              container deg {
+                description 'OTU path signal degrade.'
+                            ;
+                presence deg ;
+                leaf bit-error-rate {
+                  description 'Bit-error-rate negative exponent of base 10'
+                              ;
+                  type uint8 {
+                    range 3..9 {
+                      description 'Bit-error-rate negative exponent of base 10'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+              container post-fec-ber {
+                description 'OTU BER after FEC correctation.'
+                            ;
+                presence post-fec-ber ;
+                leaf bit-error-rate {
+                  description 'Bit-error-rate negative exponent of base 10'
+                              ;
+                  type uint8 {
+                    range 3..9 {
+                      description 'Bit-error-rate negative exponent of base 10'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+              container pre-fec-ber {
+                description 'OTU BER before FEC correctation.'
+                            ;
+                presence pre-fec-ber ;
+                leaf bit-error-rate {
+                  description 'Bit-error-rate negative exponent of base 10'
+                              ;
+                  type uint8 {
+                    range 3..9 {
+                      description 'Bit-error-rate negative exponent of base 10'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+              container ssf {
+                description 'OTU path signal fail.'
+                            ;
+                presence ssf ;
+                leaf bit-error-rate {
+                  description 'Bit-error-rate negative exponent of base 10'
+                              ;
+                  type uint8 {
+                    range 3..9 {
+                      description 'Bit-error-rate negative exponent of base 10'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+            container tti {
+              description 'Configure the trail trace identifier.'
+                          ;
+              container expected {
+                description 'Configure expected TTI string.'
+                            ;
+                container dapi {
+                  description 'Destination access point identifier.'
+                              ;
+                  presence dapi ;
+                  leaf dapi-tti-string {
+                    description 'The dapi TTI string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..15 {
+                        description 'The dapi TTI string (max be 15 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container operator {
+                  description 'Operator specific identifier.'
+                              ;
+                  presence operator ;
+                  leaf operator-specific-identifier {
+                    description 'Operator specific identifier string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..32 {
+                        description 'Operator specific identifier string (max b'
+                                  + 'e 32 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container sapi {
+                  description 'Source access point identifier.'
+                              ;
+                  presence sapi ;
+                  leaf sapi-tti-string {
+                    description 'The sapi TTI string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..15 {
+                        description 'The sapi TTI string (max be 15 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+              container sent {
+                description 'Configure transmit TTI string.'
+                            ;
+                container dapi {
+                  description 'Destination access point identifier.'
+                              ;
+                  presence dapi ;
+                  leaf dapi-tti-string {
+                    description 'The dapi TTI string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..15 {
+                        description 'The dapi TTI string (max be 15 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container operator {
+                  description 'Operator specific identifier.'
+                              ;
+                  presence operator ;
+                  leaf operator-specific-identifier {
+                    description 'Operator specific identifier string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..32 {
+                        description 'Operator specific identifier string (max b'
+                                  + 'e 32 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container sapi {
+                  description 'Source access point identifier.'
+                              ;
+                  presence sapi ;
+                  leaf sapi-tti-string {
+                    description 'The sapi TTI string'
+                                ;
+                    type ncd:string-with-blank {
+                      length 1..15 {
+                        description 'The sapi TTI string (max be 15 characters)'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+            leaf tti-processing {
+              description 'Enable trail trace identifier mismatch alarm'
+                          ;
+              type empty ;
+            }
+          }
+          container wavelength {
+            description 'Configure the wave length on an OTN controller.'
+                        ;
+            leaf conventional-band-range {
+              description 'The range for conventional band'
+                          ;
+              type uint8 {
+                range 1..255 {
+                  description 'The range for conventional band'
+                              ;
+                }
+              }
+              default 1 ;
+            }
+          }
+        }
+        list status {
+          description 'Status of the interface.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type string ;
+          }
+          leaf off-line {
+            description 'Mark the selected interface is off-line'
+                        ;
+            type empty ;
+            mandatory true ;
+          }
+        }
+      }
+      container otn-phy-controller {
+        list otn-phy-foadx {
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type string ;
+          }
+          leaf optical-attenuation {
+            description 'Configures optical attenuation.'
+                        ;
+            type uint32 {
+              range 0..2000 {
+                description 'Range of optical attenuation.'
+                            ;
+              }
+            }
+          }
+          container power-adjust {
+            leaf relative {
+              description 'Configures power adjust relative.'
+                          ;
+              type int32 {
+                range -300..300 {
+                  description 'Range of power-adjust relative.'
+                              ;
+                }
+              }
+            }
+          }
+        }
+        list otn-phy-otdr {
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type string ;
+          }
+          leaf refractivity {
+            description 'Configures refractivity.'
+                        ;
+            type int32 {
+              range -20000..30000 {
+                description 'Range of refractivity.'
+                            ;
+              }
+            }
+            default 0 ;
+          }
+          leaf pulse-width {
+            description 'Configures pulse width.'
+                        ;
+            type uint32 {
+              range 0..20000 {
+                description 'Range of pulse width.'
+                            ;
+              }
+            }
+            default 0 ;
+          }
+          leaf fiber-length {
+            description 'Configures fiber length.'
+                        ;
+            type uint32 {
+              range 0..4000 {
+                description 'Range of fiber length.'
+                            ;
+              }
+            }
+            default 0 ;
+          }
+          leaf sample-time {
+            description 'Configures sample time.'
+                        ;
+            type uint32 {
+              range 0..300 {
+                description 'Range of sample time.'
+                            ;
+              }
+            }
+            default 0 ;
+          }
+          leaf loss-threshold {
+            description 'Configures loss threshold.'
+                        ;
+            type uint32 {
+              range 1..999 {
+                description 'Range of loss threshold.'
+                            ;
+              }
+            }
+            default 500 ;
+          }
+          leaf fiber-end-threshold {
+            description 'Configures fiber end threshold.'
+                        ;
+            type uint32 {
+              range 1..99 {
+                description 'Range of fiber end threshold.'
+                            ;
+              }
+            }
+            default 50 ;
+          }
+          leaf reflect-threshold {
+            description 'Configures reflect threshold.'
+                        ;
+            type int32 {
+              range -9900..-1000 {
+                description 'Range of reflect threshold.'
+                            ;
+              }
+            }
+            default -1000 ;
+          }
+          leaf reverse-refractivity {
+            description 'Configures reverse refractivity.'
+                        ;
+            type int32 {
+              range -10000..-4000 {
+                description 'Range of reverse refractivity'
+                            ;
+              }
+            }
+            default -4000 ;
+          }
+        }
+        ncd:revise-date 2019-01-28 ;
+      }
+    }
+  }
+  container operation {
+    config false ;
+    container pm-controller {
+      container start-alss {
+        list start-als {
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type string ;
+          }
+          leaf als {
+            description 'Set recovery mode.'
+                        ;
+            type enumeration {
+              enum manual {
+                value 0 ;
+                description 'Manual impulse.'
+                            ;
+              }
+              enum testing {
+                value 1 ;
+                description 'Testing impulse.'
+                            ;
+              }
+            }
+          }
+        }
+      }
+      container expire-holdtimes {
+        list expire-holdtime {
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type string ;
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    container pm-controller {
+      container controller-flags {
+        list controller-flag {
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf au4-number {
+            description 'Au4 number'
+                        ;
+            type uint8 ;
+          }
+          leaf c2rx {
+            type ncd:string-all ;
+          }
+          leaf j0rx {
+            type ncd:string-all ;
+          }
+          leaf j1rx {
+            type ncd:string-all ;
+          }
+        }
+      }
+      container e1-flags {
+        list e1-flag {
+          key 'if-name au4-number tug3-number tug2-number e1-number'
+              ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf au4-number {
+            description 'Au4 number'
+                        ;
+            type uint8 ;
+          }
+          leaf tug3-number {
+            description 'Tug3 number'
+                        ;
+            type uint8 ;
+          }
+          leaf tug2-number {
+            description 'Tug2 number'
+                        ;
+            type uint8 ;
+          }
+          leaf e1-number {
+            description 'E1 number'
+                        ;
+            type uint8 ;
+          }
+          leaf v5rx {
+            type ncd:string-all ;
+          }
+          leaf j2rx {
+            type ncd:string-all ;
+          }
+        }
+      }
+    }
+  }
+}

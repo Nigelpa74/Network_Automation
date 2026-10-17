@@ -1,0 +1,108 @@
+module spn-dcn-ne {
+  namespace "urn:cmcc:yang:spn-dcn-ne";
+  prefix "spn-dcn-ne";
+
+  organization
+    "China Mobile Communications Corporation (CMCC)";
+  contact
+    "wangminxue@chinamobile.com";
+  description    
+    "spn dcn network element management, which gets new network elements and sends to the OMC.";
+		
+  import ietf-yang-types {
+    prefix "yang";
+  }
+  
+  import ietf-inet-types {
+    prefix "inet";
+  }
+  
+  revision 2019-07-31 {
+    description
+     "Initial modeling.";
+  }
+
+  grouping dcn-ne-parameters {
+    description
+      "Parameters for DCN-NE.";
+    leaf chassis-id {
+      type yang:mac-address;
+
+      description
+        "The string value used to identify the chassis component
+         associated with the local system.";
+    }
+	
+    leaf system-name {
+      type string {
+        length "0..255";
+      }
+      description
+        "The string value used to identify the system name of the
+         local system.  If the local agent supports IETF RFC 3418,
+         lldpLocSysName object should have the same value of sysName
+         object.";
+    }
+	
+    leaf system-description {
+      type string {
+        length "0..255";
+      }
+      description
+        "The string value used to identify the system description
+         of the local system.  If the local agent supports IETF RFC 3418,
+         lldpLocSysDesc object should have the same value of sysDesc
+         object.";
+    }
+
+    leaf management-address-ipv6 {
+      type inet:ipv6-address;
+	  
+      description
+        "Management address for IPv6.
+	 The string value used to identify the management address
+         component associated with the remote system.  The purpose
+         of this address is to contact the management entity.";
+    }
+
+    leaf management-address-ipv4 {
+      type inet:ipv4-address;
+	  
+      description
+        "Management address for IPv4.
+	 The string value used to identify the management address
+         component associated with the remote system.  The purpose
+         of this address is to contact the management entity.";
+    }    
+    
+  }
+
+  container dcn-nes {
+      config false;
+
+      list dcn-ne {
+        key "chassis-id";
+          uses dcn-ne-parameters;
+      }
+  }
+  
+ 
+  container dcn-ne-ipv6 {
+
+    leaf ipv6-address {
+      type inet:ipv6-address;
+    }
+
+    leaf prefix-length {
+      type uint8{
+        range "0..128";
+      }
+    }
+
+  }
+
+  notification dcn-events-notification {
+      uses dcn-ne-parameters; 
+  }
+}
+

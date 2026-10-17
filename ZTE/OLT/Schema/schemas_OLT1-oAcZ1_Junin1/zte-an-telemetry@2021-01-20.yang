@@ -1,0 +1,96 @@
+module zte-an-telemetry {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/telemetry'
+            ;
+  prefix telemetry ;
+  organization 'ZTE Corporation'
+               ;
+  contact 'Lu Bingbing     ZTE Corporation'+"\n"
+        + 'Mail: lu.bingbing'+"\n"
+        + 'Tel : +86-21-68897487'
+          ;
+  description 'Configuring the telemetry distributed-mode.'
+              ;
+  revision 2021-01-20 {
+    description 'Telmetryperf operation commands.'
+                ;
+  }
+  container zxAnTelemetryObjects {
+    description ''
+                ;
+    container TELEMETRY_DISTRIBUTED_MODE_CFG {
+      description 'Configuring the enable switch and maximum udp-payload-length'
+                + ' of the telemetry distributed-mode'
+                  ;
+      leaf isEnable {
+        description 'Enable or disable the telemetry distributed-mode'
+                    ;
+        type enumeration {
+          enum enabled {
+            value 1 ;
+            description ''
+                        ;
+          }
+          enum disabled {
+            value 2 ;
+            description ''
+                        ;
+          }
+        }
+        default enabled ;
+      }
+      leaf maxUdpPayloadLength {
+        description 'Specifies the telemetry distributed-mode max-udp-payload-l'
+                  + 'ength'
+                    ;
+        type int32 {
+          range 1480..30000 ;
+        }
+        default 7400 ;
+      }
+    }
+    container zxAnDistributedModeUdpTable {
+      list zxAnDistributedModeUdpInterface {
+        description 'Config Distributed Mode Udp Interface'
+                    ;
+        key zxAnVrfVpnId ;
+        max-elements 2 ;
+        leaf zxAnVrfVpnId {
+          description 'VPN identifier value.'
+                      ;
+          type int32 {
+            range 0..1024 ;
+          }
+        }
+        leaf zxAnIpMtuLength {
+          description 'IP MTU(bytes).'
+                      ;
+          type int32 {
+            range 512..3000 ;
+          }
+          default 1500 ;
+        }
+        leaf zxAnVrfConfigStatus {
+          config false ;
+          type enumeration {
+            enum CONFIGING {
+              value 0 ;
+              description 'The mux interface status is configing.'
+                          ;
+            }
+            enum SUCCESSED {
+              value 1 ;
+              description 'The mux interface status is successed.'
+                          ;
+            }
+            enum FAILED {
+              value 2 ;
+              description 'The mux interface status is failed.'
+                          ;
+            }
+          }
+          default CONFIGING ;
+        }
+      }
+    }
+  }
+}

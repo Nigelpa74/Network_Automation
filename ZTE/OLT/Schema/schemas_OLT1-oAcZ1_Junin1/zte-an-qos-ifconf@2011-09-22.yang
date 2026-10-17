@@ -1,0 +1,363 @@
+module zte-an-qos-ifconf {
+    namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/zte-an-qos-if';
+    prefix zte-an-qos-if;
+    import zxr10-netconf-defs {
+        prefix ncd;
+        revision-date 2017-08-15;
+    }
+    organization "ZTE Corporation";
+    contact "Luo Feima     ZTE Corporation
+                    Mail : luo.feima@zte.com.cn
+                    Tel  : +86-21-68896470.";
+    description "This MIB defines ZTE Access Node QoS Traffic managed objects.";
+    revision 2011-09-22 {
+        description "Modification of some spelling error for this MIB module.";
+    }
+    revision 2011-08-25 {
+        description "Modification of the descriptions for this MIB module.";
+    }
+    revision 2011-08-19 {
+        description "Modification of the comments for this MIB module.";
+    }
+    revision 2011-07-05 {
+        description "Conformance supplement for this MIB module.";
+    }
+    revision 2010-10-28 {
+        description "Initial version of this MIB module.";
+    }
+    container zxAnQos {
+        description "";
+        container zxAnQosObjects {
+            description "";
+            container zxAnQosIfObjects {
+                description "";
+                container zxAnQosIfConfTable {
+                    description "This table contains configuration data for interface, include
+                                 ethernet interface, GPON OLT and ONU interface.";
+                    list zxAnQosIfConfEntry {
+                        description "An entry in zxAnQosIfConfTable.
+                                     This table contains QoS configuration parameters for physical
+                                     interface (include ethernet interface and GPON OLT interface)
+                                     and GPON ONU interface.
+                                     
+                                     For ethernet interface, parameters can be configured include
+                                     zxAnQosIfRateLimit, zxAnQosIfBucketSize, zxAnQosIfTrustMode,
+                                     zxAnQosIfDefaultCos, zxAnQosIfDscpToDscpPrf, zxAnQosIfDscpToCosPrf,
+                                     zxAnQosIfDscpToDropPrecedencePrf and zxAnQosIfQueueBlockPrf.
+                                     Variables zxAnQosIfRateLimit and zxAnQosIfBucketSize must be
+                                     configured bindingly. Notice that elements of zxAnQosQueueDepth
+                                     in the configuring zxAnQosIfQueueBlockPrf should between 5 and 14,
+                                     or all zreos.
+                                     
+                                     For ethernet interface of C600 series, parameters can be
+                                     configured include zxAnQosIfTrustMode, zxAnQosIfDefaultCos,
+                                     zxAnQosIfCosToCosPrf, zxAnQosIfDscpToDscpPrf,
+                                     zxAnQosIfDscpToCosPrf, zxAnQosIfCosOverride,
+                                     zxAnQosIfEgressCosToCosPrf, zxAnQosIfEgressDscpToCosPrf,
+                                     and zxAnQosIfQueueConfPrf.
+                                     
+                                     For PTP interface, besides the parameters that can be
+                                     configured to ethernet interface, three more parameters can be 
+                                     configured include zxAnQosIfIngressRateLimit, 
+                                     zxAnQosIfIngressBucketSize and zxAnQosIfQueueMapPrf.
+                                     Variables zxAnQosIfIngressRateLimit and zxAnQosIfIngressBucketSize
+                                     must be configured bindingly.
+                                     Notice that zxAnQosIfQueueMapPrf configured to this interface, its
+                                     zxAnQosQueueMapMode can only be set to cos or serviceType.
+                                     
+                                     For GPON OLT interface, parameters can be configured include
+                                     zxAnQosIfQueueBlockPrf and zxAnQosIfQueueMapPrf.
+                                     Notice that zxAnQosIfQueueMapPrf configured to this interface, its
+                                     zxAnQosQueueMapMode can only be set to cos or serviceType.
+                                     
+                                     For GPON ONU interface, parameters can be configured include
+                                     zxAnQosIfTrustMode, zxAnQosIfCosFilter, zxAnQosIfDefaultCos, 
+                                     zxAnQosIfEgressDefaultCos, zxAnQosIfCosToCosPrf, 
+                                     zxAnQosIfDscpToCosPrf, zxAnQosIfCosOverride, 
+                                     zxAnQosIfEgressCosOverride, zxAnQosIfQueueBlockPrf,
+                                     zxAnQosIfQueueMapPrf, zxAnQosIfEgressCosToCosPrf 
+                                     and zxAnQosIfEgressDscpToCosPrf.
+                                     
+                                     For GPON ONU interface of C600 series, parameters can be
+                                     configured include zxAnQosIfTrustMode, zxAnQosIfDefaultCos,
+                                     zxAnQosIfCosToCosPrf, zxAnQosIfDscpToDscpPrf,
+                                     zxAnQosIfDscpToCosPrf, zxAnQosIfCosOverride,
+                                     zxAnQosIfEgressCosToCosPrf, zxAnQosIfEgressDscpToCosPrf,
+                                     and zxAnQosIfQueueConfPrf.";
+                        max-elements 65535;
+                        key "ifIndex zxAnSubIfIndex";
+                        leaf ifIndex {
+                            description "A unique value, greater than zero, for each interface.  It
+                                         is recommended that values are assigned contiguously
+                                         starting from 1.  The value for each interface sub-layer
+                                         must remain constant at least from one re-initialization of
+                                         the entity's network management system to the next re-
+                                         initialization.";
+                            type int32 {
+                                range 1..2147483647;
+                            }
+                        }
+                        leaf zxAnSubIfIndex {
+                            description "Sub-interface index at this interface.";
+                            type int32;
+                        }
+                        leaf zxAnQosIfRateLimit {
+                            description "The rate-limit of interface's shaping, 0 means not limit,
+                                         2147483647(0x7fffffff) means not support. Valid for ethernet
+                                         interface.";
+                            type int32 {
+                                range 0|64..10000000|2147483647;
+                            }
+                            default 0;
+                        }
+                        leaf zxAnQosIfBucketSize {
+                            description "The bucket-size of interface's shaping, 0 means not shaping,
+                                         2147483647(0x7fffffff) means not support. Valid for ethernet
+                                         interface.";
+                            type int32 {
+                                range 0|4..16000|2147483647;
+                            }
+                            default 0;
+                        }
+                        leaf zxAnQosIfTrustMode {
+                            description "Trust cos or trust dscp. Not support for gpon olt interface.";
+                            type enumeration {
+                                enum cos {
+                                    value 1;
+                                    description "";
+                                }
+                                enum dscp {
+                                    value 2;
+                                    description "";
+                                }
+                                enum notSupport {
+                                    value 255;
+                                    description "";
+                                }
+                            }
+                            default cos;
+                        }
+                        leaf zxAnQosIfCosFilter {
+                            description "Enable or disable CoS filter.";
+                            type enumeration {
+                                enum enable {
+                                    value 1;
+                                    description "";
+                                }
+                                enum disable {
+                                    value 2;
+                                    description "";
+                                }
+                                enum notSupport {
+                                    value 255;
+                                    description "";
+                                }
+                            }
+                            default disable;
+                        }
+                        leaf zxAnQosIfDefaultCos {
+                            description "Default CoS, 255 means not support.
+                                         This object is valid only when zxAnQosIfTrustMode is set to CoS.";
+                            type int32 {
+                                range 0..7|255;
+                            }
+                            default 0;
+                        }
+                        leaf zxAnQosIfCtagDefaultCos {
+                            description "Default CtagCoS value, 255 means not support.
+                                         This object is valid only when zxAnQosIfTrustMode is set to CoS.";
+                            type int32 {
+                                range 0..7|255;
+                            }
+                            default 0;
+                        }
+                        leaf zxAnQosIfCosToCosPrf {
+                            description "CoS to CoS mapping profile name.
+                                         An empty string means unsupported. 
+                                         Valid for gpon onu interface.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfDscpToDscpPrf {
+                            description "DSCP remarking profile name.
+                                         This object is valid only when zxAnQosIfTrustMode is set to dscp.
+                                         An empty string means unsupported. ";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfDscpToCosPrf {
+                            description "DSCP to CoS mapping profile name.
+                                         This object is valid only when zxAnQosIfTrustMode is set to dscp.
+                                         An empty string means unsupported.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfDscpToDropPrecedencePrf {
+                            description "DSCP to drop precedence mapping profile name.
+                                         This object is valid only when zxAnQosIfTrustMode is
+                                         set to dscp. An empty string means unsupported. Valid for ethernet
+                                         interface only.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfEgressDefaultCos {
+                            description "Egress default CoS vlaue, 255 means not support.";
+                            type int32 {
+                                range 0..7|255;
+                            }
+                            default 0;
+                        }
+                        leaf zxAnQosIfCosOverride {
+                            description "Enable or disable CoS Override.";
+                            type enumeration {
+                                enum enable {
+                                    value 1;
+                                    description "";
+                                }
+                                enum disable {
+                                    value 2;
+                                    description "";
+                                }
+                                enum notSupport {
+                                    value 255;
+                                    description "";
+                                }
+                            }
+                            default disable;
+                        }
+                        leaf zxAnQosIfCtagCosOverride {
+                            description "Enable or disable CtagCoS Override.";
+                            type enumeration {
+                                enum enable {
+                                    value 1;
+                                    description "";
+                                }
+                                enum disable {
+                                    value 2;
+                                    description "";
+                                }
+                                enum notSupport {
+                                    value 255;
+                                    description "";
+                                }
+                            }
+                            default disable;
+                        }
+                        leaf zxAnQosIfEgressCosOverride {
+                            description "Enable or disable Egress CoS Override.";
+                            type enumeration {
+                                enum enable {
+                                    value 1;
+                                    description "";
+                                }
+                                enum disable {
+                                    value 2;
+                                    description "";
+                                }
+                                enum notSupport {
+                                    value 255;
+                                    description "";
+                                }
+                            }
+                            default disable;
+                        }
+                        leaf zxAnQosIfCtagCosToCosPrf {
+                            description "C-tag CoS to CoS mapping profile name.            
+                                         An empty string means unsupported.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfCtagDscpToCosPrf {
+                            description "C-tag DSCP to CoS mapping profile name.
+                                         An empty string means unsupported.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfEgressCosToCosPrf {
+                            description "Egress CoS to CoS mapping profile name.
+                                         An empty string means unsupported.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfEgressDscpToCosPrf {
+                            description "Egress DSCP to CoS mapping profile name.
+                                         An empty string means unsupported.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfQueueBlockPrf {
+                            description "Queue blocking profile name.
+                                         An empty string means unsupported.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfQueueMapPrf {
+                            description "Queue mapping profile name.
+                                         Notice that if the interface type is Ethernet(exclude the PTP 
+                                         card), configure zxAnQosEthCosToQueue instead of this object. 
+                                         An empty string means unsupported.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfIngressRateLimit {
+                            description "Ingress rate limit.
+                                         Value 0 means not limit.
+                                         Value 2147483647(0x7fffffff) means not support.";
+                            type int32 {
+                                range 0|64..10000000|2147483647;
+                            }
+                            default 0;
+                        }
+                        leaf zxAnQosIfIngressBucketSize {
+                            description "Ingress bucket size.
+                                         Value 0 means no shaping.
+                                         Value 2147483647(0x7fffffff) means not support.";
+                            type int32 {
+                                range 0|4..16000|2147483647;
+                            }
+                            default 0;
+                        }
+                        leaf zxAnQosIfQueueWredPrf {
+                            description "Queue WRED profile name.
+                                         An empty string means unsupported.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfCosToDropPrecedencePrf {
+                            description "CoS to drop precedence mapping profile name.
+                                         An empty string means unsupported.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfQueueWredIIPrf {
+                            description "WRED profile name.
+                                         An empty string means unsupported.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                        leaf zxAnQosIfQueueConfPrf {
+                            description "Queue configuration profile name.
+                                         An empty string means unsupported.";
+                            type string {
+                                length 0..32;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

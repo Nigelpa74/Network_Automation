@@ -1,0 +1,769 @@
+module zte-an-mld {
+    namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/zx_mld';
+    prefix zx_mld;
+    import zxr10-netconf-defs {
+        prefix ncd;
+        revision-date 2017-08-15;
+    }
+    organization "ZTE Corporation";
+    contact "Weng Ningning  ZTE Corporation
+                         Mail: wen.ningning@zte.com.cn
+                         Tel : +86-21-68897487";
+    description "This MIB defines Description of zte mld service 
+                 objects.";
+    revision 2011-12-27 {
+        description "Initial version of this MIB module.";
+    }
+    container zxAnMld {
+        description "";
+        container zxAnMldObjects {
+            description "";
+            container zxAnMldProtocolObjects {
+                description "";
+                container zxAnMldProtoBaseObjects {
+                    description "";
+                    container zxAnMldProtoGlobalObjects {
+                        description "";
+                        leaf zxAnMldEnable {
+                            description "The administrative status of global MLD service.";
+                            type enumeration {
+                                enum enabled {
+                                    value 1;
+                                    description "";
+                                }
+                                enum disabled {
+                                    value 2;
+                                    description "";
+                                }
+                            }
+                            default disabled;
+                        }
+                    }
+                    container zxAnMldProtoIfTable {
+                        description "A table that contains all MLD protocol information of an user 
+                                     interface.";
+                        list zxAnMldProtoIfEntry {
+                            description "A list of entries of zxAnMldProtoIfTable.";
+                            max-elements 1000;
+                            key "ifIndex zxAnSubIfIndex";
+                            leaf ifIndex {
+                                description "A unique value, greater than zero, for each interface.  It
+                                             is recommended that values are assigned contiguously
+                                             starting from 1.  The value for each interface sub-layer
+                                             must remain constant at least from one re-initialization of
+                                             the entity's network management system to the next re-
+                                             initialization.";
+                                type int32 {
+                                    range 1..2147483647;
+                                }
+                            }
+                            leaf zxAnSubIfIndex {
+                                description "Sub-interface index at this interface.";
+                                type int32;
+                            }
+                            leaf zxAnMldIfAdminStatus {
+                                description "The administrative status of port's MLD service.
+                                             The value 255 means the object is not supported.";
+                                type enumeration {
+                                    enum enabled {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum drop {
+                                        value 3;
+                                        description "";
+                                    }
+                                    enum notSupport {
+                                        value 255;
+                                        description "";
+                                    }
+                                }
+                                default enabled;
+                            }
+                            leaf zxAnMldIfProtoVersion {
+                                description "The max version of MLD protocol which is supported on this port.
+                                             The value 255 means the object is not supported.";
+                                type enumeration {
+                                    enum mldv1 {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum mldv2 {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum notSupport {
+                                        value 255;
+                                        description "";
+                                    }
+                                }
+                                default mldv2;
+                            }
+                            leaf zxAnMldIfFastLeaveEnable {
+                                description "The administrative status of port's fast-leave property.
+                                             The value 255 means the object is not supported.";
+                                type enumeration {
+                                    enum enabled {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum disabled {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum notSupport {
+                                        value 255;
+                                        description "";
+                                    }
+                                }
+                                default enabled;
+                            }
+                            leaf zxAnMldIfBandwidth {
+                                description "Multicast bandwidth of this port.
+                                             Uplink port/PON port: The valid range is 10240~10240000 kbps, and 
+                                             the default value is 1024000 kbps.
+                                             VPort: The valid range is 100~204800 kbps, and the default value 
+                                             is 102400 kbps.
+                                             The value 2147483647 means the object is not supported.";
+                                type int32 {
+                                    range 100..10240000|2147483647;
+                                }
+                            }
+                            leaf zxAnMldIfMaxGroups {
+                                description "Maximum multicast groups that the port may join. 
+                                             The value 0 means the port cannot join any groups.
+                                             The value 2147483647 means the object is not supported.";
+                                type int32 {
+                                    range 0..8192|2147483647;
+                                }
+                                default 8192;
+                            }
+                        }
+                    }
+                    container zxAnMldProtoMVlanTable {
+                        description "A table that contains MLD protocol information in Multicast
+                                     VLAN.";
+                        list zxAnMldProtoMVlanEntry {
+                            description "A list of entries of zxAnMldProtoMVlanTable.";
+                            max-elements 1000;
+                            key "zxAnMldMVid";
+                            leaf zxAnMldMVid {
+                                description "Multicast VLAN ID.";
+                                type int32 {
+                                    range 1..4094;
+                                }
+                            }
+                            leaf zxAnMldMVlanMldAdminStatus {
+                                description "The administrative status of MLD service in this MVLAN.";
+                                type enumeration {
+                                    enum enabled {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum drop {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default enabled;
+                            }
+                            leaf zxAnMldMVlanMldV1OperMode {
+                                description "The operational mode of MLD v1 packet.";
+                                type enumeration {
+                                    enum accept {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum drop {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default accept;
+                            }
+                            leaf zxAnMldMVlanMldV2OperMode {
+                                description "The operational mode of MLD v2 packet.";
+                                type enumeration {
+                                    enum accept {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum drop {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default accept;
+                            }
+                            leaf zxAnMldMVlanMldWorkMode {
+                                description "The MLD work mode in this MVLAN. The meanings of the values
+                                             are:
+                                             snooping(1) - transparently forward MLD packet, snooping
+                                             is defined in RFC 4541 and TR-101.
+                                             spr(2) - transparently forward MLD general query and
+                                             suppress MLD report/leave for existing group membership,
+                                             SPR(Snooping with Proxy Reporting) is defined in TR-101.
+                                             proxy(3) - act as a host on the V interface and act as a
+                                             router on the U interface, proxy is defined in RFC4605.
+                                             router(4) - act as a terminal on the V interface and act as a
+                                             router on the U interface, router is defined in TR-101.";
+                                type enumeration {
+                                    enum snooping {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum spr {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum proxy {
+                                        value 3;
+                                        description "";
+                                    }
+                                    enum router {
+                                        value 4;
+                                        description "";
+                                    }
+                                }
+                                default proxy;
+                            }
+                            leaf zxAnMldMVlanMldSsmCtrlMode {
+                                description "The ASM/SSM service control model. The meanings of the values
+                                             are:
+                                             asm(1) - only ASM(*, G) requests are permitted, ASM(Any-
+                                             Source Multicast) is defined in RFC 1112.
+                                             ssm(2) - only SSM(S, G) requests are permitted, SSM(Source-
+                                             Specific Multicast) is defined in RFC 3569.
+                                             asmAndSsm(3) --- both ASM and SSM requests are permitted.";
+                                type enumeration {
+                                    enum asm {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum ssm {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum asmAndSsm {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default asmAndSsm;
+                            }
+                            leaf zxAnMldMVlanMldSsmIpAddr {
+                                description "The SSM IP address in this MVLAN.
+                                             All SSM(S, G) request must be in the same IP network segment as
+                                             the configued SSM IP address and netmask.";
+                                type ncd:ipv6-address;
+                            }
+                            leaf zxAnMldMVlanMldSsmIpAddrMask {
+                                description "The mask of SSM IP address in this MVLAN.
+                                             All SSM(S, G) request must be in the same IP network segment as
+                                             the configued SSM IP address and netmask.";
+                                type ncd:ipv6-address;
+                            }
+                            leaf zxAnMldMVlanMldCVid {
+                                description "Multicast C-VID.
+                                             Value 0 means no C-VID tag.";
+                                type int32 {
+                                    range 0..4094;
+                                }
+                                default 0;
+                            }
+                            leaf zxAnMldMvlanMldMaxGroups {
+                                description "Maximum multicast groups that the MVLAN may join. The value 0 means 
+                                             the MVLAN cannot join any groups.";
+                                type int32 {
+                                    range 0..8192;
+                                }
+                                default 8192;
+                            }
+                            leaf zxAnMldMVlanGenQryPktTxGrpMode {
+                                description "The general query packets transmission group mode only on pon
+                                             interfaces.";
+                                type enumeration {
+                                    enum usersInGroup {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum allUsers {
+                                        value 2;
+                                        description "";
+                                    }
+                                }
+                                default usersInGroup;
+                            }
+                        }
+                    }
+                }
+                container zxAnMldProxyObjects {
+                    description "";
+                    container zxAnMldProxyMVlanTable {
+                        description "A table that contains MLD proxy informations in Multicast
+                                     VLAN.";
+                        list zxAnMldProxyMVlanEntry {
+                            description "A list of entries of zxAnMldProxyMVlanTable.";
+                            max-elements 1000;
+                            key "zxAnMldMVid";
+                            leaf zxAnMldMVid {
+                                description "Multicast VLAN ID.";
+                                type int32 {
+                                    range 1..4094;
+                                }
+                            }
+                            leaf zxAnMldMVlanRobustnessVariable {
+                                description "MLD robustness variable in the MVLAN.";
+                                type int32 {
+                                    range 1..7;
+                                }
+                                default 2;
+                            }
+                            leaf zxAnMldMVlanHostVersion {
+                                description "The administrative version of MLD packet sent on the host
+                                             interface.
+                                             auto(1) - MLD host version is dynamicly determined by
+                                             the attached router version, according to MLD Host
+                                             Compatibility Mode described in RFC 3810.
+                                             mldv1(2) - MLD host version is MLD v1.
+                                             mldv2(3) - MLD host version is MLD v2.";
+                                type enumeration {
+                                    enum auto {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum mldv1 {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum mldv2 {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default auto;
+                            }
+                            leaf zxAnMldMVlanHostIpAddr {
+                                description "The source IP address of MLD packet sent on the host
+                                             interface.";
+                                type ncd:ipv6-address;
+                            }
+                            leaf zxAnMldMVlanUnsolReportInterval {
+                                description "MLD unsolicited report interval in the MVLAN.";
+                                type int32 {
+                                    range 1..60;
+                                }
+                                default 1;
+                            }
+                            leaf zxAnMldMVlanHostQuerier {
+                                description "The IP address of the MLD Querier attached on the host
+                                             interface which is learned from received MLD general query.";
+                                type ncd:ipv6-address;
+                            }
+                            leaf zxAnMldMVlanHostActualVersion {
+                                description "The running version of MLD packet sent on the host interface.";
+                                type enumeration {
+                                    enum mldv1 {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum mldv2 {
+                                        value 2;
+                                        description "";
+                                    }
+                                }
+                                default mldv2;
+                            }
+                            leaf zxAnMldMVlanHostV1QuerierTimer {
+                                description "The time remaining until the host assumes that there are
+                                             no MLDv1 routers present on the interface.  While this is
+                                             non-zero, the host will reply to all queries with version 1
+                                             membership reports.  This variable applies to MLDv2 hosts
+                                             that are forced to run in v1 for compatibility with
+                                             v1 routers present on the host interface.";
+                                type uint32;
+                                default 0;
+                            }
+                            leaf zxAnMldMVlanRouterIpAddr {
+                                description "The source IP address of MLD query packet sent on the router
+                                             interface.";
+                                type ncd:ipv6-address;
+                            }
+                            leaf zxAnMldMVlanQueryInterval {
+                                description "MLD general query interval in the MVLAN.";
+                                type int32 {
+                                    range 30..300;
+                                }
+                                default 125;
+                            }
+                            leaf zxAnMldMVlanQueryRespInterval {
+                                description "MLD query max response time in the MVLAN.";
+                                type int32 {
+                                    range 1000..25000;
+                                }
+                                default 10000;
+                            }
+                            leaf zxAnMldMVlanLastMemberQryIntvl {
+                                description "MLD last member query interval in the MVLAN.";
+                                type int32 {
+                                    range 100..25500;
+                                }
+                                default 1000;
+                            }
+                            leaf zxAnMldMVlanLastMemberQryCount {
+                                description "MLD last member query count in the MVLAN.";
+                                type int32 {
+                                    range 2..5;
+                                }
+                                default 2;
+                            }
+                            leaf zxAnMldMVlanStartUpQryInterval {
+                                description "MLD startup query interval in the MVLAN.
+                                             When system is start up or port is up";
+                                type int32 {
+                                    range 1..100;
+                                }
+                                default 30;
+                            }
+                            leaf zxAnMldMVlanStartUpQryCount {
+                                description "MLD startup query count in the MVLAN.";
+                                type int32 {
+                                    range 0..10;
+                                }
+                                default 2;
+                            }
+                            leaf zxAnMldMVlanMldPacketPriority {
+                                description "802.1p priority of MLD packet sent by the device.
+                                             Note that it only takes effect in proxy and SPR mode.";
+                                type int32 {
+                                    range 0..7;
+                                }
+                                default 0;
+                            }
+                            leaf zxAnMldMVlanQryPktProtoVersion {
+                                description "The version of MLD general query packet.
+                                             mldv1(1) - MLDv1.
+                                             mldv2(2) - MLDv2.";
+                                type enumeration {
+                                    enum mldv1 {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum mldv2 {
+                                        value 2;
+                                        description "";
+                                    }
+                                }
+                                default mldv1;
+                            }
+                            leaf zxAnMldMVlanMldPktTrafficClass {
+                                description "Traffic class of MLD packet sent by the device.
+                                             Note that it only takes effect in proxy and SPR mode.";
+                                type int32 {
+                                    range 0..255;
+                                }
+                                default 192;
+                            }
+                        }
+                    }
+                }
+            }
+            container zxAnMldMgmtObject {
+                description "";
+                container zxAnMldMgmtMVlanTable {
+                    description "A table used to create or remove MVLAN.";
+                    list zxAnMldMgmtMVlanEntry {
+                        description "A list of entries of zxAnMldMgmtMVlanTable.";
+                        max-elements 1000;
+                        key "zxAnMldMVid";
+                        leaf zxAnMldMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf zxAnMldMVlanGroupFilterEnable {
+                            description "The administrative status of group filter in the MVLAN.";
+                            type enumeration {
+                                enum enabled {
+                                    value 1;
+                                    description "";
+                                }
+                                enum disabled {
+                                    value 2;
+                                    description "";
+                                }
+                            }
+                            default enabled;
+                        }
+                    }
+                }
+                container zxAnMldMgmtMVlanRecvIfTable {
+                    description "A Table used to add or delete receiving port in a MVLAN.";
+                    list zxAnMldMgmtMVlanRecvIfEntry {
+                        description "A list of entries of zxAnMldMgmtMVlanRecvIfTable.";
+                        max-elements 1000;
+                        key "zxAnMldMVid ifIndex zxAnSubIfIndex";
+                        leaf zxAnMldMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf ifIndex {
+                            description "A unique value, greater than zero, for each interface.  It
+                                         is recommended that values are assigned contiguously
+                                         starting from 1.  The value for each interface sub-layer
+                                         must remain constant at least from one re-initialization of
+                                         the entity's network management system to the next re-
+                                         initialization.";
+                            type int32 {
+                                range 1..2147483647;
+                            }
+                        }
+                        leaf zxAnSubIfIndex {
+                            description "Sub-interface index at this interface.";
+                            type int32;
+                        }
+                    }
+                }
+                container zxAnMldMgmtMVlanSrcIfTable {
+                    description "A Table used to add or delete source port in a MVLAN.";
+                    list zxAnMldMgmtMVlanSrcIfEntry {
+                        description "A list of entries of zxAnMldMgmtMVlanSrcIfTable.";
+                        max-elements 1000;
+                        key "zxAnMldMVid ifIndex zxAnSubIfIndex";
+                        leaf zxAnMldMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf ifIndex {
+                            description "A unique value, greater than zero, for each interface.  It
+                                         is recommended that values are assigned contiguously
+                                         starting from 1.  The value for each interface sub-layer
+                                         must remain constant at least from one re-initialization of
+                                         the entity's network management system to the next re-
+                                         initialization.";
+                            type int32 {
+                                range 1..2147483647;
+                            }
+                        }
+                        leaf zxAnSubIfIndex {
+                            description "Sub-interface index at this interface.";
+                            type int32;
+                        }
+                    }
+                }
+                container zxAnMldMgmtGroupFilterTable {
+                    description "A table used to add or delete group-filter group segment.";
+                    list zxAnMldMgmtGroupFilterEntry {
+                        description "A list of entries of zxAnMldMgmtGroupFilterTable.";
+                        max-elements 1000;
+                        key "zxAnMldMVid zxAnMldGroupFilterStartGrpIp zxAnMldGroupFilterEndGrpIp";
+                        leaf zxAnMldMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf zxAnMldGroupFilterStartGrpIp {
+                            description "Start group ip address of a group segment.";
+                            type ncd:ipv6-address;
+                        }
+                        leaf zxAnMldGroupFilterEndGrpIp {
+                            description "End group ip address of a group segment.";
+                            type ncd:ipv6-address;
+                        }
+                    }
+                }
+                container zxAnMldMgmtGroupStaticIfTable {
+                    description "A table used to bind or unbind static receiving port to or from 
+                                 multicast group.";
+                    list zxAnMldMgmtGroupStaticIfEntry {
+                        description "A list of entries of zxAnMldMgmtGroupStaticIfTable.";
+                        max-elements 1000;
+                        key "zxAnMldMVid zxAnMldGroupIpAddr zxAnMldSourceIpAddr ifIndex zxAnSubIfIndex";
+                        leaf zxAnMldMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf zxAnMldGroupIpAddr {
+                            description "Multicast group IP Address.";
+                            type ncd:ipv6-address;
+                        }
+                        leaf zxAnMldSourceIpAddr {
+                            description "Multicast source IP Address.";
+                            type ncd:ipv6-address;
+                        }
+                        leaf ifIndex {
+                            description "A unique value, greater than zero, for each interface.  It
+                                         is recommended that values are assigned contiguously
+                                         starting from 1.  The value for each interface sub-layer
+                                         must remain constant at least from one re-initialization of
+                                         the entity's network management system to the next re-
+                                         initialization.";
+                            type int32 {
+                                range 1..2147483647;
+                            }
+                        }
+                        leaf zxAnSubIfIndex {
+                            description "Sub-interface index at this interface.";
+                            type int32;
+                        }
+                    }
+                }
+                container zxAnMldMgmtGroupConfTable {
+                    description "A table used to configure multicast group information.";
+                    list zxAnMldMgmtGroupConfEntry {
+                        description "A list of entries of zxAnMldMgmtGroupConfTable.";
+                        max-elements 1000;
+                        key "zxAnMldMVid zxAnMldGroupIpAddr zxAnMldSourceIpAddr";
+                        leaf zxAnMldMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf zxAnMldGroupIpAddr {
+                            description "Multicast group IP Address.";
+                            type ncd:ipv6-address;
+                        }
+                        leaf zxAnMldSourceIpAddr {
+                            description "Multicast source IP Address.";
+                            type ncd:ipv6-address;
+                        }
+                        leaf zxAnMldGroupBandwidth {
+                            description "Multicast group bandwidth.";
+                            type int32 {
+                                range 100..65535;
+                            }
+                            default 2048;
+                        }
+                    }
+                }
+                container zxAnMldMgmtGlobalObject {
+                    description "";
+                    leaf zxAnMldUserTrackEnable {
+                        config false;
+                        description "The administrative status of MLD explicit host tracking.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default disabled;
+                    }
+                    leaf zxAnMldBandwidthCtrlEnable {
+                        config false;
+                        description "Enable/disable the multicast bandwidth control.
+                                     enabled(1): the multicast traffic on the user port will be checked 
+                                     before user attempts to join a new multicast group.
+                                     If the total multicast traffic on the user port has 
+                                     exceeded the configured rate of port, the user will 
+                                     not be allowed to join.
+                                     disabled(2): the user may join any number of multicast groups 
+                                     eventhough the total multicast traffic on the user 
+                                     port has exceeded the configured rate of port.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default disabled;
+                    }
+                    leaf zxAnMldGroupPrejoinInterval {
+                        config false;
+                        description "The interval of MLD requests sent by the multicast group 
+                                     which the prejoin is enabled.";
+                        type int32 {
+                            range 60..300;
+                        }
+                        default 120;
+                    }
+                    leaf zxAnMldSpanVlanEnable {
+                        config false;
+                        description "Enable/disable the Span-VLAN multicast. Multicast traffic will be 
+                                     forwarded in all of VLANs if enabled.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default enabled;
+                    }
+                    leaf zxAnMldGeneralLeaveEnable {
+                        config false;
+                        description "Enable/disable handling general leave message. 
+                                     The general leave message will be handled if enabled.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default disabled;
+                    }
+                    leaf zxAnMldGeneralQueryPktsTxMode {
+                        config false;
+                        description "The transmitting mode of MLD general query packets.
+                                     Value 'both' means the device will transmit general query packets 
+                                     in unicast mode and broadcast mode at the same time.";
+                        type enumeration {
+                            enum unicast {
+                                value 1;
+                                description "";
+                            }
+                            enum broadcast {
+                                value 2;
+                                description "";
+                            }
+                            enum both {
+                                value 3;
+                                description "";
+                            }
+                        }
+                        default unicast;
+                    }
+                }
+                container zxAnMldMgmtSpanVlanTable {
+                    description "A table that contains MLD span VLAN information for VLANs.
+                                 MLD packets of this SVLAN will be processed.";
+                    list zxAnMldMgmtSpanVlanEntry {
+                        description "An entries of zxAnMldMgmtSpanVlanTable.";
+                        max-elements 4094;
+                        key "zxAnMldMgmtSpanVid";
+                        leaf zxAnMldMgmtSpanVid {
+                            description "VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

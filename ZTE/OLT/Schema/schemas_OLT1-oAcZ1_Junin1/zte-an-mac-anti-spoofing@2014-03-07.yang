@@ -1,0 +1,157 @@
+module zte-an-mac-anti-spoofing {
+    namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/mssecmac';
+    prefix mssecmac;
+    import zxr10-netconf-defs {
+        prefix ncd;
+        revision-date 2017-08-15;
+    }
+    organization "ZTE Corporation";
+    contact "Huang XuRui  ZTE Corporation
+                         Mail: huang.xurui@zte.com.cn
+                         Tel : +86-21-68897477
+                  
+                         Yu XiaoXing ZTE Corporation
+                         Mail: yu.xiaoxing@zte.com.cn
+                         Tel : +86-21-68897477";
+    description "This MIB defines mac-anti-spoofing objects of zte Access Node,
+                 Mas means mac-anti-spoofing.";
+    revision 2014-03-07 {
+        description "The modification of this mib file is following:
+                     - add the object named zxAnMasUserSideMacMoveEnable.";
+    }
+    revision 2011-08-27 {
+        description "The modification of this mib file is following:
+                     - modify the description of some variables.";
+    }
+    revision 2011-08-19 {
+        description "The modification of this mib file is following:
+                     - modify the default value as enable of zxAnMasEnable.";
+    }
+    container zxAnMas {
+        description "";
+        container zxAnMasGlobalObjects {
+            description "";
+            leaf zxAnMasEnable {
+                description "Enable or disable MAC-anti-spoofing(Mas).";
+                type enumeration {
+                    enum enabled {
+                        value 1;
+                        description "";
+                    }
+                    enum disabled {
+                        value 2;
+                        description "";
+                    }
+                }
+                default disabled;
+            }
+            leaf zxAnMasUplinkProtectEnable {
+                description "Enable or disable global uplink-protect status.When zxAnMasEnable
+                             is enable, this value is valid.
+                             As follows are the combination of zxAnMasEnable and 
+                             zxAnMasUplinkProtectEnable:
+                             1) zxAnMasEnable is disabled, then MAC move can happen and won't be 
+                             forbidden by the system.
+                             2) zxAnMasEnable is enable and zxAnMasUplinkProtectEnable is
+                             enabled, then MAC move between user-port is forbidden, MAC can
+                             move from user-port to uplink-port and MAC can move between 
+                             two uplink-port, can't move from uplink-port to user-port.
+                             This combination is the recommended configure.
+                             3) zxAnMasEnable is enable and zxAnMasUplinkProtectEnable is
+                             disabled, then any MAC move will be forbidden by the system.";
+                type enumeration {
+                    enum enabled {
+                        value 1;
+                        description "";
+                    }
+                    enum disabled {
+                        value 2;
+                        description "";
+                    }
+                }
+                default enabled;
+            }
+            leaf zxAnMasUserSideMacMoveEnable {
+                description "Enable or disable user-side MAC address moving function. When 
+                             zxAnMasEnable and zxAnMasUplinkProtectEnable are all enabled, 
+                             zxAnMasUserSideMacMoveEnable is activated. 
+                             enabled(1)  - MAC address can move between user ports, but can't 
+                             move from uplink port to user port.
+                             disabled(2) - MAC address can't move between user ports.";
+                type enumeration {
+                    enum enabled {
+                        value 1;
+                        description "";
+                    }
+                    enum disabled {
+                        value 2;
+                        description "";
+                    }
+                }
+                default disabled;
+            }
+            leaf zxAnMasMacMovePermitVlanList {
+                description "MAC-anti-spoofing(Mas) VLAN ID list for permitting MAC address
+                             moving.
+                             
+                             |  Byte 0   |  Byte 1   |  Byte 2   |  Byte 3   ...   Byte 512   |
+                             +-----------+-----------+-----------+-----------...--------------+
+                             |  BitMap   |  BitMap   |  BitMap   |  BitMap   ...   BitMap     |
+                             | VLAN 0-7  | VLAN8-15  | VLAN16-23 | VLAN24-31 ...VLAN4088-4095 |
+                             +-----------+-----------+-----------+-----------...--------------+
+                             
+                             If one bit is set to '1', the corresponding VLAN ID is configured
+                             to permit MAC address moving.
+                             VLAN 0 and VLAN 4095 are invalid, so bit 0 and bit 4095 must be
+                             always '0'.
+                             
+                             This object is effective only when zxAnMasEnable is enabled.";
+                type binary;
+            }
+        }
+        container zxAnMasObjects {
+            description "";
+            container zxAnMasMacMoveObjects {
+                description "";
+                container zxAnMasMacMoveGlbObjects {
+                    description "";
+                    leaf zxAnMasMacMoveReportEnable {
+                        description "Enable or disable MAC move notification report control.
+                                     The related notification group is zxAnMasMacMoving and
+                                     zxAnMasMacMoveForbidden.
+                                     When zxAnMasMacMoveReportEnable is disabled, the system
+                                     can't detect any MAC move.
+                                     When zxAnMasMacMoveReportEnable is enabled, the system
+                                     can detect MAC move.A MAC move can be detected by main-card
+                                     or user-card and will be recorded as a MAC move log.
+                                     Based on the MAC move log, a MAC move notification will be
+                                     reported to NMS.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default enabled;
+                    }
+                    leaf zxAnMasMacMoveReportInterval {
+                        description "The report interval of the same MAC move notification.When 
+                                     zxAnMasMacMoveReportEnable is enable and a MAC move is
+                                     detected by system, the system will record a MAC move log.
+                                     The first time this MAC move log will be reported to NMS in 5
+                                     seconds,later this same MAC move log will be reported to NMS
+                                     after the defined zxAnMasMacMoveReportInterval.";
+                        type int32 {
+                            range 1..300;
+                        }
+                        default 30;
+                    }
+                }
+            }
+        }
+    }
+}

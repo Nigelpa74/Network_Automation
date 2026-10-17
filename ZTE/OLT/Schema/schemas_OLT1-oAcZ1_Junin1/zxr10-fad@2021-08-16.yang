@@ -1,0 +1,173 @@
+module zxr10-fad {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/fad'
+            ;
+  prefix fad ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf model for flex-algo-definition.'
+              ;
+  revision 2021-08-16 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'The branch of configuration model.'
+                ;
+    container flex-algo-definition {
+      description 'The configuration of flexible algorithm definition.'
+                  ;
+      list fad-instance {
+        description 'The instance of flexible algorithm definition.'
+                    ;
+        key number ;
+        leaf number {
+          description 'The flexible algorithm definition number.'
+                      ;
+          type uint8 {
+            range 128..255 ;
+          }
+        }
+        leaf advertise-definition {
+          description 'Advertise flexible algorithm definition.'
+                      ;
+          type empty ;
+        }
+        leaf metric-type {
+          description 'Metric type.'
+                      ;
+          type enumeration {
+            enum igp {
+              value 0 ;
+            }
+            enum delay {
+              value 1 ;
+            }
+            enum te {
+              value 2 ;
+            }
+          }
+          default igp ;
+        }
+        leaf priority {
+          description Priority. ;
+          type uint8 {
+            range 0..255 ;
+          }
+          default 0 ;
+        }
+        container exclude-srlgs {
+          description 'The configuration of exclude-srlg.'
+                      ;
+          list exclude-srlg {
+            description 'The instance of exclude-srlg.'
+                        ;
+            key srlg-id ;
+            leaf srlg-id {
+              description 'SRLG Identifier.'
+                          ;
+              type uint32 {
+                range 0..4294967295 ;
+              }
+            }
+          }
+        }
+        container affinity {
+          description 'The configuration of affinity.'
+                      ;
+          container bit-positions {
+            description 'The configuration of bit position affinity.'
+                        ;
+            list bit-position {
+              description 'The instance of bit position affinity. The instance '
+                        + 'of bit position affinity and the instance of name af'
+                        + 'finity are mutually exclusive.'
+                          ;
+              key position ;
+              leaf affinity-type {
+                description 'Affinity constraint type, including exclude-any, i'
+                          + 'nclude-any and include-all.'
+                            ;
+                type enumeration {
+                  enum exclude-any {
+                    value 1 ;
+                    description 'Configure the exclude-any affinity.'
+                                ;
+                  }
+                  enum include-any {
+                    value 2 ;
+                    description 'Configure the include-any affinity.'
+                                ;
+                  }
+                  enum include-all {
+                    value 3 ;
+                    description 'Configure the include-all affinity.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+              leaf position {
+                description 'Affinity bit position.'
+                            ;
+                type uint16 {
+                  range 0..255 ;
+                }
+              }
+            }
+          }
+          container bit-names {
+            description 'The configuration of name affinity, associated with th'
+                      + 'e container /configuration/affinity-maps of zxr10-te-a'
+                      + 'ttribute.yang.'
+                        ;
+            list bit-name {
+              description 'The instance of name affinity. The instance of name '
+                        + 'affinity and the instance of bit position affinity a'
+                        + 're mutually exclusive.'
+                          ;
+              key name ;
+              leaf affinity-type {
+                description 'Affinity constraint type, including exclude-any, i'
+                          + 'nclude-any and include-all.'
+                            ;
+                type enumeration {
+                  enum exclude-any {
+                    value 1 ;
+                    description 'Configure the exclude-any affinity.'
+                                ;
+                  }
+                  enum include-any {
+                    value 2 ;
+                    description 'Configure the include-any affinity.'
+                                ;
+                  }
+                  enum include-all {
+                    value 3 ;
+                    description 'Configure the include-all affinity.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+              leaf name {
+                description 'Affinity bit name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

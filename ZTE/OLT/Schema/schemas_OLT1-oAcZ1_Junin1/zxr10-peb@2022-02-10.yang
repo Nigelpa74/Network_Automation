@@ -1,0 +1,278 @@
+module zxr10-peb {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/peb'
+            ;
+  prefix peb ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the PEB.'
+              ;
+  revision 2022-02-10 {
+    description "1.Modify the value range of node 'configuration/peb/interfaces"
+              + "/interface/pe-id' from <1-255> to <1-250>."
+                ;
+  }
+  revision 2021-12-10 {
+    description '3.Add    /peb:configuration/peb:peb/peb:global/peb:userinfo.'
+                ;
+  }
+  revision 2021-07-14 {
+    description '1.Delete /peb:configuration/peb:peb/peb:interfaces/peb:interfa'
+              + 'ce/peb:pe-ip.'+"\n"
+              + '2.Delete /peb:state/peb:peb/peb:access-pes/peb:access-pe/peb:p'
+              + 'e-ip.'+"\n"
+              + '3.Add    /peb:state/peb:peb/peb:access-pes/peb:access-pe/peb:n'
+              + 'etconf-state.'
+                ;
+  }
+  revision 2021-03-26 {
+    description "1.Modify the enumerated value of node 'configuration/peb/globa"
+              + "l/role' from 'null' to 'none'."
+                ;
+  }
+  revision 2021-01-21 {
+    description "1.Add the container 'state/peb/access-pes'."
+                ;
+  }
+  revision 2020-12-15 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'The configuration information of PEB.'
+                ;
+    container peb {
+      description 'The configuration information of PEB.'
+                  ;
+      container global {
+        description 'Global configuration.'
+                    ;
+        leaf role {
+          description 'Extended bridge role. None indicates no role, controller'
+                    + ' indicates the control bridge, and extender indicates th'
+                    + 'e control bridge.'
+                      ;
+          type enumeration {
+            enum none {
+              value 0 ;
+            }
+            enum controller {
+              value 3 ;
+            }
+            enum extender {
+              value 2 ;
+            }
+          }
+          default none ;
+        }
+        leaf enabled {
+          description 'Enables bridge port extension.'
+                      ;
+          type boolean ;
+          default false ;
+        }
+        container userinfo {
+          description 'User information.'
+                      ;
+          presence userinfo ;
+          leaf user-name {
+            description 'User name.'
+                        ;
+            type string {
+              length 1..65 {
+                description 'user name.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          choice password {
+            description 'Set a password of the user.'
+                        ;
+            mandatory true ;
+            case clear-words {
+              description 'Specify the clear password.'
+                          ;
+              leaf clear-words {
+                description 'Specify the clear password.'
+                            ;
+                type string {
+                  length 3..128 {
+                    description password. ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+            case encrypted-words {
+              description 'Specify the encrypted password.'
+                          ;
+              leaf encrypted-words {
+                description 'Specify the encrypted password.'
+                            ;
+                type string {
+                  length 64..254 {
+                    description 'encrypted password.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+          }
+          ncd:revise-date 2021-12-10 ;
+        }
+      }
+      container interfaces {
+        description 'Interface configuration.'
+                    ;
+        list interface {
+          description 'Interface configuration.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf enabled {
+            description 'Enables bridge port extension.'
+                        ;
+            type boolean ;
+            default false ;
+          }
+          leaf cascade-priority {
+            description 'The priority of the port. When transmitted from a Port'
+                      + ' capable of operating as a cascade Port (e.g. Ports of'
+                      + ' a Controlling Bridge or Extended Ports of an Extended'
+                      + ' Bridge), indicates the cascade_port_priority used in '
+                      + 'determining which Port is to be used by a Bridge Port '
+                      + 'Extender as its Upstream Port. Valid values are the ra'
+                      + 'nge from 0 to 254. When transmitted from a Bridge Port'
+                      + ' Extender on an Upstream Port or a Port capable of bec'
+                      + 'oming an Upstream Port, this parameter shall be set to'
+                      + ' 255. The default value for is 100.'
+                        ;
+            type uint32 {
+              range 0..255 ;
+            }
+            default 100 ;
+          }
+          leaf pe-id {
+            description 'Port Extender ID.'
+                        ;
+            type uint32 {
+              range 1..250 {
+                description 'The maximum value of pe-id is determined by the pe'
+                          + 'rformance parameters.'
+                            ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'The state information of PEB.'
+                ;
+    container peb {
+      description 'The state information of PEB.'
+                  ;
+      container access-pes {
+        description 'Access PE Information.'
+                    ;
+        list access-pe {
+          description 'Access PE Information.'
+                      ;
+          key pe-id ;
+          leaf pe-id {
+            description 'Port Extender ID.'
+                        ;
+            type uint32 {
+              range 1..250 ;
+            }
+          }
+          leaf pe-mac-address {
+            description 'MAC address of the Port Extender.'
+                        ;
+            type ncd:mac-address ;
+          }
+          leaf netconf-state {
+            description 'Netconf connection status.'
+                        ;
+            type enumeration {
+              enum inactive {
+                value 0 ;
+              }
+              enum active {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2021-07-14 ;
+          }
+          leaf csp-link-state {
+            description 'Control and Status Protocol link state.'
+                        ;
+            type enumeration {
+              enum inactive {
+                value 0 ;
+              }
+              enum active {
+                value 1 ;
+              }
+              enum discon {
+                value 3 ;
+              }
+            }
+          }
+          leaf upstream-port {
+            description 'A Port on a Bridge Port Extender that connects to a Ca'
+                      + 'scade Port. In the case of the connection between two '
+                      + 'Bridge Port Extenders, the Upstream Port is the Port f'
+                      + 'urthest from the Controlling Bridge.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf cascade-port {
+            description 'A Port of a Controlling Bridge or Bridge Port Extender'
+                      + ' which connects to an Upstream Port. In the case of th'
+                      + 'e connection between two Bridge Port Extenders, the Ca'
+                      + 'scade Port is the Port closest to the Controlling Brid'
+                      + 'ge.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf cascade-port-pro-status {
+            description 'The cascade port protocol status.'
+                        ;
+            type enumeration {
+              enum down {
+                value 0 ;
+              }
+              enum up {
+                value 1 ;
+              }
+            }
+          }
+          ncd:select pe-id ;
+          ncd:select cascade-port ;
+        }
+      }
+    }
+    ncd:revise-date 2021-01-21 ;
+  }
+}

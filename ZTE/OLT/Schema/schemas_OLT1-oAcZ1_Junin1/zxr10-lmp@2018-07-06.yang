@@ -1,0 +1,358 @@
+module zxr10-lmp {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/lmp'
+            ;
+  prefix lmp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf model for lmp.'
+              ;
+  revision 2018-07-06 {
+    description 'Obsolete notification node lmp,and add  notification node lmp-'
+              + 'notify.'
+                ;
+  }
+  revision 2016-09-18 {
+    description '1.Add presence and RESET2DELETE in lmp container'+"\n"
+              + '2.Add configuration/lmp/lmp-enable in lmp container'+"\n"
+              + '3.Add range in configuration/lmp/neighbors/neighbor/te-links/t'
+              + 'e-link/te-link-id'+"\n"
+              + '4.Add range in lmp/te-link/te-link-id'+"\n"
+              + '5.Add units in lmp/te-link/speed'+"\n"
+              + '6.Add range in state/te-link/te-link-id'+"\n"
+              + '7.Add units in state/te-link/speed'+"\n"
+              + '8.Add DELETE2RESET in configuration/lmp/neighbors/neighbor/nei'
+              + 'ghbor/ipccs'+"\n"
+              + '9.Modify the maxElements of configuration/lmp/neighbors/neighb'
+              + 'or/neighbor'
+                ;
+  }
+  revision 2016-08-10 ;
+  container configuration {
+    description 'The branch of configuration model.'
+                ;
+    container lmp {
+      description 'The configuration of LMP.'
+                  ;
+      presence lmp ;
+      leaf lmp-enable {
+        description 'The global switch of LMP.'
+                    ;
+        type empty ;
+        mandatory true ;
+        ncd:revise-date 2016-09-18 ;
+      }
+      leaf router-id {
+        description 'The LMP router ID configuration. Must config router id bef'
+                  + 'ore any other configuration under neighbor node and ensure'
+                  + ' that router id is reachable in route.'
+                    ;
+        type ncd:ipv4-address {
+          pattern '([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(.([0-9]|['
+                + '1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}'
+                  ;
+        }
+      }
+      container neighbors {
+        description 'The configuration of neighbors.'
+                    ;
+        list neighbor {
+          description 'The neighbor configuration list.'
+                      ;
+          max-elements 100 ;
+          key neighbor-name ;
+          leaf neighbor-name {
+            description 'The LMP neighbor name.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf remote-router-id {
+            description 'The remote router id of the LMP neighbor.A LMP neighbo'
+                      + 'r can only own a remote router id which is different w'
+                      + 'ith the local router id.'
+                        ;
+            type ncd:ipv4-address {
+              pattern '([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(.([0-'
+                    + '9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}'
+                      ;
+            }
+          }
+          container ipccs {
+            description 'The configuration of IP control channels.'
+                        ;
+            leaf static {
+              description 'Static route.'
+                          ;
+              type empty ;
+            }
+          }
+          container te-links {
+            description 'The configuration of TE links.'
+                        ;
+            list te-link {
+              description 'The TE link configuration list.'
+                          ;
+              max-elements 255 ;
+              key te-link-id ;
+              leaf te-link-id {
+                description 'The identification of TE link.'
+                            ;
+                type uint32 {
+                  range 1..4294967295 ;
+                }
+              }
+              leaf local-te-link-ipaddr {
+                description 'The identification of local TE link.'
+                            ;
+                type ncd:ipv4-address {
+                  pattern '([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(.'
+                        + '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){'
+                        + '3}'
+                          ;
+                }
+              }
+              leaf remote-te-link-ipaddr {
+                description 'The identification of remote TE link.'
+                            ;
+                type ncd:ipv4-address {
+                  pattern '([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(.'
+                        + '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){'
+                        + '3}'
+                          ;
+                }
+              }
+              container data-links {
+                description 'The configuration of data links.'
+                            ;
+                list data-link {
+                  description 'The data link configuration list.'
+                              ;
+                  max-elements 1 ;
+                  key if-name ;
+                  leaf if-name {
+                    description 'Interface name.'
+                                ;
+                    type ncd:ifname ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'The state of LMP.'
+                ;
+    list te-link {
+      description 'The list of TE links state.'
+                  ;
+      key te-link-id ;
+      leaf te-link-id {
+        description 'The identification of TE link.'
+                    ;
+        type uint32 {
+          range 1..4294967295 ;
+        }
+      }
+      leaf speed {
+        description 'The speed of data link.'
+                    ;
+        type uint32 ;
+        units kbps ;
+      }
+      leaf control-state {
+        description 'The control state of TE link.'
+                    ;
+        type enumeration {
+          enum UP {
+            value 1 ;
+          }
+          enum DOWN {
+            value 0 ;
+          }
+        }
+      }
+      leaf data-state {
+        description 'The data state of TE link.'
+                    ;
+        type enumeration {
+          enum UP {
+            value 1 ;
+          }
+          enum DOWN {
+            value 0 ;
+          }
+        }
+      }
+    }
+  }
+  notification lmp {
+    description 'The notification of LMP.'
+                ;
+    status obsolete {
+      ncd:revise-date 2018-07-06 ;
+    }
+    list te-link {
+      description 'The TE link notification list.'
+                  ;
+      key te-link-id ;
+      leaf te-link-id {
+        description 'The identification of TE link.'
+                    ;
+        type uint32 {
+          range 1..4294967295 ;
+        }
+      }
+      leaf local-router-id {
+        description 'The local router id of TE link.'
+                    ;
+        type ncd:ipv4-address ;
+      }
+      leaf local-if-id {
+        description 'The identification of local TE link.'
+                    ;
+        type ncd:ipv4-address ;
+      }
+      leaf remote-router-id {
+        description 'The router id of remote TE link.'
+                    ;
+        type ncd:ipv4-address ;
+      }
+      leaf remote-if-id {
+        description 'The identification of remote TE link.'
+                    ;
+        type ncd:ipv4-address ;
+      }
+      leaf speed {
+        description 'The speed of data link.'
+                    ;
+        type uint32 ;
+        units kbps ;
+      }
+      leaf control-state {
+        description 'The control state of TE link.'
+                    ;
+        type enumeration {
+          enum UP {
+            value 1 ;
+          }
+          enum DOWN {
+            value 0 ;
+          }
+        }
+      }
+      leaf data-state {
+        description 'The data state of TE link.'
+                    ;
+        type enumeration {
+          enum UP {
+            value 1 ;
+          }
+          enum DOWN {
+            value 0 ;
+          }
+        }
+      }
+      list data-link {
+        description 'The data link cnotification list.'
+                    ;
+        key if-name ;
+        leaf if-name {
+          description 'Interface name.'
+                      ;
+          type ncd:ifname ;
+        }
+      }
+    }
+  }
+  notification lmp-notify {
+    description 'The notification of LMP.'
+                ;
+    list te-link {
+      description 'The TE link notification list.'
+                  ;
+      key te-link-id ;
+      leaf te-link-id {
+        description 'The identification of TE link.'
+                    ;
+        type uint32 {
+          range 1..4294967295 ;
+        }
+      }
+      leaf local-router-id {
+        description 'The local router id of TE link.'
+                    ;
+        type ncd:ipv4-address ;
+      }
+      leaf local-if-id {
+        description 'The identification of local TE link.'
+                    ;
+        type ncd:ipv4-address ;
+      }
+      leaf remote-router-id {
+        description 'The router id of remote TE link.'
+                    ;
+        type ncd:ipv4-address ;
+      }
+      leaf remote-if-id {
+        description 'The identification of remote TE link.'
+                    ;
+        type ncd:ipv4-address ;
+      }
+      leaf speed {
+        description 'The speed of data link.'
+                    ;
+        type uint32 ;
+        units kbps ;
+      }
+      leaf control-state {
+        description 'The control state of TE link.'
+                    ;
+        type enumeration {
+          enum UP {
+            value 1 ;
+          }
+          enum DOWN {
+            value 0 ;
+          }
+        }
+      }
+      leaf data-state {
+        description 'The data state of TE link.'
+                    ;
+        type enumeration {
+          enum UP {
+            value 1 ;
+          }
+          enum DOWN {
+            value 0 ;
+          }
+        }
+      }
+      list data-link {
+        description 'The data link cnotification list.'
+                    ;
+        key if-name ;
+        leaf if-name {
+          description 'Interface name.'
+                      ;
+          type ncd:ifname ;
+        }
+      }
+    }
+    ncd:revise-date 2018-07-06 ;
+  }
+}

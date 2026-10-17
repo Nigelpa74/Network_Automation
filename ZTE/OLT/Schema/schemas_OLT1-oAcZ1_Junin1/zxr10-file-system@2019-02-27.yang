@@ -1,0 +1,440 @@
+module zxr10-file-system {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/file-system'
+            ;
+  prefix file-system ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2014-04-14 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe file-system'
+              ;
+  revision 2019-02-27 {
+    description 'Add zip and unzip rpc.'
+                ;
+  }
+  revision 2013-12-18 {
+    description 'Initial version'
+                ;
+  }
+  container state {
+    config false ;
+    description 'State model'
+                ;
+    container file-system {
+      description 'File-system state parameters'
+                  ;
+      list dir {
+        description 'The detail info of directory'
+                    ;
+        key 'directory cpu-name'
+            ;
+        leaf directory {
+          description 'The full path of directory'
+                      ;
+          type string {
+            length 1..159 {
+              description 'The len of directory'
+                          ;
+            }
+          }
+        }
+        leaf cpu-name {
+          description 'The cpu-name of dir'
+                      ;
+          type ncd:cpu {
+            length 1..39 ;
+          }
+        }
+        container directroy-size {
+          description 'The directroy-size of disk'
+                      ;
+          leaf total-bytes {
+            description 'The total-bytes of disk'
+                        ;
+            type uint64 {
+              range 0..18446744073709551615 {
+                description 'The value rang of uint64'
+                            ;
+              }
+            }
+            units KBytes ;
+          }
+          leaf free-bytes {
+            description 'The free-bytes of disk'
+                        ;
+            type uint64 {
+              range 0..18446744073709551615 {
+                description 'The value rang of uint64'
+                            ;
+              }
+            }
+            units KBytes ;
+          }
+        }
+        list dir-file {
+          description 'The detail info of file'
+                      ;
+          key file-name ;
+          leaf file-name {
+            description 'The full path of file-name'
+                        ;
+            type string {
+              length 1..79 {
+                description 'The len of file name'
+                            ;
+              }
+            }
+          }
+          leaf directory-attr {
+            description 'The directory-attr of file'
+                        ;
+            type enumeration {
+              enum <DIR> {
+                value 1 ;
+                description directory ;
+              }
+              enum ---- {
+                value 2 ;
+                description file ;
+              }
+            }
+          }
+          leaf file-bytes {
+            description 'The bytes of file'
+                        ;
+            type uint64 {
+              range 0..18446744073709551615 {
+                description 'The value rang of uint64'
+                            ;
+              }
+            }
+            units KBytes ;
+          }
+          leaf file-time {
+            description 'The updating time of file'
+                        ;
+            type ncd:datetime ;
+          }
+        }
+        ncd:select directory ;
+        ncd:select 'directory cpu-name'
+                   ;
+      }
+      container available-devices {
+        description 'available devices info'
+                    ;
+        list available-device {
+          description 'show the available device info'
+                      ;
+          key cpu-name ;
+          leaf cpu-name {
+            description 'The CPU name of device'
+                        ;
+            type ncd:cpu {
+              length 1..39 ;
+            }
+          }
+          list fdisk-info {
+            description 'The info of disk'
+                        ;
+            key name ;
+            leaf name {
+              description 'The name of disk'
+                          ;
+              type string {
+                length 1..30 {
+                  description 'the len of the fdisk name'
+                              ;
+                }
+              }
+            }
+          }
+          ncd:select cpu-name ;
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description 'Operation model'
+                ;
+    container file-system {
+      description 'The operation model of file-system'
+                  ;
+      container rename {
+        description 'Rename file or directory'
+                    ;
+        presence rename ;
+        leaf source-name {
+          description 'The full path of source-name'
+                      ;
+          type string {
+            length 1..159 {
+              description 'The len of source-name'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+        leaf cpu-name {
+          description 'The cpu-name of file or directory'
+                      ;
+          type ncd:cpu {
+            length 1..39 ;
+          }
+        }
+        leaf destination-name {
+          description 'The full path of destination-name'
+                      ;
+          type string {
+            length 1..79 {
+              description 'The len of desination-name'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+      }
+      container rmdir {
+        description 'Remove directory'
+                    ;
+        presence rmdir ;
+        leaf directory {
+          description 'The full path of directory'
+                      ;
+          type string {
+            length 1..159 {
+              description 'The len of  directory'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+        leaf cpu-name {
+          description 'The cpu-name of directory'
+                      ;
+          type ncd:cpu {
+            length 1..39 ;
+          }
+        }
+      }
+      container mkdir {
+        description 'Create directory'
+                    ;
+        presence mkdir ;
+        leaf directory {
+          description 'The full path of directory'
+                      ;
+          type string {
+            length 1..159 {
+              description 'The len of directory'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+        leaf cpu-name {
+          description 'The cpu-name of directory'
+                      ;
+          type ncd:cpu {
+            length 1..39 ;
+          }
+        }
+      }
+      container mount {
+        description 'Mount the storage device'
+                    ;
+        presence mount ;
+        leaf device-type {
+          description Device-type ;
+          type enumeration {
+            enum harddisk {
+              value 0 ;
+              description 'Enum value of harddisk'
+                          ;
+            }
+            enum cf-card {
+              value 1 ;
+              description 'Enum value of cf-card'
+                          ;
+            }
+            enum usb1 {
+              value 2 ;
+              description 'Enum value of usb1'
+                          ;
+            }
+            enum usb2 {
+              value 3 ;
+              description 'Enum value of usb2'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+        leaf cpu-name {
+          description 'The cpu-name of device'
+                      ;
+          type ncd:cpu {
+            length 1..39 ;
+          }
+        }
+      }
+      container umount {
+        description 'Umount the storage device'
+                    ;
+        presence umount ;
+        leaf device-type {
+          description Device-type ;
+          type enumeration {
+            enum harddisk {
+              value 0 ;
+              description 'Enum value of harddisk'
+                          ;
+            }
+            enum cf-card {
+              value 1 ;
+              description 'Enum value of cf-card'
+                          ;
+            }
+            enum usb1 {
+              value 2 ;
+              description 'Enum value of usb1'
+                          ;
+            }
+            enum usb2 {
+              value 3 ;
+              description 'Enum value of usb2'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+        leaf cpu-name {
+          description 'The cpu-name of device'
+                      ;
+          type ncd:cpu {
+            length 1..39 ;
+          }
+        }
+      }
+      container delete {
+        description 'Delete the file'
+                    ;
+        presence delete ;
+        leaf file-name {
+          description 'The name of file'
+                      ;
+          type string {
+            length 1..160 {
+              description 'The length of directory'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+        leaf cpu-name {
+          description 'The cpu-name of file'
+                      ;
+          type ncd:cpu {
+            length 1..39 ;
+          }
+        }
+      }
+    }
+  }
+  rpc zip {
+    description 'Compress file.'
+                ;
+    input {
+      leaf source-filename {
+        config false ;
+        description 'Source filename. When including file pathname, the format '
+                  + 'of name is path/filename. If only specify a filename, the '
+                  + 'length of allowable configuration is 1~79.'
+                    ;
+        type string {
+          length 1..159 ;
+        }
+        mandatory true ;
+      }
+      leaf source-cpu-name {
+        config false ;
+        description 'The CPU name of source file.'
+                    ;
+        type ncd:cpu {
+          length 1..39 ;
+        }
+      }
+      leaf destination-filename {
+        config false ;
+        description 'The destination file name.When including file pathname, th'
+                  + 'e format of name is path/filename. If only specify file pa'
+                  + 'thname or filename, the length of allowable configuration '
+                  + 'is 1~79.'
+                    ;
+        type string {
+          length 1..159 ;
+        }
+      }
+      leaf destination-cpu-name {
+        description 'The CPU name of destination file.'
+                    ;
+        type ncd:cpu {
+          length 1..39 ;
+        }
+      }
+    }
+    ncd:revise-date 2019-02-27 ;
+  }
+  rpc unzip {
+    description 'Uncompress file.'
+                ;
+    input {
+      leaf source-filename {
+        config false ;
+        description 'Source filename. When including file pathname, the format '
+                  + 'of name is path/filename. If only specify a filename, the '
+                  + 'length of allowable configuration is 1~79.'
+                    ;
+        type string {
+          length 1..159 ;
+        }
+        mandatory true ;
+      }
+      leaf source-cpu-name {
+        config false ;
+        description 'The CPU name of source file.'
+                    ;
+        type ncd:cpu {
+          length 1..39 ;
+        }
+      }
+      leaf destination-filename {
+        config false ;
+        description 'The destination file name.When including file pathname, th'
+                  + 'e format of name is path/filename. If only specify file pa'
+                  + 'thname, the length of allowable configuration is 1~79.'
+                    ;
+        type string {
+          length 1..159 ;
+        }
+      }
+      leaf destination-cpu-name {
+        description 'The CPU name of destination file.'
+                    ;
+        type ncd:cpu {
+          length 1..39 ;
+        }
+      }
+    }
+    ncd:revise-date 2019-02-27 ;
+  }
+}

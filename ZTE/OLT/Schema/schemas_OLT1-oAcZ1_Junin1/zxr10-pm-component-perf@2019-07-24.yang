@@ -1,0 +1,605 @@
+module zxr10-pm-component-perf {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-component-perf'
+            ;
+  prefix pm-component-perf ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2019-07-24 {
+    description 'add components.'
+                ;
+  }
+  revision 2018-08-24 {
+    description 'Initial version.'
+                ;
+  }
+  container state {
+    config false ;
+    container temperatures {
+      description 'Enclosing container for the components in the system.'
+                  ;
+      list temperature {
+        description 'List of components, keyed by component name.'
+                    ;
+        key name ;
+        leaf name {
+          description 'Device name for the component -- this will not be a conf'
+                    + 'igurable parameter on many implementations'
+                      ;
+          type string ;
+        }
+        leaf alias {
+          type string ;
+        }
+        leaf instant {
+          description 'The instantaneous value of the statistic.'
+                      ;
+          type decimal64 {
+            fraction-digits 1 ;
+          }
+          units celsius ;
+        }
+        leaf avg {
+          description 'The arithmetic mean value of the statistic over the samp'
+                    + 'ling period.'
+                      ;
+          type decimal64 {
+            fraction-digits 1 ;
+          }
+          units celsius ;
+        }
+        leaf min {
+          description 'The minimum value of the statistic over the sampling per'
+                    + 'iod.'
+                      ;
+          type decimal64 {
+            fraction-digits 1 ;
+          }
+          units celsius ;
+        }
+        leaf max {
+          description 'The maximum value of the statistic over the sampling per'
+                    + 'iod.'
+                      ;
+          type decimal64 {
+            fraction-digits 1 ;
+          }
+          units celsius ;
+        }
+        leaf interval {
+          description 'The time interval over which the min/max/average statist'
+                    + 'ics are computed by the system.'
+                      ;
+          type uint64 ;
+          units nanoseconds ;
+        }
+        leaf min-time {
+          description 'The absolute time at which the minimum value occurred.'
+                      ;
+          type uint64 ;
+          units nanoseconds ;
+          ncd:revise-date 2019-07-24 ;
+        }
+        leaf max-time {
+          description 'The absolute time at which the maximum value occurred.'
+                      ;
+          type uint64 ;
+          units nanoseconds ;
+          ncd:revise-date 2019-07-24 ;
+        }
+        leaf alarm-status {
+          description 'A value of true indicates the alarm has been raised or a'
+                    + 'sserted.  The value should be false when the alarm is cl'
+                    + 'eared.'
+                      ;
+          type boolean ;
+        }
+        leaf alarm-threshold {
+          description 'The threshold value that was crossed for this alarm.'
+                      ;
+          type uint32 ;
+        }
+        leaf alarm-severity {
+          description 'The severity of the current alarm.'
+                      ;
+          type enumeration {
+            enum UNKNOWN {
+              value 0 ;
+              description 'Indicates that the severity level could not be deter'
+                        + 'mined. This level SHOULD be avoided.'
+                          ;
+            }
+            enum MINOR {
+              value 1 ;
+              description 'Indicates the existence of a non-service affecting f'
+                        + 'ault condition and that corrective action should be '
+                        + 'taken in order to prevent a more serious (for exampl'
+                        + 'e, service affecting) fault. Such a severity can be '
+                        + 'reported, for example, when the detected alarm condi'
+                        + 'tion is not currently degrading the capacity of the '
+                        + 'resource'
+                          ;
+            }
+            enum WARNING {
+              value 2 ;
+              description 'Indicates the detection of a potential or impending '
+                        + 'service affecting fault, before any significant effe'
+                        + 'cts have been felt. Action should be taken to furthe'
+                        + 'r diagnose (if necessary) and correct the problem in'
+                        + ' order to prevent it from becoming a more serious se'
+                        + 'rvice affecting fault.'
+                          ;
+            }
+            enum MAJOR {
+              value 3 ;
+              description 'Indicates that a service affecting condition has dev'
+                        + 'eloped and an urgent corrective action is required. '
+                        + 'Such a severity can be reported, for example, when t'
+                        + 'here is a severe degradation in the capability of th'
+                        + 'e resource and its full capability must be restored.'
+                          ;
+            }
+            enum CRITICAL {
+              value 4 ;
+              description 'Indicates that a service affecting condition has occ'
+                        + 'urred and an immediate corrective action is required'
+                        + '. Such a severity can be reported, for example, when'
+                        + ' a resource becomes totally out of service and its c'
+                        + 'apability must be restored.'
+                          ;
+            }
+          }
+        }
+      }
+    }
+    container cpus {
+      description 'Enclosing container for the components in the system.'
+                  ;
+      list sys-cpu {
+        description 'List of components, keyed by component name.'
+                    ;
+        key index ;
+        leaf index {
+          type uint32 ;
+        }
+        container total {
+          description 'Total CPU utilization.'
+                      ;
+          leaf instant {
+            description 'The instantaneous percentage value.'
+                        ;
+            type uint8 ;
+          }
+          leaf avg {
+            description 'The arithmetic mean value of the percentage measure of'
+                      + ' the statistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf min {
+            description 'The minimum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf max {
+            description 'The maximum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf interval {
+            description 'The time interval over which the min/max/average stati'
+                      + 'stics are computed by the system.'
+                        ;
+            type uint64 ;
+            units nanoseconds ;
+          }
+        }
+        container user {
+          description 'Percentage of CPU time spent running in user space.'
+                      ;
+          leaf instant {
+            description 'The instantaneous percentage value.'
+                        ;
+            type uint8 ;
+          }
+          leaf avg {
+            description 'The arithmetic mean value of the percentage measure of'
+                      + ' the statistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf min {
+            description 'The minimum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf max {
+            description 'The maximum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf interval {
+            description 'The time interval over which the min/max/average stati'
+                      + 'stics are computed by the system.'
+                        ;
+            type uint64 ;
+            units nanoseconds ;
+          }
+        }
+        container kernel {
+          description 'Percentage of CPU time spent running in kernel space.'
+                      ;
+          leaf instant {
+            description 'The instantaneous percentage value.'
+                        ;
+            type uint8 ;
+          }
+          leaf avg {
+            description 'The arithmetic mean value of the percentage measure of'
+                      + ' the statistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf min {
+            description 'The minimum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf max {
+            description 'The maximum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf interval {
+            description 'The time interval over which the min/max/average stati'
+                      + 'stics are computed by the system.'
+                        ;
+            type uint64 ;
+            units nanoseconds ;
+          }
+        }
+        container nice {
+          description 'Percentage of CPU time spent running low-priority (niced'
+                    + ')'+"\n"
+                    + 'user processes.'
+                      ;
+          leaf instant {
+            description 'The instantaneous percentage value.'
+                        ;
+            type uint8 ;
+          }
+          leaf avg {
+            description 'The arithmetic mean value of the percentage measure of'
+                      + ' the statistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf min {
+            description 'The minimum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf max {
+            description 'The maximum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf interval {
+            description 'The time interval over which the min/max/average stati'
+                      + 'stics are computed by the system.'
+                        ;
+            type uint64 ;
+            units nanoseconds ;
+          }
+        }
+        container idle {
+          description 'Percentage of CPU time spent idle.'
+                      ;
+          leaf instant {
+            description 'The instantaneous percentage value.'
+                        ;
+            type uint8 ;
+          }
+          leaf avg {
+            description 'The arithmetic mean value of the percentage measure of'
+                      + ' the statistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf min {
+            description 'The minimum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf max {
+            description 'The maximum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf interval {
+            description 'The time interval over which the min/max/average stati'
+                      + 'stics are computed by the system.'
+                        ;
+            type uint64 ;
+            units nanoseconds ;
+          }
+        }
+        container wait {
+          description 'Percentage of CPU time spent waiting for I/O.'
+                      ;
+          leaf instant {
+            description 'The instantaneous percentage value.'
+                        ;
+            type uint8 ;
+          }
+          leaf avg {
+            description 'The arithmetic mean value of the percentage measure of'
+                      + ' the statistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf min {
+            description 'The minimum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf max {
+            description 'The maximum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf interval {
+            description 'The time interval over which the min/max/average stati'
+                      + 'stics are computed by the system.'
+                        ;
+            type uint64 ;
+            units nanoseconds ;
+          }
+        }
+        container hardware-interrupt {
+          description 'Percentage of CPU time spent servicing hardware interrup'
+                    + 'ts.'
+                      ;
+          leaf instant {
+            description 'The instantaneous percentage value.'
+                        ;
+            type uint8 ;
+          }
+          leaf avg {
+            description 'The arithmetic mean value of the percentage measure of'
+                      + ' the statistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf min {
+            description 'The minimum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf max {
+            description 'The maximum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf interval {
+            description 'The time interval over which the min/max/average stati'
+                      + 'stics are computed by the system.'
+                        ;
+            type uint64 ;
+            units nanoseconds ;
+          }
+        }
+        container software-interrupt {
+          description 'Percentage of CPU time spent servicing software interrup'
+                    + 'ts.'
+                      ;
+          leaf instant {
+            description 'The instantaneous percentage value.'
+                        ;
+            type uint8 ;
+          }
+          leaf avg {
+            description 'The arithmetic mean value of the percentage measure of'
+                      + ' the statistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf min {
+            description 'The minimum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf max {
+            description 'The maximum value of the percentage measure of the sta'
+                      + 'tistic over the sampling period.'
+                        ;
+            type uint8 ;
+          }
+          leaf interval {
+            description 'The time interval over which the min/max/average stati'
+                      + 'stics are computed by the system.'
+                        ;
+            type uint64 ;
+            units nanoseconds ;
+          }
+        }
+      }
+      list cpu {
+        description 'List of components, keyed by component name.'
+                    ;
+        key name ;
+        leaf name {
+          description 'Device name for the component -- this will not be a conf'
+                    + 'igurable parameter on many implementations'
+                      ;
+          type string ;
+        }
+        leaf alias {
+          type string ;
+        }
+        leaf instant {
+          description 'The instantaneous percentage value.'
+                      ;
+          type uint8 ;
+        }
+        leaf avg {
+          description 'The arithmetic mean value of the percentage measure of t'
+                    + 'he statistic over the sampling period.'
+                      ;
+          type uint8 ;
+        }
+        leaf min {
+          description 'he minimum value of the percentage measure of the statis'
+                    + 'tic over the sampling period.'
+                      ;
+          type uint8 ;
+        }
+        leaf max {
+          description 'The maximum value of the percentage measure of the stati'
+                    + 'stic over the sampling period.'
+                      ;
+          type uint8 ;
+        }
+        leaf interval {
+          description 'The time interval over which the min/max/average statist'
+                    + 'ics are computed by the system.'
+                      ;
+          type uint64 ;
+          units nanoseconds ;
+        }
+        leaf min-time {
+          description 'The absolute time at which the minimum value occurred.'
+                      ;
+          type uint64 ;
+          units nanoseconds ;
+          ncd:revise-date 2019-07-24 ;
+        }
+        leaf max-time {
+          description 'The absolute time at which the maximum value occurred.'
+                      ;
+          type uint64 ;
+          units nanoseconds ;
+          ncd:revise-date 2019-07-24 ;
+        }
+      }
+    }
+    container components {
+      description 'Enclosing container for the components in the system.'
+                  ;
+      list component {
+        description 'List of components, keyed by component name.'
+                    ;
+        key name ;
+        leaf name {
+          description 'Device name for the component -- this will not be a conf'
+                    + 'igurable parameter on many implementations'
+                      ;
+          type string ;
+        }
+        leaf alias {
+          type string ;
+        }
+        container input-current {
+          description input-current. ;
+          leaf instant {
+            description 'The instantaneous value of the statistic.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+          leaf avg {
+            description 'The arithmetic mean value of the statistic over the sa'
+                      + 'mpling period.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+          leaf min {
+            description 'The minimum value of the statistic over the sampling p'
+                      + 'eriod.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+          leaf max {
+            description 'The maximum value of the statistic over the sampling p'
+                      + 'eriod.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+        }
+        container input-voltage {
+          description input-voltage. ;
+          leaf instant {
+            description 'The instantaneous value of the statistic.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+          leaf avg {
+            description 'The arithmetic mean value of the statistic over the sa'
+                      + 'mpling period.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+          leaf min {
+            description 'The minimum value of the statistic over the sampling p'
+                      + 'eriod.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+          leaf max {
+            description 'The maximum value of the statistic over the sampling p'
+                      + 'eriod.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+        }
+      }
+      ncd:revise-date 2019-07-24 ;
+    }
+  }
+}

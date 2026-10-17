@@ -1,0 +1,316 @@
+module zxr10-ipdr {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ipdr'
+            ;
+  prefix zxr10-ipdr ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation'+"\n"
+        + '   Nanjing Institute of ZTE Corporation'+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China'+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe ipdr.'
+              ;
+  revision 2019-06-01 {
+    description 'Initialize version.'
+                ;
+  }
+  container configuration {
+    description Configuration. ;
+    container ipdr {
+      description 'IPDR configuration.'
+                  ;
+      container collector-mode {
+        description 'Configure IPDR collector mode.'
+                    ;
+        leaf mode {
+          description 'Configure IPDR collector mode.'
+                      ;
+          type enumeration {
+            enum active {
+              value 1 ;
+            }
+            enum passive {
+              value 2 ;
+            }
+          }
+          default active ;
+        }
+      }
+      container service {
+        description 'Configure IPDR service.'
+                    ;
+        choice status {
+          description 'IPDR service status.'
+                      ;
+          default disable ;
+          case enable {
+            description 'Enable IPDR service.'
+                        ;
+            leaf enable {
+              description 'Enable IPDR service.'
+                          ;
+              type empty ;
+              mandatory true ;
+            }
+            leaf listen-port {
+              description 'IPDR listen port.'
+                          ;
+              type uint16 {
+                range 1024..65535 ;
+              }
+              default 4737 ;
+            }
+          }
+          case disable {
+            description 'Disable IPDR service.'
+                        ;
+            leaf disable {
+              description 'Disable IPDR service.'
+                          ;
+              type empty ;
+            }
+          }
+        }
+      }
+      container source {
+        description 'Configure IPDR source address.'
+                    ;
+        container ipv4 {
+          description 'IPv4 address.'
+                      ;
+          leaf ipv4 {
+            description 'IPv4 address.'
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+        }
+        container ipv6 {
+          description 'IPv6 address.'
+                      ;
+          leaf ipv6 {
+            description 'IPv6 address.'
+                        ;
+            type ncd:ipv6-address-none-zero ;
+          }
+        }
+      }
+      container collectors {
+        description 'Configure IPDR collectors.'
+                    ;
+        list collector {
+          description 'Configure IPDR collector.'
+                      ;
+          key name ;
+          leaf name {
+            description 'Collector name.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf vrf-name {
+            description 'VPN routing/forwarding instance (VRF) name.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          choice address {
+            description 'Collector IP address.'
+                        ;
+            mandatory true ;
+            case ipv4 {
+              description 'IPv4 address.'
+                          ;
+              leaf ipv4 {
+                description 'IPv4 address.'
+                            ;
+                type ncd:ipv4-address ;
+                mandatory true ;
+              }
+            }
+            case ipv6 {
+              description 'IPv6 address.'
+                          ;
+              leaf ipv6 {
+                description 'IPv6 address.'
+                            ;
+                type ncd:ipv6-address ;
+                mandatory true ;
+              }
+            }
+          }
+          leaf port {
+            description 'Collector port.'
+                        ;
+            type uint16 {
+              range 1..65535 ;
+            }
+            default 4737 ;
+          }
+        }
+      }
+      container sessions {
+        description 'Configure IPDR sessions.'
+                    ;
+        list session {
+          description 'Configure IPDR session.'
+                      ;
+          key id ;
+          leaf id {
+            description 'Session ID.'
+                        ;
+            type uint8 {
+              range 1..32 ;
+            }
+          }
+          leaf name {
+            description 'Session name.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf description {
+            description 'Session description.'
+                        ;
+            type ncd:string-with-blank {
+              length 1..64 ;
+            }
+          }
+          container template {
+            description 'Configure template associated with the session.'
+                        ;
+            presence template ;
+            leaf template-name {
+              description 'The template name.'
+                          ;
+              type enumeration {
+                enum SAMIS-TYPE-1 {
+                  value 1 ;
+                  description 'SAMIS-TYPE-1 template.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+            choice type {
+              description 'Template report type.'
+                          ;
+              case time-interval {
+                description 'Time interval type.'
+                            ;
+                leaf time-interval {
+                  description 'Time interval value(unit:min).'
+                              ;
+                  type uint16 {
+                    range 15..1440 ;
+                  }
+                  mandatory true ;
+                }
+              }
+              case event {
+                description 'Event base type.'
+                            ;
+                leaf event {
+                  description 'Event base type.'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+              }
+              case ad-hoc {
+                description 'Ad-hoc type.'
+                            ;
+                leaf ad-hoc {
+                  description 'Ad-hoc type.'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+              }
+            }
+          }
+          container collectors {
+            description 'Configure IPDR collector associated with the session.'
+                        ;
+            list collector {
+              description 'Configure IPDR collector associated with the session.'
+                          ;
+              key name ;
+              leaf name {
+                description 'Collector name.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              leaf priority {
+                description 'Collector priority.'
+                            ;
+                type uint8 {
+                  range 1..8 ;
+                }
+                mandatory true ;
+              }
+            }
+          }
+          container active {
+            description 'IPDR session active.'
+                        ;
+            presence active ;
+            leaf state {
+              description 'IPDR session active.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable IPDR session.'
+                              ;
+                }
+                enum disable {
+                  value 0 ;
+                  description 'Disable IPDR session.'
+                              ;
+                }
+              }
+              default disable ;
+            }
+          }
+        }
+      }
+      container protocol {
+        leaf keepalive {
+          description 'Keepalive interval(Units:second).'
+                      ;
+          type uint16 {
+            range 5..300 ;
+          }
+          units second ;
+          default 300 ;
+        }
+        leaf max-unacked {
+          description 'Max unacked number.'
+                      ;
+          type uint8 {
+            range 5..200 ;
+          }
+          default 200 ;
+        }
+        leaf ack-timeout {
+          description 'Ack timeout interval(Units:second).'
+                      ;
+          type uint8 {
+            range 5..60 ;
+          }
+          units second ;
+          default 60 ;
+        }
+      }
+    }
+  }
+}

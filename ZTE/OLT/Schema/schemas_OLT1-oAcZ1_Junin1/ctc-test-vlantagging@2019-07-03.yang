@@ -1,0 +1,210 @@
+module ctc-test-vlantagging {
+    yang-version 1.1;
+    namespace "urn:ctc:yang:test:vlantagging";
+    prefix testVlan;
+
+    import bbf-dot1q-types {
+        prefix bbf-dot1qt;
+      }
+    
+    import ietf-hardware {
+        prefix "hw";
+      }
+    
+    revision "2019-07-03" { // TODO change revision to date of model creation
+        description "Initial revision of vlantagging test";
+    }
+    rpc hello {
+        input {
+            leaf name {
+                type string;
+            }
+        }
+        output {
+            leaf greeting {
+                type string;
+            }
+        }
+    }
+
+    rpc netconf-compatibility-test {
+        input {
+            leaf node {
+                type string;
+            }
+        }
+    }
+    rpc vlan-tagging-test {
+        input {
+            leaf node {
+                type string;
+            }
+            leaf vlan {
+                type union {
+                    type bbf-dot1qt:vlan-id-or-0;
+                    type enumeration {
+                      enum vlan-id-from-tag-index {
+                        description
+                          "The VLAN ID is derived from one of the ingress
+                           tags as specified by 'vlan-id-from-tag-index'.";
+                      }
+                    }
+               }
+            }
+            leaf pon {
+                type leafref {
+                          path "/hw:hardware/hw:component/hw:name";
+                              }
+            }
+            leaf uplink {
+                type leafref {
+                          path "/hw:hardware/hw:component/hw:name";
+                }
+            }
+            leaf usr-sublower {
+                type string;
+            }
+            leaf net-sublower {
+                type string;
+            }
+        }
+    }
+
+    rpc vlan-changing-test {
+        input {
+            leaf node {
+                type string;
+            }
+            leaf interface-name {
+                type enumeration {
+                     enum usr;
+                     enum net;
+                }
+             }
+            leaf vlan {
+                type union {
+                    type bbf-dot1qt:vlan-id-or-0;
+                    type enumeration {
+                      enum vlan-id-from-tag-index {
+                        description
+                          "The VLAN ID is derived from one of the ingress
+                           tags as specified by 'vlan-id-from-tag-index'.";
+                      }
+                    }
+               }
+            }
+        }
+    }
+
+    rpc vlan-deleting-interface {
+        input {
+            leaf node {
+                type string;
+            }
+            leaf interface-name {
+                type enumeration {
+                     enum usr;
+                     enum net;
+                }
+             }
+        }
+    }
+
+    rpc vlan-deleting-forwarder {
+        input {
+            leaf node {
+                type string;
+            }
+        }
+    }
+ 
+    rpc vlan-recover-interface {
+        input {
+            leaf node {
+                type string;
+            }
+            leaf interface-name {
+               type enumeration {
+                    enum usr;
+                    enum net;
+               }
+            }
+            leaf vlan {
+                type union {
+                    type bbf-dot1qt:vlan-id-or-0;
+                    type enumeration {
+                      enum vlan-id-from-tag-index {
+                        description
+                          "The VLAN ID is derived from one of the ingress
+                           tags as specified by 'vlan-id-from-tag-index'.";
+                      }
+                    }
+               }
+            }
+            leaf pon {
+                type leafref {
+                          path "/hw:hardware/hw:component/hw:name";
+                         }
+            }
+            leaf subif-lower {
+                type string;
+            }
+        }
+    }
+
+    rpc vlan-recover-forwarder {
+        input {
+            leaf node {
+                type string;
+            }
+        }
+    }
+
+    rpc vlan-convert-test {
+    	input {
+            leaf node {
+                type string;
+            }
+            leaf onu-vlan {
+                type union {
+                    type bbf-dot1qt:vlan-id-or-0;
+                    type enumeration {
+                      enum vlan-id-from-tag-index {
+                        description
+                          "The VLAN ID is derived from one of the ingress
+                           tags as specified by 'vlan-id-from-tag-index'.";
+                      }
+                    }
+                }
+            }
+            leaf olt-vlan {
+                type union {
+                    type bbf-dot1qt:vlan-id-or-0;
+                    type enumeration {
+                      enum vlan-id-from-tag-index {
+                        description
+                          "The VLAN ID is derived from one of the ingress
+                           tags as specified by 'vlan-id-from-tag-index'.";
+                      }
+                    }
+                }
+            }
+            leaf pon {
+                type leafref {
+                          path "/hw:hardware/hw:component/hw:name";
+                              }
+            }
+            leaf uplink {
+                type leafref {
+                          path "/hw:hardware/hw:component/hw:name";
+                }
+            }
+            leaf usr-sublower {
+                type string;
+            }
+            leaf net-sublower {
+                type string;
+            }
+        }
+    }
+}

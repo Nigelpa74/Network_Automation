@@ -1,0 +1,2378 @@
+module zxr10-mld {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/mld'
+            ;
+  prefix mld ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe MLD.'
+              ;
+  revision 2021-07-14 {
+    description 'Add mldv2-exclude-record leaf nodes to /configuration/router-m'
+              + 'ld/mlds/global and /configuration/router-mld/mlds-vrf/mld-vrf.'
+                ;
+  }
+  revision 2021-04-24 {
+    description '1.Add sibtp-service leaf nodes to /configuration/router-mld/ml'
+              + 'ds/interfaces/interface and /configuration/router-mld/mlds-vrf'
+              + '/mld-vrf/interfaces/interface.'+"\n"
+              + '2.Modify the description of the leaves: /state/mld/public/grou'
+              + 'p-details/group/group-flags and /state/mld/private/group-detai'
+              + 'ls/group/group-flags,/state/mld/public/group-details/group/sou'
+              + 'rces/source/source-flag and /state/mld/private/group-details/g'
+              + 'roup/sources/source/source-flag.'
+                ;
+  }
+  revision 2021-01-25 {
+    description 'Add ip-source-unspecified leaf nodes to /configuration/router-'
+              + 'mld/mlds/global and /configuration/router-mld/mlds-vrf/mld-vrf'
+              + '.'
+                ;
+  }
+  revision 2019-07-15 {
+    description 'Add maximum-joins,specific-query-ignore,access-ip-source,start'
+              + 'up-query-interval and startup-query-count leaf nodes to /confi'
+              + 'guration/router-mld/mlds/interfaces/interface and /configurati'
+              + 'on/router-mld/mlds-vrf/mld-vrf/interfaces/interface.'
+                ;
+  }
+  revision 2016-01-20 {
+    description 'modify the description of the leaves: /state/mld/public/interf'
+              + 'aces/interface/old-router and /state/mld/private/interfaces/in'
+              + 'terface/old-router.'
+                ;
+  }
+  revision 2015-09-02 {
+    description 'modfiy the default value and the range of the leaf:  /configur'
+              + 'ation/router-mld/mlds/interfaces/interface/mld-group/groups/co'
+              + 'unt and /configuration/router-mld/mlds-vrf/mld-vrf/interfaces/'
+              + 'mld-group/groups/count'
+                ;
+  }
+  revision 2015-08-25 {
+    description 'Modify the length of the leaf: /configuration/router-mld/mlds/'
+              + 'ssmmaps/acls/acl/acl-name, /configuration/router-mld/mlds/inte'
+              + 'rfaces/interface/access-group, /configuration/router-mld/mlds/'
+              + 'interfaces/interface/immediate-leave/immediate/acls/acl, /conf'
+              + 'iguration/router-mld/mlds-vrf/mld-vrf/ssmmaps/acls/acl/acl-nam'
+              + 'e, /configuration/router-mld/mlds-vrf/mld-vrf/interfaces/inter'
+              + 'face/access-group, /configuration/router-mld/mlds-vrf/mld-vrf/'
+              + 'interfaces/interface/immediate-leave/immediate/acls/acl'
+                ;
+  }
+  revision 2015-08-04 {
+    description 'Remove the config of operation'
+                ;
+  }
+  revision 2015-07-01 {
+    description '1.obsolete the container node mld-groups :/configuration/route'
+              + 'r-mld/mlds/interfaces/interface/mld-groups and /configuration/'
+              + 'router-mld/mlds-vrf/mld-vrf/interfaces/interface/mld-groups'+"\n"
+              + '2.add the container node mld-group :/configuration/router-mld/'
+              + 'mlds/interfaces/interface/mld-group and /configuration/router-'
+              + 'mld/mlds-vrf/mld-vrf/interfaces/interface/mld-group'+"\n"
+              + '3.modify the length of leaf node immediate-leave from 31 to 36'
+              + ':/state/mld/private/interfaces/interface/intf/immediate-leave '
+              + 'and /state/mld/public/interfaces/interface/intf/immediate-leav'
+              + 'e'
+                ;
+  }
+  revision 2015-06-04 {
+    description '1.remove two leaf nodes vrf-name from :/state/mld/private/grou'
+              + 'p-summary/intfs/intf/vrf-name and /state/mld/private/group-sum'
+              + 'mary/all-intfs/vrf-name to one leaf to:/state/mld/private/grou'
+              + 'p-summary/summary/vrf-name.'+"\n"
+              + '2. remove two leaf nodes vrf-name from :/state/mld/private/pac'
+              + 'kets/intfs/intf/vrf-name and /state/mld/private/packets/all-in'
+              + 'tfs/vrf-name to one leaf to:/state/mld/private/packets/packet/'
+              + 'vrf-name.'+"\n"
+              + '3.modify the name of leaf nodes last-report :/state/mld/privat'
+              + 'e/groups/group/last-report to last-reporter  :/state/mld/priva'
+              + 'te/groups/group/last-reporter,rec-leave :/state/mld/private/pa'
+              + 'ckets/packet/all-intf/rec-leave to rec-done  :/state/mld/priva'
+              + 'te/packets/packet/all-intf/rec-done, sent-leave :/state/mld/pr'
+              + 'ivate/packets/packet/all-intf/sent-leave to sent-done  :/state'
+              + '/mld/private/packets/packet/all-intf/sent-done,rec-leave :/sta'
+              + 'te/mld/private/packets/packet/intf/rec-leave to rec-done  :/st'
+              + 'ate/mld/private/packets/packet/intf/rec-done, sent-leave :/sta'
+              + 'te/mld/private/packets/packet/intf/sent-leave to sent-done :/s'
+              + 'tate/mld/private/packets/packet/intf/sent-done,rec-leave :/sta'
+              + 'te/mld/public/packet/all-intf/rec-leave to rec-done :/state/ml'
+              + 'd/public/packet/all-intf/rec-done, sent-leave :/state/mld/publ'
+              + 'ic/packet/all-intf/sent-leave to sent-done :/state/mld/public/'
+              + 'packet/all-intf/sent-done,rec-leave :/state/mld/public/packet/'
+              + 'intfs/intf/rec-leave to rec-done :/state/mld/public/packet/int'
+              + 'fs/intf/rec-done, sent-leave :/state/mld/public/packet/intfs/i'
+              + 'ntf/sent-leave to sent-done :/state/mld/public/packet/intfs/in'
+              + 'tf//sent-done.'
+                ;
+  }
+  revision 2015-04-15 {
+    description '1. add state model :/state/.'+"\n"
+              + '2. add operation model :/operation/.'+"\n"
+              + '3. modify description :/configuration/router-mld/mlds/global'
+                ;
+  }
+  revision 2014-04-10 {
+    description 'Modify the range of vrf-name from (1..31) to (1..32).'
+                ;
+  }
+  revision 2014-03-19 {
+    description 'Modify the default value of immediate-leaves and the range of '
+              + 'acl from(1..31) to (0..31).'
+                ;
+  }
+  revision 2014-03-11 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model.'
+                ;
+    container router-mld {
+      description 'Router mld'
+                  ;
+      container mlds {
+        description 'MLD instance model'
+                    ;
+        presence mld ;
+        container global {
+          description 'Configure MLD instance.'
+                      ;
+          leaf last-member-query {
+            description 'MLD last member query interval'
+                        ;
+            type uint32 {
+              range 1..25 {
+                description 'Last member query interval(second)'
+                            ;
+              }
+            }
+            units second ;
+            default 1 ;
+          }
+          leaf querier-timeout {
+            description 'MLD previous querier timeout'
+                        ;
+            type uint32 {
+              range 60..300 {
+                description 'Timeout value(second)'
+                            ;
+              }
+            }
+            units second ;
+            default 255 ;
+          }
+          leaf query-interval {
+            description 'MLD host query interval'
+                        ;
+            type uint32 {
+              range 1..65535 {
+                description 'Query interval(second)'
+                            ;
+              }
+            }
+            units second ;
+            default 125 ;
+          }
+          leaf query-max-response {
+            description 'MLD max query response value'
+                        ;
+            type uint32 {
+              range 1..25 {
+                description 'Query response value(second)'
+                            ;
+              }
+            }
+            units second ;
+            default 10 ;
+          }
+          leaf require-alert-options {
+            description 'Require MLD message with router alert options'
+                        ;
+            type empty ;
+          }
+          leaf robustness-variable {
+            description 'MLD robustness count'
+                        ;
+            type uint32 {
+              range 2..7 {
+                description 'Robustness count'
+                            ;
+              }
+            }
+            default 2 ;
+          }
+          leaf version {
+            description 'MLD version'
+                        ;
+            type uint32 {
+              range 1..2 {
+                description '1  Version 1
+2  Version 2'
+                            ;
+              }
+            }
+            default 2 ;
+          }
+          leaf ip-source-unspecified {
+            description 'Permit unspecified source address(::/128) of MLD repor'
+                      + 't message'
+                        ;
+            type empty ;
+            ncd:revise-date 2021-01-25 ;
+          }
+          leaf mldv2-exclude-record {
+            description 'Process MLDv2 group records of MODE_IS_EXCLUDE and CHA'
+                      + 'NGE_TO_EXCLUDE_MODE for SSM address'
+                        ;
+            type empty ;
+            ncd:revise-date 2021-07-14 ;
+          }
+        }
+        container group-intf-nums {
+          description 'Max host limit commands'
+                      ;
+          list num {
+            description 'Max host limit commands'
+                        ;
+            max-elements 2048 ;
+            key group-addr ;
+            leaf group-addr {
+              description 'Group address'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf intf-num {
+              description 'The number of interface'
+                          ;
+              type uint32 {
+                range 1..64 {
+                  description 'Interface number'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+        container ssmmaps {
+          description 'SSM mapping commands'
+                      ;
+          container acls {
+            description 'Access list to specify groups'
+                        ;
+            list acl {
+              description 'Access list to specify groups'
+                          ;
+              max-elements 1000 ;
+              key 'acl-name src-addr'
+                  ;
+              leaf acl-name {
+                description 'Acl name'
+                            ;
+                type string {
+                  length 1..31 {
+                    description 'Access list to specify groups'
+                                ;
+                  }
+                }
+              }
+              leaf src-addr {
+                description 'Source address'
+                            ;
+                type ncd:ipv6-address ;
+              }
+            }
+          }
+          container defaults {
+            description 'Default SSM group'
+                        ;
+            list default {
+              description 'Default SSM group'
+                          ;
+              max-elements 1000 ;
+              key 'src-addr default'
+                  ;
+              leaf src-addr {
+                description 'Source address'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf default {
+                description 'Default ssm group'
+                            ;
+                type uint8 {
+                  range 1 {
+                    description 'Default ssm group'
+                                ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        container interfaces {
+          description 'MLD interface model'
+                      ;
+          list interface {
+            description 'MLD interface model'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name'
+                              ;
+                }
+              }
+            }
+            leaf access-group {
+              description 'MLD access group'
+                          ;
+              type string {
+                length 1..31 {
+                  description 'Access list name (1-31 characters)'
+                              ;
+                }
+              }
+            }
+            leaf last-member-query-interval {
+              description 'MLD last member query interval'
+                          ;
+              type uint32 {
+                range 1..25 {
+                  description 'Last member query interval(second)'
+                              ;
+                }
+              }
+              units second ;
+              default 1 ;
+            }
+            leaf querier-timeout {
+              description 'MLD previous querier timeout'
+                          ;
+              type uint32 {
+                range 60..300 {
+                  description 'Timeout value'
+                              ;
+                }
+              }
+              units second ;
+              default 255 ;
+            }
+            leaf query-interval {
+              description 'MLD host query interval'
+                          ;
+              type uint32 {
+                range 1..65535 {
+                  description 'Timeout value(second)'
+                              ;
+                }
+              }
+              units second ;
+              default 125 ;
+            }
+            leaf query-max-response-time {
+              description 'MLD max query response value'
+                          ;
+              type uint32 {
+                range 1..25 {
+                  description 'Query response value(second)'
+                              ;
+                }
+              }
+              units second ;
+              default 10 ;
+            }
+            leaf robustness-count {
+              description 'MLD robustness count'
+                          ;
+              type uint32 {
+                range 2..7 {
+                  description 'Robustness count'
+                              ;
+                }
+              }
+              default 2 ;
+            }
+            leaf version {
+              description 'MLD version'
+                          ;
+              type uint32 {
+                range 1..2 {
+                  description '1  Version 1
+2  Version 2'
+                              ;
+                }
+              }
+              default 2 ;
+            }
+            leaf querier-disable {
+              description 'MLD querier election disable command'
+                          ;
+              type empty ;
+            }
+            leaf maximum-joins {
+              description 'MLD maximum joins'
+                          ;
+              type uint32 {
+                range 1..40000 {
+                  description 'Max allowed joins on this interface'
+                              ;
+                }
+              }
+              ncd:revise-date 2019-07-15 ;
+            }
+            leaf specific-query-ignore {
+              description 'Specific query ignore.'
+                          ;
+              type empty ;
+              ncd:revise-date 2019-07-15 ;
+            }
+            leaf access-ip-source {
+              description 'Access ip source filter.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+              ncd:revise-date 2019-07-15 ;
+            }
+            leaf startup-query-interval {
+              description 'Startup query interval.'
+                          ;
+              type uint32 {
+                range 1..18000 ;
+              }
+              units second ;
+              default 31 ;
+              ncd:revise-date 2019-07-15 ;
+            }
+            leaf startup-query-count {
+              description 'Startup query count.'
+                          ;
+              type uint32 {
+                range 1..10 ;
+              }
+              default 2 ;
+              ncd:revise-date 2019-07-15 ;
+            }
+            leaf sibtp-service {
+              description 'MLD enable SIBTP service'
+                          ;
+              type empty ;
+              ncd:revise-date 2021-04-24 ;
+            }
+            container mld-groups {
+              status obsolete {
+                ncd:revise-date 2015-07-01 ;
+              }
+              description 'MLD static multicast group'
+                          ;
+              list mld-group {
+                description 'MLD static multicast group'
+                            ;
+                max-elements 65535 ;
+                key 'group source ssm-map static-flag'
+                    ;
+                leaf group {
+                  description 'Group address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf source {
+                  description 'Source address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf ssm-map {
+                  description 'SSM static group to source mapping'
+                              ;
+                  type uint32 {
+                    range 0..1 {
+                      description 'SSM static group to source mapping'
+                                  ;
+                    }
+                  }
+                }
+                leaf static-flag {
+                  description Hiddenpara ;
+                  type uint32 {
+                    range 1..2 {
+                      description '1 static-group
+2 join-group'
+                                  ;
+                    }
+                  }
+                }
+                leaf filter-mode {
+                  description 'Filter mode'
+                              ;
+                  type uint32 {
+                    range 0..4 {
+                      description 'Filter mode'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+            container immediate-leave {
+              description 'Leave groups immediately without sending last member'
+                        + ' query'
+                          ;
+              choice immediate {
+                description 'Leave groups immediately without sending last memb'
+                          + 'er query'
+                            ;
+                case acls {
+                  description 'Immediate acl'
+                              ;
+                  leaf acl {
+                    description 'Leave groups immediately without sending last '
+                              + ' member query'
+                                ;
+                    type string {
+                      length 1..31 {
+                        description 'Immediate acl'
+                                    ;
+                      }
+                    }
+                  }
+                }
+                case alls {
+                  description 'Immediate all'
+                              ;
+                  leaf all {
+                    description 'Leave groups immediately without sending last '
+                              + 'member query'
+                                ;
+                    type empty ;
+                  }
+                }
+              }
+            }
+            container mld-group {
+              description 'MLD static multicast group'
+                          ;
+              list groups {
+                description 'MLD static multicast group'
+                            ;
+                max-elements 65535 ;
+                key 'group source ssm-map static-flag inc-mask'
+                    ;
+                leaf group {
+                  description 'Group address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf source {
+                  description 'Source address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf ssm-map {
+                  description 'SSM static group to source mapping'
+                              ;
+                  type uint32 {
+                    range 0..1 {
+                      description 'SSM static group to source mapping'
+                                  ;
+                    }
+                  }
+                }
+                leaf static-flag {
+                  description 'MLD static multicast group or join multicast gro'
+                            + 'up'
+                              ;
+                  type enumeration {
+                    enum static-group {
+                      value 1 ;
+                    }
+                    enum join-group {
+                      value 2 ;
+                    }
+                  }
+                }
+                leaf inc-mask {
+                  description 'Increment mask for group address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf filter-mode {
+                  description 'Filter mode'
+                              ;
+                  type enumeration {
+                    enum no-mode {
+                      value 0 ;
+                    }
+                    enum include {
+                      value 3 ;
+                    }
+                    enum exclude {
+                      value 4 ;
+                    }
+                  }
+                }
+                leaf count {
+                  description 'Number of group addresses to join'
+                              ;
+                  type uint32 {
+                    range 1..512 ;
+                  }
+                }
+              }
+              ncd:revise-date 2015-07-01 ;
+            }
+          }
+        }
+      }
+      container mlds-vrf {
+        description 'Configure MLD VRF parameters.'
+                    ;
+        list mld-vrf {
+          description 'Configure MLD VRF parameters.'
+                      ;
+          key vrf-name ;
+          leaf vrf-name {
+            description 'Vrf name'
+                        ;
+            type string {
+              length 1..32 {
+                description 'Vrf name'
+                            ;
+              }
+            }
+          }
+          leaf last-member-query {
+            description 'MLD last member query interval'
+                        ;
+            type uint32 {
+              range 1..25 {
+                description 'Last member query interval(second)'
+                            ;
+              }
+            }
+            units second ;
+            default 1 ;
+          }
+          leaf querier-timeout {
+            description 'MLD previous querier timeout'
+                        ;
+            type uint32 {
+              range 60..300 {
+                description 'Timeout value(second)'
+                            ;
+              }
+            }
+            units second ;
+            default 255 ;
+          }
+          leaf query-interval {
+            description 'MLD host query interval'
+                        ;
+            type uint32 {
+              range 1..65535 {
+                description 'Query interval(second)'
+                            ;
+              }
+            }
+            units second ;
+            default 125 ;
+          }
+          leaf require-alert-options {
+            description 'Require MLD message with router alert options'
+                        ;
+            type empty ;
+          }
+          leaf query-max-response {
+            description 'MLD max query response value'
+                        ;
+            type uint32 {
+              range 1..25 {
+                description 'Query response value(second)'
+                            ;
+              }
+            }
+            units second ;
+            default 10 ;
+          }
+          leaf robustness-variable {
+            description 'MLD robustness count'
+                        ;
+            type uint32 {
+              range 2..7 {
+                description 'Robustness count'
+                            ;
+              }
+            }
+            default 2 ;
+          }
+          leaf version {
+            description 'MLD version'
+                        ;
+            type uint32 {
+              range 1..2 {
+                description '1  Version 1
+2  Version 2'
+                            ;
+              }
+            }
+            default 2 ;
+          }
+          leaf ip-source-unspecified {
+            description 'Permit unspecified source address(::/128) of MLD repor'
+                      + 't message'
+                        ;
+            type empty ;
+            ncd:revise-date 2021-01-25 ;
+          }
+          leaf mldv2-exclude-record {
+            description 'Process MLDv2 group records of MODE_IS_EXCLUDE and CHA'
+                      + 'NGE_TO_EXCLUDE_MODE for SSM address'
+                        ;
+            type empty ;
+            ncd:revise-date 2021-07-14 ;
+          }
+          container group-intf-nums {
+            description 'Max host limit commands'
+                        ;
+            list num {
+              description 'Max host limit commands'
+                          ;
+              max-elements 2048 ;
+              key group-addr ;
+              leaf group-addr {
+                description 'Group address'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf intf-num {
+                description 'The number of interface'
+                            ;
+                type uint32 {
+                  range 1..64 {
+                    description 'Interface number'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+          }
+          container ssmmaps {
+            description 'SSM mapping commands'
+                        ;
+            container acls {
+              description 'Access list to specify groups'
+                          ;
+              list acl {
+                description 'Access list to specify groups'
+                            ;
+                max-elements 1000 ;
+                key 'acl-name src-addr'
+                    ;
+                leaf acl-name {
+                  description 'Acl name'
+                              ;
+                  type string {
+                    length 1..31 {
+                      description 'Access list to specify groups'
+                                  ;
+                    }
+                  }
+                }
+                leaf src-addr {
+                  description 'Source address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+              }
+            }
+            container defaults {
+              description 'Default SSM group'
+                          ;
+              list default {
+                description 'Default SSM group'
+                            ;
+                max-elements 1000 ;
+                key 'src-addr default'
+                    ;
+                leaf src-addr {
+                  description 'Source address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf default {
+                  description 'Default ssm group'
+                              ;
+                  type uint8 {
+                    range 1 {
+                      description 'Default ssm group'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          container interfaces {
+            description 'MLD interface model'
+                        ;
+            list interface {
+              description 'MLD interface model'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'Interface name'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Interface name'
+                                ;
+                  }
+                }
+              }
+              leaf access-group {
+                description 'MLD access group'
+                            ;
+                type string {
+                  length 1..31 {
+                    description 'Access list name (1-31 characters)'
+                                ;
+                  }
+                }
+              }
+              leaf last-member-query-interval {
+                description 'MLD last member query interval'
+                            ;
+                type uint32 {
+                  range 1..25 {
+                    description 'Last member query interval(second)'
+                                ;
+                  }
+                }
+                units second ;
+                default 1 ;
+              }
+              leaf querier-timeout {
+                description 'MLD previous querier timeout'
+                            ;
+                type uint32 {
+                  range 60..300 {
+                    description 'Timeout value'
+                                ;
+                  }
+                }
+                units second ;
+                default 255 ;
+              }
+              leaf query-interval {
+                description 'MLD host query interval'
+                            ;
+                type uint32 {
+                  range 1..65535 {
+                    description 'Timeout value(second)'
+                                ;
+                  }
+                }
+                units second ;
+                default 125 ;
+              }
+              leaf query-max-response-time {
+                description 'MLD max query response value'
+                            ;
+                type uint32 {
+                  range 1..25 {
+                    description 'Query response value(second)'
+                                ;
+                  }
+                }
+                units second ;
+                default 10 ;
+              }
+              leaf robustness-count {
+                description 'MLD robustness count'
+                            ;
+                type uint32 {
+                  range 2..7 {
+                    description 'Robustness count'
+                                ;
+                  }
+                }
+                default 2 ;
+              }
+              leaf version {
+                description 'MLD version'
+                            ;
+                type uint32 {
+                  range 1..2 {
+                    description '1  Version 1
+2  Version 2'
+                                ;
+                  }
+                }
+                default 2 ;
+              }
+              leaf querier-disable {
+                description 'MLD querier election disable command'
+                            ;
+                type empty ;
+              }
+              leaf maximum-joins {
+                description 'MLD maximum joins'
+                            ;
+                type uint32 {
+                  range 1..40000 {
+                    description 'Max allowed joins on this interface'
+                                ;
+                  }
+                }
+                ncd:revise-date 2019-07-15 ;
+              }
+              leaf specific-query-ignore {
+                description 'Specific query ignore.'
+                            ;
+                type empty ;
+                ncd:revise-date 2019-07-15 ;
+              }
+              leaf access-ip-source {
+                description 'Access ip source filter.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                ncd:revise-date 2019-07-15 ;
+              }
+              leaf startup-query-interval {
+                description 'Startup query interval.'
+                            ;
+                type uint32 {
+                  range 1..18000 ;
+                }
+                units second ;
+                default 31 ;
+                ncd:revise-date 2019-07-15 ;
+              }
+              leaf startup-query-count {
+                description 'Startup query count.'
+                            ;
+                type uint32 {
+                  range 1..10 ;
+                }
+                default 2 ;
+                ncd:revise-date 2019-07-15 ;
+              }
+              leaf sibtp-service {
+                description 'MLD enable SIBTP service'
+                            ;
+                type empty ;
+                ncd:revise-date 2021-04-24 ;
+              }
+              container mld-groups {
+                status obsolete {
+                  ncd:revise-date 2015-07-01 ;
+                }
+                description 'MLD static multicast group'
+                            ;
+                list mld-group {
+                  description 'MLD static multicast group'
+                              ;
+                  max-elements 65535 ;
+                  key 'group source ssm-map static-flag'
+                      ;
+                  leaf group {
+                    description 'Group address'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                  leaf source {
+                    description 'Source address'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                  leaf ssm-map {
+                    description 'SSM static group to source mapping'
+                                ;
+                    type uint32 {
+                      range 0..1 {
+                        description 'SSM static group to source mapping'
+                                    ;
+                      }
+                    }
+                  }
+                  leaf static-flag {
+                    description Hiddenpara ;
+                    type uint32 {
+                      range 1..2 {
+                        description '1 static-group
+2 join-group'
+                                    ;
+                      }
+                    }
+                  }
+                  leaf filter-mode {
+                    description 'Filter mode'
+                                ;
+                    type uint32 {
+                      range 0..4 {
+                        description 'Filter mode'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              container immediate-leave {
+                description 'Leave groups immediately without sending last memb'
+                          + 'er query'
+                            ;
+                choice immediate {
+                  description 'Leave groups immediately without sending last me'
+                            + 'mber query'
+                              ;
+                  case acls {
+                    description 'Immediate acl'
+                                ;
+                    leaf acl {
+                      description 'Leave groups immediately without sending las'
+                                + 't  member query'
+                                  ;
+                      type string {
+                        length 1..31 {
+                          description 'Access list to specify groups'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                  case alls {
+                    description 'Immediate all'
+                                ;
+                    leaf all {
+                      description 'Leave groups immediately without sending las'
+                                + 't  member query'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+              }
+              container mld-group {
+                description 'MLD static multicast group'
+                            ;
+                list groups {
+                  description 'MLD static multicast group'
+                              ;
+                  max-elements 65535 ;
+                  key 'group source ssm-map static-flag inc-mask'
+                      ;
+                  leaf group {
+                    description 'Group address'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                  leaf source {
+                    description 'Source address'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                  leaf ssm-map {
+                    description 'SSM static group to source mapping'
+                                ;
+                    type uint32 {
+                      range 0..1 {
+                        description 'SSM static group to source mapping'
+                                    ;
+                      }
+                    }
+                  }
+                  leaf static-flag {
+                    description 'MLD static multicast group or join multicast g'
+                              + 'roup'
+                                ;
+                    type enumeration {
+                      enum static-group {
+                        value 1 ;
+                      }
+                      enum join-group {
+                        value 2 ;
+                      }
+                    }
+                  }
+                  leaf inc-mask {
+                    description 'Increment mask for group address'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                  leaf filter-mode {
+                    description 'Filter mode'
+                                ;
+                    type enumeration {
+                      enum no-mode {
+                        value 0 ;
+                      }
+                      enum include {
+                        value 3 ;
+                      }
+                      enum exclude {
+                        value 4 ;
+                      }
+                    }
+                  }
+                  leaf count {
+                    description 'Number of group addresses to join'
+                                ;
+                    type uint32 {
+                      range 1..512 ;
+                    }
+                  }
+                }
+                ncd:revise-date 2015-07-01 ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model.'
+                ;
+    container mld {
+      description 'MLD state model.'
+                  ;
+      container public {
+        description 'Show MLD information'
+                    ;
+        container group-details {
+          description 'MLD group membership information'
+                      ;
+          list group {
+            description 'MLD group membership information'
+                        ;
+            key 'intf-name group-addr'
+                ;
+            leaf intf-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name.'
+                              ;
+                }
+              }
+            }
+            leaf group-addr {
+              description 'Group address.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf last-reporter {
+              description 'Last reporter.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf uptime {
+              description 'Group membership uptime.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf expire {
+              description 'If the version is MLDv1, this leaf is the expire tim'
+                        + 'e of group membership,'+"\n"
+                        + 'else it is the expire time of group exclude model.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf group-flags {
+              description 'Group flags.S-static group,SSM-SSM group,M-MDT group'
+                        + ',R-report group,B-SIBTP group.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf group-mode {
+              description 'Group mode.EXCLUDE--exclude mode,INCLUDE--include mo'
+                        + 'de.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            container sources {
+              description 'Source information.'
+                          ;
+              list source {
+                description 'Source information.'
+                            ;
+                key source-addr ;
+                leaf source-addr {
+                  description 'Source address.'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf source-present {
+                  description 'Source present time.'
+                              ;
+                  type ncd:string-all {
+                    length 0..15 ;
+                  }
+                }
+                leaf source-expire {
+                  description 'Source expire time'
+                              ;
+                  type ncd:string-all {
+                    length 0..15 ;
+                  }
+                }
+                leaf fwd {
+                  description 'Forward flag.YES-forward,NO-not forward.'
+                              ;
+                  type ncd:string-all {
+                    length 0..7 ;
+                  }
+                }
+                leaf source-flag {
+                  description 'Source flag.S-Static source,M-Mapping source,R-R'
+                            + 'eport source,B-SIBTP source.'
+                              ;
+                  type ncd:string-all {
+                    length 0..7 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        container groups {
+          description 'MLD group membership information'
+                      ;
+          list group {
+            description 'MLD group membership information'
+                        ;
+            key 'intf-name group-addr'
+                ;
+            leaf intf-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name.'
+                              ;
+                }
+              }
+            }
+            leaf group-addr {
+              description 'Group address.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf last-reporter {
+              description 'Last reporter.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf present {
+              description 'Group membership uptime.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf expire {
+              description 'If the version is MLDv1, this leaf is the expire tim'
+                        + 'e of group membership,'+"\n"
+                        + 'else it is the expire time of group exclude model.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            ncd:select 'intf-name group-addr'
+                       ;
+            ncd:select intf-name ;
+            ncd:select group-addr ;
+          }
+        }
+        container group-summary {
+          description 'MLD groups summary.'
+                      ;
+          container all-intf {
+            description 'MLD groups summary.'
+                        ;
+            leaf static {
+              description 'Static group summary.'
+                          ;
+              type uint32 ;
+            }
+            leaf join {
+              description 'Join group summary.'
+                          ;
+              type uint32 ;
+            }
+            leaf total {
+              description 'Show all group summary.'
+                          ;
+              type uint32 ;
+            }
+          }
+          container intfs {
+            description 'Show interface summary.'
+                        ;
+            list intf {
+              description 'Show interface summary.'
+                          ;
+              key intf-name ;
+              leaf intf-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Interface name.'
+                                ;
+                  }
+                }
+              }
+              leaf static {
+                description 'Static group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf join {
+                description 'Join group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf total {
+                description 'Show all group summary.'
+                            ;
+                type uint32 ;
+              }
+            }
+          }
+        }
+        container interfaces {
+          description 'MLD interface information.'
+                      ;
+          list interface {
+            description 'MLD interface information.'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name.'
+                              ;
+                }
+              }
+            }
+            leaf if-addr {
+              description 'Interface address.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf mld-flag {
+              description 'MLD enable.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf version {
+              description Version. ;
+              type uint32 {
+                range 1..2 ;
+              }
+            }
+            leaf query-interval {
+              description 'MLD query interval.'
+                          ;
+              type uint32 {
+                range 1..65535 ;
+              }
+              units second ;
+            }
+            leaf old-router {
+              description 'The version of the old router.'+"\n"
+                        + 'v1:When the MLD version of the interface is 2 and an'
+                        + ' MLDv1 membership query is received, the value of th'
+                        + 'e node is v1.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf querier-phase {
+              description 'Router in startup phase.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf last-member-query {
+              description 'MLD last member query interval.'
+                          ;
+              type uint32 {
+                range 1..25 ;
+              }
+              units second ;
+            }
+            leaf query-max-response {
+              description 'MLD query max response time.'
+                          ;
+              type uint32 {
+                range 1..25 ;
+              }
+              units second ;
+            }
+            leaf querier-timeout {
+              description 'MLD querier timeout period.'
+                          ;
+              type uint32 ;
+              units second ;
+            }
+            leaf robustness-variable {
+              description 'MLD robustness variable.'
+                          ;
+              type uint32 {
+                range 2..7 ;
+              }
+            }
+            leaf querier {
+              description 'MLD querier.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf expire {
+              description 'Other querier timeout.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf acl-name {
+              description 'Inbound MLD access group.'
+                          ;
+              type ncd:string-all {
+                length 0..31 ;
+              }
+            }
+            leaf immediate-leave {
+              description 'MLD immediate leave.'
+                          ;
+              type ncd:string-all {
+                length 0..36 ;
+              }
+            }
+          }
+        }
+        container packet {
+          description 'MLD received or sent protocol packet.'
+                      ;
+          container all-intf {
+            description 'MLD received or sent protocol packet.'
+                        ;
+            leaf rec-query {
+              description 'Received query counts'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-query {
+              description 'Sent query counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-done {
+              description 'Received done counts.'
+                          ;
+              type uint32 ;
+              ncd:revise-date 2015-06-04 ;
+            }
+            leaf sent-done {
+              description 'Sent done counts.'
+                          ;
+              type uint32 ;
+              ncd:revise-date 2015-06-04 ;
+            }
+            leaf rec-reportv1 {
+              description 'Received reportV1 counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-reportv1 {
+              description 'Sent reportV1 counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-reportv2 {
+              description 'Received reportV2 counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-reportv2 {
+              description 'Sent reportV2 counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-spec-query {
+              description 'Sent special query counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-spec-src-query {
+              description 'Sent special source query counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-dropped {
+              description 'Received dropped counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-invalid {
+              description 'Received invalid counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-total {
+              description 'Received total counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-total {
+              description 'Sent total counts.'
+                          ;
+              type uint32 ;
+            }
+          }
+          container intfs {
+            description 'MLD received or sent protocol packet in one interface.'
+                        ;
+            list intf {
+              description 'MLD received or sent protocol packet in one interfac'
+                        + 'e.'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Interface name.'
+                                ;
+                  }
+                }
+              }
+              leaf rec-query {
+                description 'Received query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-query {
+                description 'Sent query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-done {
+                description 'Received done counts.'
+                            ;
+                type uint32 ;
+                ncd:revise-date 2015-06-04 ;
+              }
+              leaf sent-done {
+                description 'Sent done counts.'
+                            ;
+                type uint32 ;
+                ncd:revise-date 2015-06-04 ;
+              }
+              leaf rec-reportv1 {
+                description 'Received reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv1 {
+                description 'Sent reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv2 {
+                description 'Received reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv2 {
+                description 'Sent reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-query {
+                description 'Sent special query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-src-query {
+                description 'Sent special source query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-dropped {
+                description 'Received dropped counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-invalid {
+                description 'Received invalid counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-total {
+                description 'Received total counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-total {
+                description 'Sent total counts.'
+                            ;
+                type uint32 ;
+              }
+            }
+          }
+        }
+      }
+      container private {
+        description 'Show MLD VRF information'
+                    ;
+        container groups {
+          description 'MLD group membership information'
+                      ;
+          list group {
+            description 'MLD group membership information'
+                        ;
+            key 'vrf-name intf-name group-addr'
+                ;
+            leaf vrf-name {
+              description 'VRF name'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'Vrf name'
+                              ;
+                }
+              }
+            }
+            leaf intf-name {
+              description 'Interface name'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name'
+                              ;
+                }
+              }
+            }
+            leaf group-addr {
+              description 'Group address'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf last-reporter {
+              description 'Last reporter'
+                          ;
+              type ncd:ipv6-address ;
+              ncd:revise-date 2015-06-04 ;
+            }
+            leaf present {
+              description 'Group membership uptime.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf expire {
+              description 'If the version is MLDv1, this leaf is the expire tim'
+                        + 'e of group membership,'+"\n"
+                        + 'else it is the expire time of group exclude model.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+          }
+        }
+        container group-details {
+          description 'MLD group membership information'
+                      ;
+          list group {
+            description 'MLD group membership information'
+                        ;
+            key 'vrf-name intf-name group-addr'
+                ;
+            leaf vrf-name {
+              description 'Vrf name'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'Vrf name'
+                              ;
+                }
+              }
+            }
+            leaf intf-name {
+              description 'Interface name'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name'
+                              ;
+                }
+              }
+            }
+            leaf group-addr {
+              description 'Group address'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf last-reporter {
+              description 'Last reporter.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf uptime {
+              description 'Group membership uptime.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf expire {
+              description 'If the version is MLDv1, this leaf is the expire tim'
+                        + 'e of group membership,'+"\n"
+                        + 'else it is the expire time of group exclude model.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf group-flags {
+              description 'Group flags.S-static group,SSM-SSM group,M-MDT group'
+                        + ',R-report group,B-SIBTP group.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf group-mode {
+              description 'Group mode.EXCLUDE-exclude mode,INCLUDE-include mode.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            container sources {
+              description 'IP source address'
+                          ;
+              list source {
+                description 'IP source address'
+                            ;
+                key source-addr ;
+                leaf source-addr {
+                  description 'Source address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf source-present {
+                  description 'Source present time.'
+                              ;
+                  type ncd:string-all {
+                    length 0..15 ;
+                  }
+                }
+                leaf source-expire {
+                  description 'Source expire time'
+                              ;
+                  type ncd:string-all {
+                    length 0..15 ;
+                  }
+                }
+                leaf fwd {
+                  description 'Forward flag.YES-forward,NO-not forward.'
+                              ;
+                  type ncd:string-all {
+                    length 0..7 ;
+                  }
+                }
+                leaf source-flag {
+                  description 'Source flag.S-Static source,M-Mapping source,R-R'
+                            + 'eport source,B-SIBTP source.'
+                              ;
+                  type ncd:string-all {
+                    length 0..7 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        container interfaces {
+          description 'MLD interface information.'
+                      ;
+          list interface {
+            description 'MLD interface information.'
+                        ;
+            key 'vrf-name if-name'
+                ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'VRF name.'
+                              ;
+                }
+              }
+            }
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name.'
+                              ;
+                }
+              }
+            }
+            leaf if-addr {
+              description 'Interface address.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf mld-flag {
+              description 'MLD enable.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf version {
+              description Version ;
+              type uint32 {
+                range 1..2 ;
+              }
+            }
+            leaf query-interval {
+              description 'MLD query interval.'
+                          ;
+              type uint32 {
+                range 1..65535 ;
+              }
+              units second ;
+            }
+            leaf old-router {
+              description 'The version of the old router.'+"\n"
+                        + 'v1:When the MLD version of the interface is 2 and an'
+                        + ' MLDv1 membership query is received, the value of th'
+                        + 'e node is v1.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf querier-phase {
+              description 'Router in startup phase.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf last-member-query {
+              description 'MLD last member query interval.'
+                          ;
+              type uint32 {
+                range 1..25 ;
+              }
+              units second ;
+            }
+            leaf query-max-response {
+              description 'MLD query max response time.'
+                          ;
+              type uint32 {
+                range 1..25 ;
+              }
+              units second ;
+            }
+            leaf querier-timeout {
+              description 'MLD querier timeout period.'
+                          ;
+              type uint32 ;
+              units second ;
+            }
+            leaf robustness-variable {
+              description 'MLD robustness variable.'
+                          ;
+              type uint32 {
+                range 2..7 ;
+              }
+            }
+            leaf querier {
+              description 'MLD querier.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf expire {
+              description 'Other querier timeout.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf acl-name {
+              description 'Inbound MLD access group.'
+                          ;
+              type ncd:string-all {
+                length 0..31 ;
+              }
+            }
+            leaf immediate-leave {
+              description 'MLD immediate leave.'
+                          ;
+              type ncd:string-all {
+                length 0..36 ;
+              }
+            }
+          }
+        }
+        container packets {
+          description 'MLD received or sent protocol packet.'
+                      ;
+          list packet {
+            description 'MLD received or sent protocol packet.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'VRF name'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'Vrf name'
+                              ;
+                }
+              }
+            }
+            container all-intf {
+              description 'MLD received or sent protocol packet.'
+                          ;
+              leaf rec-query {
+                description 'Received query counts'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-query {
+                description 'Sent query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-done {
+                description 'Received done counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-done {
+                description 'Sent done counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv1 {
+                description 'Received reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv1 {
+                description 'Sent reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv2 {
+                description 'Received reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv2 {
+                description 'Sent reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-query {
+                description 'Sent special query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-src-query {
+                description 'Sent special source query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-dropped {
+                description 'Received dropped counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-invalid {
+                description 'Received invalid counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-total {
+                description 'Received total counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-total {
+                description 'Sent total counts.'
+                            ;
+                type uint32 ;
+              }
+            }
+            list intf {
+              description 'MLD received or sent protocol packet in one interfac'
+                        + 'e.'
+                          ;
+              key intf-name ;
+              leaf intf-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Interface name.'
+                                ;
+                  }
+                }
+              }
+              leaf rec-query {
+                description 'Received query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-query {
+                description 'Sent query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-done {
+                description 'Received done counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-done {
+                description 'Sent done counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv1 {
+                description 'Received reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv1 {
+                description 'Sent reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv2 {
+                description 'Received reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv2 {
+                description 'Sent reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-query {
+                description 'Sent special query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-src-query {
+                description 'Sent special source query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-dropped {
+                description 'Received dropped counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-invalid {
+                description 'Received invalid counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-total {
+                description 'Received total counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-total {
+                description 'Sent total counts.'
+                            ;
+                type uint32 ;
+              }
+            }
+          }
+          ncd:revise-date 2015-06-04 ;
+        }
+        container group-summary {
+          description 'MLD groups summary.'
+                      ;
+          list summary {
+            description 'MLD groups summary.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type ncd:string-all {
+                length 1..32 ;
+              }
+            }
+            container all-intfs {
+              description 'MLD groups summary.'
+                          ;
+              leaf static {
+                description 'Static group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf join {
+                description 'Join group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf total {
+                description 'Show all group summary.'
+                            ;
+                type uint32 ;
+              }
+            }
+            list intf {
+              description 'Show interface summary.'
+                          ;
+              key intf-name ;
+              leaf intf-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 ;
+                }
+              }
+              leaf static {
+                description 'Static group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf join {
+                description 'Join group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf total {
+                description 'Show all group summary.'
+                            ;
+                type uint32 ;
+              }
+            }
+            ncd:revise-date 2015-06-04 ;
+          }
+        }
+      }
+    }
+    ncd:revise-date 2015-04-15 ;
+  }
+  container operation {
+    config false ;
+    description 'Operation model.'
+                ;
+    container mld {
+      description 'MLD operation model.'
+                  ;
+      container clear {
+        description 'Clear operation.'
+                    ;
+        container public {
+          description 'Clear MLD information.'
+                      ;
+          container packet-count {
+            description 'Clear MLD packet counts.'
+                        ;
+            container intf {
+              description 'Clear MLD packet in one interface.'
+                          ;
+              list interface {
+                description 'Clear MLD packet in one interface.'
+                            ;
+                key intf-name ;
+                leaf intf-name {
+                  description 'Inteface name.'
+                              ;
+                  type ncd:ifname ;
+                }
+              }
+            }
+            container all-intf {
+              description 'Clear all MLD public packet counts.'
+                          ;
+              leaf all {
+                description 'Clear all MLD public packet counts.'
+                            ;
+                type empty ;
+              }
+            }
+          }
+          container groups {
+            description 'Clear MLD group counts entries.'
+                        ;
+            container intf {
+              description 'Clear MLD group counts in one interface.'
+                          ;
+              list interface {
+                description 'Clear MLD group counts in one interface.'
+                            ;
+                key intf-name ;
+                leaf intf-name {
+                  description 'Interface name.'
+                              ;
+                  type ncd:ifname ;
+                }
+              }
+            }
+            container all-intf {
+              description 'Clear all MLD group counts.'
+                          ;
+              leaf all {
+                description 'Clear all MLD group counts.'
+                            ;
+                type empty ;
+              }
+            }
+          }
+        }
+        container private {
+          description 'Clear MLD VRF information.'
+                      ;
+          container packet-count {
+            description 'Clear MLD VRF packet counts.'
+                        ;
+            container intf {
+              description 'Clear MLD VRF packet in one interface.'
+                          ;
+              list interface {
+                description 'Clear MLD VRF packet in one interface.'
+                            ;
+                key 'vrf-name intf-name'
+                    ;
+                leaf vrf-name {
+                  description 'VRF name'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                leaf intf-name {
+                  description 'Interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                ncd:select 'vrf-name intf-name'
+                           ;
+              }
+            }
+            container all-intf {
+              description 'Clear all MLD packet counts in one vrf.'
+                          ;
+              list all {
+                description 'Clear all MLD packet counts in one vrf.'
+                            ;
+                key vrf-name ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+              }
+            }
+          }
+          container groups {
+            description 'Clear MLD group counts entries.'
+                        ;
+            container intf {
+              description 'Clear MLD VRF group counts in one interface.'
+                          ;
+              list interface {
+                description 'Clear MLD VRF group counts in one interface.'
+                            ;
+                key 'vrf-name intf-name'
+                    ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                leaf intf-name {
+                  description 'Interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                ncd:select 'vrf-name intf-name'
+                           ;
+              }
+            }
+            container all-intf {
+              description 'Clear all MLD group counts in one vrf.'
+                          ;
+              list all {
+                description 'Clear all MLD group counts in one vrf.'
+                            ;
+                key vrf-name ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    ncd:revise-date 2015-04-15 ;
+  }
+}

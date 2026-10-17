@@ -1,0 +1,140 @@
+module an-xpon {
+    yang-version 1.1;
+    namespace "urn:an:yang:an-xpon";
+    prefix "an-xpon";
+    import ietf-interfaces {
+        prefix "if";
+    }
+    import ietf-hardware {
+        prefix "hw";
+    }
+    import iana-hardware {
+        prefix "ianahw";
+    }
+    import bbf-xpon {
+        prefix "bbf-xpon";
+    }
+
+    import bbf-xponvani {
+        prefix "bbf-xponvani";
+    }
+
+    organization
+        "中国电信股份有限公司研究院
+         Research Institute of China Telecom";
+
+    contact
+        "Editor:      Liang Zhenming, China Telecom
+                                    <mailto:liangzhm@chinatelecom.cn>
+
+         Editor:      Yang Ziyao, China Telecom
+                                    <mailto:yangziyao@chinatelecom.cn>
+
+         Editor:      Tang Jian, China Telecom
+                                    <mailto:tangj10@chinatelecom.cn>
+
+         Editor:      Shi Shuguang, Huawei
+                                    <mailto:shishuguang@huawei.com>
+
+         Editor:      Huang Yueping, Huawei
+                                    <mailto:huangyueping@huawei.com>
+
+         Editor:      Feng Xiaodong, CICT
+                                    <mailto:xdfeng@fiberhome.com>
+
+         Editor:      Wu Hao, CICT
+                                    <mailto:wuh@fiberhome.com>
+
+         Editor:      Xie Yu, ZTE
+                                    <mailto:10001002@zte.com.cn>
+
+         Editor:      Ni Shenliu, ZTE
+                                    <mailto:00026486@zte.com.cn>
+
+         Leader:      Zhang Dezhi, China Telecom
+                                    <mailto:zhangdzh@chinatelecom.cn>";
+
+    description
+        "Copyright (c) 2020, Research Institute of China Telecom
+
+         Redistribution and use in source and binary forms, with or
+         without modification, are permitted provided that the following
+         conditions are met:
+
+         1. Redistributions of source code must retain the above copyright
+            notice, this list of conditions and the following disclaimer.
+
+         2. Redistributions in binary form must reproduce the above
+            copyright notice, this list of conditions and the following
+            disclaimer in the documentation and/or other materials
+            provided with the distribution.
+
+         3. Neither the name of the copyright holder nor the names of its
+            contributors may be used to endorse or promote products
+            derived from this software without specific prior written
+            permission.
+
+         THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+         CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+         INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+         MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+         DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+         CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+         SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+         NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+         LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+         CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+         STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+         ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+         ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+         The above license is used as a license under copyright only.
+
+         Any moral rights which are necessary to exercise under the above
+         license grant are also deemed granted under this license.";
+
+    revision 2020-12-18;
+    
+    augment "/if:interfaces/if:interface/bbf-xpon:channel-termination" {
+        leaf hw-port-ref {
+            type leafref {
+                path "/hw:hardware/hw:component/hw:name";
+            }
+            must "derived-from-or-self (/hw:hardware
+             /hw:component[hw:name=current()]/hw:class,
+             'ianahw:port')" {
+                error-message
+                    "Referenced component is or is derived from class 'port'.";
+            }
+            description "在channel-termination中关联gpon模型和硬件模型";
+        }
+    }
+    
+    augment "/if:interfaces/if:interface/bbf-xponvani:v-ani" {
+        container expected-loid {
+            description 
+                "OLT期望从ONU获取的LOID和密码,
+                 每个ONU的LOID和密码是唯一的。
+                 当loid有值，password空值时，
+                 表示loid认证方式；
+                 当loid和password都有值时，表示
+                 loid+password认证方式。";
+
+            leaf loid{
+                type string {
+                    length "0..24";
+                }
+            }
+            leaf password{
+                when "../loid!=''";
+                type string {
+                    length "0..12";
+                }
+            }
+        }
+        leaf onu-type {
+            type string;
+            description "ONU类型，用以标识ONU形态和端口";
+        }
+    }
+}

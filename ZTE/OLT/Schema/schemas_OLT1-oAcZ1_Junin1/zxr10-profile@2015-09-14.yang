@@ -1,0 +1,212 @@
+module zxr10-profile {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/profile'
+            ;
+  prefix profile ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the profile.'
+              ;
+  revision 2015-09-14 {
+    description "1 Obsolete the container 'configuration/profile/if-profile-rul"
+              + "es'.
+\n2 Add the container 'configuration/profile/profile-bind"
+              + "s'."
+                ;
+  }
+  revision 2014-06-20 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'Profile configure infoamation.'
+                ;
+    container profile {
+      description 'Profile configure infoamation.'
+                  ;
+      container profile-rules {
+        description 'Profile rules.'
+                    ;
+        list profile-rule {
+          description 'Profile rule.'
+                      ;
+          key profile-name ;
+          leaf profile-name {
+            description 'Name of the profile.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf traffic-class {
+            description 'Traffic class.'
+                        ;
+            type uint16 {
+              range 0..7 ;
+            }
+            default 0 ;
+          }
+          leaf ipv4-access-ingress-list {
+            description 'Name of an IPv4 access ingress list rule.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf ipv4-access-egress-list {
+            description 'Name of an IPv4 access egress list rule.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf ipv4-mixed-ingress-list {
+            description 'Name of an IPv4 mixed access ingress list rule.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf ipv4-mixed-egress-list {
+            description 'Name of an IPv4 mixed access egress list rule.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          container qos-rules {
+            description 'Qos rules.'
+                        ;
+            list qos-rule {
+              description 'QOS rule list.'
+                          ;
+              key type ;
+              leaf type {
+                description 'Type of QOS rule.'
+                            ;
+                type enumeration {
+                  enum qos-traffic-limit-acl {
+                    value 1 ;
+                    description 'Traffic limit acl rule type.'
+                                ;
+                  }
+                  enum qos-traffic-macro-flow {
+                    value 2 ;
+                    description 'Traffic macro flow rule type.'
+                                ;
+                  }
+                  enum qos-redirect-in {
+                    value 3 ;
+                    description 'Redirect in rule type.'
+                                ;
+                  }
+                  enum qos-priority-mark {
+                    value 4 ;
+                    description 'Priority mark rule type.'
+                                ;
+                  }
+                  enum qos-traffic-mirro {
+                    value 5 ;
+                    description 'Traffic mirro rule type.'
+                                ;
+                  }
+                  enum qos-traffic-statistics {
+                    value 6 ;
+                    description 'Traffic statistics rule type.'
+                                ;
+                  }
+                }
+              }
+              leaf name {
+                description 'QOS rule name.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                mandatory true ;
+              }
+            }
+          }
+        }
+      }
+      container if-profile-rules {
+        status obsolete {
+          ncd:revise-date 2015-09-14 ;
+        }
+        description 'Interface of profile.'
+                    ;
+        list if-profile-rule {
+          status obsolete {
+            ncd:revise-date 2015-09-14 ;
+          }
+          description 'Interface of profile list.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            status obsolete {
+              ncd:revise-date 2015-09-14 ;
+            }
+            description 'Name of the interface.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf profile-name {
+            status obsolete {
+              ncd:revise-date 2015-09-14 ;
+            }
+            description 'Name of the profile.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+        }
+      }
+      container profile-binds {
+        description 'Profile bind.'
+                    ;
+        list profile-bind {
+          description 'Profile bind list.'
+                      ;
+          key 'if-name mac vlan'
+              ;
+          leaf if-name {
+            description 'Name of the interface.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf mac {
+            description 'MAC address.'
+                        ;
+            type ncd:mac-address ;
+          }
+          leaf vlan {
+            description 'VLAN, value range from [1..4094].'
+                        ;
+            type uint16 {
+              range 1..4094 ;
+            }
+          }
+          leaf profile-name {
+            description 'Name of the profile.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2015-09-14 ;
+      }
+    }
+  }
+}

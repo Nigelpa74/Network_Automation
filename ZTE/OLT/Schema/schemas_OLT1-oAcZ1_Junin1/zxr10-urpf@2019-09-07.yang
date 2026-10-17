@@ -1,0 +1,297 @@
+module zxr10-urpf {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/urpf'
+            ;
+  prefix urpf ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe URPF(Unicast Reverse Path Forward'
+            + 'ing)'
+              ;
+  revision 2019-09-07 {
+    description 'Support ignore-multipath-default-route node.'+"\n"
+              + '1 configuration/urpf/ipv4/ipv4-urpf/mode/strict/ignore-multipa'
+              + 'th-default-route;'+"\n"
+              + '2 configuration/urpf/ipv6/ipv6-urpf/mode/strict/ignore-multipa'
+              + 'th-default-route.'
+                ;
+  }
+  revision 2017-12-11 {
+    description 'Change optional urpf-id nodes into mandatory.'+"\n"
+              + '1 configuration/urpf/ipv4/ipv4-urpf/mode/neighbour/neighbour/u'
+              + 'rpf-id;'+"\n"
+              + '2 configuration/urpf/ipv6/ipv6-urpf/mode/neighbour/neighbour/u'
+              + 'rpf-id.'
+                ;
+  }
+  revision 2017-11-06 {
+    description 'Support neighbour mode.'+"\n"
+              + '1 configuration/urpf/ipv4/ipv4-urpf/mode/neighbour;'+"\n"
+              + '2 configuration/urpf/ipv6/ipv6-urpf/mode/neighbour.'
+                ;
+  }
+  revision 2017-07-01 {
+    description '1.Support to configure URPF based on IP, add new nodes as foll'
+              + 'owed,'+"\n"
+              + 'feature: ip-urpf'+"\n"
+              + 'containers:'+"\n"
+              + '/configuration/urpf/ip-urpfs.'
+                ;
+  }
+  revision 2014-03-18 {
+    description 'Initial version'
+                ;
+  }
+  feature ipv4-urpf {
+    description 'Support to configure IPv4 Type URPF'
+                ;
+  }
+  feature ipv6-urpf {
+    description 'Support to configure IPv6 Type URPF'
+                ;
+  }
+  feature ipv4-urpf-acl {
+    description 'Support ACL option for IPv4 type URPF'
+                ;
+  }
+  feature ip-urpf {
+    description 'Support to configure IP Type URPF.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model'
+                ;
+    container urpf {
+      description 'Configuration about URPF'
+                  ;
+      container ipv4 {
+        if-feature ipv4-urpf ;
+        description 'Configuration IPv4 Type'
+                    ;
+        list ipv4-urpf {
+          description 'Configuration IPv4 Type URPF'
+                      ;
+          key interface ;
+          leaf interface {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          choice mode {
+            description 'Mode choice'
+                        ;
+            mandatory true ;
+            case strict {
+              description 'Strict mode'
+                          ;
+              leaf rx {
+                description 'Match strict mode'
+                            ;
+                type empty ;
+              }
+              leaf ignore-multipath-def-route {
+                description 'Ignore multipath default route'
+                            ;
+                type empty ;
+                ncd:revise-date 2019-09-07 ;
+              }
+            }
+            case loose {
+              description 'Loose mode'
+                          ;
+              leaf any {
+                description 'Match loose mode'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf ignore-def-route {
+                description 'Ignore default route'
+                            ;
+                type empty ;
+              }
+            }
+            case neighbour {
+              description 'Match neighbour mode'
+                          ;
+              container neighbour {
+                description 'Match neighbour mode'
+                            ;
+                leaf neighbour {
+                  description 'Match neighbour mode'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+                leaf urpf-id {
+                  description 'Specify URPF ID'
+                              ;
+                  type uint32 {
+                    range 1..65534 ;
+                  }
+                  mandatory true ;
+                }
+              }
+              ncd:revise-date 2017-11-06 ;
+            }
+          }
+          leaf acl-name {
+            if-feature ipv4-urpf-acl ;
+            description 'Name of access-list'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+        }
+      }
+      container ipv6 {
+        if-feature ipv6-urpf ;
+        description 'Configuration IPv6 Type'
+                    ;
+        list ipv6-urpf {
+          description 'Configuration IPv6 Type URPF'
+                      ;
+          key interface ;
+          leaf interface {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          choice mode {
+            description 'Mode choice'
+                        ;
+            mandatory true ;
+            case strict {
+              description 'Strict mode'
+                          ;
+              leaf rx {
+                description 'Match strict mode'
+                            ;
+                type empty ;
+              }
+              leaf ignore-multipath-def-route {
+                description 'Ignore multipath default route'
+                            ;
+                type empty ;
+                ncd:revise-date 2019-09-07 ;
+              }
+            }
+            case loose {
+              description 'Loose mode'
+                          ;
+              leaf any {
+                description 'Match loose mode'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf ignore-def-route {
+                description 'Ignore default route'
+                            ;
+                type empty ;
+              }
+            }
+            case neighbour {
+              description 'Match neighbour mode'
+                          ;
+              container neighbour {
+                description 'Match neighbour mode'
+                            ;
+                leaf neighbour {
+                  description 'Match neighbour mode'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+                leaf urpf-id {
+                  description 'Specify URPF ID'
+                              ;
+                  type uint32 {
+                    range 1..65534 ;
+                  }
+                  mandatory true ;
+                }
+              }
+              ncd:revise-date 2017-11-06 ;
+            }
+          }
+          leaf acl-name {
+            description 'Name of access-list'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+        }
+      }
+      container ip-urpfs {
+        if-feature ip-urpf ;
+        description 'Configuration IP Type URPF.'
+                    ;
+        list ip-urpf {
+          description 'Configuration IP Type URPF.'
+                      ;
+          key interface ;
+          leaf interface {
+            description 'Interface name, support 1-31 characters.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'Interface name, support 1-31 characters.'
+                            ;
+              }
+            }
+          }
+          container modes {
+            description 'Mode choice.'
+                        ;
+            choice mode {
+              description 'Mode choice.'
+                          ;
+              mandatory true ;
+              case strict {
+                description 'Strict mode.'
+                            ;
+                leaf rx {
+                  description 'Match strict mode.'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+              }
+              case loose {
+                description 'Loose mode.'
+                            ;
+                container loose {
+                  description 'Loose mode.'
+                              ;
+                  leaf any {
+                    description 'Match loose mode.'
+                                ;
+                    type empty ;
+                    mandatory true ;
+                  }
+                  leaf ignore-def-route {
+                    description 'Ignore default route.'
+                                ;
+                    type empty ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        ncd:revise-date 2017-07-01 ;
+      }
+    }
+  }
+}

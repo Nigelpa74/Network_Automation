@@ -1,0 +1,685 @@
+module zxr10-ipv6 {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ipv6'
+            ;
+  prefix ipv6 ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2014-04-14 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'NETCONF of IPv6 module'
+              ;
+  revision 2022-09-06 {
+    description 'Modify Length from 16 to 1 for leaf:/configuration/ipv6/nni-ga'
+              + 'teways/nni-gateway/ipv6-addr.'
+                ;
+  }
+  revision 2022-04-02 {
+    description 'Modify default value from disable to perf-code for leaf:/confi'
+              + 'guration/ipv6/srv6-config/icmp-error/based-inner-packet.'
+                ;
+  }
+  revision 2021-12-07 {
+    description 'Add node:/configuration/ipv6/icmp-config/specify-src-interface'
+              + 's.'
+                ;
+  }
+  revision 2021-09-24 {
+    description 'Add node:/configuration/ipv6/srv6-config/icmp-error/forward '+"\n"
+              + 'Add feature:icmp-error-forward-feature,icmp-based-inner-featur'
+              + 'e.'+"\n"
+              + 'Add if-feature for /configuration/ipv6/srv6-config/icmp-error/'
+              + 'based-inner-packet.'+"\n"
+              + 'Add project-label:15K for srv6-config-feature.'
+                ;
+  }
+  revision 2021-07-14 {
+    description 'Add node:/configuration/ipv6/srv6-config.'+"\n"
+              + 'Add node:/configuration/ipv6/srv6-config/icmp-error.'+"\n"
+              + 'Add node:/configuration/ipv6/srv6-config/icmp-error/based-inne'
+              + 'r-packet.'
+                ;
+  }
+  revision 2021-04-08 {
+    description 'Add node:/configuration/ipv6/nni-gateways/nni-gateway/if-name.'
+              + ''+"\n"
+              + 'Add node:/configuration/ipv6/nni-gateways/nni-gateway/ipv6-add'
+              + 'r.'
+                ;
+  }
+  revision 2021-02-02 {
+    description 'Add node:/configuration/ipv6/icmp-config/icmp-options/time-exc'
+              + 'eed.'
+                ;
+  }
+  revision 2020-09-02 {
+    description 'Add node:/configuration/ipv6/ipv6-option/strict-pmtu.'
+                ;
+  }
+  revision 2020-07-23 {
+    description 'Add node:/configuration/ipv6/ipv6-option/load-sharing-mode.'
+                ;
+  }
+  revision 2014-06-04 {
+    description 'IPv6 inial model.'
+                ;
+  }
+  feature load-sharing-feature {
+    description 'load-sharing-mode node use this feature.'
+                ;
+  }
+  feature nni-gateway-feature {
+    description 'nni-gateway node use this feature.'
+                ;
+  }
+  feature srv6-config-feature {
+    description 'Feature for SRv6 related configuration.'
+                ;
+  }
+  feature icmp-error-forward-feature {
+    description 'Feature for SRv6 icmp-error-forwarding configuration.'
+                ;
+    ncd:revise-date 2021-09-24 ;
+  }
+  feature icmp-based-inner-feature {
+    description 'Feature for SRv6 icmp-error based-inner-packet configuration.'
+                ;
+    ncd:revise-date 2021-09-24 ;
+  }
+  container configuration {
+    description 'Config node.'
+                ;
+    container ipv6 {
+      description 'IPV6 module configuration entry.'
+                  ;
+      container ipv6-option {
+        description 'Global IPV6 configuration nodes.'
+                    ;
+        leaf load-sharing {
+          if-feature load-sharing-feature ;
+          description 'Turn on the load sharing and set mode.Its default value '
+                    + 'which is turning on per-stream mode or disable and gener'
+                    + 'ally disable, depends on product specification..'
+                      ;
+          type enumeration {
+            enum per-stream {
+              value 1 ;
+              description 'Turn on the load sharing,mode is per-stream.'
+                          ;
+            }
+            enum disable {
+              value 0 ;
+              description 'Turn off the load sharing.'
+                          ;
+            }
+          }
+        }
+        leaf strict-pmtu {
+          description 'Strict-pmtu function.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Disable strict PMTU function.'
+                          ;
+            }
+            enum enable {
+              value 1 ;
+              description 'Enable strict PMTU function.'
+                          ;
+            }
+          }
+          default disable ;
+          ncd:revise-date 2020-09-02 ;
+        }
+      }
+      container icmp-config {
+        description 'Enter ICMP configure mode.'
+                    ;
+        container icmp-options {
+          description 'Set ICMP options.'
+                      ;
+          leaf time-exceed {
+            description 'Set ICMPv6 time exceeded messages function.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable sending ICMPv6 Time Exceeded messages.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Enable sending ICMPv6 Time Exceeded messages.'
+                            ;
+              }
+            }
+            default enable ;
+          }
+          container specify-src-interfaces {
+            description 'Specify the IP source address by interface name in an '
+                      + 'ICMPv6 Error message'
+                        ;
+            list specify-src-interface {
+              description 'Specify the IP source address by interface name in a'
+                        + 'n ICMPv6 Error message'
+                          ;
+              max-elements 1 ;
+              key if-name ;
+              leaf if-name {
+                description 'Loopback interface name'
+                            ;
+                type ncd:ifname {
+                  length 1..31 ;
+                }
+              }
+            }
+            ncd:revise-date 2021-12-07 ;
+          }
+        }
+        ncd:revise-date 2021-02-02 ;
+      }
+      container nni-gateways {
+        description 'Set gateway for NNI Ping&Trace.'
+                    ;
+        list nni-gateway {
+          if-feature nni-gateway-feature ;
+          description 'Set gateway for NNI Ping&Trace for specify interface.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf ipv6-addr {
+            description 'Ipv6 address of the gateway.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+        }
+        ncd:revise-date 2021-04-08 ;
+      }
+      container srv6-config {
+        if-feature srv6-config-feature ;
+        description 'Enter SRv6  related configuration.'
+                    ;
+        container icmp-error {
+          description 'ICMP error message configuration.'
+                      ;
+          leaf based-inner-packet {
+            if-feature icmp-based-inner-feature {
+              ncd:revise-date 2021-09-24 ;
+            }
+            description 'Configure the function of ICMP error message generated'
+                      + ' by inner layer packet.Its default value which is enab'
+                      + 'le or disable and generally disable, depends on produc'
+                      + 't specification.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable the function of ICMP error message generate'
+                          + 'd by inner layer packet.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable the function of ICMP error message generat'
+                          + 'ed by inner layer packet.'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          leaf forward {
+            if-feature icmp-error-forward-feature ;
+            description 'Configure the function of forwarding ICMP error messag'
+                      + 'e.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable the function of forwarding ICMP error messa'
+                          + 'ge.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable the function of forwarding ICMP error mess'
+                          + 'age .'
+                            ;
+              }
+            }
+            default disable ;
+            ncd:revise-date 2021-09-24 ;
+          }
+        }
+        ncd:revise-date 2021-07-14 ;
+      }
+    }
+    ncd:revise-date 2020-07-23 ;
+  }
+  container state {
+    config false ;
+    description 'Dynamic information.'
+                ;
+    container ipv6 {
+      description 'IPv6 information.'
+                  ;
+      container traffic {
+        description 'IPv6 statistics data.'
+                    ;
+        container ip {
+          description 'IP statistics data.'
+                      ;
+          leaf total-rcv {
+            description 'The number of receiving packets.'
+                        ;
+            type uint32 ;
+          }
+          leaf local-destination {
+            description 'The number of packets whose destination is local IP.'
+                        ;
+            type uint32 ;
+          }
+          leaf format-error {
+            description 'The number of receiving packets whose format is wrong.'
+                        ;
+            type uint32 ;
+          }
+          leaf truncated-error {
+            description 'The number of receiving packets which is truncated.'
+                        ;
+            type uint32 ;
+          }
+          leaf holimit-exceed {
+            description 'The number of packets whose hoplimit will be exceeded '
+                      + 'during tramitting.'
+                        ;
+            type uint32 ;
+          }
+          leaf unknown-proto {
+            description 'The number of receving packets whose proto is unknown.'
+                        ;
+            type uint32 ;
+          }
+          leaf reassembled {
+            description 'The number of receiving packet which will be reassembl'
+                      + 'ed.'
+                        ;
+            type uint32 ;
+          }
+          leaf reassemble-timeout {
+            description 'The number of pacekts which is timeout during reassemb'
+                      + 'ling.'
+                        ;
+            type uint32 ;
+          }
+          leaf reassembled-fail {
+            description 'The number of reassembled failure.'
+                        ;
+            type uint32 ;
+          }
+          leaf fragments {
+            description 'The number of packets which is fragmented.'
+                        ;
+            type uint32 ;
+          }
+          leaf fragment-fail {
+            description 'The number of fragment failure.'
+                        ;
+            type uint32 ;
+          }
+          leaf mcast-in {
+            description 'The number of receiving packets whose destination is m'
+                      + 'ulticast IP.'
+                        ;
+            type uint32 ;
+          }
+          leaf mcast-out {
+            description 'The number of sending packets whose destination is mul'
+                      + 'ticast IP.'
+                        ;
+            type uint32 ;
+          }
+          leaf local-generated {
+            description 'The number of packets which is generated locally exclu'
+                      + 'ding forwarding.'
+                        ;
+            type uint32 ;
+          }
+          leaf forward {
+            description 'The number of forwarding packets.'
+                        ;
+            type uint32 ;
+          }
+          leaf dropped {
+            description 'The number of lost packets due to nobufs.'
+                        ;
+            type uint32 ;
+          }
+          leaf no-route {
+            description 'The number of dropped packet due to no route.'
+                        ;
+            type uint32 ;
+          }
+        }
+        container icmp {
+          description 'ICMP statistics data.'
+                      ;
+          container receive {
+            description 'ICMP reveiving paragrams.'
+                        ;
+            leaf total-rcv {
+              description 'The number of receving packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf format-error {
+              description 'The number of receiving packets whose format is wron'
+                        + 'g.'
+                          ;
+              type uint32 ;
+            }
+            leaf checksum-error {
+              description 'The number of receiving packets whose checksum is wr'
+                        + 'ong.'
+                          ;
+              type uint32 ;
+            }
+            leaf bad-code {
+              description 'The number of receiving packets whose "code" is wron'
+                        + 'g.'
+                          ;
+              type uint32 ;
+            }
+            leaf bad-len {
+              description 'The number of receiving packets whose lenth is wrong.'
+                          ;
+              type uint32 ;
+            }
+            leaf dest-unreach {
+              description 'The number of receiving dest-unreach packets .'
+                          ;
+              type uint32 ;
+            }
+            leaf packet-too-big {
+              description 'The number of sending packet-too-big packets .'
+                          ;
+              type uint32 ;
+            }
+            leaf time-exceeded {
+              description 'The number of sending time-exceeded packets .'
+                          ;
+              type uint32 ;
+            }
+            leaf param-error {
+              description 'The number of sending param-error packets .'
+                          ;
+              type uint32 ;
+            }
+            leaf echo-request {
+              description 'The number of sending echo-request packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf echo-reply {
+              description 'The number of sending echo-reply packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf redirect {
+              description 'The number of rsending redirect packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf group-query {
+              description 'The number of sending group-query packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf group-report-v1 {
+              description 'The number of sending group-report-v1 packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf group-reduce {
+              description 'The number of sending group-reduce packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf group-report-v2 {
+              description 'The number of sending group-report-v2 packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf rs {
+              description 'The number of sending router solicit packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf ra {
+              description 'The number of sending router advert packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf ns {
+              description 'The number of sending neighour solicit packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf na {
+              description 'The number of sending neighour advert packets.'
+                          ;
+              type uint32 ;
+            }
+          }
+          container send {
+            description 'ICMP sending paragrams.'
+                        ;
+            leaf error-message-out {
+              description 'The number of sending error message packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf rate-discard {
+              description 'The number of discard packets due to rate.'
+                          ;
+              type uint32 ;
+            }
+            leaf dest-unreach {
+              description 'The number of sending dest-unreach packets .'
+                          ;
+              type uint32 ;
+            }
+            leaf packet-too-big {
+              description 'The number of sending packet-too-big packets .'
+                          ;
+              type uint32 ;
+            }
+            leaf time-exceeded {
+              description 'The number of sending time-exceeded packets .'
+                          ;
+              type uint32 ;
+            }
+            leaf param-error {
+              description 'The number of sending param-error packets .'
+                          ;
+              type uint32 ;
+            }
+            leaf echo-request {
+              description 'The number of sending echo-request packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf echo-reply {
+              description 'The number of sending echo-reply packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf redirect {
+              description 'The number of rsending redirect packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf group-query {
+              description 'The number of sending group-query packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf group-report-v1 {
+              description 'The number of sending group-report-v1 packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf group-reduce {
+              description 'The number of sending group-reduce packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf group-report-v2 {
+              description 'The number of sending group-report-v2 packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf rs {
+              description 'The number of sending router solicit packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf ra {
+              description 'The number of sending router advert packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf ns {
+              description 'The number of sending neighour solicit packets.'
+                          ;
+              type uint32 ;
+            }
+            leaf na {
+              description 'The number of sending neighour advert packets.'
+                          ;
+              type uint32 ;
+            }
+          }
+        }
+        container udp {
+          description 'UDP statistics data.'
+                      ;
+          leaf receive-total {
+            description 'The number of receiving packets.'
+                        ;
+            type uint32 ;
+          }
+          leaf nosum {
+            description 'The number of receiving packets whose checksum is zero.'
+                        ;
+            type uint32 ;
+          }
+          leaf bad-checksum {
+            description 'The number of receiving packet whose checksum is wrong.'
+                        ;
+            type uint32 ;
+          }
+          leaf bad-lenth {
+            description 'The num of receiving packets whose length is wrong.'
+                        ;
+            type uint32 ;
+          }
+          leaf noport {
+            description 'The number of receiving packets whose port is wrong.'
+                        ;
+            type uint32 ;
+          }
+          leaf send-total {
+            description 'The num of sending packets.'
+                        ;
+            type uint32 ;
+          }
+        }
+        container tcp {
+          description 'TCP statistics data.'
+                      ;
+          leaf receive-total {
+            description 'The number of receiving packets.'
+                        ;
+            type uint32 ;
+          }
+          leaf bad-checksum {
+            description 'The number of receiving packet whose checksum is wrong.'
+                        ;
+            type uint32 ;
+          }
+          leaf send-total {
+            description 'The num of sending packets.'
+                        ;
+            type uint32 ;
+          }
+        }
+      }
+      container pmtu-info {
+        description 'IPv6 PMTU.'
+                    ;
+        list pmtu {
+          key 'src-ip dst-ip vpn'
+              ;
+          leaf src-ip {
+            description 'The source IP of the PMUT item.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf dst-ip {
+            description 'The destination IP of the PMUT item.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf vpn {
+            description 'The vpn of the PMUT item.'
+                        ;
+            type string {
+              length 0..36 ;
+            }
+          }
+          leaf mtu {
+            description 'The mtu of the PMUT item.'
+                        ;
+            type uint16 ;
+          }
+          leaf time {
+            description 'The left time of the PMUT item.'
+                        ;
+            type uint16 ;
+            units minutes ;
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description 'Operation entry.'
+                ;
+    container ipv6 {
+      description 'IPv6 operation commonds.'
+                  ;
+      container traffic {
+        description 'IPv6 statistics.'
+                    ;
+        leaf clear-traffic {
+          description 'Clear statistics data.'
+                      ;
+          type empty ;
+        }
+      }
+    }
+  }
+}

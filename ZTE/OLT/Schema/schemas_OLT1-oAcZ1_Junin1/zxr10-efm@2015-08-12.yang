@@ -1,0 +1,1861 @@
+module zxr10-efm {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/efm'
+            ;
+  prefix efm ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the EFM.'
+              ;
+  revision 2015-08-12 {
+    description '1 Modify the length of state/efm/discoverys/discovery/remoteou'
+              + 'i to 8, and get its ASCII value as display result.'
+                ;
+  }
+  revision 2014-07-07 {
+    description "1 Change 'state/efm/variable-requests/variable-request/dicover"
+              + "ystate' node name to 'state/efm/variable-requests/variable-req"
+              + "uest/discoverystate'.
+\n2 Add the definition of length for som"
+              + "e nodes:
+\nstate/efm/variable-requests/variable-request/admins"
+              + "tate
+\nstate/efm/variable-requests/variable-request/mode
+\nsta"
+              + "te/efm/variable-requests/variable-request/discoverystate
+\nsta"
+              + "te/efm/variable-requests/variable-request/remoteoui
+\nstate/ef"
+              + "m/variable-requests/variable-request/loc-err-sym-per-config
+\n"
+              + "state/efm/variable-requests/variable-request/loc-err-sym-per-e"
+              + "vent
+\nstate/efm/variable-requests/variable-request/loc-err-fr"
+              + "ame-config
+\nstate/efm/variable-requests/variable-request/loc-"
+              + "err-frame-event
+\nstate/efm/variable-requests/variable-request"
+              + "/loc-err-fra-per-config
+\nstate/efm/variable-requests/variable"
+              + "-request/loc-err-fra-per-event
+\nstate/efm/variable-requests/v"
+              + "ariable-request/loc-err-fra-sec-config
+\nstate/efm/variable-re"
+              + "quests/variable-request/loc-err-fra-sec-event
+\nstate/efm/vari"
+              + "able-requests/variable-request/rem-err-sym-per-event
+\nstate/e"
+              + "fm/variable-requests/variable-request/rem-err-frame-event
+\nst"
+              + "ate/efm/variable-requests/variable-request/rem-err-fra-per-eve"
+              + "nt
+\nstate/efm/variable-requests/variable-request/rem-err-fra-"
+              + "sec-event"
+                ;
+  }
+  revision 2014-06-16 {
+    description '1 Modify the description of some nodes.'
+                ;
+  }
+  revision 2014-04-14 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'EFM configuration'
+                ;
+    container efm {
+      description 'Ethernet in the first mile'
+                  ;
+      container global {
+        description 'EFM global configuration'
+                    ;
+        leaf adminstate {
+          description 'EFM global enable switch'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Enable Ethernet OAM global function'
+                          ;
+            }
+            enum disable {
+              value 2 ;
+              description 'Disable Ethernet OAM global function'
+                          ;
+            }
+          }
+          default disable ;
+        }
+        leaf rlbtimeout {
+          description 'EFM loopback time-out,range from 1 to 10,unit:second'
+                      ;
+          type uint8 {
+            range 1..10 {
+              description 'Range from 1 to 10'
+                          ;
+            }
+          }
+          units second ;
+          default 3 ;
+        }
+        leaf oui {
+          description 'EFM Organizationally Unique Identifier'
+                      ;
+          type string {
+            length 1..3 {
+              description 'Range from 1 to 3'
+                          ;
+            }
+          }
+          default ZTE ;
+        }
+      }
+      container base-interfaces {
+        description 'EFM base interface configuration'
+                    ;
+        list base-interface {
+          description 'EFM base interface configuration'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf ifenable {
+            description 'Enable interface EFM function'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable interface Ethernet OAM function'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Disable interface Ethernet OAM function'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          leaf ifoammode {
+            description 'Configure EFM OAM mode'
+                        ;
+            type enumeration {
+              enum active {
+                value 1 ;
+                description 'Set Ethernet OAM active mode'
+                            ;
+              }
+              enum passive {
+                value 2 ;
+                description 'Set Ethernet OAM passive mode'
+                            ;
+              }
+            }
+            default active ;
+          }
+          leaf ifperiod {
+            description 'EFM PDU transmitting period, range from 1 to 10, unit:'
+                      + '100ms'
+                        ;
+            type uint8 {
+              range 1..10 {
+                description 'Range from 1 to 10'
+                            ;
+              }
+            }
+            units 100ms ;
+            default 10 ;
+          }
+          leaf iflktimeoutfast {
+            description 'Configure fast link timeout,range from 3 to 200, unit:'
+                      + '100ms'
+                        ;
+            type uint8 {
+              range 3..200 {
+                description 'Range from 3 to 200'
+                            ;
+              }
+            }
+            units 100ms ;
+            default 50 ;
+          }
+          leaf orgspectlv {
+            description 'Configure EFM capability of carrying Organization Spec'
+                      + 'ific Information TLV'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable Organization Specific TLV sending'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Disable Organization Specific TLV sending'
+                            ;
+              }
+            }
+            default enable ;
+          }
+          leaf rmtlbmode {
+            description 'Configure EFM capability of responding to remote loopb'
+                      + 'ack request'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable Ethernet OAM be in remote loopback mode'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Disable Ethernet OAM be in remote loopback mode'
+                            ;
+              }
+            }
+            default enable ;
+          }
+          leaf rmtlbguard {
+            description 'Configure EFM guard mode of disabling remote loopback '
+                      + 'mode from attack'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable guard mode of recoverying from LB to FWD'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Disable guard mode of recoverying from LB to FWD'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          leaf vabretrieval {
+            description 'Configure EFM capability of responding to variable req'
+                      + 'uest'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable variable-response function'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Disable variable-response function'
+                            ;
+              }
+            }
+            default enable ;
+          }
+        }
+      }
+      container linkmonitor-intfs {
+        description 'Configure EFM parameters of link monitor'
+                    ;
+        list linkmonitor-intf {
+          description 'Configure EFM parameters of link monitor'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf iflmenable {
+            description 'Configure EFM linkmonitor enable/disable'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable Ethernet OAM link monitor function'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Disable Ethernet OAM link monitor function'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          leaf errsymthr {
+            description 'Configure symbol period threshold,units:symbol'
+                        ;
+            type uint32 {
+              range 1..65535 {
+                description 'Range from 1 to 65535'
+                            ;
+              }
+            }
+            units symbol ;
+            default 1 ;
+          }
+          leaf errsymwin {
+            description 'Configure symbol period window,unit:million symbols'
+                        ;
+            type uint32 {
+              range 1..65535 {
+                description 'Range from 1 to 65535'
+                            ;
+              }
+            }
+            units 'million symbols'
+                  ;
+            default 1 ;
+          }
+          leaf errframethr {
+            description 'Configure frame event threshold,unit:frame'
+                        ;
+            type uint32 {
+              range 1..65535 {
+                description 'Range from 1 to 65535'
+                            ;
+              }
+            }
+            units frame ;
+            default 1 ;
+          }
+          leaf errframewin {
+            description 'Configure frame event window,unit:second'
+                        ;
+            type uint32 {
+              range 1..60 {
+                description 'Range from 1 to 60'
+                            ;
+              }
+            }
+            units second ;
+            default 1 ;
+          }
+          leaf errframeperthr {
+            description 'Configure frame period event threshold,unit:frame'
+                        ;
+            type uint32 {
+              range 1..65535 {
+                description 'Range from 1 to 65535'
+                            ;
+              }
+            }
+            units frame ;
+            default 1 ;
+          }
+          leaf errframeperwin {
+            description 'Configure frame period event window,unit:ten thousand '
+                      + 'frames'
+                        ;
+            type uint32 {
+              range 1..65535 {
+                description 'Range from 1 to 65535'
+                            ;
+              }
+            }
+            units 'ten thousand frames'
+                  ;
+            default 1 ;
+          }
+          leaf errframesecthr {
+            description 'Configure frame second event threshold,unit:second'
+                        ;
+            type uint32 {
+              range 1..900 {
+                description 'Range from 1 to 900'
+                            ;
+              }
+            }
+            units second ;
+            default 1 ;
+          }
+          leaf errframesecwin {
+            description 'Configure frame second event window,unit:second'
+                        ;
+            type uint32 {
+              range 1..900 {
+                description 'Range from 1 to 900'
+                            ;
+              }
+            }
+            units second ;
+            default 1 ;
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    description 'EFM operation'
+                ;
+    config false ;
+    container efm {
+      description 'Ethernet in the first mile'
+                  ;
+      container variable-requests {
+        description 'EFM variable request operations'
+                    ;
+        list variable-request {
+          description 'EFM variable request operations'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          choice requesttype {
+            mandatory true ;
+            case attrall {
+              description 'Device supports requesting all attributes'
+                          ;
+              leaf attrall {
+                description 'Device supports requesting all attributes'
+                            ;
+                type empty ;
+              }
+            }
+            case attributes {
+              description 'Device supports requesting one attribute or serval a'
+                        + 'ttributes'
+                          ;
+              leaf adminstate {
+                description 'Request Ethernet OAM admin state'
+                            ;
+                type empty ;
+              }
+              leaf mode {
+                description 'Request Ethernet OAM mode'
+                            ;
+                type empty ;
+              }
+              leaf dicoverystate {
+                description 'Request Ethernet OAM discovery state'
+                            ;
+                type empty ;
+              }
+              leaf localconfig {
+                description 'Request Ethernet OAM local configuration'
+                            ;
+                type empty ;
+              }
+              leaf remoteconfig {
+                description 'Request Ethernet OAM remote configuration'
+                            ;
+                type empty ;
+              }
+              leaf localpduconfig {
+                description 'Request Ethernet OAM local PDU configuration'
+                            ;
+                type empty ;
+              }
+              leaf remotemac {
+                description 'Request Ethernet OAM remote MAC address'
+                            ;
+                type empty ;
+              }
+              leaf remotepducfg {
+                description 'Request Ethernet OAM remote PDU configuration'
+                            ;
+                type empty ;
+              }
+              leaf localflag {
+                description 'Request Ethernet OAM local Flags field'
+                            ;
+                type empty ;
+              }
+              leaf remoteflag {
+                description 'Request Ethernet OAM remote Flags field'
+                            ;
+                type empty ;
+              }
+              leaf localrevision {
+                description 'Request Ethernet OAM local revision'
+                            ;
+                type empty ;
+              }
+              leaf remrevision {
+                description 'Request Ethernet OAM remote revision'
+                            ;
+                type empty ;
+              }
+              leaf localstate {
+                description 'Request Ethernet OAM local state'
+                            ;
+                type empty ;
+              }
+              leaf remotestate {
+                description 'Request Ethernet OAM remote state'
+                            ;
+                type empty ;
+              }
+              leaf remoteoui {
+                description 'Request Ethernet OAM remote vender OUI'
+                            ;
+                type empty ;
+              }
+              leaf vendorspecific {
+                description 'Request Ethernet OAM remote vendor specific inform'
+                          + 'ation'
+                            ;
+                type empty ;
+              }
+              leaf unsupported-tx {
+                description 'Request Ethernet OAM unsupported-Tx'
+                            ;
+                type empty ;
+              }
+              leaf unsupported-rx {
+                description 'Request Ethernet OAM unsupported-Rx'
+                            ;
+                type empty ;
+              }
+              leaf information-tx {
+                description 'Request Ethernet OAM information-Tx'
+                            ;
+                type empty ;
+              }
+              leaf information-rx {
+                description 'Request Ethernet OAM information-Rx'
+                            ;
+                type empty ;
+              }
+              leaf uni-event-noti-tx {
+                description 'Request Ethernet OAM unique event-notification-Tx'
+                            ;
+                type empty ;
+              }
+              leaf uni-event-noti-rx {
+                description 'Request Ethernet OAM unique event-notification-Rx'
+                            ;
+                type empty ;
+              }
+              leaf dup-event-noti-tx {
+                description 'Request Ethernet OAM duplicate event-notification-'
+                          + 'Tx'
+                            ;
+                type empty ;
+              }
+              leaf dup-event-noti-rx {
+                description 'Request Ethernet OAM duplicate event-notification-'
+                          + 'Rx'
+                            ;
+                type empty ;
+              }
+              leaf lb-control-tx {
+                description 'Request Ethernet OAM loopback-control-Tx'
+                            ;
+                type empty ;
+              }
+              leaf lb-control-rx {
+                description 'Request Ethernet OAM loopback-control-Rx'
+                            ;
+                type empty ;
+              }
+              leaf variable-req-tx {
+                description 'Request Ethernet OAM variable-request-Tx'
+                            ;
+                type empty ;
+              }
+              leaf variable-req-rx {
+                description 'Request Ethernet OAM variable-request-Rx'
+                            ;
+                type empty ;
+              }
+              leaf variable-res-tx {
+                description 'Request Ethernet OAM variable-response-Tx'
+                            ;
+                type empty ;
+              }
+              leaf variable-res-rx {
+                description 'Request Ethernet OAM variable-response-Rx'
+                            ;
+                type empty ;
+              }
+              leaf org-specific-tx {
+                description 'Request Ethernet OAM organization-specific-Tx'
+                            ;
+                type empty ;
+              }
+              leaf org-specific-rx {
+                description 'Request Ethernet OAM organization-specific-Rx'
+                            ;
+                type empty ;
+              }
+              leaf locerrsymperconfig {
+                description 'Request Ethernet OAM local error-symbol-period con'
+                          + 'fig'
+                            ;
+                type empty ;
+              }
+              leaf locerrsymperevent {
+                description 'Request Ethernet OAM local error-symbol-period eve'
+                          + 'nt'
+                            ;
+                type empty ;
+              }
+              leaf locerrframeconfig {
+                description 'Request Ethernet OAM local error-frame config'
+                            ;
+                type empty ;
+              }
+              leaf locerrframeevent {
+                description 'Request Ethernet OAM local error-frame event'
+                            ;
+                type empty ;
+              }
+              leaf locerrfraperconfig {
+                description 'Request Ethernet OAM local error-frame-period conf'
+                          + 'ig'
+                            ;
+                type empty ;
+              }
+              leaf locerrfraperevent {
+                description 'Request Ethernet OAM local error-frame-period event'
+                            ;
+                type empty ;
+              }
+              leaf locerrfrasecconfig {
+                description 'Request Ethernet OAM local error-frame-seconds con'
+                          + 'fig'
+                            ;
+                type empty ;
+              }
+              leaf locerrfrasecevent {
+                description 'Request Ethernet OAM local error-frame-seconds eve'
+                          + 'nt'
+                            ;
+                type empty ;
+              }
+              leaf remerrsymperevent {
+                description 'Request Ethernet OAM remote error-symbol-period ev'
+                          + 'ent'
+                            ;
+                type empty ;
+              }
+              leaf remerrfraevent {
+                description 'Request Ethernet OAM remote error-frame event'
+                            ;
+                type empty ;
+              }
+              leaf remerrfraperevent {
+                description 'Request Ethernet OAM remote error-frame-period eve'
+                          + 'nt'
+                            ;
+                type empty ;
+              }
+              leaf remerrfrasecevent {
+                description 'Request Ethernet OAM remote error-frame-seconds ev'
+                          + 'ent'
+                            ;
+                type empty ;
+              }
+              leaf oamid {
+                description 'Request Ethernet OAM ID'
+                            ;
+                type empty ;
+              }
+            }
+          }
+        }
+      }
+      container loopbacks {
+        description 'EFM loopback operations'
+                    ;
+        list loopback {
+          description 'EFM loopback operations'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf lbcmd {
+            description 'EFM interface remote loopback function switch'
+                        ;
+            type enumeration {
+              enum start {
+                value 1 ;
+                description 'Start interface remote loopback function'
+                            ;
+              }
+              enum stop {
+                value 2 ;
+                description 'Stop interface remote loopback function'
+                            ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    description 'EFM state information'
+                ;
+    config false ;
+    container efm {
+      description 'Ethernet in the first mile'
+                  ;
+      container global {
+        description 'EFM global information'
+                    ;
+        leaf adminstate {
+          description 'EFM global enable switch'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Enable Ethernet OAM global function'
+                          ;
+            }
+            enum disable {
+              value 2 ;
+              description 'Disable Ethernet OAM global function'
+                          ;
+            }
+          }
+        }
+        leaf linkmonitor {
+          description 'The state of linkmonitor function'
+                      ;
+          type enumeration {
+            enum support {
+              value 1 ;
+              description 'Support the linkmonitor function'
+                          ;
+            }
+            enum nonsupport {
+              value 2 ;
+              description 'Nonsupport the linkmonitor function'
+                          ;
+            }
+          }
+        }
+        leaf mibretrieval {
+          description 'The state of mibretrieval function'
+                      ;
+          type enumeration {
+            enum support {
+              value 1 ;
+              description 'Support the mibretrieval function'
+                          ;
+            }
+            enum nonsupport {
+              value 2 ;
+              description 'Nonsupport the mibretrieval function'
+                          ;
+            }
+          }
+        }
+        leaf oui {
+          description 'EFM Organizationally Unique Identifier'
+                      ;
+          type string {
+            length 1..3 {
+              description 'Range from 1 to 3'
+                          ;
+            }
+          }
+        }
+        leaf rlbtimeout {
+          description 'EFM loopback time-out,range from 1 to 10,unit:second'
+                      ;
+          type uint8 {
+            range 1..10 {
+              description 'Range from 1 to 10'
+                          ;
+            }
+          }
+          units second ;
+        }
+      }
+      container discoverys {
+        description 'Show Ethernet OAM discovery status'
+                    ;
+        list discovery {
+          description 'Show Ethernet OAM discovery status'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf localmode {
+            description 'Local working mode'
+                        ;
+            type enumeration {
+              enum passive {
+                value 0 ;
+                description 'Passive mode'
+                            ;
+              }
+              enum active {
+                value 1 ;
+                description 'Active mode'
+                            ;
+              }
+            }
+          }
+          leaf localperiod {
+            description 'Ethernet OAM sending PUD period,unit:100ms'
+                        ;
+            type uint8 ;
+            units 100ms ;
+          }
+          leaf locallktime {
+            description 'Ethernet OAM link timeout,unit:100ms'
+                        ;
+            type uint8 ;
+            units 100ms ;
+          }
+          leaf localunidirect {
+            description 'Local capability of supporting Unidirection'
+                        ;
+            type enumeration {
+              enum nonsupport {
+                value 0 ;
+                description "Don't support unidircetion"
+                            ;
+              }
+              enum support {
+                value 1 ;
+                description 'Support unidirection'
+                            ;
+              }
+            }
+          }
+          leaf localpdumax {
+            description 'Local PDU max size'
+                        ;
+            type uint16 ;
+          }
+          leaf localparse {
+            description 'Local parser status'
+                        ;
+            type enumeration {
+              enum forward {
+                value 0 ;
+                description 'Forward status'
+                            ;
+              }
+              enum loopback {
+                value 1 ;
+                description 'Loopback status'
+                            ;
+              }
+              enum discard {
+                value 2 ;
+                description 'Discard status'
+                            ;
+              }
+            }
+          }
+          leaf localmultiplexer {
+            description 'Local multiplexer status'
+                        ;
+            type enumeration {
+              enum forward {
+                value 0 ;
+                description 'Forward status'
+                            ;
+              }
+              enum discard {
+                value 1 ;
+                description 'Discard status'
+                            ;
+              }
+            }
+          }
+          leaf localstable {
+            description 'Local stable'
+                        ;
+            type enumeration {
+              enum no {
+                value 0 ;
+                description 'Local is not stable'
+                            ;
+              }
+              enum yes {
+                value 1 ;
+                description 'Local is stable'
+                            ;
+              }
+            }
+          }
+          leaf localdiscovery {
+            description 'Local discovery status'
+                        ;
+            type enumeration {
+              enum undone {
+                value 0 ;
+                description 'Discovery is not finished'
+                            ;
+              }
+              enum done {
+                value 1 ;
+                description 'Discovery is fininshed'
+                            ;
+              }
+            }
+          }
+          leaf localloopback {
+            description 'Local loopback status'
+                        ;
+            type enumeration {
+              enum off {
+                value 0 ;
+                description 'Forward status'
+                            ;
+              }
+              enum master {
+                value 1 ;
+                description 'Loopback master status'
+                            ;
+              }
+              enum slave {
+                value 2 ;
+                description 'Loopback slave status'
+                            ;
+              }
+            }
+          }
+          leaf localpdurev {
+            description 'PDU Revision value'
+                        ;
+            type string {
+              length 1..5 {
+                description 'Range from 1 to 5'
+                            ;
+              }
+            }
+          }
+          leaf remotemode {
+            description 'Remote mode'
+                        ;
+            type enumeration {
+              enum passive {
+                value 0 ;
+                description 'Passive mode'
+                            ;
+              }
+              enum active {
+                value 1 ;
+                description 'Active mode'
+                            ;
+              }
+            }
+          }
+          leaf rem-linkmonitor {
+            description 'Remote capability of supporting link monitor'
+                        ;
+            type enumeration {
+              enum nonsupport {
+                value 0 ;
+                description 'Do not support link monitor'
+                            ;
+              }
+              enum support {
+                value 1 ;
+                description 'Support link monitor'
+                            ;
+              }
+            }
+          }
+          leaf rem-unidirect {
+            description 'Remote capability of supporting unidirection'
+                        ;
+            type enumeration {
+              enum nonsupport {
+                value 0 ;
+                description 'Do not support unidirection'
+                            ;
+              }
+              enum support {
+                value 1 ;
+                description 'Support unidirection'
+                            ;
+              }
+            }
+          }
+          leaf rem-loopback {
+            description 'Remote capability of supporting loopback'
+                        ;
+            type enumeration {
+              enum nonsupport {
+                value 0 ;
+                description 'Do not support loopback'
+                            ;
+              }
+              enum support {
+                value 1 ;
+                description 'Support loopback'
+                            ;
+              }
+            }
+          }
+          leaf rem-mibretrieval {
+            description 'Remote capability support mibretrieval'
+                        ;
+            type enumeration {
+              enum nonsupport {
+                value 0 ;
+                description 'Do not support mibretrieval'
+                            ;
+              }
+              enum support {
+                value 1 ;
+                description 'Support mibretrieval'
+                            ;
+              }
+            }
+          }
+          leaf rem-pdumax {
+            description 'Remote PDU max size'
+                        ;
+            type uint16 ;
+          }
+          leaf rem-parse {
+            description 'Remote parser status'
+                        ;
+            type enumeration {
+              enum forward {
+                value 0 ;
+                description 'Forward status'
+                            ;
+              }
+              enum loopback {
+                value 1 ;
+                description 'Loopback status'
+                            ;
+              }
+              enum discard {
+                value 2 ;
+                description 'Discard status'
+                            ;
+              }
+            }
+          }
+          leaf rem-multiplexer {
+            description 'Remote multiplexer status'
+                        ;
+            type enumeration {
+              enum forward {
+                value 0 ;
+                description 'Forward status'
+                            ;
+              }
+              enum discard {
+                value 1 ;
+                description 'Discard status'
+                            ;
+              }
+            }
+          }
+          leaf rem-stable {
+            description 'Remote stable'
+                        ;
+            type enumeration {
+              enum no {
+                value 0 ;
+                description 'Remote is not stable'
+                            ;
+              }
+              enum yes {
+                value 1 ;
+                description 'Remote is stable'
+                            ;
+              }
+            }
+          }
+          leaf rem-mac {
+            description 'Remote mac address'
+                        ;
+            type ncd:mac-address ;
+          }
+          leaf rem-pdurev {
+            description 'Remote PDU Revison'
+                        ;
+            type string {
+              length 1..5 {
+                description 'Range from 1 to 5'
+                            ;
+              }
+            }
+          }
+          leaf loc-orgspec {
+            description 'Ethernet OAM capability of carrying Organization Speci'
+                      + 'fic Information TLV'
+                        ;
+            type enumeration {
+              enum nonsupport {
+                value 0 ;
+                description 'Ethernet OAM packet do not carry Organization Spec'
+                          + 'ific Information TLV'
+                            ;
+              }
+              enum support {
+                value 1 ;
+                description 'Ethernet OAM packet carry Organization Specific In'
+                          + 'formation TLV'
+                            ;
+              }
+            }
+          }
+          leaf locallbmode {
+            description 'Ethernet OAM capability of responding to loopback cont'
+                      + 'rol packet'
+                        ;
+            type enumeration {
+              enum support {
+                value 1 ;
+                description 'Ethernet OAM response to loopback control packet'
+                            ;
+              }
+              enum nonsupport {
+                value 2 ;
+                description 'Ethernet OAM do not response to loopback control p'
+                          + 'acket'
+                            ;
+              }
+            }
+          }
+          leaf locallbguard {
+            description 'Ethernet OAM guard mode of disabling remote loopback m'
+                      + 'ode from attack'
+                        ;
+            type enumeration {
+              enum recovery-forward {
+                value 1 ;
+                description 'Guard mode of recoverying from LB to FWD'
+                            ;
+              }
+              enum no {
+                value 2 ;
+                description 'Guard mode of not recoverying from LB to FWD'
+                            ;
+              }
+            }
+          }
+          leaf loc-vabresp {
+            description 'Ethernet OAM capability of responding to variable requ'
+                      + 'est'
+                        ;
+            type enumeration {
+              enum support {
+                value 1 ;
+                description 'Reponse to variable request'
+                            ;
+              }
+              enum nonsupport {
+                value 2 ;
+                description 'Do not response to variable request'
+                            ;
+              }
+            }
+          }
+          leaf rem-orgspec {
+            description 'Remote Ethernet OAM capability of carrying Organizatio'
+                      + 'n Specific Information TLV'
+                        ;
+            type enumeration {
+              enum nonsupport {
+                value 0 ;
+                description 'Do not carry Organization Specific Information TLV'
+                            ;
+              }
+              enum support {
+                value 1 ;
+                description 'Carry Organization Specific Information TLV'
+                            ;
+              }
+            }
+          }
+          leaf remoteoui {
+            description 'Ethernet OAM OUI parameter'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+          }
+        }
+      }
+      container statisticss {
+        description 'Show Ethernet OAM packet statistics'
+                    ;
+        list statistics {
+          description 'Show Ethernet OAM packet statistics'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf info-tx {
+            description 'Show sending information packet statistic'
+                        ;
+            type uint32 ;
+          }
+          leaf info-rx {
+            description 'Show receiving information packet statistics'
+                        ;
+            type uint32 ;
+          }
+          leaf lb-controltx {
+            description 'Show sending LoopbackControl packet statistics'
+                        ;
+            type uint32 ;
+          }
+          leaf lb-controlrx {
+            description 'Show receiving LoopbackControl packet statistics'
+                        ;
+            type uint32 ;
+          }
+          leaf lb-frametx {
+            description 'Show sending Loopback packet statistics'
+                        ;
+            type uint64 ;
+          }
+          leaf lb-framerx {
+            description 'Show receiving LoopbackFrame packet statistics'
+                        ;
+            type uint64 ;
+          }
+          leaf varbreqtx {
+            description 'Show sending Variable Request packet statistics'
+                        ;
+            type uint32 ;
+          }
+          leaf varbreqrx {
+            description 'Show receiving Variable Requst packet statistics'
+                        ;
+            type uint32 ;
+          }
+          leaf varbresptx {
+            description 'Show sending Variable Response packet statistics'
+                        ;
+            type uint32 ;
+          }
+          leaf varbresprx {
+            description 'Show receiving Variable Response packet statistics'
+                        ;
+            type uint32 ;
+          }
+          leaf unieventtx {
+            description 'Show sending Unique Event Notification packet statisti'
+                      + 'cs'
+                        ;
+            type uint32 ;
+          }
+          leaf unieventrx {
+            description 'Show receiving Unique Event Notification packet statis'
+                      + 'tics'
+                        ;
+            type uint32 ;
+          }
+          leaf dupeventtx {
+            description 'Show sending Duplicate Event Notification packet stati'
+                      + 'stics'
+                        ;
+            type uint32 ;
+          }
+          leaf dupeventrx {
+            description 'Show receiving Duplicate Event Notification packet sta'
+                      + 'tistics'
+                        ;
+            type uint32 ;
+          }
+          leaf orgspecftx {
+            description 'Show sending specific packet statistics'
+                        ;
+            type uint32 ;
+          }
+          leaf orgspecfrx {
+            description 'Show receiving specific packet statistics'
+                        ;
+            type uint32 ;
+          }
+          leaf unsupporttx {
+            description 'Show sending unsupported packet statistics'
+                        ;
+            type uint32 ;
+          }
+          leaf unsupportrx {
+            description 'Show receiving unsupported packet statistics'
+                        ;
+            type uint32 ;
+          }
+        }
+      }
+      container link-monitors {
+        description 'Show Ethernet OAM link monitoring status'
+                    ;
+        list link-monitor {
+          description 'Show Ethernet OAM link monitoring status'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf errsymbolwin {
+            description 'Symbol window,units:million symbols'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+            units 'million symbols'
+                  ;
+          }
+          leaf errsymbolthr {
+            description 'Error symbol threshold,unit:symbol'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+            units symbol ;
+          }
+          leaf errsymbols {
+            description 'Error symbols'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+          }
+          leaf localerrortotal {
+            description 'Local total error symbols'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+          }
+          leaf remerrortotal {
+            description 'Remote total error symbols'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+          }
+          leaf localeventtotal {
+            description 'Local total error events'
+                        ;
+            type uint32 ;
+          }
+          leaf remeventtotal {
+            description 'Remote total error events'
+                        ;
+            type uint32 ;
+          }
+          leaf errframewin {
+            description 'Frame window,unit:second'
+                        ;
+            type uint16 ;
+            units second ;
+          }
+          leaf errframethr {
+            description 'Error frame threshold,unit:frame'
+                        ;
+            type uint32 ;
+            units frame ;
+          }
+          leaf errframes {
+            description 'Error frames'
+                        ;
+            type uint32 ;
+          }
+          leaf localerrframetotal {
+            description 'Local total error frames'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+          }
+          leaf remerrframetotal {
+            description 'Remote total error frames'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+          }
+          leaf localeventframetotal {
+            description 'Local total error events'
+                        ;
+            type uint32 ;
+          }
+          leaf remeventframetotal {
+            description 'Remote total error events'
+                        ;
+            type uint32 ;
+          }
+          leaf errframeperwin {
+            description 'Error frame period window,units:ten thousand frames'
+                        ;
+            type uint32 ;
+            units 'ten thousand frames'
+                  ;
+          }
+          leaf errframeperthr {
+            description 'Error frame period threshold,units:frame'
+                        ;
+            type uint32 ;
+            units frame ;
+          }
+          leaf errframeofperiod {
+            description 'Error frames of period'
+                        ;
+            type uint32 ;
+          }
+          leaf localerrframepertotal {
+            description 'Local total error frames'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+          }
+          leaf remerrframepertotal {
+            description 'Remote total error frames'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+          }
+          leaf loceventframepertotal {
+            description 'Local total error events'
+                        ;
+            type uint32 ;
+          }
+          leaf remeventframepertotal {
+            description 'Remote total error events'
+                        ;
+            type uint32 ;
+          }
+          leaf errframesecwin {
+            description 'Error seconds window,units:second'
+                        ;
+            type uint16 ;
+            units second ;
+          }
+          leaf errframesecthr {
+            description 'Error seconds threshold,units:second'
+                        ;
+            type uint16 ;
+            units second ;
+          }
+          leaf errframesecsum {
+            description 'Error frame seconds,units:second'
+                        ;
+            type uint16 ;
+            units second ;
+          }
+          leaf locerrframesectotal {
+            description 'Local total error frame seconds,units:seconds'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+            units seconds ;
+          }
+          leaf remerrframesectotal {
+            description 'Remote total error frame seconds,units:seconds'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+            units seconds ;
+          }
+          leaf loceventframesectotal {
+            description 'Local total error frame seconds events'
+                        ;
+            type uint32 ;
+          }
+          leaf remeventframesectotal {
+            description 'Remote total error frame seconds events'
+                        ;
+            type uint32 ;
+          }
+        }
+      }
+      container variable-requests {
+        description 'Show EFM variable request information'
+                    ;
+        list variable-request {
+          description 'Show EFM variable request information'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf adminstate {
+            description 'Ethernet OAM admin state'
+                        ;
+            type string {
+              length 1..10 {
+                description 'Range from 1 to 10'
+                            ;
+              }
+            }
+          }
+          leaf mode {
+            description 'Ethernet OAM mode'
+                        ;
+            type string {
+              length 1..8 {
+                description 'Range from 1 to 8'
+                            ;
+              }
+            }
+          }
+          leaf discoverystate {
+            description 'Ethernet OAM discovery state'
+                        ;
+            type ncd:string-with-blank {
+              length 1..20 {
+                description 'Range from 1 to 20'
+                            ;
+              }
+            }
+          }
+          leaf remotemac {
+            description 'Ethernet OAM remote MAC address'
+                        ;
+            type ncd:mac-address ;
+          }
+          leaf localconfig {
+            description 'Ethernet OAM local configuration'
+                        ;
+            type uint8 ;
+          }
+          leaf remoteconfig {
+            description 'Ethernet OAM remote configuration'
+                        ;
+            type uint8 ;
+          }
+          leaf localpduconfig {
+            description 'Ethernet OAM local PDU configuration'
+                        ;
+            type uint16 {
+              range 64..1518 {
+                description 'Range from 64 to 1518'
+                            ;
+              }
+            }
+          }
+          leaf remotepducfg {
+            description 'Ethernet OAM remote PDU configuration'
+                        ;
+            type uint16 {
+              range 64..1518 {
+                description 'Range from 64 to 1518'
+                            ;
+              }
+            }
+          }
+          leaf localflag {
+            description 'Ethernet OAM local Flags field'
+                        ;
+            type uint16 ;
+          }
+          leaf remoteflag {
+            description 'Ethernet OAM remote Flags field'
+                        ;
+            type uint16 ;
+          }
+          leaf localrevision {
+            description 'Ethernet OAM local revision'
+                        ;
+            type uint16 ;
+          }
+          leaf remrevision {
+            description 'Ethernet OAM remote revision'
+                        ;
+            type uint16 ;
+          }
+          leaf localstate {
+            description 'Ethernet OAM local state'
+                        ;
+            type uint8 ;
+          }
+          leaf remotestate {
+            description 'Ethernet OAM remote state'
+                        ;
+            type uint8 ;
+          }
+          leaf remoteoui {
+            description 'Ethernet OAM remote vender OUI'
+                        ;
+            type string {
+              length 1..3 {
+                description 'Range from 1 to 3'
+                            ;
+              }
+            }
+          }
+          leaf vendorspecific {
+            description 'Ethernet OAM remote vendor specific information'
+                        ;
+            type uint32 ;
+          }
+          leaf unsupported-tx {
+            description 'Ethernet OAM unsupported-Tx'
+                        ;
+            type uint32 ;
+          }
+          leaf unsupported-rx {
+            description 'Ethernet OAM unsupported-Rx'
+                        ;
+            type uint32 ;
+          }
+          leaf information-tx {
+            description 'Ethernet OAM information-Tx'
+                        ;
+            type uint32 ;
+          }
+          leaf information-rx {
+            description 'Ethernet OAM information-Rx'
+                        ;
+            type uint32 ;
+          }
+          leaf uni-event-noti-tx {
+            description 'Ethernet OAM unique event-notification-Tx'
+                        ;
+            type uint32 ;
+          }
+          leaf dup-event-noti-tx {
+            description 'Ethernet OAM duplicate event-notification-Tx'
+                        ;
+            type uint32 ;
+          }
+          leaf uni-event-noti-rx {
+            description 'Ethernet OAM unique event-notification-Rx'
+                        ;
+            type uint32 ;
+          }
+          leaf dup-event-noti-rx {
+            description 'Ethernet OAM duplicate event-notification-Rx'
+                        ;
+            type uint32 ;
+          }
+          leaf lb-control-tx {
+            description 'Ethernet OAM loopback-control-Tx'
+                        ;
+            type uint32 ;
+          }
+          leaf lb-control-rx {
+            description 'Ethernet OAM loopback-control-Rx'
+                        ;
+            type uint32 ;
+          }
+          leaf variable-req-tx {
+            description 'Ethernet OAM variable-request-Tx'
+                        ;
+            type uint32 ;
+          }
+          leaf variable-req-rx {
+            description 'Ethernet OAM variable-request-Rx'
+                        ;
+            type uint32 ;
+          }
+          leaf variable-res-tx {
+            description 'Ethernet OAM variable-response-Tx'
+                        ;
+            type uint32 ;
+          }
+          leaf variable-res-rx {
+            description 'Ethernet OAM variable-response-Rx'
+                        ;
+            type uint32 ;
+          }
+          leaf org-specific-tx {
+            description 'Ethernet OAM organization-specific-Tx'
+                        ;
+            type uint32 ;
+          }
+          leaf org-specific-rx {
+            description 'Ethernet OAM organization-specific-Rx'
+                        ;
+            type uint32 ;
+          }
+          leaf loc-err-sym-per-config {
+            description 'Ethernet OAM local error-symbol-period config'
+                        ;
+            type string {
+              length 1..60 {
+                description 'Range from 1 to 60'
+                            ;
+              }
+            }
+          }
+          leaf loc-err-sym-per-event {
+            description 'Ethernet OAM local error-symbol-period event'
+                        ;
+            type string {
+              length 1..90 {
+                description 'Range from 1 to 90'
+                            ;
+              }
+            }
+          }
+          leaf loc-err-frame-config {
+            description 'Ethernet OAM local error-frame config'
+                        ;
+            type string {
+              length 1..40 {
+                description 'Range from 1 to 40'
+                            ;
+              }
+            }
+          }
+          leaf loc-err-frame-event {
+            description 'Ethernet OAM local error-frame event'
+                        ;
+            type string {
+              length 1..80 {
+                description 'Range from 1 to 80'
+                            ;
+              }
+            }
+          }
+          leaf loc-err-fra-per-config {
+            description 'Ethernet OAM local error-frame-period config'
+                        ;
+            type string {
+              length 1..40 {
+                description 'Range from 1 to 40'
+                            ;
+              }
+            }
+          }
+          leaf loc-err-fra-per-event {
+            description 'Ethernet OAM local error-frame-period event'
+                        ;
+            type string {
+              length 1..80 {
+                description 'Range from 1 to 80'
+                            ;
+              }
+            }
+          }
+          leaf loc-err-fra-sec-config {
+            description 'Ethernet OAM local error-frame-seconds config'
+                        ;
+            type string {
+              length 1..40 {
+                description 'Range from 1 to 40'
+                            ;
+              }
+            }
+          }
+          leaf loc-err-fra-sec-event {
+            description 'Ethernet OAM local error-frame-seconds event'
+                        ;
+            type string {
+              length 1..65 {
+                description 'Range from 1 to 65'
+                            ;
+              }
+            }
+          }
+          leaf rem-err-sym-per-event {
+            description 'Ethernet OAM remote error-symbol-period event'
+                        ;
+            type string {
+              length 1..90 {
+                description 'Range from 1 to 90'
+                            ;
+              }
+            }
+          }
+          leaf rem-err-frame-event {
+            description 'Ethernet OAM remote error-frame event'
+                        ;
+            type string {
+              length 1..80 {
+                description 'Range from 1 to 80'
+                            ;
+              }
+            }
+          }
+          leaf rem-err-fra-per-event {
+            description 'Ethernet OAM remote error-frame-period event'
+                        ;
+            type string {
+              length 1..80 {
+                description 'Range from 1 to 80'
+                            ;
+              }
+            }
+          }
+          leaf rem-err-fra-sec-event {
+            description 'Ethernet OAM remote error-frame-seconds event'
+                        ;
+            type string {
+              length 1..65 {
+                description 'Range from 1 to 65'
+                            ;
+              }
+            }
+          }
+          leaf oamid {
+            description 'Ethernet OAM ID'
+                        ;
+            type uint32 ;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,786 @@
+module zxr10-dns {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/dns'
+            ;
+  prefix dns ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe DNS.'
+              ;
+  revision 2020-12-02 {
+    description '1.Add an leaf node "vrf-mng" under configuration/dns/global'
+                ;
+  }
+  revision 2019-07-16 {
+    description '1.Add an leaf node "server-name" under configuration/dns/names'
+              + 'ervers/ipv4-servers/ipv4-servers-no-vrf/ipv4-server'+"\n"
+              + '2.Add an leaf node "server-name" under configuration/dns/names'
+              + 'ervers/ipv6-servers/ipv6-servers-no-vrf/ipv6-server'+"\n"
+              + '3.add selects for list ipv4-server'+"\n"
+              + '4.add selects for list ipv6-server'
+                ;
+  }
+  revision 2019-05-15 {
+    description '1.add selects for list hostname-ipv4'+"\n"
+              + '2.add selects for list hostname-ipv6'
+                ;
+  }
+  revision 2018-04-23 {
+    description '1.Modify the length range of leaf host under state/dns/url-dom'
+              + 'ain/ipv4-addr-info/detail.'+"\n"
+              + '2.Modify the length range of leaf host under state/dns/url-dom'
+              + 'ain/ipv6-addr-info/detail.'+"\n"
+              + '3.Modify the length range of leaf url-name under operation/dns'
+              + '/instant-refresh/spec-url.'
+                ;
+  }
+  revision 2017-11-23 {
+    description '1.Add an container "snoop-urls" under configuration/dns/'+"\n"
+              + '2.Add an leaf node "snoop-enable" under configuration/dns/glob'
+              + 'al'
+                ;
+  }
+  revision 2017-02-09 {
+    description 'add label MCG-5000'
+                ;
+  }
+  revision 2017-01-16 {
+    description '1.Add an leaf node "url-agetime" under configuration/dns/globa'
+              + 'l'+"\n"
+              + '2.Delete an leaf node "/configuration/dns/global/url-increment'
+              + 'al-issue/url-incremental-issue-switch/url-incremental-issue-on'
+              + '/refresh-interval"'+"\n"
+              + '3.Add an leaf node "/configuration/dns/global/url-incremental-'
+              + 'issue/url-incremental-issue-switch/url-incremental-issue-on/in'
+              + 'cremental-refresh-interval"'
+                ;
+  }
+  revision 2016-06-07 {
+    description '1.Add container url-domain under this path:/state/dns/url-doma'
+              + 'in.'+"\n"
+              + '2.Add container url-issue under this path:/configuration/dns/g'
+              + 'lobal.'
+                ;
+  }
+  revision 2016-03-28 {
+    description '1.Add container "source" under this path:/configuration/dns/.'
+                ;
+  }
+  revision 2016-02-15 {
+    description '1.Add two containers "hostnames-ipv4" and "hostnames-ipv6" und'
+              + 'er this path :/configuration/dns/hostnames.'+"\n"
+              + '2.Add container "import-intfs" under this path:/configuration/'
+              + 'dns/nameservers/.'+"\n"
+              + '3.Add two containers "ipv4-servers-no-vrf" and "ipv4-servers-v'
+              + 'rf" unser this path:/configuration/dns/nameservers/ipv4-server'
+              + 's.'+"\n"
+              + '4.Add two containers "ipv6-servers-no-vrf" and "ipv6-servers-v'
+              + 'rf" unser this path:/configuration/dns/nameservers/ipv6-server'
+              + 's.'
+                ;
+  }
+  revision 2015-08-11 {
+    description 'Modify the config from true to false under the state and opera'
+              + 'tion containers.'
+                ;
+  }
+  revision 2015-02-11 {
+    description '1.Change "resovle" to "resolve" in configuration/dns/global/re'
+              + 'sovle-type and its description. 2.Add an enumeration value(sta'
+              + 'tic-dynamic) for configuration/dns/global/resovle-type.'
+                ;
+  }
+  revision 2014-03-12 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description Configuration. ;
+    container dns {
+      description 'DNS config.'
+                  ;
+      container global {
+        description 'DNS global common config.'
+                    ;
+        leaf enable {
+          description 'Enable DNS process.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'DNS disable.'
+                          ;
+            }
+            enum enable {
+              value 1 ;
+              description 'DNS enable.'
+                          ;
+            }
+          }
+          default disable ;
+        }
+        leaf resolve-type {
+          description 'The resolve type of DNS.'
+                      ;
+          type enumeration {
+            enum dynamic {
+              value 0 ;
+              description 'Dynamic lookup.'
+                          ;
+            }
+            enum static {
+              value 1 ;
+              description 'Static lookup.'
+                          ;
+            }
+            enum static-dynamic {
+              value 2 ;
+              description 'Static-dynamic lookup.'
+                          ;
+            }
+          }
+          default dynamic ;
+        }
+        leaf retry-times {
+          description 'Times to retry sending a DNS query.[1,100].'
+                      ;
+          type uint8 {
+            range 1..100 {
+              description 'Possible retry-times value range.'
+                          ;
+            }
+          }
+        }
+        leaf timeout {
+          description 'Timeout waiting for response to a DNS query.[1,20].unit '
+                    + 'is seconds.'
+                      ;
+          type uint8 {
+            range 1..20 {
+              description 'Timeout value range.'
+                          ;
+            }
+          }
+          units second ;
+        }
+        leaf suffix {
+          description 'The suffix of DNS.'
+                      ;
+          type string {
+            length 1..80 {
+              description 'The length of the suffix.'
+                          ;
+            }
+          }
+        }
+        container url-incremental-issue {
+          description 'DNS URL incremental issue configuration.'
+                      ;
+          choice url-incremental-issue-switch {
+            description 'Set DNS URL incremental issue configuration.'
+                        ;
+            case url-incremental-issue-on {
+              description 'Turn on DNS URL incremental issue.'
+                          ;
+              leaf incremental-issue-on {
+                description 'Turn on DNS URL incremental issue.'
+                            ;
+                type enumeration {
+                  enum on {
+                    value 1 ;
+                    description 'Turn on DNS URL incremental issue.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+              leaf refresh-interval {
+                status obsolete {
+                  ncd:revise-date 2017-01-16 ;
+                }
+                description 'DNS URL incremental issue refresh interval'
+                            ;
+                type uint8 {
+                  range 5..60 ;
+                }
+                default 5 ;
+              }
+              leaf incremental-refresh-interval {
+                description 'DNS URL incremental issue refresh interval'
+                            ;
+                type uint16 {
+                  range 1..1440 ;
+                }
+                default 5 ;
+                ncd:revise-date 2017-01-16 ;
+              }
+            }
+            case url-incremental-issue-off {
+              description 'Turn off DNS URL incremental issue.'
+                          ;
+              leaf incremental-issue-off {
+                description 'Turn off DNS URL incremental issue.'
+                            ;
+                type enumeration {
+                  enum off {
+                    value 0 ;
+                    description 'Turn off DNS URL incremental issue.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+          }
+          ncd:revise-date 2016-06-07 ;
+        }
+        leaf url-agetime {
+          description 'DNS URL age time'
+                      ;
+          type ncd:time ;
+          ncd:revise-date 2017-01-16 ;
+        }
+        leaf snoop-enable {
+          description 'Enable dns snoop system.'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'DNS snoop enable.'
+                          ;
+            }
+            enum disable {
+              value 0 ;
+              description 'DNS snoop disable.'
+                          ;
+            }
+          }
+          ncd:revise-date 2017-11-23 ;
+        }
+        leaf vrf-mng {
+          description 'Enable VRF MNG configuration'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Enable DNS VRF mng configure'
+                          ;
+            }
+            enum disable {
+              value 0 ;
+              description 'Disable DNS VRF mng configure'
+                          ;
+            }
+          }
+          default disable ;
+          ncd:revise-date 2020-12-02 ;
+        }
+      }
+      container hostnames {
+        description 'Static hostnames of DNS.'
+                    ;
+        container hostnames-ipv4 {
+          description 'Static hostnames of DNS in ipv4 type.'
+                      ;
+          list hostname-ipv4 {
+            description 'Static hostnames of DNS in ipv4 type.'
+                        ;
+            key 'name ipv4-addr'
+                ;
+            leaf name {
+              description 'The name of static hoatname.'
+                          ;
+              type string {
+                length 1..128 {
+                  description 'The length of the name.'
+                              ;
+                }
+              }
+            }
+            leaf ipv4-addr {
+              description 'The ipv4 address of DNS static hostname.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            ncd:select name ;
+            ncd:select 'name ipv4-addr'
+                       ;
+          }
+          ncd:revise-date 2016-02-15 ;
+        }
+        container hostnames-ipv6 {
+          description 'Static hostnames of DNS in ipv6 type.'
+                      ;
+          list hostname-ipv6 {
+            description 'Static hostnames of DNS in ipv6 type.'
+                        ;
+            key 'name ipv6-addr'
+                ;
+            leaf name {
+              description 'The name of static hoatname.'
+                          ;
+              type string {
+                length 1..128 {
+                  description 'The lenght of the host name.'
+                              ;
+                }
+              }
+            }
+            leaf ipv6-addr {
+              description 'The ipv6 address of DNS static hostname.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            ncd:select name ;
+            ncd:select 'name ipv6-addr'
+                       ;
+          }
+          ncd:revise-date 2016-02-15 ;
+        }
+      }
+      container nameservers {
+        description 'Nameservers of DNS.'
+                    ;
+        container import-intfs {
+          description 'Get servers from imported interfaces.'
+                      ;
+          list import-if {
+            description 'Get servers from imported interfaces.'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'The interface name length.'
+                              ;
+                }
+              }
+            }
+          }
+          ncd:revise-date 2016-02-15 ;
+        }
+        container ipv4-servers {
+          description 'Ipv4 servers.'
+                      ;
+          container ipv4-servers-no-vrf {
+            description 'Ipv4 name server.'
+                        ;
+            list ipv4-server {
+              description 'Ipv4 nameserver.'
+                          ;
+              key ipv4-addr ;
+              leaf ipv4-addr {
+                description 'Ipv4 address of the server.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf server-name {
+                description 'The name of server.'
+                            ;
+                type string {
+                  length 1..128 {
+                    description 'The length of the name.'
+                                ;
+                  }
+                }
+                ncd:revise-date 2019-07-16 ;
+              }
+              ncd:select ipv4-addr ;
+              ncd:select server-name ;
+            }
+            ncd:revise-date 2016-02-15 ;
+          }
+          container ipv4-servers-vrf {
+            description 'Ipv4 server with vrf.'
+                        ;
+            list ipv4-server-vrf {
+              description 'Ipv4 server with vrf.'
+                          ;
+              key 'ipv4-addr vrf-name'
+                  ;
+              leaf ipv4-addr {
+                description 'Ipv4 address of the server.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf vrf-name {
+                description 'VRF name.'
+                            ;
+                type string {
+                  length 1..32 {
+                    description 'Vrf name.'
+                                ;
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2016-02-15 ;
+          }
+        }
+        container ipv6-servers {
+          description 'Ipv6 servers.'
+                      ;
+          container ipv6-servers-no-vrf {
+            description 'Ipv6 name server.'
+                        ;
+            list ipv6-server {
+              description 'Ipv6 nameserver.'
+                          ;
+              key ipv6-addr ;
+              leaf ipv6-addr {
+                description 'Ipv6 address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf server-name {
+                description 'The name of server.'
+                            ;
+                type string {
+                  length 1..128 {
+                    description 'The length of the name.'
+                                ;
+                  }
+                }
+                ncd:revise-date 2019-07-16 ;
+              }
+              ncd:select ipv6-addr ;
+              ncd:select server-name ;
+            }
+            ncd:revise-date 2016-02-15 ;
+          }
+          container ipv6-servers-vrf {
+            description 'Ipv6 server with vrf.'
+                        ;
+            list ipv6-server-vrf {
+              description 'Ipv6 server with vrf.'
+                          ;
+              key 'ipv6-addr vrf-name'
+                  ;
+              leaf ipv6-addr {
+                description 'Ipv6 address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf vrf-name {
+                description 'VRF name.'
+                            ;
+                type string {
+                  length 1..32 {
+                    description 'Vrf name.'
+                                ;
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2016-02-15 ;
+          }
+        }
+      }
+      container proxy {
+        description 'DNS proxy/relay config.'
+                    ;
+        leaf proxy-state {
+          description 'Enbale DNS proxy.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'DNS proxy disable.'
+                          ;
+            }
+            enum enable {
+              value 1 ;
+              description 'DNS proxy enable.'
+                          ;
+            }
+          }
+          default disable ;
+        }
+        leaf relay-state {
+          description 'Enbale DNS relay.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'DNS relay disable.'
+                          ;
+            }
+            enum enable {
+              value 1 ;
+              description 'DNS relay enable.'
+                          ;
+            }
+          }
+          default disable ;
+        }
+        leaf retry-times {
+          description 'Max retry times of request for DNS relay/proxy server gr'
+                    + 'oup.[5,20]'
+                      ;
+          type uint32 {
+            range 5..20 {
+              description 'Retry times.'
+                          ;
+            }
+          }
+        }
+        leaf peer-timeout {
+          description 'Deadtime of DNS relay/proxy server.[5,3600].Unit is seco'
+                    + 'nds.'
+                      ;
+          type uint32 {
+            range 5..3600 {
+              description Deadtime. ;
+            }
+          }
+          units second ;
+        }
+      }
+      container source {
+        leaf source-ipv4-address {
+          description 'The ipv4 address of DNS source.'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf source-ipv6-address {
+          description 'The ipv6 address of DNS source.'
+                      ;
+          type ncd:ipv6-address ;
+        }
+      }
+      container snoop-urls {
+        description 'Set snoop url address.'
+                    ;
+        list snoop-url {
+          description 'Set snoop url address.'
+                      ;
+          key url-name ;
+          leaf url-name {
+            type string {
+              length 1..127 {
+                description 'Set url name.'
+                            ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2017-11-23 ;
+      }
+    }
+  }
+  container state {
+    config false ;
+    description State. ;
+    container dns {
+      description 'DNS state.'
+                  ;
+      container cache-domain {
+        description 'DNS domain information in cache.'
+                    ;
+        list detail {
+          description 'Show DNS cache domain info detail.'
+                      ;
+          key 'host type record'
+              ;
+          leaf host {
+            description 'Host name.'
+                        ;
+            type string {
+              length 1..255 {
+                description 'Host name length.'
+                            ;
+              }
+            }
+          }
+          leaf type {
+            description 'Type of the record.'
+                        ;
+            type string {
+              length 1..10 {
+                description 'Type string length.'
+                            ;
+              }
+            }
+          }
+          leaf record {
+            description 'The record info.'
+                        ;
+            type string {
+              length 1..255 {
+                description 'Record string length.'
+                            ;
+              }
+            }
+          }
+          leaf age {
+            description 'Left ttl of the record.Unit is second.'
+                        ;
+            type uint32 {
+              range 0..524278 {
+                description 'Left ttl of records.'
+                            ;
+              }
+            }
+            units second ;
+          }
+          ncd:select 'host type record'
+                     ;
+        }
+      }
+      container url-domain {
+        description 'DNS URL information.'
+                    ;
+        container ipv4-addr-info {
+          description 'DNS URL IPv4 address information.'
+                      ;
+          list detail {
+            description 'DNS URL IPv4 address information.'
+                        ;
+            key 'host type ipv4-address'
+                ;
+            leaf host {
+              description 'Host name.'
+                          ;
+              type string {
+                length 1..128 {
+                  description 'Host name length.'
+                              ;
+                }
+              }
+            }
+            leaf type {
+              description 'Type of the record.'
+                          ;
+              type string {
+                length 1..10 {
+                  description 'Type length.'
+                              ;
+                }
+              }
+            }
+            leaf ipv4-address {
+              description 'IPv4 address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf age {
+              description 'Left ttl of the record.Unit is second.'
+                          ;
+              type uint32 ;
+              units second ;
+            }
+            ncd:select host ;
+          }
+        }
+        container ipv6-addr-info {
+          description 'DNS URL IPv6 address information.'
+                      ;
+          list detail {
+            description 'DNS URL IPv6 address information.'
+                        ;
+            key 'host type ipv6-address'
+                ;
+            leaf host {
+              description 'Host name.'
+                          ;
+              type string {
+                length 1..128 {
+                  description 'Host name length.'
+                              ;
+                }
+              }
+            }
+            leaf type {
+              description 'Type of the record.'
+                          ;
+              type string {
+                length 1..10 {
+                  description 'Type length.'
+                              ;
+                }
+              }
+            }
+            leaf ipv6-address {
+              description 'IPv6 address.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf age {
+              description 'Left ttl of the record.Unit is second.'
+                          ;
+              type uint32 ;
+              units second ;
+            }
+            ncd:select host ;
+          }
+        }
+        ncd:revise-date 2016-06-07 ;
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description Operation. ;
+    container dns {
+      description 'DNS operation.'
+                  ;
+      leaf flush-cache {
+        description 'Flush domain records in cache.'
+                    ;
+        type enumeration {
+          enum all {
+            value 1 ;
+          }
+        }
+      }
+      container instant-refresh {
+        description 'DNS refreshes urls.'
+                    ;
+        choice instant-refresh {
+          description 'DNS sends queries to instantly refresh urls.'
+                      ;
+          case all {
+            description 'DNS sends queries to instantly refresh all urls.'
+                        ;
+            leaf all {
+              description 'Refresh all URLs.'
+                          ;
+              type enumeration {
+                enum all {
+                  value 1 ;
+                  description 'This value stand for refreshing all.'
+                              ;
+                }
+              }
+            }
+          }
+          case spec-url {
+            description 'DNS sends queries to instantly refresh a specific url.'
+                        ;
+            leaf url-name {
+              description 'The URL name.'
+                          ;
+              type string {
+                length 1..128 {
+                  description 'The length of the url name.'
+                              ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

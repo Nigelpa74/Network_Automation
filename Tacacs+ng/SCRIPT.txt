@@ -1,0 +1,178 @@
+id = spawnd {
+    background = yes
+    listen { port = 49 }
+    spawn {
+        instances min = 1
+        instances max = 10
+    }
+}
+
+id = tac_plus-ng {
+
+    log autho {
+        destination = "/var/log/tac_plus-ng-authorization.log"
+    }
+    log authen {
+        destination = "/var/log/tac_plus-ng-authentication.log"
+    }
+
+    authentication log = authen
+    authorization log = autho
+
+    # 1. DISPOSITIVOS
+    device dev_huawei {
+        address = 172.18.6.40
+        address = 172.18.6.41
+        address = 172.18.6.42
+        welcome banner = "Welcome, you're coming from ${client.address}\n"
+        key = Huawei@minedu%500#TACACS
+    }
+
+    device dev_zte {
+        address = 172.18.3.60
+        welcome banner = "Welcome, you're coming from ${client.address}\n"
+        key = ZTE@core@2026#TACACS
+    }
+
+    # 2. PERFILES (PROFILES)
+    profile admin_profile {
+        enable 15 = login
+        script {
+            if (service == shell || service == hwtacacs || service == exec) {
+                if (cmd == "") {
+                    set priv-lvl = 15
+                    permit
+                }
+                permit
+            }
+        }
+    }
+
+    profile operator_readonly_profile {
+        script {
+            if (service == hwtacacs || service == exec || service == shell) {
+                if (cmd == "") {
+                    set priv-lvl = 1
+                    permit
+                }
+                if (cmd =~ "^ping" || cmd =~ "^tracert" || cmd =~ "^enable" || cmd =~ "^show" || cmd =~ "^traceroute" || cmd =~ "^display") {
+                    permit
+                }
+                deny
+            }
+            permit
+        }
+    }
+
+    # 3. GRUPOS Y USUARIOS
+    group grp_admin_global {}
+    group grp_operadores_huawei {}
+    group grp_admin_huawei {}
+    group grp_operadores_zte {}
+    group grp_admin_zte {}
+
+    user admingf {
+        password login = clear "L3l1tv.20!9"
+        alias = AdminGF
+        password pap = login
+        member = grp_admin_huawei
+    }
+
+    user nigel {
+        password login = clear "123456789"
+        enable = login
+        alias = Nigelpa74
+        password pap = login
+        hushlogin = yes
+        member = grp_admin_global
+    }
+
+    user eslave {
+        password login = clear "Admin@1234"
+        enable = login
+        password pap = login
+        member = grp_operadores_huawei
+    }
+
+    user usernms {
+        password login = clear "$atel1tal.!24"
+        enable = login
+        password pap = login
+        member = grp_admin_zte
+    }
+
+    user Admin {
+        password login = clear "L3l1tv.20!9"
+        enable = login
+        password pap = login
+        member = grp_admin_zte
+    }
+
+    # 4. REGLAS CENTRALIZADAS (RULESET)
+    ruleset {
+        rule acceso_admin {
+            enabled = yes
+            script {
+                if (device == dev_huawei || device == dev_zte) {
+                    # Los administradores entran a todo
+                    if (member == grp_admin_global) {
+                        profile = admin_profile
+                        permit
+                    }
+                }
+                # if (device == dev_zte) {
+                #     # Los administradores entran a zte
+                #     if (member == grp_admin_global) {
+                #         profile = admin_profile
+                #         permit
+                #     }
+                # }
+            }
+        }
+
+        rule acceso_huawei {
+            enabled = yes
+            script {
+                # Si el usuario pertenece a operadores huawei y el equipo es dev_huawei
+                if (device == dev_huawei){
+                    if (member == grp_operadores_huawei) {
+                        profile = operator_readonly_profile
+                        permit
+                    }
+                    if (member == grp_admin_huawei) {
+                        profile = admin_profile
+                        permit
+                    }
+                }
+            }
+        }
+
+        rule acceso_zte {
+            enabled = yes
+            script {
+                # Si el usuario pertenece a operadores zte y el equipo es dev_zte
+                if (device == dev_zte){
+                    if (member == grp_operadores_zte) {
+                        profile = operator_readonly_profile
+                        permit
+                    }
+                    if (member == grp_admin_zte) {
+                        profile = admin_profile
+                        permit
+                    }
+                }
+            }
+        }
+
+        # rule acceso_admin_zte {
+        #     enabled = yes
+        #     script {
+        #         # Si el usuario pertenece a administradores zte y el equipo es dev_zte
+        #         if (device == dev_zte && member == grp_admin_zte) {
+        #             profile = admin_profile
+        #             permit
+        #         }
+        #     }
+        # }
+    }
+}

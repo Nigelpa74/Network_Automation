@@ -1,0 +1,80 @@
+module zxr10-lpp-l2 {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/lpp-l2'
+            ;
+  prefix lpp-l2 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2019-07-16 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the L2 processing of local packet.'
+              ;
+  revision 2020-08-15 {
+    description 'Initial version.'
+                ;
+  }
+  feature data-link-layer-traffic {
+    description 'A feature about show data-link-layer traffic and clear data-li'
+              + 'nk-layer traffic.'
+                ;
+  }
+  container state {
+    description 'State model info.'
+                ;
+    config false ;
+    container data-link-layer {
+      description 'Data link layer state.'
+                  ;
+      container traffic-statistics {
+        if-feature data-link-layer-traffic ;
+        description 'The traffic statistics of data link layer.'
+                    ;
+        leaf vlan-layer-num-error {
+          description 'Vlan layers errors.'
+                      ;
+          type uint32 ;
+        }
+        leaf vlan-mismatch {
+          description 'Vlan mismatch.'
+                      ;
+          type uint32 ;
+        }
+        leaf unknown-protocol {
+          description 'Unkonwn protocol.'
+                      ;
+          type uint32 ;
+        }
+        leaf invalid-destination-mac {
+          description 'The destination mac is invalid.'
+                      ;
+          type uint32 ;
+        }
+      }
+    }
+  }
+  container operation {
+    description 'Operation model info.'
+                ;
+    config false ;
+    container data-link-layer {
+      description 'Data link layer operation.'
+                  ;
+      container traffic-statistics {
+        if-feature data-link-layer-traffic ;
+        description 'Operate the traffic statistics of data link layer.'
+                    ;
+        leaf clear-traffic-statistics {
+          description 'Clear the traffic statistics of data link layer.'
+                      ;
+          type empty ;
+        }
+      }
+    }
+  }
+}

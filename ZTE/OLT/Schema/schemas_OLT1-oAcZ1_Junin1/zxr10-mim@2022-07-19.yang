@@ -1,0 +1,356 @@
+module zxr10-mim {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/mim'
+            ;
+  prefix mim ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'mim Module'
+              ;
+  revision 2022-07-19 {
+    description 'add last-saved-user and changed-user nodes. 1.query zdb or sta'
+              + 'rtrun.dat last save user. 2.query configuration last changed u'
+              + 'ser.'
+                ;
+  }
+  revision 2022-06-11 {
+    description 'Obsolete rollback-configuration-switch node and add mim global'
+              + ' rollback-configuration nodes.'
+                ;
+  }
+  revision 2021-12-03 {
+    description 'Add rollback-configuration and default-commit-mode nodes.'
+                ;
+  }
+  revision 2021-07-27 {
+    description 'Add prime key auto update funtion.'
+                ;
+  }
+  revision 2019-02-21 {
+    description 'Add session-type(lmt,otnqx,pct) to configuration-change notifi'
+              + 'cation content session-type.'+"\n"
+              + 'Change configuration-change notification content ipv4-addr and'
+              + ' ipv6-addr type to chars.'
+                ;
+  }
+  revision 2017-09-04 {
+    description 'Enable or disable sending snmp trap about configuration-data c'
+              + 'hanged.'
+                ;
+  }
+  revision 2017-04-04 {
+    description 'add query configuration state. 1.query loaded file(zdb or star'
+              + 'trun.dat) created time. 2.query zdb or startrun.dat last save '
+              + 'time. 3.query configuration last changed time.'
+                ;
+  }
+  revision 2015-09-17 {
+    description 'Create Date'
+                ;
+  }
+  feature config-variation-trap {
+    description 'The ability of generating snmp trap when configuration-data is'
+              + ' changed.'
+                ;
+  }
+  container state {
+    config false ;
+    container config-state {
+      container loaded-data-time {
+        description 'create time of loaded file'
+                    ;
+        leaf zdb {
+          description 'create time of loaded zdb file'
+                      ;
+          type ncd:datetime ;
+        }
+        leaf txt {
+          description 'create time of loaded startrun.dat file'
+                      ;
+          type ncd:datetime ;
+        }
+      }
+      container last-saved-time {
+        description 'last saved time of configuration file after device start'
+                    ;
+        leaf zdb {
+          description 'last saved time of configuration file(zdb) after device '
+                    + 'start'
+                      ;
+          type ncd:datetime ;
+        }
+        leaf txt {
+          description 'last saved time of configuration file(startrun.dat) afte'
+                    + 'r device start'
+                      ;
+          type ncd:datetime ;
+        }
+      }
+      leaf changed-time {
+        description 'configuration last changed time'
+                    ;
+        type ncd:datetime ;
+      }
+      leaf changed-user {
+        description 'Last user who changed the configuration'
+                    ;
+        type ncd:string-with-blank {
+          length 0..68 ;
+        }
+        ncd:revise-date 2022-07-19 ;
+      }
+      container last-saved-user {
+        description 'The user who saved the configuration file recently after d'
+                  + 'evice start'
+                    ;
+        leaf zdb {
+          description 'The user who saved the configuration file(zdb) recently '
+                    + 'after device start'
+                      ;
+          type ncd:string-with-blank {
+            length 0..68 ;
+          }
+        }
+        leaf txt {
+          description 'The user who saved the configuration file(startrun.dat) '
+                    + 'recently after device start'
+                      ;
+          type ncd:string-with-blank {
+            length 0..68 ;
+          }
+        }
+        ncd:revise-date 2022-07-19 ;
+      }
+    }
+    ncd:revise-date 2017-04-04 ;
+  }
+  container configuration {
+    container mim {
+      description 'The configuration about management-info-maintance of system.'
+                  ;
+      container global {
+        description 'Global configuration.'
+                    ;
+        container config-variation-trap-switch {
+          if-feature config-variation-trap ;
+          description 'Enable or disable sending snmp trap about configuration-'
+                    + 'data changed.'
+                      ;
+          leaf trap-switch {
+            description 'The snmp trap is generated or not when configuration-d'
+                      + 'ata changed is detceted.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 1 ;
+                description "System won't send a trap when configuration-data c"
+                          + "hanged is detceted."
+                            ;
+              }
+              enum enable {
+                value 2 ;
+                description 'System will send a trap when configuration-data ch'
+                          + 'anged is detceted.'
+                            ;
+              }
+            }
+            default enable ;
+          }
+        }
+        container prime-key-auto-update {
+          description 'Prime key auto update function.'
+                      ;
+          presence 'Prime key auto update function.'
+                   ;
+          leaf interval-time {
+            description 'Prime key auto update interval time(day).'
+                        ;
+            type uint32 {
+              range 1..365 {
+                description 'Prime key auto update interval-time(day) range<1-3'
+                          + '65>.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          ncd:revise-date 2021-07-27 ;
+        }
+        leaf default-commit-mode {
+          description 'Sets the default commit mode for the CLI terminal. When '
+                    + 'the command configure terminal [{automatic | manual}] do'
+                    + 'es not carry any optional parameter, the commit mode of '
+                    + 'the CLI terminal where it is located is the default comm'
+                    + 'it mode.'+"\n"
+                    + 'When the default commit mode of the CLI terminal is not '
+                    + 'configured, there is default value.'
+                      ;
+          type enumeration {
+            enum automatic {
+              value 0 ;
+              description 'Set the default commit mode to automatic.'
+                          ;
+            }
+            enum manual {
+              value 1 ;
+              description 'Set the default commit mode to manual.'
+                          ;
+            }
+          }
+          default automatic ;
+          ncd:revise-date 2021-12-03 ;
+        }
+        container rollback-configuration {
+          description 'Configure the rollback function.'
+                      ;
+          leaf enable {
+            description 'Enable the rollback function.'
+                        ;
+            type boolean ;
+            default true ;
+          }
+          ncd:revise-date 2022-06-11 ;
+        }
+      }
+    }
+    ncd:revise-date 2017-09-04 ;
+  }
+  rpc rollback-configuration-switch {
+    status obsolete ;
+    description 'Rollback configuration function switch status.'
+                ;
+    input {
+      leaf switch {
+        config false ;
+        description 'Rollback configuration function switch status.'
+                    ;
+        type enumeration {
+          enum enable {
+            value 1 ;
+            description 'Enables the rollback configuration function.'
+                        ;
+          }
+          enum disable {
+            value 0 ;
+            description 'Disables the rollback configuration function.'
+                        ;
+          }
+        }
+      }
+    }
+    ncd:revise-date 2021-12-03 ;
+  }
+  rpc rollback-configuration {
+    description 'Perform the specified rollback configuration action.'
+                ;
+    input {
+      leaf last-num {
+        config false ;
+        description 'Rollback the latest consecutive configured rollback points.'
+                    ;
+        type uint32 {
+          range 1..50 ;
+        }
+      }
+    }
+    ncd:revise-date 2021-12-03 ;
+  }
+  notification configuration-change {
+    description 'Report notification when configuration changed'
+                ;
+    container notification {
+      description 'Container name which make notification more understandable'
+                  ;
+      list content {
+        description 'notification content'
+                    ;
+        key session-type ;
+        leaf session-type {
+          description 'Session Type'
+                      ;
+          type enumeration {
+            enum CLI {
+              value 1 ;
+              description 'CLI Session'
+                          ;
+            }
+            enum SNMP {
+              value 2 ;
+              description 'SNMP Session'
+                          ;
+            }
+            enum WEB {
+              value 3 ;
+              description 'WEB Session'
+                          ;
+            }
+            enum NETCONF {
+              value 4 ;
+              description 'NETCONF Session'
+                          ;
+            }
+            enum QX {
+              value 5 ;
+              description 'QX Session'
+                          ;
+            }
+            enum TR069 {
+              value 6 ;
+              description 'TR069 Session'
+                          ;
+            }
+            enum LMT {
+              value 7 ;
+            }
+            enum OTNQX {
+              value 8 ;
+            }
+            enum PCT {
+              value 9 ;
+            }
+          }
+        }
+        leaf ip-type {
+          description 'ipAddr type'
+                      ;
+          type enumeration {
+            enum NoIpAddr {
+              value 0 ;
+              description 'No Ip Address'
+                          ;
+            }
+            enum IpV4Addr {
+              value 4 ;
+              description 'IpV4 Address'
+                          ;
+            }
+            enum IpV6Addr {
+              value 6 ;
+              description 'IpV6 Address'
+                          ;
+            }
+          }
+        }
+        leaf ipv4-addr {
+          description 'Ipv4 Address'
+                      ;
+          type ncd:string-all ;
+        }
+        leaf ipv6-addr {
+          description 'Ipv6 Address'
+                      ;
+          type ncd:string-all ;
+        }
+      }
+    }
+  }
+}

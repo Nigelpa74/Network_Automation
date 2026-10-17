@@ -1,0 +1,118 @@
+module zxr10-udp-helper {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/udp-helper'
+            ;
+  prefix udp-helper ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'NETCONF of udp-helper module'
+              ;
+  revision 2014-08-06 {
+    description 'Initial Version'
+                ;
+  }
+  container configuration {
+    description 'Command of udp-helper configuration'
+                ;
+    container udp-helper {
+      description 'Command of udp-helper configuration'
+                  ;
+      container config {
+        description 'The basic config of udp-helper function'
+                    ;
+        leaf enable {
+          description 'Enable or disable udp-helper function'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Enable udp-helper function'
+                          ;
+            }
+            enum disable {
+              value 2 ;
+              description 'Disable udp-helper function'
+                          ;
+            }
+          }
+          default disable ;
+        }
+        container port {
+          description 'Configurate the list of port'
+                      ;
+          list port-list {
+            description 'List of port'
+                        ;
+            key port ;
+            leaf port {
+              description 'The port of need tranfer'
+                          ;
+              type uint16 {
+                range 0..65535 ;
+              }
+            }
+          }
+        }
+      }
+      container ifconfig {
+        description 'The udp-helper config of interface'
+                    ;
+        container udp-helper-add {
+          description 'Config the function of udp-helper about the interface'
+                      ;
+          list address-list {
+            description 'Config the function of udp-helper about the interface'
+                        ;
+            key 'ifname address'
+                ;
+            leaf ifname {
+              description 'The name of interface'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf address {
+              description 'Ipv4 address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+        }
+        container udp-helper-vrf {
+          description 'Config the function of udp-helper about vrf'
+                      ;
+          list vrf-list {
+            description 'Config the function of udp-helper about vrf'
+                        ;
+            key 'ifname address vrfname'
+                ;
+            leaf ifname {
+              description 'The name of interface'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf address {
+              description 'Ipv4 address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf vrfname {
+              description 'The name of vrf'
+                          ;
+              type string {
+                length 1..35 ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

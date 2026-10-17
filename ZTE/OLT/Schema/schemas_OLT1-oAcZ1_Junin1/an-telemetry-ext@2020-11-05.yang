@@ -1,0 +1,199 @@
+module an-telemetry-ext {
+    // namespace
+    namespace "urn:an:yang:an-telemetry-ext";
+
+    prefix "an-telemetry-ext";
+
+    import an-telemetry {
+        prefix an-telemetry;
+    }
+
+    description "Data model which creates the condition for the telemetry.";
+
+    revision 2020-11-05;
+
+    grouping  telemetry-sensor-path-condition-op-config {
+        description
+            "Parameters for a filter criterion.";
+        
+        leaf op-field{
+            type string {
+                length "1..63";
+            }
+            description
+                "Reference field in the filter criterion. Different paths support different reference fields.";
+        }
+
+        leaf op-type{
+            type enumeration {
+                enum eq {
+                    value 0;
+                    description
+                        "Equal.";
+                }
+                enum gt {
+                    value 1;
+                    description
+                        "Greater than.";
+                }
+                enum ge {
+                    value 2;
+                    description
+                        "Greater than or equal.";
+                }
+                enum lt {
+                    value 3;
+                    description
+                        "Less than.";
+                }
+                enum le {
+                    value 4;
+                    description
+                        "Less than or equal.";
+                }
+            }
+            description 
+                "Reference to the op-type of the filter criterion.";
+        }
+
+        leaf op-value{
+            type string {
+                length "1..63";
+            }
+            description
+                "Comparison value of the filter criterion.For the actual value range, see the definition of op-field in the YANG model.";
+        }
+            
+    }
+    
+    grouping  telemetry-sensor-path-filter-condition-config {
+        description
+            "Parameters for filter criteria.";
+        
+        container conditions {
+            description
+                "Top level container for filter criteria, including the filter information such as op-field, op-type, and op-value.";
+
+            list condition {
+                key "op-field op-type op-value";
+                max-elements  "2";
+                description
+                    "List of filter criteria.";
+                
+                leaf "op-field" {
+                    type leafref {
+                        path "../config/op-field";
+                    }
+                    description
+                        "Reference to the op-field of the filter criterion.";
+                }
+                
+                leaf "op-type" {
+                    type leafref {
+                        path "../config/op-type";
+                    }
+                    description
+                        "Reference to the op-type of the filter criterion.";
+                }
+                
+                leaf "op-value" {
+                    type leafref {
+                        path "../config/op-value";
+                    }
+                    description
+                        "Comparison value of the filter criterion. Op-value must be an integer and the maximum value range is [0, 4294967295]. For the actual value range, see the definition of op-field in the YANG model.";
+                }
+                
+                container config {
+                    description
+                        "Configuration parameters for a filter criterion.";
+                    uses  telemetry-sensor-path-condition-op-config;
+                }
+                container state {
+                    config false;
+                    description
+                        "State information for a filter criterion.";
+                    uses  telemetry-sensor-path-condition-op-config;
+                }
+            }
+        }
+    }
+    
+    grouping  telemetry-sensor-path-filter-attribute-config {
+        description
+            "Configuration parameters relating to the configured name of the telemetry sensor path filter.";
+        
+        leaf name {
+            type string {
+                length "1..8";
+                pattern "[A-Za-z0-9]+";
+            }
+            description "Filter name for the telemetry sensor path filter.";
+        }
+        
+        leaf condition-relation{
+            type enumeration {
+                enum and {
+                    value 1;
+                    description
+                        "The relationship between filter criteria in a filter of a sampling path is and.";
+                }
+                enum or {
+                    value 2;
+                    description
+                        "The relationship between filter criteria in a filter of a sampling path is or.";
+                }
+            }
+            default "and";
+            description 
+                "Relationship between filter criteria in a filter of a sampling path.";
+        }
+    }
+    
+    grouping telemetry-sensor-path-filter-config {
+            description
+                "Condition-based filtering's parameter of the sampling path. If the conditions are met, the data is reported.";
+            
+            container filters {
+                description
+                    "Top level container for filters. If the filter criteria are met, sampled data is sent to a collector. A filter and heartbeat interval or redundancy suppression cannot be configured at the same time.";
+
+                list filter {
+                    key "name";
+                    max-elements "1";
+                    description
+                        "Filter list of a sampling path.";
+                    
+                    leaf name {
+                        type leafref {
+                            path "../config/name";
+                        }
+                        description
+                            "Filter name of a sampling path.";
+                    }
+                     
+                    container config {
+                        description
+                            "Configuration parameters for a filter in a sampling path.";
+                        uses telemetry-sensor-path-filter-attribute-config;
+                    }
+                    
+                    container state {
+                        config false;
+                        description
+                            "State information for a filter in a sampling path.";
+                        uses telemetry-sensor-path-filter-attribute-config;
+                    }
+
+                    uses telemetry-sensor-path-filter-condition-config;
+                }
+            }    
+    }
+
+    augment "/an-telemetry:telemetry-system/an-telemetry:sensor-groups/an-telemetry:sensor-group/an-telemetry:sensor-paths/an-telemetry:sensor-path"{
+        description
+            "List of paths in the model which together comprise a sensor grouping. Filters for each path to exclude items are also provided.";
+
+        uses telemetry-sensor-path-filter-config;
+    }
+}

@@ -1,0 +1,1745 @@
+module zxr10-pm-component {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-component'
+            ;
+  prefix pm-component ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2022-04-01 {
+    description 'Increase the enumeration value of component type.'
+                ;
+  }
+  revision 2021-06-23 {
+    description 'add switch-method.'
+                ;
+  }
+  revision 2019-05-16 {
+    description 'Add notification node of linecard and cu.'
+                ;
+  }
+  revision 2018-08-24 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    container components {
+      description 'Enclosing container for the components in the system.'
+                  ;
+      list component {
+        description 'List of components, keyed by component name.'
+                    ;
+        key name ;
+        leaf name {
+          description 'Device name for the component -- this will not be a conf'
+                    + 'igurable parameter on many implementations'
+                      ;
+          type string ;
+        }
+        leaf alias {
+          description 'alias of the component'
+                      ;
+          type string ;
+        }
+        leaf custom-info {
+          description 'customer information'
+                      ;
+          type ncd:string-with-blank {
+            length 1..255 ;
+          }
+        }
+        leaf admin-state {
+          description 'Set the admin state of the component'
+                      ;
+          type enumeration {
+            enum ENABLED {
+              value 1 ;
+              description 'Enable admin state'
+                          ;
+            }
+            enum DISABLED {
+              value 2 ;
+              description 'Disable admin state'
+                          ;
+            }
+            enum MAINTENANCE {
+              value 3 ;
+              description 'Set admin-state as maintenance'
+                          ;
+            }
+          }
+          default ENABLED ;
+        }
+        leaf vendor-type {
+          description 'Device model type for the component, defined by the supp'
+                    + 'lier. Where component preconfiguration is supported, for'
+                    + ' example, the component name may be configurable.'
+                      ;
+          type uint32 {
+            range 1..4294967295 ;
+          }
+        }
+        leaf led {
+          description 'The alarm led state on the front panel of the card.'
+                      ;
+          type enumeration {
+            enum ENABLED {
+              value 1 ;
+              description 'The led is remote controlled, and the alarm light is'
+                        + ' red and flash'
+                          ;
+            }
+            enum DISABLED {
+              value 2 ;
+              description 'The remote controlled of the led is released, and co'
+                        + 'ntrolled by device'
+                          ;
+            }
+          }
+          default DISABLED ;
+        }
+      }
+    }
+    container linecards {
+      description 'Configuration data for linecard components.'
+                  ;
+      list linecard {
+        key name ;
+        leaf name {
+          description 'Device name for the component'
+                      ;
+          type string {
+            length 1..31 ;
+          }
+        }
+        leaf alias {
+          description 'Device alias for the component'
+                      ;
+          type string ;
+        }
+        leaf card-type-preconf {
+          description 'The expected card type'
+                      ;
+          type uint32 ;
+        }
+      }
+    }
+    container cus {
+      description 'Configuration data for controlcard components.'
+                  ;
+      list cu {
+        key name ;
+        leaf name {
+          description 'Device name for the component'
+                      ;
+          type string ;
+        }
+        leaf alias {
+          description 'Device alias for the component'
+                      ;
+          type string ;
+        }
+        leaf power-admin-state {
+          description 'Enable or disable power to the controlcard'
+                      ;
+          type enumeration {
+            enum POWER_DISABLED {
+              value 0 ;
+              description 'Disable power on the component'
+                          ;
+            }
+            enum POWER_ENABLED {
+              value 1 ;
+              description 'Enable power on the component'
+                          ;
+            }
+            enum MAINTENANCE {
+              value 2 ;
+              description 'Maintenance on the component'
+                          ;
+            }
+          }
+          default POWER_ENABLED ;
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    container components {
+      description 'Enclosing container for the components in the system.'
+                  ;
+      list component {
+        description 'List of components, keyed by component name.'
+                    ;
+        key name ;
+        leaf name {
+          description 'Device name for the component -- this will not be a conf'
+                    + 'igurable parameter on many implementations'
+                      ;
+          type string ;
+        }
+        leaf alias {
+          description 'alias of the component'
+                      ;
+          type string ;
+        }
+        leaf custom-info {
+          description 'customer information'
+                      ;
+          type ncd:string-with-blank ;
+        }
+        leaf admin-state {
+          description 'Set the admin state of the component'
+                      ;
+          type enumeration {
+            enum ENABLED {
+              value 1 ;
+              description 'Enable admin state'
+                          ;
+            }
+            enum DISABLED {
+              value 2 ;
+              description 'Disable admin state'
+                          ;
+            }
+            enum MAINTENANCE {
+              value 3 ;
+              description 'Set admin-state as maintenance'
+                          ;
+            }
+          }
+        }
+        leaf vendor-type {
+          description 'Device model type for the component, defined by the supp'
+                    + 'lier. Where component preconfiguration is supported, for'
+                    + ' example, the component name may be configurable.'
+                      ;
+          type uint32 ;
+        }
+        leaf led {
+          description 'The alarm led state on the front panel of the card.'
+                      ;
+          type enumeration {
+            enum ENABLED {
+              value 1 ;
+              description 'The led is remote controlled, and the alarm light is'
+                        + ' red and flash'
+                          ;
+            }
+            enum DISABLED {
+              value 2 ;
+              description 'The remote controlled of the led is released, and co'
+                        + 'ntrolled by device'
+                          ;
+            }
+          }
+        }
+        leaf type {
+          description 'Type of component as identified by the system'
+                      ;
+          type enumeration {
+            enum UNKNOWN {
+              value 0 ;
+            }
+            enum CHASSIS {
+              value 1 ;
+            }
+            enum BACKPLANE {
+              value 2 ;
+            }
+            enum FABRIC {
+              value 3 ;
+            }
+            enum POWER_SUPPLY {
+              value 4 ;
+            }
+            enum FAN {
+              value 5 ;
+            }
+            enum SENSOR {
+              value 6 ;
+            }
+            enum FRU {
+              value 7 ;
+            }
+            enum LINECARD {
+              value 8 ;
+            }
+            enum PORT {
+              value 9 ;
+            }
+            enum TRANSCEIVER {
+              value 10 ;
+            }
+            enum CPU {
+              value 11 ;
+            }
+            enum STORAGE {
+              value 12 ;
+            }
+            enum INTEGRATED_CIRCUIT {
+              value 13 ;
+            }
+            enum PANEL {
+              value 14 ;
+            }
+            enum MUX {
+              value 15 ;
+            }
+            enum CONTROLLER_CARD {
+              value 16 ;
+            }
+            enum AMPLIFIER {
+              value 17 ;
+            }
+            enum OPTICAL_CHANNEL {
+              value 18 ;
+            }
+            enum OPERATING_SYSTEM {
+              value 19 ;
+            }
+            enum OA {
+              value 20 ;
+            }
+            enum OLA {
+              value 21 ;
+            }
+            enum OLP {
+              value 22 ;
+            }
+            enum APS {
+              value 23 ;
+            }
+            enum EDFA {
+              value 24 ;
+            }
+            enum OCM_CARD {
+              value 25 ;
+            }
+            enum OTDR_CARD {
+              value 26 ;
+            }
+            enum OCM {
+              value 27 ;
+            }
+            enum OTDR {
+              value 28 ;
+            }
+            enum SLOT {
+              value 29 ;
+            }
+          }
+        }
+        leaf id {
+          description 'Unique identifier assigned by the system for the compone'
+                    + 'nt'
+                      ;
+          type string ;
+        }
+        leaf location {
+          description 'System-supplied description of the location of the compo'
+                    + 'nent within the system. This could be a bay position, sl'
+                    + 'ot number, socket location, etc. For component types tha'
+                    + 't have an explicit slot-id attribute, such as linecards,'
+                    + ' the system should populate the more specific slot-id.'
+                      ;
+          type string ;
+        }
+        leaf description {
+          description 'System-supplied description of the component'
+                      ;
+          type ncd:string-with-blank ;
+        }
+        leaf mfg-name {
+          description 'System-supplied identifier for the manufacturer of the c'
+                    + 'omponent. This data is particularly useful when a compon'
+                    + 'ent manufacturer is different than the overall device ve'
+                    + 'ndor.'
+                      ;
+          type string ;
+        }
+        leaf mfg-date {
+          description 'The manufacturer date of the component.'
+                      ;
+          type string {
+            pattern '[0-9]{4}\-[0-9]{2}\-[0-9]{2}'
+                    ;
+          }
+        }
+        leaf hardware-version {
+          description 'For hardware components, this is the hardware revision o'
+                    + 'f the component.'
+                      ;
+          type ncd:string-with-blank ;
+        }
+        leaf firmware-version {
+          description 'For hardware components, this is the version of associat'
+                    + 'ed firmware that is running on the component, if applica'
+                    + 'ble.'
+                      ;
+          type ncd:string-with-blank ;
+        }
+        leaf software-version {
+          description 'For software components such as operating system or othe'
+                    + 'r software module, this is the version of the currently '
+                    + 'running software.'
+                      ;
+          type ncd:string-with-blank ;
+        }
+        leaf serial-no {
+          description 'System-assigned serial number of the component.'
+                      ;
+          type string ;
+        }
+        leaf part-no {
+          description 'System-assigned part number for the component.  This sho'
+                    + 'uld be present in particular if the component is also an'
+                    + ' FRU (field replacable unit)'
+                      ;
+          type string ;
+        }
+        leaf removable {
+          description 'If true, this component is removable or is a field repla'
+                    + 'ceable unit'
+                      ;
+          type boolean ;
+        }
+        leaf oper-status {
+          description 'If applicable, this reports the current operational stat'
+                    + 'us of the component.'
+                      ;
+          type enumeration {
+            enum ACTIVE {
+              value 0 ;
+              description 'Component is enabled and active (i.e., up)'
+                          ;
+            }
+            enum INACTIVE {
+              value 1 ;
+              description 'Component is enabled but inactive (i.e., down)'
+                          ;
+            }
+            enum DISABLED {
+              value 2 ;
+              description 'Component is administratively disabled.'
+                          ;
+            }
+          }
+        }
+        leaf led-color {
+          description 'The LED indicator color.'
+                      ;
+          type enumeration {
+            enum OFF {
+              value 0 ;
+              description 'The LED indicator is off'
+                          ;
+            }
+            enum GREEN {
+              value 1 ;
+              description 'The LED indicator is green'
+                          ;
+            }
+            enum GREEN_BLINK {
+              value 2 ;
+              description 'The LED indicator blinks green'
+                          ;
+            }
+            enum AMBER {
+              value 3 ;
+              description 'The LED indicator is amber'
+                          ;
+            }
+            enum AMBER_BLINK {
+              value 4 ;
+              description 'The LED indicator blinks amber'
+                          ;
+            }
+            enum RED {
+              value 5 ;
+              description 'The LED indicator is red'
+                          ;
+            }
+          }
+          ncd:revise-date 2019-05-16 ;
+        }
+        container memory {
+          description 'For components that have associated memory, these values'
+                    + ' report information about available and utilized memory.'
+                      ;
+          leaf available {
+            description 'The available memory physically installed, or logicall'
+                      + 'y allocated to the component.'
+                        ;
+            type uint64 ;
+            units bytes ;
+          }
+          leaf utilized {
+            description 'The memory currently in use by processes running on th'
+                      + 'e component, not considering reserved memory that is n'
+                      + 'ot available for use.'
+                        ;
+            type uint64 ;
+            units bytes ;
+          }
+        }
+        leaf allocated-power {
+          description 'Power allocated by the system for the component.'
+                      ;
+          type uint32 ;
+          units watts ;
+        }
+        leaf used-power {
+          description 'Actual power used by the component.'
+                      ;
+          type uint32 ;
+          units watts ;
+        }
+        leaf parent {
+          description 'The parent of component.'
+                      ;
+          type string ;
+        }
+        leaf empty {
+          description 'Mark if the compoent is online.'
+                      ;
+          type boolean ;
+        }
+        leaf equipment-failure {
+          description "If true, the hardware indicates that the component's phy"
+                    + "sical equipment has failed."
+                      ;
+          type boolean ;
+        }
+        leaf equipment-mismatch {
+          description "If true, the hardware indicates that the component inser"
+                    + "ted into the affected component's physical location is o"
+                    + "f a different type than what is configured."
+                      ;
+          type boolean ;
+        }
+        container subcomponents {
+          description 'Enclosing container for subcomponent references.'
+                      ;
+          list subcomponent {
+            description 'List of subcomponent references.'
+                        ;
+            key name ;
+            leaf name {
+              description 'Reference to the name of the subcomponent'
+                          ;
+              type string ;
+            }
+            leaf alias {
+              description 'alias of the subcomponent'
+                          ;
+              type string ;
+            }
+          }
+        }
+      }
+    }
+    container linecards {
+      description 'Operational state data for linecard components.'
+                  ;
+      list linecard {
+        key name ;
+        leaf name {
+          description 'Device name for the component'
+                      ;
+          type string {
+            length 1..31 ;
+          }
+        }
+        leaf alias {
+          type string ;
+        }
+        leaf card-type-preconf {
+          description 'The expected card type'
+                      ;
+          type uint32 ;
+        }
+        leaf power-admin-state {
+          description 'Enable or disable power to the linecard'
+                      ;
+          type enumeration {
+            enum POWER_ENABLED {
+              value 1 ;
+              description 'Enable power on the component'
+                          ;
+            }
+            enum POWER_DISABLED {
+              value 0 ;
+              description 'Disable power on the component'
+                          ;
+            }
+            enum MAINTENANCE {
+              value 2 ;
+              description 'Disable power on the component'
+                          ;
+            }
+          }
+          default POWER_ENABLED ;
+        }
+        leaf slot-id {
+          description 'Identifier for the slot or chassis position in which the'
+                    + ' linecard is installed'
+                      ;
+          type uint8 ;
+        }
+        leaf card-type {
+          description 'The actual card type'
+                      ;
+          type uint32 ;
+        }
+        leaf card-class {
+          type enumeration {
+            enum UNKNOWN {
+              value 0 ;
+            }
+            enum T2X2C4 {
+              value 1 ;
+            }
+            enum T2X4C8 {
+              value 2 ;
+            }
+            enum MUX96 {
+              value 3 ;
+            }
+            enum MUX64 {
+              value 4 ;
+            }
+          }
+        }
+        container specification {
+          description 'Operational state data for component.'
+                      ;
+          leaf memory-capacity {
+            description 'The memory capability of the component.'
+                        ;
+            type uint64 ;
+            units bytes ;
+          }
+          leaf rated-power {
+            description 'Rated power of the Linecard.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units W ;
+          }
+          leaf min-input-voltage {
+            description 'The minimum value of the input voltage.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units V ;
+          }
+          leaf max-input-voltage {
+            description 'The maximum value of the input voltage.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units V ;
+          }
+          leaf min-input-current {
+            description 'The minimum value of the input current.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units mA ;
+          }
+          leaf max-input-current {
+            description 'The maximum value of the input current.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units mA ;
+          }
+          leaf min-temperature {
+            description 'The minimum value of the temperature.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+          leaf max-temperature {
+            description 'The maximum value of the temperature.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+          container supported-card-types {
+            description 'Enclosing container for supported card type.'
+                        ;
+            list card-type {
+              description 'List for card type.'
+                          ;
+              key card-class ;
+              leaf card-class {
+                description 'Linecard name defined by the model.'
+                            ;
+                type enumeration {
+                  enum UNKNOWN {
+                    value 0 ;
+                  }
+                  enum T2X2C4 {
+                    value 1 ;
+                  }
+                  enum T2X4C8 {
+                    value 2 ;
+                  }
+                  enum MUX96 {
+                    value 3 ;
+                  }
+                  enum MUX64 {
+                    value 4 ;
+                  }
+                }
+              }
+              leaf-list supported-card {
+                description 'Supported card type for the linecard.'
+                            ;
+                type ncd:string-all ;
+              }
+            }
+          }
+          ncd:revise-date 2019-05-16 ;
+        }
+        container default-configuration {
+          leaf power-admin-state {
+            description 'Set admin state of the linecard.'+"\n"
+                      + 'When the value changes, a notification is required.'
+                        ;
+            type enumeration {
+              enum POWER_ENABLED {
+                value 1 ;
+                description 'Enable power on the component'
+                            ;
+              }
+              enum POWER_DISABLED {
+                value 0 ;
+                description 'Disable power on the component'
+                            ;
+              }
+              enum MAINTENANCE {
+                value 2 ;
+                description 'Disable power on the component'
+                            ;
+              }
+            }
+            default POWER_ENABLED ;
+          }
+          leaf card-type-preconf {
+            description 'The expected card type.'+"\n"
+                      + 'When the value changes, a notification is required.'
+                        ;
+            type uint32 ;
+            default 0 ;
+          }
+        }
+      }
+    }
+    container cus {
+      list cu {
+        key name ;
+        leaf name {
+          description 'Device name for the component'
+                      ;
+          type string ;
+        }
+        leaf alias {
+          description 'Device alias for the component'
+                      ;
+          type string ;
+        }
+        leaf power-admin-state {
+          description 'Enable or disable power to the controlcard'
+                      ;
+          type enumeration {
+            enum POWER_DISABLED {
+              value 0 ;
+              description 'Disable power on the component'
+                          ;
+            }
+            enum POWER_ENABLED {
+              value 1 ;
+              description 'Enable power on the component'
+                          ;
+            }
+            enum MAINTENANCE {
+              value 2 ;
+              description 'Maintenance on the component'
+                          ;
+            }
+          }
+        }
+        leaf slot-id {
+          description 'Identifier for the slot or chassis position in which the'
+                    + ' controlcard is installed'
+                      ;
+          type uint8 ;
+        }
+        leaf redundant-state {
+          description 'Identifier for redundant state of control card.'
+                      ;
+          type enumeration {
+            enum unknown {
+              value 0 ;
+            }
+            enum master {
+              value 1 ;
+            }
+            enum standby {
+              value 2 ;
+            }
+          }
+          ncd:revise-date 2019-05-16 ;
+        }
+        container specification {
+          description 'Operational state data for component.'
+                      ;
+          leaf memory-capacity {
+            description 'The memory capability of the component.'
+                        ;
+            type uint64 ;
+            units bytes ;
+          }
+          leaf rated-power {
+            description 'Rated power of the CU.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units W ;
+          }
+          leaf min-input-voltage {
+            description 'The minimum value of the input voltage.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units V ;
+          }
+          leaf max-input-voltage {
+            description 'The maximum value of the input voltage.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units V ;
+          }
+          leaf min-input-current {
+            description 'The minimum value of the input current.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units mA ;
+          }
+          leaf max-input-current {
+            description 'The maximum value of the input current.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units mA ;
+          }
+          leaf min-temperature {
+            description 'The minimum value of the temperature.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+          leaf max-temperature {
+            description 'The maximum value of the temperature.'
+                        ;
+            type decimal64 {
+              fraction-digits 1 ;
+            }
+            units celsius ;
+          }
+          ncd:revise-date 2019-05-16 ;
+        }
+        container default-configuration {
+          leaf power-admin-state {
+            description 'Set admin state of the controller card.'+"\n"
+                      + 'When the value changes, a notification is required.'
+                        ;
+            type enumeration {
+              enum POWER_ENABLED {
+                value 1 ;
+                description 'Enable power on the component'
+                            ;
+              }
+              enum POWER_DISABLED {
+                value 0 ;
+                description 'Disable power on the component'
+                            ;
+              }
+              enum MAINTENANCE {
+                value 2 ;
+                description 'Disable power on the component'
+                            ;
+              }
+            }
+            default POWER_ENABLED ;
+          }
+        }
+      }
+    }
+  }
+  notification event {
+    container update {
+      config false ;
+      container components {
+        description 'Enclosing container for the components in the system.'
+                    ;
+        list component {
+          description 'List of components, keyed by component name.'
+                      ;
+          key name ;
+          leaf name {
+            description 'Device name for the component -- this will not be a co'
+                      + 'nfigurable parameter on many implementations'
+                        ;
+            type string ;
+          }
+          leaf alias {
+            description 'alias of the component'
+                        ;
+            type string ;
+          }
+          leaf custom-info {
+            description 'customer information'
+                        ;
+            type ncd:string-with-blank ;
+          }
+          leaf admin-state {
+            description 'Set the admin state of the component'
+                        ;
+            type enumeration {
+              enum ENABLED {
+                value 1 ;
+                description 'Enable admin state'
+                            ;
+              }
+              enum DISABLED {
+                value 2 ;
+                description 'Disable admin state'
+                            ;
+              }
+              enum MAINTENANCE {
+                value 3 ;
+                description 'Set admin-state as maintenance'
+                            ;
+              }
+            }
+          }
+          leaf vendor-type {
+            description 'Device model type for the component, defined by the su'
+                      + 'pplier. Where component preconfiguration is supported,'
+                      + ' for example, the component name may be configurable.'
+                        ;
+            type uint32 ;
+          }
+          leaf led {
+            description 'The alarm led state on the front panel of the card.'
+                        ;
+            type enumeration {
+              enum ENABLED {
+                value 1 ;
+                description 'The led is remote controlled, and the alarm light '
+                          + 'is red and flash'
+                            ;
+              }
+              enum DISABLED {
+                value 2 ;
+                description 'The remote controlled of the led is released, and '
+                          + 'controlled by device'
+                            ;
+              }
+            }
+          }
+          leaf type {
+            description 'Type of component as identified by the system'
+                        ;
+            type enumeration {
+              enum UNKNOWN {
+                value 0 ;
+              }
+              enum CHASSIS {
+                value 1 ;
+              }
+              enum BACKPLANE {
+                value 2 ;
+              }
+              enum FABRIC {
+                value 3 ;
+              }
+              enum POWER_SUPPLY {
+                value 4 ;
+              }
+              enum FAN {
+                value 5 ;
+              }
+              enum SENSOR {
+                value 6 ;
+              }
+              enum FRU {
+                value 7 ;
+              }
+              enum LINECARD {
+                value 8 ;
+              }
+              enum PORT {
+                value 9 ;
+              }
+              enum TRANSCEIVER {
+                value 10 ;
+              }
+              enum CPU {
+                value 11 ;
+              }
+              enum STORAGE {
+                value 12 ;
+              }
+              enum INTEGRATED_CIRCUIT {
+                value 13 ;
+              }
+              enum PANEL {
+                value 14 ;
+              }
+              enum MUX {
+                value 15 ;
+              }
+              enum CONTROLLER_CARD {
+                value 16 ;
+              }
+              enum AMPLIFIER {
+                value 17 ;
+              }
+              enum OPTICAL_CHANNEL {
+                value 18 ;
+              }
+              enum OPERATING_SYSTEM {
+                value 19 ;
+              }
+              enum OA {
+                value 20 ;
+              }
+              enum OLA {
+                value 21 ;
+              }
+              enum OLP {
+                value 22 ;
+              }
+              enum APS {
+                value 23 ;
+              }
+              enum EDFA {
+                value 24 ;
+              }
+              enum OCM_CARD {
+                value 25 ;
+              }
+              enum OTDR_CARD {
+                value 26 ;
+              }
+              enum OCM {
+                value 27 ;
+              }
+              enum OTDR {
+                value 28 ;
+              }
+              enum SLOT {
+                value 29 ;
+              }
+            }
+          }
+          leaf id {
+            description 'Unique identifier assigned by the system for the compo'
+                      + 'nent'
+                        ;
+            type string ;
+          }
+          leaf location {
+            description 'System-supplied description of the location of the com'
+                      + 'ponent within the system. This could be a bay position'
+                      + ', slot number, socket location, etc. For component typ'
+                      + 'es that have an explicit slot-id attribute, such as li'
+                      + 'necards, the system should populate the more specific '
+                      + 'slot-id.'
+                        ;
+            type string ;
+          }
+          leaf description {
+            description 'System-supplied description of the component'
+                        ;
+            type ncd:string-with-blank ;
+          }
+          leaf mfg-name {
+            description 'System-supplied identifier for the manufacturer of the'
+                      + ' component. This data is particularly useful when a co'
+                      + 'mponent manufacturer is different than the overall dev'
+                      + 'ice vendor.'
+                        ;
+            type string ;
+          }
+          leaf mfg-date {
+            description 'The manufacturer date of the component.'
+                        ;
+            type string {
+              pattern '[0-9]{4}\-[0-9]{2}\-[0-9]{2}'
+                      ;
+            }
+          }
+          leaf hardware-version {
+            description 'For hardware components, this is the hardware revision'
+                      + ' of the component.'
+                        ;
+            type ncd:string-with-blank ;
+          }
+          leaf firmware-version {
+            description 'For hardware components, this is the version of associ'
+                      + 'ated firmware that is running on the component, if app'
+                      + 'licable.'
+                        ;
+            type ncd:string-with-blank ;
+          }
+          leaf software-version {
+            description 'For software components such as operating system or ot'
+                      + 'her software module, this is the version of the curren'
+                      + 'tly running software.'
+                        ;
+            type ncd:string-with-blank ;
+          }
+          leaf serial-no {
+            description 'System-assigned serial number of the component.'
+                        ;
+            type string ;
+          }
+          leaf part-no {
+            description 'System-assigned part number for the component. This sh'
+                      + 'ould be present in particular if the component is also'
+                      + ' an FRU (field replacable unit)'
+                        ;
+            type string ;
+          }
+          leaf removable {
+            description 'If true, this component is removable or is a field rep'
+                      + 'laceable unit'
+                        ;
+            type boolean ;
+          }
+          leaf oper-status {
+            description 'If applicable, this reports the current operational st'
+                      + 'atus of the component.'
+                        ;
+            type enumeration {
+              enum ACTIVE {
+                value 0 ;
+                description 'Component is enabled and active (i.e., up)'
+                            ;
+              }
+              enum INACTIVE {
+                value 1 ;
+                description 'Component is enabled but inactive (i.e., down)'
+                            ;
+              }
+              enum DISABLED {
+                value 2 ;
+                description 'Component is administratively disabled.'
+                            ;
+              }
+            }
+          }
+          leaf led-color {
+            description 'The LED indicator color.'
+                        ;
+            type enumeration {
+              enum OFF {
+                value 0 ;
+                description 'The LED indicator is off'
+                            ;
+              }
+              enum GREEN {
+                value 1 ;
+                description 'The LED indicator is green'
+                            ;
+              }
+              enum GREEN_BLINK {
+                value 2 ;
+                description 'The LED indicator blinks green'
+                            ;
+              }
+              enum AMBER {
+                value 3 ;
+                description 'The LED indicator is amber'
+                            ;
+              }
+              enum AMBER_BLINK {
+                value 4 ;
+                description 'The LED indicator blinks amber'
+                            ;
+              }
+              enum RED {
+                value 5 ;
+                description 'The LED indicator is red'
+                            ;
+              }
+            }
+            ncd:revise-date 2019-05-16 ;
+          }
+          container memory {
+            description 'For components that have associated memory, these valu'
+                      + 'es report information about available and utilized mem'
+                      + 'ory.'
+                        ;
+            leaf available {
+              description 'The available memory physically installed, or logica'
+                        + 'lly allocated to the component.'
+                          ;
+              type uint64 ;
+              units bytes ;
+            }
+            leaf utilized {
+              description 'The memory currently in use by processes running on '
+                        + 'the component, not considering reserved memory that '
+                        + 'is not available for use.'
+                          ;
+              type uint64 ;
+              units bytes ;
+            }
+          }
+          leaf allocated-power {
+            description 'Power allocated by the system for the component.'
+                        ;
+            type uint32 ;
+            units watts ;
+          }
+          leaf used-power {
+            description 'Actual power used by the component.'
+                        ;
+            type uint32 ;
+            units watts ;
+          }
+          leaf parent {
+            description 'The parent of component.'
+                        ;
+            type string ;
+          }
+          leaf empty {
+            description 'Mark if the compoent is online.'
+                        ;
+            type boolean ;
+          }
+          leaf equipment-failure {
+            description "If true, the hardware indicates that the component's p"
+                      + "hysical equipment has failed."
+                        ;
+            type boolean ;
+          }
+          leaf equipment-mismatch {
+            description "If true, the hardware indicates that the component ins"
+                      + "erted into the affected component's physical location "
+                      + "is of a different type than what is configured."
+                        ;
+            type boolean ;
+          }
+          container subcomponents {
+            description 'Enclosing container for subcomponent references.'
+                        ;
+            list subcomponent {
+              description 'List of subcomponent references.'
+                          ;
+              key name ;
+              leaf name {
+                description 'Reference to the name of the subcomponent'
+                            ;
+                type string ;
+              }
+              leaf alias {
+                description 'alias of the subcomponent'
+                            ;
+                type string ;
+              }
+            }
+          }
+          container cu {
+            leaf power-admin-state {
+              description 'Power state'
+                          ;
+              type enumeration {
+                enum POWER_DISABLED {
+                  value 0 ;
+                  description 'Disable power on the component'
+                              ;
+                }
+                enum POWER_ENABLED {
+                  value 1 ;
+                  description 'Enable power on the component'
+                              ;
+                }
+                enum MAINTENANCE {
+                  value 2 ;
+                  description 'Maintenance on the component'
+                              ;
+                }
+              }
+            }
+            leaf redundant-state {
+              description 'Identifier for redundant state of control card.'
+                          ;
+              type enumeration {
+                enum unknown {
+                  value 0 ;
+                }
+                enum master {
+                  value 1 ;
+                }
+                enum standby {
+                  value 2 ;
+                }
+              }
+            }
+            leaf switch-method {
+              description 'Master and slave switch method.'
+                          ;
+              type string ;
+              ncd:revise-date 2021-06-23 ;
+            }
+            ncd:revise-date 2019-05-16 ;
+          }
+          container linecard {
+            description 'State notification for linecard components.'
+                        ;
+            leaf power-admin-state {
+              description 'Power state'
+                          ;
+              type enumeration {
+                enum POWER_DISABLED {
+                  value 0 ;
+                  description 'Disable power on the component'
+                              ;
+                }
+                enum POWER_ENABLED {
+                  value 1 ;
+                  description 'Enable power on the component'
+                              ;
+                }
+                enum MAINTENANCE {
+                  value 2 ;
+                  description 'Maintenance on the component'
+                              ;
+                }
+              }
+            }
+            leaf card-type-preconf {
+              description 'The expected card type'
+                          ;
+              type uint32 ;
+            }
+            ncd:revise-date 2019-05-16 ;
+          }
+        }
+      }
+    }
+    container delete {
+      config false ;
+      container components {
+        description 'Enclosing container for the components in the system.'
+                    ;
+        list component {
+          description 'List of components, keyed by component name.'
+                      ;
+          key name ;
+          leaf name {
+            description 'Device name for the component -- this will not be a co'
+                      + 'nfigurable parameter on many implementations'
+                        ;
+            type string ;
+          }
+          leaf alias {
+            description 'alias of the component'
+                        ;
+            type string ;
+          }
+          leaf custom-info {
+            description 'customer information'
+                        ;
+            type ncd:string-with-blank ;
+          }
+          leaf admin-state {
+            description 'Set the admin state of the component'
+                        ;
+            type enumeration {
+              enum ENABLED {
+                value 1 ;
+                description 'Enable admin state'
+                            ;
+              }
+              enum DISABLED {
+                value 2 ;
+                description 'Disable admin state'
+                            ;
+              }
+              enum MAINTENANCE {
+                value 3 ;
+                description 'Set admin-state as maintenance'
+                            ;
+              }
+            }
+          }
+          leaf vendor-type {
+            description 'Device model type for the component, defined by the su'
+                      + 'pplier. Where component preconfiguration is supported,'
+                      + ' for example, the component name may be configurable.'
+                        ;
+            type uint32 ;
+          }
+          leaf led {
+            description 'The alarm led state on the front panel of the card.'
+                        ;
+            type enumeration {
+              enum ENABLED {
+                value 1 ;
+                description 'The led is remote controlled, and the alarm light '
+                          + 'is red and flash'
+                            ;
+              }
+              enum DISABLED {
+                value 2 ;
+                description 'The remote controlled of the led is released, and '
+                          + 'controlled by device'
+                            ;
+              }
+            }
+          }
+          leaf type {
+            description 'Type of component as identified by the system'
+                        ;
+            type enumeration {
+              enum UNKNOWN {
+                value 0 ;
+              }
+              enum CHASSIS {
+                value 1 ;
+              }
+              enum BACKPLANE {
+                value 2 ;
+              }
+              enum FABRIC {
+                value 3 ;
+              }
+              enum POWER_SUPPLY {
+                value 4 ;
+              }
+              enum FAN {
+                value 5 ;
+              }
+              enum SENSOR {
+                value 6 ;
+              }
+              enum FRU {
+                value 7 ;
+              }
+              enum LINECARD {
+                value 8 ;
+              }
+              enum PORT {
+                value 9 ;
+              }
+              enum TRANSCEIVER {
+                value 10 ;
+              }
+              enum CPU {
+                value 11 ;
+              }
+              enum STORAGE {
+                value 12 ;
+              }
+              enum INTEGRATED_CIRCUIT {
+                value 13 ;
+              }
+              enum PANEL {
+                value 14 ;
+              }
+              enum MUX {
+                value 15 ;
+              }
+              enum CONTROLLER_CARD {
+                value 16 ;
+              }
+              enum AMPLIFIER {
+                value 17 ;
+              }
+              enum OPTICAL_CHANNEL {
+                value 18 ;
+              }
+              enum OPERATING_SYSTEM {
+                value 19 ;
+              }
+              enum OA {
+                value 20 ;
+              }
+              enum OLA {
+                value 21 ;
+              }
+              enum OLP {
+                value 22 ;
+              }
+              enum APS {
+                value 23 ;
+              }
+              enum EDFA {
+                value 24 ;
+              }
+              enum OCM_CARD {
+                value 25 ;
+              }
+              enum OTDR_CARD {
+                value 26 ;
+              }
+              enum OCM {
+                value 27 ;
+              }
+              enum OTDR {
+                value 28 ;
+              }
+              enum SLOT {
+                value 29 ;
+              }
+            }
+          }
+          leaf id {
+            description 'Unique identifier assigned by the system for the compo'
+                      + 'nent'
+                        ;
+            type string ;
+          }
+          leaf location {
+            description 'System-supplied description of the location of the com'
+                      + 'ponent within the system. This could be a bay position'
+                      + ', slot number, socket location, etc. For component typ'
+                      + 'es that have an explicit slot-id attribute, such as li'
+                      + 'necards, the system should populate the more specific '
+                      + 'slot-id.'
+                        ;
+            type string ;
+          }
+          leaf description {
+            description 'System-supplied description of the component'
+                        ;
+            type ncd:string-with-blank ;
+          }
+          leaf mfg-name {
+            description 'System-supplied identifier for the manufacturer of the'
+                      + ' component. This data is particularly useful when a co'
+                      + 'mponent manufacturer is different than the overall dev'
+                      + 'ice vendor.'
+                        ;
+            type string ;
+          }
+          leaf mfg-date {
+            description 'The manufacturer date of the component.'
+                        ;
+            type string {
+              pattern '[0-9]{4}\-[0-9]{2}\-[0-9]{2}'
+                      ;
+            }
+          }
+          leaf hardware-version {
+            description 'For hardware components, this is the hardware revision'
+                      + ' of the component.'
+                        ;
+            type ncd:string-with-blank ;
+          }
+          leaf firmware-version {
+            description 'For hardware components, this is the version of associ'
+                      + 'ated firmware that is running on the component, if app'
+                      + 'licable.'
+                        ;
+            type ncd:string-with-blank ;
+          }
+          leaf software-version {
+            description 'For software components such as operating system or ot'
+                      + 'her software module, this is the version of the curren'
+                      + 'tly running software.'
+                        ;
+            type ncd:string-with-blank ;
+          }
+          leaf serial-no {
+            description 'System-assigned serial number of the component.'
+                        ;
+            type string ;
+          }
+          leaf part-no {
+            description 'System-assigned part number for the component. This sh'
+                      + 'ould be present in particular if the component is also'
+                      + ' an FRU (field replacable unit)'
+                        ;
+            type string ;
+          }
+          leaf removable {
+            description 'If true, this component is removable or is a field rep'
+                      + 'laceable unit'
+                        ;
+            type boolean ;
+          }
+          leaf oper-status {
+            description 'If applicable, this reports the current operational st'
+                      + 'atus of the component.'
+                        ;
+            type enumeration {
+              enum ACTIVE {
+                value 0 ;
+                description 'Component is enabled and active (i.e., up)'
+                            ;
+              }
+              enum INACTIVE {
+                value 1 ;
+                description 'Component is enabled but inactive (i.e., down)'
+                            ;
+              }
+              enum DISABLED {
+                value 2 ;
+                description 'Component is administratively disabled.'
+                            ;
+              }
+            }
+          }
+          leaf led-color {
+            description 'The LED indicator color.'
+                        ;
+            type enumeration {
+              enum OFF {
+                value 0 ;
+                description 'The LED indicator is off'
+                            ;
+              }
+              enum GREEN {
+                value 1 ;
+                description 'The LED indicator is green'
+                            ;
+              }
+              enum GREEN_BLINK {
+                value 2 ;
+                description 'The LED indicator blinks green'
+                            ;
+              }
+              enum AMBER {
+                value 3 ;
+                description 'The LED indicator is amber'
+                            ;
+              }
+              enum AMBER_BLINK {
+                value 4 ;
+                description 'The LED indicator blinks amber'
+                            ;
+              }
+              enum RED {
+                value 5 ;
+                description 'The LED indicator is red'
+                            ;
+              }
+            }
+            ncd:revise-date 2019-05-16 ;
+          }
+          container memory {
+            description 'For components that have associated memory, these valu'
+                      + 'es report information about available and utilized mem'
+                      + 'ory.'
+                        ;
+            leaf available {
+              description 'The available memory physically installed, or logica'
+                        + 'lly allocated to the component.'
+                          ;
+              type uint64 ;
+              units bytes ;
+            }
+            leaf utilized {
+              description 'The memory currently in use by processes running on '
+                        + 'the component, not considering reserved memory that '
+                        + 'is not available for use.'
+                          ;
+              type uint64 ;
+              units bytes ;
+            }
+          }
+          leaf allocated-power {
+            description 'Power allocated by the system for the component.'
+                        ;
+            type uint32 ;
+            units watts ;
+          }
+          leaf used-power {
+            description 'Actual power used by the component.'
+                        ;
+            type uint32 ;
+            units watts ;
+          }
+          leaf parent {
+            description 'The parent of component.'
+                        ;
+            type string ;
+          }
+          leaf empty {
+            description 'Mark if the compoent is online.'
+                        ;
+            type boolean ;
+          }
+          leaf equipment-failure {
+            description "If true, the hardware indicates that the component's p"
+                      + "hysical equipment has failed."
+                        ;
+            type boolean ;
+          }
+          leaf equipment-mismatch {
+            description "If true, the hardware indicates that the component ins"
+                      + "erted into the affected component's physical location "
+                      + "is of a different type than what is configured."
+                        ;
+            type boolean ;
+          }
+          container subcomponents {
+            description 'Enclosing container for subcomponent references.'
+                        ;
+            list subcomponent {
+              description 'List of subcomponent references.'
+                          ;
+              key name ;
+              leaf name {
+                description 'Reference to the name of the subcomponent'
+                            ;
+                type string ;
+              }
+              leaf alias {
+                description 'alias of the subcomponent'
+                            ;
+                type string ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

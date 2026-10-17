@@ -1,0 +1,58 @@
+module notification-management {
+  namespace urn:ietf:params:xml:ns:netmod:notification ;
+  prefix manageEvent ;
+  organization 'IETF NETCONF WG'
+               ;
+  contact netconf@ietf.org ;
+  description "Conversion of the 'manageEvent' XSD in the NETCONF\nNotification"
+            + "s RFC."
+              ;
+  reference 'RFC 5277'
+            ;
+  revision 2017-02-16 {
+    description 'RFC 5277 version.'
+                ;
+  }
+  container netconf {
+    description 'Top-level element in the notification namespace'
+                ;
+    config false ;
+    container streams {
+      description 'The list of event streams supported by the system. When a qu'
+                + 'ery is issued, the returned set of streams is determined bas'
+                + 'ed on user privileges.'
+                  ;
+      list stream {
+        description 'Stream name, description and other information.'
+                    ;
+        key name ;
+        min-elements 1 ;
+        leaf name {
+          description "The name of the event stream. If this is the default NET"
+                    + "CONF stream, this must have the value 'NETCONF'."
+                      ;
+          type string {
+            length 1..255 ;
+          }
+        }
+        leaf description {
+          description 'A description of the event stream, including such inform'
+                    + 'ation as the type of events that are sent over this stre'
+                    + 'am.'
+                      ;
+          type string {
+            length 1..255 ;
+          }
+          mandatory true ;
+        }
+        leaf replaySupport {
+          description 'An indication of whether or not event replay is availabl'
+                    + 'e on this stream.'
+                      ;
+          type boolean ;
+          default false ;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,981 @@
+module zxr10-ftp {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ftp'
+            ;
+  prefix ftp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2014-04-14 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the FTP.'
+              ;
+  revision 2022-06-13 {
+    description 'add trust user'
+                ;
+  }
+  revision 2021-04-14 {
+    description 'expand password max legenth from 64 to 128.'
+                ;
+  }
+  revision 2021-03-22 {
+    description 'Add leaf configuration:/configuration/ftp/ftp-server/idle-time'
+              + 'out/idle-time.'
+                ;
+  }
+  revision 2020-03-23 {
+    description 'Add choice node:/operation/ftp/ftp-client/copy/trans-direction'
+              + '/upload/remote-dest-param.'+"\n"
+              + 'Add choice node:/operation/ftp/ftp-client/copy/trans-direction'
+              + '/download/remote-source-param.'
+                ;
+  }
+  revision 2019-06-12 {
+    description '1 Extend the length of node /ftp:operation/ftp:ftp/ftp:ftp-cli'
+              + 'ent/ftp:copy/ftp:trans-direction/ftp:upload/ftp:remote-dest-fi'
+              + 'le.'+"\n"
+              + '2  Extend the length of node /ftp:operation/ftp:ftp/ftp:ftp-cl'
+              + 'ient/ftp:copy/ftp:trans-direction/ftp:download/ftp:remote-sour'
+              + 'ce-file'
+                ;
+  }
+  revision 2018-06-20 {
+    description '1. Add container configuration/ftp/ftp-server/source-ip.'+"\n"
+              + '2. Add container configuration/ftp/ftp-server/source-ip/source'
+              + '-ipv4.'+"\n"
+              + '3. Add leaf configuration/ftp/ftp-server/source-ip/source-ipv4'
+              + '/ipv4-address.'+"\n"
+              + '4. Add container configuration/ftp/ftp-server/source-ip/source'
+              + '-ipv6.'+"\n"
+              + '5. Add leaf configuration/ftp/ftp-server/source-ip/source-ipv6'
+              + '/ipv6-address.'+"\n"
+              + '6. Add container configuration/ftp/ftp-server/source-ip/source'
+              + '-vrf.'+"\n"
+              + '7. Add leaf configuration/ftp/ftp-server/source-ip/source-vrf/'
+              + 'vrf-name.'+"\n"
+              + '8. Add container configuration/ftp/ftp-server/source-interface'
+              + '.'+"\n"
+              + '9. Add leaf configuration/ftp/ftp-server/source-interface/inte'
+              + 'rface-name.'+"\n"
+              + '10. Add container configuration/ftp/ftp-client/source-interfac'
+              + 'e.'+"\n"
+              + '11. Add leaf configuration/ftp/ftp-client/source-interface/int'
+              + 'erface-name.'+"\n"
+              + '12. Add the leaf upload-cpu-node of the choice branch operatio'
+              + 'n/ftp/ftp-client/copy/trans-direction/upload.'+"\n"
+              + '13. Add the leaf download-cpu-node of the choice branch operat'
+              + 'ion/ftp/ftp-client/copy/trans-direction/download.'+"\n"
+              + '14. Add leaf operation/ftp/ftp-client/copy/policy-name.'
+                ;
+  }
+  revision 2018-06-06 {
+    description 'Add performance parameter for configuration/ftp/ftp-server/top'
+              + '-directory/directory-name.'
+                ;
+  }
+  revision 2015-06-09 {
+    description 'Adjust the sequence of node /configuration/ftp/ftp-secure-serv'
+              + 'er/ftps-protocol-mode and /configuration/ftp/ftp-secure-server'
+              + '/ftps-server-status'
+                ;
+  }
+  revision 2014-06-19 {
+    description '1 Deleted the leaves ipv6-address and interface-name of the co'
+              + 'ntainer /configuration/ftp/ftp-client/source-ip/source-ipv6. '+"\n"
+              + '2 Add the choice /configuration/ftp/ftp-client/source-ip/sourc'
+              + 'e-ipv6/ipv6-addr,which contains the branches unlink-local-addr'
+              + ' and link-local-addr.'+"\n"
+              + '3 Add the leaf ipv6-address of the choice branch /configuratio'
+              + 'n/ftp/ftp-client/source-ip/source-ipv6/ipv6-addr/unlink-local-'
+              + 'addr.'+"\n"
+              + '4 Add the leaves link-local-address and interface-name of the '
+              + 'choice branch /configuration/ftp/ftp-client/source-ip/source-i'
+              + 'pv6/ipv6-addr/link-local-addr.'+"\n"
+              + '5 Add mandatory attribute of /configuration/ftp/ftp-client/sou'
+              + 'rce-ip/source-ipv6/ipv6-addr/link-local-addr/interface-name.'+"\n"
+              + '6 Add mandatory attribute of /configuration/ftp/ftp-client/sou'
+              + 'rce-ip/source-ipv6/ipv6-addr/link-local-addr/link-local-addres'
+              + 's.'+"\n"
+              + '7 Modified /configuration/ftp/ftp-client/source-ip/source-ipv6'
+              + '/ipv6-addr/link-local-addr/interface-name node type from strin'
+              + 'g to ncd:ifname.'+"\n"
+              + '8 Modified /operation/ftp/ftp-client/copy/source-addr/ipv6/int'
+              + 'erface-name node type from string to ncd:ifname.'
+                ;
+  }
+  revision 2014-04-22 {
+    description '1.Modified configuration/ftp/ftp-server/top-directory/permissi'
+              + 'on/write-copy/'+"\n"
+              + '  write-copy/read-write node type from empty to enumeration.'+"\n"
+              + '2.Modified configuration/ftp/ftp-server/top-directory//permiss'
+              + 'ion/write-copy/'+"\n"
+              + '  write-copy/copy node type from empty to enumeration.'+"\n"
+              + '3.Add MimFilter of /ftp/ftp-server/top-directory/permission/wr'
+              + 'ite-copy/write-copy.'
+                ;
+  }
+  revision 2014-03-02 {
+    description '1.Modified the length of state/ftp/ftp-server/user-state/user-'
+              + 'name from 64 to 65.'
+                ;
+  }
+  revision 2014-02-10 {
+    description '1.Modified configuration/ftp/ftp-server/top-directory/permissi'
+              + 'on/read-only/'+"\n"
+              + '  read-only node type from enumeration to empty.'+"\n"
+              + '2.Modified configuration/ftp/ftp-server/top-directory/permissi'
+              + 'on/write-copy/'+"\n"
+              + '  read-write node type from enumeration to empty.'+"\n"
+              + '3.Modified configuration/ftp/ftp-server/top-directory/permissi'
+              + 'on/write-copy/copy '+"\n"
+              + '  node type from enumeration to empty.'+"\n"
+              + '4.Modified configuration/ftp/ftp-server/acl node type from lis'
+              + 't to container '+"\n"
+              + '  and add MimFixKey for Multi-instance operation.'+"\n"
+              + '5.Modified configuration/ftp/ftp-client/source-ip node type fr'
+              + 'om list to container '+"\n"
+              + '  and add MimFixKey for Multi-instance operation.'+"\n"
+              + '6.Add presence for operation/ftp/ftp-client/copy and /operatio'
+              + 'n/ftp/'+"\n"
+              + '  ftp-server/kick-user.'+"\n"
+              + '7.Add mandatory attribute of operation/ftp/ftp-server/kick-use'
+              + 'r/user-id.'
+                ;
+  }
+  revision 2013-09-23 {
+    description 'Initial version'
+                ;
+  }
+  container configuration {
+    description 'The configuration model of FTP.'
+                ;
+    container ftp {
+      description 'Configure the FTP parameters.'
+                  ;
+      container ftp-server {
+        description 'Configure the FTP server parameters.'
+                    ;
+        container max-login {
+          description 'To configure the maximum concurrent users.'
+                      ;
+          leaf max-user-number {
+            description 'Concurrent users.'
+                        ;
+            type uint32 {
+              range 1..40 ;
+            }
+            default 40 ;
+          }
+        }
+        container top-directory {
+          description 'To configure the top directory of FTP server and permiss'
+                    + 'ion.'
+                      ;
+          leaf directory-name {
+            description 'The FTP server top directory name.'
+                        ;
+            type string {
+              length 1..159 ;
+            }
+            default /datadisk0/ ;
+          }
+          choice permission {
+            description 'To configure the permission of the top directory'
+                        ;
+            default write-copy ;
+            case read-only {
+              description 'To configure the permission of read-only.'
+                          ;
+              leaf read-only {
+                description 'To configure the permission of read-only.'
+                            ;
+                type empty ;
+              }
+            }
+            case write-copy {
+              description 'To configure the permission of read-write,copy.'
+                          ;
+              container write-copy {
+                description 'To configure the permission of read-write,copy.'
+                            ;
+                leaf read-write {
+                  description 'To configure the permission of read-write.'
+                              ;
+                  type enumeration {
+                    enum no {
+                      value 0 ;
+                      description 'To cancel the permission of FTP top director'
+                                + 'y.'
+                                  ;
+                    }
+                    enum yes {
+                      value 1 ;
+                      description 'To configure the permission of FTP top direc'
+                                + 'tory.'
+                                  ;
+                    }
+                  }
+                }
+                leaf copy {
+                  description 'To configure the permission of copy.'
+                              ;
+                  type enumeration {
+                    enum no {
+                      value 0 ;
+                      description 'To cancel the permission of FTP top director'
+                                + 'y.'
+                                  ;
+                    }
+                    enum yes {
+                      value 1 ;
+                      description 'To configure the permission of FTP top direc'
+                                + 'tory.'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        container ftp-server-status {
+          description 'To configure FTP server listen status.'
+                      ;
+          choice status {
+            description 'To configure the FTP server enable or disable.'
+                        ;
+            default disable ;
+            case disable {
+              description 'To configure the FTP server disable.'
+                          ;
+              leaf disable {
+                description 'Disable the FTP server.'
+                            ;
+                type empty ;
+              }
+            }
+            case enable {
+              description 'To configure the FTP server enable.'
+                          ;
+              leaf enable {
+                description 'Enable the FTP server.'
+                            ;
+                type empty ;
+              }
+              leaf listen-port {
+                description 'The listenning port of the FTP server. It can be c'
+                          + 'onfigured as 21 or any integer between 2401 and 24'
+                          + '20. It cannot be changed while FTP server has been'
+                          + ' enabled.'
+                            ;
+                type uint16 {
+                  range '21 | 2401..2420'
+                        ;
+                }
+                default 21 ;
+              }
+            }
+          }
+        }
+        container acl {
+          description 'To configure the ACL name which is binded to the FTP ser'
+                    + 'ver.'
+                      ;
+          container acl-ipv4 {
+            description 'To configure the IPv4 ACL name which is binded to the '
+                      + 'FTP server.'
+                        ;
+            leaf acl-name {
+              description 'The ACL name which is binded to the FTP server.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+            }
+          }
+          container acl-ipv6 {
+            description 'To configure the IPv6 ACL name which is binded to the '
+                      + 'FTP server.'
+                        ;
+            leaf acl-name {
+              description 'The ACL name which is binded to the FTP server.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+            }
+          }
+        }
+        container source-ip {
+          description 'To configure the source IP address of FTP client copy co'
+                    + 'mmand.'
+                      ;
+          container source-ipv4 {
+            description 'To configure the source IPv4 address of FTP client cop'
+                      + 'y command.'
+                        ;
+            presence 'IPv4 mandatory'
+                     ;
+            leaf ipv4-address {
+              description 'IPv4 address.'
+                          ;
+              type ncd:ipv4-address ;
+              mandatory true ;
+            }
+          }
+          container source-ipv6 {
+            description 'To configure the source IPv6 address of FTP server cop'
+                      + 'y command.'
+                        ;
+            presence 'IPv6 mandatory'
+                     ;
+            leaf ipv6-address {
+              description 'IPv6 address.'
+                          ;
+              type ncd:ipv6-address ;
+              mandatory true ;
+            }
+          }
+          container source-vrf {
+            description 'To configure the source vrf name of FTP server copy co'
+                      + 'mmand.'
+                        ;
+            presence 'vrf mandatory'
+                     ;
+            leaf vrf-name {
+              description 'vrf name.'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+              mandatory true ;
+            }
+          }
+          ncd:revise-date 2018-06-20 ;
+        }
+        container source-interface {
+          description 'To configure the source interface of FTP server copy com'
+                    + 'mand.'
+                      ;
+          presence 'source-interface manatory'
+                   ;
+          leaf interface-name {
+            description 'interface name.'
+                        ;
+            type ncd:ifname ;
+            mandatory true ;
+          }
+          ncd:revise-date 2018-06-20 ;
+        }
+        leaf idle-timeout {
+          description 'To configure the idle timeout of FTP.'
+                      ;
+          type uint32 {
+            range 0..1440 ;
+          }
+          default 10 ;
+          ncd:revise-date 2021-03-22 ;
+        }
+        container ipv4-trust-users {
+          description 'To configure the ipv4 trust-user.'
+                      ;
+          list ipv4-trust-user {
+            description 'To configure trust-user.'
+                        ;
+            key ipv4-address ;
+            leaf ipv4-address {
+              description 'To configure ipv4 address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+          ncd:revise-date 2022-06-13 ;
+        }
+        container ipv6-trust-users {
+          description 'To configure the ipv6 trust-user.'
+                      ;
+          list ipv6-trust-user {
+            description 'To configure trust-user.'
+                        ;
+            key ipv6-address ;
+            leaf ipv6-address {
+              description 'To configure ipv6 address.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+          }
+          ncd:revise-date 2022-06-13 ;
+        }
+      }
+      container ftp-client {
+        description 'Configure the FTP client parameters.'
+                    ;
+        container source-ip {
+          description 'To configure the source IP address of FTP client copy co'
+                    + 'mmand.'
+                      ;
+          container source-ipv4 {
+            description 'To configure the source IPv4 address of FTP client cop'
+                      + 'y command.'
+                        ;
+            leaf ipv4-address {
+              description 'IPv4 address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+          container source-ipv6 {
+            description 'To configure the source IPv6 address of FTP client cop'
+                      + 'y command.'
+                        ;
+            choice ipv6-addr {
+              description 'The source IPv6 address of FTP client copy command.'
+                          ;
+              case unlink-local-addr {
+                description 'Unlink local address.'
+                            ;
+                leaf ipv6-address {
+                  description 'IPv6 address.'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+              }
+              case link-local-addr {
+                description 'Link local address.'
+                            ;
+                leaf link-local-address {
+                  description 'Link local address.'
+                              ;
+                  type ncd:ipv6-address {
+                    pattern '^[Ff][Ee][8-9a-bA-B][0-9a-fA-F]'
+                            ;
+                  }
+                  mandatory true ;
+                }
+                leaf interface-name {
+                  description 'Interface name.'
+                              ;
+                  type ncd:ifname ;
+                  mandatory true ;
+                }
+              }
+            }
+          }
+        }
+        container source-interface {
+          description 'To configure the source interface of FTP client copy com'
+                    + 'mand.'
+                      ;
+          presence 'source-interface manatory'
+                   ;
+          leaf interface-name {
+            description 'interface name.'
+                        ;
+            type ncd:ifname ;
+            mandatory true ;
+          }
+          ncd:revise-date 2018-06-20 ;
+        }
+      }
+      container ftp-secure-server {
+        description 'Configure the FTPS server parameters.'
+                    ;
+        container ssl {
+          description 'To configure SSL context name and PKI name.'
+                      ;
+          presence 'the leaf ssl-context-name of this container should be manda'
+                 + 'tory, and other leafs are not.'
+                   ;
+          leaf ssl-context-name {
+            description 'SSL context name.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+          leaf pki-name {
+            description 'PKI name.'
+                        ;
+            type string {
+              length 1..63 ;
+            }
+          }
+        }
+        container ftps-protocol-mode {
+          description 'To configure FTP secure server mode.'
+                      ;
+          choice protocol-mode {
+            description 'To configure the listen protocol mode of FTPS server.'
+                        ;
+            default all ;
+            case all {
+              description 'Both explicit and implicit listen mode.'
+                          ;
+              leaf all {
+                description 'Both explicit and implicit listen mode.'
+                            ;
+                type empty ;
+              }
+              leaf implicit-port {
+                description 'Implicit listen port.'
+                            ;
+                type uint16 {
+                  range '990 | 1025..20000'
+                        ;
+                }
+                default 990 ;
+              }
+              leaf explicit-port {
+                description 'Explicit listen port.'
+                            ;
+                type uint16 {
+                  range '21 | 1025..20000'
+                        ;
+                }
+                default 21 ;
+              }
+            }
+            case explicit {
+              description 'Explicit listen mode.'
+                          ;
+              leaf explicit {
+                description 'Explicit listen mode.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf explicit-listen-port {
+                description 'Explicit listen port.'
+                            ;
+                type uint16 {
+                  range '21 | 1025..20000'
+                        ;
+                }
+                default 21 ;
+              }
+            }
+            case implicit {
+              description 'Implicit listen mode.'
+                          ;
+              leaf implicit {
+                description 'Implicit listen mode.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf implicit-listen-port {
+                description 'Implicit listen port.'
+                            ;
+                type uint16 {
+                  range '990 | 1025..20000'
+                        ;
+                }
+                default 990 ;
+              }
+            }
+          }
+        }
+        container ftps-server-status {
+          description 'To configure FTP secure server listen status.'
+                      ;
+          choice status {
+            description 'To configure the FTPS server enable or disable.'
+                        ;
+            default disable ;
+            case disable {
+              description 'To configure the FTPS server disable.'
+                          ;
+              leaf disable {
+                description 'Disable the FTPS server.'
+                            ;
+                type empty ;
+              }
+            }
+            case enable {
+              description 'To configure the FTPS server enable.'
+                          ;
+              leaf enable {
+                description 'Enable the FTPS server.'
+                            ;
+                type empty ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model of FTP.'
+                ;
+    container ftp {
+      description 'State model of FTP.'
+                  ;
+      container ftp-server {
+        description 'State model of FTP server.'
+                    ;
+        list user-state {
+          description 'Show FTP user state.'
+                      ;
+          key user-id ;
+          leaf user-id {
+            description 'User id.'
+                        ;
+            type uint16 {
+              range 1..80 ;
+            }
+          }
+          leaf user-name {
+            description 'User name.'
+                        ;
+            type string {
+              length 1..65 ;
+            }
+          }
+          leaf status {
+            description 'user current state.'
+                        ;
+            type enumeration {
+              enum offline {
+                value 0 ;
+              }
+              enum online {
+                value 1 ;
+              }
+            }
+          }
+          leaf ip-type {
+            description 'The type of IP address.'
+                        ;
+            type enumeration {
+              enum IPv4 {
+                value 4 ;
+              }
+              enum IPv6 {
+                value 6 ;
+              }
+            }
+          }
+          leaf ipv4-address {
+            description 'IPv4 address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ipv6-address {
+            description 'IPv6 address.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf port {
+            description 'Port number.'
+                        ;
+            type uint16 {
+              range 1..65535 ;
+            }
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description 'The operation model of FTP.'
+                ;
+    container ftp {
+      description 'The operation model of FTP.'
+                  ;
+      container ftp-client {
+        description 'The operation of FTP client.'
+                    ;
+        container copy {
+          description 'To copy a file over the network.'
+                      ;
+          presence 'The choice trans-direction is mandatory.'
+                   ;
+          choice copy-mode {
+            description 'To specify the mode of file transmition.'
+                        ;
+            case vrf {
+              description 'To transmit file by VRF.'
+                          ;
+              leaf vrf-name {
+                description 'To specify VRF name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+                mandatory true ;
+              }
+            }
+            case dcn {
+              description 'To transmit file by DCN.'
+                          ;
+              leaf dcn {
+                description 'DCN mode.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+            }
+          }
+          choice trans-direction {
+            description 'To specify transmition direction.'
+                        ;
+            mandatory true ;
+            case upload {
+              description Upload. ;
+              leaf local-source-file {
+                description 'To Specify the local source file name.'
+                            ;
+                type string {
+                  length 1..159 ;
+                }
+                mandatory true ;
+              }
+              choice remote-dest-param {
+                description 'Remote dest FTP server param'
+                            ;
+                mandatory true ;
+                case spliced-remote-param {
+                  description 'spliced remote param'
+                              ;
+                  leaf remote-dest-file {
+                    description 'To Specify the remote destination params.the f'
+                              + 'ormat is: '+"\n"
+                              + '//ip-address/filename@username:password.'
+                                ;
+                    type string {
+                      length 1..300 ;
+                    }
+                    mandatory true ;
+                  }
+                }
+                case splited-remote-param {
+                  description 'Splited remote param'
+                              ;
+                  container splited-remote-dest-param {
+                    description 'Splited remote param of FTP server'
+                                ;
+                    choice ip-addr {
+                      description 'IP address'
+                                  ;
+                      mandatory true ;
+                      case ipv4 {
+                        description IPv4 ;
+                        leaf remote-ipv4-address {
+                          description 'IPv4 address of FTP server'
+                                      ;
+                          type ncd:ipv4-address ;
+                          mandatory true ;
+                        }
+                      }
+                      case ipv6 {
+                        description IPv6 ;
+                        leaf remote-ipv6-address {
+                          description 'IPv6 address of FTP server'
+                                      ;
+                          type ncd:ipv6-address ;
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf username {
+                      description Username ;
+                      type string {
+                        length 1..65 ;
+                      }
+                      mandatory true ;
+                    }
+                    leaf password {
+                      description Password ;
+                      type string {
+                        length 1..128 ;
+                      }
+                      mandatory true ;
+                    }
+                    leaf path {
+                      description Path ;
+                      type string {
+                        length 1..159 ;
+                      }
+                      mandatory true ;
+                    }
+                  }
+                  ncd:revise-date 2020-03-23 ;
+                }
+              }
+              leaf upload-cpu-node {
+                description 'To specify the cpu node.'
+                            ;
+                type ncd:cpu ;
+                ncd:revise-date 2018-06-20 ;
+              }
+            }
+            case download {
+              description Download. ;
+              choice remote-source-param {
+                description 'Remote source FTP server param'
+                            ;
+                mandatory true ;
+                case spliced-remote-param {
+                  description 'spliced remote param'
+                              ;
+                  leaf remote-source-file {
+                    description 'To Specify the remote source params.the format'
+                              + ' is: '+"\n"
+                              + '//ip-address/filename@username:password.'
+                                ;
+                    type string {
+                      length 1..300 ;
+                    }
+                    mandatory true ;
+                  }
+                }
+                case splited-remote-param {
+                  description 'Splited remote param'
+                              ;
+                  container splited-remote-source-param {
+                    description 'Splited remote source param'
+                                ;
+                    choice ip-addr {
+                      description 'IP address'
+                                  ;
+                      mandatory true ;
+                      case ipv4 {
+                        description IPv4 ;
+                        leaf remote-ipv4-address {
+                          description 'IPv4 address of FTP server'
+                                      ;
+                          type ncd:ipv4-address ;
+                          mandatory true ;
+                        }
+                      }
+                      case ipv6 {
+                        description IPv6 ;
+                        leaf remote-ipv6-address {
+                          description 'IPv6 address of FTP server'
+                                      ;
+                          type ncd:ipv6-address ;
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf username {
+                      description Username ;
+                      type string {
+                        length 1..65 ;
+                      }
+                      mandatory true ;
+                    }
+                    leaf password {
+                      description Password ;
+                      type string {
+                        length 1..128 ;
+                      }
+                      mandatory true ;
+                    }
+                    leaf path {
+                      description Path ;
+                      type string {
+                        length 1..159 ;
+                      }
+                      mandatory true ;
+                    }
+                  }
+                  ncd:revise-date 2020-03-23 ;
+                }
+              }
+              leaf local-dest-file {
+                description 'To Specify the local destination file name.'
+                            ;
+                type string {
+                  length 1..159 ;
+                }
+                mandatory true ;
+              }
+              leaf download-cpu-node {
+                description 'To specify the cpu node.'
+                            ;
+                type ncd:cpu ;
+                ncd:revise-date 2018-06-20 ;
+              }
+            }
+          }
+          choice source-addr {
+            description 'To specify the source ip address.'
+                        ;
+            case ipv4 {
+              description 'IPv4 address.'
+                          ;
+              leaf ipv4-address {
+                description 'IPv4 address.'
+                            ;
+                type ncd:ipv4-address ;
+                mandatory true ;
+              }
+            }
+            case ipv6 {
+              description 'IPv6 address.'
+                          ;
+              leaf ipv6-address {
+                description 'IPv6 address.'
+                            ;
+                type ncd:ipv6-address ;
+                mandatory true ;
+              }
+              leaf interface-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname ;
+                default ''
+                        ;
+              }
+            }
+          }
+          leaf server-port {
+            description 'To specify the listen port of FTP server.'
+                        ;
+            type uint16 {
+              range 1..65535 ;
+            }
+            default 21 ;
+          }
+          leaf policy-name {
+            description 'To specify the policy name of FTP.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+            ncd:revise-date 2018-06-20 ;
+          }
+        }
+      }
+      container ftp-server {
+        description 'The operation of FTP server.'
+                    ;
+        container kick-user {
+          description 'To kick off online user.'
+                      ;
+          presence 'The leaf user-id is mandatory.'
+                   ;
+          leaf user-id {
+            description 'User id.'
+                        ;
+            type uint16 {
+              range 1..80 ;
+            }
+            mandatory true ;
+          }
+        }
+      }
+    }
+  }
+}

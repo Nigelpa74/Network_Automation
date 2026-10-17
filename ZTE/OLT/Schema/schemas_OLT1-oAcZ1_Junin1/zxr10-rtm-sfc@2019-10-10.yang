@@ -1,0 +1,459 @@
+module zxr10-rtm-sfc {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/rtm-sfc'
+            ;
+  prefix sfc ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2019-10-10 {
+    description 'Add a new container to specify interface, the path is "configuration/sfc/sfps/sfp/nexthop/interfaces"'
+                ;
+
+  }
+  revision 2018-08-16 {
+    description 'The initial version.'
+                ;
+  }
+  typedef sfp-nexthop-type {
+    type enumeration {
+      enum sff {
+        value 1 ;
+      }
+      enum sf {
+        value 2 ;
+      }
+    }
+    description 'The nexthop node type.'
+                ;
+  }
+  typedef true-or-false {
+    type enumeration {
+      enum false {
+        value 0 ;
+      }
+      enum true {
+        value 1 ;
+      }
+    }
+    description 'The state of some attributes.'
+                ;
+  }
+  typedef sfp-nexthop-sf {
+    type enumeration {
+      enum sf {
+        value 2 ;
+      }
+    }
+  }
+  typedef true {
+    type enumeration {
+      enum true {
+        value 1 ;
+      }
+    }
+  }
+  container configuration {
+    description 'The configuration for SFC.'
+                ;
+    container sfc {
+      description 'The configuration for SFC.'
+                  ;
+      leaf enable {
+        description 'Enable SFC.'
+                    ;
+        type enumeration {
+          enum disable {
+            value 0 ;
+          }
+          enum enable {
+            value 1 ;
+          }
+        }
+        default disable ;
+      }
+      container sfps {
+        description 'The configuration for SFP.'
+                    ;
+        list sfp {
+          description 'The configuration for SFP.'
+                      ;
+          key spi ;
+          leaf spi {
+            description 'Service path index.'
+                        ;
+            type uint32 {
+              range 1..16777215 ;
+            }
+          }
+          container nexthop {
+            description 'The configuration for SFP nexthop.'
+                        ;
+            container eth-nexthop {
+              description 'The configuration for SFP nexthop which encapsulatio'
+                        + 'n type is ethernet.'
+                          ;
+              container ip-nexthop {
+                description 'The configuration for SFP nexthop which specifies '
+                          + 'the remote IP address.'
+                            ;
+                container public-nexthops {
+                  description 'The configuration for SFP nexthop which specifie'
+                            + 's the public remote IP address.'
+                              ;
+                  list public-nexthop {
+                    description 'The configuration for SFP nexthop which specif'
+                              + 'ies the public remote IP address.'
+                                ;
+                    key 'si nh-node-type sfc-proxy remote-ip'
+                        ;
+                    leaf si {
+                      description 'Service index.'
+                                  ;
+                      type uint32 {
+                        range 1..255 ;
+                      }
+                    }
+                    leaf nh-node-type {
+                      description 'Nexthop node type.'
+                                  ;
+                      type sfp-nexthop-type ;
+                    }
+                    leaf sfc-proxy {
+                      description 'Whether is SF proxy.'
+                                  ;
+                      type true-or-false ;
+                    }
+                    leaf remote-ip {
+                      description 'Remote IP address.'
+                                  ;
+                      type ncd:ipv4-address ;
+                    }
+                    leaf metric {
+                      description 'Forwarding metric.'
+                                  ;
+                      type uint16 {
+                        range 0..65535 ;
+                      }
+                      default 0 ;
+                    }
+                  }
+                }
+                container private-nexthops {
+                  description 'The configuration for SFP nexthop which specifie'
+                            + 's the private remote IP address.'
+                              ;
+                  list private-nexthop {
+                    description 'The configuration for SFP nexthop which specif'
+                              + 'ies the private remote IP address.'
+                                ;
+                    key 'si nh-node-type sfc-proxy vrf-name remote-ip'
+                        ;
+                    leaf si {
+                      description 'Service index.'
+                                  ;
+                      type uint32 {
+                        range 1..255 ;
+                      }
+                    }
+                    leaf nh-node-type {
+                      description 'Nexthop node type.'
+                                  ;
+                      type sfp-nexthop-type ;
+                    }
+                    leaf sfc-proxy {
+                      description 'Whether is SF proxy.'
+                                  ;
+                      type true-or-false ;
+                    }
+                    leaf vrf-name {
+                      description 'VRF name.'
+                                  ;
+                      type ncd:string-all {
+                        length 1..32 ;
+                      }
+                    }
+                    leaf remote-ip {
+                      description 'Remote IP address.'
+                                  ;
+                      type ncd:ipv4-address ;
+                    }
+                    leaf metric {
+                      description 'Forwarding metric.'
+                                  ;
+                      type uint16 {
+                        range 0..65535 ;
+                      }
+                      default 0 ;
+                    }
+                  }
+                }
+              }
+              container mac-nexthops {
+                description 'The configuration for SFP nexthop which specifies '
+                          + 'the MAC address.'
+                            ;
+                list mac-nexthop {
+                  description 'The configuration for SFP nexthop which specifie'
+                            + 's the MAC address.'
+                              ;
+                  key 'si nh-node-type sfc-proxy mac'
+                      ;
+                  leaf si {
+                    description 'Service index.'
+                                ;
+                    type uint32 {
+                      range 1..255 ;
+                    }
+                  }
+                  leaf nh-node-type {
+                    description 'Nexthop node type.'
+                                ;
+                    type sfp-nexthop-type ;
+                  }
+                  leaf sfc-proxy {
+                    description 'Whether is SF proxy.'
+                                ;
+                    type true-or-false ;
+                  }
+                  leaf mac {
+                    description 'MAC address.'
+                                ;
+                    type ncd:mac-address ;
+                  }
+                  leaf metric {
+                    description 'Forwarding metric.'
+                                ;
+                    type uint16 {
+                      range 0..65535 ;
+                    }
+                    default 0 ;
+                  }
+                }
+              }
+            }
+            container vxlan-nexthop {
+              description 'The configuration for SFP nexthop which encapsulatio'
+                        + 'n type is VXLAN.'
+                          ;
+              container static-tunnels {
+                description 'The configuration for SFP nexthop which specifies '
+                          + 'the tunnel name.'
+                            ;
+                list static-tunnel {
+                  description 'The configuration for SFP nexthop which specifie'
+                            + 's the tunnel name.'
+                              ;
+                  key 'si nh-node-type sfc-proxy vxlan-if'
+                      ;
+                  leaf si {
+                    description 'Service index.'
+                                ;
+                    type uint32 {
+                      range 1..255 ;
+                    }
+                  }
+                  leaf nh-node-type {
+                    description 'Nexthop node type.'
+                                ;
+                    type sfp-nexthop-type ;
+                  }
+                  leaf sfc-proxy {
+                    description 'Whether is SF proxy.'
+                                ;
+                    type true-or-false ;
+                  }
+                  leaf vxlan-if {
+                    description 'The VXLAN interface name.'
+                                ;
+                    type ncd:ifname {
+                      length 1..31 ;
+                    }
+                  }
+                  leaf vni {
+                    description 'VNI value.'
+                                ;
+                    type uint32 {
+                      range 1..16777215 ;
+                    }
+                    mandatory true ;
+                  }
+                  leaf metric {
+                    description 'Forwarding metric.'
+                                ;
+                    type uint16 {
+                      range 0..65535 ;
+                    }
+                    default 0 ;
+                  }
+                }
+              }
+              container dynamic-tunnels {
+                description 'The configuration for SFP nexthop which specifies '
+                          + 'the source IP and destination IP.'
+                            ;
+                list dynamic-tunnel {
+                  description 'The configuration for SFP nexthop which specifie'
+                            + 's the source IP and destination IP.'
+                              ;
+                  key 'si nh-node-type sfc-proxy source-ip destination-ip'
+                      ;
+                  leaf si {
+                    description 'Service index.'
+                                ;
+                    type uint32 {
+                      range 1..255 ;
+                    }
+                  }
+                  leaf nh-node-type {
+                    description 'Nexthop node type.'
+                                ;
+                    type sfp-nexthop-type ;
+                  }
+                  leaf sfc-proxy {
+                    description 'Whether is SF proxy.'
+                                ;
+                    type true-or-false ;
+                  }
+                  leaf source-ip {
+                    description 'The source IP address.'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                  leaf destination-ip {
+                    description 'The destination address.'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                  leaf vni {
+                    description 'VNI value.'
+                                ;
+                    type uint32 {
+                      range 1..16777215 ;
+                    }
+                    mandatory true ;
+                  }
+                  leaf metric {
+                    description 'Forwarding metric.'
+                                ;
+                    type uint16 {
+                      range 0..65535 ;
+                    }
+                    default 0 ;
+                  }
+                }
+              }
+            }
+            container interfaces {
+              list interface {
+                description 'The configuration for SFP nexthop which specifies '
+                          + 'the interface Name.'
+                            ;
+                key 'si nh-node-type sfc-proxy name'
+                    ;
+                leaf si {
+                  description 'Service index.'
+                              ;
+                  type uint32 {
+                    range 1..255 ;
+                  }
+                }
+                leaf nh-node-type {
+                  description 'Nexthop node type.'
+                              ;
+                  type sfp-nexthop-sf ;
+                }
+                leaf sfc-proxy {
+                  description 'SF proxy.'
+                              ;
+                  type true ;
+                }
+                leaf name {
+                  description 'interface name.'
+                              ;
+                  type ncd:ifname ;
+                }
+                leaf metric {
+                  description 'Forwarding metric.'
+                              ;
+                  type uint16 {
+                    range 0..65535 ;
+                  }
+                  default 0 ;
+                }
+              }
+              ncd:revise-date 2019-10-10 ;
+            }
+          }
+          container terminals {
+            description 'The configuration for SFP terminal.'
+                        ;
+            list terminal {
+              description 'The configuration for SFP terminal.'
+                          ;
+              key si ;
+              leaf si {
+                description 'Service index.'
+                            ;
+                type uint32 {
+                  range 1..255 ;
+                }
+              }
+              leaf terminal {
+                description 'This SFP is terminal.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              container redirect-nexthop {
+                description 'The configuration for SFP terminal redirecting nex'
+                          + 'thop.'
+                            ;
+                presence redirect-nexthop ;
+                leaf redirect {
+                  description 'Whether has redirecting nexthop.'
+                              ;
+                  type true-or-false ;
+                  mandatory true ;
+                }
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                choice ipv4 {
+                  description 'The configuration for IPv4 redirecting nexthop.'
+                              ;
+                  case ipv4-nexthop {
+                    description 'The configuration for IPv4 redirecting nexthop.'
+                                ;
+                    container ipv4-nexthop {
+                      description 'The configuration for IPv4 redirecting nexth'
+                                + 'op.'
+                                  ;
+                      leaf remote-ip {
+                        description 'Remote IP address.'
+                                    ;
+                        type ncd:ipv4-address ;
+                        mandatory true ;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

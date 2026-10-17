@@ -1,0 +1,1081 @@
+module zxr10-keychain {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/keychain'
+            ;
+  prefix keychain ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2017-08-15 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2021-05-08 {
+    description 'Support UTC time mode.'
+                ;
+  }
+  revision 2020-06-17 {
+    description '1)Change length of /keychain:configuration/keychain:keychain/k'
+              + 'eychain:keychain-lists/keychain:keychain-list/keychain:keys/ke'
+              + 'ychain:key/keychain:key-hex-str/keychain:encrypted-hex-string;'
+              + ''+"\n"
+              + '2)Change length of /keychain:configuration/keychain:keychain/k'
+              + 'eychain:keychain-lists/keychain:keychain-list/keychain:keys/ke'
+              + 'ychain:key/keychain:key-str/keychain:encrypted-string;'+"\n"
+              + '3)Change length of /keychain:configuration/keychain:keychain/k'
+              + 'eychain:encryp-keychains/keychain:encryp-keychain/keychain:key'
+              + '-hex-str/keychain:encrypted-hex-string;'
+                ;
+  }
+  revision 2020-06-04 {
+    description 'Support TCP AO option function.'
+                ;
+  }
+  revision 2018-07-10 {
+    description 'Initial verision'
+                ;
+  }
+  feature gm {
+    description 'The specifiction of GM.'
+                ;
+  }
+  typedef periodicType {
+    type enumeration {
+      enum daily {
+        value 1 ;
+        description daily ;
+      }
+      enum weekly {
+        value 2 ;
+        description Weekly ;
+      }
+      enum monthly {
+        value 3 ;
+        description Monthly ;
+      }
+      enum yearly {
+        value 4 ;
+        description Yearly ;
+      }
+    }
+    description 'Periodic type'
+                ;
+  }
+  typedef toleranceType {
+    type enumeration {
+      enum time {
+        value 1 ;
+        description 'Receive tolerance value'
+                    ;
+      }
+      enum infinite {
+        value 2 ;
+        description 'Receive tolerance infinite'
+                    ;
+      }
+    }
+    description 'Tolerance type'
+                ;
+  }
+  typedef lifetimeMode {
+    type enumeration {
+      enum periodic {
+        value 2 ;
+      }
+      enum absolute {
+        value 1 ;
+      }
+    }
+    description 'Lifetime mode'
+                ;
+  }
+  typedef weekType {
+    type enumeration {
+      enum monday {
+        value 1 ;
+        description Monday ;
+      }
+      enum tuesday {
+        value 2 ;
+        description Tuesday ;
+      }
+      enum wednesday {
+        value 3 ;
+        description Wednesday ;
+      }
+      enum thursday {
+        value 4 ;
+        description Thursday ;
+      }
+      enum friday {
+        value 5 ;
+        description Friday ;
+      }
+      enum saturday {
+        value 6 ;
+        description Saturday ;
+      }
+      enum sunday {
+        value 7 ;
+        description Sunday ;
+      }
+    }
+    description 'Week type'
+                ;
+  }
+  typedef activeStatus {
+    type enumeration {
+      enum active {
+        value 1 ;
+        description 'Active status'
+                    ;
+      }
+      enum inactive {
+        value 0 ;
+        description 'Inactive status'
+                    ;
+      }
+    }
+    description 'Active status'
+                ;
+  }
+  typedef algorithmType {
+    type enumeration {
+      enum hmac-md5 {
+        value 1 ;
+        description 'HMAC-MD5 algorithm'
+                    ;
+      }
+      enum hmac-sha256 {
+        value 2 ;
+        description 'HMAC-SHA256 algorithm'
+                    ;
+      }
+      enum hmac-sha1-12 {
+        value 3 ;
+        description 'HMAC-SHA1-12 algorithm'
+                    ;
+      }
+      enum hmac-sha1-20 {
+        value 4 ;
+        description 'HMAC-SHA1-20 algorithm'
+                    ;
+      }
+      enum md5 {
+        value 5 ;
+        description 'MD5 algorithm'
+                    ;
+      }
+      enum sha1 {
+        value 6 ;
+        description 'SHA1 algorithm'
+                    ;
+      }
+      enum sha256 {
+        value 7 ;
+        description 'SHA256 algorithm'
+                    ;
+      }
+      enum cmac-aes128-12 {
+        value 10 ;
+        description 'CMAC-AES128 algorithm'
+                    ;
+      }
+    }
+    description 'cryptographic algorithm'
+                ;
+  }
+  typedef encryptAlgorithmType {
+    type enumeration {
+      enum 3des {
+        value 1 ;
+        description '3DES algorithm'
+                    ;
+      }
+      enum des {
+        value 2 ;
+        description 'DES algorithm'
+                    ;
+      }
+      enum aes-128 {
+        value 3 ;
+        description 'AES-128 algorithm'
+                    ;
+      }
+      enum aes-192 {
+        value 4 ;
+        description 'AES-192 algorithm'
+                    ;
+      }
+      enum aes-256 {
+        value 5 ;
+        description 'AES-256 algorithm'
+                    ;
+      }
+      enum null {
+        value 7 ;
+        description 'NULL algorithm'
+                    ;
+      }
+    }
+    description 'Encryption algorithm'
+                ;
+  }
+  typedef timeMode {
+    type enumeration {
+      enum utc {
+        value 1 ;
+      }
+      enum lmt {
+        value 0 ;
+      }
+    }
+    default lmt ;
+    description 'Time mode'
+                ;
+  }
+  container configuration {
+    description configuration ;
+    container keychain {
+      description 'Keychain config'
+                  ;
+      container keychain-lists {
+        description 'Set keychain'
+                    ;
+        list keychain-list {
+          description 'Set keychain'
+                      ;
+          key keychain-name ;
+          leaf keychain-name {
+            description 'keychain name'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf default-key {
+            description 'Configure default key'
+                        ;
+            type uint64 {
+              range 0..281474976710655 {
+                description 'Key ID'
+                            ;
+              }
+            }
+          }
+          container tcp-algo-id {
+            description 'Configure TCP algorithm ID'
+                        ;
+            presence tcp-algorithm-id ;
+            leaf hmac-md5 {
+              description 'Configure HMAC-MD5 ID'
+                          ;
+              type uint8 {
+                range 1..63 ;
+              }
+              default 5 ;
+            }
+            leaf hmac-sha1-12 {
+              description 'Configure HMAC-SHA1-12 ID'
+                          ;
+              type uint8 {
+                range 1..63 ;
+              }
+              default 2 ;
+            }
+            leaf hmac-sha1-20 {
+              description 'Configure HMAC-SHA1-20 ID'
+                          ;
+              type uint8 {
+                range 1..63 ;
+              }
+              default 6 ;
+            }
+            leaf hmac-sha256 {
+              description 'Configure HMAC-SHA256 ID'
+                          ;
+              type uint8 {
+                range 1..63 ;
+              }
+              default 7 ;
+            }
+            leaf hmac-sm3 {
+              if-feature gm ;
+              description 'Configure HMAC-SM3 ID'
+                          ;
+              type uint8 {
+                range 1..63 ;
+              }
+              default 9 ;
+            }
+            leaf md5 {
+              description 'Configure MD5 ID'
+                          ;
+              type uint8 {
+                range 1..63 ;
+              }
+              default 3 ;
+            }
+            leaf sha1 {
+              description 'Configure SHA1 ID'
+                          ;
+              type uint8 {
+                range 1..63 ;
+              }
+              default 4 ;
+            }
+            leaf sha256 {
+              description 'Configure SHA256 ID'
+                          ;
+              type uint8 {
+                range 1..63 ;
+              }
+              default 8 ;
+            }
+            leaf sm3 {
+              if-feature gm ;
+              description 'Configure SM3 ID'
+                          ;
+              type uint8 {
+                range 1..63 ;
+              }
+              default 10 ;
+            }
+          }
+          container lifetime-mode {
+            description 'Configure lifetime mode'
+                        ;
+            presence lifetime-mode ;
+            choice mode-type {
+              description 'Configure lifetime mode'
+                          ;
+              default absolute ;
+              case periodic {
+                description 'Periodic mode'
+                            ;
+                leaf periodic {
+                  description 'Periodic mode'
+                              ;
+                  type enumeration {
+                    enum periodic {
+                      value 2 ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf value {
+                  description 'Periodic type value'
+                              ;
+                  type periodicType ;
+                  mandatory true ;
+                }
+              }
+              case absolute {
+                description 'Absolute mode'
+                            ;
+                leaf absolute {
+                  description 'Absolute mode'
+                              ;
+                  type enumeration {
+                    enum absolute {
+                      value 1 ;
+                    }
+                  }
+                  default absolute ;
+                }
+              }
+            }
+          }
+          leaf tcp-kind {
+            description 'TCP kind option'
+                        ;
+            type uint32 {
+              range 29..255 {
+                description 'TCP kind value,default value is 254'
+                            ;
+              }
+            }
+            default 254 ;
+          }
+          container rece-tolerance {
+            description 'Configure receive tolerance'
+                        ;
+            presence receive-tolerance ;
+            choice receive-type {
+              description 'Configure receive type'
+                          ;
+              case time {
+                description 'Receive tolerance value in seconds'
+                            ;
+                leaf time {
+                  description 'Receive tolerance value in seconds'
+                              ;
+                  type enumeration {
+                    enum time {
+                      value 1 ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf value {
+                  description 'Receive tolerance value in seconds'
+                              ;
+                  type uint32 {
+                    range 1..864000 ;
+                  }
+                  mandatory true ;
+                }
+              }
+              case infinite {
+                description 'Receive tolerance infinite'
+                            ;
+                leaf infinite {
+                  description 'Receive tolerance infinite'
+                              ;
+                  type enumeration {
+                    enum infinite {
+                      value 2 ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+          }
+          container keys {
+            description 'Set key of keychain'
+                        ;
+            presence keys ;
+            list key {
+              description 'Set key of keychain'
+                          ;
+              key key-id ;
+              leaf key-id {
+                description 'Key ID'
+                            ;
+                type uint64 {
+                  range 0..281474976710655 ;
+                }
+              }
+              leaf cryptographic-algorithm {
+                description 'Configure cryptographic algorithm'
+                            ;
+                type algorithmType ;
+                default hmac-md5 ;
+              }
+              container send-lifetime {
+                description 'Configure send lifetime'
+                            ;
+                presence send-lifetime ;
+                container weekly {
+                  description 'Configure lifetime weekly'
+                              ;
+                  presence weekly ;
+                  leaf start-day {
+                    description 'Set start day value'
+                                ;
+                    type weekType ;
+                    mandatory true ;
+                  }
+                  leaf end-day {
+                    description 'Set end day value'
+                                ;
+                    type weekType ;
+                    mandatory true ;
+                  }
+                }
+                container daily {
+                  description 'Configure lifetime daily'
+                              ;
+                  presence daily ;
+                  leaf start-time {
+                    description 'Start time'
+                                ;
+                    type ncd:time ;
+                    mandatory true ;
+                  }
+                  leaf end-time {
+                    description 'End time'
+                                ;
+                    type ncd:time ;
+                    mandatory true ;
+                  }
+                }
+                container yearly {
+                  description 'Configure lifetime yearly'
+                              ;
+                  presence yearly ;
+                  leaf start-month {
+                    description 'Set start month value'
+                                ;
+                    type uint16 {
+                      range 1..12 {
+                        description 'Set start month value'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                  leaf end-month {
+                    description 'Set end month value'
+                                ;
+                    type uint16 {
+                      range 1..12 {
+                        description 'Set end month value'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container monthly {
+                  description 'Configure lifetime monthly'
+                              ;
+                  presence monthly ;
+                  leaf start-date {
+                    description 'Set start date'
+                                ;
+                    type uint16 {
+                      range 1..31 {
+                        description 'Set start date value'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                  leaf end-date {
+                    description 'Set end date'
+                                ;
+                    type uint16 {
+                      range 1..31 {
+                        description 'Set start date value'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container absolute {
+                  description 'Configure send lifetime absolute'
+                              ;
+                  presence absolute ;
+                  leaf start-time {
+                    description 'Start time'
+                                ;
+                    type ncd:time ;
+                    mandatory true ;
+                  }
+                  leaf start-date {
+                    description 'Start date'
+                                ;
+                    type ncd:date ;
+                    mandatory true ;
+                  }
+                  choice time-type {
+                    description 'Send time mode'
+                                ;
+                    mandatory true ;
+                    case duration {
+                      description 'Set duration time'
+                                  ;
+                      leaf duration {
+                        description 'Set duration time'
+                                    ;
+                        type enumeration {
+                          enum duration {
+                            value 1 ;
+                            description 'Set duration time'
+                                        ;
+                          }
+                        }
+                        mandatory true ;
+                      }
+                      leaf seconds {
+                        description 'Duration time in seconds'
+                                    ;
+                        type uint32 {
+                          range 1..31536000 ;
+                        }
+                        mandatory true ;
+                      }
+                    }
+                    case infinite {
+                      description 'Infinite active'
+                                  ;
+                      leaf infinite {
+                        description 'Set infinite time'
+                                    ;
+                        type enumeration {
+                          enum infinite {
+                            value 2 ;
+                            description 'Infinite active'
+                                        ;
+                          }
+                        }
+                        mandatory true ;
+                      }
+                    }
+                    case end {
+                      description 'Set end time'
+                                  ;
+                      leaf end {
+                        description 'Set end time'
+                                    ;
+                        type enumeration {
+                          enum end {
+                            value 3 ;
+                            description 'Set end time'
+                                        ;
+                          }
+                        }
+                        mandatory true ;
+                      }
+                      leaf end-time {
+                        description 'End time'
+                                    ;
+                        type ncd:time ;
+                        mandatory true ;
+                      }
+                      leaf end-date {
+                        description 'Set end date'
+                                    ;
+                        type ncd:date ;
+                        mandatory true ;
+                      }
+                    }
+                  }
+                }
+              }
+              container rece-lifetime {
+                description 'Configure receive lifetime'
+                            ;
+                presence receive-lifetime ;
+                container weekly {
+                  description 'Configure lifetime weekly'
+                              ;
+                  presence weekly ;
+                  leaf start-day {
+                    description 'Set start day value'
+                                ;
+                    type weekType ;
+                    mandatory true ;
+                  }
+                  leaf end-day {
+                    description 'Set end day value'
+                                ;
+                    type weekType ;
+                    mandatory true ;
+                  }
+                }
+                container daily {
+                  description 'Configure lifetime daily'
+                              ;
+                  presence daily ;
+                  leaf start-time {
+                    description 'Start time'
+                                ;
+                    type ncd:time ;
+                    mandatory true ;
+                  }
+                  leaf end-time {
+                    description 'End time'
+                                ;
+                    type ncd:time ;
+                    mandatory true ;
+                  }
+                }
+                container yearly {
+                  description 'Configure lifetime yearly'
+                              ;
+                  presence yearly ;
+                  leaf start-month {
+                    description 'Set start month value'
+                                ;
+                    type uint16 {
+                      range 1..12 {
+                        description 'Set start month value'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                  leaf end-month {
+                    description 'Set end month value'
+                                ;
+                    type uint16 {
+                      range 1..12 {
+                        description 'Set end month value'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container monthly {
+                  description 'Configure lifetime monthly'
+                              ;
+                  presence monthly ;
+                  leaf start-date {
+                    description 'Set start date'
+                                ;
+                    type uint16 {
+                      range 1..31 {
+                        description 'Set start date value'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                  leaf end-date {
+                    description 'Set end date'
+                                ;
+                    type uint16 {
+                      range 1..31 {
+                        description 'Set start date value'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+                container absolute {
+                  description 'Configure receive lifetime absolute'
+                              ;
+                  presence absolute ;
+                  leaf start-time {
+                    description 'Start time'
+                                ;
+                    type ncd:time ;
+                    mandatory true ;
+                  }
+                  leaf start-date {
+                    description 'Start date'
+                                ;
+                    type ncd:date ;
+                    mandatory true ;
+                  }
+                  choice time-type {
+                    description 'Receive time mode'
+                                ;
+                    mandatory true ;
+                    case duration {
+                      description 'Set duration time'
+                                  ;
+                      leaf duration {
+                        description 'Set duration time'
+                                    ;
+                        type enumeration {
+                          enum duration {
+                            value 1 ;
+                            description 'Set duration time'
+                                        ;
+                          }
+                        }
+                        mandatory true ;
+                      }
+                      leaf seconds {
+                        description 'Duration time in seconds'
+                                    ;
+                        type uint32 {
+                          range 1..31536000 ;
+                        }
+                        mandatory true ;
+                      }
+                    }
+                    case infinite {
+                      description 'Infinite active'
+                                  ;
+                      leaf infinite {
+                        description 'Set infinite time'
+                                    ;
+                        type enumeration {
+                          enum infinite {
+                            value 2 ;
+                            description 'Infinite active'
+                                        ;
+                          }
+                        }
+                        mandatory true ;
+                      }
+                    }
+                    case end {
+                      description 'Set end time'
+                                  ;
+                      leaf end {
+                        description 'Set end time'
+                                    ;
+                        type enumeration {
+                          enum end {
+                            value 3 ;
+                            description 'Set end time'
+                                        ;
+                          }
+                        }
+                        mandatory true ;
+                      }
+                      leaf end-time {
+                        description 'End time'
+                                    ;
+                        type ncd:time ;
+                        mandatory true ;
+                      }
+                      leaf end-date {
+                        description 'Set end date'
+                                    ;
+                        type ncd:date ;
+                        mandatory true ;
+                      }
+                    }
+                  }
+                }
+              }
+              container key-hex-str {
+                description 'Configure key strings'
+                            ;
+                presence key-hex-string ;
+                choice key-hex-string {
+                  description 'Configure key hex strings'
+                              ;
+                  case clear-hex-string {
+                    description 'Set clear key strings'
+                                ;
+                    leaf clear-hex-string {
+                      description 'Set clear key hex strings'
+                                  ;
+                      type string {
+                        length 6..64 ;
+                      }
+                    }
+                  }
+                  case encrypted-hex-string {
+                    description 'Set encrypted key hex strings'
+                                ;
+                    leaf encrypted-hex-string {
+                      description 'Set encrypted key hex strings'
+                                  ;
+                      type string {
+                        length 1..192 ;
+                      }
+                    }
+                  }
+                }
+              }
+              container key-str {
+                description 'Configure key strings'
+                            ;
+                presence key-string ;
+                choice key-string {
+                  description 'Configure key strings'
+                              ;
+                  case encrypted-string {
+                    description 'Set encrypted key'
+                                ;
+                    leaf encrypted-string {
+                      description 'Set encrypted key strings'
+                                  ;
+                      type string {
+                        length 1..192 ;
+                      }
+                    }
+                  }
+                  case clear-string {
+                    description 'Set clear key strings'
+                                ;
+                    leaf clear-string {
+                      description 'Set clear key strings'
+                                  ;
+                      type string {
+                        length 3..63 ;
+                      }
+                    }
+                  }
+                }
+              }
+              leaf send-id {
+                description 'Configure the key identifier of the TCP-AO option '
+                          + 'of the outgoing segment.'
+                            ;
+                type uint16 {
+                  range 0..255 ;
+                }
+                ncd:revise-date 2020-06-04 ;
+              }
+              leaf receive-id {
+                description 'Configure the key identifier compared with the TCP'
+                          + '-AO key identifier of the incoming  segment during'
+                          + ' authentication.'
+                            ;
+                type uint16 {
+                  range 0..255 ;
+                }
+                ncd:revise-date 2020-06-04 ;
+              }
+              leaf include-tcp-options {
+                description 'Configure whether TCP option participates in Ao au'
+                          + 'thentication.'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+                ncd:revise-date 2020-06-04 ;
+              }
+            }
+          }
+          leaf tcp-kind-ao {
+            description 'Enable the TCP AO option feature'
+                        ;
+            type uint8 {
+              range 0..1 ;
+            }
+            ncd:revise-date 2020-06-04 ;
+          }
+          leaf time-mode {
+            description 'Configure time mode'
+                        ;
+            type timeMode ;
+            default lmt ;
+            ncd:revise-date 2021-05-08 ;
+          }
+        }
+      }
+      container encryp-keychains {
+        description 'Set encryption keychain'
+                    ;
+        list encryp-keychain {
+          description 'Set encryption keychain'
+                      ;
+          key keychain-name ;
+          leaf keychain-name {
+            description 'Encryption keychain name'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf encryption-algorithm {
+            description 'Configure encryption algorithm'
+                        ;
+            type encryptAlgorithmType ;
+            default 3des ;
+          }
+          container key-hex-str {
+            description 'Configure key strings'
+                        ;
+            presence key-hex-string ;
+            choice key-hex-string {
+              description 'Configure key strings'
+                          ;
+              case clear-hex-string {
+                description 'Set clear key strings'
+                            ;
+                leaf clear-hex-string {
+                  description 'Set clear key hex strings'
+                              ;
+                  type string {
+                    length 16..64 ;
+                  }
+                }
+              }
+              case encrypted-hex-string {
+                description 'Set encrypted key hex strings'
+                            ;
+                leaf encrypted-hex-string {
+                  description 'Set encrypted key hex strings'
+                              ;
+                  type string {
+                    length 1..192 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description State ;
+    container keychain {
+      description 'Keychain state'
+                  ;
+      container keychain-lists {
+        description 'Show keychain information'
+                    ;
+        list keychain-list {
+          description 'Show keychain information'
+                      ;
+          key keychain-name ;
+          leaf keychain-name {
+            description 'keychain name'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf default-key {
+            description 'default key'
+                        ;
+            type uint64 ;
+          }
+          leaf lifetime-mode {
+            description 'Receive tolerance'
+                        ;
+            type lifetimeMode ;
+          }
+          leaf time-mode {
+            description 'time mode'
+                        ;
+            type timeMode ;
+            ncd:revise-date 2021-05-08 ;
+          }
+          ncd:select keychain-name ;
+        }
+        list key-of-keychain {
+          description 'Show key of keychain'
+                      ;
+          key 'keychain-name key-id'
+              ;
+          leaf keychain-name {
+            description 'keychain name'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf key-id {
+            description 'Key ID'
+                        ;
+            type uint64 {
+              range 0..281474976710655 ;
+            }
+          }
+          leaf send-active-status {
+            description 'Send active status'
+                        ;
+            type activeStatus ;
+          }
+          leaf receive-active-status {
+            description 'Receive active status'
+                        ;
+            type activeStatus ;
+          }
+          leaf cryptographic-algorithm {
+            description 'Cryptographic algorithm'
+                        ;
+            type algorithmType ;
+            default hmac-md5 ;
+          }
+          ncd:select 'keychain-name key-id'
+                     ;
+          ncd:select keychain-name ;
+        }
+      }
+    }
+  }
+}

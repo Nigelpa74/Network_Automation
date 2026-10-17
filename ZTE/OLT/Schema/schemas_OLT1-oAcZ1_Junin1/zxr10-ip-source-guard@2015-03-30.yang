@@ -1,0 +1,129 @@
+module zxr10-ip-source-guard {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ip-source-guard' ;
+  prefix ipsg ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation' ;
+  contact "ZTE Corporation  
+\n"
+        + "   Nanjing Institute of ZTE Corporation 
+\n"
+        + "   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe IP source guard.' ;
+  revision 2015-03-30 {
+    description 'Initial version.' ;
+  }
+  feature if-mode {
+    description 'Configure filter mode of interfaces.' ;
+  }
+  feature if-switch {
+    description 'Configure filter switch of interfaces.' ;
+  }
+  typedef switch-type {
+    type enumeration {
+      enum disable {
+        value 0 ;
+      }
+      enum enable {
+        value 1 ;
+      }
+    }
+    description 'Switch type:0.disable,1.enable.' ;
+  }
+  typedef mode-type {
+    type enumeration {
+      enum mac-base {
+        value 1 ;
+        description 'Filter base on MAC.' ;
+      }
+      enum ip-base {
+        value 2 ;
+        description 'Filter base on IP.' ;
+      }
+      enum mac-ip-base {
+        value 3 ;
+        description 'Filter base on MAC and IP.' ;
+      }
+    }
+    description 'Mode type:1.mac-base,2.ip-base,3.mac-ip-base.' ;
+  }
+  container configuration {
+    description 'Configuration model.' ;
+    container ip-source-guard {
+      description 'IP source guard configuration.' ;
+      container interfaces {
+        description 'Select an interface to configure.' ;
+        container if-modes {
+          description 'Select an interface to configure filter mode.' ;
+          list if-mode {
+            if-feature if-mode ;
+            description 'Select an interface to configure filter mode.' ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+            }
+            leaf mode {
+              description 'IP source guard mode, it can be configured as mac-ba'
+                        + 'se, ip-base or mac-ip-base.'
+                          ;
+              type mode-type ;
+              mandatory true ;
+            }
+            choice vlan {
+              description 'Prescribe a limit to filter scope of the interface, '
+                        + 'VLAN-based and mode-based features are merged in the'
+                        + ' ingress direction and applied on the interface.'
+                          ;
+              case vlan-id {
+                description 'VLAN ID.' ;
+                leaf vlan-id {
+                  description 'VLAN ID.' ;
+                  type int16 {
+                    range 1..4094 ;
+                  }
+                }
+              }
+              case vlan-default {
+                description 'VLAN default.' ;
+                leaf vlan-default {
+                  description 'VLAN default.' ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+              }
+            }
+          }
+        }
+        container if-switches {
+          description 'Select an interface to configure filter switch.' ;
+          list if-switch {
+            if-feature if-switch ;
+            description 'Select an interface to configure filter switch.' ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.' ;
+              type ncd:ifname {
+                length 1..31 ;
+              }
+            }
+            leaf switch-state {
+              description 'Enable or disable IP source guard function of the sp'
+                        + 'ecified interface.'
+                          ;
+              type switch-type ;
+              default disable ;
+            }
+          }
+        }
+      }
+    }
+  }
+}

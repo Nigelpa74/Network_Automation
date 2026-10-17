@@ -1,0 +1,463 @@
+module zxr10-tcp-synflood-protect {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/tcp-synflood-prot'
+          + 'ect'
+            ;
+  prefix tcp-synflood-protect ;
+  yang-version 1 ;
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe TCP synflood protect.'
+              ;
+  revision 2021-02-04 {
+    description 'Modify data range of instance from 1-5 to 1-20 in '+"\n"
+              + '/state/tcp-synflood-protect/ipv4-statistic/ipv4-statistics/ins'
+              + 'tance.'+"\n"
+              + '/state/tcp-synflood-protect/ipv6-statistic/ipv6-statistics/ins'
+              + 'tance.'
+                ;
+  }
+  revision 2014-09-15 {
+    description 'Modify data range of wait-time and number in '+"\n"
+              + '/configuration/tcp-synflood-protect/ipv4/defence-type/type0-co'
+              + 'nfig/,type1-config,type2-config.'
+                ;
+  }
+  revision 2014-09-02 {
+    description 'Modify defence type in both IPv4 and IPv6 from container to ch'
+              + 'oice, change leaf node one-low of one-minute-limit container i'
+              + 'n IPv6 to mandatory.'
+                ;
+  }
+  revision 2014-04-21 {
+    description 'Add defence-type container, max-connect container and one-minu'
+              + 'te container.'
+                ;
+  }
+  revision 2014-02-11 {
+    description 'Inital Model info.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model info.'
+                ;
+    presence tcp-synflood-protect ;
+    container tcp-synflood-protect {
+      description 'TCP synflood protect configuration.'
+                  ;
+      container ipv4 {
+        description 'IPv4 tcp synflood protect configure model.'
+                    ;
+        leaf defence-enable {
+          description 'Enale/Disable function.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 1 ;
+            }
+            enum enable {
+              value 2 ;
+            }
+          }
+          default disable ;
+        }
+        container defence-type {
+          description 'Configuration of defence type.'
+                      ;
+          choice type {
+            description 'TCP synflood defence type config.'
+                        ;
+            case type0 {
+              description 'Quicken TCP aging and delete TCP half-connections'
+                          ;
+              container type0-config {
+                description 'Configuration of parameters'
+                            ;
+                presence type0-config ;
+                leaf wait-time {
+                  description 'Syn wait time.'
+                              ;
+                  type uint16 {
+                    range 1..80 ;
+                  }
+                  units seconds ;
+                  mandatory true ;
+                }
+                leaf number {
+                  description 'Half connect numbers.'
+                              ;
+                  type uint16 {
+                    range 1..65535 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+            case type1 {
+              description 'Delete TCP half-connections'
+                          ;
+              container type1-config {
+                description 'Configuration of parameters'
+                            ;
+                presence type1-config ;
+                leaf number {
+                  description 'Half connect numbers.'
+                              ;
+                  type uint16 {
+                    range 1..65535 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+            case type2 {
+              description 'Quicken TCP aging'
+                          ;
+              container type2-config {
+                description 'Configuration of parameters'
+                            ;
+                presence type2-config ;
+                leaf wait-time {
+                  description 'Syn wait time.'
+                              ;
+                  type uint16 {
+                    range 1..80 ;
+                  }
+                  units seconds ;
+                  mandatory true ;
+                }
+              }
+            }
+          }
+        }
+        container max-connect-limit {
+          description 'Max connect config.'
+                      ;
+          presence 'max connect config'
+                   ;
+          leaf max-high {
+            description 'Max connection high value.'
+                        ;
+            type uint8 {
+              range 1..100 ;
+            }
+            mandatory true ;
+          }
+          leaf max-low {
+            description 'Max connection low value.'
+                        ;
+            type uint8 {
+              range 1..100 ;
+            }
+            mandatory true ;
+          }
+        }
+        container one-minute-limit {
+          description 'One minute limit config.'
+                      ;
+          presence 'one minute limit config'
+                   ;
+          leaf one-high {
+            description 'One minute connection high value.'
+                        ;
+            type uint8 {
+              range 1..100 ;
+            }
+            mandatory true ;
+          }
+          leaf one-low {
+            description 'One minute connection low value.'
+                        ;
+            type uint8 {
+              range 1..100 ;
+            }
+            mandatory true ;
+          }
+        }
+      }
+      container ipv6 {
+        description 'IPv6 tcp synflood protect configure model.'
+                    ;
+        leaf prevent-enable {
+          description 'Enale/Disable function.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 1 ;
+            }
+            enum enable {
+              value 2 ;
+            }
+          }
+          default disable ;
+        }
+        container defence-type {
+          description 'Configuration of defence type.'
+                      ;
+          choice type {
+            description 'TCP synflood defence type config.'
+                        ;
+            case type0 {
+              description 'Quicken TCP aging and delete TCP half-connections'
+                          ;
+              container type0-config {
+                description 'Configuration of parameters'
+                            ;
+                presence type0-config ;
+                leaf wait-time {
+                  description 'Syn wait time.'
+                              ;
+                  type uint16 {
+                    range 1..80 ;
+                  }
+                  units seconds ;
+                  mandatory true ;
+                }
+                leaf number {
+                  description 'Half connect numbers.'
+                              ;
+                  type uint16 {
+                    range 1..65535 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+            case type1 {
+              description 'Delete TCP half-connections'
+                          ;
+              container type1-config {
+                description 'Configuration of parameters'
+                            ;
+                presence type1-config ;
+                leaf number {
+                  description 'Half connect numbers.'
+                              ;
+                  type uint16 {
+                    range 1..65535 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+            case type2 {
+              description 'Quicken TCP aging'
+                          ;
+              container type2-config {
+                description 'Configuration of parameters'
+                            ;
+                presence type2-config ;
+                leaf wait-time {
+                  description 'Syn wait time.'
+                              ;
+                  type uint16 {
+                    range 1..80 ;
+                  }
+                  units seconds ;
+                  mandatory true ;
+                }
+              }
+            }
+          }
+        }
+        container max-connect-limit {
+          description 'Max connect config.'
+                      ;
+          presence 'max connect config'
+                   ;
+          leaf max-high {
+            description 'Max connection high value.'
+                        ;
+            type uint8 {
+              range 1..100 ;
+            }
+            mandatory true ;
+          }
+          leaf max-low {
+            description 'Max connection low value.'
+                        ;
+            type uint8 {
+              range 1..100 ;
+            }
+            mandatory true ;
+          }
+        }
+        container one-minute-limit {
+          description 'One minute limit config.'
+                      ;
+          presence 'one minute limit config'
+                   ;
+          leaf one-high {
+            description 'One minute connection high value.'
+                        ;
+            type uint8 {
+              range 1..100 ;
+            }
+            mandatory true ;
+          }
+          leaf one-low {
+            description 'One minute connection low value.'
+                        ;
+            type uint8 {
+              range 1..100 ;
+            }
+            mandatory true ;
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model info.'
+                ;
+    container tcp-synflood-protect {
+      description 'TCP synflood protect statistics informaiton..'
+                  ;
+      container ipv4-statistic {
+        description 'Statistics information.'
+                    ;
+        list ipv4-statistics {
+          description 'IPv4 TCP synflood protect statistics information.'
+                      ;
+          key instance ;
+          leaf instance {
+            description 'Instance number.'
+                        ;
+            type uint32 {
+              range 1..20 ;
+            }
+          }
+          leaf status {
+            description 'The state of TCP synflood protect.'
+                        ;
+            type enumeration {
+              enum safety {
+                value 1 ;
+              }
+              enum warning {
+                value 2 ;
+              }
+              enum defence {
+                value 3 ;
+              }
+            }
+          }
+          leaf maxcon {
+            description 'Current total connections'
+                        ;
+            type uint32 ;
+          }
+          leaf maxhcon {
+            description 'Current total half-connections'
+                        ;
+            type uint32 ;
+          }
+          leaf onehcon {
+            description 'Oneminute half-connections.'
+                        ;
+            type uint32 ;
+          }
+          leaf tolcon {
+            description 'Max connections of the cpu allowed.'
+                        ;
+            type uint32 ;
+          }
+          leaf onecons {
+            description 'Oneminute connections'
+                        ;
+            type uint32 ;
+          }
+          leaf maxper {
+            description 'Maxcon percent.'
+                        ;
+            type string {
+              length 1..10 ;
+            }
+          }
+          leaf oneper {
+            description 'Onecon percent'
+                        ;
+            type string {
+              length 1..10 ;
+            }
+          }
+        }
+      }
+      container ipv6-statistic {
+        description 'Statistics information.'
+                    ;
+        list ipv6-statistics {
+          description 'IPv6 TCP synflood protect statistics information.'
+                      ;
+          key instance ;
+          leaf instance {
+            description 'Instance number.'
+                        ;
+            type uint32 {
+              range 1..20 ;
+            }
+          }
+          leaf status {
+            description 'The state of TCP synflood protect.'
+                        ;
+            type enumeration {
+              enum safety {
+                value 1 ;
+              }
+              enum warning {
+                value 2 ;
+              }
+              enum defence {
+                value 3 ;
+              }
+            }
+          }
+          leaf maxcon {
+            description 'Current total connections'
+                        ;
+            type uint32 ;
+          }
+          leaf maxhcon {
+            description 'Current total half-connections'
+                        ;
+            type uint32 ;
+          }
+          leaf onecons {
+            description 'Oneminute connections'
+                        ;
+            type uint32 ;
+          }
+          leaf onehcon {
+            description 'Oneminute half-connections.'
+                        ;
+            type uint32 ;
+          }
+          leaf tolcon {
+            description 'Max connections of the cpu allowed.'
+                        ;
+            type uint32 ;
+          }
+          leaf maxper {
+            description 'Maxcon percent.'
+                        ;
+            type string {
+              length 1..10 ;
+            }
+          }
+          leaf oneper {
+            description 'Onecon percent'
+                        ;
+            type string {
+              length 1..10 ;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,327 @@
+module ietf-netconf-time {
+  namespace urn:ietf:params:xml:ns:yang:ietf-netconf-time ;
+  prefix nct ;
+  import ietf-netconf {
+    prefix nc ;
+  }
+  import ietf-yang-types {
+    prefix yang ;
+  }
+  import ietf-netconf-monitoring {
+    prefix ncm ;
+  }
+  organization IETF ;
+  contact 'Editor: Tal Mizrahi'+"\n"
+        + '<dew@tx.technion.ac.il>'+"\n"
+        + 'Editor: Yoram Moses'+"\n"
+        + '<moses@ee.technion.ac.il>'
+          ;
+  description "This module defines a capability-based extension to the\nNetwork"
+            + " Configuration Protocol (NETCONF) that allows\ntime-triggered co"
+            + "nfiguration and management operations.\nThis extension allows NE"
+            + "TCONF clients to invoke configuration\nupdates according to sche"
+            + "duled times and allows NETCONF\nservers to attach timestamps to "
+            + "the data they send to NETCONF\nclients.\n\nCopyright (c) 2016 IE"
+            + "TF Trust and the persons identified as\nthe authors of the code."
+            + "  All rights reserved.\n\nRedistribution and use in source and b"
+            + "inary forms, with or\nwithout modification, is permitted pursuan"
+            + "t to, and subject\nto the license terms contained in, the Simpli"
+            + "fied BSD License\nset forth in Section 4.c of the IETF Trust's L"
+            + "egal Provisions\nRelating to IETF Documents\n(http://trustee.iet"
+            + "f.org/license-info)."
+              ;
+  revision 2016-01-26 {
+    description 'Initial version.'
+                ;
+    reference 'RFC 7758:
+Time Capability in NETCONF'
+              ;
+  }
+  typedef time-interval {
+    type string {
+      pattern '([0-9][0-9]):([0-5][0-9]):([0-5][0-9])+(\.[0-9]+)'
+              ;
+    }
+    description 'Defines a time interval, up to 24 hours.'+"\n"
+              + 'The format is specified as HH:mm:ss.f,'+"\n"
+              + 'consisting of two digits for hours,'+"\n"
+              + 'two digits for minutes, two digits'+"\n"
+              + 'for seconds, and zero or more digits'+"\n"
+              + 'representing second fractions.'
+                ;
+  }
+  grouping scheduling-tolerance-parameters {
+    description 'Contains the parameters of the scheduling tolerance.'
+                ;
+    leaf sched-max-future {
+      description 'When the scheduled time is in the future, i.e., greater'+"\n"
+                + 'than the present time, this leaf defines the maximal'+"\n"
+                + 'difference between the scheduled time'+"\n"
+                + 'and the present time that the server is willing to'+"\n"
+                + 'accept.  If the difference exceeds this number, the'+"\n"
+                + 'server responds with an error.'
+                  ;
+      type time-interval ;
+      default 00:00:15.0 ;
+    }
+    leaf sched-max-past {
+      description 'When the scheduled time is in the past, i.e., less'+"\n"
+                + 'than the present time, this leaf defines the maximal'+"\n"
+                + 'difference between the present time'+"\n"
+                + 'and the scheduled time that the server is willing to'+"\n"
+                + 'accept.  If the difference exceeds this number, the'+"\n"
+                + 'server responds with an error.'
+                  ;
+      type time-interval ;
+      default 00:00:15.0 ;
+    }
+  }
+  rpc cancel-schedule {
+    description 'Cancels a scheduled message.'
+                ;
+    reference 'RFC 7758:
+Time Capability in NETCONF'
+              ;
+    input {
+      leaf cancelled-message-id {
+        description 'The ID of the message to be cancelled.'
+                    ;
+        type string ;
+      }
+      leaf get-time {
+        description 'Indicates that the rpc-reply should include'+"\n"
+                  + 'the execution-time.'
+                    ;
+        type empty ;
+      }
+    }
+    output {
+      leaf execution-time {
+        description 'The time at which the RPC was executed.'
+                    ;
+        type yang:date-and-time ;
+      }
+    }
+  }
+  notification netconf-scheduled-message {
+    description 'Indicates that a scheduled message was received.'
+                ;
+    reference 'RFC 7758:
+Time Capability in NETCONF'
+              ;
+    leaf schedule-id {
+      description 'The ID of the scheduled message.'
+                  ;
+      config false ;
+      type string ;
+    }
+    leaf scheduled-time {
+      description 'The time at which the RPC is scheduled to be performed.'
+                  ;
+      config false ;
+      type yang:date-and-time ;
+    }
+  }
+  augment /nc:get-config/nc:input {
+    description 'Adds the time element to <get-config>.'
+                ;
+    leaf scheduled-time {
+      description 'The time at which the RPC is scheduled to be performed.'
+                  ;
+      type yang:date-and-time ;
+    }
+    leaf get-time {
+      description 'Indicates that the rpc-reply should include the'+"\n"
+                + 'execution-time.'
+                  ;
+      type empty ;
+    }
+  }
+  augment /nc:get-config/nc:output {
+    description 'Adds the time element to <get-config>.'
+                ;
+    leaf execution-time {
+      description 'The time at which the RPC was executed.'
+                  ;
+      type yang:date-and-time ;
+    }
+  }
+  augment /nc:get/nc:input {
+    description 'Adds the time element to <get>.'
+                ;
+    leaf scheduled-time {
+      description 'The time at which the RPC is scheduled to be performed.'
+                  ;
+      type yang:date-and-time ;
+    }
+    leaf get-time {
+      description 'Indicates that the rpc-reply should include the'+"\n"
+                + 'execution-time.'
+                  ;
+      type empty ;
+    }
+  }
+  augment /nc:get/nc:output {
+    description 'Adds the time element to <get>.'
+                ;
+    leaf execution-time {
+      description 'The time at which the RPC was executed.'
+                  ;
+      type yang:date-and-time ;
+    }
+  }
+  augment /nc:copy-config/nc:input {
+    description 'Adds the time element to <copy-config>.'
+                ;
+    leaf scheduled-time {
+      description 'The time at which the RPC is scheduled to be performed.'
+                  ;
+      type yang:date-and-time ;
+    }
+    leaf get-time {
+      description 'Indicates that the rpc-reply should include the'+"\n"
+                + 'execution-time.'
+                  ;
+      type empty ;
+    }
+  }
+  augment /nc:copy-config/nc:output {
+    description 'Adds the time element to <copy-config>.'
+                ;
+    leaf execution-time {
+      description 'The time at which the RPC was executed.'
+                  ;
+      type yang:date-and-time ;
+    }
+  }
+  augment /nc:edit-config/nc:input {
+    description 'Adds the time element to <edit-config>.'
+                ;
+    leaf scheduled-time {
+      description 'The time at which the RPC is scheduled to be performed.'
+                  ;
+      type yang:date-and-time ;
+    }
+    leaf get-time {
+      description 'Indicates that the rpc-reply should include the'+"\n"
+                + 'execution-time.'
+                  ;
+      type empty ;
+    }
+  }
+  augment /nc:edit-config/nc:output {
+    description 'Adds the time element to <edit-config>.'
+                ;
+    leaf execution-time {
+      description 'The time at which the RPC was executed.'
+                  ;
+      type yang:date-and-time ;
+    }
+  }
+  augment /nc:delete-config/nc:input {
+    description 'Adds the time element to <delete-config>.'
+                ;
+    leaf scheduled-time {
+      description 'The time at which the RPC is scheduled to be performed.'
+                  ;
+      type yang:date-and-time ;
+    }
+    leaf get-time {
+      description 'Indicates that the rpc-reply should include the'+"\n"
+                + 'execution-time.'
+                  ;
+      type empty ;
+    }
+  }
+  augment /nc:delete-config/nc:output {
+    description 'Adds the time element to <delete-config>.'
+                ;
+    leaf execution-time {
+      description 'The time at which the RPC was executed.'
+                  ;
+      type yang:date-and-time ;
+    }
+  }
+  augment /nc:lock/nc:input {
+    description 'Adds the time element to <lock>.'
+                ;
+    leaf scheduled-time {
+      description 'The time at which the RPC is scheduled to be performed.'
+                  ;
+      type yang:date-and-time ;
+    }
+    leaf get-time {
+      description 'Indicates that the rpc-reply should include the'+"\n"
+                + 'execution-time.'
+                  ;
+      type empty ;
+    }
+  }
+  augment /nc:lock/nc:output {
+    description 'Adds the time element to <lock>.'
+                ;
+    leaf execution-time {
+      description 'The time at which the RPC was executed.'
+                  ;
+      type yang:date-and-time ;
+    }
+  }
+  augment /nc:unlock/nc:input {
+    description 'Adds the time element to <unlock>.'
+                ;
+    leaf scheduled-time {
+      description 'The time at which the RPC is scheduled to be performed.'
+                  ;
+      type yang:date-and-time ;
+    }
+    leaf get-time {
+      description 'Indicates that the rpc-reply should include the'+"\n"
+                + 'execution-time.'
+                  ;
+      type empty ;
+    }
+  }
+  augment /nc:unlock/nc:output {
+    description 'Adds the time element to <unlock>.'
+                ;
+    leaf execution-time {
+      description 'The time at which the RPC was executed.'
+                  ;
+      type yang:date-and-time ;
+    }
+  }
+  augment /nc:commit/nc:input {
+    description 'Adds the time element to <commit>.'
+                ;
+    leaf scheduled-time {
+      description 'The time at which the RPC is scheduled to be performed.'
+                  ;
+      type yang:date-and-time ;
+    }
+    leaf get-time {
+      description 'Indicates that the rpc-reply should include the'+"\n"
+                + 'execution-time.'
+                  ;
+      type empty ;
+    }
+  }
+  augment /nc:commit/nc:output {
+    description 'Adds the time element to <commit>.'
+                ;
+    leaf execution-time {
+      description 'The time at which the RPC was executed.'
+                  ;
+      type yang:date-and-time ;
+    }
+  }
+  augment /ncm:netconf-state {
+    description 'The scheduling tolerance of the server.'
+                ;
+    container scheduling-tolerance {
+      description 'The scheduling tolerance when the time capability
+is enabled.'
+                  ;
+      uses scheduling-tolerance-parameters ;
+    }
+  }
+}

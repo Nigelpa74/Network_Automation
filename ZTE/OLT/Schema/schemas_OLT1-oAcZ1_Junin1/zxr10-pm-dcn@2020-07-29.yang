@@ -1,0 +1,4844 @@
+module zxr10-pm-dcn {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-dcn'
+            ;
+  prefix pm-dcn ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2020-07-29 {
+    description 'Modify rang of "process-id" or "instance-number" of all contai'
+              + 'ner.'
+                ;
+  }
+  revision 2020-07-20 {
+    description 'Add leaf "bfd-flag" of container "ip-route".'+"\n"
+              + 'Add leaf "bfd-flag" of container "dcn-ipv6-static-route".'+"\n"
+              + 'Add leaf "bfd-flag" of container "query-ip-routes".'+"\n"
+              + 'Add leaf "bfd-flag" of container "query-dcn-ipv6-static-routes'
+              + '".'
+                ;
+  }
+  revision 2020-05-29 {
+    description 'Add container "dcn-ospfv3-redistribute".'+"\n"
+              + 'Add container "query-dcn-ospfv3-redistributes".'+"\n"
+              + 'Add container "dcn-ospfv3-notify".'+"\n"
+              + 'Add leaf "ospfv3-notify-flag" of container "query-ospfv3-proce'
+              + 'ss".'
+                ;
+  }
+  revision 2020-04-08 {
+    description 'Add container "dcn-if-l2-config"'+"\n"
+              + 'Modify container "dcn-if-l3-config"'+"\n"
+              + 'Modify container "dcn-ping-detect"'+"\n"
+              + 'Add container "dcn-ospfv3-route-aggr"'+"\n"
+              + 'Add container "dcn-ospfv3-area-stub"'+"\n"
+              + 'Add container "dcn-ospfv3-process"'+"\n"
+              + 'Add container "query-dcn-ospfv3-process"'+"\n"
+              + 'Add container "query-dcn-ospfv3-area-stubs"'+"\n"
+              + 'Add container "query-dcn-ospfv3-route-aggrs"'+"\n"
+              + 'Modify container "query-dcn-if-ipv6-l3"'
+                ;
+  }
+  revision 2020-02-12 {
+    description 'Add container "if-neighbor-qx"'
+                ;
+  }
+  revision 2019-12-30 {
+    description 'Add container "dcn-route-redistributes"'
+                ;
+  }
+  revision 2019-12-18 {
+    description 'Modify rang of "process-id" in "if-neighbor-l3-config"'
+                ;
+  }
+  revision 2019-11-07 {
+    description 'Modify type of "target-ip-address" in container "dcn-ping-dete'
+              + 'ct"'+"\n"
+              + 'Modify type of "target-ip-address" in container "query-dcn-pin'
+              + 'g-detect"'
+                ;
+  }
+  revision 2019-09-02 {
+    description 'Add "dcn-mngipv6"'+"\n"
+              + 'Add "dcn-ospf-notify"'+"\n"
+              + 'Add "query-dcn-vlan-ifs"'+"\n"
+              + 'Modify "dcn-ping-detect"'+"\n"
+              + 'Modify "query-dcn-ping-detects"'
+                ;
+  }
+  revision 2019-08-08 {
+    description 'Add  IPV6 function status'+"\n"
+              + 'Add  mng OSPFv3 area'+"\n"
+              + 'Add  ipv6 static route'+"\n"
+              + 'Add  if ipv6 l3'
+                ;
+  }
+  revision 2019-07-02 {
+    description 'Add if-neighbor-l2-configs.
+Add if-neighbor-l3-configs.'
+                ;
+  }
+  revision 2019-05-17 {
+    description 'Add query L2 mac.'
+                ;
+  }
+  revision 2019-05-13 {
+    description 'add vlanid opt-type, modefiy Ospf authentication key, add qx m'
+              + 'ac.'+"\n"
+              + 'add leaf "bangdwidth-mb".Change leaf "key-delay" rang to 0-100'
+              + '000.'
+                ;
+  }
+  revision 2019-04-26 {
+    description 'Change leaf "port" rang to 1-255.'
+                ;
+  }
+  revision 2019-04-23 {
+    description 'add mac addr'
+                ;
+  }
+  revision 2019-03-08 {
+    description 'Add leaf dcn-port-work-mode for 61.'
+                ;
+  }
+  revision 2019-02-28 {
+    description 'Add container dcn-neighbor-ifs.'
+                ;
+  }
+  revision 2019-01-29 {
+    description 'Add ip-route enum edit for 61 and 67.'
+                ;
+  }
+  revision 2019-01-17 {
+    description 'shelf range 0-255.slot range 0-255.'
+                ;
+  }
+  revision 2018-10-26 {
+    description 'Add topo contains and leafs for 67.'
+                ;
+  }
+  revision 2018-06-06 {
+    description 'Add DCN mode eth-p2mp-auto, l3 port mode, query l3 port mode.'
+                ;
+  }
+  revision 2017-11-28 {
+    description 'Add leaf neighbor-dcn-mode and contain neighbor-route-aggrs ad'
+              + 'd contain neighbor-ospf-stubs.'
+                ;
+  }
+  revision 2017-05-05 {
+    description 'Add contain if-neighbor-dcn-mode;'+"\n"
+              + 'Add contain if-neighbor-ospf-area;'+"\n"
+              + 'Add contain if-neighbor-ospf-area-stub'
+                ;
+  }
+  revision 2015-10-22 {
+    description 'add contain dcn-mng-ospf-area and contain query-dcn-mng-ospf-a'
+              + 'rea'
+                ;
+  }
+  revision 2015-06-29 ;
+  container operation {
+    config false ;
+    container dcn {
+      description 'Configure DCN'
+                  ;
+      container dcn-network-mode {
+        description 'Configure dcn network mode'
+                    ;
+        leaf network-mode {
+          description 'Configure dcn network mode'
+                      ;
+          type enumeration {
+            enum eth-p2p {
+              value 1 ;
+              description 'Configure dcn mode to eth-p2p'
+                          ;
+            }
+            enum eth-p2p-auto {
+              value 3 ;
+              description 'Configure dcn mode to auto eth-p2p'
+                          ;
+            }
+            enum pppoe-auto {
+              value 4 ;
+              description 'Configure dcn mode to auto pppoe'
+                          ;
+            }
+            enum eth-p2mp-auto {
+              value 5 ;
+              description 'Configure dcn mode to auto eth-p2mp'
+                          ;
+            }
+          }
+        }
+      }
+      container dcn-function-status {
+        description 'Enable or disable DCN function'
+                    ;
+        leaf function-status {
+          description 'Enable or disable DCN function'
+                      ;
+          type enumeration {
+            enum enable {
+              value 0 ;
+              description 'DCN enable'
+                          ;
+            }
+            enum disable {
+              value 1 ;
+              description 'DCN disable'
+                          ;
+            }
+          }
+        }
+      }
+      container dcn-ipv6-function-status {
+        description 'Enable or disable dcn IPv6 function'
+                    ;
+        leaf ipv6-function-status {
+          description 'Enable or disable dcn IPv6 function'
+                      ;
+          type enumeration {
+            enum ipv6-enable {
+              value 1 ;
+              description 'DCN IPV6 enable'
+                          ;
+            }
+            enum ipv6-disable {
+              value 0 ;
+              description 'DCN IPV6 disable'
+                          ;
+            }
+          }
+        }
+        ncd:revise-date 2019-08-08 ;
+      }
+      container dcn-mngip {
+        description 'Configure DCN network Mng IP address'
+                    ;
+        leaf ip-address {
+          description 'IPv4 address'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf ip-mask {
+          description 'IPv4 address mask'
+                      ;
+          type ncd:ipv4-mask ;
+        }
+      }
+      container dcn-mngipv6 {
+        description 'Configure DCN network Mng IPv6 address'
+                    ;
+        leaf ipv6-address {
+          description 'IPv6 address'
+                      ;
+          type ncd:ipv6-address ;
+        }
+        leaf prefix-length {
+          description 'IPv6 prefix lenth'
+                      ;
+          type ncd:ipv6-mask-length ;
+        }
+        ncd:revise-date 2019-09-02 ;
+      }
+      container dcn-ospf-area {
+        description 'Configure OSPFv2 area route aggregation'
+                    ;
+        choice area-id {
+          description 'OSPFv2 area'
+                      ;
+          case number-format {
+            description 'OSPFv2 area in number format'
+                        ;
+            leaf number {
+              description 'OSPFv2 area in number format'
+                          ;
+              type uint32 {
+                range 0..4294967295 ;
+              }
+            }
+          }
+          case ip-format {
+            description 'OSPFv2 area in IPv4 address format'
+                        ;
+            leaf ip {
+              description 'OSPFv2 area in IPv4 address format'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+        }
+        leaf routeaggr-ip-address {
+          description 'Route aggregation IPv4 address'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf routeaggr-ip-mask {
+          description 'Route aggregation IPv4 mask'
+                      ;
+          type ncd:ipv4-mask ;
+        }
+        leaf range-type {
+          description 'Route aggregation range type'
+                      ;
+          type enumeration {
+            enum nssa-external-link {
+              value 0 ;
+            }
+            enum summary-link {
+              value 1 ;
+            }
+          }
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        leaf instance-number {
+          description 'OSPFv2 instance number'
+                      ;
+          type uint32 {
+            range 0..31 ;
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+      }
+      container dcn-mng-ospf-area {
+        description 'Configure Mng OSPFv2 area'
+                    ;
+        choice area-id {
+          description 'OSPFv2 area'
+                      ;
+          case number-format {
+            description 'OSPFv2 area in number format'
+                        ;
+            leaf number {
+              description 'OSPFv2 area in number format'
+                          ;
+              type uint32 {
+                range 0..4294836225 ;
+              }
+            }
+          }
+          case ip-format {
+            description 'OSPFv2 area in IPv4 address format'
+                        ;
+            leaf ip {
+              description 'OSPFv2 area in IPv4 address format'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+        }
+        leaf instance-number {
+          description 'OSPFv2 instance number'
+                      ;
+          type uint32 {
+            range 0..31 ;
+          }
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        ncd:revise-date 2015-10-22 ;
+      }
+      container dcn-mng-ospfv3-area {
+        description 'Configure Mng OSPFv3 area'
+                    ;
+        choice area-id {
+          description 'OSPFv3 area'
+                      ;
+          case number-format {
+            description 'OSPFv3 area in number format'
+                        ;
+            leaf number {
+              description 'OSPFv3 area in number format'
+                          ;
+              type uint32 {
+                range 0..4294836225 ;
+              }
+            }
+          }
+          case ip-format {
+            description 'OSPFv3 area in IPv4 address format'
+                        ;
+            leaf ip {
+              description 'OSPFv3 area in IPv4 address format'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        ncd:revise-date 2019-08-08 ;
+      }
+      container dcn-ospf-area-stub {
+        description 'Configure OSPFv2 stub area'
+                    ;
+        choice area-id {
+          description 'OSPFv2 area'
+                      ;
+          case number-format {
+            description 'OSPFv2 area in number format'
+                        ;
+            leaf number {
+              description 'OSPFv2 area in number format'
+                          ;
+              type uint32 {
+                range 1..4294967295 ;
+              }
+            }
+          }
+          case ip-format {
+            description 'OSPFv2 area in IPv4 address format'
+                        ;
+            leaf ip {
+              description 'OSPFv2 area in IPv4 address format'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+        }
+        leaf instance-number {
+          description 'OSPFv2 instance number'
+                      ;
+          type uint32 {
+            range 0..31 ;
+          }
+        }
+        leaf no-summary {
+          description 'Forbid sending 3-LSA to stub area'
+                      ;
+          type uint8 {
+            range 0..1 ;
+          }
+        }
+        leaf default-cost {
+          description 'Default cost'
+                      ;
+          type uint32 {
+            range 1..65535 ;
+          }
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        leaf area-type {
+          description 'Area type'
+                      ;
+          type enumeration {
+            enum stub {
+              value 2 ;
+            }
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+        ncd:revise-date 2015-04-23 ;
+      }
+      container dcn-ospf-redistribute {
+        description 'Configure OSPFv2 route redistribute'
+                    ;
+        leaf protocol {
+          description 'Protocol type'
+                      ;
+          type enumeration {
+            enum sl-nat64-ipv4 {
+              value 27 ;
+            }
+            enum user-special {
+              value 17 ;
+            }
+            enum nat {
+              value 11 ;
+            }
+            enum natpt {
+              value 13 ;
+            }
+            enum subscriber-host {
+              value 12 ;
+            }
+            enum subscriber-aggregation {
+              value 16 ;
+            }
+            enum static {
+              value 1 ;
+            }
+            enum connected {
+              value 2 ;
+            }
+            enum rip {
+              value 3 ;
+            }
+            enum ospf-int {
+              value 4 ;
+            }
+            enum ospf-ext {
+              value 5 ;
+            }
+            enum isis-1 {
+              value 6 ;
+            }
+            enum isis-2 {
+              value 7 ;
+            }
+            enum isis-1-2 {
+              value 8 ;
+            }
+            enum bgp-ext {
+              value 9 ;
+            }
+            enum bgp-int {
+              value 10 ;
+            }
+            enum ps-busi-addr {
+              value 14 ;
+            }
+            enum ps-user-addr {
+              value 15 ;
+            }
+          }
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        leaf ospf-id {
+          description 'OSPFv2 process ID'
+                      ;
+          type uint32 {
+            range 1..65535 ;
+          }
+        }
+        leaf dest-ospf-id {
+          description 'Destination OSPFv2 process ID'
+                      ;
+          type uint32 {
+            range 0..31 ;
+          }
+          ncd:revise-date 2018-10-26 ;
+        }
+        leaf src-ospf-id {
+          description 'Source OSPFv2 process ID'
+                      ;
+          type uint32 {
+            range 0..31 ;
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+        leaf isis-id {
+          description 'ISIS process ID'
+                      ;
+          type uint32 {
+            range 0..65535 ;
+          }
+        }
+        container as {
+          description 'Configure AS'
+                      ;
+          leaf as-flag {
+            description 'AS flag'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+          leaf as-value {
+            description 'AS number of BGP'
+                        ;
+            type ncd:asn-dot ;
+          }
+        }
+        leaf peer {
+          description 'Invalid value : 0.0.0.0'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf with-originate-metric {
+          description 'Invalid value : 0'
+                      ;
+          type uint32 {
+            range 0..1 ;
+          }
+        }
+        leaf metric {
+          description 'Redistribute LSA metric'
+                      ;
+          type uint32 {
+            range 0..16777214 ;
+          }
+        }
+        leaf metric-type {
+          description 'Redistribute LSA metric-type'
+                      ;
+          type enumeration {
+            enum ext-2 {
+              value 0 ;
+              description 'OSPF external type 2'
+                          ;
+            }
+            enum ext-1 {
+              value 1 ;
+              description 'OSPF external type 1'
+                          ;
+            }
+          }
+        }
+        leaf route-map {
+          description 'Route matching strategy'
+                      ;
+          type string ;
+        }
+        container tag {
+          description 'Configure tag'
+                      ;
+          leaf tag-flag {
+            description 'Tag flag'
+                        ;
+            type enumeration {
+              enum config {
+                value 1 ;
+              }
+              enum delete {
+                value 0 ;
+              }
+            }
+          }
+          leaf tag-value {
+            description 'Tag value'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+        }
+        leaf ip-address {
+          description 'IPv4 address'
+                      ;
+          type ncd:ipv4-address ;
+          ncd:revise-date 2018-06-06 ;
+        }
+        leaf ip-mask {
+          description 'IPv4 address mask'
+                      ;
+          type ncd:ipv4-mask ;
+          ncd:revise-date 2018-06-06 ;
+        }
+        leaf host-only {
+          description 'Redistribute host route only'
+                      ;
+          type enumeration {
+            enum host-true {
+              value 1 ;
+              description 'host-only true'
+                          ;
+            }
+            enum host-false {
+              value 0 ;
+              description 'host-only false'
+                          ;
+            }
+          }
+          ncd:revise-date 2019-09-02 ;
+        }
+      }
+      container ip-route {
+        description 'Configure DCN IPv4 static route'
+                    ;
+        leaf ip-address {
+          description 'IPv4 address'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf ip-mask {
+          description 'IPv4 address mask'
+                      ;
+          type ncd:ipv4-mask ;
+        }
+        leaf next-hop {
+          description 'Nexthop IPv4 address'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf bfd-flag {
+          description 'Whether enable BFD detection, the default is 0 means dis'
+                    + 'able, and 1 means enable. The range is 0-1'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description bfd-enable ;
+            }
+            enum disable {
+              value 0 ;
+              description bfd-disable ;
+            }
+          }
+          ncd:revise-date 2020-07-20 ;
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+            enum edit {
+              value 2 ;
+            }
+          }
+        }
+      }
+      container dcn-ipv6-static-route {
+        description 'Configure DCN IPv6 static route'
+                    ;
+        leaf ipv6-address {
+          description 'IPv6 address'
+                      ;
+          type ncd:ipv6-address ;
+        }
+        leaf prefix-length {
+          description 'IPv6 prefix length'
+                      ;
+          type ncd:ipv6-mask-length {
+            range 0..128 ;
+          }
+        }
+        leaf next-hop {
+          description 'Next-hop IPv6 address'
+                      ;
+          type ncd:ipv6-address ;
+        }
+        leaf bfd-flag {
+          description 'Whether enable BFD detection, the default is 0 means dis'
+                    + 'able, and 1 means enable. The range is 0-1'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description bfd-enable ;
+            }
+            enum disable {
+              value 0 ;
+              description bfd-disable ;
+            }
+          }
+          ncd:revise-date 2020-07-20 ;
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        ncd:revise-date 2019-08-08 ;
+      }
+      container dcn-ospf-process {
+        description 'Configure OSPFv2 instance'
+                    ;
+        leaf process-id {
+          description 'OSPFv2 instance number'
+                      ;
+          type uint32 {
+            range 1..31 ;
+          }
+        }
+        leaf router-id {
+          description 'OSPFv2 router-id'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        ncd:revise-date 2018-06-06 ;
+      }
+      container dcn-ping-detect {
+        description 'Configure DCN PING detect'
+                    ;
+        leaf id {
+          description 'Detect group ID'
+                      ;
+          type uint8 {
+            range 1..32 ;
+          }
+        }
+        leaf target-ip-address {
+          description 'Target IPv4 address'
+                      ;
+          type ncd:ipv4-address ;
+          ncd:revise-date 2019-11-07 ;
+        }
+        leaf dest-ip-address {
+          description 'Destination IPv4 address'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf dest-ip-mask {
+          description 'Destination IPv4 address mask'
+                      ;
+          type ncd:ipv4-mask ;
+        }
+        leaf nexthop-ip-address {
+          description 'Nexthop IPv4 address'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf src-ip-address {
+          description 'Source IPv4 address'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf interval {
+          description Looptime(s) ;
+          type uint8 {
+            range 1..60 ;
+          }
+        }
+        leaf timeout {
+          description Timeout(s) ;
+          type uint8 {
+            range 1..3 ;
+          }
+        }
+        leaf retry {
+          description 'Repeat time'
+                      ;
+          type uint8 {
+            range 5..20 ;
+          }
+        }
+        leaf instance-number {
+          description 'OSPFv2 instance number'
+                      ;
+          type uint32 {
+            range 0..31 ;
+          }
+        }
+        leaf opt-type {
+          description 'Operate type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        ncd:revise-date 2018-06-06 ;
+      }
+      container dcn-neighbor-ifs {
+        description 'Configure neighbor net-element in batch'
+                    ;
+        container if-neighbor-l2-configs {
+          description 'Configure interface L2 attribute of neighbor net-element'
+                      ;
+          list if-neighbor-l2-config {
+            description 'Configure interface L2/L3 attribute of neighbor net-el'
+                      + 'ement'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            leaf shelf {
+              description 'Shelf number'
+                          ;
+              type uint8 {
+                range 0..255 {
+                  description 'shelf range.'
+                              ;
+                }
+              }
+            }
+            leaf slot {
+              description 'Slot number'
+                          ;
+              type uint8 {
+                range 0..255 {
+                  description 'slot range.'
+                              ;
+                }
+              }
+            }
+            leaf subslot {
+              description 'Subslot number'
+                          ;
+              type uint8 {
+                range 0..255 ;
+              }
+            }
+            leaf port {
+              description 'Port number'
+                          ;
+              type uint32 {
+                range 1..255 ;
+              }
+            }
+            leaf dcn {
+              description 'Dnable or disable interface DCN function'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 0 ;
+                  description 'dcn enable'
+                              ;
+                }
+                enum disable {
+                  value 1 ;
+                  description 'dcn disable'
+                              ;
+                }
+              }
+            }
+            leaf vlanid {
+              description 'Vlan id'
+                          ;
+              type uint16 {
+                range 1..4094 {
+                  description 'value range: 1-4094'
+                              ;
+                }
+              }
+            }
+            leaf bandwidth-mb {
+              description Bandwidth(M) ;
+              type uint32 {
+                range 1..100 {
+                  description 'band width range: 1-100'
+                              ;
+                }
+              }
+            }
+            leaf mac {
+              description Mac ;
+              type ncd:mac-address {
+                length 0..281474976710655 ;
+              }
+            }
+          }
+          ncd:revise-date 2019-07-02 ;
+        }
+        container if-neighbor-l3-configs {
+          description 'Configure interface L3 attribute of neighbor net-element'
+                      ;
+          list if-neighbor-l3-config {
+            description 'Configure interface L3 attribute of neighbor net-eleme'
+                      + 'nt'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            leaf shelf {
+              description 'Shelf number'
+                          ;
+              type uint8 {
+                range 0..255 {
+                  description 'shelf range.'
+                              ;
+                }
+              }
+            }
+            leaf slot {
+              description 'Slot number'
+                          ;
+              type uint8 {
+                range 0..255 {
+                  description 'slot range.'
+                              ;
+                }
+              }
+            }
+            leaf subslot {
+              description 'Subslot number'
+                          ;
+              type uint8 {
+                range 0..255 ;
+              }
+            }
+            leaf port {
+              description 'Port number'
+                          ;
+              type uint8 {
+                range 1..255 ;
+              }
+            }
+            leaf port-mode {
+              description 'Interface mode'
+                          ;
+              type enumeration {
+                enum p2p {
+                  value 1 ;
+                  description 'port mode is p2p'
+                              ;
+                }
+                enum eth {
+                  value 2 ;
+                  description 'port mode is eth'
+                              ;
+                }
+                enum eth-p2p {
+                  value 3 ;
+                  description 'port mode is eth-p2p'
+                              ;
+                }
+                enum eth-p2mp {
+                  value 4 ;
+                  description 'port mode is eth-p2mp'
+                              ;
+                }
+                enum pppoe {
+                  value 5 ;
+                  description 'port mode is pppoe'
+                              ;
+                }
+              }
+            }
+            leaf ipaddress-type {
+              description 'IPv4 address type'
+                          ;
+              type enumeration {
+                enum unnumbered {
+                  value 0 ;
+                }
+                enum numbered {
+                  value 1 ;
+                }
+              }
+              default unnumbered ;
+            }
+            leaf ip-address {
+              description 'IPv4 address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf ip-mask {
+              description 'IPv4 address mask'
+                          ;
+              type ncd:ipv4-mask ;
+            }
+            choice if-area-id {
+              description 'OSPFv2 area'
+                          ;
+              case number-format {
+                description 'OSPFv2 area in number format'
+                            ;
+                leaf number {
+                  description 'OSPFv2 area in number format'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 {
+                      description 'ospf area id range'
+                                  ;
+                    }
+                  }
+                }
+              }
+              case ip-format {
+                description 'OSPFv2 area in IPv4 address format'
+                            ;
+                leaf ip {
+                  description 'OSPFv2 area in IPv4 address format'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+              }
+            }
+            leaf process-id {
+              description 'OSPFv2 instance number'
+                          ;
+              type uint8 {
+                range 0..31 ;
+              }
+            }
+          }
+          ncd:revise-date 2019-07-02 ;
+        }
+        container if-neighbor-route-aggrs {
+          description 'Configure OSPFv2 area route aggregation of neighbor net-'
+                    + 'element'
+                      ;
+          list if-neighbor-route-aggr {
+            description 'Configure OSPFv2 area route aggregation of neighbor ne'
+                      + 't-element'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            choice area-id {
+              description 'OSPFv2 area'
+                          ;
+              case number-format {
+                description 'OSPFv2 area in number format'
+                            ;
+                leaf number {
+                  description 'OSPFv2 area in number format'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                }
+              }
+              case ip-format {
+                description 'OSPFv2 area in IPv4 address format'
+                            ;
+                leaf ip {
+                  description 'OSPFv2 area in IPv4 address format'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+              }
+            }
+            leaf routeaggr-ip-address {
+              description 'Route aggregation IPv4 address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf routeaggr-ip-mask {
+              description 'Route aggregation IPv4 mask'
+                          ;
+              type ncd:ipv4-mask ;
+            }
+            leaf range-type {
+              description 'Route aggregation range type'
+                          ;
+              type enumeration {
+                enum nssa-external-link {
+                  value 0 ;
+                }
+                enum summary-link {
+                  value 1 ;
+                }
+              }
+            }
+            leaf instance-number {
+              description 'OSPFv2 instance number'
+                          ;
+              type uint32 {
+                range 0..31 ;
+              }
+            }
+            leaf opt-type {
+              description 'Operation type'
+                          ;
+              type enumeration {
+                enum config {
+                  value 0 ;
+                }
+                enum delete {
+                  value 1 ;
+                }
+              }
+            }
+          }
+        }
+        container if-neighbor-ospf-area-stubs {
+          description 'Configure OSPFv2 stub area of neighbor net-element'
+                      ;
+          list if-neighbor-ospf-area-stub {
+            description 'Configure OSPFv2 stub area of neighbor net-element'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            choice area-id {
+              description 'OSPFv2 area'
+                          ;
+              case number-format {
+                description 'OSPFv2 area in number format'
+                            ;
+                leaf number {
+                  description 'OSPFv2 area in number format'
+                              ;
+                  type uint32 {
+                    range 1..4294967295 ;
+                  }
+                }
+              }
+              case ip-format {
+                description 'OSPFv2 area in IPv4 address format'
+                            ;
+                leaf ip {
+                  description 'OSPFv2 area in IPv4 address format'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+              }
+            }
+            leaf instance-number {
+              description 'OSPFv2 instance number'
+                          ;
+              type uint32 {
+                range 0..31 ;
+              }
+            }
+            leaf no-summary {
+              description 'Forbid sending 3-LSA to stub area'
+                          ;
+              type uint8 {
+                range 0..1 ;
+              }
+            }
+            leaf default-cost {
+              description 'Default cost'
+                          ;
+              type uint32 {
+                range 1..65535 ;
+              }
+            }
+            leaf area-type {
+              description 'Area type'
+                          ;
+              type enumeration {
+                enum stub {
+                  value 2 ;
+                }
+              }
+            }
+            leaf opt-type {
+              description 'Operation type'
+                          ;
+              type enumeration {
+                enum config {
+                  value 0 ;
+                }
+                enum delete {
+                  value 1 ;
+                }
+              }
+            }
+          }
+        }
+        container if-neighbor-static-routes {
+          description 'Configure static route of neighbor net-element'
+                      ;
+          list if-neighbor-static-route {
+            description 'Configure static route of neighbor net-element'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            leaf ip-address {
+              description 'IPv4 address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf ip-mask {
+              description 'IPv4 address mask'
+                          ;
+              type ncd:ipv4-mask ;
+            }
+            leaf next-hop {
+              description 'Nexthop IPv4 address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf opt-type {
+              description 'Operation type'
+                          ;
+              type enumeration {
+                enum config {
+                  value 0 ;
+                }
+                enum delete {
+                  value 1 ;
+                }
+              }
+            }
+          }
+        }
+        ncd:revise-date 2019-02-28 ;
+      }
+      container dcn-if {
+        description 'DCN interface configuration'
+                    ;
+        container if-dcn-status {
+          description 'Enable or disable interface DCN function'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf dcn-status {
+            description 'Enable or disable interface DCN function'
+                        ;
+            type enumeration {
+              enum enable {
+                value 0 ;
+                description 'dcn enable'
+                            ;
+              }
+              enum disable {
+                value 1 ;
+                description 'dcn disable'
+                            ;
+              }
+            }
+            default enable ;
+          }
+        }
+        container if-ospf-area {
+          description 'Configure OSPFv2 area of external interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          choice if-area-id {
+            description 'OSPFv2 area'
+                        ;
+            case number-format {
+              description 'OSPFv2 area in number format'
+                          ;
+              leaf number {
+                description 'OSPFv2 area in number format'
+                            ;
+                type uint32 {
+                  range 0..4294836225 ;
+                }
+              }
+            }
+            case ip-format {
+              description 'OSPFv2 area in IPv4 address format'
+                          ;
+              leaf ip {
+                description 'OSPFv2 area in IPv4 address format'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          leaf instance-number {
+            description 'OSPFv2 instance number'
+                        ;
+            type uint32 {
+              range 0..31 ;
+            }
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+        }
+        container if-ospf-flood-passive {
+          description 'Configure OSPFv2 area flood of external interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+        container if-dcn-port-ospf-area {
+          description 'Configure OSPFv2 area of DCN interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          choice if-area-id {
+            description 'OSPFv2 area'
+                        ;
+            case number-format {
+              description 'OSPFv2 area in number format'
+                          ;
+              leaf number {
+                description 'OSPFv2 area in number format'
+                            ;
+                type uint32 {
+                  range 0..4294836225 {
+                    description 'ospf area id range'
+                                ;
+                  }
+                }
+              }
+            }
+            case ip-format {
+              description 'OSPFv2 area in IPv4 address format'
+                          ;
+              leaf ip {
+                description 'OSPFv2 area in IPv4 address format'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          leaf instance-number {
+            description 'OSPFv2 instance number'
+                        ;
+            type uint32 {
+              range 0..31 ;
+            }
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+        }
+        container id-dcn-port-ospf-flood {
+          description 'Configure OSPFv2 area flood of DCN interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf vlanid {
+            description 'VLAN ID'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'value range: 1-4094'
+                            ;
+              }
+            }
+          }
+          leaf ospf-flood {
+            description 'OSPFv2 area flood'
+                        ;
+            type enumeration {
+              enum active {
+                value 0 ;
+              }
+              enum passive {
+                value 1 ;
+              }
+            }
+            default active ;
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+        container if-dcn-l3-port-mode {
+          description 'Configure port mode of DCN interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf vlanid {
+            description 'VLAN ID'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'value range: 1-4094'
+                            ;
+              }
+            }
+          }
+          leaf port-mode {
+            description 'Port mode'
+                        ;
+            type enumeration {
+              enum eth {
+                value 2 ;
+                description 'port mode is eth'
+                            ;
+              }
+              enum eth-p2p {
+                value 3 ;
+                description 'port mode is eth-p2p'
+                            ;
+              }
+              enum eth-p2mp {
+                value 4 ;
+                description 'port mode is eth-p2mp'
+                            ;
+              }
+              enum pppoe {
+                value 5 ;
+                description 'port mode is pppoe'
+                            ;
+              }
+              enum p2p {
+                value 1 ;
+                description 'port mode is p2p'
+                            ;
+              }
+            }
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+        container if-dcn-port-ip {
+          description 'Configure IPv4 address of DCN interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf vlanid {
+            description 'VLAN ID'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'value range: 1-4094'
+                            ;
+              }
+            }
+          }
+          leaf ipaddress-type {
+            description 'IPv4 address type'
+                        ;
+            type enumeration {
+              enum unnumbered {
+                value 0 ;
+              }
+              enum numbered {
+                value 1 ;
+              }
+            }
+            default unnumbered ;
+          }
+          leaf ip-address {
+            description 'IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ip-mask {
+            description 'IPv4 address mask'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+        container if-dcn-port-ospf-auth {
+          description 'Configure OSPFv2 authentication of DCN interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf vlanid {
+            description 'VLAN ID'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'value range: 1-4094'
+                            ;
+              }
+            }
+          }
+          leaf auth-type {
+            description 'Authentication type'
+                        ;
+            type enumeration {
+              enum null {
+                value 1 ;
+              }
+              enum md5 {
+                value 3 ;
+              }
+            }
+          }
+          leaf auth-key {
+            description 'Authentication key'
+                        ;
+            type string {
+              length 0..24 ;
+            }
+          }
+          leaf key-delay {
+            description 'Delay time(m)'
+                        ;
+            type uint32 {
+              range 0..100000 ;
+            }
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+        container if-vlanid {
+          description 'Configure VLAN ID of DCN interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf vlanid {
+            description 'VLAN ID'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'value range: 1-4094'
+                            ;
+              }
+            }
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2019-05-13 ;
+          }
+        }
+        container if-dcn-port-bandwidth {
+          description 'Configure bandwidth of DCN interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf vlanid {
+            description 'VLAN ID'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'value range: 1-4094'
+                            ;
+              }
+            }
+          }
+          leaf bandwidth {
+            description Bandwidth ;
+            type uint32 {
+              range 1..100 {
+                description 'band width range: 1-100'
+                            ;
+              }
+            }
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+        container if-dcn-port-mac-offset {
+          description 'Configure MAC offset of DCN interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf vlanid {
+            description 'VLAN ID'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'value range: 1-4094'
+                            ;
+              }
+            }
+          }
+          leaf mac-offset {
+            description 'MAC offset'
+                        ;
+            type uint8 {
+              range 1..20 ;
+            }
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+        container if-dcn-port-mac-addr {
+          description 'Configure MAC address of DCN interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf vlanid {
+            description 'VLAN ID'
+                        ;
+            type uint16 ;
+          }
+          leaf mac-addr {
+            description 'MAC address'
+                        ;
+            type ncd:mac-address ;
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2019-04-23 ;
+          }
+          ncd:revise-date 2019-04-23 ;
+        }
+        container if-ip-vrf-forwarding {
+          description 'Bind external interface to VRF'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+        }
+        container if-ip {
+          description 'Configure IPv4 address of external interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf ip-address {
+            description 'IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ip-mask {
+            description 'IPv4 address mask'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2018-10-26 ;
+          }
+        }
+        container if-mac {
+          description 'Configure MAC address of external interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf mac {
+            description 'MAC address'
+                        ;
+            type ncd:mac-address ;
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+          ncd:revise-date 2019-05-13 ;
+        }
+        container if-mac-offset {
+          description 'Configure MAC offset of external interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf mac-offset {
+            description 'MAC offset'
+                        ;
+            type uint8 {
+              range 1..20 ;
+            }
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+          ncd:revise-date 2018-10-26 ;
+        }
+        container if-neighbor-dcn {
+          description 'Enable or disable DCN function of neighbor net-element'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf dcn-status {
+            description 'Enable or disable DCN function'
+                        ;
+            type enumeration {
+              enum enable {
+                value 0 ;
+                description 'dcn enable'
+                            ;
+              }
+              enum disable {
+                value 1 ;
+                description 'dcn disable'
+                            ;
+              }
+            }
+          }
+        }
+        container if-neighbor-mngip {
+          description 'Configure Mng IP address of neighbor net-element'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf ip-address {
+            description 'IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ip-mask {
+            description 'IPv4 address mask'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+        }
+        container if-neighbor-port-l2 {
+          description 'Configure interface L2 attribute of neighbor net-element'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf shelf {
+            description 'Shelf number'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'shelf range.'
+                            ;
+              }
+            }
+          }
+          leaf slot {
+            description 'Slot number'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'slot range.'
+                            ;
+              }
+            }
+          }
+          leaf subslot {
+            description 'Subslot number'
+                        ;
+            type uint8 ;
+          }
+          leaf port {
+            description 'Port number'
+                        ;
+            type uint32 ;
+          }
+          leaf dcn {
+            description 'Dnable or disable interface DCN function'
+                        ;
+            type enumeration {
+              enum enable {
+                value 0 ;
+                description 'dcn enable'
+                            ;
+              }
+              enum disable {
+                value 1 ;
+                description 'dcn disable'
+                            ;
+              }
+            }
+          }
+          leaf vlanid {
+            description 'VLAN ID'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'value range: 1-4094'
+                            ;
+              }
+            }
+          }
+          leaf bandwidth {
+            description Bandwidth(K) ;
+            type uint32 {
+              range 1000..100000 {
+                description 'band width range: 1000-100000'
+                            ;
+              }
+            }
+          }
+          leaf bandwidth-mb {
+            description Bandwidth(M) ;
+            type uint32 {
+              range 1..100 {
+                description 'band width range: 1-100'
+                            ;
+              }
+            }
+            ncd:revise-date 2019-05-13 ;
+          }
+          leaf mac {
+            description 'MAC address'
+                        ;
+            type ncd:mac-address {
+              length 0..281474976710655 ;
+            }
+            ncd:revise-date 2018-06-06 ;
+          }
+        }
+        container if-neighbor-port-l3 {
+          description 'Configure interface L3 attribute of neighbor net-element'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf shelf {
+            description 'Shelf number'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'shelf range.'
+                            ;
+              }
+            }
+          }
+          leaf slot {
+            description 'Slot number'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'slot range.'
+                            ;
+              }
+            }
+          }
+          leaf subslot {
+            description 'Subslot number'
+                        ;
+            type uint8 {
+              range 0..255 ;
+            }
+          }
+          leaf port {
+            description 'Port number'
+                        ;
+            type uint8 {
+              range 1..255 ;
+            }
+          }
+          leaf port-mode {
+            description 'Port mode'
+                        ;
+            type enumeration {
+              enum p2p {
+                value 1 ;
+                description 'port mode is p2p'
+                            ;
+              }
+              enum eth {
+                value 2 ;
+                description 'port mode is eth'
+                            ;
+              }
+              enum eth-p2p {
+                value 3 ;
+                description 'port mode is eth-p2p'
+                            ;
+              }
+              enum eth-p2mp {
+                value 4 ;
+                description 'port mode is eth-p2mp'
+                            ;
+              }
+              enum pppoe {
+                value 5 ;
+                description 'port mode is pppoe'
+                            ;
+              }
+            }
+          }
+          leaf ipaddress-type {
+            description 'IPv4 address type'
+                        ;
+            type enumeration {
+              enum unnumbered {
+                value 0 ;
+              }
+              enum numbered {
+                value 1 ;
+              }
+            }
+            default unnumbered ;
+          }
+          leaf ip-address {
+            description 'IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ip-mask {
+            description 'IPv4 address mask'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          choice if-area-id {
+            description 'OSPFv2 area'
+                        ;
+            case number-format {
+              description 'OSPFv2 area in number format'
+                          ;
+              leaf number {
+                description 'OSPFv2 area in number format'
+                            ;
+                type uint32 {
+                  range 0..4294967295 {
+                    description 'ospf area id range'
+                                ;
+                  }
+                }
+              }
+            }
+            case ip-format {
+              description 'OSPFv2 area in IPv4 address format'
+                          ;
+              leaf ip {
+                description 'OSPFv2 area in IPv4 address format'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          leaf process-id {
+            description 'OSPFv2 instance number'
+                        ;
+            type uint8 {
+              range 0..31 ;
+            }
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+        container if-neighbor-dcn-mode {
+          description 'Configure DCN network mode of neighbor net-element'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf network-mode {
+            description 'DCN network mode'
+                        ;
+            type enumeration {
+              enum eth-p2p {
+                value 1 ;
+                description 'Configure dcn mode to eth-p2p'
+                            ;
+              }
+              enum eth-p2p-auto {
+                value 3 ;
+                description 'Configure dcn mode to auto eth-p2p'
+                            ;
+              }
+              enum pppoe-auto {
+                value 4 ;
+                description 'Configure dcn mode to auto pppoe'
+                            ;
+              }
+              enum eth-p2mp-auto {
+                value 5 ;
+                description 'Configure dcn mode to auto eth-p2mp'
+                            ;
+              }
+            }
+          }
+          ncd:revise-date 2017-05-05 ;
+        }
+        container if-neighbor-ospf-area {
+          description 'Configure OSPFv2 area route aggregation of neighbor net-'
+                    + 'element'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          choice area-id {
+            description 'OSPFv2 area'
+                        ;
+            case number-format {
+              description 'OSPFv2 area in number format'
+                          ;
+              leaf number {
+                description 'OSPFv2 area in number format'
+                            ;
+                type uint32 {
+                  range 0..4294967295 ;
+                }
+              }
+            }
+            case ip-format {
+              description 'OSPFv2 area in IPv4 address format'
+                          ;
+              leaf ip {
+                description 'OSPFv2 area in IPv4 address format'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          leaf routeaggr-ip-address {
+            description 'Route aggregation IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf routeaggr-ip-mask {
+            description 'Route aggregation IPv4 mask'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          leaf range-type {
+            description 'Route aggregation range type'
+                        ;
+            type enumeration {
+              enum nssa-external-link {
+                value 0 ;
+              }
+              enum summary-link {
+                value 1 ;
+              }
+            }
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+          leaf instance-number {
+            description 'OSPFv2 instance number'
+                        ;
+            type uint32 {
+              range 0..31 ;
+            }
+            ncd:revise-date 2018-06-06 ;
+          }
+          ncd:revise-date 2017-05-05 ;
+        }
+        container if-neighbor-ospf-area-stub {
+          description 'Configure OSPFv2 stub area of neighbor net-element'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          choice area-id {
+            description 'OSPFv2 area'
+                        ;
+            case number-format {
+              description 'OSPFv2 area in number format'
+                          ;
+              leaf number {
+                description 'OSPFv2 area in number format'
+                            ;
+                type uint32 {
+                  range 1..4294967295 ;
+                }
+              }
+            }
+            case ip-format {
+              description 'OSPFv2 area in IPv4 address format'
+                          ;
+              leaf ip {
+                description 'OSPFv2 area in IPv4 address format'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          leaf instance-number {
+            description 'OSPFv2 instance number'
+                        ;
+            type uint32 {
+              range 0..31 ;
+            }
+          }
+          leaf no-summary {
+            description 'Forbid sending 3-LSA to stub area'
+                        ;
+            type uint8 {
+              range 0..1 ;
+            }
+          }
+          leaf default-cost {
+            description 'Default cost'
+                        ;
+            type uint32 {
+              range 1..65535 ;
+            }
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+          leaf area-type {
+            description 'Area type'
+                        ;
+            type enumeration {
+              enum stub {
+                value 2 ;
+              }
+            }
+            ncd:revise-date 2018-06-06 ;
+          }
+          ncd:revise-date 2017-05-05 ;
+        }
+        container if-neighbor-static-route {
+          description 'Configure static route of neighbor net-element'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf ip-address {
+            description 'IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ip-mask {
+            description 'IPv4 address mask'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          leaf next-hop {
+            description 'Nexthop IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+              enum edit {
+                value 2 ;
+              }
+            }
+          }
+          ncd:revise-date 2018-06-06 ;
+        }
+        container if-neighbor-qx {
+          description 'Configure QX attribute of neighbor net-element'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf ip-address {
+            description 'IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ip-mask {
+            description 'IPv4 address mask'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          leaf mac {
+            description 'MAC address'
+                        ;
+            type ncd:mac-address ;
+          }
+          choice if-area-id {
+            description 'OSPFv2 area'
+                        ;
+            case number-format {
+              description 'OSPFv2 area in number format'
+                          ;
+              leaf number {
+                description 'OSPFv2 area in number format'
+                            ;
+                type uint32 {
+                  range 0..4294967295 {
+                    description 'ospf area id range'
+                                ;
+                  }
+                }
+              }
+            }
+            case ip-format {
+              description 'OSPFv2 area in IPv4 address format'
+                          ;
+              leaf ip {
+                description 'OSPFv2 area in IPv4 address format'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          leaf ospf-flood {
+            description 'OSPFv2 area flood'
+                        ;
+            type enumeration {
+              enum active {
+                value 0 ;
+              }
+              enum passive {
+                value 1 ;
+              }
+            }
+            default active ;
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+          ncd:revise-date 2020-02-12 ;
+        }
+      }
+      container dcn-if-ipv6 {
+        description 'DCN interface IPv6 configuration'
+                    ;
+        container dcn-if-l3-config {
+          description 'Configure L3 IPv6 attribute of DCN interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf vlanid {
+            description 'VLAN ID'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'value range: 1-4094'
+                            ;
+              }
+            }
+          }
+          leaf ipv6-address-type {
+            description 'IPv6 address type'
+                        ;
+            type enumeration {
+              enum link-local {
+                value 1 ;
+              }
+            }
+          }
+          leaf ipv6-address {
+            description 'IPv6 address'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          choice if-area-id {
+            description 'OSPFv3 area'
+                        ;
+            case number-format {
+              description 'OSPFv3 area in number format'
+                          ;
+              leaf number {
+                description 'OSPFv3 area in number format'
+                            ;
+                type uint32 {
+                  range 0..4294967295 {
+                    description 'ospf area id range'
+                                ;
+                  }
+                }
+              }
+            }
+            case ip-format {
+              description 'OSPFv3 area in IPv4 address format'
+                          ;
+              leaf ip {
+                description 'OSPFv3 area in IPv4 address format'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+            ncd:revise-date 2020-04-08 ;
+          }
+          leaf ospfv3-flood-passive {
+            description 'OSPFv3 area flood'
+                        ;
+            type enumeration {
+              enum active {
+                value 0 ;
+              }
+              enum passive {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2020-04-08 ;
+          }
+          leaf ospfv3-inst-number {
+            description 'OSPFv3 instance number'
+                        ;
+            type uint8 {
+              range 0..31 ;
+            }
+          }
+        }
+        container external-if-l3-config {
+          description 'Configure L3 IPv6 attribute of external interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf ipv6-address-type {
+            description 'IPv6 address type'
+                        ;
+            type enumeration {
+              enum link-local {
+                value 1 ;
+              }
+              enum manaul {
+                value 2 ;
+              }
+            }
+          }
+          leaf ipv6-address {
+            description 'IPv6 address'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf prefix-length {
+            description 'IPv6 prefix length'
+                        ;
+            type uint8 {
+              range 0..128 ;
+            }
+          }
+          choice if-area-id {
+            description 'OSPFv3 area'
+                        ;
+            case number-format {
+              description 'OSPFv3 area in number format'
+                          ;
+              leaf number {
+                description 'OSPFv3 area in number format'
+                            ;
+                type uint32 {
+                  range 0..4294967295 {
+                    description 'ospf area id range'
+                                ;
+                  }
+                }
+              }
+            }
+            case ip-format {
+              description 'OSPFv3 area in IPv4 address format'
+                          ;
+              leaf ip {
+                description 'OSPFv3 area in IPv4 address format'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          leaf ospfv3-flood-passive {
+            description 'OSPFv3 area flood'
+                        ;
+            type enumeration {
+              enum active {
+                value 0 ;
+              }
+              enum passive {
+                value 1 ;
+              }
+            }
+            default active ;
+          }
+          leaf ospfv3-inst-number {
+            description 'OSPFv3 instance number'
+                        ;
+            type uint8 {
+              range 0..31 ;
+            }
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+        }
+        container if-neighbor-mngipv6 {
+          description 'Configure Mng IPv6 address of neighbor net-element'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf ipv6-address {
+            description 'IPv6 address'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf prefix-length {
+            description 'IPv6 prefix length'
+                        ;
+            type ncd:ipv6-mask-length {
+              range 0..128 ;
+            }
+          }
+        }
+        container dcn-if-l2-config {
+          description 'Configure L2 IPv6 attribute of DCN interface'
+                      ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf dcn-status {
+            description 'Dnable or disable interface DCN IPv6 function'
+                        ;
+            type enumeration {
+              enum enable {
+                value 0 ;
+                description 'dcn enable'
+                            ;
+              }
+              enum disable {
+                value 1 ;
+                description 'dcn disable'
+                            ;
+              }
+            }
+            default enable ;
+          }
+          leaf vlanid {
+            description 'VLAN ID'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'value range: 1-4094'
+                            ;
+              }
+            }
+          }
+          leaf mac-offset {
+            description 'MAC offset'
+                        ;
+            type uint8 {
+              range 0..20 ;
+            }
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+          ncd:revise-date 2020-04-08 ;
+        }
+        ncd:revise-date 2019-08-08 ;
+      }
+      container dcn-ospf-notify {
+        description 'Configure OSPFv2 default route notify'
+                    ;
+        leaf instance-number {
+          description 'OSPFv3 instance number'
+                      ;
+          type uint32 {
+            range 0..31 {
+              description 'ospf instance number range is [0-31]'
+                          ;
+            }
+          }
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        ncd:revise-date 2019-09-02 ;
+      }
+      container dcn-route-redistributes {
+        description 'Configure OSPFv2 route redistribute in batch'
+                    ;
+        list dcn-route-redistribute {
+          description 'Configure OSPFv2 route redistribute in batch'
+                      ;
+          key 'protocol-type dest-ospf-id src-ospf-id'
+              ;
+          leaf protocol-type {
+            description 'Protocol type'
+                        ;
+            type enumeration {
+              enum static {
+                value 1 ;
+              }
+              enum connected {
+                value 2 ;
+              }
+              enum ospf-int {
+                value 4 ;
+              }
+              enum ospf-ext {
+                value 5 ;
+              }
+            }
+          }
+          leaf dest-ospf-id {
+            description 'Destination OSPFv2 process ID'
+                        ;
+            type uint32 {
+              range 0..31 ;
+            }
+          }
+          leaf src-ospf-id {
+            description 'Source OSPFv2 process ID'
+                        ;
+            type uint32 {
+              range 0..31 ;
+            }
+          }
+          leaf metric {
+            description 'Redistribute LSA metric'
+                        ;
+            type uint32 {
+              range 0..16777214 ;
+            }
+          }
+          leaf metric-type {
+            description 'Redistribute LSA metric-type'
+                        ;
+            type enumeration {
+              enum ext-2 {
+                value 0 ;
+                description 'OSPF external type 2'
+                            ;
+              }
+              enum ext-1 {
+                value 1 ;
+                description 'OSPF external type 1'
+                            ;
+              }
+            }
+          }
+          leaf host-only {
+            description 'Redistribute host route only'
+                        ;
+            type enumeration {
+              enum host-true {
+                value 1 ;
+                description 'host-only true'
+                            ;
+              }
+              enum host-false {
+                value 0 ;
+                description 'host-only false'
+                            ;
+              }
+            }
+          }
+          leaf ip-address {
+            description 'IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ip-mask {
+            description 'IPv4 address mask'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          leaf opt-type {
+            description 'Operation type'
+                        ;
+            type enumeration {
+              enum config {
+                value 0 ;
+              }
+              enum delete {
+                value 1 ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2019-12-30 ;
+      }
+      container dcn-ospfv3-route-aggr {
+        description 'Configure OSPFv3 area route aggregation'
+                    ;
+        choice area-id {
+          description 'OSPFv3 area'
+                      ;
+          case number-format {
+            description 'OSPFv3 area in number format'
+                        ;
+            leaf number {
+              description 'OSPFv3 area in number format'
+                          ;
+              type uint32 {
+                range 0..4294836225 ;
+              }
+            }
+          }
+          case ip-format {
+            description 'OSPFv3 area in IPv4 address format'
+                        ;
+            leaf ip {
+              description 'OSPFv3 area in IPv4 address format'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+        }
+        leaf ipv6-address {
+          description 'IPv6 address'
+                      ;
+          type ncd:ipv6-address ;
+        }
+        leaf prefix-length {
+          description 'IPv6 prefix length'
+                      ;
+          type ncd:ipv6-mask-length {
+            range 0..128 ;
+          }
+        }
+        leaf instance-number {
+          description 'OSPFv3 instance number'
+                      ;
+          type uint32 {
+            range 0..31 ;
+          }
+        }
+        leaf opt-type {
+          description 'Operate type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        ncd:revise-date 2020-04-08 ;
+      }
+      container dcn-ospfv3-area-stub {
+        description 'Configure OSPFv3 stub area'
+                    ;
+        choice ospfv3-area-id {
+          description 'OSPFv3 area'
+                      ;
+          case number-format {
+            description 'OSPFv3 area in number format'
+                        ;
+            leaf number {
+              description 'OSPFv3 area in number format'
+                          ;
+              type uint32 {
+                range 1..4294967295 ;
+              }
+            }
+          }
+          case ip-format {
+            description 'OSPFv3 area in IPv4 address format'
+                        ;
+            leaf ip {
+              description 'OSPFv3 area in IPv4 address format'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+        }
+        leaf ospfv3-instance-number {
+          description 'OSPFv3 instance number'
+                      ;
+          type uint32 {
+            range 0..31 ;
+          }
+        }
+        leaf no-summary {
+          description 'Forbid sending 3-LSA to stub area'
+                      ;
+          type uint8 {
+            range 0..1 ;
+          }
+        }
+        leaf default-cost {
+          description 'Default cost'
+                      ;
+          type uint32 {
+            range 0..16777215 ;
+          }
+        }
+        leaf ospfv3-area-type {
+          description 'Area type'
+                      ;
+          type enumeration {
+            enum stub {
+              value 2 ;
+            }
+          }
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        ncd:revise-date 2020-04-08 ;
+      }
+      container dcn-ospfv3-process {
+        description 'Configure OSPFv3 instance'
+                    ;
+        leaf ospfv3-process-id {
+          description 'OSPFv3 instance number'
+                      ;
+          type uint32 {
+            range 1..31 ;
+          }
+        }
+        leaf ospfv3-router-id {
+          description 'OSPFv3 router-id'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        ncd:revise-date 2020-04-08 ;
+      }
+      container dcn-ospfv3-redistribute {
+        description 'Configure OSPFv3 route redistribute'
+                    ;
+        leaf protocol {
+          description 'Protocol type'
+                      ;
+          type enumeration {
+            enum static {
+              value 1 ;
+            }
+            enum connected {
+              value 2 ;
+            }
+            enum ospf {
+              value 4 ;
+            }
+          }
+        }
+        leaf ospfv3-id {
+          description 'Destination OSPFv3 process ID'
+                      ;
+          type uint32 {
+            range 0..31 ;
+          }
+        }
+        leaf src-ospfv3-id {
+          description 'Source OSPFv3 process ID'
+                      ;
+          type uint32 {
+            range 0..31 ;
+          }
+        }
+        leaf metric {
+          description 'Redistribute LSA metric'
+                      ;
+          type uint32 {
+            range 1..16777214 ;
+          }
+        }
+        leaf metric-type {
+          description 'Redistribute LSA metric-type'
+                      ;
+          type enumeration {
+            enum ext-2 {
+              value 0 ;
+              description 'OSPF external type 2'
+                          ;
+            }
+            enum ext-1 {
+              value 1 ;
+              description 'OSPF external type 1'
+                          ;
+            }
+          }
+        }
+        leaf host-only {
+          description 'Redistribute host route only'
+                      ;
+          type enumeration {
+            enum host-true {
+              value 1 ;
+              description 'host-only true'
+                          ;
+            }
+            enum host-false {
+              value 0 ;
+              description 'host-only false'
+                          ;
+            }
+          }
+        }
+        leaf ipv6-address {
+          description 'IPv6 address'
+                      ;
+          type ncd:ipv6-address ;
+        }
+        leaf prefix-length {
+          description 'IPv6 prefix length'
+                      ;
+          type ncd:ipv6-mask-length {
+            range 0..128 ;
+          }
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        ncd:revise-date 2020-05-29 ;
+      }
+      container dcn-ospfv3-notify {
+        description 'Configure OSPFv3 default route notify'
+                    ;
+        leaf instance-number {
+          description 'OSPFv3 instance number'
+                      ;
+          type uint32 {
+            range 0..31 {
+              description 'ospfv3 instance number range is [0-31]'
+                          ;
+            }
+          }
+        }
+        leaf opt-type {
+          description 'Operation type'
+                      ;
+          type enumeration {
+            enum config {
+              value 0 ;
+            }
+            enum delete {
+              value 1 ;
+            }
+          }
+        }
+        ncd:revise-date 2020-05-29 ;
+      }
+    }
+  }
+  container state {
+    config false ;
+    container dcn {
+      description 'Query DCN configurations'
+                  ;
+      leaf query-dcn-network-mode {
+        description 'Query DCN network mode'
+                    ;
+        type enumeration {
+          enum eth-p2p {
+            value 1 ;
+            description 'DCN mode is eth-p2p'
+                        ;
+          }
+          enum eth-p2p-auto {
+            value 3 ;
+            description 'DCN mode is auto eth-p2p'
+                        ;
+          }
+          enum pppoe-auto {
+            value 4 ;
+            description 'dcn mode is auto pppoe'
+                        ;
+          }
+          enum eth-p2mp-auto {
+            value 5 ;
+            description 'DCN mode is auto eth-p2mp'
+                        ;
+          }
+        }
+      }
+      leaf query-dcn-function-status {
+        description 'Query DCN IPv4 function status(enable/diable)'
+                    ;
+        type enumeration {
+          enum enable {
+            value 0 ;
+          }
+          enum disable {
+            value 1 ;
+          }
+        }
+      }
+      container query-dcn-ipv6-function-status {
+        description 'Query DCN IPv6 function status(enable/diable)'
+                    ;
+        leaf ipv6-function-status {
+          description 'DCN IPv6 function state(enable/disable)'
+                      ;
+          type enumeration {
+            enum ipv6-enable {
+              value 1 ;
+              description 'DCN enable'
+                          ;
+            }
+            enum ipv6-disable {
+              value 0 ;
+            }
+          }
+        }
+        ncd:revise-date 2019-08-08 ;
+      }
+      container query-dcn-mngip {
+        description 'Query the IPv4 address of DCN management port'
+                    ;
+        leaf ip-address {
+          description 'IPv4 address'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf ip-mask {
+          description 'IPv4 address mask'
+                      ;
+          type ncd:ipv4-mask ;
+        }
+      }
+      container query-dcn-mngipv6 {
+        description 'Query the IPv6 address of DCN management port'
+                    ;
+        leaf ipv6-address {
+          description 'IPv6 address'
+                      ;
+          type ncd:ipv6-address ;
+        }
+        leaf prefix-length {
+          description 'IPv6 address prefix-length'
+                      ;
+          type uint8 {
+            range 0..128 ;
+          }
+        }
+        ncd:revise-date 2019-08-08 ;
+      }
+      container query-dcn-qx {
+        description 'Query DCN Qx port configuration'
+                    ;
+        leaf ip-address {
+          description 'IPv4 address of Qx port'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf ip-mask {
+          description 'IPv4 address mask'
+                      ;
+          type ncd:ipv4-mask ;
+        }
+        leaf if-ospf-enable {
+          description 'OSPFv2 enable state of Qx port'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+            }
+            enum enable {
+              value 1 ;
+            }
+          }
+        }
+        leaf if-ospf-area {
+          description 'OSPFv2 area of Qx port'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf if-ospf-flood {
+          description 'OSPFv2 flood of Qx port'
+                      ;
+          type enumeration {
+            enum active {
+              value 0 ;
+            }
+            enum passive {
+              value 1 ;
+            }
+          }
+        }
+        leaf ip-vrf-forwarding {
+          description 'Is the Qx port added to the DCN VRF group(TRUE/FALSE)'
+                      ;
+          type uint8 ;
+        }
+        leaf if-mac-offset {
+          description 'Mac-offset of Qx port'
+                      ;
+          type uint8 ;
+        }
+        leaf if-mac {
+          description 'MAC address of Qx port'
+                      ;
+          type ncd:mac-address ;
+          ncd:revise-date 2019-05-13 ;
+        }
+        ncd:revise-date 2018-10-26 ;
+      }
+      container query-dcn-mng-ospf-area {
+        description 'Query the OSPFv2 area configuration of DCN management port'
+                    ;
+        leaf area-id {
+          description 'OSPFv2 area number'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        leaf instance-number {
+          description 'OSPFv2 instance number'
+                      ;
+          type uint32 ;
+        }
+        ncd:revise-date 2015-10-22 ;
+      }
+      container query-dcn-mng-ospfv3-area {
+        description 'Query the OSPFv3 area configuration of DCN management port'
+                    ;
+        leaf ospfv3-area-ip {
+          description 'OSPFv3 area number'
+                      ;
+          type ncd:ipv4-address ;
+        }
+        ncd:revise-date 2019-08-08 ;
+      }
+      container query-dcn-ospf-process {
+        description 'Query DCN OSPFv2 process configurations'
+                    ;
+        list query-ospf-process {
+          description 'Query DCN OSPFv2 process configurations'
+                      ;
+          key process-id ;
+          leaf process-id {
+            description 'OSPFv2 instance number'
+                        ;
+            type uint32 ;
+          }
+          leaf router-id {
+            description 'OSPFv2 router ID'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ospf-notify-flag {
+            description 'OSPFv2 default route notification flag(notify-true/not'
+                      + 'ify-false)'
+                        ;
+            type enumeration {
+              enum notify-true {
+                value 1 ;
+              }
+              enum notify-false {
+                value 0 ;
+              }
+            }
+            ncd:revise-date 2019-09-02 ;
+          }
+        }
+        ncd:revise-date 2018-10-26 ;
+      }
+      container query-dcn-ospf-areas {
+        description 'Query DCN OSPFv2 area configurations'
+                    ;
+        list query-ospf-area {
+          description 'Query DCN OSPFv2 area configuration'
+                      ;
+          key 'area-id routeaggr-ip-address routeaggr-ip-mask range-type'
+              ;
+          leaf area-id {
+            description 'OSPFv2 area number'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf routeaggr-ip-address {
+            description 'IPv4 address of route aggregation'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf routeaggr-ip-mask {
+            description 'IPv4 address mask of route aggregation'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          leaf range-type {
+            description 'OSPFv2 LSA range type'
+                        ;
+            type enumeration {
+              enum nssa-external-link {
+                value 0 ;
+              }
+              enum summary-link {
+                value 1 ;
+              }
+            }
+          }
+          leaf instance-number {
+            description 'OSPFv2 instance number'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2018-06-06 ;
+          }
+        }
+      }
+      container query-dcn-ospf-area-stubs {
+        description 'Query DCN OSPFv2 stub area configurations'
+                    ;
+        list query-dcn-ospf-area-stub {
+          description 'Query DCN OSPFv2 stub area configuration'
+                      ;
+          key 'area-id instance-number'
+              ;
+          leaf area-id {
+            description 'OSPFv2 area number'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf instance-number {
+            description 'OSPFv2 instance number'
+                        ;
+            type uint32 ;
+          }
+          leaf no-summary {
+            description 'Forbid sending 3-LSA to stub area(true/false)'
+                        ;
+            type uint8 ;
+          }
+          leaf default-cost {
+            description 'Stub area default cost'
+                        ;
+            type uint32 ;
+          }
+          leaf area-type {
+            description 'OSPFv2 area type'
+                        ;
+            type enumeration {
+              enum stub {
+                value 2 ;
+              }
+            }
+            ncd:revise-date 2018-06-06 ;
+          }
+        }
+        ncd:revise-date 2015-04-23 ;
+      }
+      container query-dcn-ospf-redistributes {
+        description 'Query DCN OSPFv3 route redistribution configurations'
+                    ;
+        list query-ospf-redistribute {
+          description 'Query DCN OSPFv3 route redistribution configuration'
+                      ;
+          key protocol ;
+          leaf protocol {
+            description 'Route protocol type'
+                        ;
+            type enumeration {
+              enum sl-nat64-ipv4 {
+                value 27 ;
+              }
+              enum user-special {
+                value 17 ;
+              }
+              enum nat {
+                value 11 ;
+              }
+              enum natpt {
+                value 13 ;
+              }
+              enum subscriber-host {
+                value 12 ;
+              }
+              enum subscriber-aggregation {
+                value 16 ;
+              }
+              enum static {
+                value 1 ;
+              }
+              enum connected {
+                value 2 ;
+              }
+              enum rip {
+                value 3 ;
+              }
+              enum ospf-int {
+                value 4 ;
+              }
+              enum ospf-ext {
+                value 5 ;
+              }
+              enum isis-1 {
+                value 6 ;
+              }
+              enum isis-2 {
+                value 7 ;
+              }
+              enum isis-1-2 {
+                value 8 ;
+              }
+              enum bgp-ext {
+                value 9 ;
+              }
+              enum bgp-int {
+                value 10 ;
+              }
+              enum ps-busi-addr {
+                value 14 ;
+              }
+              enum ps-user-addr {
+                value 15 ;
+              }
+            }
+          }
+          leaf process-id {
+            description 'OSPFv2 process ID'
+                        ;
+            type uint32 ;
+          }
+          leaf src-process-id {
+            description 'OSPFv2 source process ID'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf as {
+            description 'AS number of BGP'
+                        ;
+            type ncd:asn-dot ;
+          }
+          leaf peer {
+            description 'IPv4 address of the peer of the BGP external route'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf with-originate-metric {
+            description 'Use originate LSA metric'
+                        ;
+            type uint32 ;
+          }
+          leaf metric {
+            description 'Metric of LSA'
+                        ;
+            type uint32 ;
+          }
+          leaf metric-type {
+            description 'Metric type of LSA'
+                        ;
+            type enumeration {
+              enum ext-2 {
+                value 0 ;
+              }
+              enum ext-1 {
+                value 1 ;
+              }
+            }
+          }
+          leaf route-map {
+            description 'The name of the route map for the current protocol red'
+                      + 'istribution'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf tag {
+            description 'Tag of LSA'
+                        ;
+            type uint32 ;
+          }
+          leaf ip-address {
+            description 'Route IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf ip-mask {
+            description 'Route IPv4 address mask'
+                        ;
+            type ncd:ipv4-mask ;
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf host-only {
+            description 'Whethe redistribute host route only(yes/no),yes: redis'
+                      + 'tribute host routes only'
+                        ;
+            type enumeration {
+              enum host-true {
+                value 1 ;
+                description 'host-only true'
+                            ;
+              }
+              enum host-false {
+                value 0 ;
+                description 'host-only false'
+                            ;
+              }
+            }
+            ncd:revise-date 2019-09-02 ;
+          }
+        }
+      }
+      container query-dcn-ifs {
+        description 'Query the L2, L3 configurations of DCN IPv4 port'
+                    ;
+        list query-dcn-if {
+          description 'Query the L2, L3 configuration of DCN IPv4 port'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf dcn-status {
+            description 'DCN status of the Interface'
+                        ;
+            type enumeration {
+              enum enable {
+                value 0 ;
+              }
+              enum disable {
+                value 1 ;
+              }
+            }
+          }
+          leaf vlanid {
+            description 'Vlan id of the DCN port'
+                        ;
+            type uint16 ;
+          }
+          leaf dcn-port-bandwidth {
+            description 'Bandwidth of the DCN port'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf dcn-port-mac {
+            description 'MAC address of the DCN port'
+                        ;
+            type ncd:mac-address ;
+            ncd:revise-date 2019-05-17 ;
+          }
+          leaf dcn-port-mac-offset {
+            description 'Mac-offset of the DCN port'
+                        ;
+            type uint8 ;
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf dcn-port-ospf-area {
+            description 'OSPFv2 area id of the DCN port'
+                        ;
+            type ncd:ipv4-address ;
+            ncd:revise-date 2015-04-23 ;
+          }
+          leaf dcn-port-ospf-flood {
+            description 'OSPFv2 flood of the DCN port'
+                        ;
+            type enumeration {
+              enum active {
+                value 0 ;
+              }
+              enum passive {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf dcn-port-mode {
+            description 'L3 port work mode of the DCN port'
+                        ;
+            type enumeration {
+              enum eth {
+                value 2 ;
+                description 'port mode is eth'
+                            ;
+              }
+              enum eth-p2p {
+                value 3 ;
+                description 'port mode is eth-p2p'
+                            ;
+              }
+              enum eth-p2mp {
+                value 4 ;
+                description 'port mode is eth-p2mp'
+                            ;
+              }
+              enum pppoe {
+                value 5 ;
+                description 'port mode is pppoe'
+                            ;
+              }
+              enum p2p {
+                value 1 ;
+                description 'port mode is p2p'
+                            ;
+              }
+            }
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf dcn-port-work-mode {
+            description 'L3 port work mode of the DCN port'
+                        ;
+            type enumeration {
+              enum eth {
+                value 2 ;
+                description 'port mode is eth'
+                            ;
+              }
+              enum eth-p2p {
+                value 3 ;
+                description 'port mode is eth-p2p'
+                            ;
+              }
+              enum eth-p2mp {
+                value 4 ;
+                description 'port mode is eth-p2mp'
+                            ;
+              }
+              enum pppoe {
+                value 5 ;
+                description 'port mode is pppoe'
+                            ;
+              }
+            }
+            ncd:revise-date 2019-03-08 ;
+          }
+          leaf dcn-port-ipaddress-type {
+            description 'IPv4 address type of the DCN port'
+                        ;
+            type enumeration {
+              enum unnumbered {
+                value 0 ;
+              }
+              enum numbered {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf dcn-port-ip-address {
+            description 'IPv4 address of the DCN port'
+                        ;
+            type ncd:ipv4-address ;
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf dcn-port-ip-mask {
+            description 'IPv4 address mask of the DCN port'
+                        ;
+            type ncd:ipv4-mask ;
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf dcn-port-inst-number {
+            description 'OSPFv2 process number of DCN port added'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2015-04-23 ;
+          }
+          leaf dcn-port-auth-type {
+            description 'OSPFv2 authentication type of the DCN port'
+                        ;
+            type enumeration {
+              enum null {
+                value 1 ;
+              }
+              enum md5 {
+                value 3 ;
+              }
+            }
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf dcn-port-auth-key {
+            description 'OSPFv2 authentication key of the DCN port'
+                        ;
+            type string {
+              length 0..24 ;
+            }
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf dcn-port-key-delay {
+            description 'Key delay'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2018-06-06 ;
+          }
+          leaf ip-vrf-forwarding {
+            description 'Whether the DCN port is join VRF group(TRUE/FALSE)'
+                        ;
+            type uint8 ;
+          }
+          leaf ip-address {
+            description 'IPv4 address of the DCN port'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ip-mask {
+            description 'IPv4 address mask of the DCN port'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+        }
+      }
+      container query-dcn-vlan-ifs {
+        description 'Query the DCN configurations of VLAN sub interfaces'
+                    ;
+        list query-dcn-vlan-if {
+          description 'Query the DCN configuration of VLAN sub interface'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf ip-address {
+            description 'IPv4 address of the interface'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ip-mask {
+            description 'IPv4 address mask of the interface'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          leaf if-ospf-enable {
+            description 'OSPF enable status of the interface'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+              }
+              enum enable {
+                value 1 ;
+              }
+            }
+          }
+          leaf if-ospf-area {
+            description 'OSPF area of the interface'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf if-ospf-flood {
+            description 'OSPF flood of the interface'
+                        ;
+            type enumeration {
+              enum active {
+                value 0 ;
+              }
+              enum passive {
+                value 1 ;
+              }
+            }
+          }
+          leaf ip-vrf-forwarding {
+            description 'Whether the DCN port is join VRF group(TRUE/FALSE)'
+                        ;
+            type uint8 ;
+          }
+          leaf if-inst-number {
+            description 'OSPFv2 process number of DCN port'
+                        ;
+            type uint32 ;
+          }
+        }
+        ncd:revise-date 2019-09-02 ;
+      }
+      container query-dcn-ipv6-ifs {
+        description 'Query IPv6 configurations of DCN interfaces'
+                    ;
+        list query-dcn-extern-if {
+          description 'Query IPv6 configuration of DCN interfaces'
+                      ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf ipv6-address-type {
+            description 'IPv6 address type of the interface'
+                        ;
+            type enumeration {
+              enum link-local {
+                value 1 ;
+              }
+              enum manaul {
+                value 2 ;
+              }
+            }
+          }
+          leaf ipv6-address {
+            description 'IPv6 address of the interface'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf prefix-length {
+            description 'IPv6 address prefix-length of the interface'
+                        ;
+            type uint8 {
+              range 0..128 ;
+            }
+          }
+          choice if-area-id {
+            description 'The OSPFv3 area of the interface'
+                        ;
+            case number-format {
+              description 'OSPFv3 area in number format'
+                          ;
+              leaf number {
+                description 'OSPFv3 area in number format'
+                            ;
+                type uint32 {
+                  range 0..4294967295 {
+                    description 'ospf area id range'
+                                ;
+                  }
+                }
+              }
+            }
+            case ip-format {
+              description 'OSPFv3 area in IP address format'
+                          ;
+              leaf ip {
+                description 'OSPFv3 area in IP address format'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          leaf ospfv3-flood-passive {
+            description 'Ospfv3 flood passive of the interface'
+                        ;
+            type enumeration {
+              enum active {
+                value 0 ;
+              }
+              enum passive {
+                value 1 ;
+              }
+            }
+          }
+          leaf ospfv3-inst-number {
+            description 'OSPFv3 instance number of the interface'
+                        ;
+            type uint8 {
+              range 0..31 ;
+            }
+          }
+        }
+        list query-dcn-if-ipv6 {
+          description 'Query the L2, L3 configuration of DCN IPv4 port'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name'
+                        ;
+            type string ;
+          }
+          leaf dcn-status {
+            description 'DCN enable status of the Interface'
+                        ;
+            type enumeration {
+              enum enable {
+                value 0 ;
+              }
+              enum disable {
+                value 1 ;
+              }
+            }
+          }
+          leaf vlanid {
+            description 'Vlan id of the DCN port'
+                        ;
+            type uint16 ;
+          }
+          leaf dcn-port-mac-offset {
+            description 'Mac-offset the DCN port'
+                        ;
+            type uint8 ;
+          }
+          leaf dcn-port-ipv6-address-type {
+            description 'IPv6 address type the DCN port'
+                        ;
+            type enumeration {
+              enum link-local {
+                value 1 ;
+              }
+            }
+          }
+          leaf dcn-port-ipv6-address {
+            description 'IPv6 address of the DCN port'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf dcn-port-ospfv3-area {
+            description 'OSPFv3 area ID of the DCN port'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf dcn-port-ospfv3-flood {
+            description 'OSPFv3 flood of the DCN port'
+                        ;
+            type enumeration {
+              enum active {
+                value 0 ;
+              }
+              enum passive {
+                value 1 ;
+              }
+            }
+          }
+          leaf dcn-port-ospfv3-inst-number {
+            description 'OSPFv3 instance number of the DCN port'
+                        ;
+            type uint32 ;
+          }
+          ncd:revise-date 2020-04-08 ;
+        }
+        ncd:revise-date 2019-08-08 ;
+      }
+      container query-dcn-special-ifs {
+        description 'Query the DCN configurations of special ports(Only Qx port'
+                  + ' is supported )'
+                    ;
+        list query-dcn-special-if {
+          description 'Query the DCN configuration of special port(Only Qx port'
+                    + ' is supported )'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Special interface name'
+                        ;
+            type string ;
+          }
+          leaf ip-vrf-forwarding {
+            description 'Whether the DCN port is join VRF group(TRUE/FALSE)'
+                        ;
+            type uint8 ;
+          }
+          leaf ip-address {
+            description 'IPv4 address of the interface'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ip-mask {
+            description 'IPv4 address mask of the interface'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+        }
+      }
+      container query-dcn-ifs-neighbor {
+        description 'Query DCN neighbor informations'
+                    ;
+        list query-dcn-if-neighbor {
+          description 'Query DCN neighbor informations'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'The output interface of this device'
+                        ;
+            type string ;
+          }
+          leaf neighbor-dcn-status {
+            description 'Neighbor DCN status'
+                        ;
+            type enumeration {
+              enum enable {
+                value 0 ;
+              }
+              enum disable {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2015-05-06 ;
+          }
+          leaf neighbor-ip-address {
+            description 'Neighbor IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+            ncd:revise-date 2015-05-06 ;
+          }
+          leaf neighbor-ip-mask {
+            description 'Neighbor IPv4 address mask'
+                        ;
+            type ncd:ipv4-mask ;
+            ncd:revise-date 2015-05-06 ;
+          }
+          leaf neighbor-protocol {
+            description 'Neighbor interface protocol status'
+                        ;
+            type enumeration {
+              enum up {
+                value 0 ;
+              }
+              enum down {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2015-05-06 ;
+          }
+          leaf neighbor-dcn-mode {
+            description 'Neighbor DCN network mode'
+                        ;
+            type enumeration {
+              enum eth-p2p {
+                value 1 ;
+                description 'DCN mode is eth-p2p'
+                            ;
+              }
+              enum eth-p2p-auto {
+                value 3 ;
+                description 'DCN mode is eth-p2p-auto'
+                            ;
+              }
+              enum pppoe-auto {
+                value 4 ;
+                description 'DCN mode is pppoe-auto'
+                            ;
+              }
+              enum eth-p2mp-auto {
+                value 5 ;
+                description 'DCN mode is eth-p2mp-auto'
+                            ;
+              }
+            }
+            ncd:revise-date 2017-11-28 ;
+          }
+          leaf neighbor-qx-ip-address {
+            description 'IPv4 address of neighbor Qx port'
+                        ;
+            type ncd:ipv4-address ;
+            ncd:revise-date 2018-10-26 ;
+          }
+          leaf neighbor-qx-ip-mask {
+            description 'IPv4 address mask of neighbor Qx port'
+                        ;
+            type ncd:ipv4-mask ;
+            ncd:revise-date 2018-10-26 ;
+          }
+          leaf neighbor-qx-ospf-enable {
+            description 'OSPF enable state of neighbor Qx port'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+              }
+              enum enable {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2018-10-26 ;
+          }
+          leaf neighbor-qx-ospf-area {
+            description 'OSPFv2 area number of neighbor Qx port'
+                        ;
+            type ncd:ipv4-address ;
+            ncd:revise-date 2018-10-26 ;
+          }
+          leaf neighbor-qx-ospf-flood {
+            description 'Ospfv2 flood of neighbor Qx'
+                        ;
+            type enumeration {
+              enum active {
+                value 0 ;
+              }
+              enum passive {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2018-10-26 ;
+          }
+          leaf neighbor-qx-mac {
+            description 'MAC address of neighbor Qx port'
+                        ;
+            type ncd:mac-address ;
+            ncd:revise-date 2018-10-26 ;
+          }
+          container neighbor-route-aggrs {
+            description 'Query routing aggregation configurations of DCN neighb'
+                      + 'ors'
+                        ;
+            list neighbor-route-aggr {
+              description 'Query routing aggregation configuration of DCN neigh'
+                        + 'bor'
+                          ;
+              key nbr-area-id ;
+              leaf nbr-area-id {
+                description 'OSPFv2 area number'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf nbr-routeaggr-ip {
+                description 'Route aggregation IPv4 address'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf nbr-routeaggr-mask {
+                description 'Route aggregation IPv4 mask'
+                            ;
+                type ncd:ipv4-mask ;
+              }
+              leaf nbr-range-type {
+                description 'OSPFv2 LSA range type'
+                            ;
+                type enumeration {
+                  enum nssa-external-link {
+                    value 0 ;
+                  }
+                  enum summary-link {
+                    value 1 ;
+                  }
+                }
+              }
+              leaf nbr-instance-number {
+                description 'OSPFv2 instance number'
+                            ;
+                type uint32 ;
+                ncd:revise-date 2018-06-06 ;
+              }
+            }
+            ncd:revise-date 2017-11-28 ;
+          }
+          container neighbor-ospf-stubs {
+            description 'Query OSPFv2 stub area configurations of DCN neighbors'
+                        ;
+            list neighbor-ospf-stub {
+              description 'Query OSPFv2 stub area configuration of DCN neighbor'
+                          ;
+              key nbr-area-id ;
+              leaf nbr-area-id {
+                description 'OSPFv2 area number'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf nbr-inst-number {
+                description 'OSPFv2 instance number'
+                            ;
+                type uint32 ;
+              }
+              leaf nbr-no-summary {
+                description 'Whether the stub area notifies inter area routing('
+                          + '0/1),1: No notice 0: Notice'
+                            ;
+                type uint8 ;
+              }
+              leaf nbr-cost {
+                description 'Stub area default cost'
+                            ;
+                type uint32 ;
+              }
+              leaf nbr-area-type {
+                description 'OSPFv2 area type'
+                            ;
+                type enumeration {
+                  enum stub {
+                    value 2 ;
+                  }
+                }
+                ncd:revise-date 2018-06-06 ;
+              }
+            }
+            ncd:revise-date 2017-11-28 ;
+          }
+          container neighbor-static-routes {
+            description 'Query IPv4 static route configurations of DCN neighbors'
+                        ;
+            list neighbor-static-route {
+              description 'Query IPv4 static route configuration of DCN neighbor'
+                          ;
+              key 'nbr-ip-address nbr-ip-mask nbr-next-hop'
+                  ;
+              leaf nbr-ip-address {
+                description 'Destination IPv4 address'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf nbr-ip-mask {
+                description 'Destination IPv4 address prefix length'
+                            ;
+                type ncd:ipv4-mask ;
+              }
+              leaf nbr-next-hop {
+                description 'NextHop IPv4 address'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+            ncd:revise-date 2018-06-06 ;
+          }
+          list neighbor-if {
+            description 'Query DCN port configurations of DCN neighbors'
+                        ;
+            key 'neighbor-if-shelf neighbor-if-slot neighbor-if-subslot neighbo'
+              + 'r-if-port'
+                ;
+            leaf neighbor-if-shelf {
+              description 'Neighbor interface shelf'
+                          ;
+              type uint8 ;
+            }
+            leaf neighbor-if-slot {
+              description 'Neighbor interface slot'
+                          ;
+              type uint8 ;
+            }
+            leaf neighbor-if-subslot {
+              description 'Neighbor interface subslot'
+                          ;
+              type uint8 ;
+            }
+            leaf neighbor-if-port {
+              description 'Neighbor interface port'
+                          ;
+              type uint32 ;
+            }
+            leaf neighbor-if-port-type {
+              description 'Neighbor interface port type'
+                          ;
+              type uint16 ;
+            }
+            leaf neighbor-if-dcn-status {
+              description 'Neighbor interface dcn status'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 0 ;
+                }
+                enum disable {
+                  value 1 ;
+                }
+              }
+            }
+            leaf neighbor-if-vlan {
+              description 'Neighbor interface vlan'
+                          ;
+              type uint16 ;
+            }
+            leaf neighbor-if-bandwidth {
+              description 'Bandwidth of the DCN port'
+                          ;
+              type uint32 ;
+              ncd:revise-date 2018-06-06 ;
+            }
+            leaf neighbor-if-mac {
+              description 'MAC address of the DCN port'
+                          ;
+              type ncd:mac-address ;
+              ncd:revise-date 2018-06-06 ;
+            }
+            leaf neighbor-if-port-mode {
+              description 'L3 port mode of the DCN port'
+                          ;
+              type enumeration {
+                enum p2p {
+                  value 1 ;
+                  description 'port mode is p2p'
+                              ;
+                }
+                enum eth {
+                  value 2 ;
+                  description 'port mode is eth'
+                              ;
+                }
+                enum eth-p2p {
+                  value 3 ;
+                  description 'port mode is eth-p2p'
+                              ;
+                }
+                enum eth-p2mp {
+                  value 4 ;
+                  description 'port mode is eth-p2mp'
+                              ;
+                }
+                enum pppoe {
+                  value 5 ;
+                  description 'port mode is pppoe'
+                              ;
+                }
+              }
+              ncd:revise-date 2018-06-06 ;
+            }
+            leaf neighbor-if-ipaddress-type {
+              description 'IPv4 address type of the DCN port'
+                          ;
+              type enumeration {
+                enum unnumbered {
+                  value 0 ;
+                }
+                enum numbered {
+                  value 1 ;
+                }
+              }
+              ncd:revise-date 2018-06-06 ;
+            }
+            leaf neighbor-if-ip-address {
+              description 'IPv4 address of the DCN port'
+                          ;
+              type ncd:ipv4-address ;
+              ncd:revise-date 2018-06-06 ;
+            }
+            leaf neighbor-if-ip-mask {
+              description 'IPv4 address mask of the DCN port'
+                          ;
+              type ncd:ipv4-mask ;
+              ncd:revise-date 2018-06-06 ;
+            }
+            leaf neighbor-if-ospf-area {
+              description 'OSPFv2 area of the DCN port'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf neighbor-if-inst-number {
+              description 'OSPFv2 instance number of the DCN port'
+                          ;
+              type uint32 ;
+            }
+            ncd:revise-date 2015-05-06 ;
+          }
+        }
+        list query-dcn-if-neighbor-ipv6 {
+          description 'Query DCN neighbor IPv6 address configuration'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'The output interface of this device'
+                        ;
+            type string ;
+          }
+          leaf neighbor-ipv6-address {
+            description 'Neighbor IPv6 address'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf neighbor-prefix-length {
+            description 'Neighbor IPv6 address prefix-length'
+                        ;
+            type ncd:ipv6-mask-length ;
+          }
+          ncd:revise-date 2019-08-08 ;
+        }
+      }
+      container query-dcn-vertexs {
+        description 'Query the DCN informations of all class A devices in the D'
+                  + 'CN network'
+                    ;
+        list query-dcn-vertex {
+          description 'Query the DCN information of class A devices in the DCN '
+                    + 'network'
+                      ;
+          key 'pro-id ne-ipv4'
+              ;
+          leaf pro-id {
+            description 'Process ID'
+                        ;
+            type uint32 ;
+          }
+          leaf ne-ipv4 {
+            description 'Network equipment IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ne-id {
+            description 'Network equipment id'
+                        ;
+            type uint32 ;
+          }
+          leaf ne-type {
+            description 'Network equipment type'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf ne-name {
+            description 'Network equipment name'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf ne-mac {
+            description 'Network equipment MAC address'
+                        ;
+            type ncd:mac-address ;
+          }
+          leaf ne-ipv6 {
+            description 'Network equipment IPv6 address'
+                        ;
+            type ncd:ipv6-address ;
+          }
+        }
+      }
+      container query-dcn-static-routes {
+        description 'Query DCN IPv4 static routing configurations'
+                    ;
+        list query-dcn-static-route {
+          description 'Query DCN IPv4 static routing configuration'
+                      ;
+          key 'ip-address ip-mask next-hop'
+              ;
+          leaf ip-address {
+            description 'Destination IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ip-mask {
+            description 'Destination IPv4 address mask'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          leaf next-hop {
+            description 'NextHop IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf bfd-flag {
+            description 'Whether enable BFD detection(enable/diable)'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 0 ;
+              }
+            }
+            ncd:revise-date 2020-07-20 ;
+          }
+        }
+      }
+      container query-dcn-ipv6-static-routes {
+        description 'Query DCN IPv6 static routing configurations'
+                    ;
+        list query-dcn-static-route {
+          description 'Query DCN IPv6 static routing configuration'
+                      ;
+          key 'ipv6-address prefix-length next-hop'
+              ;
+          leaf ipv6-address {
+            description 'Destination IPv6 address'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf prefix-length {
+            description 'Destination IPv6 address prefix length'
+                        ;
+            type ncd:ipv6-mask-length {
+              range 0..128 ;
+            }
+          }
+          leaf next-hop {
+            description 'NextHop IPv6 address'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf bfd-flag {
+            description 'Whether enable BFD detection(enable/diable)'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 0 ;
+              }
+            }
+            ncd:revise-date 2020-07-20 ;
+          }
+        }
+        ncd:revise-date 2019-08-08 ;
+      }
+      container query-dcn-ping-detects {
+        description 'Query DCN Ping detection configurations'
+                    ;
+        list query-dcn-ping-detect {
+          description 'Query DCN Ping detection configuration'
+                      ;
+          key id ;
+          leaf id {
+            description 'Ping detection ID number'
+                        ;
+            type uint8 ;
+          }
+          leaf target-ip-address {
+            description 'Target IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+            ncd:revise-date 2019-11-07 ;
+          }
+          leaf dest-ip-address {
+            description 'Destination IPv4 address of the static route'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf dest-ip-mask {
+            description 'Destination IPv4 address mask of the static route'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          leaf nexthop-ip-address {
+            description 'NextHop IPv4 address mask of the static route'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf src-ip-address {
+            description 'Source IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf interval {
+            description 'Time interval (seconds)'
+                        ;
+            type uint8 ;
+          }
+          leaf timeout {
+            description 'Timeout (seconds)'
+                        ;
+            type uint8 ;
+          }
+          leaf retry {
+            description 'Retry count'
+                        ;
+            type uint8 ;
+          }
+          leaf instance-number {
+            description 'OSPFv2 instance number'
+                        ;
+            type uint32 ;
+          }
+        }
+        ncd:revise-date 2018-06-06 ;
+      }
+      container query-dcn-ospfv3-process {
+        description 'Query DCN OSPFv3 process configurations'
+                    ;
+        list query-ospfv3-process {
+          description 'Query DCN OSPFv3 process configuration'
+                      ;
+          key ospfv3-process-id ;
+          leaf ospfv3-process-id {
+            description 'OSPFv3 instance number'
+                        ;
+            type uint32 ;
+          }
+          leaf ospfv3-router-id {
+            description 'OSPFv3 router ID'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ospfv3-notify-flag {
+            description 'ospfv3 notify flag(notify-true/notify-false)'
+                        ;
+            type enumeration {
+              enum notify-true {
+                value 1 ;
+              }
+              enum notify-false {
+                value 0 ;
+              }
+            }
+            ncd:revise-date 2020-05-29 ;
+          }
+        }
+        ncd:revise-date 2020-04-08 ;
+      }
+      container query-dcn-ospfv3-area-stubs {
+        description 'Query DCN OSPFv3 stub area configurations'
+                    ;
+        list query-dcn-ospfv3-area-stub {
+          description 'Query DCN OSPFv3 stub area configuration'
+                      ;
+          key 'ospfv3-area ospfv3-instance-number'
+              ;
+          leaf ospfv3-area {
+            description 'OSPFv3 area number'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ospfv3-instance-number {
+            description 'OSPFv3 area instance number'
+                        ;
+            type uint32 ;
+          }
+          leaf no-summary {
+            description 'Forbid sending 3-LSA to stub area(true/false)'
+                        ;
+            type uint8 ;
+          }
+          leaf default-cost {
+            description 'Stub area default cost'
+                        ;
+            type uint32 ;
+          }
+          leaf ospfv3-area-type {
+            description 'OSPFv3 area type'
+                        ;
+            type enumeration {
+              enum stub {
+                value 2 ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2020-04-08 ;
+      }
+      container query-dcn-ospfv3-route-aggrs {
+        description 'Query DCN OSPFv3 Routing aggregation configurations'
+                    ;
+        list query-ospfv3-route-aggr {
+          description 'Query DCN OSPFv3 Routing aggregation configuration'
+                      ;
+          key 'area-id ipv6-address prefix-length instance-number'
+              ;
+          leaf area-id {
+            description 'OSPFv3 area number'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ipv6-address {
+            description 'OSPFv3 route aggregation IPv6 address'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf prefix-length {
+            description 'OSPFv3 route aggregation IPv6 prefix-length'
+                        ;
+            type ncd:ipv6-mask-length {
+              range 0..128 ;
+            }
+          }
+          leaf instance-number {
+            description 'OSPFv3 instance number'
+                        ;
+            type uint32 ;
+          }
+        }
+        ncd:revise-date 2020-04-08 ;
+      }
+      container query-dcn-ospfv3-redistributes {
+        description 'Query DCN OSPFv3 route redistribution configurations'
+                    ;
+        list query-ospfv3-redistribute {
+          description 'Query DCN OSPFv3 route redistribution configuration'
+                      ;
+          key protocol ;
+          leaf protocol {
+            description 'Route protocol type'
+                        ;
+            type enumeration {
+              enum static {
+                value 1 ;
+              }
+              enum connected {
+                value 2 ;
+              }
+              enum ospf {
+                value 4 ;
+              }
+            }
+          }
+          leaf ospfv3-id {
+            description 'OSPFv3 process ID'
+                        ;
+            type uint32 ;
+          }
+          leaf src-ospfv3-id {
+            description 'Source OSPFv3 process ID'
+                        ;
+            type uint32 ;
+          }
+          leaf metric {
+            description 'Metric value'
+                        ;
+            type uint32 ;
+          }
+          leaf metric-type {
+            description 'Metric type'
+                        ;
+            type enumeration {
+              enum ext-2 {
+                value 0 ;
+              }
+              enum ext-1 {
+                value 1 ;
+              }
+            }
+          }
+          leaf host-only {
+            description 'Whethe redistribute host route only(yes/no),yes: redis'
+                      + 'tribute host routes only'
+                        ;
+            type enumeration {
+              enum host-true {
+                value 1 ;
+                description 'host-only true'
+                            ;
+              }
+              enum host-false {
+                value 0 ;
+                description 'host-only false'
+                            ;
+              }
+            }
+          }
+          leaf ipv6-address {
+            description 'Route IPv6 address'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf prefix-length {
+            description 'Route IPv6 prefix-length'
+                        ;
+            type ncd:ipv6-mask-length {
+              range 0..128 ;
+            }
+          }
+        }
+        ncd:revise-date 2020-05-29 ;
+      }
+    }
+  }
+}

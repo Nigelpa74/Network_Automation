@@ -1,0 +1,155 @@
+module zxr10-ietf-netconf-acm-devations {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ietf-netconf-acm-'
+          + 'devations'
+            ;
+  prefix nacm-devs ;
+  import ietf-netconf-acm {
+    prefix nacm ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'Devations and augment for ietf-netconf-acm module.'
+              ;
+  revision 2021-04-16 {
+    description 'Initial version'
+                ;
+    reference 'RFC 6536: Network Configuration Protocol (NETCONF)'+"\n"
+            + 'Access Control Model'
+              ;
+  }
+  deviation /nacm:nacm/nacm:enable-nacm {
+    deviate replace {
+      default false ;
+    }
+  }
+  deviation /nacm:nacm/nacm:enable-external-groups {
+    deviate not-supported ;
+  }
+  deviation /nacm:nacm/nacm:groups/nacm:group/nacm:name {
+    deviate replace {
+      type nacm:group-name-type {
+        length 1..32 ;
+      }
+    }
+  }
+  deviation /nacm:nacm/nacm:groups/nacm:group/nacm:user-name {
+    deviate replace {
+      type nacm:user-name-type {
+        length 1..128 ;
+      }
+    }
+    deviate add {
+      max-elements 128 ;
+    }
+  }
+  deviation /nacm:nacm/nacm:rule-list/nacm:name {
+    deviate replace {
+      type string {
+        length 1..32 ;
+      }
+    }
+  }
+  deviation /nacm:nacm/nacm:rule-list/nacm:group {
+    deviate replace {
+      type union {
+        type nacm:matchall-string-type ;
+        type nacm:group-name-type {
+          length 1..32 ;
+        }
+      }
+    }
+    deviate add {
+      max-elements 128 ;
+    }
+  }
+  deviation /nacm:nacm/nacm:rule-list/nacm:rule/nacm:name {
+    deviate replace {
+      type string {
+        length 1..32 ;
+      }
+    }
+  }
+  deviation /nacm:nacm/nacm:rule-list/nacm:rule/nacm:module-name {
+    deviate replace {
+      type union {
+        type nacm:matchall-string-type ;
+        type string {
+          length 1..127 ;
+        }
+      }
+    }
+  }
+  deviation '/nacm:nacm/nacm:rule-list/nacm:rule/nacm:rule-type/nacm:protocol-o'
+          + 'peration/nacm:rpc-name'
+            {
+    deviate replace {
+      type union {
+        type nacm:matchall-string-type ;
+        type string {
+          length 1..63 ;
+        }
+      }
+    }
+  }
+  deviation '/nacm:nacm/nacm:rule-list/nacm:rule/nacm:rule-type/nacm:notificati'
+          + 'on/nacm:notification-name'
+            {
+    deviate replace {
+      type union {
+        type nacm:matchall-string-type ;
+        type string {
+          length 1..63 ;
+        }
+      }
+    }
+  }
+  deviation '/nacm:nacm/nacm:rule-list/nacm:rule/nacm:rule-type/nacm:data-node/'
+          + 'nacm:path'
+            {
+    deviate replace {
+      type nacm:node-instance-identifier {
+        length 1..254 ;
+      }
+    }
+  }
+  deviation /nacm:nacm/nacm:rule-list/nacm:rule/nacm:comment {
+    deviate replace {
+      type string {
+        length 1..255 ;
+      }
+    }
+  }
+  deviation /nacm:nacm/nacm:rule-list {
+    deviate add {
+      max-elements 64 ;
+    }
+  }
+  deviation /nacm:nacm/nacm:rule-list/nacm:rule {
+    deviate add {
+      max-elements 256 ;
+    }
+  }
+  deviation /nacm:nacm/nacm:groups/nacm:group {
+    deviate add {
+      max-elements 128 ;
+    }
+  }
+  augment /nacm:nacm {
+    container recovery-user {
+      description 'The session created by recovery user belong to emergency rec'
+                + 'overy session.'
+                  ;
+      leaf user-name {
+        description user-name ;
+        type string {
+          length 1..128 ;
+        }
+      }
+    }
+  }
+}

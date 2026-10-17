@@ -1,0 +1,272 @@
+module zxr10-timerange {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/timerange'
+            ;
+  prefix timerange ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the TIMERANGE.'
+              ;
+  revision 2015-07-28 {
+    description 'Remove config attribute of all state nodes.'
+                ;
+  }
+  revision 2015-01-19 {
+    description "Modify enum value of 'configuration/timerange/global-configura"
+              + "tion/instances/instance/period-non-endday-rules/non-endday-rul"
+              + "e/startday' from 0-9 to 0,8,9"
+                ;
+  }
+  revision 2014-07-01 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'The configuration model of TIMERANGE.'
+                ;
+    container timerange {
+      description 'The configuration model of TIMERANGE.'
+                  ;
+      container global-configuration {
+        description 'The global configuration model of TIMERANGE.'
+                    ;
+        container enable {
+          description 'To configure status of enable.'
+                      ;
+          leaf status {
+            description 'Status of enable.'
+                        ;
+            type enumeration {
+              enum off {
+                value 0 ;
+                description 'config disable status.'
+                            ;
+              }
+              enum on {
+                value 1 ;
+                description 'config enable status.'
+                            ;
+              }
+            }
+          }
+        }
+        container instances {
+          description 'Instances of TIMERANGE.'
+                      ;
+          list instance {
+            description 'Instance of TIMERANGE.'
+                        ;
+            key name ;
+            max-elements 2048 ;
+            leaf name {
+              description 'Name of TIMERANGE instance.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+            }
+            container absolute-rule {
+              description 'To configure absolute time rule.'
+                          ;
+              container startdate {
+                description 'To configure start date.'
+                            ;
+                presence 'Mandatory leafs are included.'
+                         ;
+                leaf startday {
+                  description 'To configure start day.'
+                              ;
+                  type ncd:date ;
+                  mandatory true ;
+                }
+                leaf starttime {
+                  description 'To configure start time.'
+                              ;
+                  type ncd:time ;
+                  mandatory true ;
+                }
+              }
+              container enddate {
+                description 'To configure end date.'
+                            ;
+                presence 'Mandatory leafs are included.'
+                         ;
+                leaf endday {
+                  description 'To configure end day.'
+                              ;
+                  type ncd:date ;
+                  mandatory true ;
+                }
+                leaf endtime {
+                  description 'To configure end time.'
+                              ;
+                  type ncd:time ;
+                  mandatory true ;
+                }
+              }
+            }
+            container period-endday-exist-rules {
+              description 'To configure period rule which end day exists.'
+                          ;
+              list endday-exist-rule {
+                description 'To configure period rule which end day exists.'
+                            ;
+                key 'startday daytime-begin endday daytime-end'
+                    ;
+                max-elements 2048 ;
+                leaf startday {
+                  description 'Day of start.'
+                              ;
+                  type enumeration {
+                    enum Monday {
+                      value 1 ;
+                    }
+                    enum Tuesday {
+                      value 2 ;
+                    }
+                    enum Wednesday {
+                      value 3 ;
+                    }
+                    enum Thursday {
+                      value 4 ;
+                    }
+                    enum Friday {
+                      value 5 ;
+                    }
+                    enum Saturday {
+                      value 6 ;
+                    }
+                    enum Sunday {
+                      value 7 ;
+                    }
+                  }
+                }
+                leaf daytime-begin {
+                  description 'Time of begin.'
+                              ;
+                  type ncd:time ;
+                }
+                leaf endday {
+                  description 'Day of end.'
+                              ;
+                  type enumeration {
+                    enum Monday {
+                      value 1 ;
+                    }
+                    enum Tuesday {
+                      value 2 ;
+                    }
+                    enum Wednesday {
+                      value 3 ;
+                    }
+                    enum Thursday {
+                      value 4 ;
+                    }
+                    enum Friday {
+                      value 5 ;
+                    }
+                    enum Saturday {
+                      value 6 ;
+                    }
+                    enum Sunday {
+                      value 7 ;
+                    }
+                  }
+                }
+                leaf daytime-end {
+                  description 'Time of end.'
+                              ;
+                  type ncd:time ;
+                }
+              }
+            }
+            container period-non-endday-rules {
+              description 'To configure period rule which has no end day.'
+                          ;
+              list non-endday-rule {
+                description 'To configure period rule which has no end day.'
+                            ;
+                key 'startday daytime-begin daytime-end'
+                    ;
+                max-elements 2048 ;
+                leaf startday {
+                  description 'Day of start.'
+                              ;
+                  type enumeration {
+                    enum Weekdays {
+                      value 0 ;
+                      description 'From Monday to Friday.'
+                                  ;
+                    }
+                    enum Weekend {
+                      value 8 ;
+                      description 'Saturday and Sunday.'
+                                  ;
+                    }
+                    enum Daily {
+                      value 9 ;
+                      description 'From Monday to Sunday.'
+                                  ;
+                    }
+                  }
+                }
+                leaf daytime-begin {
+                  description 'Time of begin.'
+                              ;
+                  type ncd:time ;
+                }
+                leaf daytime-end {
+                  description 'Time of end.'
+                              ;
+                  type ncd:time ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    description 'The state model of TIMERANGE.'
+                ;
+    config false ;
+    container timerange {
+      description 'The state model of TIMERANGE.'
+                  ;
+      list state-info {
+        description 'State of time range information.'
+                    ;
+        key name ;
+        max-elements 2048 ;
+        leaf name {
+          description 'Name of time range.'
+                      ;
+          type string {
+            length 1..31 ;
+          }
+        }
+        leaf state {
+          description 'State of time range.'
+                      ;
+          type enumeration {
+            enum inactive {
+              value 0 ;
+            }
+            enum active {
+              value 1 ;
+            }
+          }
+        }
+      }
+    }
+  }
+}

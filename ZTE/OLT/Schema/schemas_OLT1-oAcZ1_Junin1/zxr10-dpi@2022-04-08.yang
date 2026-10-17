@@ -1,0 +1,199 @@
+module zxr10-dpi {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/dpi'
+            ;
+  prefix dpi ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2022-04-08 {
+    description '1. Add typedef dpi-direction.'+"\n"
+              + '2. Add operation container and add operation/dpi/stats-clear-a'
+              + 'pps/stats-clear-app.'+"\n"
+              + '3. Add state container and add state/dpi/dpi-app-stats/dpi-app'
+              + '-stat.'
+                ;
+  }
+  revision 2021-09-16 {
+    description 'Initial version'
+                ;
+  }
+  typedef dpi-direction {
+    type enumeration {
+      enum input {
+        value 1 ;
+        description 'input  Attaches to the input flow'
+                    ;
+      }
+      enum output {
+        value 2 ;
+        description 'output Attaches to the output flow'
+                    ;
+      }
+    }
+    description 'The flow direction, as follows,'+"\n"
+              + '     input  Attaches to the input flow'+"\n"
+              + '     output Attaches to the output flow'
+                ;
+  }
+  container configuration {
+    description 'DPI module configuration model'
+                ;
+    container dpi {
+      description 'DPI module configuration root node'
+                  ;
+      container enable-interfaces {
+        description 'The interface enable DPI.'
+                    ;
+        list enable-interface {
+          description 'The interface enable DPI.'
+                      ;
+          key 'if-name direction'
+              ;
+          leaf if-name {
+            description 'The interface which to be enbled DPI.'
+                        ;
+            type ncd:ifname {
+              length 1..31 ;
+            }
+          }
+          leaf direction {
+            description 'The direction which to be enbled DPI.'
+                        ;
+            type enumeration {
+              enum input {
+                value 1 ;
+              }
+              enum output {
+                value 2 ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description 'Operation model'
+                ;
+    container dpi {
+      description 'Operation about DPI.'
+                  ;
+      container stats-clear-apps {
+        description 'Clear DPI traffic policy statistic data for application.'
+                    ;
+        list stats-clear-app {
+          description 'Clear DPI traffic policy statistic data for application.'
+                      ;
+          key 'if-name direction'
+              ;
+          leaf if-name {
+            description 'The name of interface.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf direction {
+            description 'The direction to clear.'
+                        ;
+            type dpi-direction ;
+          }
+        }
+      }
+    }
+    ncd:revise-date 2022-04-08 ;
+  }
+  container state {
+    config false ;
+    description 'State model'
+                ;
+    container dpi {
+      description 'State about DPI.'
+                  ;
+      container dpi-app-stats {
+        description 'Query DPI application statistics data.'
+                    ;
+        list dpi-app-stat {
+          description 'Query DPI application statistics data.'
+                      ;
+          key 'ifname direction app-name'
+              ;
+          leaf ifname {
+            description 'The name of the attaching interface.'
+                        ;
+            type string {
+              length 1..31 {
+                description 'Name of the attaching interface, support 1-31 char'
+                          + 'acters.'
+                            ;
+              }
+            }
+          }
+          leaf direction {
+            description 'Configure the interface direction, as follows,'+"\n"
+                      + '     input  Attaches to the input interface'+"\n"
+                      + '     output Attaches to the output interface'
+                        ;
+            type enumeration {
+              enum input {
+                value 1 ;
+                description 'Attaches to the input interface.'
+                            ;
+              }
+              enum output {
+                value 2 ;
+                description 'Attaches to the output interface.'
+                            ;
+              }
+            }
+          }
+          leaf app-name {
+            description 'Set application name, support 1-31 characters.'
+                        ;
+            type string {
+              length 1..31 {
+                description 'Name of the application, support 1-31 characters.'
+                            ;
+              }
+            }
+          }
+          leaf transmit-pkts {
+            description 'The transmit packtes.'
+                        ;
+            type uint64 ;
+          }
+          leaf transmit-octets {
+            description 'The transmit octets.'
+                        ;
+            type uint64 ;
+            units byte ;
+          }
+          leaf transmit-pkts-rate {
+            description 'The transmit packtes rate.'
+                        ;
+            type uint64 ;
+            units pps ;
+          }
+          leaf transmit-octets-rate {
+            description 'The transmit octets rate.'
+                        ;
+            type uint64 ;
+            units bps ;
+          }
+          ncd:select 'ifname direction'
+                     ;
+          ncd:select 'ifname direction app-name'
+                     ;
+        }
+      }
+    }
+    ncd:revise-date 2022-04-08 ;
+  }
+}

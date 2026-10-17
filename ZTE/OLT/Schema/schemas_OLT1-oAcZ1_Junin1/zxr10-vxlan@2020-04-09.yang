@@ -1,0 +1,1660 @@
+module zxr10-vxlan {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/vxlan'
+            ;
+  prefix vxlan ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe VXLAN.'
+              ;
+  revision 2020-04-09 {
+    description '1.Add a new select evpn-tunnel-id on zxr10-vxlan\state\vxlan\v'
+              + 'xlan-tunnels;'
+                ;
+  }
+  revision 2019-11-19 {
+    description '1.Add a new container vni-instances on zxr10-vxlan\configurati'
+              + 'on\vxlan;'+"\n"
+              + '2.Add a new container nve-instances on zxr10-vxlan\configurati'
+              + 'on\vxlan;'
+                ;
+  }
+  revision 2018-11-29 {
+    description '1.Add a new list tunnel-ipv6-statistics-config on zxr10-vxlan\c'
+              + 'onfiguration\vxlan\tunnel-statistics-configs;'+"\n"
+              + '2.Add a new list tunnel-ipv6-vni-statistics-config on zxr10-vx'
+              + 'lan\configuration\vxlan\tunnel-statistics-configs;'+"\n"
+              + '3.Add a new container statistics on zxr10-vxlan\state\vxlan\vx'
+              + 'lan-tunnels\vxlan-tunnel-ipv6;'+"\n"
+              + '4.Add a new list vxlan-tunnel-ipv6-statistics on zxr10-vxlan\o'
+              + 'peration\vxlan\clear-vxlan-tunnel-statistics.'
+                ;
+  }
+  revision 2018-11-05 {
+    description '1.Add a new list vni-statistics-config on zxr10-vxlan\configur'
+              + 'ation\vxlan\tunnel-statistics-configs;'+"\n"
+              + '2.Add a new container vxlan-statistics on zxr10-vxlan\state\vx'
+              + 'lan;'+"\n"
+              + '3.Add a new list vxlan-statistics on zxr10-vxlan\operation\vxl'
+              + 'an\clear-vxlan-tunnel-statistics.'
+                ;
+  }
+  revision 2018-02-06 {
+    description '1.Add a new list node of vxlan-tunnel-ipv6 on zxr10-vxlan\stat'
+              + 'e\vxlan\vxlan-tunnels.'
+                ;
+  }
+  revision 2017-11-15 {
+    description '1.Delete SWITCH & C600 labels in feature mac-flooding;'+"\n"
+              + '2.Delete SWITCH & C600 labels in feature vxlan-instance-mode;'+"\n"
+              + '3.Delete SWITCH & C600 labels in feature static-tunnel;'+"\n"
+              + '4.Delete SWITCH & C600 labels in feature redundancy-group-bind'
+              + ';'+"\n"
+              + '5.Delete SWITCH & C600 labels in feature vtep-bind;'+"\n"
+              + '6.Delete SWITCH & C600 labels in feature move-dampening.'
+                ;
+  }
+  revision 2017-09-20 {
+    description '1.Add a new container node of move-dampening-policy on zxr10-v'
+              + 'xlan\configuration\vxlan\vxlan-instances\vxlan-instance;'+"\n"
+              + '2.The feature of move-dampening is defined.'
+                ;
+  }
+  revision 2017-09-15 {
+    description '1.The feature of vtep-bind is defined.'+"\n"
+              + '2.The feature of vtep-instance-mode is validated to 15K and T8'
+              + 'K. '+"\n"
+              + '3.All features in the yang of revison 2017-9-15 are validated '
+              + 'to 89 and 89-GM.'
+                ;
+  }
+  revision 2017-05-04 {
+    description '1.Add a new container node of mac-policy on zxr10-vxlan\config'
+              + 'uration\vxlan\vxlan-instances\vxlan-instance;'+"\n"
+              + '2.Add a leaf node of evpn-remote-mac-learning on zxr10-vxlan\c'
+              + 'onfiguration\vxlan\vxlan-instances\vxlan-instance\mac-policy;'+"\n"
+              + '3.Add a leaf node of local-mac-learning on zxr10-vxlan\configu'
+              + 'ration\vxlan\vxlan-instances\vxlan-instance\mac-policy;'+"\n"
+              + '4.Add a leaf node of evpn-remote-mac-receiving on zxr10-vxlan\c'
+              + 'onfiguration\vxlan\vxlan-instances\vxlan-instance\mac-policy;'+"\n"
+              + '5.Add a leaf node of evpn-local-mac-advertising on zxr10-vxlan'
+              + '\configuration\vxlan\vxlan-instances\vxlan-instance\mac-policy'
+              + ';'
+                ;
+  }
+  revision 2017-03-30 {
+    description '1.Add a new choice of ingress-adjust on zxr10-vxlan\configurat'
+              + 'ion\vxlan\vxlan-instances\vxlan-instance\vxlan-map-tables\vxla'
+              + 'n-map-l2interface;'+"\n"
+              + '2.delete a leaf node of ingress-adjust-tag-as-payload on zxr10'
+              + '-vxlan\configuration\vxlan\vxlan-instances\vxlan-instance\vxla'
+              + 'n-map-tables\vxlan-map-l2interface;'
+                ;
+  }
+  revision 2017-01-16 {
+    description '1.Add a leaf node /vxlan:configuration/vxlan:vxlan/vxlan:vxlan'
+              + '-instances/vxlan:vxlan-instance/vxlan:vxlan-route-targets/vxla'
+              + 'n:vxlan-route-target/vxlan:split-horizon-group.'
+                ;
+  }
+  revision 2017-01-10 {
+    description '1.Add four new leaves on vxlan:state/vxlan:vxlan/vxlan:vxlan-t'
+              + 'unnels/vxlan:vxlan-tunnel/vxlan:statistics/vxlan:tunnel-statis'
+              + 'tics/'+"\n"
+              + '2.Add four new leaves on vxlan:state/vxlan:vxlan/vxlan:vxlan-t'
+              + 'unnels/vxlan:vxlan-tunnel/vxlan:statistics/vxlan:tunnel-vni-st'
+              + 'atistics/vxlan:tunnel-vni-statistic/'
+                ;
+  }
+  revision 2016-08-18 {
+    description '1.Delete the container node of map-l2interace on zxr10-vxlan\c'
+              + 'onfiguration\vxlan\vxlan-instances\vxlan-instance\vxlan-map-ta'
+              + 'bles\vxlan-map-l2interface;'+"\n"
+              + '2.Add a new list node of map-l2interace on zxr10-vxlan\configu'
+              + 'ration\vxlan\vxlan-instances\vxlan-instance\vxlan-map-tables\v'
+              + 'xlan-map-l2interface;'
+                ;
+  }
+  revision 2016-07-05 {
+    description "(1)Add feature node mac-flooding, VXLAN-instance-mode, vtep-in"
+              + "stance-mode, static-tunnel, redundancy-group-bind.
+\n(2)Add fe"
+              + "ature attribute mac-flooding on container 'configuration/vxlan"
+              + "/mac-floodings'.
+\n(3)Add feature attribute VXLAN-instance-mod"
+              + "e on container 'configuration/vxlan/vxlan-instances'.
+\n(4)Add"
+              + " feature attribute vtep-instance-mode on container 'configurat"
+              + "ion/vxlan/vtep-instances' and 'configuration/vxlan/vtep-binds'"
+              + ".
+\n(5)Add feature attribute static-tunnel on container 'confi"
+              + "guration/vxlan/static-tunnel-binds'.
+\n(6)Add feature attribut"
+              + "e redundancy-group-bind on container 'configuration/vxlan/redu"
+              + "ndancy-group-binds'."
+                ;
+  }
+  revision 2016-04-26 {
+    description '1.Add range of /vxlan:state/vxlan:vxlan/vxlan:vxlan-tunnels/vx'
+              + 'lan:vxlan-tunnel/vxlan:statistics/vxlan:tunnel-vni-statistics/'
+              + 'vxlan:tunnel-vni-statistic/vxlan:vxlan-id.'+"\n"
+              + '2.Change range of /vxlan:state/vxlan:vxlan/vxlan:vxlan-tunnels'
+              + '/vxlan:vxlan-tunnel/vxlan:statistics/vxlan:tunnel-statistics/v'
+              + 'xlan:in-bytes,/vxlan:state/vxlan:vxlan/vxlan:vxlan-tunnels/vxl'
+              + 'an:vxlan-tunnel/vxlan:statistics/vxlan:tunnel-statistics/vxlan'
+              + ':out-bytes,/vxlan:state/vxlan:vxlan/vxlan:vxlan-tunnels/vxlan:'
+              + 'vxlan-tunnel/vxlan:statistics/vxlan:tunnel-statistics/vxlan:in'
+              + '-packets and /vxlan:state/vxlan:vxlan/vxlan:vxlan-tunnels/vxla'
+              + 'n:vxlan-tunnel/vxlan:statistics/vxlan:tunnel-statistics/vxlan:'
+              + 'out-packets.'
+                ;
+  }
+  revision 2016-04-20 {
+    description '1.Add a new container on zxr10-vxlan\configuration\vxlan\stati'
+              + 'c-tunnel-binds;'+"\n"
+              + '2.Add a new container on zxr10-vxlan\configuration\vxlan\tunne'
+              + 'l-statistics-configs;'+"\n"
+              + '3.Add a new container on zxr10-vxlan\configuration\vxlan\redun'
+              + 'dancy-group-binds;'+"\n"
+              + '4.Add a new leaf on zxr10-vxlan\state\vxlan\vxlan-tunnels\vxla'
+              + 'n-tunnel\static-tunnel-id;'+"\n"
+              + '5.Add a new container on zxr10-vxlan\state\vxlan\vxlan-tunnels'
+              + '\vxlan-tunnel\statistics;'+"\n"
+              + '6.Add a new container on zxr10-vxlan\operation.'
+                ;
+  }
+  revision 2016-04-05 {
+    description '1.Delete the node /vxlan:state/vxlan:vxlan/vxlan:vxlan-tunnels'
+              + '/vxlan:vxlan-tunnel/vxlan:tunnel-type.'+"\n"
+              + '2.Change the name of node /vxlan:state/vxlan:vxlan/vxlan:vxlan'
+              + '-tunnels/vxlan:vxlan-tunnel/vxlan:destination-ip to /vxlan:sta'
+              + 'te/vxlan:vxlan/vxlan:vxlan-tunnels/vxlan:vxlan-tunnel/vxlan:re'
+              + 'mote-ipv4.'+"\n"
+              + '3.Change the name of node /vxlan:state/vxlan:vxlan/vxlan:vxlan'
+              + '-tunnels/vxlan:vxlan-tunnel/vxlan:source-ip to /vxlan:state/vx'
+              + 'lan:vxlan/vxlan:vxlan-tunnels/vxlan:vxlan-tunnel/vxlan:local-i'
+              + 'pv4.'+"\n"
+              + '4.Change the name of node /vxlan:state/vxlan:vxlan/vxlan:vxlan'
+              + '-tunnels/vxlan:vxlan-tunnel/vxlan:tunnel-id to /vxlan:state/vx'
+              + 'lan:vxlan/vxlan:vxlan-tunnels/vxlan:vxlan-tunnel/vxlan:evpn-tu'
+              + 'nnel-id.'
+                ;
+  }
+  revision 2016-03-16 {
+    description '1.Change the name of node /vxlan:configuration/vxlan:vxlan/vxl'
+              + 'an:vxlan-instances/vxlan:vxlan-instance/vxlan:vxlan-route-targ'
+              + 'ets/vxlan:vxlan-route-target/vxlan:rd to rt-value,change the d'
+              + 'escription of this node.'
+                ;
+  }
+  revision 2016-01-08 {
+    description '1.Add container /vxlan:configuration/vxlan:vxlan/vxlan:mac-flo'
+              + 'odings.'+"\n"
+              + '2.Add leaf /vxlan:configuration/vxlan:vxlan/vxlan:vxlan-instan'
+              + 'ces/vxlan:vxlan-instance/vxlan:description.'+"\n"
+              + '3.Add leaf /vxlan:configuration/vxlan:vxlan/vxlan:vxlan-instan'
+              + 'ces/vxlan:vxlan-instance/vxlan:unknow-unicast-drop.'+"\n"
+              + '4.Add leaf /vxlan:configuration/vxlan:vxlan/vxlan:vxlan-instan'
+              + 'ces/vxlan:vxlan-instance/vxlan:filter-vrrp.'+"\n"
+              + '5.Add container /vxlan:configuration/vxlan:vxlan/vxlan:vxlan-i'
+              + 'nstances/vxlan:vxlan-instance/vxlan:vxlan-rd.'+"\n"
+              + '6.Add container /vxlan:configuration/vxlan:vxlan/vxlan:vxlan-i'
+              + 'nstances/vxlan:vxlan-instance/vxlan:vxlan-route-targets.'+"\n"
+              + '7.Add container /vxlan:state.'+"\n"
+              + '8.Obsolete container /vxlan:configuration/vxlan:vxlan/vxlan:vx'
+              + 'lan-instances/vxlan:vxlan-instance/vxlan:vxlan-multicast-ip.'+"\n"
+              + '9.Obsolete container /vxlan:configuration/vxlan:vxlan/vxlan:vx'
+              + 'lan-instances/vxlan:vxlan-instance/vxlan:vxlan-multicast-ipv6.'
+                ;
+  }
+  revision 2015-11-25 {
+    description 'Add container /vxlan:configuration/vxlan:vxlan/vxlan:vxlan-ins'
+              + 'tances/vxlan:vxlan-instance/vxlan:vxlan-multicast-ipv6.'
+                ;
+  }
+  revision 2014-09-16 {
+    description 'Initial version.'
+                ;
+  }
+  feature mac-flooding {
+    description 'This node is used to distinguish whether the MAC flooding func'
+              + 'tion can be enabled.'
+                ;
+  }
+  feature vxlan-instance-mode {
+    description 'This node is used to distinguish whether the VXLAN instance mo'
+              + 'de can be enabled.'
+                ;
+  }
+  feature vtep-instance-mode {
+    description 'This node is used to distinguish whether the vtep instance mod'
+              + 'e can be enabled.'
+                ;
+  }
+  feature static-tunnel {
+    description 'This node is used to distinguish whether static tunnel functio'
+              + 'n can be enabled.'
+                ;
+  }
+  feature redundancy-group-bind {
+    description 'This node is used to distinguish whether redundancy group bind'
+              + ' table function can be enabled.'
+                ;
+  }
+  feature vtep-bind {
+    description 'This node is used to distinguish whether the vtep bind can be '
+              + 'enabled.'
+                ;
+  }
+  feature move-dampening {
+    description 'This node is used to distinguish whether the move dampening po'
+              + 'licy can be enabled.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model info.'
+                ;
+    container vxlan {
+      description 'Configure VXLAN parameters.'
+                  ;
+      container global-config {
+        description 'Global enable configuration of VXLAN.'
+                    ;
+        presence global-config ;
+        leaf global-enable {
+          description 'VXLAN global enble.'
+                      ;
+          type empty ;
+          mandatory true ;
+        }
+      }
+      container mac-floodings {
+        if-feature mac-flooding ;
+        description 'Configuration of MAC flooding.'
+                    ;
+        list mac-flooding {
+          description 'Configuration of MAC flooding.'
+                      ;
+          key 'mac-address vlan-id'
+              ;
+          leaf mac-address {
+            description 'Specific MAC address of MAC flooding.'
+                        ;
+            type ncd:mac-address ;
+          }
+          leaf vlan-id {
+            description 'VLAN ID of MAC flooding.'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must be between 1 to 4094.'
+                            ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2016-01-08 ;
+      }
+      container vxlan-instances {
+        if-feature vxlan-instance-mode ;
+        description 'Configuration of VXLAN instances.'
+                    ;
+        list vxlan-instance {
+          description 'Configuration of VXLAN instance.'
+                      ;
+          key vxlan-id ;
+          leaf vxlan-id {
+            description 'VXLAN ID of VXLAN instance.'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'The value of VXLAN,it must be between 1 to 1677721'
+                          + '5.'
+                            ;
+              }
+            }
+          }
+          leaf description {
+            description 'The description information of VXLAN instance.'
+                        ;
+            type string {
+              length 0..64 {
+                description 'VXLAN instance description information.'
+                            ;
+              }
+            }
+            default ''
+                    ;
+            ncd:revise-date 2016-01-08 ;
+          }
+          leaf unknow-unicast-drop {
+            description 'Unknow unicast drop configuration of VXLAN instance.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Unknown unicast drop enable.'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Unknown unicast drop disable.'
+                            ;
+              }
+            }
+            default enable ;
+            ncd:revise-date 2016-01-08 ;
+          }
+          leaf filter-vrrp {
+            description 'VRRP packets filter configuration of VXLAN instance.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'VRRP packets filter.'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'VRRP packets not filter.'
+                            ;
+              }
+            }
+            default enable ;
+            ncd:revise-date 2016-01-08 ;
+          }
+          container vxlan-multicast-ip {
+            status obsolete {
+              ncd:revise-date 2016-01-08 ;
+            }
+            description 'VXLAN multicast IP address.'
+                        ;
+            presence vxlan-multicast-ip ;
+            leaf multicast-ip {
+              status obsolete {
+                ncd:revise-date 2016-01-08 ;
+              }
+              description 'VXLAN multicast IP address.'
+                          ;
+              type ncd:ipv4-address ;
+              mandatory true ;
+            }
+          }
+          container vxlan-multicast-ipv6 {
+            status obsolete {
+              ncd:revise-date 2016-01-08 ;
+            }
+            description 'VXLAN multicast IPv6 address.'
+                        ;
+            presence vxlan-multicast-ipv6 ;
+            leaf multicast-ipv6 {
+              status obsolete {
+                ncd:revise-date 2016-01-08 ;
+              }
+              description 'VXLAN multicast IPv6 address.'
+                          ;
+              type ncd:ipv6-address ;
+              mandatory true ;
+            }
+            ncd:revise-date 2015-11-25 ;
+          }
+          container vxlan-map-tables {
+            description 'VXLAN map tables.'
+                        ;
+            presence vxlan-map-tables ;
+            choice vxlan-map-types {
+              description 'VXLAN map type choice.'
+                          ;
+              case vxlan-map-vlan {
+                description 'VXLAN map VLAN.'
+                            ;
+                leaf map-type-vlan {
+                  description 'VXLAN map VLAN.'
+                              ;
+                  type enumeration {
+                    enum map-type-vlan1to1 {
+                      value 1 ;
+                      description 'Map type VLAN1:1.'
+                                  ;
+                    }
+                    enum map-type-vlan1ton {
+                      value 2 ;
+                      description 'Map type VLAN1:n.'
+                                  ;
+                    }
+                  }
+                  default map-type-vlan1to1 ;
+                }
+                list map-vlan {
+                  description 'VXLAN map VLAN.'
+                              ;
+                  key vlan-id ;
+                  leaf vlan-id {
+                    description 'VLAN ID.'
+                                ;
+                    type uint16 {
+                      range 1..4094 {
+                        description 'The value of VLAN,it must be between 1 to '
+                                  + '4094.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case vxlan-map-mac {
+                description 'VXLAN map MAC.'
+                            ;
+                leaf map-type-mac {
+                  description 'VXLAN map MAC.'
+                              ;
+                  type empty ;
+                }
+                container map-mac {
+                  description 'VXLAN map MAC.'
+                              ;
+                  presence map-mac ;
+                  leaf mac {
+                    description 'MAC address.'
+                                ;
+                    type ncd:mac-address ;
+                    mandatory true ;
+                  }
+                }
+              }
+              case vxlan-map-l2interface {
+                description 'VXLAN map L2 interface.'
+                            ;
+                leaf map-type-l2interface {
+                  description 'VXLAN map L2 interface.'
+                              ;
+                  type empty ;
+                }
+                list map-l2interface {
+                  description 'VXLAN map L2 interface.'
+                              ;
+                  key interface-name ;
+                  leaf interface-name {
+                    description 'L2 interface name.'
+                                ;
+                    type ncd:ifname ;
+                  }
+                  leaf ingress-adjust-tag-as-payload {
+                    status obsolete {
+                      ncd:revise-date 2017-03-30 ;
+                    }
+                    description 'The ingress tag as payload flag of the etherne'
+                              + 't parameter.'
+                                ;
+                    type enumeration {
+                      enum default {
+                        value 0 ;
+                        description 'Sub-interface means pTag. The others means'
+                                  + ' uTag.'
+                                    ;
+                      }
+                      enum all {
+                        value 1 ;
+                        description 'The ingress tag as payload flag is from ou'
+                                  + 'ter most.'
+                                    ;
+                      }
+                      enum from-sublayer {
+                        value 2 ;
+                        description 'The ingress tag as payload flag is from su'
+                                  + 'b layer.'
+                                    ;
+                      }
+                    }
+                    default default ;
+                  }
+                  choice ingress-adjust {
+                    description 'Configure ingress-adjustment operation'
+                                ;
+                    case tag-as-payload {
+                      description 'The ingress tag as payload flag of the ether'
+                                + 'net parameter.'
+                                  ;
+                      leaf tag-as-payload {
+                        description 'The ingress tag as payload flag of the eth'
+                                  + 'ernet parameter.'
+                                    ;
+                        type enumeration {
+                          enum default {
+                            value 0 ;
+                            description 'Sub-interface means pTag. The others means uTag.'
+                                        ;
+                          }
+                          enum all {
+                            value 1 ;
+                            description 'The ingress tag as payload flag is from outer most.'
+                                        ;
+                          }
+                          enum from-sublayer {
+                            value 2 ;
+                            description 'The ingress tag as payload flag is from sub layer.'
+                                        ;
+                          }
+                        }
+                        default default ;
+                      }
+                    }
+                    ncd:revise-date 2017-03-30 ;
+                  }
+                  ncd:revise-date 2016-08-18 ;
+                }
+              }
+              case vxlan-map-l3interface {
+                description 'VXLAN map L3 interface.'
+                            ;
+                leaf map-type-l3interface {
+                  description 'VXLAN map L3 interface.'
+                              ;
+                  type empty ;
+                }
+                list map-l3interface {
+                  description 'VXLAN map L3 interface.'
+                              ;
+                  key interface-name ;
+                  leaf interface-name {
+                    description 'L3 interface name.'
+                                ;
+                    type ncd:ifname {
+                      length 1..31 {
+                        description 'The length of interface name must be betwe'
+                                  + 'en 1 to 31.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          container vxlan-rd {
+            description 'Information of route distinguisher.'
+                        ;
+            presence vxlan-rd ;
+            leaf rd {
+              description 'The route distinguisher parameter.'
+                          ;
+              type union {
+                type ncd:asn-nn ;
+                type ncd:ipadd-nn ;
+              }
+              mandatory true ;
+            }
+            ncd:revise-date 2016-01-08 ;
+          }
+          container vxlan-route-targets {
+            description 'The configuration of route target.'
+                        ;
+            presence vxlan-route-targets ;
+            list vxlan-route-target {
+              description 'The configuration of route target.'
+                          ;
+              key 'effect-type rt-value'
+                  ;
+              leaf effect-type {
+                description 'The effect type of route target.'
+                            ;
+                type enumeration {
+                  enum export {
+                    value 2 ;
+                    description 'The route target effect type is export.'
+                                ;
+                  }
+                  enum import {
+                    value 3 ;
+                    description 'The route target effect type is import.'
+                                ;
+                  }
+                }
+              }
+              leaf rt-value {
+                description 'The value of RT attribution.'
+                            ;
+                type union {
+                  type ncd:asn-nn ;
+                  type ncd:ipadd-nn ;
+                }
+                ncd:revise-date 2016-03-16 ;
+              }
+              leaf split-horizon-group {
+                description 'Split-horizon group,the range is A-Z.'
+                            ;
+                type string ;
+                ncd:revise-date 2017-01-16 ;
+              }
+            }
+            ncd:revise-date 2016-01-08 ;
+          }
+          container mac-policy {
+            description 'Information of MAC learning policy.'
+                        ;
+            presence mac-policy ;
+            leaf evpn-remote-mac-learning {
+              description 'Remote MAC of EVPN tunnel learning enable.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description Enable ;
+                }
+                enum disable {
+                  value 2 ;
+                  description Disable ;
+                }
+              }
+              default enable ;
+            }
+            leaf evpn-remote-mac-receiving {
+              description 'Remote EVPN tunnel advertise MAC receiving enable.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description Enable ;
+                }
+                enum disable {
+                  value 2 ;
+                  description Disable ;
+                }
+              }
+              default enable ;
+            }
+            leaf evpn-local-mac-advertising {
+              description 'EVPN local MAC advertising enable.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+                enum disable {
+                  value 2 ;
+                }
+              }
+              default enable ;
+            }
+            leaf local-mac-learning {
+              description 'Local MAC learning enable of VXLAN instance.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description Enable ;
+                }
+                enum disable {
+                  value 2 ;
+                  description Disable ;
+                }
+              }
+              default enable ;
+            }
+            ncd:revise-date 2017-05-04 ;
+          }
+          container move-dampening-policy {
+            description 'The detector of MAC/IP routing drift.'
+                        ;
+            leaf move-dampening {
+              description 'The detector switch of MAC/IP routing drift.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'The detector switch of MAC/IP routing drift is e'
+                            + 'nable.'
+                              ;
+                }
+                enum disable {
+                  value 2 ;
+                  description 'The detector switch of MAC/IP routing drift is d'
+                            + 'isable.'
+                              ;
+                }
+              }
+              default enable ;
+            }
+            leaf move-dampening-interval {
+              description 'The detector interval of MAC/IP routing drift,unit s'
+                        + 'econd.'
+                          ;
+              type uint16 {
+                range 60..900 {
+                  description 'The interval range is from 60 to 900.'
+                              ;
+                }
+              }
+              default 180 ;
+            }
+            leaf move-dampening-count {
+              description 'The detector count of MAC/IP routing drift.'
+                          ;
+              type uint16 {
+                range 1..30 {
+                  description 'The count range is from 1 to 30.'
+                              ;
+                }
+              }
+              default 5 ;
+            }
+            leaf move-dampening-timeout {
+              description 'The timeout of MAC/IP routing drift,unit second.'
+                          ;
+              type uint16 {
+                range 30..1200 {
+                  description 'The timeout range is from 30 to 1200.'
+                              ;
+                }
+              }
+              default 180 ;
+            }
+            ncd:revise-date 2017-09-20 ;
+          }
+        }
+      }
+      container vtep-instances {
+        if-feature vtep-instance-mode ;
+        description 'Configuration of VTEP instances.'
+                    ;
+        container vtep-source-interfaces {
+          description 'Configuration of VTEP source interfaces.'
+                      ;
+          list vtep-source-interface {
+            description 'Configuration of VTEP source interface.'
+                        ;
+            key vtep-name ;
+            leaf vtep-name {
+              description 'VTEP interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'The length of interface name must be between 1 t'
+                            + 'o 31.'
+                              ;
+                }
+              }
+            }
+            leaf source-interface {
+              description 'Source interface name of VTEP instance.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'The length of interface name must be between 1 t'
+                            + 'o 31.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+        container vtep-modes {
+          description 'Configuration of VTEP modes.'
+                      ;
+          list vtep-mode {
+            description 'Configuration of VTEP mode.'
+                        ;
+            key vtep-name ;
+            leaf vtep-name {
+              description 'VTEP interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'The length of interface name must be between 1 t'
+                            + 'o 31.'
+                              ;
+                }
+              }
+            }
+            leaf vtep-mode {
+              description 'VTEP mode.'
+                          ;
+              type enumeration {
+                enum discard-inner-vlan {
+                  value 1 ;
+                  description 'Discard inner-VLAN.'
+                              ;
+                }
+                enum no-discard-inner-vlan {
+                  value 2 ;
+                  description 'No discard inner-VLAN.'
+                              ;
+                }
+              }
+              default discard-inner-vlan ;
+            }
+          }
+        }
+        container vtep-multicast-ips {
+          description 'The multicast IP address of VTEP instance.'
+                      ;
+          list vtep-multicast-ip {
+            description 'The multicast IP address of VTEP instance.'
+                        ;
+            key vtep-name ;
+            leaf vtep-name {
+              description 'VTEP interface name.'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf multicast-ip {
+              description 'Multicast IP address of VTEP instance.'
+                          ;
+              type ncd:ipv4-address ;
+              mandatory true ;
+            }
+          }
+          ncd:revise-date 2016-01-08 ;
+        }
+        container vtep-multicast-ipv6s {
+          description 'The multicast IPv6 address of VTEP instance.'
+                      ;
+          list vtep-multicast-ipv6 {
+            description 'The multicast IPv6 address of VTEP instance.'
+                        ;
+            key vtep-name ;
+            leaf vtep-name {
+              description 'VTEP interface name.'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf multicast-ipv6 {
+              description 'Multicast IPv6 address of VTEP instance.'
+                          ;
+              type ncd:ipv6-address ;
+              mandatory true ;
+            }
+          }
+          ncd:revise-date 2016-01-08 ;
+        }
+      }
+      container vtep-binds {
+        if-feature vtep-bind ;
+        description 'VTEP bind table.'
+                    ;
+        list vtep-bind {
+          description 'VTEP bind table.'
+                      ;
+          key 'vtep-name vxlan-id'
+              ;
+          leaf vtep-name {
+            description 'VTEP interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'The length of interface name must be between 1 to '
+                          + '31.'
+                            ;
+              }
+            }
+          }
+          leaf vxlan-id {
+            description 'VXLAN ID binding by VTEP interface.'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'The value of VXLAN,it must be between 1 to 1677721'
+                          + '5.'
+                            ;
+              }
+            }
+          }
+        }
+      }
+      container static-tunnel-binds {
+        if-feature static-tunnel ;
+        description 'Static tunnel bind table.'
+                    ;
+        list static-tunnel-bind {
+          description 'Static tunnel bind table.'
+                      ;
+          key 'vxlan-id static-tunnel-name'
+              ;
+          leaf static-tunnel-name {
+            description 'Static tunnel interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'The length of interface name must be between 1 to '
+                          + '31.'
+                            ;
+              }
+            }
+          }
+          leaf vxlan-id {
+            description 'VXLAN ID binding by static tunnel interface.'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'The value of VXLAN,it must be between 1 to 1677721'
+                          + '5.'
+                            ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2016-04-20 ;
+      }
+      container tunnel-statistics-configs {
+        description 'Configuration of tunnel statistics.'
+                    ;
+        list tunnel-statistics-config {
+          description 'Configuration of tunnel statistics.'
+                      ;
+          key 'local-ipv4 remote-ipv4'
+              ;
+          leaf local-ipv4 {
+            description 'Local IP address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf remote-ipv4 {
+            description 'Remote IP address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+        }
+        list tunnel-vni-statistics-config {
+          description 'Configuration of tunnel statistics in VXLAN.'
+                      ;
+          key 'local-ipv4 remote-ipv4 vxlan-id'
+              ;
+          leaf local-ipv4 {
+            description 'Local IP address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf remote-ipv4 {
+            description 'Remote IP address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf vxlan-id {
+            description 'The VXLAN in tunnel.'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'The value of VXLAN,it must be between 1 to 1677721'
+                          + '5.'
+                            ;
+              }
+            }
+          }
+        }
+        list tunnel-ipv6-statistics-config {
+          description 'Configuration of IPv6 tunnel statistics.'
+                      ;
+          key 'local-ipv6 remote-ipv6'
+              ;
+          leaf local-ipv6 {
+            description 'Local IPv6 address.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf remote-ipv6 {
+            description 'Remote IPv6 address.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          ncd:revise-date 2018-11-29 ;
+        }
+        list tunnel-ipv6-vni-statistics-config {
+          description 'Configuration of IPv6 tunnel statistics in VXLAN.'
+                      ;
+          key 'local-ipv6 remote-ipv6 vxlan-id'
+              ;
+          leaf local-ipv6 {
+            description 'Local IPv6 address.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf remote-ipv6 {
+            description 'Remote IPv6 address.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf vxlan-id {
+            description 'The VXLAN in tunnel.'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'The value of VXLAN,it must be between 1 to 1677721'
+                          + '5.'
+                            ;
+              }
+            }
+          }
+          ncd:revise-date 2018-11-29 ;
+        }
+        list vni-statistics-config {
+          description 'Configuration of vxlan statistics.'
+                      ;
+          key vxlan-id ;
+          leaf vxlan-id {
+            description 'VXLAN Network Identifier.'
+                        ;
+            type uint32 ;
+          }
+          ncd:revise-date 2018-11-05 ;
+        }
+        ncd:revise-date 2016-04-20 ;
+      }
+      container redundancy-group-binds {
+        if-feature redundancy-group-bind ;
+        description 'Redundancy group bind table.'
+                    ;
+        list redundancy-group-bind {
+          description 'Redundancy group bind table.'
+                      ;
+          key 'vxlan-id redundancy-group'
+              ;
+          leaf vxlan-id {
+            description 'VXLAN ID binding by redundancy group.'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'The value of VXLAN,it must be between 1 to 1677721'
+                          + '5.'
+                            ;
+              }
+            }
+          }
+          leaf redundancy-group {
+            description 'Redundancy group ID.'
+                        ;
+            type uint32 {
+              range 1..4294967293 {
+                description 'The value of redundancy group,it must be between 1'
+                          + ' to 4294967293.'
+                            ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2016-04-20 ;
+      }
+      container nve-instances {
+        description 'Configuration of NVE instances.'
+                    ;
+        list nve-instance {
+          description 'Configuration of NVE instance.'
+                      ;
+          key nve-port ;
+          leaf nve-port {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf source-vtep-ipv4 {
+            description 'Source IP of NVE instance.'
+                        ;
+            type ncd:ipv4-address ;
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2019-11-19 ;
+      }
+      container vni-instances {
+        description 'Configuration of VNI instances.'
+                    ;
+        list vni-instance {
+          description 'Configuration of VNI instance.'
+                      ;
+          key vni-id ;
+          leaf vni-id {
+            description 'ID of VNI instance.'
+                        ;
+            type uint32 ;
+          }
+          leaf protocol-type {
+            description 'Protocol type of VNI.'
+                        ;
+            type enumeration {
+              enum null {
+                value 0 ;
+                description Null. ;
+              }
+              enum bgp {
+                value 1 ;
+                description "Use bgp as vxlan's protocol."
+                            ;
+              }
+            }
+            default null ;
+          }
+          container source-nve-instance {
+            description 'Configuration of VNI source interfaces.'
+                        ;
+            presence source-nve-instance ;
+            leaf nve-port {
+              description 'Source interface name of VNI instance.'
+                          ;
+              type ncd:ifname ;
+            }
+          }
+          container vni-multicasts {
+            description 'VNI multicast IP address.'
+                        ;
+            list vni-multicast {
+              description 'VNI multicast IP address.'
+                          ;
+              key multicast-ipv4 ;
+              leaf multicast-ipv4 {
+                description 'VNI multicast IP address.'
+                            ;
+                type ncd:ipv4-address ;
+                mandatory true ;
+              }
+              leaf pim-mode {
+                description 'PIM mode.'
+                            ;
+                type enumeration {
+                  enum sm {
+                    value 1 ;
+                    description 'PIM Sparse Mode.'
+                                ;
+                  }
+                  enum ssm {
+                    value 2 ;
+                    description 'PIM Source Specific Multicast.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2019-11-19 ;
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'Information of VXLAN state.'
+                ;
+    container vxlan {
+      description 'Information of VXLAN state.'
+                  ;
+      container vxlan-tunnels {
+        description 'Information of VXLAN tunnel.'
+                    ;
+        list vxlan-tunnel {
+          description 'Information of VXLAN tunnel.'
+                      ;
+          key 'remote-ipv4 local-ipv4'
+              ;
+          leaf remote-ipv4 {
+            description 'Remote IPv4 address of VXLAN tunnel.'
+                        ;
+            type ncd:ipv4-address ;
+            ncd:revise-date 2016-04-05 ;
+          }
+          leaf local-ipv4 {
+            description 'Local IPv4 address of VXLAN tunnel.'
+                        ;
+            type ncd:ipv4-address ;
+            ncd:revise-date 2016-04-05 ;
+          }
+          leaf static-tunnel-id {
+            description 'Static tunnel ID.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2016-04-20 ;
+          }
+          leaf evpn-tunnel-id {
+            description 'EVPN tunnel ID.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2016-04-05 ;
+          }
+          container statistics {
+            description 'Tunnel statistics.'
+                        ;
+            container tunnel-statistics {
+              description 'Total tunnel statistics.'
+                          ;
+              leaf in-bytes {
+                description 'Total bytes received.'
+                            ;
+                type string {
+                  length 1..24 ;
+                }
+              }
+              leaf out-bytes {
+                description 'Total bytes sent.'
+                            ;
+                type string {
+                  length 1..24 ;
+                }
+              }
+              leaf in-packets {
+                description 'Total packets received.'
+                            ;
+                type string {
+                  length 1..24 ;
+                }
+              }
+              leaf out-packets {
+                description 'Total packets sent.'
+                            ;
+                type string {
+                  length 1..24 ;
+                }
+              }
+              leaf in-rate-bps {
+                description '120s-bytes-rate received.'
+                            ;
+                type uint64 ;
+                ncd:revise-date 2017-01-10 ;
+              }
+              leaf out-rate-bps {
+                description '120s-bytes-rate sent.'
+                            ;
+                type uint64 ;
+                ncd:revise-date 2017-01-10 ;
+              }
+              leaf in-rate-pps {
+                description '120s-packets-rate received.'
+                            ;
+                type uint64 ;
+                ncd:revise-date 2017-01-10 ;
+              }
+              leaf out-rate-pps {
+                description '120s-packets-rate sent.'
+                            ;
+                type uint64 ;
+                ncd:revise-date 2017-01-10 ;
+              }
+            }
+            container tunnel-vni-statistics {
+              description 'Statistics in VXLAN tunnel.'
+                          ;
+              list tunnel-vni-statistic {
+                description 'Statistics in VXLAN tunnel.'
+                            ;
+                key vxlan-id ;
+                leaf vxlan-id {
+                  description 'The VXLAN in tunnel.'
+                              ;
+                  type uint32 {
+                    range 1..16777215 {
+                      description 'The value of VXLAN,it must be between 1 to 1'
+                                + '6777215.'
+                                  ;
+                    }
+                  }
+                }
+                leaf in-bytes {
+                  description 'Total bytes received.'
+                              ;
+                  type string {
+                    length 1..24 ;
+                  }
+                }
+                leaf out-bytes {
+                  description 'Total bytes sent.'
+                              ;
+                  type string {
+                    length 1..24 ;
+                  }
+                }
+                leaf in-packets {
+                  description 'Total packets received.'
+                              ;
+                  type string {
+                    length 1..24 ;
+                  }
+                }
+                leaf out-packets {
+                  description 'Total packets sent.'
+                              ;
+                  type string {
+                    length 1..24 ;
+                  }
+                }
+                leaf in-rate-bps {
+                  description '120s-bytes-rate received.'
+                              ;
+                  type uint64 ;
+                  ncd:revise-date 2017-01-10 ;
+                }
+                leaf out-rate-bps {
+                  description '120s-bytes-rate sent.'
+                              ;
+                  type uint64 ;
+                  ncd:revise-date 2017-01-10 ;
+                }
+                leaf in-rate-pps {
+                  description '120s-packets-rate received.'
+                              ;
+                  type uint64 ;
+                  ncd:revise-date 2017-01-10 ;
+                }
+                leaf out-rate-pps {
+                  description '120s-packets-rate sent.'
+                              ;
+                  type uint64 ;
+                  ncd:revise-date 2017-01-10 ;
+                }
+              }
+            }
+            ncd:revise-date 2016-04-20 ;
+          }
+          ncd:select 'remote-ipv4 local-ipv4'
+                     ;
+          ncd:select evpn-tunnel-id ;
+        }
+        list vxlan-tunnel-ipv6 {
+          description 'Information of VXLAN tunnel(IPv6).'
+                      ;
+          key 'remote-ipv6 local-ipv6'
+              ;
+          leaf remote-ipv6 {
+            description 'Remote IPv6 address of VXLAN tunnel.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf local-ipv6 {
+            description 'Local IPv6 address of VXLAN tunnel.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf static-tunnel-id {
+            description 'Static tunnel ID.'
+                        ;
+            type uint32 ;
+          }
+          leaf evpn-tunnel-id {
+            description 'EVPN tunnel ID.'
+                        ;
+            type uint32 ;
+          }
+          container statistics {
+            description 'Tunnel(IPv6) statistics.'
+                        ;
+            container tunnel-ipv6-statistics {
+              description 'Total IPv6 tunnel statistics.'
+                          ;
+              leaf in-bytes {
+                description 'Total bytes received.'
+                            ;
+                type string {
+                  length 1..24 ;
+                }
+              }
+              leaf out-bytes {
+                description 'Total bytes sent.'
+                            ;
+                type string {
+                  length 1..24 ;
+                }
+              }
+              leaf in-packets {
+                description 'Total packets received.'
+                            ;
+                type string {
+                  length 1..24 ;
+                }
+              }
+              leaf out-packets {
+                description 'Total packets sent.'
+                            ;
+                type string {
+                  length 1..24 ;
+                }
+              }
+              leaf in-rate-bps {
+                description '120s-bytes-rate received.'
+                            ;
+                type uint64 ;
+              }
+              leaf out-rate-bps {
+                description '120s-bytes-rate sent.'
+                            ;
+                type uint64 ;
+              }
+              leaf in-rate-pps {
+                description '120s-packets-rate received.'
+                            ;
+                type uint64 ;
+              }
+              leaf out-rate-pps {
+                description '120s-packets-rate sent.'
+                            ;
+                type uint64 ;
+              }
+            }
+            container tunnel-ipv6-vni-statistics {
+              description 'Statistics in VXLAN IPv6 tunnel.'
+                          ;
+              list tunnel-ipv6-vni-statistic {
+                description 'Statistics in VXLAN IPv6 tunnel.'
+                            ;
+                key vxlan-id ;
+                leaf vxlan-id {
+                  description 'The VXLAN in tunnel.'
+                              ;
+                  type uint32 {
+                    range 1..16777215 {
+                      description 'The value of VXLAN,it must be between 1 to 1'
+                                + '6777215.'
+                                  ;
+                    }
+                  }
+                }
+                leaf in-bytes {
+                  description 'Total bytes received.'
+                              ;
+                  type string {
+                    length 1..24 ;
+                  }
+                }
+                leaf out-bytes {
+                  description 'Total bytes sent.'
+                              ;
+                  type string {
+                    length 1..24 ;
+                  }
+                }
+                leaf in-packets {
+                  description 'Total packets received.'
+                              ;
+                  type string {
+                    length 1..24 ;
+                  }
+                }
+                leaf out-packets {
+                  description 'Total packets sent.'
+                              ;
+                  type string {
+                    length 1..24 ;
+                  }
+                }
+                leaf in-rate-bps {
+                  description '120s-bytes-rate received.'
+                              ;
+                  type uint64 ;
+                }
+                leaf out-rate-bps {
+                  description '120s-bytes-rate sent.'
+                              ;
+                  type uint64 ;
+                }
+                leaf in-rate-pps {
+                  description '120s-packets-rate received.'
+                              ;
+                  type uint64 ;
+                }
+                leaf out-rate-pps {
+                  description '120s-packets-rate sent.'
+                              ;
+                  type uint64 ;
+                }
+              }
+            }
+            ncd:revise-date 2018-11-29 ;
+          }
+          ncd:select 'remote-ipv6 local-ipv6'
+                     ;
+          ncd:select evpn-tunnel-id ;
+          ncd:revise-date 2018-02-06 ;
+        }
+      }
+      container vxlan-statistics {
+        description 'Statistics in VXLAN.'
+                    ;
+        list vxlan-statistic {
+          description 'Statistic in VXLAN.'
+                      ;
+          key vxlan-id ;
+          leaf vxlan-id {
+            description 'VXLAN Network Identifier'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'The value of VXLAN,it must be between 1 to 1677721'
+                          + '5.'
+                            ;
+              }
+            }
+          }
+          leaf in-bytes {
+            description 'Total bytes received.'
+                        ;
+            type string ;
+          }
+          leaf out-bytes {
+            description 'Total bytes sent.'
+                        ;
+            type string ;
+          }
+          leaf in-packets {
+            description 'Total packets received.'
+                        ;
+            type string ;
+          }
+          leaf out-packets {
+            description 'Total packets sent.'
+                        ;
+            type string ;
+          }
+          leaf in-rate-bps {
+            description '120s-bytes-rate received.'
+                        ;
+            type uint64 ;
+          }
+          leaf out-rate-bps {
+            description '120s-bytes-rate sent.'
+                        ;
+            type uint64 ;
+          }
+          leaf in-rate-pps {
+            description '120s-packets-rate received.'
+                        ;
+            type uint64 ;
+          }
+          leaf out-rate-pps {
+            description '120s-packets-rate sent.'
+                        ;
+            type uint64 ;
+          }
+        }
+        ncd:revise-date 2018-11-05 ;
+      }
+    }
+    ncd:revise-date 2016-01-08 ;
+  }
+  container operation {
+    config false ;
+    description 'Operation of VXLAN.'
+                ;
+    container vxlan {
+      description 'Operation of VXLAN.'
+                  ;
+      container clear-vxlan-tunnel-statistics {
+        description 'Clear statistics of VXLAN tunnel.'
+                    ;
+        list vxlan-tunnel-statistics {
+          description 'Clear statistics of VXLAN tunnel.'
+                      ;
+          key 'local-ipv4 remote-ipv4'
+              ;
+          leaf local-ipv4 {
+            description 'Local IP address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf remote-ipv4 {
+            description 'Remote IP address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf vxlan-id {
+            description 'The VXLAN in tunnel.'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'Range of VXLAN ID.'
+                            ;
+              }
+            }
+          }
+        }
+        list vxlan-tunnel-ipv6-statistics {
+          description 'Clear statistics of VXLAN tunnel(IPv6).'
+                      ;
+          key 'local-ipv6 remote-ipv6'
+              ;
+          leaf local-ipv6 {
+            description 'Local IPv6 address.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf remote-ipv6 {
+            description 'Remote IPv6 address.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf vxlan-id {
+            description 'The VXLAN in tunnel.'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'Range of VXLAN ID.'
+                            ;
+              }
+            }
+          }
+          ncd:revise-date 2018-11-29 ;
+        }
+        list vxlan-statistics {
+          description 'Clear statistics of VXLAN.'
+                      ;
+          key vxlan-id ;
+          leaf vxlan-id {
+            description 'VXLAN Network Identifier'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'Range of VXLAN ID.'
+                            ;
+              }
+            }
+          }
+          ncd:revise-date 2018-11-05 ;
+        }
+      }
+    }
+    ncd:revise-date 2016-04-20 ;
+  }
+}

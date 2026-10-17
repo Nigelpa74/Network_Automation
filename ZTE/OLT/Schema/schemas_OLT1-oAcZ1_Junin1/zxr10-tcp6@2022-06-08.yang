@@ -1,0 +1,797 @@
+module zxr10-tcp6 {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/tcp6'
+            ;
+  prefix tcp6 ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'NETCONF of TCP6 module'
+              ;
+  revision 2022-06-08 {
+    description 'Add container prevent-wl-attack for /configuration/tcp.'+"\n"
+              + 'Add leaf prevent-wl-attack for /configuration/tcp/prevent-wl-a'
+              + 'ttack.'+"\n"
+              + 'Add container back-press for /configuration/tcp/prevent-wl-att'
+              + 'ack.'+"\n"
+              + 'Add container wl-attack for /configuration/tcp/prevent-wl-atta'
+              + 'ck.'
+                ;
+  }
+  revision 2020-01-17 {
+    description "Remove \"15K\" from feature-send-rst's project-label-info."
+                ;
+  }
+  revision 2019-09-03 {
+    description 'Add send-rst switch to determine whether we should send RST pa'
+              + 'cket when there is no listening port number. Add the leaf node'
+              + ' of /configuration/tcp6/config/send-rst.'
+                ;
+  }
+  revision 2016-06-01 {
+    description 'Delete the lenth definition of node: /operation/tcp6/clear-con'
+              + 'nect-vrf/dest-ipv6-address and /operation/tcp6/clear-connect-v'
+              + 'rf/source-ipv6-address.'+"\n"
+              + 'Modify the description of node:/state/tcp6/statistics/sent/dal'
+              + 'lyack-segs.'
+                ;
+  }
+  revision 2014-12-03 {
+    description 'Change the leaf node of configuraticon/tcp6/config/window-size'
+              + ' datatype form uint16 to uint32 '+"\n"
+              + 'Change the leaf node of configuraticon/tcp6/config/window-size'
+              + ' range form <10-65535> to <10-1048560>'
+                ;
+  }
+  revision 2014-08-22 {
+    description 'Modify the name of leaf node passive-pens in the command of sh'
+              + 'ow tcp6 statistics.'
+                ;
+  }
+  revision 2014-06-24 {
+    description 'Initial version'
+                ;
+  }
+  feature feature-send-rst {
+    description 'Feature of send-rst'
+                ;
+  }
+  feature feature-prevent-wl-attack {
+    description 'Feature of prevent-wl-attack'
+                ;
+    ncd:revise-date 2022-06-08 ;
+  }
+  container configuration {
+    description 'Command of TCP6 configuration'
+                ;
+    container tcp6 {
+      description 'Command of TCP6 configuration'
+                  ;
+      container config {
+        description 'Configure the basic parameter of TCP6'
+                    ;
+        leaf synwait-time {
+          description 'Wait time for establishing a TCP6 connection'
+                      ;
+          type uint16 {
+            range 30..80 ;
+          }
+          units seconds ;
+          default 75 ;
+        }
+        leaf finwait-time {
+          description 'Wait time for closing a TCP6 connection'
+                      ;
+          type uint16 {
+            range 300..675 ;
+          }
+          units seconds ;
+          default 675 ;
+        }
+        leaf window-size {
+          description 'TCP6 window size'
+                      ;
+          type uint32 {
+            range 100..1048560 ;
+          }
+          units bytes ;
+          default 32768 ;
+        }
+        leaf queue-max {
+          description 'Set maximum queue of outgoing TCP6 packets'
+                      ;
+          type uint16 {
+            range 5..50 ;
+          }
+          default 5 ;
+        }
+        leaf send-rst {
+          if-feature feature-send-rst ;
+          description 'Set TCP6 RST packet sending without listening port nummb'
+                    + 'er'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Enable sending TCP6 RST packet'
+                          ;
+            }
+            enum disable {
+              value 0 ;
+              description 'Disable sending TCP6 RST packet'
+                          ;
+            }
+          }
+          default enable ;
+          ncd:revise-date 2019-09-03 ;
+        }
+        container prevent-wl-attack {
+          if-feature feature-prevent-wl-attack ;
+          description 'Set TCP6 prevent-white-list-attack'
+                      ;
+          presence 'set TCP prevent white list attack'
+                   ;
+          container prevent-wl-enable {
+            description 'Enable TCP prevent whitelist attack'
+                        ;
+            presence prevent-wl-enable ;
+            leaf enable {
+              description 'The swith for function of tcp prevent-whitelist-atta'
+                        + 'ck.Its default value which is turning on tcp- preven'
+                        + 't-whitelist-attack or disable and generally disable,'
+                        + ' depends on product specification.'
+                          ;
+              type boolean ;
+              mandatory true ;
+            }
+          }
+          container prevent-wl-parament {
+            description 'Configure paraments of the prevent whitelist'
+                        ;
+            presence prevent-wl-parament ;
+            container wl-attack {
+              description 'Set TCP prevent-white-list-attack parameters'
+                          ;
+              leaf attack-num {
+                description 'Received white-list-attack packets in one second'
+                            ;
+                type uint16 {
+                  range 10..1000 ;
+                }
+                mandatory true ;
+              }
+              leaf attack-per-num {
+                description 'Continued to received white-list-attack packets ov'
+                          + 'er limited num'
+                            ;
+                type uint8 {
+                  range 3..60 ;
+                }
+                mandatory true ;
+              }
+            }
+            container back-press {
+              description 'Set TCP6 back press parameters'
+                          ;
+              leaf rate {
+                description 'Allows the number of packets received in one second'
+                            ;
+                type uint16 {
+                  range 1..1000 ;
+                }
+                units pps ;
+                mandatory true ;
+              }
+              leaf time {
+                description 'The time of back press'
+                            ;
+                type uint32 {
+                  range 30..86400 ;
+                }
+                units seconds ;
+                mandatory true ;
+              }
+            }
+          }
+          ncd:revise-date 2022-06-08 ;
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'Command of TCP6 show'
+                ;
+    container tcp6 {
+      description 'Command of TCP6 show'
+                  ;
+      list brief {
+        description 'Show brief information of TCP6 connections'
+                    ;
+        key index ;
+        leaf index {
+          description 'Index of tcb'
+                      ;
+          type uint32 ;
+        }
+        leaf local-address {
+          description 'Local ipv6 address and port'
+                      ;
+          type string {
+            length 1..60 ;
+          }
+        }
+        leaf remote-address {
+          description 'Remote ipv6 address and port'
+                      ;
+          type string {
+            length 1..60 ;
+          }
+        }
+        leaf state {
+          description 'State of TCP6 connection'
+                      ;
+          type string {
+            length 1..20 ;
+          }
+        }
+      }
+      list tcb {
+        description 'Show the detail information of all TCP6 connections or a s'
+                  + 'pecific TCP6 connection'
+                    ;
+        key index ;
+        leaf index {
+          description 'Index of tcb'
+                      ;
+          type uint32 {
+            range 1..4294967295 ;
+          }
+        }
+        leaf local-ip {
+          description 'Local ipv6 address'
+                      ;
+          type string ;
+        }
+        leaf remote-ip {
+          description 'Remote ipv6 address'
+                      ;
+          type string ;
+        }
+        leaf local-port {
+          description 'Local port'
+                      ;
+          type uint16 {
+            range 1..65535 ;
+          }
+        }
+        leaf remote-port {
+          description 'Remote port'
+                      ;
+          type uint16 {
+            range 1..65535 ;
+          }
+        }
+        leaf state {
+          description 'State of TCP6 connection'
+                      ;
+          type string ;
+        }
+        leaf iss {
+          description 'Initial send sequence number'
+                      ;
+          type uint32 ;
+        }
+        leaf snduna {
+          description 'Sequence number of sent and not acked'
+                      ;
+          type uint32 ;
+        }
+        leaf sndnxt {
+          description 'Sequence number for sending new data'
+                      ;
+          type uint32 ;
+        }
+        leaf sndwnd {
+          description 'Size of foreign window'
+                      ;
+          type uint32 ;
+        }
+        leaf irs {
+          description 'Initial receive sequence number'
+                      ;
+          type uint32 ;
+        }
+        leaf rcvnxt {
+          description 'Sequence number for incoming'
+                      ;
+          type uint32 ;
+        }
+        leaf rcvwnd {
+          description 'Size of local window'
+                      ;
+          type uint32 ;
+        }
+        leaf srtt {
+          description 'Smoothed (mean) round trip time'
+                      ;
+          type uint16 ;
+          units milliseconds ;
+        }
+        leaf rtto {
+          description 'Calculated retransmission timeout'
+                      ;
+          type uint16 ;
+          units milliseconds ;
+        }
+        leaf krtt {
+          description 'Backed-off RTO, per Karn'
+                      ;
+          type uint16 ;
+          units milliseconds ;
+        }
+        leaf min-rtt {
+          description 'Minimum trip time'
+                      ;
+          type uint16 ;
+          units milliseconds ;
+        }
+        leaf max-rtt {
+          description 'Maximum trip time'
+                      ;
+          type uint16 ;
+          units milliseconds ;
+        }
+      }
+      container statistics {
+        description 'Show the statistics of TCP6'
+                    ;
+        container received {
+          description 'Information of receiving'
+                      ;
+          leaf in-segs {
+            description 'Number of received segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf noport-errs {
+            description 'Error segments of no port'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf checksum-errs {
+            description 'Error segments of checksum'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf badoffset-errs {
+            description 'Error segments of bad offset'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf tooshort-errs {
+            description 'Error segments of too short length'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf inseq-segs {
+            description 'Number of received precedence segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf inseq-seg-len {
+            description 'Length of received precedence segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            units bytes ;
+          }
+          leaf outof-order-segs {
+            description 'Received segments that out of order'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf outof-order-seg-len {
+            description 'Received segment length that out of order'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            units bytes ;
+          }
+          leaf toobig-errs {
+            description 'Received segments that out of received window'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf toobig-err-len {
+            description 'Received segment length that out of received window'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            units bytes ;
+          }
+          leaf pktafterclose-errs {
+            description 'Received segments after tcp closed'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf wndprobe-insegs {
+            description 'Received window probe segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf wndupdate-insegs {
+            description 'Received window update segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf dupack-segs {
+            description 'Received duplicate ack segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf ackunsent-errs {
+            description 'Received ack that not send data'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf ack-segs {
+            description 'Number of received ack segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf ack-seg-len {
+            description 'Length of received ack segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            units bytes ;
+          }
+          leaf dup-packs {
+            description 'Num of received duplicate-only packets'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf dup-pack-len {
+            description 'Length of received duplicate packets'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf part-dup-packs {
+            description 'Receive the num of packets with some duplicate data'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf part-dup-pack-len {
+            description 'Length of part-duplicate packets'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+        }
+        container sent {
+          description 'Information of sending'
+                      ;
+          leaf out-segs {
+            description 'Number of sent segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf ctr-segs {
+            description 'Number of sent control segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf rtxmctr-segs {
+            description 'Number of control segments that being retransmitted'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf outdata-segs {
+            description 'Number of sent data segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf outdata-seg-len {
+            description 'Total length of sent data segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            units bytes ;
+          }
+          leaf rtxmdata-segs {
+            description 'Number of retransmitted data segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf rtxmdata-seg-len {
+            description 'Length of retransmitted data segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            units bytes ;
+          }
+          leaf ackonly-segs {
+            description 'Number of sent ack segments only'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf dallyack-segs {
+            description 'Number of delayed ack segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf wndprobe-out-segs {
+            description 'Number of sent window probe segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf wndupdate-out-segs {
+            description 'Number of sent window update segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+        }
+        container common-info {
+          description 'Common information'
+                      ;
+          leaf active-opens {
+            description 'Number of active connections'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf passive-opens {
+            description 'Number of passive connections'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf connects {
+            description 'Number of TCP6 connections'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf conn-closes {
+            description 'Number of being closed connections'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf rxmt-tmos {
+            description 'Number of retransmitted segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf connclose-inrxmts {
+            description 'Number of closed connections that being retransmitted'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf keepalive-tmos {
+            description 'Number of keepalive segments that being out of interva'
+                      + 'l of keepalive timer'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf keepalive-probes {
+            description 'Number of keepalive segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf connclose-in-keepalive {
+            description 'Number of closed connections because of not receiving '
+                      + 'keepalive segments'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf drops {
+            description 'Num of dropped connections'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf conn-drops {
+            description 'Num of dropped  embryonic connections'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description 'Command of TCP6 clear'
+                ;
+    container tcp6 {
+      description 'Commad of TCP6 clear'
+                  ;
+      container clear {
+        description 'Closed a TCP6 connection or clear the statistics of all TC'
+                  + 'P6 connections'
+                    ;
+        presence clear ;
+        container tcbs {
+          description 'Closed a TCP6 connetion based on the index of tcb'
+                      ;
+          presence 'Clear TCP6 connections based on index of tcb'
+                   ;
+          leaf tcb {
+            description 'Closed a TCP6 connetion based on the index of tcb'
+                        ;
+            type uint32 {
+              range 1..4294967295 ;
+            }
+            mandatory true ;
+          }
+        }
+        container statistics {
+          description 'Clear statistics data of TCP6'
+                      ;
+          leaf statistic {
+            description 'Clear statistics data of TCP6'
+                        ;
+            type empty ;
+          }
+        }
+      }
+      container clear-connect-address {
+        description 'Closed a TCP6 connection based on ip address and port'
+                    ;
+        presence clear-connect-address ;
+        leaf source-port {
+          description Source-port ;
+          type uint16 {
+            range 1..65535 ;
+          }
+          mandatory true ;
+        }
+        leaf dest-port {
+          description Dest-port ;
+          type uint16 {
+            range 1..65535 ;
+          }
+          mandatory true ;
+        }
+        leaf dest-ipv6-address {
+          description 'Dest ipv6 address'
+                      ;
+          type ncd:ipv6-address ;
+          mandatory true ;
+        }
+        leaf source-ipv6-address {
+          description 'Source ipv6 address'
+                      ;
+          type ncd:ipv6-address ;
+          mandatory true ;
+        }
+      }
+      container clear-connect-vrf {
+        description 'Closed a TCP6 connection based on ip address,port and vrf'
+                    ;
+        presence clear-connect-vrf ;
+        leaf source-port {
+          description 'Source port'
+                      ;
+          type uint16 {
+            range 1..65535 ;
+          }
+          mandatory true ;
+        }
+        leaf dest-port {
+          description 'Dest port'
+                      ;
+          type uint16 {
+            range 1..65535 ;
+          }
+          mandatory true ;
+        }
+        leaf dest-ipv6-address {
+          description 'Dest ipv6 address'
+                      ;
+          type ncd:ipv6-address ;
+          mandatory true ;
+        }
+        leaf source-ipv6-address {
+          description 'source ipv6 address'
+                      ;
+          type ncd:ipv6-address ;
+          mandatory true ;
+        }
+        leaf vrf-name {
+          description 'Vrf name'
+                      ;
+          type string {
+            length 1..32 ;
+          }
+          mandatory true ;
+        }
+      }
+    }
+  }
+}

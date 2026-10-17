@@ -1,0 +1,354 @@
+module zxr10-supervlan {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/supervlan'
+            ;
+  prefix supervlan ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe SuperVLAN.'
+              ;
+  revision 2018-08-03 {
+    description '1.Change /configuration/supervlan/bind-table/sub-interface-bin'
+              + 'd/supervlan-id  to mandatory.'+"\n"
+              + '2.Change /configuration/supervlan/bind-table/subvlan-bind/supe'
+              + 'rvlan-id to mandatory.'
+                ;
+  }
+  revision 2016-04-25 {
+    description '1.Add a feature gratuitous-arp-broadcast for the switch projec'
+              + 't.'
+                ;
+  }
+  revision 2014-02-10 {
+    description 'Spell check is error, ralate modify relate'
+                ;
+  }
+  revision 2014-01-14 {
+    description 'Modify some leaf which relate to performance parameter,include'
+              + ' ifattr-flag/ip-pool-filter(default value),sub-interface-bind/'
+              + 'supervlan-id(max value and edit type),subvlan-bind/supervlan-i'
+              + 'd(max value and edit type)'
+                ;
+  }
+  revision 2013-11-28 {
+    description 'Initial version.'
+                ;
+  }
+  feature gratuitous-arp-broadcast {
+    description 'The information of gratuitous arp broadcast.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model info.'
+                ;
+    container supervlan {
+      description 'Configure SuperVLAN parameters.'
+                  ;
+      container supervlan-ifattr {
+        description 'The interface configuration of a SuperVLAN.'
+                    ;
+        list ifattr-flag {
+          description 'The interface flag configuration of a SuperVLAN.'
+                      ;
+          key interface-name ;
+          leaf interface-name {
+            description 'SuperVLAN interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'The length of interface name,it must between 1 to '
+                          + '31 BYTE.'
+                            ;
+              }
+            }
+          }
+          leaf inter-subvlan-routing {
+            description 'SuperVLAN inter-subvlan-routing attribute status,1 mea'
+                      + 'n IPv4 enable,2 mean IPv6 enable, 3 mean IPv4 and IPv6'
+                      + ' enable, 4 mean disable,default value is 3.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 3 ;
+                description 'The flag of inter-subvlan-routing is enable.'
+                            ;
+              }
+              enum disable {
+                value 4 ;
+                description 'The flag of inter-subvlan-routing is disable.'
+                            ;
+              }
+            }
+            default enable ;
+          }
+          leaf inter-subvlan-routing-for-v4v6 {
+            description 'SuperVLAN inter-subvlan-routing-for-v4v6 attribute sta'
+                      + 'tus is used to distinguish between IPv4 and IPv6,1 mea'
+                      + 'n IPv4 enable,2 mean IPv6 enable.If IPv4 and IPv6 are '
+                      + 'enable or disable at the same time,the attribute value'
+                      + ' is 5,identified as a invalid value.'
+                        ;
+            type enumeration {
+              enum enable-ipv4 {
+                value 1 ;
+                description 'The flag of inter-subvlan-routing is enable ipv4.'
+                            ;
+              }
+              enum enable-ipv6 {
+                value 2 ;
+                description 'The flag of inter-subvlan-routing is enable ipv6.'
+                            ;
+              }
+              enum invalid {
+                value 5 ;
+                description 'The flag of inter-subvlan-routing-for-v4v6 is inva'
+                          + 'lid.'
+                            ;
+              }
+            }
+            default invalid ;
+          }
+          leaf ip-pool-filter {
+            description 'SuperVLAN ip-pool-filter attribute status,1 mean enabl'
+                      + 'e,2 mean disable.default value relate to performance p'
+                      + 'arameter.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'The flag of ip-pool-filter is enable.'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'The flag of ip-pool-filter is disable.'
+                            ;
+              }
+            }
+            default enable ;
+          }
+          leaf arp-broadcast {
+            description 'SuperVLAN arp-broadcast attribute status,1 mean enable'
+                      + ',2 mean disable,default value is 2.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'The flag of arp-broadcast is enable.'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'The flag of arp-broadcast is disable.'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          leaf gratuitous-arp-broadcast {
+            if-feature gratuitous-arp-broadcast ;
+            description 'SuperVLAN gratuitous-arp-broadcast attribute status,1 '
+                      + 'mean enable,2 mean disable,default value is 1.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'The flag of gratuitous-arp-broadcast is enable.'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'The flag of gratuitous-arp-broadcast is disable.'
+                            ;
+              }
+            }
+            default enable ;
+          }
+          leaf nd-broadcast {
+            description 'SuperVLAN nd-broadcast attribute status for IPv6,1 mea'
+                      + 'n enable,2 mean disable,default value is 2.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'The flag of nd-broadcast is enable.'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'The flag of nd-broadcast is disable.'
+                            ;
+              }
+            }
+            default disable ;
+          }
+        }
+      }
+      container bind-table {
+        description 'The bind relation of SuperVLAN and sub-interface or SubVLA'
+                  + 'N.'
+                    ;
+        list sub-interface-bind {
+          description 'The bind relation of SuperVLAN and sub-interface.'
+                      ;
+          key member-name ;
+          leaf member-name {
+            description 'Sub-interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'The length of interface name,it must between 1 to '
+                          + '31 BYTE.'
+                            ;
+              }
+            }
+          }
+          leaf supervlan-id {
+            description 'SuperVLAN ID. Min value is 1, max value relate to perf'
+                      + 'ormance parameter.'
+                        ;
+            type uint32 {
+              range 1..4096 {
+                description 'SuperVLAN ID.Min value is 1, max value relate to p'
+                          + 'erformance parameter.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+        list subvlan-bind {
+          description 'The bind relation of SuperVLAN and SubVLAN.'
+                      ;
+          key subvlan-id ;
+          leaf subvlan-id {
+            description 'SubVLAN ID.'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'SubVLAN ID.'
+                            ;
+              }
+            }
+          }
+          leaf supervlan-id {
+            description 'SuperVLAN ID. Min value is 1, max value relate to perf'
+                      + 'ormance parameter.'
+                        ;
+            type uint32 {
+              range 1..4096 {
+                description 'Min value is 1, max value relate to performance pa'
+                          + 'rameter.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+      }
+      container ippool-table {
+        description 'The IP-POOL table of SuperVLAN.'
+                    ;
+        list sub-interface-ippool {
+          description 'The IP-POOL of sub-interface.'
+                      ;
+          key 'member-name address-begin address-end'
+              ;
+          leaf member-name {
+            description 'Sub-interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'The length of interface name,it must between 1 to '
+                          + '31 BYTE.'
+                            ;
+              }
+            }
+          }
+          leaf address-begin {
+            description 'IP-POOL address begin for sub-interface.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf address-end {
+            description 'IP-POOL address end for sub-interface.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+        }
+        list subvlan-ippool {
+          description 'The IP-POOL of SubVLAN.'
+                      ;
+          key 'subvlan-id address-begin address-end'
+              ;
+          leaf subvlan-id {
+            description 'SubVLAN ID.'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'SubVLAN ID.'
+                            ;
+              }
+            }
+          }
+          leaf address-begin {
+            description 'IP-POOL address begin for SubVLAN.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf address-end {
+            description 'IP-POOL address end for SubVLAN.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+        }
+      }
+      container subvlan-ifattr {
+        description 'The attribute of current SubVLAN.'
+                    ;
+        list ifattr-flag {
+          description 'This list contains attribute of SubVLAN.'
+                      ;
+          key subvlan-id ;
+          leaf subvlan-id {
+            description 'SubVLAN ID.'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'SubVLAN ID.'
+                            ;
+              }
+            }
+          }
+          leaf gratuitous-arp-broadcast {
+            description 'SubVLAN gratuitous-arp-broadcast attribute status,1 me'
+                      + 'an enable,2 mean disable,default value is 1.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'The flag of gratuitous-arp-broadcast is enable.'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'The flag of gratuitous-arp-broadcast is disable.'
+                            ;
+              }
+            }
+            default enable ;
+          }
+        }
+      }
+    }
+  }
+}

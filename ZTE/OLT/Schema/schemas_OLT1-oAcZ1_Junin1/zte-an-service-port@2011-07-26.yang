@@ -1,0 +1,715 @@
+module zte-an-service-port {
+    namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/srvport';
+    prefix srvport;
+    import zxr10-netconf-defs {
+        prefix ncd;
+        revision-date 2017-08-15;
+    }
+    organization "ZTE Corporation";
+    contact "Wang Yuke     ZTE Corporation
+                        Mail: wang.yuke@zte.com.cn
+                        Tel : +86-21-68897487";
+    description "This MIB defines managed objects of zte service port.";
+    revision 2011-07-26 {
+        description "Add multi-variables usage rules for variables of service port
+                     configuration.";
+    }
+    revision 2011-05-26 {
+        description "Initial version of this MIB module.";
+    }
+    container zxAnServicePort {
+        description "";
+        container zxAnServicePortObjects {
+            description "";
+            container zxAnSrvPortConfTable {
+                description "This table includes interface service port configuration.
+                             It uses  in user's traffic scene, a service port indicates
+                             an user's service,for example VOIP/CATV/POTS/DATA service.
+                             We can create a service port as the same time finished some
+                             functions which are QinQ and translate etc.";
+                list zxAnSrvPortConfEntry {
+                    description "An entry in zxAnSrvPortConfTable.
+                                 When a manager wants to create a service port,it must comply
+                                 with the multi-variables usage rule that all the mib variables
+                                 related to same function must be in one snmp set operation, the
+                                 variables have two type: mandatory and optional.
+                                 
+                                 Mandatory variables must be in the one snmp set operation.
+                                 Optional variables may be in the one snmp set operation with the
+                                 mandatory variables, but must not be used alone.
+                                 
+                                 To create a service port,  there are several cases base on the
+                                 variable zxAnSrvPortServiceMode, and the mandatory and optional
+                                 variables for each case are different.
+                                 
+                                 Case 1: to create a service port when zxAnSrvPortServiceMode is
+                                 untag(1):
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortCVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortSVid,
+                                 zxAnSrvPortCtagCos,
+                                 zxAnSrvPortStagCos,
+                                 zxAnSrvPortIngressTrafficPrf,
+                                 zxAnSrvPortEgressTrafficPrf,
+                                 
+                                 Case 2: To create a service port when zxAnSrvPortServiceMode is
+                                 untagAndEtype(2):
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortUserEthType,
+                                 zxAnSrvPortUserDefinedEthType,
+                                 zxAnSrvPortCVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortSVid,
+                                 zxAnSrvPortCtagCos,
+                                 zxAnSrvPortStagCos,
+                                 zxAnSrvPortIngressTrafficPrf,
+                                 zxAnSrvPortEgressTrafficPrf,
+                                 
+                                 Case 3: To create a service port when zxAnSrvPortServiceMode is
+                                 cos(3):
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortUserCos,
+                                 zxAnSrvPortCVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortSVid,
+                                 zxAnSrvPortCtagCos,
+                                 zxAnSrvPortStagCos,
+                                 zxAnSrvPortIngressTrafficPrf,
+                                 zxAnSrvPortEgressTrafficPrf,
+                                 
+                                 Case 4: To create a service port when zxAnSrvPortServiceMode is
+                                 tag(4):
+                                 normal config:
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortUserVid,
+                                 zxAnSrvPortCVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortSVid,
+                                 zxAnSrvPortCtagCos,
+                                 zxAnSrvPortStagCos,
+                                 zxAnSrvPortIngressTrafficPrf,
+                                 zxAnSrvPortEgressTrafficPrf,
+                                 
+                                 Case 5: To create a service port when zxAnSrvPortServiceMode is
+                                 tls(5):
+                                 
+                                 When value of supportTlsCVidInTlsMode(1) is 1:
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortTlsCVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus
+                                 
+                                 When value of supportTlsCVidInTlsMode(1) is 0:
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortTlsSVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortStagCos
+                                 
+                                 When value of supportTlsCos(5) is 1:
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortTlsCVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional:
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortCtagCos
+                                 
+                                 Case 6: To create a service port when zxAnSrvPortServiceMode is
+                                 tagAndEtype(6):
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortUserVid,
+                                 zxAnSrvPortUserEthType,
+                                 zxAnSrvPortUserDefinedEthType,
+                                 zxAnSrvPortCVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortSVid,
+                                 zxAnSrvPortCtagCos,
+                                 zxAnSrvPortStagCos,
+                                 zxAnSrvPortIngressTrafficPrf,
+                                 zxAnSrvPortEgressTrafficPrf,
+                                 
+                                 Case 7: To create a service port when zxAnSrvPortServiceMode is
+                                 tagAndCos(7):
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortUserVid,
+                                 zxAnSrvPortUserCos,
+                                 zxAnSrvPortCVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortSVid,
+                                 zxAnSrvPortCtagCos,
+                                 zxAnSrvPortStagCos,
+                                 zxAnSrvPortIngressTrafficPrf,
+                                 zxAnSrvPortEgressTrafficPrf,
+                                 
+                                 Case 8: To create a service port when zxAnSrvPortServiceMode is
+                                 vlanRange(8):
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortStartUserVid,
+                                 zxAnSrvPortEndUserVid,
+                                 zxAnSrvPortSVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortStagCos,
+                                 zxAnSrvPortIngressTrafficPrf,
+                                 zxAnSrvPortEgressTrafficPrf,
+                                 
+                                 Case 9: To create a service port when zxAnSrvPortServiceMode is
+                                 vlanRangeAndEtype(9):
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortStartUserVid,
+                                 zxAnSrvPortEndUserVid,
+                                 zxAnSrvPortUserEthType,
+                                 zxAnSrvPortUserDefinedEthType,
+                                 zxAnSrvPortSVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortStagCos,
+                                 zxAnSrvPortIngressTrafficPrf,
+                                 zxAnSrvPortEgressTrafficPrf,
+                                 
+                                 Case 10: To create a service port when zxAnSrvPortServiceMode is
+                                 vlanRangeAndCos(10):
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortStartUserVid,
+                                 zxAnSrvPortEndUserVid,
+                                 zxAnSrvPortUserCos,
+                                 zxAnSrvPortSVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortStagCos,
+                                 zxAnSrvPortIngressTrafficPrf,
+                                 zxAnSrvPortEgressTrafficPrf,
+                                 
+                                 Case 11: To create a service port when zxAnSrvPortServiceMode is
+                                 batchBindVlan(11):
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortStartUserVid,
+                                 zxAnSrvPortEndUserVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortIngressTrafficPrf,
+                                 zxAnSrvPortEgressTrafficPrf,
+                                 
+                                 Case 12: To create a service port when zxAnSrvPortServiceMode is
+                                 doubleVlan(12):
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortUserVid,
+                                 zxAnSrvPortUserSVid,
+                                 zxAnSrvPortCVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional :
+                                 zxAnSrvPortSVid,
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortStagCos,
+                                 zxAnSrvPortIngressTrafficPrf,
+                                 zxAnSrvPortEgressTrafficPrf,
+                                 
+                                 Case 13: To create a service port when zxAnSrvPortServiceMode is
+                                 doubleTlsVlan(13):
+                                 When value of supportTlsCos(1) is 0:
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortTlsSVid,
+                                 zxAnSrvPortTlsCVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional:
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 
+                                 When value of supportTlsCos(1) is 1:
+                                 - mandatoty:
+                                 zxAnSrvPortServiceMode,
+                                 zxAnSrvPortBrgIfId,
+                                 zxAnSrvPortTlsSVid,
+                                 zxAnSrvPortTlsCVid,
+                                 zxAnSrvPortRowStatus
+                                 - optional:
+                                 zxAnSrvPortDesc,
+                                 zxAnSrvPortAdminStatus,
+                                 zxAnSrvPortCtagCos,
+                                 zxAnSrvPortStagCos,
+                                 
+                                 After an entry is created , only variable zxAnSrvPortDesc and
+                                 zxAnSrvPortAdminStatus can be modified. If a manager tries to
+                                 modify any other variables in this entry,
+                                 agent will return error with snmp error code inconsistentValue.
+                                 ";
+                    max-elements 4194304;
+                    key "ifIndex zxAnSubIfIndex ";
+                    leaf ifIndex {
+                        description "A unique value, greater than zero, for each interface.  It
+                                     is recommended that values are assigned contiguously
+                                     starting from 1.  The value for each interface sub-layer
+                                     must remain constant at least from one re-initialization of
+                                     the entity's network management system to the next re-
+                                     initialization.";
+                        type int32 {
+                            range 1..2147483647;
+                        }
+                    }
+                    leaf zxAnSubIfIndex {
+                        description "Sub-interface index at this interface.";
+                        type int32;
+                    }
+                    leaf zxAnSrvPortDesc {
+                        description "A service port description string.";
+                        type string {
+                            length 0..64;
+                        }
+                    }
+                    leaf zxAnSrvPortAdminStatus {
+                        description "The administrative state of the service port.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                    }
+                    leaf zxAnSrvPortServiceMode {
+                        description "A traffic type for a service port. To distinguish specific
+                                     service traffic flow type, the packet information from
+                                     the user-side port is used, and this information is classfied
+                                     to differnet cases that is represented by the value of variable
+                                     zxAnSrvPortServiceMode.
+                                     After distinguishing the service traffic flow type based on the
+                                     packet information, a service port can be created, and additionally
+                                     the packet can be modified if you want.
+                                     For example:
+                                     - translate user-vlan to new cvlan
+                                     - add a svlan
+                                     - modify the svlan when user-side packet is double tagged
+                                     - translate the cos of svlan
+                                     
+                                     The following is the explanation of each value of variable
+                                     zxAnSrvPortServiceMode.
+                                     - untag(1)
+                                     create a service port when user packet is untag.
+                                     - untagAndEtype(2)
+                                     create a service port when user packet is untag and has a
+                                     specific Ethernet type.
+                                     - cos(3)
+                                     create a service port when user packet is priority tag.
+                                     - tag(4)
+                                     create a service port when user packet is single VLAN tag.
+                                     - tls(5)
+                                     create a service port for a TLS service.
+                                     - tagAndEtype(6)
+                                     create a service port when user packet is single VLAN tag and
+                                     has a specific Ethernet type.
+                                     - tagAndCos(7)
+                                     create a service port when user packet is single VLAN tag and
+                                     has a specific cos.
+                                     - vlanRange(8)
+                                     create a service port for a QinQ service. The user packet will
+                                     add a svlan when the vlan tag is in the vlan range.
+                                     - vlanRangeAndEtype(9)
+                                     create a service port for a QinQ service. The user packet will
+                                     add a svlan when the vlan tag is in the vlan range and has a
+                                     specific ethernet type.
+                                     - vlanRangeAndCos(10)
+                                     create a service port for a QinQ service. The user packet will
+                                     add a svlan when the vlan tag is in the vlan range and has a
+                                     specific cos.
+                                     - batchBindVlan(11)
+                                     create a service port for a transparent service.
+                                     - doubleVlan(12)
+                                     create a service port when user packet is double VLAN tag.
+                                     - doubleTlsVlan(13)
+                                     create a service port for a double tag TLS service.
+                                     ";
+                        type enumeration {
+                            enum untag {
+                                value 1;
+                                description "";
+                            }
+                            enum untagAndEtype {
+                                value 2;
+                                description "";
+                            }
+                            enum cos {
+                                value 3;
+                                description "";
+                            }
+                            enum tag {
+                                value 4;
+                                description "";
+                            }
+                            enum tls {
+                                value 5;
+                                description "";
+                            }
+                            enum tagAndEtype {
+                                value 6;
+                                description "";
+                            }
+                            enum tagAndCos {
+                                value 7;
+                                description "";
+                            }
+                            enum vlanRange {
+                                value 8;
+                                description "";
+                            }
+                            enum vlanRangeAndEtype {
+                                value 9;
+                                description "";
+                            }
+                            enum vlanRangeAndCos {
+                                value 10;
+                                description "";
+                            }
+                            enum batchBindVlan {
+                                value 11;
+                                description "";
+                            }
+                            enum doubleVlan {
+                                value 12;
+                                description "";
+                            }
+                            enum doubleTlsVlan {
+                                value 13;
+                                description "";
+                            }
+                        }
+                        default untag;
+                    }
+                    leaf zxAnSrvPortBrgIfId {
+                        description "Vport index from 1 to 128.";
+                        type int32 {
+                            range 1..128;
+                        }
+                        default 1;
+                    }
+                    leaf zxAnSrvPortUserVid {
+                        description "User inner VLAN.
+                                     '0' indicates untag.";
+                        type int32 {
+                            range 0..4094;
+                        }
+                        default 0;
+                    }
+                    leaf zxAnSrvPortUserSVid {
+                        description "User inner SVLAN.
+                                     '0' indicates not configured.";
+                        type int32 {
+                            range 0..4094;
+                        }
+                        default 0;
+                    }
+                    leaf zxAnSrvPortUserCos {
+                        description "User priority, from 0 to 7.
+                                     '0xFF' indicates not configured.";
+                        type int32 {
+                            range 0..255;
+                        }
+                        default 255;
+                    }
+                    leaf zxAnSrvPortUserStagCos {
+                        description "User SVLAN priority,from 0 to 7.
+                                     '0xFF' indicates not configured.";
+                        type int32 {
+                            range 0..255;
+                        }
+                        default 255;
+                    }
+                    leaf zxAnSrvPortStartUserVid {
+                        description "User inner start VLAN.
+                                     '0' indicates untag.";
+                        type int32 {
+                            range 0..4094;
+                        }
+                        default 0;
+                    }
+                    leaf zxAnSrvPortEndUserVid {
+                        description "User inner end vlan.
+                                     '0' indicates untag.";
+                        type int32 {
+                            range 0..4094;
+                        }
+                        default 0;
+                    }
+                    leaf zxAnSrvPortUserEthType {
+                        description "User Ethernet type.
+                                     noConfig(1)   - User ethernet type is not configured.
+                                     pppoe(2)      - User ethernet type is PPPoE.
+                                     ipoe(3)       - User ethernet type is IPoE.
+                                     userDefined(4)- User ethernet type is configured in
+                                     zxAnSrvPortUserDefinedEthType.";
+                        type enumeration {
+                            enum noConfig {
+                                value 1;
+                                description "";
+                            }
+                            enum pppoe {
+                                value 2;
+                                description "";
+                            }
+                            enum ipoe {
+                                value 3;
+                                description "";
+                            }
+                            enum userDefined {
+                                value 4;
+                                description "";
+                            }
+                        }
+                        default noConfig;
+                    }
+                    leaf zxAnSrvPortUserDefinedEthType {
+                        description "Specify the user side of ethernet packet type that is defined by
+                                     user.
+                                     When zxAnSrvPortUserEthType is userDefined(4), this object is
+                                     effective.
+                                     
+                                     Different ethernet packet type is seperated with ','.
+                                     For example: 0x8101,0x8102,0x8848.";
+                        type string {
+                            length 0..32;
+                        }
+                    }
+                    leaf zxAnSrvPortCVid {
+                        description "The network side CVLAN.
+                                     '0' indicates not configured.";
+                        type int32 {
+                            range 0..4094;
+                        }
+                        default 0;
+                    }
+                    leaf zxAnSrvPortSVid {
+                        description "The network side SVLAN.
+                                     '0' indicates not configured.";
+                        type int32 {
+                            range 0..4094;
+                        }
+                        default 0;
+                    }
+                    leaf zxAnSrvPortCtagCos {
+                        description "This object indicates network side CVLAN CoS.
+                                     '0xFF' indicates not configured.";
+                        type int32 {
+                            range 0..255;
+                        }
+                        default 255;
+                    }
+                    leaf zxAnSrvPortStagCos {
+                        description "This object indicates network side SVLAN CoS.
+                                     '0xFF' indicates not configured.";
+                        type int32 {
+                            range 0..255;
+                        }
+                        default 255;
+                    }
+                    leaf zxAnSrvPortTlsSVid {
+                        description "TLS SVLAN.
+                                     When zxAnServicePortServiceMode is tls(5) or doubleTlsVlan(13),
+                                     value 0 indicates untag.
+                                     When zxAnServicePortServiceMode is not tls(5) or doubleTlsVlan(13),
+                                     value 0 indicates not configured.";
+                        type int32 {
+                            range 0..4094;
+                        }
+                        default 0;
+                    }
+                    leaf zxAnSrvPortIngressTrafficPrf {
+                        description "Ingress traffic profile.
+                                     The zero length means not configured.";
+                        type string {
+                            length 0..32;
+                        }
+                    }
+                    leaf zxAnSrvPortEgressTrafficPrf {
+                        description "Egress traffic profile.
+                                     The zero length means not configured.";
+                        type string {
+                            length 0..32;
+                        }
+                    }
+                    leaf zxAnSrvPortTlsCVid {
+                        description "TLS CVLAN.
+                                     When zxAnServicePortServiceMode is not doubleTlsVlan(13), value 0
+                                     indicates not configured.";
+                        type int32 {
+                            range 0..4094;
+                        }
+                        default 0;
+                    }
+                    leaf zxAnSrvPortCosList {
+                        description "CoS list.
+                                     
+                                     |  bit 0   |  bit 1   |    ...   bit 7   |
+                                     +----------+----------+----...-----------+
+                                     |  CoS 0   |  CoS 1   |    ...   CoS 7   |
+                                     +----------+----------+----...-----------+
+                                     
+                                     If one bit is set to '1', the corresponding CoS is configured to
+                                     CoS list.
+                                     It is valid when zxAnSrvPortUserCos, zxAnSrvPortUserStagCos,
+                                     zxAnSrvPortCtagCos and zxAnSrvPortStagCos is set to '0xFF'(not
+                                     configured).";
+                        type uint8;
+                    }
+                    leaf zxAnSrvPortCarThresh {
+                        description "CAR (Commit Access Rate) threshold.
+                                     The flow can take x% of the tokens from the token bucket at most.
+                                     When the number of the tokens taken from the token bucket exceeds
+                                     x%, the flow is forbidden to take any tokens.
+                                     For example, percent100 means the flow can take
+                                     tokens once the token bucket is not empty.";
+                        type enumeration {
+                            enum percent10 {
+                                value 1;
+                                description "";
+                            }
+                            enum percent25 {
+                                value 2;
+                                description "";
+                            }
+                            enum percent50 {
+                                value 3;
+                                description "";
+                            }
+                            enum percent75 {
+                                value 4;
+                                description "";
+                            }
+                            enum percent100 {
+                                value 5;
+                                description "";
+                            }
+                        }
+                        default percent100;
+                    }
+                    leaf zxAnSrvPortUserVidExpandMode {
+                        description "User inner VLAN expanding mode.";
+                        type enumeration {
+                            enum increment {
+                                value 1;
+                                description "";
+                            }
+                            enum decrement {
+                                value 2;
+                                description "";
+                            }
+                            enum notConfigured {
+                                value 255;
+                                description "";
+                            }
+                        }
+                        default notConfigured;
+                    }
+                    leaf zxAnSrvPortCvidExpandMode {
+                        description "The network side CVLAN expanding mode.";
+                        type enumeration {
+                            enum increment {
+                                value 1;
+                                description "";
+                            }
+                            enum decrement {
+                                value 2;
+                                description "";
+                            }
+                            enum notConfigured {
+                                value 255;
+                                description "";
+                            }
+                        }
+                        default notConfigured;
+                    }
+                    leaf zxAnSrvPortSvidExpandMode {
+                        description "The network side SVLAN expanding mode.";
+                        type enumeration {
+                            enum increment {
+                                value 1;
+                                description "";
+                            }
+                            enum decrement {
+                                value 2;
+                                description "";
+                            }
+                            enum notConfigured {
+                                value 255;
+                                description "";
+                            }
+                        }
+                        default notConfigured;
+                    }
+                    leaf zxAnSrvPortExpandNumber {
+                        description "The number of the expanding rules of the service port.
+                                     '0' indicates not expanding.";
+                        type int32 {
+                            range 0..4094;
+                        }
+                        default 0;
+                    }
+                }
+            }
+        }
+    }
+}

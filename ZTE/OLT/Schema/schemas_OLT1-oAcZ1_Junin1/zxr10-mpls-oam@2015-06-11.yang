@@ -1,0 +1,1119 @@
+module zxr10-mpls-oam {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/mpls-oam'
+            ;
+  prefix mpls-oam ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe MPLS-OAM'
+              ;
+  revision 2015-06-11 {
+    description '1.Add statistic-switch node for operation/mpls-oam/statistics/'
+              + 'remote-nodes/remote-node.'+"\n"
+              + '2.Add statistic-switch node for operation/mpls-oam/statistics/'
+              + 'local-nodes/local-node.'+"\n"
+              + '3.Add statistic-switch node for operation/mpls-oam/statistics/'
+              + 'all-node.'
+                ;
+  }
+  revision 2015-01-08 {
+    description "1.Add a config-frequency typedef Node.
+\n2.Modify frequency's "
+              + "DerivedType of local-node.
+\n3.Modify frequency's DerivedType "
+              + "of transit-node.
+\n4.Modify frequency's DerivedType of egress-"
+              + "node.\n5.Modify node-type's enum value in remote-node."
+                ;
+  }
+  revision 2014-04-01 {
+    description 'Initial version.'
+                ;
+  }
+  typedef statistic-type {
+    type enumeration {
+      enum all {
+        value 1 ;
+        description 'all packets.'
+                    ;
+      }
+      enum cv {
+        value 2 ;
+        description 'CV packets.'
+                    ;
+      }
+      enum ffd {
+        value 3 ;
+        description 'FFD packets.'
+                    ;
+      }
+      enum bdi {
+        value 4 ;
+        description 'BDI packets.'
+                    ;
+      }
+      enum fdi {
+        value 5 ;
+        description 'FDI packets.'
+                    ;
+      }
+    }
+    description 'The packet type of MPLS-OAM.'
+                ;
+  }
+  typedef frequency {
+    type enumeration {
+      enum 10 {
+        value 1 ;
+        description 'The frequency of FFD packet is 10ms.'
+                    ;
+      }
+      enum 20 {
+        value 2 ;
+        description 'The frequency of FFD packet is 20ms.'
+                    ;
+      }
+      enum 50 {
+        value 3 ;
+        description 'The frequency of FFD packet is 50ms.'
+                    ;
+      }
+      enum 100 {
+        value 4 ;
+        description 'The frequency of FFD packet is 100ms.'
+                    ;
+      }
+      enum 200 {
+        value 5 ;
+        description 'The frequency of FFD packet is 200ms.'
+                    ;
+      }
+      enum 500 {
+        value 6 ;
+        description 'The frequency of FFD packet is 500ms.'
+                    ;
+      }
+      enum 3.3 {
+        value 7 ;
+        description 'The frequency of FFD packet is 3.3ms.'
+                    ;
+      }
+      enum 1000 {
+        value 8 ;
+        description 'The frequency of CV packet is 1000ms.'
+                    ;
+      }
+      enum 0 {
+        value 0 ;
+        description 'The frequency is not config.'
+                    ;
+      }
+    }
+    description 'The frequency of FFD packet.'
+                ;
+  }
+  typedef packet-type {
+    type enumeration {
+      enum cv {
+        value 1 ;
+        description 'The packet type is CV.'
+                    ;
+      }
+      enum ffd {
+        value 7 ;
+        description 'The packet type is FFD.'
+                    ;
+      }
+    }
+    description 'The packet type of MPLS-OAM.'
+                ;
+  }
+  typedef trans-status {
+    type enumeration {
+      enum dClient {
+        value 1 ;
+        description 'The transfer status of this instance is dClient.'
+                    ;
+      }
+      enum dInitStat {
+        value 2 ;
+        description 'The transfer status of this instance is dInitStat.'
+                    ;
+      }
+      enum OK {
+        value 3 ;
+        description 'The transfer status of this instance is OK.'
+                    ;
+      }
+    }
+    description 'The transfer status of instance.'
+                ;
+  }
+  typedef detect-status {
+    type enumeration {
+      enum dLOCV {
+        value 1 ;
+        description 'The detect status of this instance is dLOCV.'
+                    ;
+      }
+      enum OK {
+        value 2 ;
+        description 'The detect status of this instance is OK.'
+                    ;
+      }
+      enum dServer {
+        value 3 ;
+        description 'The detect status of this instance is dServer.'
+                    ;
+      }
+      enum dClient {
+        value 4 ;
+        description 'The detect status of this instance is dClient.'
+                    ;
+      }
+      enum dTTSI_Mismatch {
+        value 5 ;
+        description 'The detect status of this instance is dTTSI_Mismatch.'
+                    ;
+      }
+      enum dTTSI_Mismerge {
+        value 6 ;
+        description 'The detect status of this instance is dTTSI_Mismerge.'
+                    ;
+      }
+      enum dExcess {
+        value 7 ;
+        description 'The detect status of this instance is dExcess.'
+                    ;
+      }
+      enum dUnknown {
+        value 8 ;
+        description 'The detect status of this instance is dUnknown.'
+                    ;
+      }
+      enum dInitStat {
+        value 9 ;
+        description 'The detect status of this instance is dInitStat.'
+                    ;
+      }
+    }
+    description 'The detect status of instance.'
+                ;
+  }
+  typedef config-frequency {
+    type enumeration {
+      enum 10 {
+        value 1 ;
+        description 'The frequency of FFD packet is 10ms.'
+                    ;
+      }
+      enum 20 {
+        value 2 ;
+        description 'The frequency of FFD packet is 20ms.'
+                    ;
+      }
+      enum 50 {
+        value 3 ;
+        description 'The frequency of FFD packet is 50ms.'
+                    ;
+      }
+      enum 100 {
+        value 4 ;
+        description 'The frequency of FFD packet is 100ms.'
+                    ;
+      }
+      enum 200 {
+        value 5 ;
+        description 'The frequency of FFD packet is 200ms.'
+                    ;
+      }
+      enum 500 {
+        value 6 ;
+        description 'The frequency of FFD packet is 500ms.'
+                    ;
+      }
+      enum 3.3 {
+        value 7 ;
+        description 'The frequency of FFD packet is 3.3ms.'
+                    ;
+      }
+    }
+    description 'The config frequency of FFD packet.'
+                ;
+  }
+  typedef statistic-switch {
+    type enumeration {
+      enum on {
+        value 1 ;
+        description 'start statistics switch of packet.'
+                    ;
+      }
+      enum off {
+        value 2 ;
+        description 'stop statistics switch of packet.'
+                    ;
+      }
+    }
+    description 'The statistics switch of packet.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model Info.'
+                ;
+    container mpls-oam {
+      description 'MPLS-OAM instances configuration.'
+                  ;
+      container global {
+        description 'Configure MPLS-OAM global Info.'
+                    ;
+        leaf status {
+          description 'The switch for turning on/off MPLS-OAM function(default:'
+                    + ' disable).'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Turn off MPLS-OAM function.'
+                          ;
+            }
+            enum enable {
+              value 1 ;
+              description 'Turn on MPLS-OAM function.'
+                          ;
+            }
+          }
+          default disable ;
+        }
+        leaf lsp-id {
+          description 'Configure MPLS-OAM LSP ID value(default:1).'
+                      ;
+          type uint16 {
+            range 0..1 {
+              description 'The range of MPLS-OAM LSP ID.'
+                          ;
+            }
+          }
+          default 1 ;
+        }
+      }
+      container local-nodes {
+        description 'Configure MPLS-OAM local node Info.'
+                    ;
+        list local-node {
+          description 'Configure MPLS-OAM local node Info.'
+                      ;
+          key 'tunnel-id ingress-id'
+              ;
+          leaf tunnel-id {
+            description 'Configure MPLS-OAM local node tunnel ID.'
+                        ;
+            type uint32 ;
+          }
+          leaf ingress-id {
+            description 'Configure MPLS-OAM local node ingress ID.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf status {
+            description 'The switch for turning on/off local node test function'
+                      + '(default: disable).'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Turn off local node test function.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Turn on local node test function.'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          choice packet-type {
+            description 'Configure MPLS-OAM packet type.'
+                        ;
+            case cv {
+              description 'The packet type is CV.'
+                          ;
+              container cv {
+                description 'The packet type is CV.'
+                            ;
+                leaf cv-priority {
+                  description 'Configure the priority of CV packet.'
+                              ;
+                  type uint8 {
+                    range 0..7 {
+                      description 'The range of cv packet priority.'
+                                  ;
+                    }
+                  }
+                  default 0 ;
+                }
+              }
+            }
+            case ffd {
+              description 'The packet type is FFD.'
+                          ;
+              container ffd {
+                description 'The packet type is FFD.'
+                            ;
+                leaf frequency {
+                  description 'Configure the frequency of FFD packet.'
+                              ;
+                  type config-frequency ;
+                  units ms ;
+                  mandatory true ;
+                }
+                leaf ffd-priority {
+                  description 'Configure the priority of FFD packet.'
+                              ;
+                  type uint8 {
+                    range 0..7 {
+                      description 'The range of ffd packet priority.'
+                                  ;
+                    }
+                  }
+                  default 0 ;
+                }
+              }
+            }
+          }
+        }
+      }
+      container transit-nodes {
+        description 'Configure MPLS-OAM transit node Info.'
+                    ;
+        list transit-node {
+          description 'Configure MPLS-OAM transit node Info.'
+                      ;
+          key 'tunnel-id ingress-id'
+              ;
+          leaf tunnel-id {
+            description 'Configure MPLS-OAM transit node tunnel ID.'
+                        ;
+            type uint32 ;
+          }
+          leaf ingress-id {
+            description 'Configure MPLS-OAM transit node ingress ID.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf back-tunnel {
+            description 'Configure back-tunnel ID of transit node.'
+                        ;
+            type uint32 ;
+            mandatory true ;
+          }
+          leaf share-mode {
+            description 'Configure the share mode of transit node back-tunnel.'
+                        ;
+            type enumeration {
+              enum no-share {
+                value 0 ;
+                description 'No-share mode.'
+                            ;
+              }
+              enum share {
+                value 1 ;
+                description 'Share mode.'
+                            ;
+              }
+            }
+            default no-share ;
+          }
+          choice packet-type {
+            description 'Configure MPLS-OAM packet type.'
+                        ;
+            mandatory true ;
+            case cv {
+              description 'The packet type is CV.'
+                          ;
+              container cv {
+                description 'The packet type is CV.'
+                            ;
+                leaf cv {
+                  description 'The packet type is CV.'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+              }
+            }
+            case ffd {
+              description 'The packet type is FFD.'
+                          ;
+              container ffd {
+                description 'The packet type is FFD.'
+                            ;
+                leaf frequency {
+                  description 'Configure the frequency of FFD packet.'
+                              ;
+                  type config-frequency ;
+                  units ms ;
+                  mandatory true ;
+                }
+              }
+            }
+          }
+        }
+      }
+      container egress-nodes {
+        description 'Configure MPLS-OAM egress node Info.'
+                    ;
+        list egress-node {
+          description 'Configure MPLS-OAM egress node Info.'
+                      ;
+          key 'tunnel-id ingress-id'
+              ;
+          leaf tunnel-id {
+            description 'Configure MPLS-OAM egress node tunnel ID.'
+                        ;
+            type uint32 ;
+          }
+          leaf ingress-id {
+            description 'Configure MPLS-OAM egress node ingress ID.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf back-tunnel {
+            description 'Configure back-tunnel ID of transit node.'
+                        ;
+            type uint32 ;
+            mandatory true ;
+          }
+          leaf share-mode {
+            description 'Configure the share mode of transit node back-tunnel.'
+                        ;
+            type enumeration {
+              enum no-share {
+                value 0 ;
+                description 'No-share mode.'
+                            ;
+              }
+              enum share {
+                value 1 ;
+                description 'Share mode.'
+                            ;
+              }
+            }
+            default no-share ;
+          }
+          choice packet-type {
+            description 'Configure MPLS-OAM packet type.'
+                        ;
+            mandatory true ;
+            case cv {
+              description 'The packet type is CV.'
+                          ;
+              container cv {
+                description 'The packet type is CV.'
+                            ;
+                leaf cv {
+                  description 'The packet type is CV.'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+              }
+            }
+            case ffd {
+              description 'The packet type is FFD.'
+                          ;
+              container ffd {
+                description 'The packet type is FFD.'
+                            ;
+                leaf frequency {
+                  description 'Configure the frequency of FFD packet.'
+                              ;
+                  type config-frequency ;
+                  units ms ;
+                  mandatory true ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model Info.'
+                ;
+    container mpls-oam {
+      description 'MPLS-OAM state parameters.'
+                  ;
+      container local-nodes {
+        description 'The information of MPLS-OAM local node.'
+                    ;
+        list local-node {
+          description 'The information of MPLS-OAM local node.'
+                      ;
+          key 'tunnel-id lsp-id ingress-id'
+              ;
+          leaf tunnel-id {
+            description 'The tunnel ID of local node.'
+                        ;
+            type uint32 ;
+          }
+          leaf ingress-id {
+            description 'The ingress ID of local node.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf lsp-id {
+            description 'The value of MPLS-OAM LSP ID.'
+                        ;
+            type uint16 {
+              range 0..1 {
+                description 'The range of MPLS-OAM LSP ID.'
+                            ;
+              }
+            }
+          }
+          leaf packet-type {
+            description 'The packet type of MPLS-OAM.'
+                        ;
+            type packet-type ;
+          }
+          leaf frequency {
+            description 'The frequency of FFD packet.'
+                        ;
+            type frequency ;
+            units ms ;
+          }
+          leaf enable-status {
+            description 'The enable status of local node.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'The instance status is enable.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'The instance status is disable.'
+                            ;
+              }
+            }
+          }
+          leaf ascription {
+            description 'The status of ascription,found or not found.'
+                        ;
+            type enumeration {
+              enum yes {
+                value 1 ;
+                description 'The ascription is found.'
+                            ;
+              }
+              enum no {
+                value 0 ;
+                description 'The ascription is not found.'
+                            ;
+              }
+            }
+          }
+          leaf trans-status {
+            description 'The transfer status of this instance.'
+                        ;
+            type trans-status ;
+          }
+          leaf detect-status {
+            description 'The detect status of this instance.'
+                        ;
+            type detect-status ;
+          }
+          leaf start-cv-count {
+            description 'Statistics of CV packet message start or not.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Statistics of CV packet message disable.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Statistics of CV packet message enable.'
+                            ;
+              }
+            }
+          }
+          leaf start-ffd-count {
+            description 'Statistics of FFD packet message start or not.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Statistics of FFD packet message disable.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Statistics of FFD packet message enable.'
+                            ;
+              }
+            }
+          }
+          leaf start-fdi-count {
+            description 'Statistics of FDI packet message start or not.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Statistics of FDI packet message disable.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Statistics of FDI packet message enable.'
+                            ;
+              }
+            }
+          }
+          leaf start-bdi-count {
+            description 'Statistics of BDI packet message start or not.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Statistics of BDI packet message disable.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Statistics of BDI packet message enable.'
+                            ;
+              }
+            }
+          }
+          leaf count-cv {
+            description 'The number of CV packet messages.'
+                        ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The range of CV packets.'
+                            ;
+              }
+            }
+          }
+          leaf count-ffd {
+            description 'The number of FFD packet messages.'
+                        ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The range of FFD packets.'
+                            ;
+              }
+            }
+          }
+          leaf count-fdi {
+            description 'The number of FDI packet messages.'
+                        ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The range of FDI packets.'
+                            ;
+              }
+            }
+          }
+          leaf count-bdi {
+            description 'The number of BDI packet messages.'
+                        ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The range of BDI packets.'
+                            ;
+              }
+            }
+          }
+        }
+      }
+      container remote-nodes {
+        description 'The information of MPLS-OAM remote node.'
+                    ;
+        list remote-node {
+          description 'The information of MPLS-OAM remote node.'
+                      ;
+          key 'tunnel-id lsp-id ingress-id'
+              ;
+          leaf tunnel-id {
+            description 'The tunnel ID of remote node.'
+                        ;
+            type uint32 ;
+          }
+          leaf ingress-id {
+            description 'The ingress ID of remote node.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf lsp-id {
+            description 'The value of MPLS-OAM LSP ID.'
+                        ;
+            type uint16 {
+              range 0..1 {
+                description 'The range of MPLS-OAM LSP ID.'
+                            ;
+              }
+            }
+          }
+          leaf node-type {
+            description 'The node type of MPLS-OAM.'
+                        ;
+            type enumeration {
+              enum egress {
+                value 3 ;
+                description 'The node type is egress node.'
+                            ;
+              }
+              enum transit {
+                value 2 ;
+                description 'The node type is transit node.'
+                            ;
+              }
+            }
+          }
+          leaf packet-type {
+            description 'The packet type of MPLS-OAM.'
+                        ;
+            type packet-type ;
+          }
+          leaf frequency {
+            description 'The frequency of FFD packet.'
+                        ;
+            type frequency ;
+            units ms ;
+          }
+          leaf back-tunnel-id {
+            description 'The index value of backward tunnel.'
+                        ;
+            type uint32 ;
+          }
+          leaf share-mode {
+            description 'The share mode of backward tunnel.'
+                        ;
+            type enumeration {
+              enum share {
+                value 1 ;
+                description 'Share mode.'
+                            ;
+              }
+              enum no-share {
+                value 0 ;
+                description 'No share mode.'
+                            ;
+              }
+            }
+          }
+          leaf ascription {
+            description 'The status of ascription,found or not found.'
+                        ;
+            type enumeration {
+              enum yes {
+                value 1 ;
+                description 'The ascription is found.'
+                            ;
+              }
+              enum no {
+                value 0 ;
+                description 'The ascription is not found.'
+                            ;
+              }
+            }
+          }
+          leaf trans-status {
+            description 'The transfer status of this instance.'
+                        ;
+            type trans-status ;
+          }
+          leaf detect-status {
+            description 'The detect status of this instance.'
+                        ;
+            type detect-status ;
+          }
+          leaf start-cv-count {
+            description 'Statistics of CV packet message start or not.'
+                        ;
+            type enumeration {
+              enum false {
+                value 0 ;
+                description 'Statistics of CV packet message disable.'
+                            ;
+              }
+              enum true {
+                value 1 ;
+                description 'Statistics of CV packet message enable.'
+                            ;
+              }
+            }
+          }
+          leaf start-ffd-count {
+            description 'Statistics of FFD packet message start or not.'
+                        ;
+            type enumeration {
+              enum false {
+                value 0 ;
+                description 'Statistics of FFD packet message disable.'
+                            ;
+              }
+              enum true {
+                value 1 ;
+                description 'Statistics of FFD packet message enable.'
+                            ;
+              }
+            }
+          }
+          leaf start-fdi-count {
+            description 'Statistics of FDI packet message start or not.'
+                        ;
+            type enumeration {
+              enum false {
+                value 0 ;
+                description 'Statistics of FDI packet message disable.'
+                            ;
+              }
+              enum true {
+                value 1 ;
+                description 'Statistics of FDI packet message enable.'
+                            ;
+              }
+            }
+          }
+          leaf start-bdi-count {
+            description 'Statistics of BDI packet message start or not.'
+                        ;
+            type enumeration {
+              enum false {
+                value 0 ;
+                description 'Statistics of BDI packet message disable.'
+                            ;
+              }
+              enum true {
+                value 1 ;
+                description 'Statistics of BDI packet message disable.'
+                            ;
+              }
+            }
+          }
+          leaf count-cv {
+            description 'The number of CV packet messages.'
+                        ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The range of CV packets.'
+                            ;
+              }
+            }
+          }
+          leaf count-ffd {
+            description 'The number of FFD packet messages.'
+                        ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The range of FFD packets.'
+                            ;
+              }
+            }
+          }
+          leaf count-fdi {
+            description 'The number of FDI packet messages.'
+                        ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The range of FDI packets.'
+                            ;
+              }
+            }
+          }
+          leaf count-bdi {
+            description 'The number of BDI packet messages.'
+                        ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The range of BDI packets.'
+                            ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description 'Operations model Info.'
+                ;
+    container mpls-oam {
+      description 'MPLS-OAM operation parameters.'
+                  ;
+      container statistics {
+        description 'MPLS-OAM statistic operation.'
+                    ;
+        container all-node {
+          description 'The statistic operation for all node.'
+                      ;
+          presence 'statistic all node'
+                   ;
+          leaf statistic-type {
+            description 'The packet type of statistic,including all packet,CV p'
+                      + 'acket,FFD packet,FDI packet,BDI packet.'
+                        ;
+            type statistic-type ;
+            mandatory true ;
+          }
+          leaf statistic-switch {
+            description 'The statistics switch of packet.'
+                        ;
+            type statistic-switch ;
+            default on ;
+            ncd:revise-date 2015-06-11 ;
+          }
+        }
+        container local-nodes {
+          description 'The statistic operation for local node.'
+                      ;
+          list local-node {
+            description 'The statistic operation for local node.'
+                        ;
+            key 'tunnel-id ingress-id'
+                ;
+            leaf tunnel-id {
+              description 'The tunnel ID of this local node.'
+                          ;
+              type uint32 ;
+            }
+            leaf ingress-id {
+              description 'The ingress ID of this local node.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf statistic-type {
+              description 'The packet type of statistic,including all packet,CV'
+                        + ' packet,FFD packet,FDI packet,BDI packet.'
+                          ;
+              type statistic-type ;
+              mandatory true ;
+            }
+            leaf statistic-switch {
+              description 'The statistics switch of local node.'
+                          ;
+              type statistic-switch ;
+              default on ;
+              ncd:revise-date 2015-06-11 ;
+            }
+          }
+        }
+        container remote-nodes {
+          description 'The statistic operation for remote node.'
+                      ;
+          list remote-node {
+            description 'The statistic operation for remote node.'
+                        ;
+            key 'tunnel-id ingress-id'
+                ;
+            leaf tunnel-id {
+              description 'The tunnel ID of this remote node.'
+                          ;
+              type uint32 ;
+            }
+            leaf ingress-id {
+              description 'The ingress ID of this remote node.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf statistic-type {
+              description 'The packet type of statistic,including all packet,CV'
+                        + ' packet,FFD packet,FDI packet,BDI packet.'
+                          ;
+              type statistic-type ;
+              mandatory true ;
+            }
+            leaf statistic-switch {
+              description 'The statistics switch of remote node.'
+                          ;
+              type statistic-switch ;
+              default on ;
+              ncd:revise-date 2015-06-11 ;
+            }
+          }
+        }
+      }
+      container clear-statistics {
+        description 'Clear MPLS-OAM statistic Info.'
+                    ;
+        container local-node {
+          description 'Clear local node statistic Info.'
+                      ;
+          presence 'clear local node'
+                   ;
+          container tunnel {
+            description 'The tunnel information of this local node.'
+                        ;
+            presence tunnel ;
+            leaf tunnel-id {
+              description 'The tunnel ID of this local node.'
+                          ;
+              type uint32 ;
+              mandatory true ;
+            }
+            leaf ingress-id {
+              description 'The ingress ID of this local node.'
+                          ;
+              type ncd:ipv4-address ;
+              mandatory true ;
+            }
+          }
+          leaf clear-type {
+            description 'The packet type of cleaning,including all packet,CV pa'
+                      + 'cket,FFD packet,FDI packet,BDI packet.'
+                        ;
+            type statistic-type ;
+            mandatory true ;
+          }
+        }
+        container remote-node {
+          description 'Clear remote node statistic Info.'
+                      ;
+          presence 'clear remote node'
+                   ;
+          container tunnel {
+            description 'The tunnel information of this remote node.'
+                        ;
+            presence tunnel ;
+            leaf tunnel-id {
+              description 'The tunnel ID of this remote node.'
+                          ;
+              type uint32 ;
+              mandatory true ;
+            }
+            leaf ingress-id {
+              description 'The ingress ID of this remote node.'
+                          ;
+              type ncd:ipv4-address ;
+              mandatory true ;
+            }
+          }
+          leaf clear-type {
+            description 'The packet type of cleaning,including all packet,CV pa'
+                      + 'cket,FFD packet,FDI packet,BDI packet.'
+                        ;
+            type statistic-type ;
+            mandatory true ;
+          }
+        }
+      }
+    }
+  }
+}

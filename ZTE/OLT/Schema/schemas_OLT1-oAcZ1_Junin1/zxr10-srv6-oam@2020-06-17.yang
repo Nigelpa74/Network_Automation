@@ -1,0 +1,105 @@
+module zxr10-srv6-oam {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/srv6-oam'
+            ;
+  prefix srv6-oam ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2020-06-17 {
+    description 'Initial version.
+Configure the generatation of END OP.'
+                ;
+  }
+  feature srv6-oam-function {
+    description 'SRv6 OAM function.'
+                ;
+  }
+  container configuration {
+    description 'SRv6 oam configuration.'
+                ;
+    container srv6-oam {
+      description 'SRv6 oam configuration.'
+                  ;
+      container srv6-oam-switch {
+        if-feature srv6-oam-function ;
+        description 'Enable or disable SRv6 OAM.'
+                    ;
+        leaf switch-set {
+          description 'Enable or disable SRv6 OAM.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Disable the function of SRv6 OAM.'
+                          ;
+            }
+            enum enable {
+              value 1 ;
+              description 'Enable the function of SRv6 OAM.'
+                          ;
+            }
+          }
+          default disable ;
+        }
+      }
+      container end-op {
+        if-feature srv6-oam-function ;
+        description 'End op configuration.'
+                    ;
+        list end-ops {
+          description 'End op configuration'
+                      ;
+          key locator-name ;
+          leaf locator-name {
+            description 'Locator name.'
+                        ;
+            type string {
+              length 1..31 {
+                description 'The length of locator name is from 1 to 31.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          choice mode {
+            description 'Choice mode.'
+                        ;
+            case auto {
+              description 'Automatic mode.'
+                          ;
+              leaf auto {
+                description 'Enable automatic mode.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+            }
+            case static {
+              description 'Static mode.'
+                          ;
+              leaf static {
+                description 'Enable static mode.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf func-code {
+                description 'Function OP code.'
+                            ;
+                type ncd:ipv6-address-none-zero ;
+                mandatory true ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

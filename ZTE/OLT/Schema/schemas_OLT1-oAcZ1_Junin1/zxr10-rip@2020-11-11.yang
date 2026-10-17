@@ -1,0 +1,2187 @@
+module zxr10-rip {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/rip'
+            ;
+  prefix rip ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2020-11-11 {
+    description 'Add leafs to set all interfaces of RIP to be passive.'
+                ;
+  }
+  revision 2020-09-21 {
+    description 'Modify the length of route policy name to 200 characters.'
+                ;
+  }
+  revision 2020-07-06 {
+    description 'Modify the length of encrypted text.'
+                ;
+  }
+  revision 2020-06-09 {
+    description 'Modify the range of route-map, the paths are configuration/rip'
+              + '/public-instance/redistributes and configuration/rip/vrf-redis'
+              + 'tributes.'
+                ;
+  }
+  revision 2017-09-26 {
+    description 'Initial version.'
+                ;
+  }
+  typedef enable-or-disable {
+    type enumeration {
+      enum disable {
+        value 0 ;
+        description 'The function is disabled.'
+                    ;
+      }
+      enum enable {
+        value 1 ;
+        description 'The function is enabled.'
+                    ;
+      }
+    }
+    description 'Define the state of function switch.'
+                ;
+  }
+  typedef select-mode-def {
+    type enumeration {
+      enum global {
+        value 1 ;
+        description 'The public network.'
+                    ;
+      }
+      enum vpn {
+        value 2 ;
+        description 'The VPN network.'
+                    ;
+      }
+    }
+    description 'The type of network. The "global" means the public network, th'
+              + 'e "vpn" means private network.'
+                ;
+  }
+  typedef route-status-def {
+    type enumeration {
+      enum invalid {
+        value 0 ;
+        description 'The route is invalid.'
+                    ;
+      }
+      enum invalid-and-best {
+        value 1 ;
+        description 'The route is invalid but is the best.'
+                    ;
+      }
+      enum valid {
+        value 2 ;
+        description 'The route is valid but not best.'
+                    ;
+      }
+      enum valid-and-best {
+        value 3 ;
+        description 'The route is valid and best.'
+                    ;
+      }
+    }
+    description 'The definition of route status.'
+                ;
+  }
+  typedef route-time-status-def {
+    type enumeration {
+      enum normal {
+        value 0 ;
+        description 'The route is normal.'
+                    ;
+      }
+      enum holddown {
+        value 1 ;
+        description 'The route is in holddown time.'
+                    ;
+      }
+      enum flush {
+        value 2 ;
+        description 'The route is out holddown time, possibly to be flushed.'
+                    ;
+      }
+    }
+    description 'The definition of route time status.'
+                ;
+  }
+  typedef route-owner-def {
+    type enumeration {
+      enum unknown {
+        value 0 ;
+        description 'The route owner is unknown.'
+                    ;
+      }
+      enum connected {
+        value 1 ;
+        description 'Connected route.'
+                    ;
+      }
+      enum static {
+        value 2 ;
+        description 'Static route.'
+                    ;
+      }
+      enum ospf-int {
+        value 3 ;
+        description 'OSPF-INT route.'
+                    ;
+      }
+      enum ospf-ext {
+        value 4 ;
+        description 'OSPF-EXT route.'
+                    ;
+      }
+      enum isis-l1 {
+        value 5 ;
+        description 'ISIS-L1 route.'
+                    ;
+      }
+      enum isis-l2 {
+        value 6 ;
+        description 'ISIS-L2 route.'
+                    ;
+      }
+      enum bgp-int {
+        value 7 ;
+        description 'BGP-INT route.'
+                    ;
+      }
+      enum bgp-ext {
+        value 8 ;
+        description 'BGP-EXT route.'
+                    ;
+      }
+      enum rip-connected {
+        value 9 ;
+        description 'RIP connected route.'
+                    ;
+      }
+      enum rip-discard {
+        value 10 ;
+        description 'RIP discard route.'
+                    ;
+      }
+      enum rip {
+        value 11 ;
+        description 'RIP route.'
+                    ;
+      }
+      enum nat {
+        value 12 ;
+        description 'NAT route.'
+                    ;
+      }
+      enum pat {
+        value 13 ;
+        description 'PAT route.'
+                    ;
+      }
+      enum user-ipaddr {
+        value 14 ;
+        description 'User IP address route.'
+                    ;
+      }
+      enum user-network {
+        value 15 ;
+        description 'User network route.'
+                    ;
+      }
+      enum user-special {
+        value 16 ;
+        description 'User special route.'
+                    ;
+      }
+      enum ps-busi-addr {
+        value 17 ;
+        description 'PS-BUSI-address route.'
+                    ;
+      }
+      enum ps-user-addr {
+        value 18 ;
+        description 'PS-user-address route.'
+                    ;
+      }
+      enum ipsec {
+        value 19 ;
+        description 'IPSec route.'
+                    ;
+      }
+    }
+    description 'The definition of route owner.'
+                ;
+  }
+  typedef rip-version-def {
+    type enumeration {
+      enum v1 {
+        value 1 ;
+        description 'RIP version 1.'
+                    ;
+      }
+      enum v2 {
+        value 2 ;
+        description 'RIP version 2.'
+                    ;
+      }
+    }
+    description 'The definition of RIP version.'
+                ;
+  }
+  container configuration {
+    description 'The configuration information processing of RIP module.'
+                ;
+    container rip {
+      description 'The configuration of RIP module.'
+                  ;
+      container public-instance {
+        description 'The configuration of RIP public instance.'
+                    ;
+        leaf version {
+          description 'Set routing protocol version.'
+                      ;
+          type rip-version-def ;
+          default v2 ;
+        }
+        leaf max-paths {
+          description 'Maximum number of parallel routes RIP can support.'
+                      ;
+          type uint8 {
+            range 1..32 ;
+          }
+          default 1 ;
+        }
+        leaf default-metric {
+          description 'Default metric of redistributed routes.'
+                      ;
+          type uint8 {
+            range 1..16 ;
+          }
+          default 1 ;
+        }
+        leaf distance {
+          description 'Define an administrative distance.'
+                      ;
+          type uint8 {
+            range 1..255 ;
+          }
+          default 120 ;
+        }
+        leaf auto-summary {
+          description 'Enable automatic network number summarization.'
+                      ;
+          type enable-or-disable ;
+          default enable ;
+        }
+        leaf validate-update-source {
+          description 'Perform sanity checks against source address of routing '
+                    + 'updates.'
+                      ;
+          type enable-or-disable ;
+          default enable ;
+        }
+        leaf flash-update-threshold {
+          description 'Specify flash update threshold in second.'
+                      ;
+          type uint8 {
+            range 1..30 ;
+          }
+          units second ;
+          default 5 ;
+        }
+        leaf bfd {
+          description 'Configure all interfaces BFD capability.'
+                      ;
+          type enable-or-disable ;
+          default disable ;
+        }
+        leaf fast-reroute {
+          description 'Enable RIP fast-reroute function.'
+                      ;
+          type enable-or-disable ;
+          default disable ;
+        }
+        leaf track-name {
+          description 'Event tracking.'
+                      ;
+          type string {
+            length 1..31 ;
+          }
+        }
+        container timer-basic {
+          description 'Adjust routing timers.'
+                      ;
+          presence timer-basic ;
+          leaf update-time {
+            description 'Interval between updates, default is 30(seconds).'
+                        ;
+            type uint32 {
+              range 1..65535 ;
+            }
+            units second ;
+            mandatory true ;
+          }
+          leaf invalid-time {
+            description 'Invalid time, default is 180(seconds).'
+                        ;
+            type uint32 {
+              range 1..65535 ;
+            }
+            units second ;
+            mandatory true ;
+          }
+          leaf holddown-time {
+            description 'Holddown time, default is 180(seconds).'
+                        ;
+            type uint32 {
+              range 0..65535 ;
+            }
+            units second ;
+            mandatory true ;
+          }
+          leaf flush-time {
+            description 'Flush time, default is 240(seconds).'
+                        ;
+            type uint32 {
+              range 1..65535 ;
+            }
+            units second ;
+            mandatory true ;
+          }
+        }
+        container output-delay {
+          description 'Interpacket delay of RIP updates.'
+                      ;
+          presence output-delay ;
+          leaf packets {
+            description 'Packet number.'
+                        ;
+            type uint32 {
+              range 1..4294967295 ;
+            }
+            mandatory true ;
+          }
+          leaf delay-time {
+            description 'Delay in milliseconds.'
+                        ;
+            type uint8 {
+              range 1..100 ;
+            }
+            units millisecond ;
+            mandatory true ;
+          }
+        }
+        container networks {
+          description 'The configuration of RIP networks in public instance.'
+                      ;
+          list network {
+            description 'Enable routing on an IP network.'
+                        ;
+            key 'network-addr network-wildmask'
+                ;
+            leaf network-addr {
+              description 'Network address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf network-wildmask {
+              description 'Network wild mask.'
+                          ;
+              type ncd:ipv4-imask ;
+            }
+          }
+        }
+        container neighbors {
+          description 'The configuration of RIP neighbors in public instance.'
+                      ;
+          list neighbor {
+            description 'Specify a neighbor router.'
+                        ;
+            key neighbor-addr ;
+            leaf neighbor-addr {
+              description 'Neighbor IP address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+        }
+        container redistributes {
+          description 'Redistribute information from another routing protocol.'
+                      ;
+          container redistribute-isiss {
+            description 'Redistribute information from ISIS.'
+                        ;
+            list redistribute-isis {
+              description 'Redistribute information from ISIS.'
+                          ;
+              key 'protocol process-id'
+                  ;
+              leaf protocol {
+                description 'Routing protocol type.'
+                            ;
+                type enumeration {
+                  enum isis-1 {
+                    value 6 ;
+                    description 'IS-IS level-1 routes.'
+                                ;
+                  }
+                  enum isis-2 {
+                    value 7 ;
+                    description 'IS-IS level-2 routes.'
+                                ;
+                  }
+                }
+              }
+              leaf process-id {
+                description 'Process ID of ISIS.'
+                            ;
+                type uint32 {
+                  range 0..65535 ;
+                }
+              }
+              leaf metric {
+                description 'Metric for redistributed routes.'
+                            ;
+                type uint8 {
+                  range 1..16 ;
+                }
+              }
+              leaf route-map {
+                description 'Apply route-map to redistribute.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+              }
+              leaf route-policy {
+                description 'Apply route-policy to redistribute.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+              }
+            }
+          }
+          container redistribute-ospfs {
+            description 'Redistribute information from OSPF.'
+                        ;
+            list redistribute-ospf {
+              description 'Redistribute information from OSPF.'
+                          ;
+              key 'protocol process-id'
+                  ;
+              leaf protocol {
+                description 'Routing protocol type.'
+                            ;
+                type enumeration {
+                  enum ospf-int {
+                    value 2 ;
+                    description 'Open shortest path first(OSPF) internal routes.'
+                                ;
+                  }
+                  enum ospf-ext {
+                    value 3 ;
+                    description 'Open shortest path first(OSPF) external routes.'
+                                ;
+                  }
+                }
+              }
+              leaf process-id {
+                description 'Process ID of OSPF.'
+                            ;
+                type uint32 {
+                  range 1..65535 ;
+                }
+              }
+              leaf metric {
+                description 'Metric for redistributed routes.'
+                            ;
+                type uint8 {
+                  range 1..16 ;
+                }
+              }
+              leaf route-map {
+                description 'Apply route-map to redistribute.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+              }
+              leaf route-policy {
+                description 'Apply route-policy to redistribute.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+              }
+            }
+          }
+          container redistribute-pss {
+            description 'Redistribute information from PS.'
+                        ;
+            list redistribute-ps {
+              description 'Redistribute information from PS.'
+                          ;
+              key protocol ;
+              leaf protocol {
+                description 'Routing protocol type.'
+                            ;
+                type enumeration {
+                  enum ps-busi-addr {
+                    value 12 ;
+                    description 'Ps-busi-addr routes.'
+                                ;
+                  }
+                  enum ps-user-addr {
+                    value 13 ;
+                    description 'Ps-user-addr routes.'
+                                ;
+                  }
+                }
+              }
+              leaf metric {
+                description 'Configure metric for redistributed routes.'
+                            ;
+                type uint8 {
+                  range 1..16 ;
+                }
+              }
+              leaf with-originate-metric {
+                description 'Use original metric of redistributed route.'
+                            ;
+                type empty ;
+              }
+              leaf route-map {
+                description 'Apply route-map to redistribute.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+              }
+              leaf route-policy {
+                description 'Apply route-policy to redistribute.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+              }
+            }
+          }
+          container redistribute-others {
+            description 'Redistribute information from another routing protocol.'
+                        ;
+            list redistribute-other {
+              description 'Redistribute information from another routing protoc'
+                        + 'ol.'
+                          ;
+              key protocol ;
+              leaf protocol {
+                description 'Routing protocol type.'
+                            ;
+                type enumeration {
+                  enum connected {
+                    value 0 ;
+                    description 'Connected routes.'
+                                ;
+                  }
+                  enum static {
+                    value 1 ;
+                    description 'Static routes.'
+                                ;
+                  }
+                  enum bgp-ext {
+                    value 4 ;
+                    description 'External border gateway protocol (EBGP) routes.'
+                                ;
+                  }
+                  enum bgp-int {
+                    value 5 ;
+                    description 'Internal border gateway protocol (IBGP) routes.'
+                                ;
+                  }
+                  enum nat {
+                    value 8 ;
+                    description 'NAT routes.'
+                                ;
+                  }
+                  enum natpt {
+                    value 9 ;
+                    description 'Port-address Translation routes.'
+                                ;
+                  }
+                  enum subscriber-host {
+                    value 10 ;
+                    description "Bras subscriber's host routes."
+                                ;
+                  }
+                  enum subscriber-aggregation {
+                    value 11 ;
+                    description "Bras subscriber's aggregation routes."
+                                ;
+                  }
+                  enum user-special {
+                    value 14 ;
+                    description 'User-special routes.'
+                                ;
+                  }
+                  enum ipsec {
+                    value 15 ;
+                    description 'IPsec routes.'
+                                ;
+                  }
+                }
+              }
+              leaf metric {
+                description 'Metric for redistributed routes.'
+                            ;
+                type uint8 {
+                  range 1..16 ;
+                }
+              }
+              leaf route-map {
+                description 'Apply route-map to redistribute.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+              }
+              leaf route-policy {
+                description 'Apply route-policy to redistribute.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+              }
+            }
+          }
+        }
+        container offset-lists {
+          description 'Apply offset lists to RIP.'
+                      ;
+          container for-insts {
+            description 'Apply offset lists to RIP instance.'
+                        ;
+            presence for-insts ;
+            list for-inst {
+              description 'Apply offset lists to RIP instance.'
+                          ;
+              key in-or-out ;
+              leaf in-or-out {
+                description 'Specify the direction of offset list.'
+                            ;
+                type enumeration {
+                  enum in {
+                    value 1 ;
+                    description 'Inbound packets.'
+                                ;
+                  }
+                  enum out {
+                    value 2 ;
+                    description 'Outbound packets.'
+                                ;
+                  }
+                }
+              }
+              leaf acl-name {
+                description 'Access list of networks to apply offset list(1-31 '
+                          + 'characters).'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                mandatory true ;
+              }
+              leaf metric {
+                description 'Offset list metric.'
+                            ;
+                type uint8 {
+                  range 0..16 ;
+                }
+                mandatory true ;
+              }
+            }
+          }
+          container for-ifs {
+            description 'Apply offset lists to RIP interface.'
+                        ;
+            presence for-ifs ;
+            list for-if {
+              description 'Apply offset lists to RIP interface.'
+                          ;
+              key 'in-or-out interface'
+                  ;
+              leaf in-or-out {
+                description 'Specify the direction of offset list.'
+                            ;
+                type enumeration {
+                  enum in {
+                    value 1 ;
+                    description 'Inbound packets.'
+                                ;
+                  }
+                  enum out {
+                    value 2 ;
+                    description 'Outbound packets.'
+                                ;
+                  }
+                }
+              }
+              leaf interface {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 ;
+                }
+              }
+              leaf acl-name {
+                description 'Access list of networks to apply offset (1-31 char'
+                          + 'acters).'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                mandatory true ;
+              }
+              leaf metric {
+                description 'Offset list metric.'
+                            ;
+                type uint8 {
+                  range 0..16 ;
+                }
+                mandatory true ;
+              }
+            }
+          }
+        }
+        container interfaces {
+          description 'Configuration of RIP interfaces.'
+                      ;
+          list interface {
+            description 'Configuration of RIP interface.'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 0..31 ;
+              }
+            }
+            leaf poison-reverse {
+              description 'Configure poison reverse.'
+                          ;
+              type enable-or-disable ;
+              default enable ;
+            }
+            leaf split-horizen {
+              description 'Configure split horizon.'
+                          ;
+              type enable-or-disable ;
+              default enable ;
+            }
+            leaf if-mode {
+              description 'The mode of the interface, include active(only send)'
+                        + ',passive(only recieve) ,normal(send and recieve) and'
+                        + ' default(depend on the RIP instance).'
+                          ;
+              type enumeration {
+                enum normal {
+                  value 0 ;
+                  description 'This RIP interface both send and receive.'
+                              ;
+                }
+                enum active {
+                  value 1 ;
+                  description 'This RIP interface only send.'
+                              ;
+                }
+                enum passive {
+                  value 2 ;
+                  description 'This RIP interface only receive.'
+                              ;
+                }
+                enum default {
+                  value 3 ;
+                }
+              }
+              default default ;
+            }
+            leaf only-send-subnet {
+              description 'Only send subnet information about the interface.'
+                          ;
+              type enable-or-disable ;
+              default disable ;
+            }
+            leaf originate-default-route {
+              description 'Originate default route on specified interface.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Can not originate default route on this interfac'
+                            + 'e.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Originate default route and send it on this inte'
+                            + 'rface.'
+                              ;
+                }
+                enum only {
+                  value 2 ;
+                  description 'Originate default route and only send on at this'
+                            + ' interface.'
+                              ;
+                }
+              }
+              default disable ;
+            }
+            leaf notify-default-route {
+              description 'Enable an interface to notify default route.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Can not notify default route on this interface.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Notify default route on this interface.'
+                              ;
+                }
+                enum only {
+                  value 2 ;
+                  description 'Only notify default route on this interface.'
+                              ;
+                }
+              }
+              default disable ;
+            }
+            leaf originate-default-rpl {
+              description 'Use route-policy when originate default route.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+            leaf neighbor-restrict {
+              description 'Enable the interface restrict mode of communicate wi'
+                        + 'th neighbors.'
+                          ;
+              type enable-or-disable ;
+              default disable ;
+            }
+            leaf auth-mode {
+              description 'Specify the authentication type.'
+                          ;
+              type enumeration {
+                enum none {
+                  value 1 ;
+                  description 'No authentication.'
+                              ;
+                }
+                enum text {
+                  value 2 ;
+                  description 'Simple text authentication.'
+                              ;
+                }
+                enum md5 {
+                  value 3 ;
+                  description 'MD5 authentication.'
+                              ;
+                }
+              }
+              default none ;
+            }
+            leaf bfd {
+              description 'Configure BFD for the interface.'
+                          ;
+              type enumeration {
+                enum not-config {
+                  value 0 ;
+                  description 'BFD is not configured.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'BFD is enabled.'
+                              ;
+                }
+                enum disable {
+                  value 2 ;
+                  description 'BFD is disabled.'
+                              ;
+                }
+              }
+              default not-config ;
+            }
+            leaf keychain-name {
+              description 'Specify a keychain of authentication.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+            }
+            leaf send-version {
+              description 'Specify RIP version for transmission.'
+                          ;
+              type enumeration {
+                enum v1 {
+                  value 1 ;
+                  description 'Use RIP version 1 to transmit advertisement.'
+                              ;
+                }
+                enum v2 {
+                  value 2 ;
+                  description 'Use RIP version 2 to transmit advertisement.'
+                              ;
+                }
+                enum not-config {
+                  value 3 ;
+                  description 'Send version is not configured on this interface.'
+                              ;
+                }
+              }
+              default not-config ;
+            }
+            leaf send-type {
+              description 'Specify send type.'
+                          ;
+              type enumeration {
+                enum not-config {
+                  value 0 ;
+                  description 'Transmission type is not configured.'
+                              ;
+                }
+                enum broadcast {
+                  value 1 ;
+                  description 'Transmission type is broadcast.'
+                              ;
+                }
+                enum multicast {
+                  value 2 ;
+                  description 'Transmission type is multicast.'
+                              ;
+                }
+              }
+              default not-config ;
+            }
+            choice auth-key {
+              description 'Specify the authentication key.'
+                          ;
+              case auth-key-clear {
+                description 'Set the authentication key in clear text.'
+                            ;
+                container auth-key-clear {
+                  description 'Set the authentication key in clear text.'
+                              ;
+                  leaf key-clear {
+                    description 'Set the authentication key in clear text.'
+                                ;
+                    type string {
+                      length 1..16 ;
+                    }
+                  }
+                }
+              }
+              case auth-key-encrypted {
+                description 'Set the authentication key in encrypted text.'
+                            ;
+                container auth-key-encrypted {
+                  description 'Set the authentication key in encrypted text.'
+                              ;
+                  leaf key-encrypted {
+                    description 'Set the authentication key in encrypted text.'
+                                ;
+                    type string {
+                      length 1..84 ;
+                    }
+                  }
+                }
+              }
+            }
+            container receive-version {
+              description 'Specify RIP version for reception.'
+                          ;
+              presence receive-version ;
+              leaf receive-v1 {
+                description 'RIP version number.'
+                            ;
+                type rip-version-def ;
+                mandatory true ;
+              }
+              leaf receive-v2 {
+                description 'RIP version number.'
+                            ;
+                type enumeration {
+                  enum none {
+                    value 0 ;
+                    description 'No config.'
+                                ;
+                  }
+                  enum v1 {
+                    value 1 ;
+                    description 'RIP version 1.'
+                                ;
+                  }
+                  enum v2 {
+                    value 2 ;
+                    description 'RIP version 2.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+          }
+        }
+        leaf passive {
+          type enumeration {
+            enum enable {
+              value 1 ;
+            }
+            enum disable {
+              value 0 ;
+            }
+          }
+          default disable ;
+          ncd:revise-date 2020-11-11 ;
+        }
+      }
+      container vrf-instances {
+        description 'The configuration of RIP VRF instances.'
+                    ;
+        list vrf-instance {
+          description 'The configuration of RIP VRF instance.'
+                      ;
+          key vrf-name ;
+          leaf vrf-name {
+            description 'VPN Routing/Forwarding instance name (1-32 characters).'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf version {
+            description 'Set routing protocol version.'
+                        ;
+            type rip-version-def ;
+            default v2 ;
+          }
+          leaf max-paths {
+            description 'Maximum number of parallel routes RIP can support.'
+                        ;
+            type uint8 {
+              range 1..32 ;
+            }
+            default 1 ;
+          }
+          leaf default-metric {
+            description 'Default metric of redistributed routes.'
+                        ;
+            type uint8 {
+              range 1..16 ;
+            }
+            default 1 ;
+          }
+          leaf distance {
+            description 'Define an administrative distance.'
+                        ;
+            type uint8 {
+              range 1..255 ;
+            }
+            default 120 ;
+          }
+          leaf auto-summary {
+            description 'Enable automatic network number summarization.'
+                        ;
+            type enable-or-disable ;
+            default enable ;
+          }
+          leaf validate-update-source {
+            description 'Perform sanity checks against source address of routin'
+                      + 'g updates.'
+                        ;
+            type enable-or-disable ;
+            default enable ;
+          }
+          leaf bfd {
+            description 'Configure all interfaces BFD capability.'
+                        ;
+            type enable-or-disable ;
+            default disable ;
+          }
+          leaf fast-reroute {
+            description 'Enable RIP fast-reroute function.'
+                        ;
+            type enable-or-disable ;
+            default disable ;
+          }
+          leaf track-name {
+            description 'Event tracking.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf passive {
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 0 ;
+              }
+            }
+            default disable ;
+            ncd:revise-date 2020-11-11 ;
+          }
+        }
+      }
+      container vrf-networks {
+        description 'The configuration of RIP networks in VRF instance.'
+                    ;
+        list vrf-network {
+          description 'Enable routing on an IP network.'
+                      ;
+          key 'vrf-name network-addr network-wildmask'
+              ;
+          leaf vrf-name {
+            description 'VPN Routing/Forwarding instance name (1-32 characters).'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf network-addr {
+            description 'Network address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf network-wildmask {
+            description 'Network wild mask.'
+                        ;
+            type ncd:ipv4-imask ;
+          }
+        }
+      }
+      container vrf-neighbors {
+        description 'The configuration of RIP neighbors in VRF instance.'
+                    ;
+        list vrf-neighbor {
+          description 'Specify a neighbor router.'
+                      ;
+          key 'vrf-name neighbor-addr'
+              ;
+          leaf vrf-name {
+            description 'VPN Routing/Forwarding instance name (1-32 characters).'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf neighbor-addr {
+            description 'Neighbor IP address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+        }
+      }
+      container vrf-redistributes {
+        description 'Redistribute information from another routing protocol in '
+                  + 'VRF instance..'
+                    ;
+        container redistribute-isiss {
+          description 'Redistribute information from ISIS.'
+                      ;
+          list redistribute-isis {
+            description 'Redistribute information from ISIS.'
+                        ;
+            key 'vrf-name protocol process-id'
+                ;
+            leaf vrf-name {
+              description 'VPN Routing/Forwarding instance name (1-32 character'
+                        + 's).'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf protocol {
+              description 'Routing protocol type.'
+                          ;
+              type enumeration {
+                enum isis-1 {
+                  value 6 ;
+                  description 'IS-IS level-1 routes.'
+                              ;
+                }
+                enum isis-2 {
+                  value 7 ;
+                  description 'IS-IS level-2 routes.'
+                              ;
+                }
+              }
+            }
+            leaf process-id {
+              description 'Process ID of ISIS.'
+                          ;
+              type uint32 {
+                range 0..65535 ;
+              }
+            }
+            leaf metric {
+              description 'Metric for redistributed routes.'
+                          ;
+              type uint8 {
+                range 1..16 ;
+              }
+            }
+            leaf route-map {
+              description 'Apply route-map to redistribute.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+            leaf route-policy {
+              description 'Apply route-policy to redistribute.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+          }
+        }
+        container redistribute-ospfs {
+          description 'Redistribute information from OSPF.'
+                      ;
+          list redistribute-ospf {
+            description 'Redistribute information from OSPF.'
+                        ;
+            key 'vrf-name protocol process-id'
+                ;
+            leaf vrf-name {
+              description 'VPN Routing/Forwarding instance name (1-32 character'
+                        + 's).'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf protocol {
+              description 'Routing protocol type.'
+                          ;
+              type enumeration {
+                enum ospf-int {
+                  value 2 ;
+                  description 'Open shortest path first(OSPF) internal routes.'
+                              ;
+                }
+                enum ospf-ext {
+                  value 3 ;
+                  description 'Open shortest path first(OSPF) external routes.'
+                              ;
+                }
+              }
+            }
+            leaf process-id {
+              description 'Process ID of OSPF.'
+                          ;
+              type uint32 {
+                range 1..65535 ;
+              }
+            }
+            leaf metric {
+              description 'Metric for redistributed routes.'
+                          ;
+              type uint8 {
+                range 1..16 ;
+              }
+            }
+            leaf route-map {
+              description 'Apply route-map to redistribute.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+            leaf route-policy {
+              description 'Apply route-policy to redistribute.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+          }
+        }
+        container redistribute-pss {
+          description 'Redistribute information from PS.'
+                      ;
+          list redistribute-ps {
+            description 'Redistribute information from PS.'
+                        ;
+            key 'vrf-name protocol'
+                ;
+            leaf vrf-name {
+              description 'VPN Routing/Forwarding instance name (1-32 character'
+                        + 's).'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf protocol {
+              description 'Routing protocol type.'
+                          ;
+              type enumeration {
+                enum ps-busi-addr {
+                  value 12 ;
+                  description 'Ps-busi-addr routes.'
+                              ;
+                }
+                enum ps-user-addr {
+                  value 13 ;
+                  description 'Ps-user-addr routes.'
+                              ;
+                }
+              }
+            }
+            leaf metric {
+              description 'Configure metric for redistributed routes.'
+                          ;
+              type uint8 {
+                range 1..16 ;
+              }
+            }
+            leaf with-originate-metric {
+              description 'Use original metric of redistributed route.'
+                          ;
+              type empty ;
+            }
+            leaf route-map {
+              description 'Apply route-map to redistribute.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+            leaf route-policy {
+              description 'Apply route-policy to redistribute.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+          }
+        }
+        container redistribute-others {
+          description 'Redistribute information from another routing protocol.'
+                      ;
+          list redistribute-other {
+            description 'Redistribute information from another routing protocol.'
+                        ;
+            key 'vrf-name protocol'
+                ;
+            leaf vrf-name {
+              description 'VPN Routing/Forwarding instance name (1-32 character'
+                        + 's).'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf protocol {
+              description 'Routing protocol type.'
+                          ;
+              type enumeration {
+                enum connected {
+                  value 0 ;
+                  description 'Connected routes.'
+                              ;
+                }
+                enum static {
+                  value 1 ;
+                  description 'Static routes.'
+                              ;
+                }
+                enum bgp-ext {
+                  value 4 ;
+                  description 'External border gateway protocol (EBGP) routes.'
+                              ;
+                }
+                enum bgp-int {
+                  value 5 ;
+                  description 'Internal border gateway protocol (IBGP) routes.'
+                              ;
+                }
+                enum nat {
+                  value 8 ;
+                  description 'NAT routes.'
+                              ;
+                }
+                enum natpt {
+                  value 9 ;
+                  description 'Port-address Translation routes.'
+                              ;
+                }
+                enum subscriber-host {
+                  value 10 ;
+                  description "Bras subscriber's host routes."
+                              ;
+                }
+                enum subscriber-aggregation {
+                  value 11 ;
+                  description "Bras subscriber's aggregation routes."
+                              ;
+                }
+                enum user-special {
+                  value 14 ;
+                  description 'User-special routes.'
+                              ;
+                }
+                enum ipsec {
+                  value 15 ;
+                  description 'IPsec routes.'
+                              ;
+                }
+              }
+            }
+            leaf metric {
+              description 'Metric for redistributed routes.'
+                          ;
+              type uint8 {
+                range 1..16 ;
+              }
+            }
+            leaf route-map {
+              description 'Apply route-map to redistribute.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+            leaf route-policy {
+              description 'Apply route-policy to redistribute.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+          }
+        }
+      }
+      container vrf-offset-lists {
+        description 'Apply offset lists to RIP.'
+                    ;
+        container for-insts {
+          description 'Apply offset lists to RIP instance.'
+                      ;
+          presence without-ifs ;
+          list for-inst {
+            description 'Apply offset lists to RIP instance.'
+                        ;
+            key 'vrf-name in-or-out'
+                ;
+            leaf vrf-name {
+              description 'VPN Routing/Forwarding instance name (1-32 character'
+                        + 's).'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf in-or-out {
+              description 'Specify the direction of offset list.'
+                          ;
+              type enumeration {
+                enum in {
+                  value 1 ;
+                  description 'Inbound packets.'
+                              ;
+                }
+                enum out {
+                  value 2 ;
+                  description 'Outbound packets.'
+                              ;
+                }
+              }
+            }
+            leaf acl-name {
+              description 'Access list of networks to apply offset list(1-31 ch'
+                        + 'aracters).'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+              mandatory true ;
+            }
+            leaf metric {
+              description 'Offset list metric.'
+                          ;
+              type uint8 {
+                range 0..16 ;
+              }
+              mandatory true ;
+            }
+          }
+        }
+        container for-ifs {
+          description 'Apply offset lists to RIP interface.'
+                      ;
+          presence with-ifs ;
+          list for-if {
+            description 'Apply offset lists to RIP interface.'
+                        ;
+            key 'vrf-name in-or-out interface'
+                ;
+            leaf vrf-name {
+              description 'VPN Routing/Forwarding instance name (1-32 character'
+                        + 's).'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf in-or-out {
+              description 'Specify the direction of offset list.'
+                          ;
+              type enumeration {
+                enum in {
+                  value 1 ;
+                  description 'Inbound packets.'
+                              ;
+                }
+                enum out {
+                  value 2 ;
+                  description 'Outbound packets.'
+                              ;
+                }
+              }
+            }
+            leaf interface {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 ;
+              }
+            }
+            leaf acl-name {
+              description 'Access list of networks to apply offset (1-31 charac'
+                        + 'ters).'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+              mandatory true ;
+            }
+            leaf metric {
+              description 'Offset list metric.'
+                          ;
+              type uint8 {
+                range 0..16 ;
+              }
+              mandatory true ;
+            }
+          }
+        }
+      }
+      container auth-keychains {
+        description 'Configure authentication keychain in RIP module.'
+                    ;
+        list auth-keychain {
+          description 'Configure authentication keychain in RIP module.'
+                      ;
+          key 'if-name key-id'
+              ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf key-id {
+            description 'Key identifier.'
+                        ;
+            type uint8 {
+              range 1..255 ;
+            }
+          }
+          choice auth-key {
+            description 'Specify the authentication key.'
+                        ;
+            case auth-key-clear {
+              description 'Set the authentication key in clear text.'
+                          ;
+              container auth-key-clear {
+                description 'Set the authentication key in clear text.'
+                            ;
+                leaf key-clear {
+                  description 'Set the authentication key in clear text.'
+                              ;
+                  type string {
+                    length 1..16 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+            case auth-key-encrypted {
+              description 'Set the authentication key in encrypted text.'
+                          ;
+              container auth-key-encrypted {
+                description 'Set the authentication key in encrypted text.'
+                            ;
+                leaf key-encrypted {
+                  description 'Set the authentication key in encrypted text.'
+                              ;
+                  type string {
+                    length 1..84 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'The querying information processing of RIP module.'
+                ;
+    container rip {
+      description 'The querying information processing of RIP module.'
+                  ;
+      container neighbors {
+        description 'The querying information of RIP neighbors.'
+                    ;
+        list neighbor {
+          description 'The list of RIP neighbor querying information.'+"\n"
+                    + 'For all RIP neighbors of public network, need select obj'
+                    + '-type(1).'+"\n"
+                    + 'For the special RIP neighbor of public network, need sel'
+                    + 'ect obj-type(1) and neighbor-addr.'+"\n"
+                    + 'For all RIP neighbors of one VPN, need select obj-type(2'
+                    + ') and vrf-name.'+"\n"
+                    + 'For the special RIP neighbor of one VPN, need select obj'
+                    + '-type(2), vrf-name and neighbor-addr.'
+                      ;
+          key 'obj-type vrf-name neighbor-addr'
+              ;
+          leaf obj-type {
+            description 'The type of network. The "global" means the public net'
+                      + 'work, the "vpn" means private network.'
+                        ;
+            type select-mode-def ;
+          }
+          leaf vrf-name {
+            description 'VPN Routing/Forwarding instance name (1-32 characters).'
+                        ;
+            type string {
+              length 0..32 ;
+            }
+          }
+          leaf neighbor-addr {
+            description 'Neighbor IP address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname {
+              length 0..31 ;
+            }
+          }
+          ncd:select obj-type ;
+          ncd:select 'obj-type vrf-name'
+                     ;
+          ncd:select 'obj-type neighbor-addr'
+                     ;
+          ncd:select 'obj-type vrf-name neighbor-addr'
+                     ;
+        }
+      }
+      container interfaces {
+        description 'The querying information of RIP interfaces.'
+                    ;
+        list interface {
+          description 'The list of RIP interface querying information.'+"\n"
+                    + 'For all RIP interfaces of public network, need select ob'
+                    + 'j-type(1).'+"\n"
+                    + 'For all RIP interface of one VPN, need select obj-type(2'
+                    + '), vrf-name.'+"\n"
+                    + 'For the special RIP interface, need select if-name.'
+                      ;
+          key 'obj-type vrf-name if-name if-ip-addr'
+              ;
+          leaf obj-type {
+            description 'The type of network. The "global" means the public net'
+                      + 'work, the "vpn" means private network.'
+                        ;
+            type select-mode-def ;
+          }
+          leaf vrf-name {
+            description 'VPN Routing/Forwarding instance name (1-32 characters).'
+                        ;
+            type string {
+              length 0..32 ;
+            }
+          }
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf if-ip-addr {
+            description 'The IP address on the interface.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf if-ip-masklen {
+            description 'The prefix length on the interface.'
+                        ;
+            type uint8 {
+              range 0..32 ;
+            }
+          }
+          leaf status {
+            description 'The status of the interface.'
+                        ;
+            type enable-or-disable ;
+          }
+          leaf recieve-version {
+            description 'The version of RIP message which can be recieved on th'
+                      + 'e interface.'
+                        ;
+            type enumeration {
+              enum v1 {
+                value 1 ;
+              }
+              enum v2 {
+                value 2 ;
+              }
+              enum all {
+                value 0 ;
+              }
+            }
+          }
+          leaf send-version {
+            description 'The version of RIP message sent on the interface,inclu'
+                      + 'de the send mode in RIP-2.'
+                        ;
+            type enumeration {
+              enum v1 {
+                value 1 ;
+                description RIP-1 ;
+              }
+              enum v2-multicast {
+                value 2 ;
+                description 'RIP-2 messages are multicast.'
+                            ;
+              }
+              enum v2-broadcast {
+                value 3 ;
+                description 'RIP-2 messages are broadcast.'
+                            ;
+              }
+            }
+          }
+          leaf split-horizon {
+            description 'Split horizen status.'
+                        ;
+            type enable-or-disable ;
+          }
+          leaf poison-reverse {
+            description 'Poison reverse status.'
+                        ;
+            type enable-or-disable ;
+          }
+          leaf subnet-only {
+            description 'Only send subnet information about the interface.'
+                        ;
+            type enable-or-disable ;
+          }
+          leaf notify-default-route {
+            description 'Notify default route on the interface.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Can not notify default route on this interface.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Notify default route on this interface.'
+                            ;
+              }
+              enum only {
+                value 2 ;
+                description 'Only notify default route on this interface.'
+                            ;
+              }
+            }
+          }
+          leaf originate-default-route {
+            description 'Originate default route on the interface.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Can not originate default route on this interface.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Originate default route and send it on this interf'
+                          + 'ace.'
+                            ;
+              }
+              enum only {
+                value 2 ;
+                description 'Originate default route and only send it on this i'
+                          + 'nterface.'
+                            ;
+              }
+            }
+          }
+          leaf neighbor-strict {
+            description 'The interface restrict mode of communicate with neighb'
+                      + 'ors.'
+                        ;
+            type enable-or-disable ;
+          }
+          leaf if-mode {
+            description 'The mode of the interface,include active(only send),pa'
+                      + 'ssive(only recieve) and normal.'
+                        ;
+            type enumeration {
+              enum normal {
+                value 0 ;
+                description 'This RIP interface both send and receive.'
+                            ;
+              }
+              enum active {
+                value 1 ;
+                description 'This RIP interface only send.'
+                            ;
+              }
+              enum passive {
+                value 2 ;
+                description 'This RIP interface only receive.'
+                            ;
+              }
+            }
+          }
+          leaf auth-mode {
+            description 'The authentication mode of the interface.'
+                        ;
+            type enumeration {
+              enum none {
+                value 0 ;
+                description 'No authentication.'
+                            ;
+              }
+              enum text {
+                value 1 ;
+                description 'Simple text authentication.'
+                            ;
+              }
+              enum md5 {
+                value 2 ;
+                description 'MD5 authentication.'
+                            ;
+              }
+            }
+          }
+          leaf bfd {
+            description BFD. ;
+            type enable-or-disable ;
+          }
+          leaf keychain-name {
+            description 'The name of keychain.'
+                        ;
+            type string {
+              length 0..31 ;
+            }
+          }
+          leaf route-policy-name {
+            description 'The name of route policy.'
+                        ;
+            type string {
+              length 0..31 ;
+            }
+          }
+          ncd:select if-name ;
+          ncd:select obj-type ;
+          ncd:select 'obj-type vrf-name'
+                     ;
+        }
+      }
+      container statistics {
+        description 'The querying information of RIP statistics.'
+                    ;
+        list statistic {
+          description 'The list of RIP statistic querying information.'+"\n"
+                    + 'For RIP statistic of public instance, need select obj-ty'
+                    + 'pe(1).'+"\n"
+                    + 'For RIP statistic of VRF instance, need select obj-type('
+                    + '2) and vrf-name.'
+                      ;
+          key 'obj-type vrf-name'
+              ;
+          leaf obj-type {
+            description 'The type of network. The "global" means the public net'
+                      + 'work, the "vpn" means private network.'
+                        ;
+            type select-mode-def ;
+          }
+          leaf vrf-name {
+            description 'VPN Routing/Forwarding instance name (1-32 characters).'
+                        ;
+            type string {
+              length 0..32 ;
+            }
+          }
+          leaf total-packets-sent {
+            description 'The total of packets sent.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf request-packets-sent {
+            description 'The total of request packets sent.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf response-packets-sent {
+            description 'The total of response packets sent.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf total-packets-recieved {
+            description 'The total of packets recieved.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf request-packets-recieved {
+            description 'The total of request packets recieved.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf response-packets-recieved {
+            description 'The total of response packets recieved.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          ncd:select obj-type ;
+          ncd:select 'obj-type vrf-name'
+                     ;
+        }
+      }
+      container routes {
+        description 'The querying information of RIP routes.'
+                    ;
+        list route {
+          description 'The list of RIP route querying information.'+"\n"
+                    + 'For all RIP routes of public network, need select obj-ty'
+                    + 'pe(1).'+"\n"
+                    + 'For the special RIP route of public network, need select'
+                    + ' obj-type(1), route-addr and route-mask-len.'+"\n"
+                    + 'For all RIP routes of one VPN, need select obj-type(2) a'
+                    + 'nd vrf-name.'+"\n"
+                    + 'For the special RIP route of one VPN, need select obj-ty'
+                    + 'pe(2), vrf-name, route-addr and route-mask-len.'
+                      ;
+          key 'obj-type vrf-name dest-addr dest-mask-len serial-number nexthop-'
+            + 'addr'
+              ;
+          leaf obj-type {
+            description 'The type of network. The "global" means the public net'
+                      + 'work, the "vpn" means private network.'
+                        ;
+            type select-mode-def ;
+          }
+          leaf vrf-name {
+            description 'VPN Routing/Forwarding instance name (1-32 characters).'
+                        ;
+            type string {
+              length 0..32 ;
+            }
+          }
+          leaf dest-addr {
+            description 'The destination IP address of route.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf dest-mask-len {
+            description 'The mask length of route.'
+                        ;
+            type uint8 {
+              range 0..32 ;
+            }
+          }
+          leaf serial-number {
+            description 'The serial number of route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf nexthop-addr {
+            description 'The nexthop address of route.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf route-owner {
+            description 'Route owner.'
+                        ;
+            type route-owner-def ;
+          }
+          leaf route-stauts {
+            description 'Router status.'
+                        ;
+            type route-status-def ;
+          }
+          leaf metric {
+            description 'The metric of route.'
+                        ;
+            type uint32 {
+              range 0..16 ;
+            }
+          }
+          leaf distance {
+            description 'The distance of route.'
+                        ;
+            type uint8 {
+              range 0..255 ;
+            }
+          }
+          leaf tag {
+            description 'The tag of route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf instance-id {
+            description 'The instance ID of route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf time {
+            description 'Route time.'
+                        ;
+            type ncd:time {
+              length 0..11 ;
+            }
+          }
+          leaf time-status {
+            description 'Route time status.'
+                        ;
+            type route-time-status-def ;
+          }
+          ncd:select obj-type ;
+          ncd:select 'obj-type dest-addr dest-mask-len'
+                     ;
+          ncd:select 'obj-type vrf-name'
+                     ;
+          ncd:select 'obj-type vrf-name dest-addr dest-mask-len'
+                     ;
+        }
+      }
+      container route-statistics {
+        description 'The querying information of RIP route statistics.'
+                    ;
+        list route-statistic {
+          description 'The list of RIP route statistic querying information.'+"\n"
+                    + 'For RIP route statistic of public instance, need select '
+                    + 'obj-type(1).'+"\n"
+                    + 'For RIP route statistic of VRF instance, need select obj'
+                    + '-type(2) and vrf-name.'
+                      ;
+          key 'obj-type vrf-name'
+              ;
+          leaf obj-type {
+            description 'The type of network. The "global" means the public net'
+                      + 'work, the "vpn" means private network.'
+                        ;
+            type select-mode-def ;
+          }
+          leaf vrf-name {
+            description 'VPN Routing/Forwarding instance name (1-32 characters).'
+                        ;
+            type string {
+              length 0..32 ;
+            }
+          }
+          leaf rip {
+            description 'The statistic of RIP route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf rip-discard {
+            description 'The statistic of RIP discard route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf rip-connected {
+            description 'The statistic of RIP connected route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf redistributed {
+            description 'The statistic of redistributed route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf total {
+            description 'The total number of routes.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          ncd:select obj-type ;
+          ncd:select 'obj-type vrf-name'
+                     ;
+        }
+      }
+    }
+  }
+}

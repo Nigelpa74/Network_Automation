@@ -1,0 +1,4696 @@
+module zxr10-rpm-srt {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/rpm-srt'
+            ;
+  prefix rpm-srt ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2021-02-19 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the function of IPv4-STATIC-ROUTE'
+            + ' and IPv6-STATIC-ROUTE in the route protocol module.'
+              ;
+  revision 2022-07-14 {
+    description 'Support the public IPv6 static route with IPv4 nexthop.'
+                ;
+  }
+  revision 2022-06-02 {
+    description 'Support the VPN instance of nexthop.'
+                ;
+  }
+  revision 2021-12-10 {
+    description 'Modify the fixkeys of route-config.'
+                ;
+  }
+  revision 2021-05-08 {
+    description 'Add nodes sr-policy for static route.'+"\n"
+              + 'Modify the fixkeys of route-config.'
+                ;
+  }
+  revision 2021-04-13 {
+    description 'Add nodes for restriction of  static route recursion.'
+                ;
+  }
+  revision 2021-01-07 {
+    description 'Add nodes for static route track action.'
+                ;
+  }
+  revision 2020-08-19 {
+    description 'Add nodes for VRF of nexthop.'
+                ;
+  }
+  revision 2020-08-13 {
+    description 'Add a new node to configure recursion l3evpn for IPv4 static r'
+              + 'oute and IPv6 static route.'+"\n"
+              + 'The paths are "configuration/rpm-srt/rpm-srtv4/recursion-l3evp'
+              + 'n" and "configuration/rpm-srt/rpm-srtv6/recursion-l3evpn".'
+                ;
+  }
+  revision 2020-04-26 {
+    description 'Add a new node to configure recursion l3vpn for IPv6 static ro'
+              + 'ute.'+"\n"
+              + 'The paths are "configuration/rpm-srt/rpm-srtv6/recursion-l3vpn'
+              + '".'
+                ;
+  }
+  revision 2020-04-03 {
+    description 'Add a new node to configure bfd template of IPv4 static route.'
+              + ''+"\n"
+              + 'Add a new node to configure bfd template of IPv6 static route.'
+              + ''+"\n"
+              + 'The paths are "configuration/rpm-srt/rpm-srtv4/bfd","configura'
+              + 'tion/rpm-srt/rpm-srtv6/bfd".'
+                ;
+  }
+  revision 2020-01-09 {
+    description 'Add new containers to configure nexthop of IPv4 static route r'
+              + 'esolving delay.'+"\n"
+              + 'Add new containers to configure nexthop of IPv6 static route r'
+              + 'esolving delay.'+"\n"
+              + 'The paths are "configuration/rpm-srt/rpm-srtv4/nexthop/trigger'
+              + '/delay","configuration/rpm-srt/rpm-srtv6/nexthop/trigger/delay'
+              + '".'+"\n"
+              + 'Update the attribute id of IPv4 destination and mask.'
+                ;
+  }
+  revision 2019-10-29 {
+    description 'Add new project label of V6000.vRouter and V6000.vBras-C in fe'
+              + 'atures "ipv6-gloval-nh".'
+                ;
+  }
+  revision 2019-09-04 {
+    description 'Add new project label of SWITCH.5960 and SWITCH.99 in features'
+              + ' "ipv6-gloval-nh".'
+                ;
+  }
+  revision 2019-08-21 {
+    description 'Add new project label of T8000 in feature "ipv4-dest-with-ipv6'
+              + '-global-nh".'
+                ;
+  }
+  revision 2019-06-26 {
+    description 'Add new project label of PTN.6100 in features "ipv6-gloval-nh"'
+              + ' and "ipv4-dest-with-ipv6-global-nh".'
+                ;
+  }
+  revision 2019-04-01 {
+    description 'Add a features of ipv4-dest-with-ipv6-global-nh.global-v6-nhs
+'
+              + ''+"\n"
+              + 'Add a new node global-v6-nhs in IPv4-STATIC-ROUTE to configure'
+              + ' ipv6 global nexthop.'+"\n"
+              + 'The paths are "configuration/rpm-srt/rpm-srtv4/private-net/glo'
+              + 'bal-v6-nhs","configuration/rpm-srt/rpm-srtv4/mng-net/global-v6'
+              + '-nhs".'+"\n"
+              + 'Add a leaf "ipv6-nexthop" in state/rpm-srt/route-status/view-l'
+              + 'ist.'
+                ;
+  }
+  revision 2019-03-25 {
+    description 'Add new project label of OTN 9700/8700 to support IPv6 static '
+              + 'route.'
+                ;
+  }
+  revision 2019-02-21 {
+    description 'Add new project label of 65v5 to support ipv6-route.'
+                ;
+  }
+  revision 2019-01-23 {
+    description 'Add project label V6000(vRouter/vBras-C) on features of public'
+              + '-dest-address.'
+                ;
+  }
+  revision 2018-12-04 {
+    description 'Add the route-vxlan node for IPv6-STATIC-ROUTE. The path is "c'
+              + 'onfiguration/rpm-srt/rpm-srtv6/route-vxlan".'+"\n"
+              + 'Add a feature "ipv6-vxlan" for IPv6 vxlan route.'
+                ;
+  }
+  revision 2018-10-31 {
+    description 'Add a new leaf global in IPv6-STATIC-ROUTE to configure IPv6 n'
+              + 'exthop to be global.'+"\n"
+              + 'The paths are "configuration/rpm-srt/rpm-srtv6/private-net/onl'
+              + 'y-nhs/only-nh" and "configuration/rpm-srt/rpm-srtv6/mng-net/on'
+              + 'ly-nhs/only-nh".'+"\n"
+              + 'Add a feature "ipv6-global-nh" for IPv6 static route global fu'
+              + 'nction.'
+                ;
+  }
+  revision 2018-10-28 {
+    description 'Add project label PTN(6100) on features of ipv4-global-nh and '
+              + 'ipv6-permanent.'
+                ;
+  }
+  revision 2018-08-02 {
+    description 'Add the permanent node for IPv6-STATIC-ROUTE to set permanent '
+              + 'attribute. The path is "configuration/rpm-srt/rpm-srtv6/route-'
+              + 'config".'
+                ;
+  }
+  revision 2018-07-26 {
+    description 'Add one enumeration value (PUBLIC) to the leaf node nhtype. Th'
+              + 'e path is "state/rpm-srt/rpm-srtv4/route-status/view-list/nhty'
+              + 'pe".'
+                ;
+  }
+  revision 2018-06-28 {
+    description 'Add the leaf track-name for route-vxlan to support relating tr'
+              + 'ack-detection. The path is "configuration/rpm-srt/rpm-srtv4/ro'
+              + 'ute-vxlan/static-tunnels/static-tunnel".'+"\n"
+              + 'Add the container dynamic-tunnels for route-vxlan to support d'
+              + 'ynamic tunnel route. The path is "configuration/rpm-srt/rpm-sr'
+              + 'tv4/route-vxlan/dynamic-tunnels".'
+                ;
+  }
+  revision 2018-05-30 {
+    description 'Add a new node global-v4-nhs in IPv6-STATIC-ROUTE to configure'
+              + ' IPv4 nexthop to be global.'+"\n"
+              + 'The paths are "configuration/rpm-srt/rpm-srtv6/private-net/glo'
+              + 'bal-v4-nhs" and "configuration/rpm-srt/rpm-srtv6/mng-net/globa'
+              + 'l-v4-nhs".'+"\n"
+              + 'Add a feature "ipv4-global-nh-feature" for IPv6 static route g'
+              + 'lobal function.'
+                ;
+  }
+  revision 2018-05-10 {
+    description 'Add a new node publics in IPv4-STATIC-ROUTE and IPv6-STATIC-RO'
+              + 'UTE to configure nexthop to be public.'+"\n"
+              + 'The paths are "configuration/rpm-srt/rpm-srtv4/private-net/pub'
+              + 'lics","configuration/rpm-srt/rpm-srtv4/mng-net/publics","confi'
+              + 'guration/rpm-srt/rpm-srtv6/private-net/publics",and "configura'
+              + 'tion/rpm-srt/rpm-srtv6/mng-net/publics".'+"\n"
+              + 'Add a feature "public-dest-address" for public dest-address fu'
+              + 'nction.'
+                ;
+  }
+  revision 2018-01-26 {
+    description 'Modify the leaf name l3vni-label to vni-label for static VXLAN'
+              + ' route.'
+                ;
+  }
+  revision 2017-11-30 {
+    description 'Add the route-vxlan node for IPv4-STATIC-ROUTE. The path is "c'
+              + 'onfiguration/rpm-srt/rpm-srtv4/route-vxlan".'
+                ;
+  }
+  revision 2016-05-26 {
+    description 'Add the recursion-l3vpn node for IPv4-STATIC-ROUTE. The path i'
+              + 's "configuration/rpm-srt/rpm-srtv4/recursion-l3vpn".'
+                ;
+  }
+  revision 2015-11-03 {
+    description 'Add the source-nexthop-vrf node for IPv4-STATIC-ROUTE to set v'
+              + 'pn peer-bfd local address. The path is "configuration/rpm-srt/'
+              + 'rpm-srtv4/source-nexthop-vrf".'
+                ;
+  }
+  revision 2015-07-28 {
+    description 'Modify the "config" attribute of the state node and its leaf n'
+              + 'odes.'
+                ;
+  }
+  revision 2015-04-03 {
+    description 'Add the preference-decrement node for IPv4-STATIC-ROUTE to set'
+              + ' preference decrement when the route has been related with tra'
+              + 'ck detection. The path is "configuration/rpm-srt/rpm-srtv4/rou'
+              + 'te-config".'
+                ;
+  }
+  revision 2015-04-02 {
+    description 'Add the tag-value node for IPv6-STATIC-ROUTE to set tag value.'
+              + ' The path is "configuration/rpm-srt/rpm-srtv6/route-config".'
+                ;
+  }
+  revision 2015-02-28 {
+    description 'Add the dynamic-protect node for IPv6-STATIC-ROUTE to protect '
+              + 'the dynamic route. The path is "configuration/rpm-srt/rpm-srtv'
+              + '6/dynamic-protect".'
+                ;
+  }
+  revision 2014-08-07 {
+    description 'Add the update-delay node for IPv4-STATIC-ROUTE to set update-'
+              + 'delay time. The path is "configuration/rpm-srt/rpm-srtv4/updat'
+              + 'e-delay".'
+                ;
+  }
+  revision 2014-07-01 {
+    description 'Add the dynamic-protect node for IPv4-STATIC-ROUTE to protect '
+              + 'the dynamic route. The path is "configuration/rpm-srt/rpm-srtv'
+              + '4/dynamic-protect".'
+                ;
+  }
+  revision 2014-05-08 {
+    description 'Modify the description of fast-reroute node in rpm-srtv4 modul'
+              + 'e.'
+                ;
+  }
+  revision 2014-04-22 {
+    description 'Add the routing status query function for IPV4-STATIC-ROUTE mo'
+              + 'dule.'
+                ;
+  }
+  revision 2014-03-19 {
+    description "Modify the attribute's length of track-name and description."
+                ;
+  }
+  revision 2014-03-18 {
+    description '1.Add a new attribute ifnh-flag for IPv4-STATIC-ROUTE and IPv6'
+              + '-STATIC-ROUTE to label both-if-nh node.'+"\n"
+              + '2.Delete the regular expression of if-nexthop and the ipv6-if-'
+              + 'nh node.'
+                ;
+  }
+  revision 2013-08-15 {
+    description 'The initial version.'
+                ;
+  }
+  feature public-dest-address {
+    description 'The anycast-mac-address configuration is used to configure nex'
+              + 'thop to be public.'
+                ;
+  }
+  feature ipv4-global-nh {
+    description 'This configuration is used to configure IPv4 global nexthop fo'
+              + 'r IPv6 static route.'
+                ;
+  }
+  feature ipv6-permanent {
+    description 'This configuration is used to specify permanent IPv6 static ro'
+              + 'ute.'
+                ;
+  }
+  feature ipv6-global-nh {
+    reference 'This configuration is used to configure IPv6 global nexthop for '
+            + 'IPv6 static route.'
+              ;
+  }
+  feature ipv6-vxlan {
+    description 'The feature is for IPv6 vxlan route.'
+                ;
+  }
+  feature ipv4-dest-with-ipv6-global-nh {
+    description 'This configuration is used to configure IPv6 global nexthop fo'
+              + 'r IPv4 static route.'
+                ;
+  }
+  feature nexthop-resolving-delay {
+    description 'This configuration is used to configure IPv4 and IPv6 static r'
+              + 'oute nexthop resolving delay.'
+                ;
+  }
+  feature bfd-template {
+    description "This configuration is used to configure IPv4 and IPv6 static r"
+              + "oute BFD's template."
+                ;
+  }
+  typedef protect-type {
+    type enumeration {
+      enum RIP {
+        value 1 ;
+        description 'Static route protect RIP route.'
+                    ;
+      }
+      enum OSPF {
+        value 2 ;
+        description 'Static route protect OSPFv2 route.'
+                    ;
+      }
+      enum BGP {
+        value 4 ;
+        description 'Static route protect BGP route.'
+                    ;
+      }
+      enum ISIS {
+        value 8 ;
+        description 'Static route protect ISIS route.'
+                    ;
+      }
+    }
+    description 'Define the route type which the static route can protect.'
+                ;
+  }
+  typedef recursion-type {
+    type enumeration {
+      enum DIRECT {
+        value 1 ;
+        description 'Static route can recurse direct route only.'
+                    ;
+      }
+    }
+    description 'Define the route type which the static route can recurse.'
+                ;
+  }
+  typedef address-family {
+    type enumeration {
+      enum IPv4 {
+        value 2 ;
+      }
+      enum IPv6 {
+        value 24 ;
+      }
+    }
+  }
+  container configuration {
+    description 'The configuration information processing of IPv4-STATIC-ROUTE '
+              + 'and IPv6-STATIC-ROUTE module'
+                ;
+    container rpm-srt {
+      description 'The configuration information processing of IPv4-STATIC-ROUT'
+                + 'E and IPv6-STATIC-ROUTE module'
+                  ;
+      container rpm-srtv4 {
+        description "The total node for IPV4-STATIC-ROUTE's all configuration
+\n"
+                  + "commands"
+                    ;
+        container route-config {
+          description 'The configuration for STATIC-ROUTE basic information, in'
+                    + 'cluding  the destination address, mask, interface, the n'
+                    + 'exthop, priority, metric, tag, BFD detection, track dete'
+                    + 'ction, route description, permanent, etc.'
+                      ;
+          container public-net {
+            description 'The configuration for public static route.'
+                        ;
+            container only-ifs {
+              description 'The configuration for static route which only specif'
+                        + 'ies the interface.'
+                          ;
+              list only-if {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the interface.'
+                            ;
+                key 'dest-addr mask-addr interface'
+                    ;
+                leaf dest-addr {
+                  description 'The destination address of route'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask of route'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf interface {
+                  description 'The interface name of route'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority and the default value is 1. T'
+                            + 'he range is 1-255.'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object name which the static route tra"
+                            + "ck-detection related. The default value is null,"
+                            + " means that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-03 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+              }
+            }
+            container only-nhs {
+              description 'The configuration for static route which only specif'
+                        + 'ies the nexthop.'
+                          ;
+              list only-nh {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the nexthop.'
+                            ;
+                key 'dest-addr mask-addr nexthop'
+                    ;
+                leaf dest-addr {
+                  description 'The destination address of route'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask of route'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf nexthop {
+                  description 'The nexthop of route'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-03 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1.'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+              }
+            }
+            container both-if-nhs {
+              description 'The configuration for static route which both specif'
+                        + 'y the interface and the nexthop.'
+                          ;
+              list both-if-nh {
+                description 'The configuration for static route which both spec'
+                          + 'ify the interface and the nexthop.'
+                            ;
+                key 'dest-addr mask-addr interface if-nexthop'
+                    ;
+                leaf dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf interface {
+                  description 'The interface'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                leaf if-nexthop {
+                  description 'The nexthop of route'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-03 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+              }
+            }
+            container nexthop-vrfs {
+              description 'Configure static routes with nexthop in VPN instance.'
+                          ;
+              list nexthop-vrf {
+                description 'Configure static routes with nexthop in VPN instan'
+                          + 'ce.'
+                            ;
+                key 'dest-addr mask-addr'
+                    ;
+                leaf dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf nh-vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                  mandatory true ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+              }
+              ncd:revise-date 2020-08-19 ;
+            }
+            container sr-policys {
+              description 'The configuration for static route which only specif'
+                        + 'ies the SR Policy.'
+                          ;
+              list sr-policy {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the SR Policy.'
+                            ;
+                key 'dest-addr mask-addr color end-point'
+                    ;
+                leaf dest-addr {
+                  description 'The destination address of route.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask of route.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf color {
+                  description 'The color of SR Policy. Its range is 1-429496729'
+                            + '5.'
+                              ;
+                  type uint32 {
+                    range 1..4294967295 ;
+                  }
+                }
+                leaf end-point {
+                  description 'The end-point of SR Policy.'
+                              ;
+                  type string {
+                    length 1..39 ;
+                  }
+                }
+                leaf end-point-afi {
+                  description 'The address family of end-point.The value is IPv'
+                            + '4 or IPv6.'
+                              ;
+                  type address-family ;
+                  mandatory true ;
+                }
+                leaf srv6-sid {
+                  description 'The SRv6 SID of SRv6 Policy.'
+                              ;
+                  type ncd:ipv6-address-none-zero ;
+                  default :: ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255.'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295.'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+              }
+              ncd:revise-date 2021-05-08 ;
+            }
+          }
+          container private-net {
+            description 'The configuration for private static route.'
+                        ;
+            container only-ifs {
+              description 'The configuration for static route which only specif'
+                        + 'ies the interface.'
+                          ;
+              list only-if {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the interface.'
+                            ;
+                key 'vrf-name dest-addr mask-addr interface'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf interface {
+                  description 'Specify the interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-03 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+              }
+            }
+            container only-nhs {
+              description 'The configuration for static route which only specif'
+                        + 'ies the nexthop.'
+                          ;
+              list only-nh {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the nexthop.'
+                            ;
+                key 'vrf-name dest-addr mask-addr nexthop'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf nexthop {
+                  description 'The nexthop'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf global {
+                  description 'Whether a global static route, the default is 0 '
+                            + 'means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-03 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+              }
+            }
+            container both-if-nhs {
+              description 'The configuration for static route which both specif'
+                        + 'y the interface and the nexthop.'
+                          ;
+              list both-if-nh {
+                description 'The configuration for static route which both spec'
+                          + 'ify the interface and the nexthop.'
+                            ;
+                key 'vrf-name dest-addr mask-addr interface if-nexthop'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf interface {
+                  description 'The interface'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                leaf if-nexthop {
+                  description 'The nexthop'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-03 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+              }
+            }
+            container publics {
+              if-feature public-dest-address ;
+              description 'The configuration for static route which specifies t'
+                        + 'he nexthop to be public.'
+                          ;
+              list public {
+                description 'The configuration for static route which specifies'
+                          + ' the nexthop to be public.'
+                            ;
+                key 'vrf-name dest-addr mask-addr'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+              }
+              ncd:revise-date 2018-05-10 ;
+            }
+            container global-v6-nhs {
+              if-feature ipv4-dest-with-ipv6-global-nh ;
+              description 'The configuration for static route which only specif'
+                        + 'ies the IPv6 global nexthop.'
+                          ;
+              list global-v6-nh {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the IPv6 global nexthop.'
+                            ;
+                key 'vrf-name dest-addr mask-addr ipv6-nh'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf ipv6-nh {
+                  description 'The IPv6 nexthop.'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+              }
+              ncd:revise-date 2019-04-01 ;
+            }
+            container sr-policys {
+              description 'The configuration for static route which only specif'
+                        + 'ies the SR Policy.'
+                          ;
+              list sr-policy {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the SR Policy.'
+                            ;
+                key 'vrf-name dest-addr mask-addr color end-point'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf dest-addr {
+                  description 'The destination address of route.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask of route.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf color {
+                  description 'The color of SR Policy. Its range is 1-429496729'
+                            + '5.'
+                              ;
+                  type uint32 {
+                    range 1..4294967295 ;
+                  }
+                }
+                leaf end-point {
+                  description 'The end-point of SR Policy.'
+                              ;
+                  type string {
+                    length 1..39 ;
+                  }
+                }
+                leaf end-point-afi {
+                  description 'The address family of end-point.The value is IPv'
+                            + '4 or IPv6.'
+                              ;
+                  type address-family ;
+                  mandatory true ;
+                }
+                leaf srv6-sid {
+                  description 'The SRv6 SID of SRv6 Policy.'
+                              ;
+                  type ncd:ipv6-address-none-zero ;
+                  default :: ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255.'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295.'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+              }
+              ncd:revise-date 2021-05-08 ;
+            }
+            container nh-with-vrfs {
+              list nh-with-vrf {
+                key 'vrf-name dest-addr mask-addr nexthop nh-vrf-name'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf dest-addr {
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  type ncd:ipv4-address ;
+                }
+                leaf nexthop {
+                  type ncd:ipv4-address-none-zero ;
+                }
+                leaf nh-vrf-name {
+                  type string ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+              }
+              ncd:revise-date 2022-06-02 ;
+            }
+          }
+          container mng-net {
+            description 'The configuration for mng static route.'
+                        ;
+            container only-nhs {
+              description 'The configuration for static route which only specif'
+                        + 'ies the nexthop.'
+                          ;
+              list only-nh {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the nexthop.'
+                            ;
+                key 'dest-addr mask-addr nexthop'
+                    ;
+                leaf dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf nexthop {
+                  description 'The nexthop'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf global {
+                  description 'Whether a global static route, the default is 0 '
+                            + 'means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-03 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+              }
+            }
+            container publics {
+              if-feature public-dest-address ;
+              description 'The configuration for static route which specifies t'
+                        + 'he nexthop to be public.'
+                          ;
+              list public {
+                description 'The configuration for static route which specifies'
+                          + ' the nexthop to be public.'
+                            ;
+                key 'dest-addr mask-addr'
+                    ;
+                leaf dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+              }
+              ncd:revise-date 2018-05-10 ;
+            }
+            container global-v6-nhs {
+              if-feature ipv4-dest-with-ipv6-global-nh ;
+              description 'The configuration for static route which only specif'
+                        + 'ies the IPv6 global nexthop.'
+                          ;
+              list global-v6-nh {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the IPv6 global nexthop.'
+                            ;
+                key 'dest-addr mask-addr ipv6-nh'
+                    ;
+                leaf dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf ipv6-nh {
+                  description 'The IPv6 nexthop.'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+              }
+              ncd:revise-date 2019-04-01 ;
+            }
+            container sr-policys {
+              description 'The configuration for static route which only specif'
+                        + 'ies the SR Policy.'
+                          ;
+              list sr-policy {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the SR Policy.'
+                            ;
+                key 'dest-addr mask-addr color end-point'
+                    ;
+                leaf dest-addr {
+                  description 'The destination address of route.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-addr {
+                  description 'The mask of route.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf color {
+                  description 'The color of SR Policy. Its range is 1-429496729'
+                            + '5.'
+                              ;
+                  type uint32 {
+                    range 1..4294967295 ;
+                  }
+                }
+                leaf end-point {
+                  description 'The end-point of SR Policy.'
+                              ;
+                  type string {
+                    length 1..39 ;
+                  }
+                }
+                leaf end-point-afi {
+                  description 'The address family of end-point.The value is IPv'
+                            + '4 or IPv6.'
+                              ;
+                  type address-family ;
+                  mandatory true ;
+                }
+                leaf srv6-sid {
+                  description 'The SRv6 SID of SRv6 Policy.'
+                              ;
+                  type ncd:ipv6-address-none-zero ;
+                  default :: ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255.'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295.'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf preference-decrement {
+                  description 'The preference decrement can be set when the rou'
+                            + 'te has been related with track detection.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+              }
+              ncd:revise-date 2021-05-08 ;
+            }
+          }
+        }
+        container source-nexthop {
+          description 'To specify the original address for static route, using '
+                    + 'for creating multiple-hops BFD session in some scenarios'
+                    + '.'
+                      ;
+          presence source-nexthop ;
+          leaf loopback-name {
+            description 'The loopback name specified'
+                        ;
+            type ncd:ifname {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+        }
+        container source-nexthop-vrf {
+          description 'To specify the original address for vpn static route, us'
+                    + 'ing for creating vpn multiple-hops BFD session in some s'
+                    + 'cenarios.'
+                      ;
+          presence source-nexthop-vrf ;
+          list private-net {
+            description 'To specify the original address for vpn static route, '
+                      + 'using for creating vpn multiple-hops BFD session in so'
+                      + 'me scenarios.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'Specifying the VPN name'
+                          ;
+              type ncd:string-all {
+                length 1..32 ;
+              }
+            }
+            leaf loopback-name {
+              description 'To specify the loopback name, which must be in the s'
+                        + 'ame vpn instance.'
+                          ;
+              type ncd:ifname {
+                length 1..31 ;
+              }
+              mandatory true ;
+            }
+          }
+          ncd:revise-date 2015-11-02 ;
+        }
+        container fast-reroute {
+          description "The node for IPv4-STATIC-ROUTE's FRR function."
+                      ;
+          container public-net {
+            description 'Enable or disable the switch of FRR function in public'
+                      + ' network.'
+                        ;
+            leaf wtr-value {
+              description 'Set the WTR(frrWaitToRestore) time, the default valu'
+                        + 'e is 0. The range is 0-12, and the unit is minutes.'
+                          ;
+              type uint8 {
+                range 0..12 ;
+              }
+              units mins ;
+              default 0 ;
+            }
+          }
+          container private-nets {
+            description 'Enable or disable the switch of FRR function in privat'
+                      + 'e network.'
+                        ;
+            list private-net {
+              description 'Enable or disable the switch of FRR function in priv'
+                        + 'ate network.'
+                          ;
+              key vrf-name ;
+              leaf vrf-name {
+                description 'Specifying the VPN name'
+                            ;
+                type ncd:string-all {
+                  length 1..32 ;
+                }
+              }
+              leaf wtr-value {
+                description 'Set the WTR(frrWaitToRestore) time. The range is 0'
+                          + '-12, and the unit is minutes.'
+                            ;
+                type uint8 {
+                  range 0..12 ;
+                }
+                units mins ;
+                default 0 ;
+              }
+            }
+          }
+        }
+        container dynamic-protect {
+          description 'The function node for IPv4-STATIC-ROUTE to protect the d'
+                    + 'ynamic route(RIP, OSPFv2, ISIS, BGP etc).'
+                      ;
+          container public-nets {
+            description 'Enable or disable the function of dynamic-route-protec'
+                      + 'tion in public network.'
+                        ;
+            list public-net {
+              description 'Enable or disable the function of dynamic-route-prot'
+                        + 'ection in public network.'
+                          ;
+              key route-type ;
+              leaf route-type {
+                description 'Specify the route type (RIP, OSPF, BGP, ISIS) whic'
+                          + 'h is needed to protect.'
+                            ;
+                type protect-type ;
+              }
+            }
+          }
+          container private-nets {
+            description 'Enable or disable the function of dynamic-route-protec'
+                      + 'tion in private network.'
+                        ;
+            list private-net {
+              description 'Enable or disable the function of dynamic-route-prot'
+                        + 'ection in private network.'
+                          ;
+              key 'vrf-name route-type'
+                  ;
+              leaf vrf-name {
+                description 'Specify the VPN name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf route-type {
+                description 'Specify the route type (RIP, OSPF, BGP, ISIS) whic'
+                          + 'h is needed to protect.'
+                            ;
+                type protect-type ;
+              }
+            }
+          }
+        }
+        container update-delay {
+          description 'The node for STATIC-ROUTE to set update-delay time.'
+                      ;
+          leaf time-interval {
+            description 'The update-delay time interval, the default value is 0'
+                      + ', the range is 0 to 1200, and the unit is second.'
+                        ;
+            type uint16 {
+              range 0..1200 ;
+            }
+            units second ;
+            default 0 ;
+          }
+        }
+        container recursion-l3vpn {
+          description 'The recursion-l3vpn function for IPv4-STATIC-ROUTE.'
+                      ;
+          list private-net {
+            description 'The recursion-l3vpn function for IPv4-STATIC-ROUTE.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'Specifying the VPN name'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+          }
+          ncd:revise-date 2016-05-26 ;
+        }
+        container route-vxlan {
+          description 'The configuration for static VXLAN route.'
+                      ;
+          container static-tunnels {
+            description 'Routing configuration in static tunnel scene.'
+                        ;
+            list static-tunnel {
+              description 'Routing configuration in static tunnel scene.'
+                          ;
+              key 'vrf-name dest-addr mask-addr vxlan-if'
+                  ;
+              leaf vrf-name {
+                description 'The name of the private network VPN.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf dest-addr {
+                description 'The destination address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf mask-addr {
+                description 'The mask address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf vxlan-if {
+                description 'The VXLAN interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 ;
+                }
+              }
+              leaf vni-label {
+                description 'The VNI label value, and the invalid value is 0. T'
+                          + 'he range is 1-16777215.'
+                            ;
+                type uint32 {
+                  range 1..16777215 ;
+                }
+                ncd:revise-date 2018-01-26 ;
+              }
+              leaf router-mac {
+                description 'The router MAC value.'
+                            ;
+                type ncd:mac-address ;
+              }
+              leaf distance {
+                description 'The route priority, and the default value is 1. Th'
+                          + 'e range is 1-255.'
+                            ;
+                type uint8 {
+                  range 1..255 ;
+                }
+                default 1 ;
+              }
+              leaf metric {
+                description 'The route metric, and the default value is 0. The '
+                          + 'range is 0-255.'
+                            ;
+                type uint8 {
+                  range 0..255 ;
+                }
+                default 0 ;
+              }
+              leaf description {
+                description 'The description information of the route.'
+                            ;
+                type string {
+                  length 0..64 ;
+                }
+              }
+              leaf track-name {
+                description "The track object which the static route track-dete"
+                          + "ction related. The default value is null, means th"
+                          + "at don't relate track-detection."
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                ncd:revise-date 2018-06-28 ;
+              }
+            }
+          }
+          container dynamic-tunnels {
+            description 'Routing configuration in dynamic tunnel scene.'
+                        ;
+            list dynamic-tunnel {
+              description 'Routing configuration in dynamic tunnel scene.'
+                          ;
+              key 'vrf-name dest-addr mask-addr local-ip remote-ip'
+                  ;
+              leaf vrf-name {
+                description 'The name of the private network VPN.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf dest-addr {
+                description 'The destination address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf mask-addr {
+                description 'The mask address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf local-ip {
+                description 'The local ip address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf remote-ip {
+                description 'The remote ip address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf vni-label {
+                description 'The VNI label value, and the invalid value is 0. T'
+                          + 'he range is 1-16777215.'
+                            ;
+                type uint32 {
+                  range 1..16777215 ;
+                }
+              }
+              leaf router-mac {
+                description 'The router MAC value.'
+                            ;
+                type ncd:mac-address ;
+              }
+              leaf distance {
+                description 'The route priority, and the default value is 1. Th'
+                          + 'e range is 1-255.'
+                            ;
+                type uint8 {
+                  range 1..255 ;
+                }
+                default 1 ;
+              }
+              leaf metric {
+                description 'The route metric, and the default value is 0. The '
+                          + 'range is 0-255.'
+                            ;
+                type uint8 {
+                  range 0..255 ;
+                }
+                default 0 ;
+              }
+              leaf description {
+                description 'The description information of the route.'
+                            ;
+                type string {
+                  length 0..64 ;
+                }
+              }
+              leaf track-name {
+                description "The track object which the static route track-dete"
+                          + "ction related. The default value is null, means th"
+                          + "at don't relate track-detection."
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+            ncd:revise-date 2018-06-28 ;
+          }
+          ncd:revise-date 2017-11-30 ;
+        }
+        container nexthop {
+          if-feature nexthop-resolving-delay ;
+          description 'The node for IPv4 static route to set related nexthop fe'
+                    + 'atures.'
+                      ;
+          container trigger {
+            description 'The node to trigger nexthop resolving.'
+                        ;
+            container delay {
+              description 'The node to set delay time.'
+                          ;
+              leaf time {
+                description 'The nexthop resolving delay time , the default val'
+                          + 'ue is 0, the range is 0 to 300, and the unit is se'
+                          + 'cond.'
+                            ;
+                type uint32 {
+                  range 0..300 {
+                    description 'Delay-time value.'
+                                ;
+                  }
+                }
+                units second ;
+                default 0 ;
+              }
+            }
+          }
+          ncd:revise-date 2020-01-09 ;
+        }
+        container bfd {
+          if-feature bfd-template ;
+          description "The configuration for IPv4 static route to set BFD's att"
+                    + "ribute."
+                      ;
+          container single-bfds {
+            description "The configuration for IPv4 static route to set single-"
+                      + "hop BFD's attributes."
+                        ;
+            presence template-name ;
+            list single-bfd {
+              description "The configuration for single-hop BFD's template name."
+                          ;
+              key 'ifname nexthop'
+                  ;
+              leaf ifname {
+                description 'The interface name specified.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 ;
+                }
+              }
+              leaf nexthop {
+                description 'The nexthop addresss specified.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf template-name {
+                description "The template name of single-hop BFD.
+\nThese chara"
+                          + "cters's ASCII unicode must be between 0x21-0x3E / "
+                          + "0x40-0x7E."
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                mandatory true ;
+              }
+            }
+          }
+          container multi-bfds {
+            description "The configuration for IPv4 static route to set public "
+                      + "multi-hop BFD's attributes."
+                        ;
+            presence template-name ;
+            list multi-bfd {
+              description "The configuration for multi-hop BFD's template name."
+                          ;
+              key 'nexthop local-address'
+                  ;
+              leaf local-address {
+                description 'The original address specified.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf nexthop {
+                description 'The nexthop addresss specified.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf template-name {
+                description "The template name of public multi-hop BFD.
+\nThese"
+                          + " characters's ASCII unicode must be between 0x21-0"
+                          + "x3E / 0x40-0x7E."
+                            ;
+                type string ;
+                mandatory true ;
+              }
+            }
+          }
+          container multi-bfds-vrf {
+            description "The configuration for IPv4 static route to set private"
+                      + " multi-hop BFD's attributes."
+                        ;
+            presence template-name ;
+            list multi-bfd-vrf {
+              description "The configuration for private multi-hop BFD's templa"
+                        + "te name."
+                          ;
+              key 'vrfname nexthop local-address'
+                  ;
+              leaf vrfname {
+                description "The name of the private network VPN.
+\nThese chara"
+                          + "cters's ASCII unicode must be between 0x20-0x7E."
+                            ;
+                type ncd:string-all ;
+              }
+              leaf local-address {
+                description 'The original address specified.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf nexthop {
+                description 'The nexthop addresss specified.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf template-name {
+                description "The template name of private multi-hop BFD.
+\nThes"
+                          + "e characters's ASCII unicode must be between 0x21-"
+                          + "0x3E / 0x40-0x7E."
+                            ;
+                type string ;
+                mandatory true ;
+              }
+            }
+          }
+          ncd:revise-date 2020-04-03 ;
+        }
+        container recursion-l3evpns {
+          description 'The recursion-l3evpn function for IPv4-STATIC-ROUTE.'
+                      ;
+          list recursion-l3evpn {
+            description 'The recursion-l3evpn function for IPv4-STATIC-ROUTE.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'Specifying the VPN name'
+                          ;
+              type string ;
+            }
+            leaf status {
+              description 'Set static route recursion L3EVPN enbale or disable.'
+                          ;
+              type enumeration {
+                enum ENABLE {
+                  value 1 ;
+                  description 'Set static route recursion L3EVPN enbale.'
+                              ;
+                }
+                enum DISABLE {
+                  value 0 ;
+                  description 'Set static route recursion L3EVPN disable.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          ncd:revise-date 2020-08-13 ;
+        }
+        container track-actions {
+          description 'Static route track configuration.'
+                      ;
+          list track-action {
+            description 'Static route track configuration.'
+                        ;
+            key 'track-name track-state'
+                ;
+            leaf track-name {
+              description 'Specifying the track name.'
+                          ;
+              type string ;
+            }
+            leaf track-state {
+              description 'The track state.'
+                          ;
+              type enumeration {
+                enum ADMIN-DOWN {
+                  value 1 ;
+                  description 'Administratively down.'
+                              ;
+                }
+              }
+            }
+            leaf action {
+              description 'Set static route invalid or not with the track state.'
+                          ;
+              type enumeration {
+                enum VALID {
+                  value 1 ;
+                  description 'Set static route valid.'
+                              ;
+                }
+                enum INVALID {
+                  value 0 ;
+                  description 'Set static route invalid.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          ncd:revise-date 2021-01-07 ;
+        }
+        container only-recurse {
+          description 'The only recurtion function for IPv4 static route.'
+                      ;
+          container public-net {
+            description 'The only recurtion function for IPv4 static route in p'
+                      + 'ublic net.'
+                        ;
+            presence route-type ;
+            leaf route-type {
+              description 'Set the special route type of static route rescure o'
+                        + 'nly.'
+                          ;
+              type recursion-type ;
+              mandatory true ;
+            }
+          }
+          container private-nets {
+            description 'The only recurtion function for IPv4 static route in p'
+                      + 'rivate net.'
+                        ;
+            list private-net {
+              description 'The only recurtion function for IPv4 static route in'
+                        + ' private net'
+                          ;
+              key vrf-name ;
+              leaf vrf-name {
+                description 'Specifying the VPN name'
+                            ;
+                type ncd:string-all {
+                  length 1..32 ;
+                }
+              }
+              leaf route-type {
+                description 'Set the special route type of static route rescure'
+                          + ' only.'
+                            ;
+                type recursion-type ;
+                mandatory true ;
+              }
+            }
+          }
+          container mng-net {
+            description 'The only recurtion function for IPv4 static route in m'
+                      + 'ng net.'
+                        ;
+            presence route-type ;
+            leaf route-type {
+              description 'Set the special route type of static route rescure o'
+                        + 'nly.'
+                          ;
+              type recursion-type ;
+              mandatory true ;
+            }
+          }
+          ncd:revise-date 2021-04-13 ;
+        }
+      }
+      container rpm-srtv6 {
+        description "The total node for IPV6-STATIC-ROUTE's all configuration
+\n"
+                  + "commands"
+                    ;
+        container route-config {
+          description 'The configuration for STATIC-ROUTE basic information, in'
+                    + 'cluding  the destination address, mask, interface, the n'
+                    + 'exthop, priority, metric, BFD detection, track detection'
+                    + ', route description, etc.'
+                      ;
+          container public-net {
+            description 'The configuration for public static route.'
+                        ;
+            container only-ifs {
+              description 'The configuration for static route which only specif'
+                        + 'ies the interface.'
+                          ;
+              list only-if {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the interface.'
+                            ;
+                key 'ipv6-dest-addr mask-len interface'
+                    ;
+                leaf interface {
+                  description 'Specify the interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-02 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  if-feature ipv6-permanent ;
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2018-08-02 ;
+                }
+              }
+            }
+            container only-nhs {
+              description 'The configuration for static route which only specif'
+                        + 'ies the nexthop.'
+                          ;
+              list only-nh {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the nexthop.'
+                            ;
+                key 'ipv6-dest-addr ipv6-nh mask-len'
+                    ;
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf ipv6-nh {
+                  description 'The route nexthop'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-02 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  if-feature ipv6-permanent ;
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2018-08-02 ;
+                }
+              }
+            }
+            container both-if-nhs {
+              description 'The configuration for static route which both specif'
+                        + 'y the interface and the nexthop.'
+                          ;
+              list both-if-nh {
+                description 'The configuration for static route which both spec'
+                          + 'ify the interface and the nexthop.'
+                            ;
+                key 'interface ipv6-dest-addr ipv6-if-nh mask-len'
+                    ;
+                leaf interface {
+                  description 'Specify the interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf ipv6-if-nh {
+                  description 'The route nexthop'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-02 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  if-feature ipv6-permanent ;
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2018-08-02 ;
+                }
+              }
+            }
+            container nexthop-vrfs {
+              description 'Configure static routes with nexthop in VPN instance.'
+                          ;
+              list nexthop-vrf {
+                description 'Configure static routes with nexthop in VPN instan'
+                          + 'ce.'
+                            ;
+                key 'ipv6-dest-addr mask-len'
+                    ;
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf nh-vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                  mandatory true ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+              }
+              ncd:revise-date 2020-08-19 ;
+            }
+            container sr-policys {
+              description 'The configuration for static route which only specif'
+                        + 'ies the SR Policy.'
+                          ;
+              list sr-policy {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the SR Policy.'
+                            ;
+                key 'ipv6-dest-addr mask-len color end-point'
+                    ;
+                leaf ipv6-dest-addr {
+                  description 'The destination address.'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length.'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf color {
+                  description 'The color of SR Policy. Its range is 1-429496729'
+                            + '5.'
+                              ;
+                  type uint32 {
+                    range 1..4294967295 ;
+                  }
+                }
+                leaf end-point {
+                  description 'The end-point of SR Policy.'
+                              ;
+                  type string {
+                    length 1..39 ;
+                  }
+                }
+                leaf end-point-afi {
+                  description 'The address family of end-point.The value is IPv'
+                            + '4 or IPv6.'
+                              ;
+                  type address-family ;
+                  mandatory true ;
+                }
+                leaf srv6-sid {
+                  description 'The SRv6 SID of SRv6 Policy.'
+                              ;
+                  type ncd:ipv6-address-none-zero ;
+                  default :: ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255.'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295.'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+              }
+              ncd:revise-date 2021-05-08 ;
+            }
+            container ipv4-nhs {
+              description 'The configuration for static route which only specif'
+                        + 'ies the IPv4 global nexthop.'
+                          ;
+              list ipv4-nh {
+                description 'The configuration for IPv6 static route with IPv4 '
+                          + 'nexthop.'
+                            ;
+                key 'ipv6-dest-addr ipv4-nh mask-len'
+                    ;
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf ipv4-nh {
+                  description 'The route nexthop'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  if-feature ipv6-permanent ;
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+              }
+              ncd:revise-date 2022-07-14 ;
+            }
+          }
+          container private-net {
+            description 'The configuration for private static route.'
+                        ;
+            container only-ifs {
+              description 'The configuration for static route which only specif'
+                        + 'ies the interface.'
+                          ;
+              list only-if {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the interface.'
+                            ;
+                key 'vrf-name interface ipv6-dest-addr mask-len'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf interface {
+                  description 'Specify the interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-02 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  if-feature ipv6-permanent ;
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2018-08-02 ;
+                }
+              }
+            }
+            container only-nhs {
+              description 'The configuration for static route which only specif'
+                        + 'ies the nexthop.'
+                          ;
+              list only-nh {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the nexthop.'
+                            ;
+                key 'vrf-name ipv6-dest-addr ipv6-nh mask-len'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf ipv6-nh {
+                  description 'The route nexthop'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-02 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  if-feature ipv6-permanent ;
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2018-08-02 ;
+                }
+                leaf global {
+                  if-feature ipv6-global-nh ;
+                  description 'Whether a global static route, the default is 0 '
+                            + 'means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2018-10-31 ;
+                }
+              }
+            }
+            container both-if-nhs {
+              description 'The configuration for static route which both specif'
+                        + 'y the interface and the nexthop.'
+                          ;
+              list both-if-nh {
+                description 'The configuration for static route which both spec'
+                          + 'ify the interface and the nexthop.'
+                            ;
+                key 'vrf-name interface ipv6-dest-addr ipv6-if-nh mask-len'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf interface {
+                  description 'Specify the interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf ipv6-if-nh {
+                  description 'The route nexthop'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-02 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  if-feature ipv6-permanent ;
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2018-08-02 ;
+                }
+              }
+            }
+            container publics {
+              if-feature public-dest-address ;
+              description 'The configuration for static route which specifies t'
+                        + 'he nexthop to be public.'
+                          ;
+              list public {
+                description 'The configuration for static route which specifies'
+                          + ' the nexthop to be public.'
+                            ;
+                key 'vrf-name ipv6-dest-addr mask-len'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+              }
+              ncd:revise-date 2018-05-10 ;
+            }
+            container global-v4-nhs {
+              if-feature ipv4-global-nh ;
+              description 'The configuration for static route which only specif'
+                        + 'ies the IPv4 global nexthop.'
+                          ;
+              list global-v4-nh {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the IPv4 global nexthop.'
+                            ;
+                key 'vrf-name ipv6-dest-addr ipv4-nh mask-len'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf ipv4-nh {
+                  description 'The route nexthop'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  if-feature ipv6-permanent ;
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2018-08-02 ;
+                }
+              }
+              ncd:revise-date 2018-05-30 ;
+            }
+            container sr-policys {
+              description 'The configuration for static route which only specif'
+                        + 'ies the SR Policy.'
+                          ;
+              list sr-policy {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the SR Policy.'
+                            ;
+                key 'vrf-name ipv6-dest-addr mask-len color end-point'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf ipv6-dest-addr {
+                  description 'The destination address.'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length.'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf color {
+                  description 'The color of SR Policy. Its range is 1-429496729'
+                            + '5.'
+                              ;
+                  type uint32 {
+                    range 1..4294967295 ;
+                  }
+                }
+                leaf end-point {
+                  description 'The end-point of SR Policy.'
+                              ;
+                  type string {
+                    length 1..39 ;
+                  }
+                }
+                leaf end-point-afi {
+                  description 'The address family of end-point.The value is IPv'
+                            + '4 or IPv6.'
+                              ;
+                  type address-family ;
+                  mandatory true ;
+                }
+                leaf srv6-sid {
+                  description 'The SRv6 SID of SRv6 Policy.'
+                              ;
+                  type ncd:ipv6-address-none-zero ;
+                  default :: ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255.'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295.'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+              }
+              ncd:revise-date 2021-05-08 ;
+            }
+            container nh-with-vrfs {
+              list nh-with-vrf {
+                key 'vrf-name ipv6-dest-addr ipv6-nh mask-len nh-vrf-name'
+                    ;
+                leaf vrf-name {
+                  description 'The name of the private network VPN.'
+                              ;
+                  type ncd:string-all {
+                    length 1..32 ;
+                  }
+                }
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf ipv6-nh {
+                  description 'The route nexthop'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf nh-vrf-name {
+                  type string ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+              }
+              ncd:revise-date 2022-06-02 ;
+            }
+          }
+          container mng-net {
+            description 'The configuration for mng static route.'
+                        ;
+            container only-nhs {
+              description 'The configuration for static route which only specif'
+                        + 'ies the nexthop.'
+                          ;
+              list only-nh {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the nexthop.'
+                            ;
+                key 'ipv6-dest-addr ipv6-nh mask-len'
+                    ;
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf ipv6-nh {
+                  description 'The route nexthop'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2015-04-02 ;
+                }
+                leaf bfd-button {
+                  description 'Whether associated BFD detection, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  if-feature ipv6-permanent ;
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2018-08-02 ;
+                }
+                leaf global {
+                  if-feature ipv6-global-nh ;
+                  description 'Whether a global static route, the default is 0 '
+                            + 'means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2018-10-31 ;
+                }
+              }
+            }
+            container publics {
+              if-feature public-dest-address ;
+              description 'The configuration for static route which specifies t'
+                        + 'he nexthop to be public.'
+                          ;
+              list public {
+                description 'The configuration for static route which specifies'
+                          + ' the nexthop to be public.'
+                            ;
+                key 'ipv6-dest-addr mask-len'
+                    ;
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+              }
+              ncd:revise-date 2018-05-10 ;
+            }
+            container global-v4-nhs {
+              if-feature ipv4-global-nh ;
+              description 'The configuration for static route which only specif'
+                        + 'ies the IPv4 global nexthop.'
+                          ;
+              list global-v4-nh {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the IPv4 global nexthop.'
+                            ;
+                key 'ipv6-dest-addr ipv4-nh mask-len'
+                    ;
+                leaf ipv6-dest-addr {
+                  description 'The destination address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf ipv4-nh {
+                  description 'The route nexthop'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+                leaf permanent {
+                  if-feature ipv6-permanent ;
+                  description 'Whether a permanent static route, the default is'
+                            + ' 0 means no, and 1 means yes. The range is 0-1'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2018-08-02 ;
+                }
+              }
+              ncd:revise-date 2018-05-30 ;
+            }
+            container sr-policys {
+              description 'The configuration for static route which only specif'
+                        + 'ies the SR Policy.'
+                          ;
+              list sr-policy {
+                description 'The configuration for static route which only spec'
+                          + 'ifies the SR Policy.'
+                            ;
+                key 'ipv6-dest-addr mask-len color end-point'
+                    ;
+                leaf ipv6-dest-addr {
+                  description 'The destination address.'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf mask-len {
+                  description 'The mask length.'
+                              ;
+                  type uint8 {
+                    range 0..128 ;
+                  }
+                }
+                leaf color {
+                  description 'The color of SR Policy. Its range is 1-429496729'
+                            + '5.'
+                              ;
+                  type uint32 {
+                    range 1..4294967295 ;
+                  }
+                }
+                leaf end-point {
+                  description 'The end-point of SR Policy.'
+                              ;
+                  type string {
+                    length 1..39 ;
+                  }
+                }
+                leaf end-point-afi {
+                  description 'The address family of end-point.The value is IPv'
+                            + '4 or IPv6.'
+                              ;
+                  type address-family ;
+                  mandatory true ;
+                }
+                leaf srv6-sid {
+                  description 'The SRv6 SID of SRv6 Policy.'
+                              ;
+                  type ncd:ipv6-address-none-zero ;
+                  default :: ;
+                }
+                leaf preference {
+                  description 'The route priority, and the default value is 1. '
+                            + 'The range is 1-255.'
+                              ;
+                  type uint8 {
+                    range 1..255 ;
+                  }
+                  default 1 ;
+                }
+                leaf metric {
+                  description 'The route metric, and the default value is 0. Th'
+                            + 'e range is 0-255.'
+                              ;
+                  type uint8 {
+                    range 0..255 ;
+                  }
+                  default 0 ;
+                }
+                leaf tag-value {
+                  description 'The route tag, and the default value is 0. The r'
+                            + 'ange is 0-4294967295.'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  default 0 ;
+                }
+                leaf track-name {
+                  description "The track object which the static route track-de"
+                            + "tection related. The default value is null, mean"
+                            + "s that don't relate track-detection."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf description {
+                  description 'The description of the static route information.'
+                            + ' The default value is empty, means no descriptio'
+                            + 'n information.'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+              }
+              ncd:revise-date 2021-05-08 ;
+            }
+          }
+        }
+        container source-nexthop {
+          description 'To specify the original address for static route, using '
+                    + 'for creating multiple-hops BFD session in some scenarios'
+                    + '.'
+                      ;
+          presence source-nexthop ;
+          leaf loopback-name {
+            description 'The loopback name specified'
+                        ;
+            type ncd:ifname {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+        }
+        container fast-reroute {
+          description "The node for IPv6-STATIC-ROUTE's FRR function."
+                      ;
+          container public-net {
+            description 'Enable or disable the switch of FRR function in public'
+                      + ' network.'
+                        ;
+            leaf wtr-value {
+              description 'Set the WTR(frrWaitToRestore) time, the default valu'
+                        + 'e is 0. The range is 0-12, and the unit is minutes.'
+                          ;
+              type uint8 {
+                range 0..12 ;
+              }
+              units mins ;
+              default 0 ;
+            }
+          }
+          container private-nets {
+            description 'Enable or disable the switch of FRR function in privat'
+                      + 'e network.'
+                        ;
+            list private-net {
+              description 'Enable or disable the switch of FRR function in priv'
+                        + 'ate network.'
+                          ;
+              key vrf-name ;
+              leaf vrf-name {
+                description 'Specifying the VPN name'
+                            ;
+                type ncd:string-all {
+                  length 1..32 ;
+                }
+              }
+              leaf wtr-value {
+                description 'Set the WTR(frrWaitToRestore) time. The range is 0'
+                          + '-12, and the unit is minutes.'
+                            ;
+                type uint8 {
+                  range 0..12 ;
+                }
+                units mins ;
+                default 0 ;
+              }
+            }
+          }
+        }
+        container dynamic-protect {
+          description 'The function node for IPv6-STATIC-ROUTE to protect the d'
+                    + 'ynamic route(RIPng, OSPFv3, ISIS, BGP etc).'
+                      ;
+          container public-nets {
+            description 'Enable or disable the function of dynamic-route-protec'
+                      + 'tion in public network.'
+                        ;
+            list public-net {
+              description 'Enable or disable the function of dynamic-route-prot'
+                        + 'ection in public network.'
+                          ;
+              key route-type ;
+              leaf route-type {
+                description 'Specify the route type (RIPng, OSPFv3, BGP, ISIS) '
+                          + 'which is needed to protect.'
+                            ;
+                type protect-type ;
+              }
+            }
+          }
+          container private-nets {
+            description 'Enable or disable the function of dynamic-route-protec'
+                      + 'tion in private network.'
+                        ;
+            list private-net {
+              description 'Enable or disable the function of dynamic-route-prot'
+                        + 'ection in private network.'
+                          ;
+              key 'vrf-name route-type'
+                  ;
+              leaf vrf-name {
+                description 'Specify the VPN name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf route-type {
+                description 'Specify the route type (RIPng, OSPFv3, BGP, ISIS) '
+                          + 'which is needed to protect.'
+                            ;
+                type protect-type ;
+              }
+            }
+          }
+        }
+        container recursion-l3vpn {
+          description 'The recursion l3vpn function for IPv6 static route.'
+                      ;
+          list private-net {
+            description 'The recursion l3vpn function for IPv6 private static r'
+                      + 'oute.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'Specifying the VPN name'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+          }
+          ncd:revise-date 2020-04-26 ;
+        }
+        container route-vxlan {
+          if-feature ipv6-vxlan ;
+          description 'The configuration for static VXLAN route.'
+                      ;
+          container static-tunnels {
+            description 'Routing configuration in static tunnel scene.'
+                        ;
+            list static-tunnel {
+              description 'Routing configuration in static tunnel scene.'
+                          ;
+              key 'vrf-name ipv6-dest-addr mask-len vxlan-if'
+                  ;
+              leaf vrf-name {
+                description 'The name of the private network VPN.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf ipv6-dest-addr {
+                description 'The destination address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf mask-len {
+                description 'The mask lenth.'
+                            ;
+                type uint8 ;
+              }
+              leaf vxlan-if {
+                description 'The VXLAN interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 ;
+                }
+              }
+              leaf vni-label {
+                description 'The VNI label value, and the invalid value is 0. T'
+                          + 'he range is 1-16777215.'
+                            ;
+                type uint32 {
+                  range 1..16777215 ;
+                }
+              }
+              leaf router-mac {
+                description 'The router MAC value.'
+                            ;
+                type ncd:mac-address ;
+              }
+              leaf distance {
+                description 'The route priority, and the default value is 1. Th'
+                          + 'e range is 1-255.'
+                            ;
+                type uint8 {
+                  range 1..255 ;
+                }
+                default 1 ;
+              }
+              leaf metric {
+                description 'The route metric, and the default value is 0. The '
+                          + 'range is 0-255.'
+                            ;
+                type uint8 {
+                  range 0..255 ;
+                }
+                default 0 ;
+              }
+              leaf description {
+                description 'The description information of the route.'
+                            ;
+                type string {
+                  length 0..64 ;
+                }
+              }
+              leaf track-name {
+                description "The track object which the static route track-dete"
+                          + "ction related. The default value is null, means th"
+                          + "at don't relate track-detection."
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+          }
+          container dynamic-tunnels {
+            description 'Routing configuration in dynamic tunnel scene.'
+                        ;
+            list dynamic-tunnel {
+              description 'Routing configuration in dynamic tunnel scene.'
+                          ;
+              key 'vrf-name ipv6-dest-addr mask-len local-ipv6 remote-ipv6'
+                  ;
+              leaf vrf-name {
+                description 'The name of the private network VPN.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf ipv6-dest-addr {
+                description 'The destination address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf mask-len {
+                description 'The mask lenth.'
+                            ;
+                type uint8 ;
+              }
+              leaf local-ipv6 {
+                description 'The local IPv6 address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf remote-ipv6 {
+                description 'The remote IPv6 address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf vni-label {
+                description 'The VNI label value, and the invalid value is 0. T'
+                          + 'he range is 1-16777215.'
+                            ;
+                type uint32 {
+                  range 1..16777215 ;
+                }
+              }
+              leaf router-mac {
+                description 'The router MAC value.'
+                            ;
+                type ncd:mac-address ;
+              }
+              leaf distance {
+                description 'The route priority, and the default value is 1. Th'
+                          + 'e range is 1-255.'
+                            ;
+                type uint8 {
+                  range 1..255 ;
+                }
+                default 1 ;
+              }
+              leaf metric {
+                description 'The route metric, and the default value is 0. The '
+                          + 'range is 0-255.'
+                            ;
+                type uint8 {
+                  range 0..255 ;
+                }
+                default 0 ;
+              }
+              leaf description {
+                description 'The description information of the route.'
+                            ;
+                type string {
+                  length 0..64 ;
+                }
+              }
+              leaf track-name {
+                description "The track object which the static route track-dete"
+                          + "ction related. The default value is null, means th"
+                          + "at don't relate track-detection."
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+          }
+          ncd:revise-date 2018-12-04 ;
+        }
+        container nexthop {
+          if-feature nexthop-resolving-delay ;
+          description 'The node for IPv6 static route to set related nexthop fe'
+                    + 'atures.'
+                      ;
+          container trigger {
+            description 'The node to trigger nexthop resolving.'
+                        ;
+            container delay {
+              description 'The node to set delay time.'
+                          ;
+              leaf time {
+                description 'The nexthop resolving delay time , the default val'
+                          + 'ue is 0, the range is 0 to 300, and the unit is se'
+                          + 'cond.'
+                            ;
+                type uint32 {
+                  range 0..300 {
+                    description 'Delay-time value.'
+                                ;
+                  }
+                }
+                units second ;
+                default 0 ;
+              }
+            }
+          }
+          ncd:revise-date 2020-01-09 ;
+        }
+        container bfd {
+          if-feature bfd-template ;
+          description "The configuration for IPv6 static route to set BFD's att"
+                    + "ribute."
+                      ;
+          container single-bfds {
+            description "The configuration for IPv6 static route to set single-"
+                      + "hop BFD's attributes."
+                        ;
+            presence template-name ;
+            list single-bfd {
+              description "The configuration for single-hop BFD's template name."
+                          ;
+              key 'ifname nexthop'
+                  ;
+              leaf ifname {
+                description 'The interface name specified.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 ;
+                }
+              }
+              leaf nexthop {
+                description 'The nexthop addresss specified.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf template-name {
+                description "The template name of single-hop BFD.
+\nThese chara"
+                          + "cters's ASCII unicode must be between 0x21-0x3E / "
+                          + "0x40-0x7E."
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                mandatory true ;
+              }
+            }
+          }
+          container multi-bfds {
+            description "The configuration for IPv6 static route to set public "
+                      + "multi-hop BFD's attributes."
+                        ;
+            presence template-name ;
+            list multi-bfd {
+              description "The configuration for public multi-hop BFD's templat"
+                        + "e name."
+                          ;
+              key 'nexthop local-address'
+                  ;
+              leaf local-address {
+                description 'The original address specified.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf nexthop {
+                description 'The nexthop addresss specified.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf template-name {
+                description "The template name of public multi-hop BFD.
+\nThese"
+                          + " characters's ASCII unicode must be between 0x21-0"
+                          + "x3E / 0x40-0x7E."
+                            ;
+                type string ;
+                mandatory true ;
+              }
+            }
+          }
+          container multi-bfds-vrf {
+            description "The configuration for IPv6 static route to set multi-h"
+                      + "op BFD's attributes."
+                        ;
+            presence template-name ;
+            list multi-bfd-vrf {
+              description "The configuration for private multi-hop BFD's templa"
+                        + "te name."
+                          ;
+              key 'vrfname nexthop local-address'
+                  ;
+              leaf vrfname {
+                description "The name of the private network VPN.
+\nThese chara"
+                          + "cters's ASCII unicode must be between 0x20-0x7E."
+                            ;
+                type ncd:string-all ;
+              }
+              leaf local-address {
+                description 'The original address specified.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf nexthop {
+                description 'The nexthop addresss specified.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf template-name {
+                description "The template name of private multi-hop BFD.
+\nThes"
+                          + "e characters's ASCII unicode must be between 0x21-"
+                          + "0x3E / 0x40-0x7E."
+                            ;
+                type string ;
+                mandatory true ;
+              }
+            }
+          }
+          ncd:revise-date 2020-04-03 ;
+        }
+        container recursion-l3evpns {
+          description 'The recursion-l3evpn function for IPv6-STATIC-ROUTE.'
+                      ;
+          list recursion-l3evpn {
+            description 'The recursion-l3evpn function for IPv6-STATIC-ROUTE.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'Specifying the VPN name'
+                          ;
+              type string ;
+            }
+            leaf status {
+              description 'Set static route recursion L3EVPN enbale or disable.'
+                          ;
+              type enumeration {
+                enum ENABLE {
+                  value 1 ;
+                  description 'Set static route recursion L3EVPN enbale.'
+                              ;
+                }
+                enum DISABLE {
+                  value 0 ;
+                  description 'Set static route recursion L3EVPN disable.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          ncd:revise-date 2020-08-13 ;
+        }
+        container track-actions {
+          description 'Static route track configuration.'
+                      ;
+          list track-action {
+            description 'Static route track configuration.'
+                        ;
+            key 'track-name track-state'
+                ;
+            leaf track-name {
+              description 'Specifying the track name.'
+                          ;
+              type string ;
+            }
+            leaf track-state {
+              description 'The track state.'
+                          ;
+              type enumeration {
+                enum ADMIN-DOWN {
+                  value 1 ;
+                  description 'Administratively down.'
+                              ;
+                }
+              }
+            }
+            leaf action {
+              description 'Set static route invalid or not with the track state.'
+                          ;
+              type enumeration {
+                enum VALID {
+                  value 1 ;
+                  description 'Set static route valid.'
+                              ;
+                }
+                enum INVALID {
+                  value 0 ;
+                  description 'Set static route invalid.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          ncd:revise-date 2021-01-07 ;
+        }
+        container only-recurse {
+          description 'The only recurtion function for IPv4 static route.'
+                      ;
+          container public-net {
+            description 'The only recurtion function for IPv6 static route in p'
+                      + 'ublic net.'
+                        ;
+            presence route-type ;
+            leaf route-type {
+              description 'Set the special route type of static route rescure o'
+                        + 'nly.'
+                          ;
+              type recursion-type ;
+              mandatory true ;
+            }
+          }
+          container private-nets {
+            description 'The only recurtion function for IPv6 static route in p'
+                      + 'rivate net.'
+                        ;
+            list private-net {
+              description 'The only recurtion function for IPv6 static route in'
+                        + ' private net.'
+                          ;
+              key vrf-name ;
+              leaf vrf-name {
+                description 'Specifying the VPN name'
+                            ;
+                type ncd:string-all {
+                  length 1..32 ;
+                }
+              }
+              leaf route-type {
+                description 'Set the special route type of static route rescure'
+                          + ' only.'
+                            ;
+                type recursion-type ;
+                mandatory true ;
+              }
+            }
+          }
+          container mng-net {
+            description 'The only recurtion function for IPv6 static route in m'
+                      + 'ng net.'
+                        ;
+            presence route-type ;
+            leaf route-type {
+              description 'Set the special route type of static route rescure o'
+                        + 'nly.'
+                          ;
+              type recursion-type ;
+              mandatory true ;
+            }
+          }
+          ncd:revise-date 2021-04-13 ;
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'The information query of IPv4-STATIC-ROUTE and IPv6-STATIC-ROU'
+              + 'TE module.'
+                ;
+    container rpm-srt {
+      description 'The information query of IPv4-STATIC-ROUTE and IPv6-STATIC-R'
+                + 'OUTE module.'
+                  ;
+      container rpm-srtv4 {
+        description 'The information query of IPv4-STATIC-ROUTE module.'
+                    ;
+        container route-status {
+          description 'The routing status query.'
+                      ;
+          list view-list {
+            description 'The list of routing status query.'
+                        ;
+            key 'objtype vrfname addr mask nhtype nexthop ifname'
+                ;
+            leaf objtype {
+              description 'The route type. The "MAIN" means the public route, t'
+                        + 'he "VRF" means private route, the "MNG" means mng ro'
+                        + 'ute, and the "ALL" means all routes (which is not us'
+                        + 'ed now).'
+                          ;
+              type enumeration {
+                enum MAIN {
+                  value 1 ;
+                  description 'The public static routes.'
+                              ;
+                }
+                enum VRF {
+                  value 2 ;
+                  description 'The private static routes.'
+                              ;
+                }
+                enum MNG {
+                  value 3 ;
+                  description 'The mng static routes.'
+                              ;
+                }
+                enum ALL {
+                  value 4 ;
+                  description 'The all static routes.'
+                              ;
+                }
+              }
+            }
+            leaf vrfname {
+              description 'The name of the private network VPN. The "" means pu'
+                        + 'blic route.'
+                          ;
+              type ncd:string-all {
+                length 0..32 ;
+              }
+            }
+            leaf addr {
+              description 'The destination address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf mask {
+              description 'The mask'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf nhtype {
+              description 'The nexthop type. The "IP" means configuration only '
+                        + 'with nexthop, the "IF" means configuration only with'
+                        + ' interface, the "IFIP" means configuration both with'
+                        + ' interface and nexthop, the "PUBLIC" means configura'
+                        + 'tion with public.'
+                          ;
+              type enumeration {
+                enum IP {
+                  value 1 ;
+                  description 'Only has nexthop.'
+                              ;
+                }
+                enum IF {
+                  value 2 ;
+                  description 'Only has interface.'
+                              ;
+                }
+                enum IFIP {
+                  value 3 ;
+                  description 'Both have nexthop and interface.'
+                              ;
+                }
+                enum PUBLIC {
+                  value 4 ;
+                  description 'The nexthop is public.'
+                              ;
+                }
+              }
+            }
+            leaf nexthop {
+              description 'The route nexthop.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf ifname {
+              description 'The interface name of route.'
+                          ;
+              type ncd:string-all ;
+            }
+            leaf route-status {
+              description 'The route status. The "VALID" means that route is va'
+                        + 'lid, the "INVALID" means that route is invalid, and '
+                        + 'the "NOTEXIST" means route is not exist (which is no'
+                        + 't used now).'
+                          ;
+              type enumeration {
+                enum VALID {
+                  value 0 ;
+                  description 'Route is valid.'
+                              ;
+                }
+                enum INVALID {
+                  value 1 ;
+                  description 'Route is invalid.'
+                              ;
+                }
+                enum NOTEXIST {
+                  value 2 ;
+                  description 'Route is not exist.'
+                              ;
+                }
+              }
+              default VALID ;
+            }
+            leaf route-tag {
+              description 'The route tag, and the default value is 0. The range'
+                        + ' is 0-4294967295'
+                          ;
+              type uint32 {
+                range 0..4294967295 ;
+              }
+              default 0 ;
+            }
+            leaf is-used-backup {
+              description 'The route is backup route or not. The "YES" means ye'
+                        + 's, and the "NO" means no.'
+                          ;
+              type enumeration {
+                enum NO {
+                  value 0 ;
+                  description 'The route is not backup route.'
+                              ;
+                }
+                enum YES {
+                  value 1 ;
+                  description 'The route is backup route.'
+                              ;
+                }
+              }
+              default NO ;
+            }
+            leaf ipv6-nexthop {
+              if-feature ipv4-dest-with-ipv6-global-nh ;
+              description 'The route ipv6 nexthop.'
+                          ;
+              type ncd:ipv6-address ;
+              ncd:revise-date 2019-04-01 ;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1137 @@
+module zxr10-vrrp {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/vrrp'
+            ;
+  prefix vrrp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe VRRP. Virtual Router Redundancy P'
+            + 'rotocol, specifies an election protocol that dynamically assigns'
+            + ' responsibility for a virtual router to one of the VRRP routers '
+            + 'on a LAN.'
+              ;
+  reference RFC5798 ;
+  revision 2021-03-08 {
+    description '1.Add choise zxr10-vrrp/configuration/vrrp/vrrp-intf/vrrp-grou'
+              + 'ps/vrrp-group/authentication'+"\n"
+              + '2.Add case zxr10-vrrp/configuration/vrrp/vrrp-intf/vrrp-groups'
+              + '/vrrp-group/authentication/text'+"\n"
+              + '3.Add leaf zxr10-vrrp/configuration/vrrp/vrrp-intf/vrrp-groups'
+              + '/vrrp-group/authentication/text/text-string/plain-text/auth-st'
+              + 'ring'+"\n"
+              + '4.Add leaf zxr10-vrrp/configuration/vrrp/vrrp-intf/vrrp-groups'
+              + '/vrrp-group/authentication/text/text-string/cipher-text/encryp'
+              + 'ted-auth-string'
+                ;
+  }
+  revision 2019-07-29 {
+    description 'Add leaf zxr10-vrrp/configuration/vrrp/vrrp-intf/vrrp-groups/v'
+              + 'rrp-group/arp-na-interval'
+                ;
+  }
+  revision 2018-10-31 {
+    description '1.Add zxr10-vrrp/state/vrrp/vrrp-group/mac'+"\n"
+              + '2.Add zxr10-vrrp/state/vrrp/vrrp-group/virtual-forwarder'
+                ;
+  }
+  revision 2016-10-27 {
+    description '1 Add feature balance-opt.
+2 Add feature backup-route.'
+                ;
+  }
+  revision 2015-04-01 {
+    description '1 Add zxr10-vrrp/state/vrrp/vrrp-group/last-change-systime.'+"\n"
+              + '2 Set configuration attribute of zxr10-vrrp/state to false.'
+                ;
+  }
+  revision 2015-01-29 {
+    description 'Modify auth-type leaf infomation.'
+                ;
+  }
+  revision 2013-12-20 {
+    description '1.Support interface filter'+"\n"
+              + '2.Support performance definition'+"\n"
+              + '3.Modify ipv4-address to vrrp-ipv4-address, ipv6-address to vr'
+              + 'rp-ipv6-address'
+                ;
+  }
+  revision 2013-10-18 {
+    description '1.Modify adver-interval to choice'+"\n"
+              + '2.Delete mandatory true for key nodes'+"\n"
+              + '3.Add default for leaf forwarder-preempt-delay'+"\n"
+              + '4.Add select intf-name for state'
+                ;
+  }
+  revision 2013-07-15 {
+    description 'Initial version.'
+                ;
+  }
+  feature balance-opt {
+    description 'Load balance feature.'
+                ;
+  }
+  feature backup-route {
+    description 'VRRP backup-route feature.'
+                ;
+  }
+  container configuration {
+    description 'Configuration of VRRP'
+                ;
+    container vrrp {
+      description 'VRRP Configuration'
+                  ;
+      list vrrp-intf {
+        description 'VRRP interface'
+                    ;
+        key intf-name ;
+        leaf intf-name {
+          description 'VRRP interface name'
+                      ;
+          type ncd:ifname ;
+        }
+        container vrrp-groups {
+          description 'VRRP groups of this interface, the max group number is 2'
+                    + '55 per interface.'
+                      ;
+          list vrrp-group {
+            description 'VRRP group'
+                        ;
+            key group-id ;
+            leaf group-id {
+              description 'Virtual Router ID which identifies the virtual route'
+                        + 'r, range from 1 to 255'
+                          ;
+              type uint8 {
+                range 1..255 {
+                  description 'Virtual Router ID'
+                              ;
+                }
+              }
+            }
+            leaf learn-mode {
+              description 'Whether learn advertisement interval from packet, de'
+                        + 'fault is configure mode.'
+                          ;
+              type enumeration {
+                enum configure {
+                  value 0 ;
+                  description 'Configure mode, means backup decides Master-down'
+                            + '-time according to the advertisement interval co'
+                            + 'nfigued locally'
+                              ;
+                }
+                enum learn {
+                  value 1 ;
+                  description 'Learn mode, means backup decides Master-down-tim'
+                            + 'e according to the advertisement interval in pac'
+                            + 'kets from Master'
+                              ;
+                }
+              }
+              default configure ;
+            }
+            leaf priority {
+              description 'VRRP priority, configured from 1 to 254. Higher valu'
+                        + 'es equal higher priority, the default value is 100, '
+                        + '0 and 255 are reserved for special using. 0 means Ma'
+                        + 'ster quit, 255 means IP address owner when VRRP IP i'
+                        + 's equal to IP on interface.'
+                          ;
+              type uint8 {
+                range 1..254 {
+                  description 'VRRP priority value'
+                              ;
+                }
+              }
+              default 100 ;
+            }
+            leaf auth-type {
+              description 'VRRP authentication type, default value is No Authen'
+                        + 'tication. Simple text authentication is only support'
+                        + 'ed when VRRP version is 2.'
+                          ;
+              type enumeration {
+                enum none {
+                  value 0 ;
+                  description 'No authentication'
+                              ;
+                }
+                enum simple-text {
+                  value 1 ;
+                  description 'Simple text authentication'
+                              ;
+                }
+                enum md5 {
+                  value 2 ;
+                  description 'MD5 authentication'
+                              ;
+                }
+                enum keychain {
+                  value 3 ;
+                  description 'Keychain authentication'
+                              ;
+                }
+              }
+              default none ;
+            }
+            choice authentication {
+              description 'VRRP authentication'
+                          ;
+              case text {
+                description 'VRRP text authentication'
+                            ;
+                choice text-string {
+                  description 'VRRP text authentication string'
+                              ;
+                  case plain-text {
+                    description Plaintext ;
+                    leaf auth-string {
+                      description 'VRRP authentication text when auth-type is s'
+                                + 'imple-text, it must be the same within VRRP '
+                                + 'Routers.'
+                                  ;
+                      type string {
+                        length 0..8 {
+                          description 'Authentication text'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                  case cipher-text {
+                    description Ciphertext ;
+                    leaf encrypted-auth-string {
+                      description 'VRRP encrypted authentication string of simp'
+                                + 'le-text.'
+                                  ;
+                      type string {
+                        length 64 {
+                          description 'Encrypted authentication string.'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2021-03-08 ;
+            }
+            choice adver-interval {
+              description 'Time interval between sending ADVERTISEMENTS'
+                          ;
+              default second ;
+              case second {
+                description 'Time interval in second'
+                            ;
+                leaf value-in-sec {
+                  description 'Time interval between ADVERTISEMENTS, unit is se'
+                            + 'cond'
+                              ;
+                  type uint16 {
+                    range 1..40 {
+                      description 'Time value'
+                                  ;
+                    }
+                  }
+                  units second ;
+                  default 1 ;
+                }
+              }
+              case msec {
+                description 'Time interval in millisecond'
+                            ;
+                leaf value-in-msec {
+                  description 'Time interval between ADVERTISEMENTS, unit is mi'
+                            + 'llisecond'
+                              ;
+                  type uint16 {
+                    range 50..40000 {
+                      description 'Time value'
+                                  ;
+                    }
+                  }
+                  units millisecond ;
+                }
+              }
+            }
+            leaf out-intf-send-mode {
+              description 'Send mode of VRRP out-interface, send from all out i'
+                        + 'nterfaces by default.'
+                          ;
+              type enumeration {
+                enum all {
+                  value 1 ;
+                  description 'Send from all out-interfaces'
+                              ;
+                }
+                enum rotation {
+                  value 2 ;
+                  description 'Send from one of out-interfaces, selected by rot'
+                            + 'ation'
+                              ;
+                }
+              }
+              default all ;
+            }
+            leaf admin-group-type {
+              description "There are 3 group types: normal group - which state "
+                        + "is determined by itself, member group - which state "
+                        + "is determinedby it's owner and owner group - which d"
+                        + "etermines members' state.
+\nThis leaf value should b"
+                        + "e owner for owner group; it should be not-owner for "
+                        + "normal and member group, if admin-group-intf-name an"
+                        + "d admin-group-id are not set, it is a normal group; "
+                        + "if admin-group-intf-name and admin-group-id areset, "
+                        + "it is a member group."
+                          ;
+              type enumeration {
+                enum not-owner {
+                  value 0 ;
+                  description 'Not Administrator group owner, means member or n'
+                            + 'ormal goup.'
+                              ;
+                }
+                enum owner {
+                  value 1 ;
+                  description 'Administrator group owner'
+                              ;
+                }
+              }
+              default not-owner ;
+            }
+            leaf admin-group-intf-name {
+              description 'The interface of VRRP admin-owner'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf admin-group-id {
+              description 'The group ID of admin-owner'
+                          ;
+              type uint8 {
+                range 0..255 {
+                  description 'The group ID of admin-owner'
+                              ;
+                }
+              }
+            }
+            leaf version {
+              description 'VRRP version'
+                          ;
+              type uint16 {
+                range 2..3 {
+                  description 'VRRP Version'
+                              ;
+                }
+              }
+              default 3 ;
+            }
+            leaf accept {
+              description "Controls whether a virtual router in Master state wi"
+                        + "ll accept packets addressed to the address owner's I"
+                        + "PvX address as its own if it is not the IPvX address"
+                        + " owner, the default value is accept."
+                          ;
+              type enumeration {
+                enum not-accept {
+                  value 0 ;
+                  description "Do not accept packets addressed to the address o"
+                            + "wner's IPvX address as its own if it is not the "
+                            + "IPvX address owner"
+                              ;
+                }
+                enum accept {
+                  value 1 ;
+                  description "Accept packets addressed to the address owner's "
+                            + "IPvX address as its own if it is not the IPvX ad"
+                            + "dress owner"
+                              ;
+                }
+              }
+              default accept ;
+            }
+            leaf check-ttl {
+              description 'If check TTL is 255 in advertisement, the default va'
+                        + 'lue is check.'
+                          ;
+              type enumeration {
+                enum not-check {
+                  value 0 ;
+                  description 'Do not check TTL in advertisement'
+                              ;
+                }
+                enum check {
+                  value 1 ;
+                  description 'Check TTL is 255 in advertisement'
+                              ;
+                }
+              }
+              default check ;
+            }
+            leaf preempt {
+              description 'VRRP preempt mode. Controls whether a higher-priorit'
+                        + 'y Backup router preempts a lower-priority Master rou'
+                        + 'ter. Values are Enable to allow preemption and Disab'
+                        + 'le to prohibit preemption.  Default is Enable.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Do not preempt'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Preempt enabled'
+                              ;
+                }
+              }
+              default enable ;
+            }
+            leaf preempt-delay {
+              description "Preempt delay time, range from 0 to 3600(s). If it's"
+                        + " zero,higher-priority Backup preempt immediately, ot"
+                        + "herwise, it preempts after delayed this interval, th"
+                        + "e default value is 0."
+                          ;
+              type uint16 {
+                range 0..3600 {
+                  description 'Preempt delay time'
+                              ;
+                }
+              }
+              units second ;
+              default 0 ;
+            }
+            leaf reload-delay {
+              description "Reload delay time after interface is up and VRRP res"
+                        + "tart, if it's zero, VRRP restart immediately, otherw"
+                        + "ise VRRP restart after the delay time, the default v"
+                        + "alue is 0."
+                          ;
+              type uint16 {
+                range 0..65535 {
+                  description 'Reload delay after interface down'
+                              ;
+                }
+              }
+              units second ;
+              default 0 ;
+            }
+            leaf backup-route {
+              if-feature backup-route ;
+              description 'If Backup router is enabled to forward, the default '
+                        + 'value is disable.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Backup forwarding is disabled'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Bakcup forwarding is enabled'
+                              ;
+                }
+              }
+              default disable ;
+            }
+            leaf work-mode {
+              if-feature balance-opt ;
+              description 'VRRP work mode. The default mode is Standard which w'
+                        + 'orks according to RFC, only one router is forwarding'
+                        + ' in one VRRP group. Load-balance mode is an extensio'
+                        + 'n, it provides traffic balancing in one VRRP group.'
+                          ;
+              type enumeration {
+                enum standard {
+                  value 1 ;
+                  description 'Standard mode'
+                              ;
+                }
+                enum load-balance {
+                  value 2 ;
+                  description 'Load balance mode'
+                              ;
+                }
+              }
+              default standard ;
+            }
+            leaf arp-na-interval {
+              description 'The interval of sending free ARP or NA packet period'
+                        + 'ically, range from 1 to 3600(s), default: 60 seconds'
+                        + '.'
+                          ;
+              type uint16 {
+                range 1..3600 {
+                  description interval ;
+                }
+              }
+              units second ;
+              default 60 ;
+              ncd:revise-date 2019-07-29 ;
+            }
+            container virtual-ips {
+              description 'VRRP IP addresses'
+                          ;
+              choice ip {
+                description 'Virtual IP'
+                            ;
+                case v4 {
+                  description 'IPv4 address'
+                              ;
+                  list vrrp-ipv4-address {
+                    description 'Virtual addresses, including primary and secon'
+                              + 'dary addresses'
+                                ;
+                    key 'vip4 secondary-flag'
+                        ;
+                    leaf vip4 {
+                      description 'IPv4 address'
+                                  ;
+                      type ncd:ipv4-address ;
+                    }
+                    leaf secondary-flag {
+                      description 'Primary or secondary address'
+                                  ;
+                      type enumeration {
+                        enum primary {
+                          value 0 ;
+                          description 'Primary address'
+                                      ;
+                        }
+                        enum secondary {
+                          value 1 ;
+                          description 'Secondary address'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                }
+                case v6 {
+                  description 'IPv6 address'
+                              ;
+                  list vrrp-ipv6-address {
+                    description 'Virtual addresses, including primary and secon'
+                              + 'dary addresses'
+                                ;
+                    key 'vip6 secondary-flag'
+                        ;
+                    leaf vip6 {
+                      description 'IPv6 address'
+                                  ;
+                      type ncd:ipv6-address ;
+                    }
+                    leaf secondary-flag {
+                      description 'Primary or secondary address'
+                                  ;
+                      type enumeration {
+                        enum primary {
+                          value 0 ;
+                          description 'Primary address'
+                                      ;
+                        }
+                        enum secondary {
+                          value 1 ;
+                          description 'Secondary address'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            container track-intfs {
+              description 'VRRP track interfaces, the max number is 64 per grou'
+                        + 'p.'
+                          ;
+              list track-intf {
+                description 'Track interface, adjusting priority and re-electin'
+                          + 'g Master according to the interface state'
+                            ;
+                key track-intf-name ;
+                leaf track-intf-name {
+                  description 'Tracked interface name'
+                              ;
+                  type ncd:ifname ;
+                }
+                leaf policy {
+                  description 'Track interface policy, 1:priority-down, 2:rapid'
+                            + '-down, priority is down to 1, and Master send 0-'
+                            + 'priority advertisement'
+                              ;
+                  type enumeration {
+                    enum priority-down {
+                      value 1 ;
+                      description 'Priority decrement'
+                                  ;
+                    }
+                    enum rapid-down {
+                      value 2 ;
+                      description 'Priority rapid down to 1, and Master send 0-'
+                                + 'priority advertisement'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf priority-value {
+                  description 'Decreased priority value, range from 1 to 254, t'
+                            + 'he default value is 10'
+                              ;
+                  type uint8 {
+                    range 1..254 {
+                      description 'Decrement value'
+                                  ;
+                    }
+                  }
+                  default 10 ;
+                }
+              }
+            }
+            container track-samgrs {
+              description 'VRRP track samgr, the max number is 10 per group.'
+                          ;
+              list track-samgr {
+                description 'Track samgr object or group, re-elect Master accor'
+                          + 'ding to other detection'
+                            ;
+                key track-name ;
+                leaf track-name {
+                  description 'Track name'
+                              ;
+                  type string {
+                    length 0..31 {
+                      description 'Track name'
+                                  ;
+                    }
+                  }
+                }
+                leaf type {
+                  description 'Track type, 1:object, 2:group'
+                              ;
+                  type enumeration {
+                    enum object {
+                      value 1 ;
+                      description 'Track object'
+                                  ;
+                    }
+                    enum group {
+                      value 2 ;
+                      description 'Track group'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf policy {
+                  description 'Policy type, 1:decrease priority 2:link-type 3:p'
+                            + 'eer-type'
+                              ;
+                  type enumeration {
+                    enum priority-down {
+                      value 1 ;
+                      description 'Decrease priority'
+                                  ;
+                    }
+                    enum link {
+                      value 2 ;
+                      description 'Link type'
+                                  ;
+                    }
+                    enum peer {
+                      value 3 ;
+                      description 'Peer type'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf priority-value {
+                  description 'Decreased priority value, range from 1 to 254, t'
+                            + 'he default value is 10'
+                              ;
+                  type uint32 {
+                    range 1..254 {
+                      description 'Decrement value'
+                                  ;
+                    }
+                  }
+                  default 10 ;
+                }
+              }
+            }
+            container out-interfaces {
+              description 'VRRP out interfaces for sending Advertisement, the m'
+                        + 'ax number is 3 per group.'
+                          ;
+              list out-intf {
+                description 'The out-interfaces sent advertisement, 3 interface'
+                          + 's can be configured.'
+                            ;
+                key out-intf-name ;
+                leaf out-intf-name {
+                  description 'The out-interface names, 3 interfaces can be con'
+                            + 'figured.'
+                              ;
+                  type ncd:ifname ;
+                }
+              }
+            }
+            container load-balance {
+              if-feature balance-opt ;
+              description 'Configuration of VRRPE'
+                          ;
+              leaf forwarder-id {
+                description 'Forwarder owner ID represent one Virtual Forwarder'
+                          + ' which is in charge of the forwarding for one Virt'
+                          + 'ual MAC'
+                            ;
+                type uint8 {
+                  range 1..4 {
+                    description 'Forwarder owner ID'
+                                ;
+                  }
+                }
+              }
+              leaf weight {
+                description 'Forwarder weight of this device, range from 1 to 2'
+                          + '55. Higher values equal higher ability, the defaul'
+                          + 't value is 100'
+                            ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Forwarder weight of this device'
+                                ;
+                  }
+                }
+                default 100 ;
+              }
+              leaf low-weight {
+                description 'If forwarder weight is lower than this value, the '
+                          + 'router is not able to forward any longer, the defa'
+                          + 'ult value is 1.'
+                            ;
+                type uint8 {
+                  range 1..254 {
+                    description 'The lowest value means router has the ability '
+                              + 'to forward'
+                                ;
+                  }
+                }
+                default 1 ;
+              }
+              leaf forwarder-preempt {
+                description 'VRRPE forwarder preempt mode. Controls whether a h'
+                          + 'igher-priority Virtual Forwrader preempts a lower-'
+                          + 'priority forwarder. Values are Enable to allow pre'
+                          + 'emption and Disable to prohibit preemption.  Defau'
+                          + 'lt is Enable.'
+                            ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                    description 'Do not preempt'
+                                ;
+                  }
+                  enum enable {
+                    value 1 ;
+                    description 'Preempt enabled'
+                                ;
+                  }
+                }
+                default enable ;
+              }
+              leaf forwarder-preempt-delay {
+                description "Preempt delay time, range from 0 to 3600(s). If it"
+                          + "'s zero, higher-priority Virtual Forwrader preempt"
+                          + " immediately, otherwise, it preempts after delayed"
+                          + " this interval."
+                            ;
+                type uint16 {
+                  range 0..3600 {
+                    description 'Preempt delay time'
+                                ;
+                  }
+                }
+                units second ;
+                default 0 ;
+              }
+              leaf redirect-time {
+                description 'Redirect time, range from 1 to 3600(s). After the '
+                          + 'router corrupted which in charge of one Virtual Fo'
+                          + 'rwarder, other router take it over, and after redi'
+                          + 'rect time interval, the Virtual MAC of this Virtua'
+                          + 'l Forwarder is not dilivered an longer.'
+                            ;
+                type uint16 {
+                  range 1..3600 {
+                    description 'Redirect time'
+                                ;
+                  }
+                }
+                units second ;
+                default 600 ;
+              }
+              leaf time-out-mode {
+                description "After the router corrupted which in charge of one "
+                          + "VirtualForwarder, other router take it over, and a"
+                          + "fter time out interval, the Virtual Forwarder will"
+                          + " be deleted. If it's configured to be time-out-dis"
+                          + "baled, Virtual Forwarder will never be deleted."
+                            ;
+                type enumeration {
+                  enum time-out-enabled {
+                    value 0 ;
+                    description 'Time out is enabled'
+                                ;
+                  }
+                  enum time-out-disabled {
+                    value 1 ;
+                    description 'Never time out'
+                                ;
+                  }
+                }
+                default time-out-enabled ;
+              }
+              leaf time-out {
+                description 'Time out interval before Virtual Forwarder is dele'
+                          + 'ted, range from 600 to 64800(s), the default value'
+                          + ' is 14400s.'
+                            ;
+                type uint16 {
+                  range 600..64800 {
+                    description 'Time out interval before Virtual Forwarder is '
+                              + 'deleted'
+                                ;
+                  }
+                }
+                units second ;
+                default 14400 ;
+              }
+              leaf policy {
+                description 'Load balance policy, 1:round-robin, 2:weighted, 3:'
+                          + 'host-dependent, the default value is round-robin.'
+                            ;
+                type enumeration {
+                  enum round-robin {
+                    value 1 ;
+                    description 'Round robin policy'
+                                ;
+                  }
+                  enum weighted {
+                    value 2 ;
+                    description 'Weighted policy'
+                                ;
+                  }
+                  enum host-dependent {
+                    value 3 ;
+                    description 'Host dependent policy'
+                                ;
+                  }
+                }
+                default round-robin ;
+              }
+            }
+            container vf-track-intfs {
+              if-feature balance-opt ;
+              description 'Virtural Forwarder track interfaces, the max number '
+                        + 'is 64 per forwarder.'
+                          ;
+              list vf-track-intf {
+                description 'Track interface, adjusting priority and re-electin'
+                          + 'g Active forwarder according to the interface stat'
+                          + 'e'
+                            ;
+                key track-intf-name ;
+                leaf track-intf-name {
+                  description 'Tracked interface name'
+                              ;
+                  type ncd:ifname ;
+                }
+                leaf policy {
+                  description 'Track interface policy, 1:priority-down'
+                              ;
+                  type enumeration {
+                    enum priority-down {
+                      value 1 ;
+                      description 'Priority decrement'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf weight-value {
+                  description 'Decrement weight value, range from 1 to 254, the'
+                            + ' default value is 10'
+                              ;
+                  type uint8 {
+                    range 1..254 {
+                      description 'Decrement weight value'
+                                  ;
+                    }
+                  }
+                  default 10 ;
+                }
+              }
+            }
+            container vf-track-samgrs {
+              if-feature balance-opt ;
+              description 'Virtural Forwarder track samgr, the max number is 10'
+                        + ' per forwarder.'
+                          ;
+              list vf-track-samgr {
+                description 'Track samgr object or group, re-elect Active forwa'
+                          + 'rder according to other detection'
+                            ;
+                key track-name ;
+                leaf track-name {
+                  description 'Track name'
+                              ;
+                  type string {
+                    length 0..31 {
+                      description 'Track name'
+                                  ;
+                    }
+                  }
+                }
+                leaf type {
+                  description 'Track type, 1:object, 2:group'
+                              ;
+                  type enumeration {
+                    enum object {
+                      value 1 ;
+                      description 'Track object'
+                                  ;
+                    }
+                    enum group {
+                      value 2 ;
+                      description 'Track group'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf policy {
+                  description 'Policy type, 1:decrease priority 2:link-type 3:p'
+                            + 'eer-type'
+                              ;
+                  type enumeration {
+                    enum decrease-weight {
+                      value 1 ;
+                      description 'Decrease weight'
+                                  ;
+                    }
+                    enum link-type {
+                      value 2 ;
+                      description 'Link type'
+                                  ;
+                    }
+                    enum peer-type {
+                      value 3 ;
+                      description 'Peer type'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf weight-value {
+                  description 'Decreased priority value, range from 1 to 254, t'
+                            + 'he default value is 10'
+                              ;
+                  type uint32 {
+                    range 1..254 {
+                      description 'Decrement value'
+                                  ;
+                    }
+                  }
+                  default 10 ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State of VRRP'
+                ;
+    container vrrp {
+      description 'State of VRRP'
+                  ;
+      list vrrp-group {
+        description 'VRRP group information'
+                    ;
+        key 'group-id intf-name'
+            ;
+        leaf group-id {
+          description 'Group ID'
+                      ;
+          type uint8 {
+            range 0..255 {
+              description 'Group ID'
+                          ;
+            }
+          }
+        }
+        leaf intf-name {
+          description 'VRRP interface name'
+                      ;
+          type string {
+            length 0..31 {
+              description 'VRRP interface name'
+                          ;
+            }
+          }
+        }
+        leaf state {
+          description 'VRRP state, 1:initial, 2:backup, 3:master'
+                      ;
+          type enumeration {
+            enum initial {
+              value 1 ;
+              description Initial ;
+            }
+            enum backup {
+              value 2 ;
+            }
+            enum master {
+              value 3 ;
+            }
+          }
+        }
+        leaf run-priority {
+          description 'Running priority'
+                      ;
+          type uint8 {
+            range 1..255 {
+              description 'Running priority'
+                          ;
+            }
+          }
+        }
+        leaf state-change-num {
+          description 'State change number'
+                      ;
+          type uint32 ;
+        }
+        leaf last-change-time {
+          description 'The last state change time'
+                      ;
+          type uint32 ;
+        }
+        leaf master-run-priority {
+          description 'Master priority'
+                      ;
+          type uint8 {
+            range 0..255 {
+              description 'Master priority'
+                          ;
+            }
+          }
+        }
+        leaf master-adver-interval {
+          description 'Master advertisement interval'
+                      ;
+          type uint32 ;
+        }
+        leaf master-down-interval {
+          description 'Master down time'
+                      ;
+          type uint32 ;
+        }
+        leaf master-ip-type {
+          description 'Interface IP type of Master, 1:IPv4, 2:IPv6'
+                      ;
+          type enumeration {
+            enum v4 {
+              value 1 ;
+              description IPv4 ;
+            }
+            enum v6 {
+              value 2 ;
+              description IPv6 ;
+            }
+          }
+        }
+        leaf master-ip {
+          description 'Interface IP of Master'
+                      ;
+          type string {
+            length 0..255 {
+              description 'IP address displayed in string'
+                          ;
+            }
+          }
+        }
+        leaf last-change-systime {
+          description 'The recent time of state changing, eg:2015-04-07 13:26:3'
+                    + '5.'
+                      ;
+          type ncd:string-with-blank {
+            length 0..19 {
+              description 'Systime string'
+                          ;
+            }
+          }
+        }
+        leaf mac {
+          description 'VRRP group virtual MAC.'
+                      ;
+          type ncd:mac-address ;
+        }
+        list virtual-forwarder {
+          key id ;
+          leaf id {
+            description 'Forwarder ID.'
+                        ;
+            type uint8 ;
+          }
+          leaf state {
+            description 'Forwarder state.'
+                        ;
+            type enumeration {
+              enum initial {
+                value 1 ;
+                description Initial ;
+              }
+              enum active {
+                value 2 ;
+                description Active ;
+              }
+              enum takeover {
+                value 3 ;
+                description Takeover ;
+              }
+              enum listening {
+                value 4 ;
+                description Listening ;
+              }
+            }
+          }
+          leaf mac {
+            description 'Forwarder MAC.'
+                        ;
+            type ncd:mac-address ;
+          }
+        }
+        ncd:select 'group-id intf-name'
+                   ;
+        ncd:select intf-name ;
+      }
+    }
+  }
+}

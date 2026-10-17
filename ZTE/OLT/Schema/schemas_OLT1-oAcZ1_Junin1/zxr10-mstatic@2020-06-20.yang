@@ -1,0 +1,1603 @@
+module zxr10-mstatic {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/mstatic'
+            ;
+  prefix mstatic ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module of describing IPv4 MSTATIC and IPv6 MSTATIC.'
+              ;
+  revision 2020-06-20 {
+    description 'Add the list oif-index-bier of the oif-indexes: configuration/'
+              + 'mstatics/mstatic-v6/public/oif-indexes/oif-index-bier.'+"\n"
+              + 'Add the leaf of ipv6-bier: /configuration/mstatics/mastatic-v4'
+              + '/public/oif-indexes/oif-index-bier.'+"\n"
+              + 'Add the leafes of bfer-index and subdomain-id: /state/mstatic/'
+              + 'mstatic-v4/public/routes/route; /state/mstatic/mstatic-v6/publ'
+              + 'ic/routes/route.'
+                ;
+  }
+  revision 2017-11-02 {
+    description 'modify the type of bfer-index, subdomain-id: configuration/mst'
+              + 'atics/mstatic-v4/public/oif-indexes/oif-index-bier/bfer-index,'
+              + ' configuration/mstatics/mstatic-v4/public/oif-indexes/oif-inde'
+              + 'x-biersubdomain-id;'
+                ;
+  }
+  revision 2017-10-18 {
+    description 'Add the list oif-index-bier of the oif-indexes: configuration/'
+              + 'mstatics/mstatic-v4/public/oif-indexes/oif-index-bier.'
+                ;
+  }
+  revision 2016-04-11 {
+    description 'Add the permanent-attribution feature, and the If_Features of '
+              + 'the leaves:configuration/mstatics/mstatic-v4/public/routes/rou'
+              + 'te/permanent; configuration/mstatics/mstatic-v4/private/routes'
+              + '/route/permanent;configuration/mstatics/mstatic-v6/public/rout'
+              + 'es/route/permanent; configuration/mstatics/mstatic-v6/private/'
+              + 'routes/route/permanent.'
+                ;
+  }
+  revision 2016-01-13 {
+    description 'Modify the patterns of the leaves: configuration/mstatics/msta'
+              + 'tic-v4/public/routes/route/inc-mask; configuration/mstatics/ms'
+              + 'tatic-v4/private/routes/route/inc-mask.'
+                ;
+  }
+  revision 2015-12-18 {
+    description 'add leaves of inc-mask and count: /configuration/mstatics/mast'
+              + 'atic-v4/public/routes/route/, /configuration/mstatics/mastatic'
+              + '-v4/private/vrf-mastatic/routes/route, /configuration/mstatics'
+              + '/mastatic-v6/public/routes/route/ and /configuration/mstatics/'
+              + 'mastatic-v6/private/vrf-mastatic/routes/route.'
+                ;
+  }
+  revision 2015-10-17 {
+    description 'modify the type and description of the leaf: /state/mstatic/ms'
+              + 'tatic-v4/public/routes/route/oifs/oif/oif-state; /state/mstati'
+              + 'c/mstatic-v4/private/routes/route/oifs/oif/oif-state; /state/m'
+              + 'static/mstatic-v6/public/routes/route/oifs/oif/oif-state; /sta'
+              + 'te/mstatic/mstatic-v6/private/routes/route/oifs/oif/oif-state.'
+                ;
+  }
+  revision 2015-08-28 {
+    description '1.add container :configuration/mstatics/mstatic-v4/public/frr;'
+              + ''+"\n"
+              + '2.add container :configuration/mstatics/mstatic-v4/private/frr'
+              + ';'+"\n"
+              + '3.add container :configuration/mstatics/mstatic-v6/public/frr;'
+              + ''+"\n"
+              + '4.add container :configuration/mstatics/mstatic-v6/private/frr'
+              + ';'+"\n"
+              + '5.add leafs :configuration/mstatics/mstatic-v4/public/routes/r'
+              + 'oute/track-name,slave-iif-name,slave-track-name,permanent;'+"\n"
+              + '6.add leafs :configuration/mstatics/mstatic-v4/private/routes/'
+              + 'route/track-name,slave-iif-name,slave-track-name,permanent;'+"\n"
+              + '7.add leafs :configuration/mstatics/mstatic-v6/public/routes/r'
+              + 'oute/track-name,slave-iif-name,slave-track-name,permanent;'+"\n"
+              + '8.add leafs :configuration/mstatics/mstatic-v6/private/routes/'
+              + 'route/track-name,slave-iif-name,slave-track-name,permanent;'+"\n"
+              + '9.modify the type and description of the leaf: /state/mstatic/'
+              + 'mstatic-v4/public/routes/route/iif-state;'+"\n"
+              + '10.modify the type and description of the leaf: /state/mstatic'
+              + '/mstatic-v4/private/routes/route/iif-state;'+"\n"
+              + '11.modify the type and description of the leaf: /state/mstatic'
+              + '/mstatic-v6/public/routes/route/iif-state;'+"\n"
+              + '12.modify the type and description of the leaf: /state/mstatic'
+              + '/mstatic-v6/private/routes/route/iif-state;'+"\n"
+              + '13.modify the description of the leaf: /state/mstatic/mstatic-'
+              + 'v4/public/routes/route/oifs/oif/oif-state;'+"\n"
+              + '14.modify the description of the leaf: /state/mstatic/mstatic-'
+              + 'v4/private/routes/route/oifs/oif/oif-state;'+"\n"
+              + '15.modify the description of the leaf: /state/mstatic/mstatic-'
+              + 'v6/public/routes/route/oifs/oif/oif-state;'+"\n"
+              + '16.modify the description of the leaf: /state/mstatic/mstatic-'
+              + 'v6/private/routes/route/oifs/oif/oif-state;'+"\n"
+              + '17.add leafs :/state/mstatic/mstatic-v4/public/routes/route/tr'
+              + 'ack-name,slave-iif-name,slave-iif-state,slave-track-name;'+"\n"
+              + '18.add leafs :/state/mstatic/mstatic-v4/private/routes/route/t'
+              + 'rack-name,slave-iif-name,slave-iif-state,slave-track-name;'+"\n"
+              + '19.add leafs :/state/mstatic/mstatic-v6/public/routes/route/tr'
+              + 'ack-name,slave-iif-name,slave-iif-state,slave-track-name;'+"\n"
+              + '20.add leafs :/state/mstatic/mstatic-v6/private/routes/route/t'
+              + 'rack-name,slave-iif-name,slave-iif-state,slave-track-name;'
+                ;
+  }
+  revision 2015-07-08 {
+    description '1.Modify description and range to the leaf:configuration/mstat'
+              + 'ics/mstatic-v4/limit/xg-limit,sg-limit;'+"\n"
+              + '2.Modify description and range to the leaf:state/mstatic/mstat'
+              + 'ic-v4/public/summary/xg-num,sg-num,total-num, state/mstatic/ms'
+              + 'tatic-v4/private/summary/xg-num,sg-num,total-num,state/mstatic'
+              + '/mstatic-v6/public/summary/xg-num,sg-num,total-num, state/msta'
+              + 'tic/mstatic-v6/private/summary/xg-num,sg-num,total-num.'
+                ;
+  }
+  revision 2015-07-02 {
+    description '1.add container :configuration/mstatics/mstatic-v4/public.'+"\n"
+              + '2.move containers :configuration/mstatics/mstatic-v4/global,li'
+              + 'mit,oif-indexes,routes to:configuration/mstatics/mstaic-v4/pub'
+              + 'lic.'+"\n"
+              + '3.add container :configuration/mstatics/mstatic-v4/private.'+"\n"
+              + '4.add container :configuration/mstatics/mstatic-v6/public.'+"\n"
+              + '5.move containers :configuration/mstatics/mstatic-v6/global,li'
+              + 'mit,oif-indexes,routes to:configuration/mstatics/mstaic-v6/pub'
+              + 'lic.'+"\n"
+              + '6.add container :configuration/mstatics/mstatic-v6/private.'+"\n"
+              + '7.add container :state/mstatic/mstatic-v4/public.'+"\n"
+              + '8.move containers :state/mstatic/mstatic-v4/routes,summary to:'
+              + 'state/mstatic/mstatic-v4/public.'+"\n"
+              + '9.add container :state/mstatic/mstatic-v4/private.'+"\n"
+              + '10.add container :state/mstatic/mstatic-v6/public.'+"\n"
+              + '11.move containers :state/mstatic/mstatic-v6/routes,summary to'
+              + ':state/mstatic/mstatic-v6/public.'+"\n"
+              + '12.add container :state/mstatic/mstatic-v6/private.'+"\n"
+              + '13.modify the description of list :state/mstatic/mstatic-v4/pu'
+              + 'blic/routes/route,state/mstatic/mstatic-v4/public/routes/route'
+              + '/oifs/oif,state/mstatic/mstatic-v6/public/routes/route,state/m'
+              + 'static/mstatic-v6/public/routes/route/oifs/oif.'+"\n"
+              + '14.modify the description and enumeration name of the leaf :st'
+              + 'ate/mstatic/mstatic-v4/public/routes/route/iif-state,state/mst'
+              + 'atic/mstatic-v4/public/routes/route/oifs/oif/oif-state,state/m'
+              + 'static/mstatic-v6/public/routes/route/iif-state,state/mstatic/'
+              + 'mstatic-v6/public/routes/route/oifs/oif/oif-state.'
+                ;
+  }
+  revision 2015-03-31 {
+    description 'Add state of MSTATIC.'
+                ;
+  }
+  revision 2015-03-04 {
+    description '1.modify the description of the container and leaf: /configura'
+              + 'tion/mstatics/mstatic-v4/limit, oif-indexes, routes.'+"\n"
+              + '2.modify the description of the container and leaf: /configura'
+              + 'tion/mstatics/mstatic-6/limit, oif-indexes, routes.'
+                ;
+  }
+  revision 2013-10-12 {
+    description 'Initial version.'
+                ;
+  }
+  feature permanent-attribution {
+    description 'Permanent route.'
+                ;
+  }
+  container configuration {
+    description 'IPv4 MSTATIC and IPv6 MSTATIC configuration.'
+                ;
+    container mstatics {
+      description 'Mstatics contain IPv4 MSTATIC for short MSTATIC and IPv6 MST'
+                + 'ATIC.'
+                  ;
+      presence mstatic ;
+      container mstatic-v4 {
+        description 'MSTATIC configuration.'
+                    ;
+        presence mstatic-v4 ;
+        container public {
+          description 'Public mode of MSTATIC module configure node.'
+                      ;
+          container global {
+            description 'MSTATIC global start configuration.'
+                        ;
+            leaf start {
+              description 'MSTATIC start flag.'
+                          ;
+              type empty ;
+            }
+          }
+          container limit {
+            description 'Configure MSTATIC route limit.'
+                        ;
+            presence limit ;
+            leaf xg-limit {
+              description 'XG limit.'
+                          ;
+              type int32 {
+                range 1..2048 {
+                  description 'The range from 1 to 2048,the max value gets from'
+                            + ' performance parameter.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+            leaf sg-limit {
+              description 'SG limit.'
+                          ;
+              type int32 {
+                range 1..2048 {
+                  description 'The range from 1 to 2048,the max value gets from'
+                            + ' performance parameter.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          container oif-indexes {
+            description 'Configure MSTATIC oif list.'
+                        ;
+            presence oif-indexes ;
+            list oif-index {
+              description 'Configure MSTATIC oif instance.'
+                          ;
+              key 'intf-name oif-index'
+                  ;
+              leaf intf-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'The length for 1 to 31.'
+                                ;
+                  }
+                }
+              }
+              leaf oif-index {
+                description 'Downstream interface index.'
+                            ;
+                type uint16 {
+                  range 1..100 {
+                    description 'The range from 1 to 100.'
+                                ;
+                  }
+                }
+              }
+            }
+            list oif-index-bier {
+              description 'Configure BFER index of MSTATIC route.'
+                          ;
+              key 'oif-index bfer-index subdomain-id'
+                  ;
+              leaf oif-index {
+                description 'Downstream forwording index.'
+                            ;
+                type uint16 {
+                  range 1..100 {
+                    description 'The range from 1 to 100.'
+                                ;
+                  }
+                }
+              }
+              leaf bfer-index {
+                description 'BFER index.'
+                            ;
+                type uint32 {
+                  range 1..100 {
+                    description 'The range from 1 to 100.'
+                                ;
+                  }
+                }
+              }
+              leaf subdomain-id {
+                description 'Subdomain ID.'
+                            ;
+                type uint8 {
+                  range 0..255 {
+                    description 'The range from 0 to 255.'
+                                ;
+                  }
+                }
+              }
+              leaf ipv6-bier {
+                description 'BIER tunnel over IPv6.'
+                            ;
+                type empty ;
+                ncd:revise-date 2020-06-20 ;
+              }
+              ncd:revise-date 2017-10-18 ;
+            }
+          }
+          container routes {
+            description 'Configure MSTATIC route.'
+                        ;
+            presence routes ;
+            list route {
+              description 'Configure MSTATIC route instance.'
+                          ;
+              key 'group source'
+                  ;
+              leaf group {
+                description 'Group address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf source {
+                description 'Source address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf iif-name {
+                description 'Upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'The length for 1 to 31.'
+                                ;
+                  }
+                }
+              }
+              leaf track-name {
+                description 'Master upstream interface track name.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-iif-name {
+                description 'Slave upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-track-name {
+                description 'Slave upstream interface track name.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf permanent {
+                if-feature permanent-attribution ;
+                description 'Permanent route.'
+                            ;
+                type empty ;
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf oif-index {
+                description 'Downstream interface index.'
+                            ;
+                type uint16 {
+                  range 1..100 {
+                    description 'The range from 1 to 100.'
+                                ;
+                  }
+                }
+              }
+              leaf inc-mask {
+                description 'Increment mask of MSTATIC group address.'
+                            ;
+                type ncd:ipv4-address {
+                  pattern '(([1-9]|[1-9][0-9]|[1][0-9][0-9]|[2][0-4][0-9]|[2][5'
+                        + '][0-5])\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3}))|('
+                        + '0\.([1-9]|[1-9][0-9]|[1][0-9][0-9]|[2][0-4][0-9]|[2]'
+                        + '[5][0-5])\.([0-9]{1,3})\.([0-9]{1,3}))|((0\.){2}([1-'
+                        + '9]|[1-9][0-9]|[1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5'
+                        + '])\.([0-9]{1,3}))|((0\.){3}([1-9]|[1-9][0-9]|[1][0-9'
+                        + '][0-9]|[2][0-4][0-9]|[2][5][0-5]))'
+                          ;
+                }
+                ncd:revise-date 2015-12-18 ;
+              }
+              leaf count {
+                description 'The number of MSTATIC group addresses.'
+                            ;
+                type uint32 {
+                  range 1..512 ;
+                }
+                ncd:revise-date 2015-12-18 ;
+              }
+            }
+          }
+          container frr {
+            description 'Configure MSTATIC fast reroute.'
+                        ;
+            presence frr ;
+            leaf wtr {
+              description 'Time interval when slave interface change back.'
+                          ;
+              type uint8 {
+                range 1..12 ;
+              }
+              units minute ;
+              mandatory true ;
+            }
+            ncd:revise-date 2015-08-28 ;
+          }
+          ncd:revise-date 2015-07-02 ;
+        }
+        container private {
+          description 'Private mode of MSTATIC module configure root node.'
+                      ;
+          list vrf-mstatic {
+            description 'Private mode of MSTATIC module configure root node.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            container oif-indexes {
+              description 'Configure MSTATIC downstream interface.'
+                          ;
+              list oif-index {
+                description 'Configure MSTATIC downstream interface.'
+                            ;
+                key 'intf-name index'
+                    ;
+                leaf intf-name {
+                  description 'Interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 {
+                      description 'The length for 1 to 31.'
+                                  ;
+                    }
+                  }
+                }
+                leaf index {
+                  description 'Downstream interface index.'
+                              ;
+                  type uint16 {
+                    range 1..100 {
+                      description 'The range from 1 to 100.'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+            container routes {
+              description 'Configure MSTATIC route.'
+                          ;
+              list route {
+                description 'Configure MSTATIC route.'
+                            ;
+                key 'group source'
+                    ;
+                leaf group {
+                  description 'Group address.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf source {
+                  description 'Source address.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf iif-name {
+                  description 'Upstream interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 {
+                      description 'The length for 1 to 31.'
+                                  ;
+                    }
+                  }
+                }
+                leaf track-name {
+                  description 'Master upstream interface track name.'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                  ncd:revise-date 2015-08-28 ;
+                }
+                leaf slave-iif-name {
+                  description 'Slave upstream interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                  ncd:revise-date 2015-08-28 ;
+                }
+                leaf slave-track-name {
+                  description 'Slave upstream interface track name.'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                  ncd:revise-date 2015-08-28 ;
+                }
+                leaf permanent {
+                  if-feature permanent-attribution ;
+                  description 'Permanent route.'
+                              ;
+                  type empty ;
+                  ncd:revise-date 2015-08-28 ;
+                }
+                leaf oif-index {
+                  description 'Downstream interface index.'
+                              ;
+                  type uint16 {
+                    range 1..100 {
+                      description 'The range from 1 to 100.'
+                                  ;
+                    }
+                  }
+                }
+                leaf inc-mask {
+                  description 'Increment mask of MSTATIC group address.'
+                              ;
+                  type ncd:ipv4-address {
+                    pattern '(([1-9]|[1-9][0-9]|[1][0-9][0-9]|[2][0-4][0-9]|[2]'
+                          + '[5][0-5])\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3}'
+                          + '))|(0\.([1-9]|[1-9][0-9]|[1][0-9][0-9]|[2][0-4][0-'
+                          + '9]|[2][5][0-5])\.([0-9]{1,3})\.([0-9]{1,3}))|((0\.'
+                          + '){2}([1-9]|[1-9][0-9]|[1][0-9][0-9]|[2][0-4][0-9]|'
+                          + '[2][5][0-5])\.([0-9]{1,3}))|((0\.){3}([1-9]|[1-9]['
+                          + '0-9]|[1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5]))'
+                            ;
+                  }
+                  ncd:revise-date 2015-12-18 ;
+                }
+                leaf count {
+                  description 'The number of MSTATIC group addresses.'
+                              ;
+                  type uint32 {
+                    range 1..512 ;
+                  }
+                  ncd:revise-date 2015-12-18 ;
+                }
+              }
+            }
+            container frr {
+              description 'Configure MSTATIC fast reroute.'
+                          ;
+              presence frr ;
+              leaf wtr {
+                description 'Time interval when slave interface change back.'
+                            ;
+                type uint8 {
+                  range 1..12 ;
+                }
+                units minute ;
+                mandatory true ;
+              }
+              ncd:revise-date 2015-08-28 ;
+            }
+          }
+          ncd:revise-date 2015-07-02 ;
+        }
+      }
+      container mstatic-v6 {
+        description 'IPv6 MSTATIC configuration.'
+                    ;
+        presence mstatic-v6 ;
+        container public {
+          description 'Public mode of IPv6 MSTATIC module configure node.'
+                      ;
+          container global {
+            description 'IPv6 MSTATIC global start configuration.'
+                        ;
+            leaf start {
+              description 'IPv6 MSTATIC start flag.'
+                          ;
+              type empty ;
+            }
+          }
+          container limit {
+            description 'Configure IPv6 MSTATIC route limit.'
+                        ;
+            presence limit ;
+            leaf xg-limit {
+              description 'XG limit.'
+                          ;
+              type int32 {
+                range 1..2048 {
+                  description 'The range from 1 to 2048,the max value gets from'
+                            + ' performance parameter.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+            leaf sg-limit {
+              description 'SG limit.'
+                          ;
+              type int32 {
+                range 1..2048 {
+                  description 'The range from 1 to 2048,the max value gets from'
+                            + ' performance parameter.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          container oif-indexes {
+            description 'Configure IPv6 MSTATIC oif list.'
+                        ;
+            presence oif-indexes ;
+            list oif-index {
+              description 'Configure IPv6 MSTATIC oif instance.'
+                          ;
+              key 'intf-name oif-index'
+                  ;
+              leaf intf-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'The length for 1 to 31.'
+                                ;
+                  }
+                }
+              }
+              leaf oif-index {
+                description 'Downstream interface index.'
+                            ;
+                type uint16 {
+                  range 1..100 {
+                    description 'The range from 1 to 100.'
+                                ;
+                  }
+                }
+              }
+            }
+            list oif-index-bier {
+              description 'Configure BFER index of IPv6 MSTATIC route.'
+                          ;
+              key 'oif-index bfer-index subdomain-id'
+                  ;
+              leaf oif-index {
+                description 'Downstream forwording index.'
+                            ;
+                type uint16 {
+                  range 1..100 {
+                    description 'The range from 1 to 100.'
+                                ;
+                  }
+                }
+              }
+              leaf bfer-index {
+                description 'BFER index.'
+                            ;
+                type uint32 {
+                  range 1..100 {
+                    description 'The range from 1 to 100.'
+                                ;
+                  }
+                }
+              }
+              leaf subdomain-id {
+                description 'Subdomain ID.'
+                            ;
+                type uint8 {
+                  range 0..255 {
+                    description 'The range from 0 to 255.'
+                                ;
+                  }
+                }
+              }
+              leaf ipv4-bier {
+                description 'BIER tunnel over IPv4.'
+                            ;
+                type empty ;
+              }
+              ncd:revise-date 2020-06-20 ;
+            }
+          }
+          container routes {
+            description 'Configure IPv6 MSTATIC route.'
+                        ;
+            presence routes ;
+            list route {
+              description 'Configure IPv6 MSTATIC route instance.'
+                          ;
+              key 'group source'
+                  ;
+              leaf group {
+                description 'IPv6 group address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf source {
+                description 'IPv6 source address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf iif-name {
+                description 'Upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'The length for 1 to 31.'
+                                ;
+                  }
+                }
+              }
+              leaf track-name {
+                description 'Master upstream interface track name.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-iif-name {
+                description 'Slave upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-track-name {
+                description 'Slave upstream interface track name.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf permanent {
+                if-feature permanent-attribution ;
+                description 'Permanent route.'
+                            ;
+                type empty ;
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf oif-index {
+                description 'Downstream interface index.'
+                            ;
+                type uint16 {
+                  range 1..100 {
+                    description 'The range from 1 to 100.'
+                                ;
+                  }
+                }
+              }
+              leaf inc-mask {
+                description 'Increment mask of IPv6 MSTATIC group address.'
+                            ;
+                type ncd:ipv6-address {
+                  pattern '([0-9a-fA-F]{1,4}:){7}([0-9a-fA-F]{0,4})$|^([0-9a-fA'
+                        + '-F]{1,4}:){1,6}(:[0-9a-fA-F]{0,4}){1,6}$|^([:]{2})(('
+                        + '[0-9a-fA-F]{1,4}:){0,6})([0-9a-fA-F]{1,4})$|^([0-9a-'
+                        + 'fA-F]{1,4}:){6}([0-9]{1,3}.){3}([0-9]{1,3})$|^([0-9a'
+                        + '-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{0,4}){1,5}([0-9]{1,3'
+                        + '}.){3}([0-9]{1,3})$|^([:]{2})(([0-9a-fA-F]{1,4}:){0,'
+                        + '5})([0-9]{1,3}.){3}([0-9]{1,3})'
+                          ;
+                }
+                ncd:revise-date 2015-12-18 ;
+              }
+              leaf count {
+                description 'The number of IPv6 MSTATIC group addresses.'
+                            ;
+                type uint32 {
+                  range 1..512 ;
+                }
+                ncd:revise-date 2015-12-18 ;
+              }
+            }
+          }
+          container frr {
+            description 'Configure MSTATIC fast reroute.'
+                        ;
+            presence frr ;
+            leaf wtr {
+              description 'Time interval when slave interface change back.'
+                          ;
+              type uint8 {
+                range 1..12 ;
+              }
+              units minute ;
+              mandatory true ;
+            }
+            ncd:revise-date 2015-08-28 ;
+          }
+          ncd:revise-date 2015-07-02 ;
+        }
+        container private {
+          description 'Private mode of IPv6 MSTATIC module configure root node.'
+                      ;
+          list vrf-mstatic {
+            description 'Private mode of IPv6 MSTATIC module configure root nod'
+                      + 'e.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            container oif-indexes {
+              description 'Configure IPv6 MSTATIC downstream interface.'
+                          ;
+              list oif-index {
+                description 'Configure IPv6 MSTATIC downstream interface.'
+                            ;
+                key 'intf-name index'
+                    ;
+                leaf intf-name {
+                  description 'Interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 {
+                      description 'The length for 1 to 31.'
+                                  ;
+                    }
+                  }
+                }
+                leaf index {
+                  description 'Downstream interface index.'
+                              ;
+                  type uint16 {
+                    range 1..100 {
+                      description 'The range from 1 to 100.'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+            container routes {
+              description 'Configure IPv6 MSTATIC route.'
+                          ;
+              list route {
+                description 'Configure IPv6 MSTATIC route instance.'
+                            ;
+                key 'group source'
+                    ;
+                leaf group {
+                  description 'IPv6 group address.'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf source {
+                  description 'IPv6 source address.'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf iif-name {
+                  description 'Upstream interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 {
+                      description 'The length for 1 to 31.'
+                                  ;
+                    }
+                  }
+                }
+                leaf track-name {
+                  description 'Master upstream interface track name.'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                  ncd:revise-date 2015-08-28 ;
+                }
+                leaf slave-iif-name {
+                  description 'Slave upstream interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                  ncd:revise-date 2015-08-28 ;
+                }
+                leaf slave-track-name {
+                  description 'Slave upstream interface track name.'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                  ncd:revise-date 2015-08-28 ;
+                }
+                leaf permanent {
+                  if-feature permanent-attribution ;
+                  description 'Permanent route.'
+                              ;
+                  type empty ;
+                  ncd:revise-date 2015-08-28 ;
+                }
+                leaf oif-index {
+                  description 'Downstream interface index.'
+                              ;
+                  type uint16 {
+                    range 1..100 {
+                      description 'The range from 1 to 100.'
+                                  ;
+                    }
+                  }
+                }
+                leaf inc-mask {
+                  description 'Increment mask of IPv6 MSTATIC group address.'
+                              ;
+                  type ncd:ipv6-address {
+                    pattern '([0-9a-fA-F]{1,4}:){7}([0-9a-fA-F]{0,4})$|^([0-9a-'
+                          + 'fA-F]{1,4}:){1,6}(:[0-9a-fA-F]{0,4}){1,6}$|^([:]{2'
+                          + '})(([0-9a-fA-F]{1,4}:){0,6})([0-9a-fA-F]{1,4})$|^('
+                          + '[0-9a-fA-F]{1,4}:){6}([0-9]{1,3}.){3}([0-9]{1,3})$'
+                          + '|^([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{0,4}){1,5}'
+                          + '([0-9]{1,3}.){3}([0-9]{1,3})$|^([:]{2})(([0-9a-fA-'
+                          + 'F]{1,4}:){0,5})([0-9]{1,3}.){3}([0-9]{1,3})'
+                            ;
+                  }
+                  ncd:revise-date 2015-12-18 ;
+                }
+                leaf count {
+                  description 'The number of IPv6 MSTATIC group addresses.'
+                              ;
+                  type uint32 {
+                    range 1..512 ;
+                  }
+                  ncd:revise-date 2015-12-18 ;
+                }
+              }
+            }
+            container frr {
+              description 'Configure MSTATIC fast reroute.'
+                          ;
+              presence frr ;
+              leaf wtr {
+                description 'Time interval when slave interface change back.'
+                            ;
+                type uint8 {
+                  range 1..12 ;
+                }
+                units minute ;
+                mandatory true ;
+              }
+              ncd:revise-date 2015-08-28 ;
+            }
+          }
+          ncd:revise-date 2015-07-02 ;
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State module.'
+                ;
+    container mstatic {
+      description 'MSTATIC module show info.'
+                  ;
+      container mstatic-v4 {
+        description 'IPv4 MSTATIC module show info.'
+                    ;
+        container public {
+          description 'Public root node.'
+                      ;
+          container routes {
+            description 'MSTATIC route information.'
+                        ;
+            list route {
+              description 'MSTATIC route information.'
+                          ;
+              key 'source group'
+                  ;
+              leaf source {
+                description 'Source address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf group {
+                description 'Group address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf iif-name {
+                description 'Upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 0..31 ;
+                }
+              }
+              leaf iif-state {
+                description 'Upstream interface state.'+"\n"
+                          + 'N:Not available, A:Available, W:Wait to restore.'
+                            ;
+                type ncd:string-all {
+                  length 0..15 ;
+                }
+              }
+              leaf track-name {
+                description 'Upstream interface track name.'
+                            ;
+                type string {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-iif-name {
+                description 'Slave upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-iif-state {
+                description 'Slave upstream interface state.'+"\n"
+                          + 'N:Not available, A:Available.'
+                            ;
+                type ncd:string-all {
+                  length 0..15 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-track-name {
+                description 'Slave upstreaminterface track name.'
+                            ;
+                type string {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf bfer-index {
+                description 'BFER index.'
+                            ;
+                type uint32 {
+                  range 0..100 ;
+                }
+                ncd:revise-date 2020-06-20 ;
+              }
+              leaf subdomain-id {
+                description 'Subdomain ID.'
+                            ;
+                type uint8 {
+                  range 0..255 ;
+                }
+                ncd:revise-date 2020-06-20 ;
+              }
+              container oifs {
+                description 'Downstream interface information.'
+                            ;
+                list oif {
+                  description 'Downstream interface information.'
+                              ;
+                  key oif-name ;
+                  leaf oif-name {
+                    description 'Downstream interface name.'
+                                ;
+                    type ncd:ifname {
+                      length 0..31 ;
+                    }
+                  }
+                  leaf oif-state {
+                    description 'Downstream interface state.'+"\n"
+                              + 'N:Not available, F:Forward.'
+                                ;
+                    type ncd:string-all {
+                      length 0..15 ;
+                    }
+                  }
+                  ncd:select oif-name ;
+                }
+              }
+              ncd:select source ;
+              ncd:select group ;
+              ncd:select 'source group'
+                         ;
+            }
+          }
+          container summary {
+            description 'MSTATIC route summary.'
+                        ;
+            leaf xg-num {
+              description 'XG number.'
+                          ;
+              type uint16 {
+                range 0..2048 {
+                  description 'The range from 1 to 2048,the max value gets from'
+                            + ' performance parameter.'
+                              ;
+                }
+              }
+            }
+            leaf sg-num {
+              description 'SG number.'
+                          ;
+              type uint16 {
+                range 0..2048 {
+                  description 'The range from 1 to 2048,the max value gets from'
+                            + ' performance parameter.'
+                              ;
+                }
+              }
+            }
+            leaf total-num {
+              description 'Total number.'
+                          ;
+              type uint16 {
+                range 0..4096 ;
+              }
+            }
+          }
+          ncd:revise-date 2015-07-02 ;
+        }
+        container private {
+          description 'Private root node.'
+                      ;
+          container routes {
+            description 'MSTATIC route information.'
+                        ;
+            list route {
+              description 'MSTATIC route information.'
+                          ;
+              key 'vrf-name source group'
+                  ;
+              leaf vrf-name {
+                description 'VPN Routing/Forwarding instance name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf source {
+                description 'Source address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf group {
+                description 'Group address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf iif-name {
+                description 'Upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 0..31 ;
+                }
+              }
+              leaf iif-state {
+                description 'Upstream interface state.'+"\n"
+                          + 'N:Not available, A:Available, W:Wait to restore.'
+                            ;
+                type ncd:string-all {
+                  length 0..15 ;
+                }
+              }
+              leaf track-name {
+                description 'Upstream interface track name.'
+                            ;
+                type string {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-iif-name {
+                description 'Slave upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-iif-state {
+                description 'Slave upstream interface state.'+"\n"
+                          + 'N:Not available, A:Available.'
+                            ;
+                type ncd:string-all {
+                  length 0..15 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-track-name {
+                description 'Slave upstreaminterface track name.'
+                            ;
+                type string {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              container oifs {
+                description 'Downstream interface information.'
+                            ;
+                list oif {
+                  description 'Downstream interface information.'
+                              ;
+                  key oif-name ;
+                  leaf oif-name {
+                    description 'Downstream interface name.'
+                                ;
+                    type ncd:ifname {
+                      length 0..31 ;
+                    }
+                  }
+                  leaf oif-state {
+                    description 'Downstream interface state.'+"\n"
+                              + 'N:Not available, F:Forward.'
+                                ;
+                    type ncd:string-all {
+                      length 0..15 ;
+                    }
+                  }
+                  ncd:select oif-name ;
+                }
+              }
+              ncd:select vrf-name ;
+              ncd:select source ;
+              ncd:select group ;
+              ncd:select 'vrf-name source'
+                         ;
+              ncd:select 'vrf-name group'
+                         ;
+              ncd:select 'source group'
+                         ;
+              ncd:select 'vrf-name source group'
+                         ;
+            }
+          }
+          container summarys {
+            description 'MSTATIC route summary.'
+                        ;
+            list summary {
+              description 'MSTATIC route summary.'
+                          ;
+              key vrf-name ;
+              leaf vrf-name {
+                description 'VPN Routing/Forwarding instance name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf xg-num {
+                description 'XG number.'
+                            ;
+                type uint16 {
+                  range 0..2048 {
+                    description 'The range from 1 to 2048,the max value gets fr'
+                              + 'om performance parameter.'
+                                ;
+                  }
+                }
+              }
+              leaf sg-num {
+                description 'SG number.'
+                            ;
+                type uint16 {
+                  range 0..2048 {
+                    description 'The range from 1 to 2048,the max value gets fr'
+                              + 'om performance parameter.'
+                                ;
+                  }
+                }
+              }
+              leaf total-num {
+                description 'Total number.'
+                            ;
+                type uint16 {
+                  range 0..4096 ;
+                }
+              }
+              ncd:select vrf-name ;
+            }
+          }
+          ncd:revise-date 2015-07-02 ;
+        }
+      }
+      container mstatic-v6 {
+        description 'IPv6 MSTATIC module show info.'
+                    ;
+        container public {
+          description 'Public root node.'
+                      ;
+          container routes {
+            description 'MSTATIC6 route information.'
+                        ;
+            list route {
+              description 'MSTATIC6 route information.'
+                          ;
+              key 'source group'
+                  ;
+              leaf source {
+                description 'Source address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf group {
+                description 'Group address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf iif-name {
+                description 'Upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 0..31 ;
+                }
+              }
+              leaf iif-state {
+                description 'Upstream interface state.'+"\n"
+                          + 'N:Not available, A:Available, W:Wait to restore.'
+                            ;
+                type ncd:string-all {
+                  length 0..15 ;
+                }
+              }
+              leaf track-name {
+                description 'Upstream interface track name.'
+                            ;
+                type string {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-iif-name {
+                description 'Slave upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-iif-state {
+                description 'Slave upstream interface state.'+"\n"
+                          + 'N:Not available, A:Available.'
+                            ;
+                type ncd:string-all {
+                  length 0..15 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-track-name {
+                description 'Slave upstreaminterface track name.'
+                            ;
+                type string {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf bfer-index {
+                description 'BFER index.'
+                            ;
+                type uint32 {
+                  range 0..100 ;
+                }
+                ncd:revise-date 2020-06-20 ;
+              }
+              leaf subdomain-id {
+                description 'Subdomain ID.'
+                            ;
+                type uint8 {
+                  range 0..255 ;
+                }
+                ncd:revise-date 2020-06-20 ;
+              }
+              container oifs {
+                description 'Downstream interface information.'
+                            ;
+                list oif {
+                  description 'Downstream interface information.'
+                              ;
+                  key oif-name ;
+                  leaf oif-name {
+                    description 'Downstream interface name.'
+                                ;
+                    type ncd:ifname {
+                      length 0..31 ;
+                    }
+                  }
+                  leaf oif-state {
+                    description 'Downstream interface state.'+"\n"
+                              + 'N:Not available, F:Forward.'
+                                ;
+                    type ncd:string-all {
+                      length 0..15 ;
+                    }
+                  }
+                  ncd:select oif-name ;
+                }
+              }
+              ncd:select source ;
+              ncd:select group ;
+              ncd:select 'source group'
+                         ;
+            }
+          }
+          container summary {
+            description 'MSTATIC6 route summary.'
+                        ;
+            leaf xg-num {
+              description 'XG number.'
+                          ;
+              type uint16 {
+                range 0..2048 {
+                  description 'The range from 1 to 2048,the max value gets from'
+                            + ' performance parameter.'
+                              ;
+                }
+              }
+            }
+            leaf sg-num {
+              description 'SG number.'
+                          ;
+              type uint16 {
+                range 0..2048 {
+                  description 'The range from 1 to 2048,the max value gets from'
+                            + ' performance parameter.'
+                              ;
+                }
+              }
+            }
+            leaf total-num {
+              description 'Total number.'
+                          ;
+              type uint16 {
+                range 0..4096 ;
+              }
+            }
+          }
+          ncd:revise-date 2015-07-02 ;
+        }
+        container private {
+          description 'Private root node.'
+                      ;
+          container routes {
+            description 'MSTATIC6 route information.'
+                        ;
+            list route {
+              description 'MSTATIC6 route information.'
+                          ;
+              key 'vrf-name source group'
+                  ;
+              leaf vrf-name {
+                description 'VPN Routing/Forwarding instance name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf source {
+                description 'Source address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf group {
+                description 'Group address.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf iif-name {
+                description 'Upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 0..31 ;
+                }
+              }
+              leaf iif-state {
+                description 'Upstream interface state.'+"\n"
+                          + 'N:Not available, A:Available, W:Wait to restore.'
+                            ;
+                type ncd:string-all {
+                  length 0..15 ;
+                }
+              }
+              leaf track-name {
+                description 'Upstream interface track name.'
+                            ;
+                type string {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-iif-name {
+                description 'Slave upstream interface name.'
+                            ;
+                type ncd:ifname {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-iif-state {
+                description 'Slave upstream interface state.'+"\n"
+                          + 'N:Not available, A:Available.'
+                            ;
+                type ncd:string-all {
+                  length 0..15 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              leaf slave-track-name {
+                description 'Slave upstreaminterface track name.'
+                            ;
+                type string {
+                  length 0..31 ;
+                }
+                ncd:revise-date 2015-08-28 ;
+              }
+              container oifs {
+                description 'Downstream interface information.'
+                            ;
+                list oif {
+                  description 'Downstream interface information.'
+                              ;
+                  key oif-name ;
+                  leaf oif-name {
+                    description 'Downstream interface name.'
+                                ;
+                    type ncd:ifname {
+                      length 0..31 ;
+                    }
+                  }
+                  leaf oif-state {
+                    description 'Downstream interface state.'+"\n"
+                              + 'N:Not available, F:Forward.'
+                                ;
+                    type ncd:string-all {
+                      length 0..15 ;
+                    }
+                  }
+                  ncd:select oif-name ;
+                }
+              }
+              ncd:select vrf-name ;
+              ncd:select source ;
+              ncd:select group ;
+              ncd:select 'vrf-name source'
+                         ;
+              ncd:select 'vrf-name group'
+                         ;
+              ncd:select 'source group'
+                         ;
+              ncd:select 'vrf-name source group'
+                         ;
+            }
+          }
+          container summarys {
+            description 'MSTATIC6 route summary.'
+                        ;
+            list summary {
+              description 'MSTATIC6 route summary.'
+                          ;
+              key vrf-name ;
+              leaf vrf-name {
+                description 'VPN Routing/Forwarding instance name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf xg-num {
+                description 'XG number.'
+                            ;
+                type uint16 {
+                  range 0..2048 {
+                    description 'The range from 1 to 2048,the max value gets fr'
+                              + 'om performance parameter.'
+                                ;
+                  }
+                }
+              }
+              leaf sg-num {
+                description 'SG number.'
+                            ;
+                type uint16 {
+                  range 0..2048 {
+                    description 'The range from 1 to 2048,the max value gets fr'
+                              + 'om performance parameter.'
+                                ;
+                  }
+                }
+              }
+              leaf total-num {
+                description 'Total number.'
+                            ;
+                type uint16 {
+                  range 0..4096 ;
+                }
+              }
+              ncd:select vrf-name ;
+            }
+          }
+          ncd:revise-date 2015-07-02 ;
+        }
+      }
+    }
+    ncd:revise-date 2015-03-31 ;
+  }
+}

@@ -1,0 +1,519 @@
+module zxr10-ping-detect {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ping-detect'
+            ;
+  prefix ping-detect ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe PING_DETECT. Ping_detect is desig'
+            + 'ned to detect failures in network layer communication with two d'
+            + 'evice by sending ICMP request/response packets.'
+              ;
+  revision 2020-08-25 {
+    description '1.Add leaf /configuration/ping-detect/groups/group/lists/list/'
+              + 'items/item/ipv6-addr/next-hop-address'
+                ;
+  }
+  revision 2019-12-18 {
+    description 'Add source-address in configuration of items'
+                ;
+  }
+  revision 2016-06-29 {
+    description "Add Perf-code for /configuration/ping-detect/groups/group/grou"
+              + "p-options/size's max value"
+                ;
+  }
+  revision 2015-05-07 {
+    description '1)Modify max value of configuration/ping-detect/groups/group/g'
+              + 'roup-options/retry-times from 10 to 100.'+"\n"
+              + '2)Add leaf: configuration/ping-detect/groups/group/group-optio'
+              + 'ns/size.'+"\n"
+              + '3)Add leaf: configuration/ping-detect/groups/group/group-optio'
+              + 'ns/medium.'+"\n"
+              + '4)Add leaf: configuration/ping-detect/groups/group/group-optio'
+              + 'ns/high.'+"\n"
+              + '5)Add leaf: configuration/ping-detect/groups/group/group-optio'
+              + 'ns/mode.'+"\n"
+              + '6)Delete config attribute of all nodes in state.'+"\n"
+              + '7)Add leaf: state/ping-detect/group-results/group-result/actua'
+              + 'l-loop-time.'+"\n"
+              + '8)Add leaf: configuration/ping-detect/groups/group/group-optio'
+              + 'ns/interval.'
+                ;
+  }
+  revision 2015-02-15 {
+    description '1 list-options add operation-change:delete2reset'+"\n"
+              + '2 group-options add operation-change:delete2reset'
+                ;
+  }
+  revision 2014-06-04 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model info.'
+                ;
+    container ping-detect {
+      description 'Configure ping-detect parameters.'
+                  ;
+      container groups {
+        description 'Configure detect group parameters.'
+                    ;
+        list group {
+          description 'Configure detect group parameters.'
+                      ;
+          key group-num ;
+          leaf group-num {
+            description 'Detect group number.'
+                        ;
+            type uint32 {
+              range 1..100 {
+                description 'Detect group number.'
+                            ;
+              }
+            }
+          }
+          container lists {
+            description 'Configure list parameters.'
+                        ;
+            list list {
+              description 'Configure list parameters.'
+                          ;
+              key list-num ;
+              leaf list-num {
+                description 'Detect list number.'
+                            ;
+                type uint16 {
+                  range 1..10 {
+                    description 'Detect list number.'
+                                ;
+                  }
+                }
+              }
+              container items {
+                description 'Configure item parameters.'
+                            ;
+                list item {
+                  description 'Configure item parameters.'
+                              ;
+                  key item-num ;
+                  leaf item-num {
+                    description 'Detect item number.'
+                                ;
+                    type uint16 {
+                      range 1..10 {
+                        description 'Detect item number.'
+                                    ;
+                      }
+                    }
+                  }
+                  leaf vrf-name {
+                    description 'VRF name of detect item.'
+                                ;
+                    type string {
+                      length 1..32 {
+                        description 'VRF name of detect item.'
+                                    ;
+                      }
+                    }
+                  }
+                  choice address-type {
+                    description 'The ip address type of detect item.'
+                                ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'Detect ipv4 address.'
+                                  ;
+                      container ipv4-addr {
+                        description 'Detect ipv4 address.'
+                                    ;
+                        leaf source-address {
+                          description 'Source ipv4 address.'
+                                      ;
+                          type ncd:ipv4-address-none-zero ;
+                          ncd:revise-date 2019-12-18 ;
+                        }
+                        leaf next-hop-address {
+                          description 'Next hop ipv4 address.'
+                                      ;
+                          type ncd:ipv4-address {
+                            pattern '((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9'
+                                  + ']|25[0-4])\.)(([0-9]|[1-9][0-9]|1[0-9][0-9'
+                                  + ']|2[0-4][0-9]|25[0-5])\.){2}([0-9]|[1-9][0'
+                                  + '-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))'
+                                    ;
+                          }
+                          ncd:revise-date 2019-12-18 ;
+                        }
+                        leaf out-if {
+                          description 'Output interface name.'
+                                      ;
+                          type ncd:ifname {
+                            length 1..31 {
+                              description 'Output interface name.'
+                                          ;
+                            }
+                          }
+                          ncd:revise-date 2019-12-18 ;
+                        }
+                        leaf dst-address {
+                          description 'Dest ipv4 address.'
+                                      ;
+                          type ncd:ipv4-address ;
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    case ipv6 {
+                      description 'Detect ipv6 address.'
+                                  ;
+                      container ipv6-addr {
+                        description 'Detect ipv6 address.'
+                                    ;
+                        leaf source-address {
+                          description 'Source ipv6 address.'
+                                      ;
+                          type ncd:ipv6-address-none-zero ;
+                          ncd:revise-date 2019-12-18 ;
+                        }
+                        leaf out-if {
+                          description 'Output interface name.'
+                                      ;
+                          type ncd:ifname {
+                            length 1..31 {
+                              description 'Output interface name.'
+                                          ;
+                            }
+                          }
+                          ncd:revise-date 2019-12-18 ;
+                        }
+                        leaf dst-address {
+                          description 'Dest ipv6 address.'
+                                      ;
+                          type ncd:ipv6-address ;
+                          mandatory true ;
+                        }
+                        leaf next-hop-address {
+                          description 'IPv6 next hop address.'
+                                      ;
+                          type ncd:ipv6-address-none-zero ;
+                          ncd:revise-date 2020-08-25 ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              container list-options {
+                description 'Option parameters for list.'
+                            ;
+                leaf list-option {
+                  description 'Configure detect list option.'
+                              ;
+                  type enumeration {
+                    enum or {
+                      value 0 ;
+                      description 'Or relationship.'
+                                  ;
+                    }
+                    enum and {
+                      value 1 ;
+                      description 'And relationship.'
+                                  ;
+                    }
+                  }
+                  default and ;
+                }
+              }
+            }
+          }
+          container group-options {
+            description 'Option parameters for group.'
+                        ;
+            leaf loop-time {
+              description 'Configure detect group loop time.'
+                          ;
+              type uint32 {
+                range 2..86400 {
+                  description 'Configure detect group loop time.'
+                              ;
+                }
+              }
+              default 15 ;
+            }
+            leaf group-option {
+              description 'Configure detect group option.'
+                          ;
+              type enumeration {
+                enum or {
+                  value 0 ;
+                  description 'Or relationship.'
+                              ;
+                }
+                enum and {
+                  value 1 ;
+                  description 'And relationship.'
+                              ;
+                }
+              }
+              default and ;
+            }
+            leaf retry-times {
+              description 'Configure detect group retry times.'
+                          ;
+              type uint8 {
+                range 1..100 {
+                  description 'Configure detect group retry times.'
+                              ;
+                }
+              }
+              default 2 ;
+            }
+            leaf time-out {
+              description 'Configure detect group out time.'
+                          ;
+              type uint32 {
+                range 1..20 {
+                  description 'Configure detect group out time.'
+                              ;
+                }
+              }
+              default 2 ;
+            }
+            leaf size {
+              description 'Detect group packet size.'
+                          ;
+              type uint16 {
+                range 36..65507 ;
+              }
+              default 100 ;
+            }
+            leaf medium {
+              description 'General alarm threshold.'
+                          ;
+              type uint8 {
+                range 0..99 ;
+              }
+              default 10 ;
+            }
+            leaf high {
+              description 'Serious alarm threshold.'
+                          ;
+              type uint8 {
+                range 1..100 ;
+              }
+              default 20 ;
+            }
+            leaf mode {
+              description 'Mode of detect group.'
+                          ;
+              type enumeration {
+                enum lm-cc {
+                  value 0 ;
+                  description 'Loss measurement and connectivity check'
+                              ;
+                }
+                enum cc {
+                  value 1 ;
+                  description 'Connectivity check'
+                              ;
+                }
+              }
+              default cc ;
+            }
+            leaf interval {
+              description 'Packet interval(units:100ms).'
+                          ;
+              type uint16 {
+                range 1..50 {
+                  description 'Packet interval(units:100ms).'
+                              ;
+                }
+              }
+              units 100ms ;
+              default 1 ;
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model info.'
+                ;
+    container ping-detect {
+      description 'Ping-detect state information.'
+                  ;
+      container group-results {
+        description 'Detect group state information.'
+                    ;
+        list group-result {
+          description 'Detect group state information.'
+                      ;
+          key group-num ;
+          leaf group-num {
+            description 'Detect group number.'
+                        ;
+            type uint32 {
+              range 1..100 {
+                description 'Detect group number.'
+                            ;
+              }
+            }
+          }
+          leaf group-state {
+            description 'The state of detect group.'
+                        ;
+            type enumeration {
+              enum unknown {
+                value 0 ;
+              }
+              enum down {
+                value 1 ;
+              }
+              enum up {
+                value 2 ;
+              }
+            }
+            default unknown ;
+          }
+          leaf actual-loop-time {
+            description 'Actual detect group loop time.'
+                        ;
+            type uint32 {
+              range 2..86400 {
+                description 'Actual detect group loop time.'
+                            ;
+              }
+            }
+            units s ;
+          }
+        }
+      }
+      container list-results {
+        description 'Detect list state information.'
+                    ;
+        list list-result {
+          description 'Detect list state information.'
+                      ;
+          key 'group-num list-num'
+              ;
+          leaf group-num {
+            description 'Detect group number.'
+                        ;
+            type uint32 {
+              range 1..100 {
+                description 'Detect group number.'
+                            ;
+              }
+            }
+          }
+          leaf list-num {
+            description 'Detect list number.'
+                        ;
+            type uint16 {
+              range 1..10 {
+                description 'Detect list number.'
+                            ;
+              }
+            }
+          }
+          leaf list-state {
+            description 'The state of detect list.'
+                        ;
+            type enumeration {
+              enum unknown {
+                value 0 ;
+              }
+              enum down {
+                value 1 ;
+              }
+              enum up {
+                value 2 ;
+              }
+            }
+            default unknown ;
+          }
+          ncd:select group-num ;
+          ncd:select 'group-num list-num'
+                     ;
+        }
+      }
+      container item-results {
+        description 'Detect item state information.'
+                    ;
+        list item-result {
+          description 'Detect item state information.'
+                      ;
+          key 'group-num list-num item-num'
+              ;
+          leaf group-num {
+            description 'Detect group number.'
+                        ;
+            type uint32 {
+              range 1..100 {
+                description 'Detect group number.'
+                            ;
+              }
+            }
+          }
+          leaf list-num {
+            description 'Detect list number.'
+                        ;
+            type uint16 {
+              range 1..10 {
+                description 'Detect list number.'
+                            ;
+              }
+            }
+          }
+          leaf item-num {
+            description 'Detect item number.'
+                        ;
+            type uint16 {
+              range 1..10 {
+                description 'Detect item number.'
+                            ;
+              }
+            }
+          }
+          leaf item-state {
+            description 'The state of detect item.'
+                        ;
+            type enumeration {
+              enum unknown {
+                value 0 ;
+              }
+              enum down {
+                value 1 ;
+              }
+              enum up {
+                value 2 ;
+              }
+            }
+            default unknown ;
+          }
+          leaf loss-ratio {
+            description 'Packet loss-ratio'
+                        ;
+            type uint8 ;
+          }
+          ncd:select group-num ;
+          ncd:select 'group-num list-num'
+                     ;
+          ncd:select 'group-num list-num item-num'
+                     ;
+        }
+      }
+    }
+  }
+}

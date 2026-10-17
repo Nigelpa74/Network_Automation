@@ -1,0 +1,107 @@
+module zxr10-tunnel-list {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/tunnel-list'
+            ;
+  prefix tunnel-list ;
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'This model is used to describe the configuration of tunnel-list '
+            + 'module. Tunnel-list maintains the relationship of master tunnel '
+            + 'and slave tunnels in tunnel-list instance. Tunnels in the same t'
+            + 'unnel-list instance must go through the same forwarding path. On'
+            + 'ly one tunnel can be specified as master tunnel in a tunnel-list'
+            + ' instance, and the subsequent tunnels which join in this instanc'
+            + 'e must specified as slave tunnel. The states of slave tunnels de'
+            + 'pend on the master tunnel in a tunnel-list instance.'
+              ;
+  revision 2015-10-22 {
+    description 'Leaf node of "/tunnel-list:configuration/tunnel-list:tunnel-li'
+              + 'st/tunnel-list:instances/tunnel-list:instance/tunnel-list:inst'
+              + 'ance-id",change its range from 1..256 to 1..1024; at the same '
+              + 'time,change "Description" of leaf "instance-id" and list "inst'
+              + 'ance".'
+                ;
+  }
+  revision 2015-05-07 {
+    description 'Mandatory attribute of leaf node "/tunnel-list:configuration/t'
+              + 'unnel-list:tunnel-list/tunnel-list:instances/tunnel-list:insta'
+              + 'nce/tunnel-list:master/tunnel-list:master-tunnel-id" change fr'
+              + 'om true to not.'
+                ;
+  }
+  revision 2013-01-16 {
+    description 'Initial version'
+                ;
+  }
+  container configuration {
+    description 'Configuration model info.'
+                ;
+    container tunnel-list {
+      description 'Tunnel-list configuration info.'
+                  ;
+      container instances {
+        description 'Tunnel-list configuration parameters info.'
+                    ;
+        list instance {
+          description 'There are several matters needing attention when you con'
+                    + 'figure the parameters of tunnel-list.'+"\n"
+                    + '1.The tunnels in tunnel-list must be configured first.'+"\n"
+                    + '2.A tunnel can only join in one tunnel-list instance.'+"\n"
+                    + '3.The instances of tunnels joined in a tunnel-list can n'
+                    + 'ot be deleted.'+"\n"
+                    + '4.The loop tunnels are not allowed to join in the tunnel'
+                    + '-list instance.'+"\n"
+                    + '5.The attribute of tunnel joined in tunnel-list cannot b'
+                    + 'e modified as loop. '+"\n"
+                    + '6.Master tunnel must be configured before slave tunnels '
+                    + 'in tunnel-list instance.'+"\n"
+                    + '7.Master tunnel cannot be modified or deleted when slave'
+                    + ' tunnel has been configured.'+"\n"
+                    + '8.The maximum of slave tunnels in a tunnel-list instance'
+                    + ' is 1023.'
+                      ;
+          key instance-id ;
+          leaf instance-id {
+            description 'Tunnel-list instance ID, key of the object, value type'
+                      + ' is unsigned int.'
+                        ;
+            type uint32 {
+              range 1..1024 ;
+            }
+          }
+          container master {
+            description 'The configuration parameter of master tunnel.'
+                        ;
+            leaf master-tunnel-id {
+              description 'The ID of the tunnel specified as master tunnel.'
+                          ;
+              type uint32 {
+                range 1..64511 ;
+              }
+            }
+          }
+          container slaves {
+            description 'The configuration info of slave tunnels.'
+                        ;
+            list slave {
+              description 'The configuration parameter of slave tunnel.'
+                          ;
+              key slave-tunnel-id ;
+              leaf slave-tunnel-id {
+                description 'The ID of the tunnel specified as slave tunnel.'
+                            ;
+                type uint32 {
+                  range 1..64511 ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

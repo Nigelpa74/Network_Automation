@@ -1,0 +1,173 @@
+module zxr10-tftp {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/tftp'
+            ;
+  prefix tftp ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2017-08-15 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the TFTP.'
+              ;
+  revision 2018-06-20 {
+    description '1.Add the leaves upload-cpu-node,download-cpu-node and interfa'
+              + 'ce-name leaf of the container tftp/tftp-client/copy.'
+                ;
+  }
+  revision 2017-02-27 {
+    description "The feature node 'tftp-copy-dcn' supports more products."
+                ;
+  }
+  revision 2017-02-13 {
+    description "Modify supporting products information of the feature node 'tf"
+              + "tp-copy-dcn'"
+                ;
+  }
+  revision 2014-01-02 {
+    description 'Initial version.'
+                ;
+  }
+  feature tftp-copy-dcn {
+    description 'The featrue which is applied for transmitting file by DCN.'
+                ;
+  }
+  feature tftp-copy-commander {
+    description 'The featrue used for commander function.'
+                ;
+  }
+  container operation {
+    description 'The operation model of TFTP.'
+                ;
+    config false ;
+    container tftp {
+      description 'The operation model of TFTP.'
+                  ;
+      container tftp-client {
+        description 'The operation of TFTP client.'
+                    ;
+        container copy {
+          description 'To copy a file over the network.'
+                      ;
+          presence 'the choice trans-direction of this container should be mand'
+                 + 'atory.'
+                   ;
+          choice copy-mode {
+            description 'To specify the mode of file transmition.'
+                        ;
+            case commander {
+              if-feature tftp-copy-commander ;
+              description 'To transmit file by commander.'
+                          ;
+              leaf commander {
+                description 'Commander mode.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+            }
+            case vrf {
+              description 'To transmit file by VRF.'
+                          ;
+              leaf vrf-name {
+                description 'To specify VRF name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+                mandatory true ;
+              }
+            }
+            case dcn {
+              if-feature tftp-copy-dcn ;
+              description 'To transmit file by DCN.'
+                          ;
+              leaf dcn {
+                description 'DCN mode.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+            }
+          }
+          choice trans-direction {
+            description 'To specify transmition direction.'
+                        ;
+            mandatory true ;
+            case upload {
+              description Upload. ;
+              leaf local-source-file {
+                description 'To Specify the local source file name.'
+                            ;
+                type string {
+                  length 1..159 ;
+                }
+                mandatory true ;
+              }
+              leaf remote-dest-file {
+                description 'To Specify the remote destination parameters.'
+                            ;
+                type string {
+                  length 1..159 ;
+                }
+                mandatory true ;
+              }
+              leaf upload-cpu-node {
+                type ncd:cpu ;
+              }
+            }
+            case download {
+              description Download. ;
+              leaf remote-source-file {
+                description 'To Specify the remote source parameters.'
+                            ;
+                type string {
+                  length 1..159 ;
+                }
+                mandatory true ;
+              }
+              leaf local-dest-file {
+                description 'To Specify the local destination file name.'
+                            ;
+                type string {
+                  length 1..159 ;
+                }
+                mandatory true ;
+              }
+              leaf download-cpu-node {
+                type ncd:cpu ;
+              }
+            }
+          }
+          leaf ipv6 {
+            description 'To specify to transmit file by IPv6.Setting the IPv6 i'
+                      + 's not available when the copy mode is commander.'
+                        ;
+            type enumeration {
+              enum IPv6 {
+                value 1 ;
+              }
+            }
+          }
+          leaf server-port {
+            description 'To specify the listen port of TFTP server.Setting the '
+                      + 'listen port is not available when the copy mode is com'
+                      + 'mander.'
+                        ;
+            type uint16 {
+              range 1..65535 ;
+            }
+          }
+          leaf interface-name {
+            type ncd:ifname ;
+          }
+        }
+      }
+    }
+  }
+}

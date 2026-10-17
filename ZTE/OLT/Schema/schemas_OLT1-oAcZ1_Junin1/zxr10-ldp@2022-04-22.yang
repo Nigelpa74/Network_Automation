@@ -1,0 +1,4717 @@
+module zxr10-ldp {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ldp'
+            ;
+  prefix ldp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf model to describe LDP.'
+              ;
+  revision 2022-04-22 {
+    description '1.Modify the maximum length of the string of node mfec-opaqueV'
+              + 'alue in /state/ldp/mldp-mfec-states/mfec-states/ from 80 to 32'
+              + '8.'
+                ;
+  }
+  revision 2022-03-29 {
+    description '1.Add container mldp-frr in /configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-mldp.'+"\n"
+              + '2.Add leaf node frr in /configuration/ldp/ldp-configs/ldp-conf'
+              + 'ig/ldp-mldp/mldp-frr.'+"\n"
+              + '3.Add enum type function-switch.'
+                ;
+  }
+  revision 2022-03-02 {
+    description '1.Add a leaf node in /ldp:configuration/ldp:ldp/ldp:ldp-config'
+              + 's/ldp:ldp-config/ldp:ldp-bs/ldp:interface/ldp:interface-ipv4/l'
+              + 'dp:ipv4/ldp:mldp.'+"\n"
+              + '2.Add enum type is-enabled.'
+                ;
+  }
+  revision 2020-08-04 {
+    description '1.Move some containers or nodes horizontally.The container or '
+              + 'node paths involved are as below:'+"\n"
+              + '/ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:'
+              + 'ldp-bs/ldp:auto-config-global'+"\n"
+              + '/ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:'
+              + 'ldp-bs/ldp:password'+"\n"
+              + '/ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:'
+              + 'ldp-bs/ldp:interface/ldp:interface-ipv4/ldp:ipv4/ldp:direct-gt'
+              + 'sm'+"\n"
+              + '/ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:'
+              + 'ldp-bs/ldp:interface/ldp:interface-ipv4/ldp:ipv4/ldp:label-dis'
+              + 'tribution'+"\n"
+              + '/ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:'
+              + 'ldp-bs/ldp:interface/ldp:interface-ipv6/ldp:ipv6/ldp:label-dis'
+              + 'tribution-ipv6'+"\n"
+              + '/ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:'
+              + 'ldp-p2p/ldp:lsp-dod-req-queue'+"\n"
+              + '/ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:'
+              + 'ldp-p2p/ldp:lsp-policy'+"\n"
+              + '/ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:'
+              + 'ldp-p2p/ldp:label-withdraw-delay'+"\n"
+              + '/ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:'
+              + 'ldp-p2p/ldp:ldp-over-te'+"\n"
+              + '/ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:'
+              + 'ldp-p2p/ldp:entropy-label'+"\n"
+              + '/ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:'
+              + 'ldp-mldp/ldp:mldp-mbb'
+                ;
+  }
+  revision 2020-07-07 {
+    description '1.Add the leaf node en-password string length from 64 to 172 i'
+              + 'n /ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ld'
+              + 'p:ldp-bs/ldp:passwords/ldp:password/ldp:password-or-enpassword'
+              + '/ldp:en-password/ldp:en-pwd/ldp:en-password.'+"\n"
+              + '2.Add the leaf node en-password string length from 64 to 172 i'
+              + 'n /ldp:configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ld'
+              + 'p:ldp-bs/ldp:passwords/ldp:global-password/ldp:password-or-enp'
+              + 'assword/ldp:en-password/ldp:en-password.'
+                ;
+  }
+  revision 2020-06-20 {
+    description '1.Add the update-source-choice-clear case which in /ldp:config'
+              + 'uration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:ldp-bs/ldp:'
+              + 'target-session/ldp:target-session-ipv4/ldp:ipv4/ldp:update-sou'
+              + 'rce. '+"\n"
+              + '2.Add the discovery-transport-choice-clear case which in /ldp:'
+              + 'configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:ldp-b'
+              + 's/ldp:interface/ldp:interface-ipv4/ldp:ipv4/ldp:discovery-tran'
+              + 'sport.'+"\n"
+              + '3.Add the discovery-transport-choice-clear case which in /ldp:'
+              + 'configuration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:ldp-b'
+              + 's/ldp:interface/ldp:interface-ipv6/ldp:ipv6/ldp:discovery-tran'
+              + 'sport.'+"\n"
+              + '4.Add the duration-time-choice-clear case which in /ldp:config'
+              + 'uration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:ldp-bs/ldp:'
+              + 'session-protection/ldp:duration-time.'+"\n"
+              + '5.Add the host-or-for-choice-clear case which in /ldp:configur'
+              + 'ation/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:ldp-p2p/ldp:a'
+              + 'ccess-fec/ldp:ipv4/ldp:host-or-for.'+"\n"
+              + '6.Add the ipv6-host-or-for-choice-clear case which in ldp:conf'
+              + 'iguration/ldp:ldp/ldp:ldp-configs/ldp:ldp-config/ldp:ldp-p2p/l'
+              + 'dp:access-fec/ldp:ipv6/ldp:ipv6-host-or-for.'
+                ;
+  }
+  revision 2020-05-23 {
+    description '1.Add a leaf node prefix-list-name in /configuration/ldp/ldp-c'
+              + 'onfigs/ldp-config/ldp-p2p/access-fec/ipv4/host-or-for/prefix-l'
+              + 'ist.'+"\n"
+              + '2.Add a leaf node ipv6-prefix-list-name in /configuration/ldp/'
+              + 'ldp-configs/ldp-config/ldp-p2p/access-fec/ipv6/ipv6-host-or-fo'
+              + 'r/ipv6-prefix-list.'
+                ;
+  }
+  revision 2020-05-18 {
+    description '1.Adding "range 0..1" for /ldp:configuration/ldp:ldp/ldp:ldp-c'
+              + 'onfigs/ldp:ldp-config/ldp:ldp-bs/ldp:target-session/ldp:target'
+              + '-session-ipv4/ldp:ipv4/ldp:dual-stack-prefer;'+"\n"
+              + '2.Adding "range 0..1" for /ldp:configuration/ldp:ldp/ldp:ldp-c'
+              + 'onfigs/ldp:ldp-config/ldp:ldp-bs/ldp:target-session/ldp:target'
+              + '-session-ipv6/ldp:ipv6/ldp:dual-stack-prefer;'+"\n"
+              + '3.Adding "range 0..1" for /ldp:configuration/ldp:ldp/ldp:ldp-c'
+              + 'onfigs/ldp:ldp-config/ldp:ldp-bs/ldp:interface/ldp:interface-i'
+              + 'pv4/ldp:ipv4/ldp:dual-stack-prefer;'+"\n"
+              + '4.Adding "range 0..1" for /ldp:configuration/ldp:ldp/ldp:ldp-c'
+              + 'onfigs/ldp:ldp-config/ldp:ldp-bs/ldp:interface/ldp:interface-i'
+              + 'pv6/ldp:ipv6/ldp:dual-stack-prefer;'+"\n"
+              + '5.Adding "range 3..50" for /ldp:configuration/ldp:ldp/ldp:bfd/'
+              + 'ldp:bfd-ipv6/ldp:ipv6/ldp:multiplier;'
+                ;
+  }
+  revision 2020-03-30 {
+    description '1.Add a leaf node template in /configuration/ldp/ldp-configs/l'
+              + 'dp-config/ldp-mldp/p2mp-bfd/bfd-config/template/template-name.'
+              + ''+"\n"
+              + '2.Add a leaf node template in /configuration/bfd/bfd-ipv4/ipv4'
+              + '/bfd-config/template/template-name.'+"\n"
+              + '3.Add a leaf node template in /configuration/bfd/bfd-ipv6/ipv6'
+              + '/bfd-config/template/template-name.'+"\n"
+              + '4.Add a leaf node template in /configuration/peer-bfds/peer-bf'
+              + 'd/template-name.'
+                ;
+  }
+  revision 2019-10-10 {
+    description '1.Add a leaf node cgn in /configuration/ldp/ldp-configs/ldp-co'
+              + 'nfig/ldp-p2p/access-fec/ipv4/cgn.'+"\n"
+              + '2.Add a leaf node cgn in /configuration/ldp/ldp-configs/ldp-co'
+              + 'nfig/ldp-p2p/access-fec/ipv6/ipv6-cgn.'
+                ;
+  }
+  revision 2019-05-29 {
+    description '1.Delete a leaf node ipv6-target-tranaddr in /configuration/ld'
+              + 'p/ldp-configs/ldp-config/ldp-bs/ipv6-target-tranaddr.'+"\n"
+              + '2.Add a choice node ipv6addr-or-ifname in /configuration/ldp/l'
+              + 'dp-configs/ldp-config/ldp-bs/ipv6-target-tranaddr.'+"\n"
+              + '3.Add a case node ipv6-target-tranaddr in /configuration/ldp/l'
+              + 'dp-configs/ldp-config/ldp-bs/ipv6-target-tranaddr/ipv6addr-or-'
+              + 'ifname.'+"\n"
+              + '4.Add a leaf node ipv6-target-tranaddr in /configuration/ldp/l'
+              + 'dp-configs/ldp-config/ldp-bs/ipv6-target-tranaddr/ipv6addr-or-'
+              + 'ifname/ipv6-target-tranaddr.'+"\n"
+              + '5.Add a case node if-name in /configuration/ldp/ldp-configs/ld'
+              + 'p-config/ldp-bs/ipv6-target-tranaddr/ipv6addr-or-ifname.'+"\n"
+              + '6.Add a leaf node if-name in /configuration/ldp/ldp-configs/ld'
+              + 'p-config/ldp-bs/ipv6-target-tranaddr/ipv6addr-or-ifname/if-nam'
+              + 'e.'
+                ;
+  }
+  revision 2019-05-14 {
+    description '1.Add a choice node router-id in /configuration/ldp/ldp-config'
+              + 's/ldp-config/ldp-bs/router-id.'+"\n"
+              + '2.Add a case node ip-address in /configuration/ldp/ldp-configs'
+              + '/ldp-config/ldp-bs/router-id/router-id.'+"\n"
+              + '3.Add a leaf node router-id-addr in /configuration/ldp/ldp-con'
+              + 'figs/ldp-config/ldp-bs/router-id/router-id/ip-address.'+"\n"
+              + '4.Add a case node interface in /configuration/ldp/ldp-configs/'
+              + 'ldp-config/ldp-bs/router-id/router-id.'+"\n"
+              + '5.Change leaf node if-name in /configuration/ldp/ldp-configs/l'
+              + 'dp-config/ldp-bs/router-id/router-id/interface.'
+                ;
+  }
+  revision 2019-01-03 {
+    description '1.Add a container node p2mp-bfd in /configuration/ldp/ldp-conf'
+              + 'igs/ldp-config/ldp-mldp.'+"\n"
+              + '2.Add a leaf node interval in /configuration/ldp/ldp-configs/l'
+              + 'dp-config/ldp-mldp/p2mp-bfd.'+"\n"
+              + '3.Add a leaf node multiplier in /configuration/ldp/ldp-configs'
+              + '/ldp-config/ldp-mldp/p2mp-bfd.'
+                ;
+  }
+  revision 2018-12-05 {
+    description '1.Add leaf node sess-link-type in state/ldp/session-states/ses'
+              + 'sion-state.'+"\n"
+              + '2.Add enum type sess-link-type.'
+                ;
+  }
+  revision 2018-11-20 {
+    description '1.Add a container node global-password in /configuration/ldp/l'
+              + 'dp-configs/ldp-config/ldp-bs/passwords.'+"\n"
+              + '2.Add a choice node password-or-enpassword in /configuration/l'
+              + 'dp/ldp-configs/ldp-config/ldp-bs/passwords/global-password.'+"\n"
+              + '3.Add a case node password in /configuration/ldp/ldp-configs/l'
+              + 'dp-config/ldp-bs/passwords/global-password/password-or-enpassw'
+              + 'ord.'+"\n"
+              + '4.Add a leaf node password in /configuration/ldp/ldp-configs/l'
+              + 'dp-config/ldp-bs/passwords/global-password/password-or-enpassw'
+              + 'ord/password.'+"\n"
+              + '5.Add a case node en-password in /configuration/ldp/ldp-config'
+              + 's/ldp-config/ldp-bs/passwords/global-password/password-or-enpa'
+              + 'ssword.'+"\n"
+              + '6.Add a leaf node en-password in /configuration/ldp/ldp-config'
+              + 's/ldp-config/ldp-bs/passwords/global-password/password-or-enpa'
+              + 'ssword/en-password.'
+                ;
+  }
+  revision 2018-10-29 {
+    description '1.Add leaf node dual-stack-prefer in configuration/ldp/ldp-con'
+              + 'figs/ldp-config/ldp-bs/target-session/target-session-ipv4/ipv4'
+              + '.'+"\n"
+              + '2.Add leaf node dual-stack-prefer in configuration/ldp/ldp-con'
+              + 'figs/ldp-config/ldp-bs/target-session/target-session-ipv6/ipv6'
+              + '.'+"\n"
+              + '3.Add leaf node dual-stack-prefer in configuration/ldp/ldp-con'
+              + 'figs/ldp-config/ldp-bs/interface/interface-ipv4/ipv4.'+"\n"
+              + '4.Add leaf node dual-stack-prefer in configuration/ldp/ldp-con'
+              + 'figs/ldp-config/ldp-bs/interface/interface-ipv6/ipv6.'+"\n"
+              + '5.Add leaf node local-trans-addr-ipv4 in state/ldp/hello-state'
+              + 's/hello-state.'+"\n"
+              + '6.Add leaf node local-trans-addr-ipv6 in state/ldp/hello-state'
+              + 's/hello-state.'+"\n"
+              + '7.Add leaf node hello-prefer in state/ldp/hello-states/hello-s'
+              + 'tate.'+"\n"
+              + '8.Add enum type hello-prefer-type.'
+                ;
+  }
+  revision 2018-03-14 {
+    description '1.Add contianer entropy-label in configuration/ldp/ldp-configs'
+              + '/ldp-config/ldp-p2p/.'+"\n"
+              + '2.Add leaf node entropy-label-enable in configuration/ldp/ldp-'
+              + 'configs/ldp-config/ldp-p2p/entropy-label.'+"\n"
+              + '3.Add leaf entropy-label in /state/ldp/parameters-states.'
+                ;
+  }
+  revision 2017-12-12 {
+    description '1.Add leaf node pw-only in /configuration/ldp/ldp-configs/ldp-'
+              + 'config/ldp-bs/target-session/target-session-ipv4/ipv4'+"\n"
+              + '2.Add the contain node ldp-over-te in /configuration/ldp/ldp-c'
+              + 'onfigs/ldp-config/ldp-p2p'+"\n"
+              + '3.Add leaf node enableflag in /configuration/ldp/ldp-configs/l'
+              + 'dp-config/ldp-p2p/ldp-over-te'
+                ;
+  }
+  revision 2017-11-30 {
+    description '1.Add leaf node force in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-bs/igp-sync.'
+                ;
+  }
+  revision 2017-11-28 {
+    description '1.Add contianer label-withdraw-delay in configuration/ldp/ldp-'
+              + 'configs/ldp-config/ldp-p2p/.'+"\n"
+              + '2.Add leaf node delay-enable in configuration/ldp/ldp-configs/'
+              + 'ldp-config/ldp-p2p/label-withdraw-delay.'+"\n"
+              + '3.Add leaf node delay-time in configuration/ldp/ldp-configs/ld'
+              + 'p-config/ldp-p2p/label-withdraw-delay.'
+                ;
+  }
+  revision 2017-11-17 {
+    description '1.Add the contain node session-protection in /configuration/ld'
+              + 'p/ldp-configs/ldp-config/ldp-bs'+"\n"
+              + '2.Add leaf node sess-protection-enable in /configuration/ldp/l'
+              + 'dp-configs/ldp-config/ldp-bs/session-protection'+"\n"
+              + '3.Add leaf node sess-protection-for-acl in /configuration/ldp/'
+              + 'ldp-configs/ldp-config/ldp-bs/session-protection'+"\n"
+              + '4.Add choice node duration-time in /configuration/ldp/ldp-conf'
+              + 'igs/ldp-config/ldp-bs/session-protection'+"\n"
+              + '5.Add case time in /configuration/ldp/ldp-configs/ldp-config/l'
+              + 'dp-bs/session-protection/duration-time'+"\n"
+              + '6.Add case infinite in /configuration/ldp/ldp-configs/ldp-conf'
+              + 'ig/ldp-bs/session-protection/duration-time'+"\n"
+              + '7.Add leaf time in /configuration/ldp/ldp-configs/ldp-config/l'
+              + 'dp-bs/session-protection/duration-time/time'+"\n"
+              + '8.Add leaf infinite in  /configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-bs/session-protection/time/infinite'
+                ;
+  }
+  revision 2017-10-13 {
+    description '1.Modify the max value of the leaf node /configuration/ldp/ldp'
+              + '/ldp-configs/ldp-config/ldp-bs/gr/max-recovery from 600 to 360'
+              + '0;'+"\n"
+              + '2.Modify the max value of the leaf node /configuration/ldp/ldp'
+              + '/ldp-configs/ldp-config/ldp-bs/gr/neigh-liveness from 300 to 3'
+              + '600.'
+                ;
+  }
+  revision 2017-04-17 {
+    description '1.Add leaf node holdtime in configuration/ldp/ldp-configs/ldp-'
+              + 'config/ldp-bs/target-session/target-session-ipv4/ipv4.'+"\n"
+              + '2.Add leaf node hello-inv in configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-bs/target-session/target-session-ipv4/ipv4.'+"\n"
+              + '3.Add leaf node hello-life in configuration/ldp/ldp-configs/ld'
+              + 'p-config/ldp-bs/target-session/target-session-ipv4/ipv4.'+"\n"
+              + '4.Add leaf node holdtime in configuration/ldp/ldp-configs/ldp-'
+              + 'config/ldp-bs/target-session/target-session-ipv6/ipv6.'+"\n"
+              + '5.Add leaf node hello-inv in configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-bs/target-session/target-session-ipv6/ipv6.'+"\n"
+              + '6.Add leaf node hello-life in configuration/ldp/ldp-configs/ld'
+              + 'p-config/ldp-bs/target-session/target-session-ipv6/ipv6.'+"\n"
+              + '7.Add leaf node holdtime in configuration/ldp/ldp-configs/ldp-'
+              + 'config/ldp-bs/interface/interface-ipv4/ipv4.'+"\n"
+              + '8.Add leaf node hello-inv in configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-bs/interface/interface-ipv4/ipv4.'+"\n"
+              + '9.Add leaf node hello-life in configuration/ldp/ldp-configs/ld'
+              + 'p-config/ldp-bs/interface/interface-ipv4/ipv4.'+"\n"
+              + '10.Add leaf node holdtime in configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-bs/interface/interface-ipv6/ipv6.'+"\n"
+              + '11.Add leaf node hello-inv in configuration/ldp/ldp-configs/ld'
+              + 'p-config/ldp-bs/interface/interface-ipv6/ipv6.'+"\n"
+              + '12.Add leaf node hello-life in configuration/ldp/ldp-configs/l'
+              + 'dp-config/ldp-bs/interface/interface-ipv6/ipv6.'
+                ;
+  }
+  revision 2017-03-30 {
+    description '1.Add enum type sess-auth-type'+"\n"
+              + '2.Add enum type sess-gr-result'+"\n"
+              + '3.Add leaf node sess-auth-type in /state/ldp/session-states/se'
+              + 'ssion-state'+"\n"
+              + '4.Add leaf node sess-gr-result in /state/ldp/session-states/se'
+              + 'ssion-state'+"\n"
+              + '5.Add leaf node gr-recovery-failcnt in /state/ldp/session-stat'
+              + 'es/session-state.'
+                ;
+  }
+  revision 2016-11-11 {
+    description '1.Add leaf node router-id in configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-bs/target-session/target-session-ipv4/ipv4.'+"\n"
+              + '2.Add leaf node router-id in configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-bs/target-session/target-session-ipv6/ipv6.'+"\n"
+              + '3.Add leaf node remote-labelspace in state/ldp/fec-states/fec-'
+              + 'state.'+"\n"
+              + '4.Add leaf node local-ipaddr in state/ldp/fec-states/fec-state'
+              + '.'+"\n"
+              + '5.Add leaf node local-labelspace in state/ldp/fec-states/fec-s'
+              + 'tate.'
+                ;
+  }
+  revision 2016-11-08 {
+    description '1.Add select in list graceful-restart-state in state/ldp/grace'
+              + 'ful-restart-sates.'+"\n"
+              + '2.Add select in list backoff-state in state/ldp/backoff-states'
+              + '.'
+                ;
+  }
+  revision 2016-09-01 {
+    description '1.Add choice node update-source in configuration/ldp/ldp-confi'
+              + 'gs/ldp-config/ldp-bs/target-session/target-session-ipv4/ipv4.
+'
+              + ''+"\n"
+              + '2.Add case interface in configuration/ldp/ldp-configs/ldp-conf'
+              + 'ig/ldp-bs/target-session/target-session-ipv4/ipv4/update-sourc'
+              + 'e.'+"\n"
+              + '3.Add case ip-address in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-bs/target-session/target-session-ipv4/ipv4/update-sour'
+              + 'ce.'+"\n"
+              + '4.Add leaf updatesource-ifname in  configuration/ldp/ldp-confi'
+              + 'gs/ldp-config/ldp-bs/target-session/target-session-ipv4/ipv4/u'
+              + 'pdate-source/interface.'+"\n"
+              + '5.Add leaf updatesource-ipaddress in  configuration/ldp/ldp-co'
+              + 'nfigs/ldp-config/ldp-bs/target-session/target-session-ipv4/ipv'
+              + '4/update-source/ip-address.'
+                ;
+  }
+  revision 2016-08-28 {
+    description '1.Add a value in definition of mfec-state enumeration .'
+                ;
+  }
+  revision 2016-08-10 {
+    description '1.Add the container node lsp-policy in /configuration/ldp/ldp-'
+              + 'configs/ldp-config/ldp-p2p.'+"\n"
+              + '2.Add the leaf node transit-only in /configuration/ldp/ldp-con'
+              + 'figs/ldp-config/ldp-p2p/lsp-policy.'
+                ;
+  }
+  revision 2016-07-19 {
+    description '1.Change state of ldp-debug-policy container from current to o'
+              + 'bsolete in configuration/ldp.'
+                ;
+  }
+  revision 2016-06-15 {
+    description '1.Add the contain node lsp-dod-request in /configuration/ldp/l'
+              + 'dp-configs/ldp-config/ldp-p2p'+"\n"
+              + '2.Add the contain node ipv4-lsp-dod-request in /configuration/'
+              + 'ldp/ldp-configs/ldp-config/ldp-p2p/lsp-dod-request'+"\n"
+              + '3.Add the list node ipv4 in /configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-p2p/lsp-dod-request/ipv4-lsp-dod-request'+"\n"
+              + '4.Add the leaf node ip in /configuration/ldp/ldp-configs/ldp-c'
+              + 'onfig/ldp-p2p/lsp-dod-request/ipv4-lsp-dod-request/ipv4'+"\n"
+              + '5.Add the leaf node masklen in /configuration/ldp/ldp-configs/'
+              + 'ldp-config/ldp-p2p/lsp-dod-request/ipv4-lsp-dod-request/ipv4'+"\n"
+              + '6.Add the contain node ipv6-lsp-dod-request in /configuration/'
+              + 'ldp/ldp-configs/ldp-config/ldp-p2p/lsp-dod-request'+"\n"
+              + '7.Add the list node ipv6 in /configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-p2p/lsp-dod-request/ipv6-lsp-dod-request'+"\n"
+              + '8.Add the leaf node ipv6 in /configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-p2p/lsp-dod-request/ipv6-lsp-dod-request/ipv6'+"\n"
+              + '9.Add the leaf node masklen in /configuration/ldp/ldp-configs/'
+              + 'ldp-config/ldp-p2p/lsp-dod-request/ipv6-lsp-dod-request/ipv6'+"\n"
+              + '10.Add the contain node lsp-dod-req-queue in /configuration/ld'
+              + 'p/ldp-configs/ldp-config/ldp-p2p'+"\n"
+              + '11.Add the leaf node queue-mode in /configuration/ldp/ldp-conf'
+              + 'igs/ldp-config/ldp-p2p/lsp-dod-req-queue'+"\n"
+              + '12.Add the leaf node lsp-req-queuemode-cfg in /state/ldp/param'
+              + 'eters-states'
+                ;
+  }
+  revision 2016-04-12 {
+    description '1.Add default value of of leaf node label-space in /configurat'
+              + 'ion/ldp/ldp-debug-policy/sessions/remote-routeid.'
+                ;
+  }
+  revision 2016-04-07 {
+    description '1.Add enum type mdowncb-state'+"\n"
+              + '2.Add the leaf node rmt-binding-state in /state/ldp/mldp-mfec-'
+              + 'states/mfec-states/rmt-binding-state.'
+                ;
+  }
+  revision 2016-03-07 {
+    description '1.Delete the default value of leaf node ipv6-target-tranaddr i'
+              + 'n /configuration/ldp/ldp-configs/ldp-config/ldp-bs/ipv6-target'
+              + '-tranaddr.'+"\n"
+              + '2.Tick off an null item when reset action of leaf node ipv6-ta'
+              + 'rget-tranaddr in /configuration/ldp/ldp-configs/ldp-config/ldp'
+              + '-bs/ipv6-target-tranaddr.'+"\n"
+              + '3.Add a MIM filter(regex) to container ipv6-target-tranaddr in'
+              + ' /configuration/ldp/ldp-configs/ldp-config/ldp-bs.'+"\n"
+              + '4.Delete the default value of leaf node src-addr-ipv4 in /stat'
+              + 'e/ldp/hello-states/hello-state.'+"\n"
+              + '5.Delete the default value of leaf node target-addr-ipv4 in /s'
+              + 'tate/ldp/hello-states/hello-state.'
+                ;
+  }
+  revision 2015-12-23 {
+    description '1.Add the case node keychain in /configuration/ldp/ldp-configs'
+              + '/ldp-config/ldp-bs/passwords/password/password-or-enpassword'+"\n"
+              + '2.Add the contain node keychain in /configuration/ldp/ldp-conf'
+              + 'igs/ldp-config/ldp-bs/passwords/password/password-or-enpasswor'
+              + 'd/keychain'+"\n"
+              + '3.Add the leaf node keychain in /configuration/ldp/ldp-configs'
+              + '/ldp-config/ldp-bs/passwords/password/password-or-enpassword/k'
+              + 'eychain/keychain'
+                ;
+  }
+  revision 2015-10-27 {
+    description "1.Modify status of the leaf node labelspace to 'obsolete' in c"
+              + "onfiguration\ldp\ldp-debug-policy\sessions\remote-routerid\;
+\n"
+              + "2.Add leaf node label-space in configuration\ldp\ldp-debug-pol"
+              + "icy\sessions\remote-routerid\.
+\n3.Modify description of the l"
+              + "eaf node label-space in state\ldp\debug-policy-session\session"
+              + "s\."
+                ;
+  }
+  revision 2015-08-27 {
+    description '1.Add the leaf node adv-peer-cnt in /state/ldp/mldp-mfec-state'
+              + 's/mfec-states'+"\n"
+              + '2.Add the leaf node rmt-peer-cnt in /state/ldp/mldp-mfec-state'
+              + 's/mfec-states'+"\n"
+              + '3.Add the container mldp-binding-summary-states in  /state/ldp'
+              + '/'+"\n"
+              + '4.Add the leaf node mfec-totalcnt in /state/ldp/mldp-binding-s'
+              + 'ummary-states '+"\n"
+              + '5.Add the leaf node upcb-totalcnt in /state/ldp/mldp-binding-s'
+              + 'ummary-states '+"\n"
+              + '6.Add the leaf node downcb-totalcnt in /state/ldp/mldp-binding'
+              + '-summary-states'+"\n"
+              + '7.Add the leaf node assigned-inlabelcnt in /state/ldp/mldp-bin'
+              + 'ding-summary-states'+"\n"
+              + '8.Add the leaf node learned-outlabelcnt in /state/ldp/mldp-bin'
+              + 'ding-summary-states'
+                ;
+  }
+  revision 2015-06-04 {
+    description 'Change state of igpsync-states from current to obsolete:'+"\n"
+              + '1.Change state of list node igpsync-state from current to obso'
+              + 'lete'+"\n"
+              + 'Add state of igp-synchronism-states:'+"\n"
+              + '1.Add container igp-synchronism-states in /state/ldp/'+"\n"
+              + '2.Add list node igp-synchronism-state in /state/ldp/igp-synchr'
+              + 'onism-states'+"\n"
+              + '3.Add leaf node if-name in /state/ldp/igp-synchronism-states/i'
+              + 'gp-synchronism-state'+"\n"
+              + '4.Add leaf node b-igpsync-enable in /state/ldp/igp-synchronism'
+              + '-states/igp-synchronism-state'+"\n"
+              + '5.Add leaf node sync-status in /state/ldp/igp-synchronism-stat'
+              + 'es/igp-synchronism-state'+"\n"
+              + '6.Add leaf node peer-ldpid-addr in /state/ldp/igp-synchronism-'
+              + 'states/igp-synchronism-state'+"\n"
+              + '7.Add leaf node peer-ldpid-labelspace in /state/ldp/igp-synchr'
+              + 'onism-states/igp-synchronism-state'+"\n"
+              + '8.Add leaf node b-gr-enablein /state/ldp/igp-synchronism-state'
+              + 's/igp-synchronism-state'+"\n"
+              + '9.Add leaf node b-gr-process in /state/ldp/igp-synchronism-sta'
+              + 'tes/igp-synchronism-state'+"\n"
+              + '10.Add leaf node b-full in /state/ldp/igp-synchronism-states/i'
+              + 'gp-synchronism-state'+"\n"
+              + '11.Add leaf node left-time in /state/ldp/igp-synchronism-state'
+              + 's/igp-synchronism-state'+"\n"
+              + '12.Add leaf node if-type in /state/ldp/igp-synchronism-states/'
+              + 'igp-synchronism-state'
+                ;
+  }
+  revision 2015-05-11 {
+    description 'Delete the default value of leaf node if-name in \configuratio'
+              + 'n\ldp\ldp-configs\ldp-config\ldp-bs\router-id.'+"\n"
+              + 'Add reset null of leaf node if-name in \configuration\ldp\ldp-'
+              + 'configs\ldp-config\ldp-bs\router-id.'
+                ;
+  }
+  revision 2015-04-30 {
+    description 'Add state of instance-statistic:'+"\n"
+              + '1.Add container instance-statistic in /state/ldp/'+"\n"
+              + '2.Add leaf node session-cout in /state/ldp/instance-statistic
+'
+              + ''+"\n"
+              + '3.Add leaf node session-oper-cout in /state/ldp/instance-stati'
+              + 'stic'+"\n"
+              + '4.Add leaf node hello-cout in /state/ldp/instance-statistic'+"\n"
+              + '6.Add leaf node sess-uptime in /state/ldp/session-states/sessi'
+              + 'on-state'+"\n"
+              + '7.Add leaf node addr-num in /state/ldp/session-states/session-'
+              + 'state'+"\n"
+              + '8.Add leaf node outlabel-ipv4-num in /state/ldp/session-states'
+              + '/session-state'+"\n"
+              + '9.Add leaf node outlabel-ipv6-num in /state/ldp/session-states'
+              + '/session-state'+"\n"
+              + '10.Add the leaf node /state/ldp/fec-states/fec-state/adv-peer-'
+              + 'count'+"\n"
+              + '11.Add the leaf node /state/ldp/fec-states/fec-state/rmt-peer-'
+              + 'count'
+                ;
+  }
+  revision 2015-02-28 {
+    description '1.Modify type of the leaf node accept-enable in configuration\l'
+              + 'dp\ldp-config\ldp-bs\accept-targethello\ from uint8 to empty'
+                ;
+  }
+  revision 2015-02-05 {
+    description '1.Add leaf node if-type in state/ldp/igpsync-states/igpsync-st'
+              + 'ates/igpsync-state.'
+                ;
+  }
+  revision 2015-01-29 {
+    description '1.Delete the leaf node /configuration/ldp/ldp-mldp/mldp-mbb/mb'
+              + 'b-enable;'+"\n"
+              + '2.Delete the leaf node /configuration/ldp/ldp-mldp/mldp-enable'
+              + ';'+"\n"
+              + '3.Add MimAction for AttributeId 2 in /configuration/ldp/ldp-ml'
+              + 'dp;'+"\n"
+              + '4.Add MimAction for AttributeId 3 in /configuration/ldp/ldp-ml'
+              + 'dp/mldp-mbb;'
+                ;
+  }
+  revision 2014-12-15 {
+    description '1.Add container accept-targethello in /configuration/ldp/ldp-c'
+              + 'onfigs/ldp-config/ldp-bs/'+"\n"
+              + '2.Add leaf node accept-enable and accept-for-acl in /configura'
+              + 'tion/ldp/ldp-configs/ldp-config/ldp-bs/accept-targethello'
+                ;
+  }
+  revision 2014-11-24 {
+    description 'Add configuration and state of debug policy:'+"\n"
+              + '1.Add the typedef label-space'+"\n"
+              + '2.Add container ldp-debug-policy in /configuration/ldp/'+"\n"
+              + '3.Add a container hello-interfaces in /configuration/ldp/ldp-d'
+              + 'ebug-policy'+"\n"
+              + '4.Add a list hello-interface in /configuration/ldp/ldp-debug-p'
+              + 'olicy/hello-interfaces'+"\n"
+              + '5.Add leaf node inst-id if-name in /configuration/ldp/ldp-debu'
+              + 'g-policy/hello-interfaces/hello-interface'+"\n"
+              + '6.Add a container sessions in /configuration/ldp/ldp-debug-pol'
+              + 'icy'+"\n"
+              + '7.Add a list remote-routerid in /configuration/ldp/ldp-debug-p'
+              + 'olicy/sessions'+"\n"
+              + '8.Add leaf node inst-id ip labelspace in /configuration/ldp/ld'
+              + 'p-debug-policy/sessions/remote-routerid'+"\n"
+              + '9.Add a container target-hellos in /configuration/ldp/ldp-debu'
+              + 'g-policy'+"\n"
+              + '10.Add a container target-hello-ipv4 in /configuration/ldp/ldp'
+              + '-debug-policy/target-hellos'+"\n"
+              + '11.Add a list ipv4 in /configuration/ldp/ldp-debug-policy/targ'
+              + 'et-hellos/target-hello-ipv4'+"\n"
+              + '12.Add leaf node inst-id ipv4 in /configuration/ldp/ldp-debug-'
+              + 'policy/target-hellos/target-hello-ipv4/ipv4'+"\n"
+              + '13.Add a container target-hello-ipv6 in /configuration/ldp/ldp'
+              + '-debug-policy/target-hellos'+"\n"
+              + '14.Add a list ipv6 in /configuration/ldp/ldp-debug-policy/targ'
+              + 'et-hellos/target-hello-ipv6'+"\n"
+              + '15.Add leaf node inst-id ipv6 in /configuration/ldp/ldp-debug-'
+              + 'policy/target-hellos/target-hello-ipv6/ipv6'+"\n"
+              + '16.Add a container tran-conns in /configuration/ldp/ldp-debug-'
+              + 'policy'+"\n"
+              + '17.Add a container peer-tranaddr-ipv4 in /configuration/ldp/ld'
+              + 'p-debug-policy/tran-conns'+"\n"
+              + '18.Add a list ipv4 in /configuration/ldp/ldp-debug-policy/tran'
+              + '-conns/target-hello-ipv4'+"\n"
+              + '19.Add leaf node inst-id ipv4 in /configuration/ldp/ldp-debug-'
+              + 'policy/tran-conns/target-hello-ipv4/ipv4'+"\n"
+              + '20.Add a container peer-tranaddr-ipv6 in /configuration/ldp/ld'
+              + 'p-debug-policy/tran-conns'+"\n"
+              + '21.Add a list ipv4 in /configuration/ldp/ldp-debug-policy/tran'
+              + '-conns/target-hello-ipv6'+"\n"
+              + '22.Add leaf node inst-id ipv6 in /configuration/ldp/ldp-debug-'
+              + 'policy/tran-conns/target-hello-ipv6/ipv6'+"\n"
+              + '23.Add container ldp-debug-policy in /state/ldp/'+"\n"
+              + '24.Add a container debug-policy-dhello in /state/ldp'+"\n"
+              + '25.Add a list hello-interfaces in /state/ldp/debug-policy-dhel'
+              + 'lo'+"\n"
+              + '26.Add leaf node if-name in /state/ldp/debug-policy-dhello/hel'
+              + 'lo-interfaces'+"\n"
+              + '27.Add a container debug-policy-thello in /state/ldp'+"\n"
+              + '28.Add a list target-hellos in /state/ldp/debug-policy-thello
+'
+              + ''+"\n"
+              + '29.Add leaf node target-hello-ipv4 target-hello-ipv6 in /state'
+              + '/ldp/debug-policy-thello/target-hellos'+"\n"
+              + '30.Add a container debug-policy-session in /state/ldp'+"\n"
+              + '31.Add a list sessions in /state/ldp/debug-policy-session'+"\n"
+              + '32.Add leaf node ip labelspace in /state/ldp/debug-policy-sess'
+              + 'ion/sessions'+"\n"
+              + '33.Add a container debug-policy-connections in /state/ldp'+"\n"
+              + '34.Add a list peer-tranaddrs in /state/ldp/debug-policy-connec'
+              + 'tions'+"\n"
+              + '35.Add leaf node peer-tranaddrs-ipv4 peer-tranaddrs-ipv6 in /s'
+              + 'tate/ldp/debug-policy-connections/peer-tranaddrs'
+                ;
+  }
+  revision 2014-09-24 {
+    description '1.Modify the min value of the leaf node /configuration/ldp/bfd'
+              + '/bfd-ipv4/ipv4/interval from 10 to 3;'+"\n"
+              + '2.Add perf-code of the leaf node /configuration/ldp/bfd/bfd-ip'
+              + 'v4/ipv4/interval ;'+"\n"
+              + '3.Modify the min value of the leaf node /configuration/ldp/bfd'
+              + '/bfd-ipv4/ipv4/mim-rx from 10 to 3;'+"\n"
+              + '4.Add perf-code of the leaf node /configuration/ldp/bfd/bfd-ip'
+              + 'v4/ipv4/mim-rx ;'+"\n"
+              + '5. Add perf-code of the leaf node /configuration/ldp/bfd/bfd-i'
+              + 'pv6/ipv6/interval ;'+"\n"
+              + '6.Add perf-code of the leaf node /configuration/ldp/bfd/bfd-ip'
+              + 'v6/ipv6/mim-rx'
+                ;
+  }
+  revision 2014-08-25 {
+    description '1.Add a containers igp-sync-interfaces in configuration/ldp/ld'
+              + 'p-configs/ldp-config/ldp-bs;'+"\n"
+              + '2.Add a list igp-sync-interfaces in configuration/ldp/ldp-conf'
+              + 'igs/ldp-config/ldp-bs/igp-sync-interfaces;'+"\n"
+              + '3.Add leaf node if-name in configuration/ldp/ldp-configs/ldp-c'
+              + 'onfig/ldp-bs/igp-sync-interfaces/igp-sync-interface.'
+                ;
+  }
+  revision 2014-07-15 {
+    description 'Add configuration and state of MLDP:'+"\n"
+              + '1.Add the typedef mldp-mfec-opaqueValue-type and mfec-state'+"\n"
+              + '2.Add container ldp-mldp in /configuration/ldp/ldp-configs/ldp'
+              + '-config'+"\n"
+              + '3.Add container mldp-mbb in /configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-mldp'+"\n"
+              + '4.Add container recursor-mfec in /configuration/ldp/ldp-config'
+              + 's/ldp-config/ldp-mldp'+"\n"
+              + '5.Add leaf node mldp-enable in /configuration/ldp/ldp-configs/'
+              + 'ldp-config/ldp-mldp'+"\n"
+              + '6.Add leaf node mbb-enable in /configuration/ldp/ldp-configs/l'
+              + 'dp-config/ldp-mldp/mldp-mbb'+"\n"
+              + '7.Add leaf node wait-time in /configuration/ldp/ldp-configs/ld'
+              + 'p-config/ldp-mldp/mldp-mbb'+"\n"
+              + '8.Add leaf node recursor-mfec-enable in /configuration/ldp/ldp'
+              + '-configs/ldp-config/ldp-mldp/recursor-mfec'+"\n"
+              + '9.Add container mldp-parameters-states in /state/ldp'+"\n"
+              + '10.Add container mldp-mfec-states in /state/ldp'+"\n"
+              + '11.Add leaf node p2mp-enable,mp2mp-enable,mbb-enable,mbb-wait-'
+              + 'time in /state/ldp/mldp-parameters-states'+"\n"
+              + '12.Add list node mfec-states in /state/ldp/mldp-mfec-states'+"\n"
+              + '13.Add leaf node root-addr,mfec-opaqueValue,mfec-opaqueValue-t'
+              + 'ype,neighbor-addr,local-label,peer-label,mfec-state in /state/'
+              + 'ldp/mldp-mfec-states/mfec-states'+"\n"
+              + 'Add state of LDP:'+"\n"
+              + '14.Add leaf bxmit,brecv,trans-addr-ipv4 and trans-addr-ipv6 in'
+              + ' /state/ldp/hello-states/hello-state.'+"\n"
+              + '15.Add the typedef label-retention-mode,sync-status and interf'
+              + 'ace-type.'+"\n"
+              + '16.Add container bindings-summary-states,traffic-count-states,'
+              + 'parameters-states,graceful-restart-states,igpsync-states,inter'
+              + 'face-states,backoff-states in /state/ldp.'+"\n"
+              + '17.Add leaf prefix-count,upcb-count,downcb-count,assigned-labe'
+              + 'l-count and learned-outlabel-count in /state/ldp/bindings-summ'
+              + 'ary-states.'+"\n"
+              + '18.Add list traffic-count-state in /state/ldp/traffic-count-st'
+              + 'ates,add leaf fec-addr-type,fec-addr-ipv4,fec-addr-ipv6,fec-ad'
+              + 'drlen,inflow-count-bytes,inflow-count-packets,inflow-lost-coun'
+              + 't-bytes,inflow-lost-count-packets,outflow-count-bytes,outflow-'
+              + 'count-packets,outflow-lost-count-bytes and outflow-lost-count-'
+              + 'packets in /state/ldp/traffic-count-states/traffic-count-state'
+              + '.'+"\n"
+              + '19.Add leaf protocol-version,session-holdtime,keepalive-interv'
+              + 'al,directhello-holdtime,directhello-interval,targethello-holdt'
+              + 'ime,targethello-interval,dod-max-hopcnt,backoff-time-initial,b'
+              + 'ack-time-max,lsp-ctrlmode-used,lsp-ctrlmode-cfg,lbl-retentionm'
+              + 'ode-used,lbl-retentionmode-cfg,loop-detection and igpsync-dela'
+              + 'ytime in /state/ldp/parameters-states.'+"\n"
+              + '20.Add list graceful-restart-state in /state/ldp/graceful-rest'
+              + 'art-states,add leaf b-gr-enable,neighbour-liveness-timer,max-r'
+              + 'ecovery-timer,peer-ldpid-addr,peer-ldpid-labelspace,local-ldpi'
+              + 'd-addr,local-ldpid-labelspace and session-state in /state/ldp/'
+              + 'graceful-restart-states/graceful-restart-state.'+"\n"
+              + '21.Add list igpsync-state in /state/ldp/igpsync-states,add lea'
+              + 'f if-name,b-igpsync-enable,sync-status,peer-ldpid-addr,peer-ld'
+              + 'pid-labelspace,b-gr-enable,b-gr-process,b-full and left-time i'
+              + 'n /state/ldp/igpsync-states/igpsync-state.'+"\n"
+              + '22.Add list interface-state in /state/ldp/interface-states,add'
+              + ' leaf if-name,if-type,b-ip,b-oper,b-userconfig,b-ospf and b-is'
+              + 'is in /state/ldp/interface-states/interface-state.'+"\n"
+              + '23.Add list backoff-state in /state/ldp/backoff-states,add lea'
+              + 'f backoff-time-initial,backoff-time-max,backoff-cnt,peer-ldpid'
+              + '-addr,peer-ldpid-labelspace,local-ldpid-addr,local-ldpid-label'
+              + 'space,session-backoff-time and session-waiting-time in /state/'
+              + 'ldp/backoff-states/backoff-state.'
+                ;
+  }
+  revision 2014-07-07 {
+    description '1.Delete all leaf nodes in configuration/ldp/ldp-configs/ldp-c'
+              + 'onfig/ldp-p2p/access-fec'+"\n"
+              + '2.Add two containers ipv4 and ipv6 in configuration/ldp/ldp-co'
+              + 'nfigs/ldp-config/ldp-p2p/access-fec'+"\n"
+              + '3.Add leaf node bgp,choice node host-or-for in configuration/l'
+              + 'dp/ldp-configs/ldp-config/ldp-p2p/access-fec/ipv4'+"\n"
+              + '4.Add case node host-route-only,case node for-acl-name in conf'
+              + 'iguration/ldp/ldp-configs/ldp-config/ldp-p2p/access-fec/ipv4/h'
+              + 'ost-or-for'+"\n"
+              + '5.Add leaf node host-route-only in configuration/ldp/ldp-confi'
+              + 'gs/ldp-config/ldp-p2p/access-fec/ipv4/host-or-for/host-route-o'
+              + 'nly '+"\n"
+              + '6.Add leaf node for-acl-name in configuration/ldp/ldp-configs/'
+              + 'ldp-config/ldp-p2p/access-fec/ipv4/host-or-for/for-acl-name '+"\n"
+              + '7.Add the same as 3,4,5,6 in configuration/ldp/ldp-configs/ldp'
+              + '-config/ldp-p2p/access-fec/ipv6'+"\n"
+              + '8.Modify the rang of the leaf node configuration/ldp/ldp-confi'
+              + 'gs/ldp-config/vrf-name from 0-35 to 1-32'+"\n"
+              + '9.Modify the rang from 0-31 to 1-31,delete the default value ,'
+              + ' add the reset-value in configuration/ldp/ldp-configs/ldp-conf'
+              + 'ig/ldp-bs/capability/capability-acl'+"\n"
+              + '10.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/longest-match/ipv4-acl-name'+"\n"
+              + '11.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/longest-match/ipv6-acl-name'+"\n"
+              + '12.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/egress/for-acl-name'+"\n"
+              + '13.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/egress/nexthop-acl-name'+"\n"
+              + '14.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/egress/ipv6-for-acl-name'+"\n"
+              + '15.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/egress/ipv6-nexthop-acl-name'+"\n"
+              + '16.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/label-request/for-acl-name'+"\n"
+              + '17.Add the rang 1-31,delete the default value , add the reset-'
+              + 'value in configuration/ldp/ldp-configs/ldp-config/ldp-p2p/labe'
+              + 'l-request/ipv6-for-acl-name'+"\n"
+              + '18.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/traffic-count-fec/acl-name'+"\n"
+              + '19.Add the rang 1-31,delete the default value , add the reset-'
+              + 'value in configuration/ldp/ldp-configs/ldp-config/ldp-p2p/traf'
+              + 'fic-count-fec/ipv6-acl-name'+"\n"
+              + '20.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/explicit-null/ipv4/to-acl-name'+"\n"
+              + '21.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/explicit-null/ipv4/for-acl-name'+"\n"
+              + '22.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/explicit-null/ipv6/ipv6-for-acl-name'+"\n"
+              + '23.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/explicit-null/ipv6/ipv6-to-acl-name'+"\n"
+              + '24.Modify the rang from 0-31 to 1-31,delete the default value '
+              + ', add the reset-value in configuration/ldp/ldp-configs/ldp-con'
+              + 'fig/ldp-p2p/label-adver-for/for-acl-name'+"\n"
+              + '25.Add the rang 1-31,delete the default value , add the reset-'
+              + 'value in configuration/ldp/ldp-configs/ldp-config/ldp-p2p/labe'
+              + 'l-adver-for/ipv4-label-advertise/label-adver-for/to-acl-name'+"\n"
+              + '26.Add the rang 1-31,delete the default value , add the reset-'
+              + 'value in configuration/ldp/ldp-configs/ldp-config/ldp-p2p/labe'
+              + 'l-adver-for/ipv6-label-advertise/ipv6-label-advertise-for/to-a'
+              + 'cl-name'
+                ;
+  }
+  revision 2014-06-24 {
+    description '1.Add presence in configuration/ldp/ldp-configs/ldp-config/ldp'
+              + '-bs/backoff'+"\n"
+              + '2.Modify mandatory in configuration/ldp/ldp-configs/ldp-config'
+              + '/ldp-bs/backoff/backoff-init and configuration/ldp/ldp-configs'
+              + '/ldp-config/ldp-bs/backoff/backoff-max from false to true'+"\n"
+              + '3.Delete default in configuration/ldp/ldp-configs/ldp-config/l'
+              + 'dp-bs/backoff/backoff-init and configuration/ldp/ldp-configs/l'
+              + 'dp-config/ldp-bs/backoff/backoff-max '+"\n"
+              + '4.Add reset-value in configuration/ldp/ldp-configs/ldp-config/'
+              + 'ldp-bs/backoff/backoff-init and configuration/ldp/ldp-configs/'
+              + 'ldp-config/ldp-bs/backoff/backoff-max'
+                ;
+  }
+  revision 2014-05-09 {
+    description 'Modify the third selects of peeraddr-state in /state/ldp/peera'
+              + 'ddr-states.'
+                ;
+  }
+  revision 2014-04-24 {
+    description 'Delete all context in list ipv4 ,and delete list ipv4 in Conta'
+              + 'iner bfd.'+"\n"
+              + 'Add Container bfd-ipv4,and add list ipv4 in Container bfd-ipv4'
+              + '.'+"\n"
+              + 'Add leaf node instid,ip,masklen,interval,min-rx,multiplier,pro'
+              + 'tect-unbinding,source in list ipv4.'+"\n"
+              + 'Add Container bfd-ipv6,and add list ipv6 in Container bfd-ipv6'
+              + '.'+"\n"
+              + 'Add leaf node instid,ip,masklen,interval,min-rx,multiplier,pro'
+              + 'tect-unbinding,source in list ipv6.'
+                ;
+  }
+  revision 2014-04-21 {
+    description 'modify the value range of leaf dod in container target-session'
+              + '-ipv6.'+"\n"
+              + 'modify the value range of leaf ipv6-dis-autocfg-flag in contai'
+              + 'ner auto-config-global.'+"\n"
+              + 'modify the value range of leaf disableflag in container auto-c'
+              + 'onfig-interfaces ipv6.'+"\n"
+              + 'modify the value range of leaf instid in container bfd.'+"\n"
+              + 'modify the value range of leaf instid in container peer-bfds.
+'
+              + ''+"\n"
+              + 'modify the key and seleted of LDP state container.'+"\n"
+              + 'modify the description of local-label-type leaf and remote-lab'
+              + 'el-type leaf in list fec-state.'+"\n"
+              + 'change enum label-type enumeration.'
+                ;
+  }
+  revision 2014-03-24 {
+    description 'add enum type lsp-control-mode'+"\n"
+              + '      change leaf node lsp-control-mode data type into enum,de'
+              + 'fault value is independent'
+                ;
+  }
+  revision 2013-09-05 {
+    description 'Initial version.'
+                ;
+  }
+  typedef sess-state {
+    type enumeration {
+      enum nonexistent {
+        value 1 ;
+        description 'The state of LDP session is nonexistent'
+                    ;
+      }
+      enum initialized {
+        value 2 ;
+        description 'The state of LDP sedssion is initialize'
+                    ;
+      }
+      enum openrec {
+        value 3 ;
+        description 'The state of LDP sedssion is openrec'
+                    ;
+      }
+      enum opensent {
+        value 4 ;
+        description 'The state of LDP sedssion is opensent'
+                    ;
+      }
+      enum operational {
+        value 5 ;
+        description 'The state of LDP sedssion is operational'
+                    ;
+      }
+      enum tcp_connect_awaited {
+        value 6 ;
+        description 'The state of LDP sedssion is tcp_connect_awaited'
+                    ;
+      }
+    }
+    default nonexistent ;
+    description 'The state of LDP session'
+                ;
+  }
+  typedef sess-gr-state {
+    type enumeration {
+      enum normal {
+        value 0 ;
+        description 'The state of LDP gr session is normal'
+                    ;
+      }
+      enum reconnect {
+        value 1 ;
+        description 'The state of LDP gr session is reconnect'
+                    ;
+      }
+      enum recovery {
+        value 2 ;
+        description 'The state of LDP gr session is recovery'
+                    ;
+      }
+    }
+    default normal ;
+    description 'The state of LDP GR session'
+                ;
+  }
+  typedef interface-state {
+    type enumeration {
+      enum down {
+        value 0 ;
+        description 'The state of interface is down'
+                    ;
+      }
+      enum up {
+        value 1 ;
+        description 'The state of interface is up'
+                    ;
+      }
+    }
+    default down ;
+    description 'The state of LDP interface'
+                ;
+  }
+  typedef label-type {
+    type enumeration {
+      enum UnTag {
+        value 0 ;
+        description 'Have no label'
+                    ;
+      }
+      enum exp-null {
+        value 1 ;
+        description 'Explicit null label'
+                    ;
+      }
+      enum normal {
+        value 2 ;
+        description 'Nomarl label'
+                    ;
+      }
+      enum imp-null {
+        value 3 ;
+        description 'Implicit null label'
+                    ;
+      }
+    }
+    default UnTag ;
+    description 'The type of label'
+                ;
+  }
+  typedef addr-type {
+    type enumeration {
+      enum IPv4 {
+        value 1 ;
+        description 'The type of address is IPv4'
+                    ;
+      }
+      enum IPv6 {
+        value 2 ;
+        description 'The type of address is IPv6'
+                    ;
+      }
+    }
+    default IPv4 ;
+    description 'The type of address'
+                ;
+  }
+  typedef fec-state {
+    type enumeration {
+      enum ok {
+        value 1 ;
+        description 'The state of FEC is ok'
+                    ;
+      }
+      enum egress {
+        value 2 ;
+        description 'The state of FEC is egress'
+                    ;
+      }
+      enum noOutLable {
+        value 3 ;
+        description 'The state of FEC is noOutLable'
+                    ;
+      }
+      enum noInLable {
+        value 4 ;
+        description 'The state of FEC is noInLable'
+                    ;
+      }
+    }
+    default egress ;
+    description 'The state of FEC'
+                ;
+  }
+  typedef hello-type {
+    type enumeration {
+      enum DIRECT {
+        value 0 ;
+        description 'The type of hello is direct'
+                    ;
+      }
+      enum TARGET {
+        value 1 ;
+        description 'The type of hello is target'
+                    ;
+      }
+    }
+    default DIRECT ;
+    description 'The type of hello'
+                ;
+  }
+  typedef lsp-control-mode {
+    type enumeration {
+      enum independent {
+        value 0 ;
+        description 'Lsp control mode is independent'
+                    ;
+      }
+      enum order {
+        value 1 ;
+        description 'Lsp control mode is order'
+                    ;
+      }
+    }
+    default independent ;
+    description 'LSP control mode'
+                ;
+  }
+  typedef label-retention-mode {
+    type enumeration {
+      enum liberal {
+        value 0 ;
+        description 'label retention mode is liberal.'
+                    ;
+      }
+      enum conservative {
+        value 1 ;
+        description 'label retention mode is conservative.'
+                    ;
+      }
+    }
+    default liberal ;
+    description 'label retention mode'
+                ;
+  }
+  typedef sync-status {
+    type enumeration {
+      enum not-ready {
+        value 0 ;
+        description 'not ready'
+                    ;
+      }
+      enum ready {
+        value 1 ;
+        description ready ;
+      }
+    }
+    default not-ready ;
+    description 'The status of IGP sync.'
+                ;
+  }
+  typedef interface-type {
+    type enumeration {
+      enum IPv4 {
+        value 1 ;
+        description 'The type of LDP interface is IPv4'
+                    ;
+      }
+      enum IPv6 {
+        value 2 ;
+        description 'The type of LDP interface is IPv6'
+                    ;
+      }
+    }
+    default IPv4 ;
+    description 'The type of LDP interface.'
+                ;
+  }
+  typedef mldp-mfec-opaqueValue-type {
+    type enumeration {
+      enum GEN_LSPID {
+        value 1 ;
+        description 'LSP ID'
+                    ;
+      }
+      enum IPV4_SRC {
+        value 2 ;
+        description <S,G> ;
+      }
+      enum IPV4_BIDIR {
+        value 4 ;
+      }
+      enum VPNV4_SRC {
+        value 6 ;
+      }
+      enum VPNV4_BIDIR {
+        value 8 ;
+      }
+      enum ROSEN_MDT {
+        value 10 ;
+      }
+      enum PUB_RECURSIVE {
+        value 11 ;
+      }
+      enum VPN_RECURSIVE {
+        value 12 ;
+      }
+    }
+    default GEN_LSPID ;
+    description 'MLDP MFEC opaque value type'
+                ;
+  }
+  typedef mfec-state {
+    type enumeration {
+      enum none {
+        value 0 ;
+        description 'None role of this node'
+                    ;
+      }
+      enum root {
+        value 1 ;
+        description 'Root node'
+                    ;
+      }
+      enum tran {
+        value 2 ;
+        description 'Tran Node'
+                    ;
+      }
+      enum leaf {
+        value 3 ;
+        description 'Leaf node'
+                    ;
+      }
+      enum leaf&tran {
+        value 4 ;
+        description 'Leaf and tran node'
+                    ;
+      }
+    }
+    default root ;
+    description 'The state of MFEC'
+                ;
+  }
+  typedef label-space {
+    type enumeration {
+      enum 0 {
+        value 1 ;
+        description 'label space for ldp'
+                    ;
+      }
+      enum 65535 {
+        value 2 ;
+        description 'label space for iccp'
+                    ;
+      }
+      enum null {
+        value 0 ;
+        description 'label space not config'
+                    ;
+      }
+    }
+    default 0 ;
+    description 'The label space id'
+                ;
+  }
+  typedef mdowncb-state {
+    type enumeration {
+      enum none {
+        value 0 ;
+      }
+      enum deleting {
+        value 1 ;
+      }
+      enum releasing {
+        value 2 ;
+      }
+      enum stale {
+        value 3 ;
+      }
+      enum inuse {
+        value 4 ;
+      }
+      enum stale&inuse {
+        value 5 ;
+      }
+    }
+  }
+  typedef sess-auth-type {
+    type enumeration {
+      enum None {
+        value 0 ;
+        description 'The type of LDP session authentication is none'
+                    ;
+      }
+      enum MD5 {
+        value 1 ;
+        description 'The type of LDP session authentication is MD5'
+                    ;
+      }
+      enum keychain {
+        value 2 ;
+        description 'The type of LDP session authentication is keychain'
+                    ;
+      }
+    }
+    default None ;
+    description 'Type of LDP session authentication'
+                ;
+  }
+  typedef sess-gr-result {
+    type enumeration {
+      enum none {
+        value 0 ;
+        description "The result of LDP gr session doesn't make any sense"
+                    ;
+      }
+      enum succeed {
+        value 1 ;
+        description 'LDP gr session succeed.'
+                    ;
+      }
+      enum reconnect_fail {
+        value 2 ;
+        description 'LDP gr session reconnect fail.'
+                    ;
+      }
+      enum recovery_fail {
+        value 3 ;
+        description 'LDP gr session recovery fail.'
+                    ;
+      }
+    }
+    description 'The result of LDP gr session as a gr helper'
+                ;
+  }
+  typedef hello-prefer-type {
+    type enumeration {
+      enum None {
+        value 0 ;
+        description 'neighbor dual-stack transport-connection prefer none'
+                    ;
+      }
+      enum Ipv4 {
+        value 1 ;
+        description 'neighbor dual-stack transport-connection prefer ipv4'
+                    ;
+      }
+      enum Ipv6 {
+        value 2 ;
+        description 'neighbor dual-stack transport-connection prefer ipv6'
+                    ;
+      }
+    }
+    default None ;
+    description 'the type of neighbor dual-stack transport-connection prefer'
+                ;
+  }
+  typedef sess-link-type {
+    type enumeration {
+      enum None {
+        value 0 ;
+        description 'The type of LDP session is none'
+                    ;
+      }
+      enum Direct {
+        value 1 ;
+        description 'The type of LDP session is direct'
+                    ;
+      }
+      enum Target {
+        value 2 ;
+        description 'The type of LDP session is target'
+                    ;
+      }
+      enum Direct-and-target {
+        value 3 ;
+        description 'The type of LDP session is Direct-and-target'
+                    ;
+      }
+    }
+    default None ;
+    description 'The type of LDP session link'
+                ;
+  }
+  typedef is-enabled {
+    type enumeration {
+      enum enable {
+        value 0 ;
+        description 'The function is enabled'
+                    ;
+      }
+      enum disable {
+        value 1 ;
+        description 'The function is disabled'
+                    ;
+      }
+    }
+    default enable ;
+    description 'Whether the function is enabled or not.Use it when mim default'
+              + ' value 0 means the function is enabled.'
+                ;
+  }
+  typedef function-switch {
+    type enumeration {
+      enum disable {
+        value 0 ;
+        description 'The function is disabled'
+                    ;
+      }
+      enum enable {
+        value 1 ;
+        description 'The function is enabled'
+                    ;
+      }
+    }
+    default disable ;
+    description 'Whether the function is enabled or not.Use it when mim default'
+              + ' value 0 means the function is disabled.'
+                ;
+  }
+  container configuration {
+    description 'LDP netconf configuration model'
+                ;
+    container ldp {
+      description 'LDP config container'
+                  ;
+      container ldp-configs {
+        description 'Config ldp'
+                    ;
+        list ldp-config {
+          description 'Config ldp'
+                      ;
+          key inst-id ;
+          leaf inst-id {
+            description 'LDP instance id'
+                        ;
+            type uint32 {
+              range 1..65535 ;
+            }
+          }
+          leaf vrf-name {
+            description 'LDP vrf name'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          container ldp-bs {
+            description 'LDP BS config container'
+                        ;
+            presence ldp-bs ;
+            container holdtime {
+              description 'LDP session holdtime'
+                          ;
+              leaf holdtime {
+                description 'LDP session holdtime'
+                            ;
+                type uint32 {
+                  range 15..65535 ;
+                }
+                units s ;
+                default 180 ;
+              }
+            }
+            container style {
+              description 'New style to reset keepalive timer'
+                          ;
+              leaf style {
+                description 'New style to reset keepalive timer'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+              }
+            }
+            container backoff {
+              description 'Session backoff time'
+                          ;
+              presence backoff ;
+              leaf backoff-init {
+                description 'Initial session backoff time in seconds(s)'
+                            ;
+                type uint32 {
+                  range 10..65535 ;
+                }
+                units s ;
+                mandatory true ;
+              }
+              leaf backoff-max {
+                description 'Maximum session backoff time in seconds(s)'
+                            ;
+                type uint32 {
+                  range 10..65535 ;
+                }
+                units s ;
+                mandatory true ;
+              }
+            }
+            container discovery {
+              description 'Ldp discovery hello or target-hello interval and hol'
+                        + 'dtime'
+                          ;
+              container hello {
+                description 'Ldp discovery hello interval and holdtime'
+                            ;
+                leaf hello-inv {
+                  description 'Ldp discovery hello interval'
+                              ;
+                  type uint32 {
+                    range 1..65535 ;
+                  }
+                  units s ;
+                  default 5 ;
+                }
+                leaf hello-life {
+                  description 'Ldp discovery hello holdtime'
+                              ;
+                  type uint32 {
+                    range 1..65535 ;
+                  }
+                  units s ;
+                  default 15 ;
+                }
+              }
+              container target-hello {
+                description 'Ldp discovery target-hello interval and holdtime'
+                            ;
+                leaf target-hello-inv {
+                  description 'Ldp discovery target-hello interval'
+                              ;
+                  type uint32 {
+                    range 1..65535 ;
+                  }
+                  units s ;
+                  default 15 ;
+                }
+                leaf target-hello-life {
+                  description 'Ldp discovery target-hello holdtime'
+                              ;
+                  type uint32 {
+                    range 1..65535 ;
+                  }
+                  units s ;
+                  default 45 ;
+                }
+              }
+            }
+            container ipv6-target-tranaddr {
+              description 'Transport-address of ipv6 target-session'
+                          ;
+              choice ipv6addr-or-ifname {
+                description 'Config target ipv6 transport-address or if-name'
+                            ;
+                case ipv6-target-tranaddr {
+                  description 'Config target ipv6 transport-address'
+                              ;
+                  leaf ipv6-target-tranaddr {
+                    description 'Config target ipv6 transport-address'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                }
+                case if-name {
+                  description 'target ipv6 transport-address interface'
+                              ;
+                  leaf if-name {
+                    description 'Config target ipv6 transport-address interface'
+                                ;
+                    type ncd:ifname {
+                      length 0..31 ;
+                    }
+                  }
+                  ncd:revise-date 2019-05-29 ;
+                }
+              }
+            }
+            container filter {
+              description 'ACL name of  filter packet'
+                          ;
+              leaf filter-pak-acl {
+                description 'ACL name of  filter packet'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+            container igp-sync {
+              description 'LDP-IGP synchronization delay timer'
+                          ;
+              leaf igp-sync {
+                description 'LDP-IGP synchronization delay timer'
+                            ;
+                type uint32 {
+                  range 1..65535 ;
+                }
+                units s ;
+                default 5 ;
+              }
+              leaf force {
+                description 'Force mode'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+                ncd:revise-date 2017-11-30 ;
+              }
+            }
+            container capability {
+              description 'LDP capability filter'
+                          ;
+              leaf capability-acl {
+                description 'LDP capability filter'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+            container auto-config-global {
+              description 'Disable all interface auto config'
+                          ;
+              leaf dis-autocfg-flag {
+                description 'Disable all interface auto config'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+              }
+              leaf ipv6-dis-autocfg-flag {
+                description 'Disable all IPv6 interface auto config'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+              }
+            }
+            container passwords {
+              description 'Config MD5'
+                          ;
+              container global-password {
+                description 'Config Global MD5'
+                            ;
+                choice password-or-enpassword {
+                  description 'Config global password or sealed password'
+                              ;
+                  case password {
+                    description 'Global password'
+                                ;
+                    leaf password {
+                      description 'Global password'
+                                  ;
+                      type string {
+                        length 3..80 ;
+                      }
+                    }
+                  }
+                  case en-password {
+                    description 'Global sealed password'
+                                ;
+                    leaf en-password {
+                      description 'Global sealed password.'+"\n"
+                                + 'Because of the encryption upgrade, the lengt'
+                                + 'h range is changed from 108 to 64-172.'
+                                  ;
+                      type string {
+                        length 64..172 ;
+                      }
+                    }
+                  }
+                }
+                ncd:revise-date 2018-11-20 ;
+              }
+              list password {
+                description 'Config MD5'
+                            ;
+                key ip ;
+                leaf ip {
+                  description 'IP address for LDP neighbor'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                choice password-or-enpassword {
+                  description 'Config password or sealed password'
+                              ;
+                  case password {
+                    description Password ;
+                    container pwd {
+                      description 'Password container'
+                                  ;
+                      leaf password {
+                        description 'Set a password'
+                                    ;
+                        type string {
+                          length 3..80 ;
+                        }
+                      }
+                    }
+                  }
+                  case en-password {
+                    description 'Sealed password'
+                                ;
+                    container en-pwd {
+                      description 'Sealed password'
+                                  ;
+                      leaf en-password {
+                        description 'Sealed password.'+"\n"
+                                  + 'Because of the encryption upgrade, the len'
+                                  + 'gth range is changed from 108 to 64-172.'
+                                    ;
+                        type string {
+                          length 64..172 ;
+                        }
+                      }
+                    }
+                  }
+                  case keychain {
+                    description keychain ;
+                    container keychain {
+                      description keychain ;
+                      leaf keychain {
+                        description 'Set a keychain'
+                                    ;
+                        type string {
+                          length 1..31 ;
+                        }
+                      }
+                    }
+                    ncd:revise-date 2015-12-23 ;
+                  }
+                }
+              }
+            }
+            container target-session {
+              description 'Config target-session'
+                          ;
+              container target-session-ipv4 {
+                description 'Config Ipv4 target-session'
+                            ;
+                list ipv4 {
+                  description 'Config ipv4 target-session'
+                              ;
+                  key ip ;
+                  leaf ip {
+                    description 'IP address for LDP neighbor'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                  leaf dod {
+                    description 'Set label distribution mode'
+                                ;
+                    type uint8 {
+                      range 0..1 ;
+                    }
+                    default 0 ;
+                  }
+                  choice update-source {
+                    description 'Target-session update-source config.'
+                                ;
+                    case interface {
+                      description "Use interface address for target-session upd"
+                                + "ate-source.It's mutually exclusive with ip-a"
+                                + "ddress."
+                                  ;
+                      leaf updatesource-ifname {
+                        description "Use interface address for target-session u"
+                                  + "pdate-source.It's mutually exclusive with "
+                                  + "ip-address."
+                                    ;
+                        type ncd:ifname ;
+                      }
+                    }
+                    case ip-address {
+                      description "Use ip address for target-session update-sou"
+                                + "rce.It's mutually exclusive with interface."
+                                  ;
+                      leaf updatesource-ipaddress {
+                        description "Use ip address for target-session update-s"
+                                  + "ource.It's mutually exclusive with interfa"
+                                  + "ce."
+                                    ;
+                        type ncd:ipv4-address ;
+                      }
+                    }
+                    case update-source-choice-clear {
+                      description 'Remove value of any entities which belong to'
+                                + ' any case within this choice.'
+                                  ;
+                      container update-source-all-clear {
+                        description 'Remove this entitiy means to remove value '
+                                  + 'of any entities which belong to any case w'
+                                  + 'ithin this choice.'
+                                    ;
+                        presence update-source-all-clear ;
+                      }
+                      ncd:revise-date 2020-06-20 ;
+                    }
+                    ncd:revise-date 2016-09-01 ;
+                  }
+                  leaf router-id {
+                    description 'Target-session router-id config.'
+                                ;
+                    type ncd:ifname ;
+                    ncd:revise-date 2016-11-11 ;
+                  }
+                  leaf holdtime {
+                    description 'Configure LDP session holdtime in target sessi'
+                              + 'on.'
+                                ;
+                    type uint32 {
+                      range 15..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf hello-inv {
+                    description 'Configure LDP discovery hello interval in targ'
+                              + 'et session.'
+                                ;
+                    type uint32 {
+                      range 1..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf hello-life {
+                    description 'Configure Ldp discovery hello holdtime in targ'
+                              + 'et session.'
+                                ;
+                    type uint32 {
+                      range 1..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf pw-only {
+                    description 'Set the target session only for pw'
+                                ;
+                    type uint8 {
+                      range 0..1 ;
+                    }
+                    default 0 ;
+                    ncd:revise-date 2017-12-12 ;
+                  }
+                  leaf dual-stack-prefer {
+                    description 'target-session dual-stack transport-connection'
+                              + ' prefer'+"\n"
+                              + '0 - ipv4'+"\n"
+                              + '1 - ipv6'
+                                ;
+                    type uint8 {
+                      range 0..1 ;
+                    }
+                    default 0 ;
+                    ncd:revise-date 2018-10-29 ;
+                  }
+                }
+              }
+              container target-session-ipv6 {
+                description 'Config Ipv6 target-session'
+                            ;
+                list ipv6 {
+                  description 'Config ipv6 target-session'
+                              ;
+                  key ipv6 ;
+                  leaf ipv6 {
+                    description 'IPv6 address for LDP neighbor'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                  leaf dod {
+                    description 'Set label distribution mode'
+                                ;
+                    type uint8 {
+                      range 0..1 ;
+                    }
+                    default 0 ;
+                  }
+                  leaf router-id {
+                    description 'Target-session router-id config.'
+                                ;
+                    type ncd:ifname ;
+                    ncd:revise-date 2016-11-11 ;
+                  }
+                  leaf holdtime {
+                    description 'Configure LDP session holdtime in target sessi'
+                              + 'on.'
+                                ;
+                    type uint32 {
+                      range 15..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf hello-inv {
+                    description 'Configure LDP discovery hello interval in targ'
+                              + 'et session.'
+                                ;
+                    type uint32 {
+                      range 1..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf hello-life {
+                    description 'Configure Ldp discovery hello holdtime in targ'
+                              + 'et session.'
+                                ;
+                    type uint32 {
+                      range 1..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf dual-stack-prefer {
+                    description 'target-session dual-stack transport-connection'
+                              + ' prefer'+"\n"
+                              + '0 - ipv4'+"\n"
+                              + '1 - ipv6'
+                                ;
+                    type uint8 {
+                      range 0..1 ;
+                    }
+                    default 0 ;
+                    ncd:revise-date 2018-10-29 ;
+                  }
+                }
+              }
+            }
+            container router-id {
+              description 'Config LSR router-id'
+                          ;
+              choice router-id {
+                description 'LDP router ID config.'
+                            ;
+                case interface {
+                  description "Use interface address for LDP router ID.It's mut"
+                            + "ually exclusive with ip-address."
+                              ;
+                  leaf if-name {
+                    description "Use interface address for LDP router ID.It's m"
+                              + "utually exclusive with ip-address."
+                                ;
+                    type ncd:ifname ;
+                    mandatory true ;
+                  }
+                }
+                case ip-address {
+                  description "Use ip address for LDP router ID.It's mutually e"
+                            + "xclusive with interface."
+                              ;
+                  leaf router-id-addr {
+                    description "Use ip address for LDP router ID.It's mutually"
+                              + " exclusive with interface."
+                                ;
+                    type ncd:ipv4-address ;
+                    mandatory true ;
+                  }
+                  ncd:revise-date 2019-05-14 ;
+                }
+              }
+            }
+            container gr {
+              description 'LDP GR config'
+                          ;
+              leaf gr-enable {
+                description 'Enable GR'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+              }
+              leaf max-recovery {
+                description 'MPLS LDP graceful restart Max-Recovery time'
+                            ;
+                type uint32 {
+                  range 15..3600 ;
+                }
+                units s ;
+                default 120 ;
+              }
+              leaf neigh-liveness {
+                description 'MPLS LDP graceful restart neighbor-Liveness time'
+                            ;
+                type uint32 {
+                  range 5..3600 ;
+                }
+                units s ;
+                default 120 ;
+              }
+            }
+            container interface {
+              description 'Enable interface config container'
+                          ;
+              container interface-ipv4 {
+                description 'Config ipv4 interface'
+                            ;
+                list ipv4 {
+                  description 'Config ipv4 interface'
+                              ;
+                  key if-name ;
+                  leaf if-name {
+                    description 'Interface name'
+                                ;
+                    type ncd:ifname {
+                      length 0..31 ;
+                    }
+                  }
+                  choice discovery-transport {
+                    description 'Transport address config'
+                                ;
+                    case btran-intf {
+                      description "Use interface address for LDP transport addr"
+                                + "ess.It's mutually exclusive with tran-addres"
+                                + "s and tran-address-ipv6."
+                                  ;
+                      leaf btran-intf {
+                        description "Use interface address for LDP transport ad"
+                                  + "dress.It's mutually exclusive with tran-ad"
+                                  + "dress and tran-address-ipv6."
+                                    ;
+                        type uint8 {
+                          range 0..1 ;
+                        }
+                        default 0 ;
+                      }
+                    }
+                    case tran-address {
+                      description "IP address to use for LDP transport address "
+                                + ".It's mutually exclusive with tran-address-i"
+                                + "pv6 and btran-inf."
+                                  ;
+                      leaf tran-address {
+                        description "IP address to use for LDP transport addres"
+                                  + "s .It's mutually exclusive with tran-addre"
+                                  + "ss-ipv6 and btran-inf."
+                                    ;
+                        type ncd:ipv4-address ;
+                        default 0.0.0.0 ;
+                      }
+                    }
+                    case tran-address-ipv6 {
+                      description "IPv6 address to use for LDP transport addres"
+                                + "s.It's mutually exclusive with tran-address "
+                                + "and btran-inf."
+                                  ;
+                      leaf tran-address-ipv6 {
+                        description "IPv6 address to use for LDP transport addr"
+                                  + "ess.It's mutually exclusive with tran-addr"
+                                  + "ess and btran-inf."
+                                    ;
+                        type ncd:ipv6-address ;
+                        default :: ;
+                      }
+                    }
+                    case discovery-transport-choice-clear {
+                      description 'Remove value of any entities which belong to'
+                                + ' any case within this choice.'
+                                  ;
+                      container discovery-transport-all-clear {
+                        description 'Remove this entitiy means to remove value '
+                                  + 'of any entities which belong to any case w'
+                                  + 'ithin this choice.'
+                                    ;
+                        presence discovery-transport-all-clear ;
+                      }
+                      ncd:revise-date 2020-06-20 ;
+                    }
+                  }
+                  leaf holdtime {
+                    description 'Configure LDP session holdtime in interface.'
+                                ;
+                    type uint32 {
+                      range 15..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf hello-inv {
+                    description 'Configure LDP discovery hello interval in inte'
+                              + 'rface.'
+                                ;
+                    type uint32 {
+                      range 1..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf hello-life {
+                    description 'Configure Ldp discovery hello holdtime in inte'
+                              + 'rface.'
+                                ;
+                    type uint32 {
+                      range 1..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf dual-stack-prefer {
+                    description 'neighbor dual-stack transport-connection prefe'
+                              + 'r'+"\n"
+                              + '0 - ipv4'+"\n"
+                              + '1 - ipv6'
+                                ;
+                    type uint8 {
+                      range 0..1 ;
+                    }
+                    default 0 ;
+                    ncd:revise-date 2018-10-29 ;
+                  }
+                  leaf mldp {
+                    description 'Interface mLDP forwarding status'+"\n"
+                              + '0 - enable'+"\n"
+                              + '1 - disable'
+                                ;
+                    type is-enabled ;
+                    default enable ;
+                    ncd:revise-date 2022-03-02 ;
+                  }
+                  container direct-gtsm {
+                    description 'Direct generalized TTL security mechanism'
+                                ;
+                    leaf gtsm-flag {
+                      description 'Enable direct generalized TTL security mecha'
+                                + 'nism'
+                                  ;
+                      type uint8 {
+                        range 0..1 ;
+                      }
+                      default 0 ;
+                    }
+                  }
+                  container label-distribution {
+                    description 'Set label-distribution DoD mode'
+                                ;
+                    leaf label-dod {
+                      description 'Enable LDP connect with DoD mode LSR'
+                                  ;
+                      type uint8 {
+                        range 0..1 ;
+                      }
+                      default 0 ;
+                    }
+                  }
+                }
+              }
+              container interface-ipv6 {
+                description 'Config ipv6 nterface'
+                            ;
+                list ipv6 {
+                  description 'Config ipv6 nterface'
+                              ;
+                  key if-name ;
+                  leaf if-name {
+                    description 'Interface name'
+                                ;
+                    type ncd:ifname {
+                      length 0..31 ;
+                    }
+                  }
+                  choice discovery-transport {
+                    description 'Discovery transport address for TCP connection'
+                                ;
+                    case tran-address-ipv4 {
+                      description 'Discovery transport ipv4 address for TCP con'
+                                + 'nection'
+                                  ;
+                      leaf tran-addr-ipv4 {
+                        description "IP address to use for LDP transport addres"
+                                  + "s.It's mutually exclusive with tran-addres"
+                                  + "s-ipv6."
+                                    ;
+                        type ncd:ipv4-address ;
+                        default 0.0.0.0 ;
+                      }
+                    }
+                    case tran-address-ipv6 {
+                      description 'Discovery transport IPv6 address for TCP con'
+                                + 'nection'
+                                  ;
+                      leaf tran-addr-ipv6 {
+                        description "IPv6 address to use for LDP transport addr"
+                                  + "ess.It's mutually exclusive with tran-addr"
+                                  + "ess ."
+                                    ;
+                        type ncd:ipv6-address ;
+                        default :: ;
+                      }
+                    }
+                    case discovery-transport-choice-clear {
+                      description 'Remove value of any entities which belong to'
+                                + ' any case within this choice.'
+                                  ;
+                      container discovery-transport-all-clear {
+                        description 'Remove this entitiy means to remove value '
+                                  + 'of any entities which belong to any case w'
+                                  + 'ithin this choice.'
+                                    ;
+                        presence discovery-transport-all-clear ;
+                      }
+                      ncd:revise-date 2020-06-20 ;
+                    }
+                  }
+                  leaf holdtime {
+                    description 'Configure LDP session holdtime in interface.'
+                                ;
+                    type uint32 {
+                      range 15..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf hello-inv {
+                    description 'Configure LDP discovery hello interval in inte'
+                              + 'rface.'
+                                ;
+                    type uint32 {
+                      range 1..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf hello-life {
+                    description 'Configure Ldp discovery hello holdtime in inte'
+                              + 'rface.'
+                                ;
+                    type uint32 {
+                      range 1..65535 ;
+                    }
+                    units s ;
+                    ncd:revise-date 2017-04-17 ;
+                  }
+                  leaf dual-stack-prefer {
+                    description 'neighbor dual-stack transport-connection prefe'
+                              + 'r'+"\n"
+                              + '0 - ipv4'+"\n"
+                              + '1 - ipv6'
+                                ;
+                    type uint8 {
+                      range 0..1 ;
+                    }
+                    default 0 ;
+                    ncd:revise-date 2018-10-29 ;
+                  }
+                  container label-distribution-ipv6 {
+                    description 'Set label-distribution DoD mode'
+                                ;
+                    leaf label-distribution-ipv6 {
+                      description 'Enable LDP connect with DoD mode LSR'
+                                  ;
+                      type uint8 {
+                        range 0..1 ;
+                      }
+                      default 0 ;
+                    }
+                  }
+                }
+              }
+            }
+            container target-gtsms {
+              description 'Set target generalized TTL security mechanism.'
+                          ;
+              list target-gtsm {
+                description 'Set target generalized TTL security mechanism.'
+                            ;
+                key ip ;
+                leaf ip {
+                  description 'IP address for LDP neighbor'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf hop-num {
+                  description 'Set ttl-security hop number'
+                              ;
+                  type uint32 {
+                    range 1..254 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+            container auto-config-interfaces {
+              description 'Auto config on ldp interface'
+                          ;
+              container ipv4 {
+                description 'Auto config on ldp IPv4 interface'
+                            ;
+                list auto-config-interface {
+                  description 'Auto config on ldp IPv4 interface'
+                              ;
+                  key if-name ;
+                  leaf if-name {
+                    description 'Interface name'
+                                ;
+                    type ncd:ifname {
+                      length 0..31 ;
+                    }
+                  }
+                  leaf disableflag {
+                    description 'Disable or enable the interface auto config'
+                                ;
+                    type uint8 {
+                      range 0..1 ;
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+              container ipv6 {
+                description 'Auto config on ldp IPv6 interface'
+                            ;
+                list ipv6-auto-config-interface {
+                  description 'Auto config on ldp v6 interface'
+                              ;
+                  key if-name ;
+                  leaf if-name {
+                    description 'Interface name'
+                                ;
+                    type string ;
+                  }
+                  leaf disableflag {
+                    description 'Disable or enable the interface auto config'
+                                ;
+                    type uint8 {
+                      range 0..1 ;
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+            container igp-sync-interfaces {
+              description 'Enable LDP IGP synchronization interfaces.'
+                          ;
+              presence igp-sync-intferfaces ;
+              list igp-sync-interface {
+                description 'Enable LDP IGP synchronization interface.'
+                            ;
+                key if-name ;
+                leaf if-name {
+                  description 'Select interface to enable LDP IGP synchronizati'
+                            + 'on. Te_tunnl interface is now permitted.'
+                              ;
+                  type ncd:ifname {
+                    length 0..31 ;
+                  }
+                }
+              }
+            }
+            container accept-targethello {
+              description 'Config accept target-hello'
+                          ;
+              presence accept-targethello ;
+              leaf accept-enable {
+                description 'Enable accept all target-hello'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf accept-for-acl {
+                description 'IP ACL for destination prefixes'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+            container session-protection {
+              description 'Config session protection'
+                          ;
+              presence session-protection ;
+              leaf sess-protection-enable {
+                description 'Enable session protection'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf sess-protection-for-acl {
+                description 'IP ACL for peer Router-ID'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              choice duration-time {
+                description 'Session protection duration time'
+                            ;
+                default time ;
+                case time {
+                  description "Session protection duration time config. It's mu"
+                            + "tually exclusive with infinite. Default time is "
+                            + "86400 seconds."
+                              ;
+                  leaf time {
+                    description 'Session protection duration time.Default time '
+                              + 'is 86400 seconds.'
+                                ;
+                    type uint32 {
+                      range 30..2147483 ;
+                    }
+                    default 86400 ;
+                  }
+                }
+                case infinite {
+                  description "Session protection duration time infinite. It's "
+                            + "mutually exclusive with duration-time."
+                              ;
+                  leaf infinite {
+                    description 'Session protection duration time is infinite.'
+                                ;
+                    type empty ;
+                  }
+                }
+                case duration-time-choice-clear {
+                  description 'Remove value of any entities which belong to any'
+                            + ' case within this choice.'
+                              ;
+                  container duration-time-all-clear {
+                    description 'Remove this entitiy means to remove value of a'
+                              + 'ny entities which belong to any case within th'
+                              + 'is choice.'
+                                ;
+                    presence duration-time-all-clear ;
+                  }
+                  ncd:revise-date 2020-06-20 ;
+                }
+              }
+              ncd:revise-date 2017-11-17 ;
+            }
+          }
+          container ldp-p2p {
+            description 'LDP P2P config container'
+                        ;
+            container label-retention {
+              description 'Set label-retention mode'
+                          ;
+              leaf conservative-mode {
+                description 'Enable LDP label-retention conservative mode'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+              }
+            }
+            container lsp-control {
+              description 'Set LSP control mode'
+                          ;
+              leaf lsp-control-mode {
+                description 'LSP control mode must be either order or independe'
+                          + 'nt mode'
+                            ;
+                type lsp-control-mode ;
+                default independent ;
+              }
+            }
+            container longest-match {
+              description 'Set longest match LSP'
+                          ;
+              leaf ipv4-acl-name {
+                description 'Set IPv4 longest-match for ACL'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              leaf ipv6-acl-name {
+                description 'Set IPv6 longest-match for ACL'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+            container access-fec {
+              description 'Set LDP FEC filter'
+                          ;
+              container ipv4 {
+                description 'Set LDP IPv4 FEC filter'
+                            ;
+                leaf bgp {
+                  description 'Access BGP route as FEC'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                choice host-or-for {
+                  description 'Config mfec distribute label rule'
+                              ;
+                  case host-route-only {
+                    description "Access host route as FEC only.It's mutually ex"
+                              + "clusive with for-acl-name and prefix-list."
+                                ;
+                    leaf host-route-only {
+                      description "Access host route as FEC only.It's mutually "
+                                + "exclusive with for-acl-name and prefix-list."
+                                  ;
+                      type uint8 {
+                        range 0..1 ;
+                      }
+                      default 0 ;
+                    }
+                  }
+                  case for-acl-name {
+                    description "ACL specifying controls on destination prefixe"
+                              + "s.It's mutually exclusive with host-route-only"
+                              + " and prefix-list."
+                                ;
+                    leaf for-acl-name {
+                      description "ACL specifying controls on destination prefi"
+                                + "xes.It's mutually exclusive with host-route-"
+                                + "only and prefix-list."
+                                  ;
+                      type string {
+                        length 1..31 ;
+                      }
+                    }
+                  }
+                  case prefix-list {
+                    description "PFL specifying controls on destination prefixe"
+                              + "s.It's mutually exclusive with host-route-only"
+                              + " and for-acl-name."
+                                ;
+                    leaf prefix-list-name {
+                      description "PFL specifying controls on destination prefi"
+                                + "xes.It's mutually exclusive with host-route-"
+                                + "only and for-acl-name."
+                                  ;
+                      type string {
+                        length 1..169 ;
+                      }
+                    }
+                    ncd:revise-date 2020-05-23 ;
+                  }
+                  case host-or-for-choice-clear {
+                    description 'Remove value of any entities which belong to a'
+                              + 'ny case within this choice.'
+                                ;
+                    container host-or-for-all-clear {
+                      description 'Remove this entitiy means to remove value of'
+                                + ' any entities which belong to any case withi'
+                                + 'n this choice.'
+                                  ;
+                      presence host-or-for-all-clear ;
+                    }
+                    ncd:revise-date 2020-06-20 ;
+                  }
+                }
+                leaf cgn {
+                  description 'Access CGN route as FEC'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2019-10-10 ;
+                }
+              }
+              container ipv6 {
+                description 'Set LDP IPv6 FEC filter'
+                            ;
+                leaf ipv6-bgp {
+                  description 'Access BGP route as FEC'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                }
+                choice ipv6-host-or-for {
+                  description 'Config mfec distribute label rule'
+                              ;
+                  case ipv6-host-route-only {
+                    description "Access host route as FEC only.It's mutually ex"
+                              + "clusive with ipv6-for-acl-name and ipv6-prefix"
+                              + "-list."
+                                ;
+                    leaf ipv6-host-route-only {
+                      description "Access host route as FEC only.It's mutually "
+                                + "exclusive with ipv6-for-acl-name and ipv6-pr"
+                                + "efix-list."
+                                  ;
+                      type uint8 {
+                        range 0..1 ;
+                      }
+                      default 0 ;
+                    }
+                  }
+                  case ipv6-for-acl-name {
+                    description "ACL specifying controls on destination prefixe"
+                              + "s.It's mutually exclusive with ipv6-host-route"
+                              + "-only and ipv6-prefix-list."
+                                ;
+                    leaf ipv6-for-acl-name {
+                      description "ACL specifying controls on destination prefi"
+                                + "xes.It's mutually exclusive with ipv6-host-r"
+                                + "oute-only and ipv6-prefix-list."
+                                  ;
+                      type string {
+                        length 1..31 ;
+                      }
+                    }
+                  }
+                  case ipv6-prefix-list {
+                    description "PFL specifying controls on destination prefixe"
+                              + "s.It's mutually exclusive with ipv6-host-route"
+                              + "-only and ipv6-prefix-list."
+                                ;
+                    leaf ipv6-prefix-list-name {
+                      description "PFL specifying controls on destination prefi"
+                                + "xes.It's mutually exclusive with ipv6-host-r"
+                                + "oute-only and ipv6-for-acl."
+                                  ;
+                      type string {
+                        length 1..169 ;
+                      }
+                    }
+                    ncd:revise-date 2020-05-23 ;
+                  }
+                  case ipv6-host-or-for-choice-clear {
+                    description 'Remove value of any entities which belong to a'
+                              + 'ny case within this choice.'
+                                ;
+                    container ipv6-host-or-for-all-clear {
+                      description 'Remove this entitiy means to remove value of'
+                                + ' any entities which belong to any case withi'
+                                + 'n this choice.'
+                                  ;
+                      presence ipv6-host-or-for-all-clear ;
+                    }
+                    ncd:revise-date 2020-06-20 ;
+                  }
+                }
+                leaf ipv6-cgn {
+                  description 'Access CGN route as FEC'
+                              ;
+                  type uint8 {
+                    range 0..1 ;
+                  }
+                  default 0 ;
+                  ncd:revise-date 2019-10-10 ;
+                }
+              }
+            }
+            container egress {
+              description 'Set LDP egress control rule'
+                          ;
+              leaf for-acl-name {
+                description 'ACL specifying controls on destination prefixes'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              leaf nexthop-acl-name {
+                description 'ACL specifying controls on nexthop'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              leaf ipv6-for-acl-name {
+                description 'ACL specifying controls on destination prefixes(IP'
+                          + 'v6)'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              leaf ipv6-nexthop-acl-name {
+                description 'ACL specifying controls on nexthop(IPv6)'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+            container label-advertise {
+              description 'Label advertisement rule'
+                          ;
+              leaf disable {
+                description 'Disable label advertise'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+              }
+              leaf old-style {
+                description 'Use old style(TDP) method for matching prefix ACL'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+              }
+            }
+            container label-request {
+              description 'Access list to specify valid downstream on demand de'
+                        + 'stinations'
+                          ;
+              leaf for-acl-name {
+                description 'IP access-list for destination prefixes (1-31 char'
+                          + 'acters)(IPv4)'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              leaf ipv6-for-acl-name {
+                description 'IP access-list for destination prefixes (1-31 char'
+                          + 'acters)(IPv6)'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+            container traffic-count-fec {
+              description 'Configure LDP LSP traffic count'
+                          ;
+              leaf acl-name {
+                description 'Set ACL name (1-31 characters)(IPv4)'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              leaf ipv6-acl-name {
+                description 'Set ACL name (1-31 characters)(IPv6)'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+            container lsp-dod-req-queue {
+              description 'Configue LDP LSP dod request queue mode'
+                          ;
+              leaf queue-mode {
+                description 'Enable LSP dod request queue mode'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+              }
+              ncd:revise-date 2016-06-15 ;
+            }
+            container lsp-policy {
+              description 'Configue LDP LSP policy'
+                          ;
+              leaf transit-noly {
+                description 'Enable LSP policy transit only
+0:disable;
+1:enable.'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+              }
+              ncd:revise-date 2016-08-10 ;
+            }
+            container label-withdraw-delay {
+              description 'label withdraw delay'
+                          ;
+              leaf delay-enable {
+                description 'enable label withdraw delay
+0:disable;
+1:enable.'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+              }
+              leaf delay-time {
+                description 'The time of delay'
+                            ;
+                type uint32 {
+                  range 1..65535 ;
+                }
+                units s ;
+                default 5 ;
+              }
+              ncd:revise-date 2017-11-28 ;
+            }
+            container ldp-over-te {
+              description 'Set ldp over te LSP'
+                          ;
+              leaf enableflag {
+                description 'Disable or Enable Ldp over Te
+0: disable
+1: enable'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 1 ;
+              }
+              ncd:revise-date 2017-12-12 ;
+            }
+            container entropy-label {
+              description 'entropy label'
+                          ;
+              leaf entropy-label-enable {
+                description 'enable entropy label
+0:disable;
+1:enable.'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+              }
+              ncd:revise-date 2018-03-14 ;
+            }
+            container explicit-null {
+              description 'Advertise explicit null label in place of implicit n'
+                        + 'ull'
+                          ;
+              container ipv4 {
+                description 'Advertise explicit null label in place of implicit'
+                          + ' null (ipv4)'
+                            ;
+                presence ipv4 ;
+                leaf enable-explicit-null {
+                  description 'Enable explicit null label in place of implicit '
+                            + 'null'
+                              ;
+                  type uint8 {
+                    range 1 ;
+                  }
+                  mandatory true ;
+                }
+                leaf to-acl-name {
+                  description "IP access-list for LDP peers (1-31 characters).I"
+                            + "t's mutually exclusive with enable-explicit-null"
+                            + "."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf for-acl-name {
+                  description "IP access-list for destination prefixes (1-31 ch"
+                            + "aracters).It's mutually exclusive with enable-ex"
+                            + "plicit-null."
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+              }
+              container ipv6 {
+                description 'Advertise explicit null label in place of implicit'
+                          + ' null (ipv6)'
+                            ;
+                presence ipv6 ;
+                leaf ipv6-enable-explicit-null {
+                  description 'Enable explicit null label in place of implicit '
+                            + 'null(IPv6)'
+                              ;
+                  type uint8 {
+                    range 1 ;
+                  }
+                  mandatory true ;
+                }
+                leaf ipv6-for-acl-name {
+                  description 'IP access-list for destination prefixes (1-31 ch'
+                            + 'aracters).(IPv6)'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+                leaf ipv6-to-acl-name {
+                  description 'IP access-list for LDP peers (1-31 characters).('
+                            + 'IPv6)'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+              }
+            }
+            container label-adver-for {
+              description 'ACL specifying controls on destination prefixes'
+                          ;
+              container ipv4-label-advertise {
+                description 'ACL specifying controls on destination prefixes'
+                            ;
+                list label-advertise-for {
+                  description 'ACL specifying controls on destination prefixes'
+                              ;
+                  key for-acl-name ;
+                  leaf for-acl-name {
+                    description 'IP ACL for destination prefixes (1-31 characte'
+                              + 'rs)'
+                                ;
+                    type string {
+                      length 1..31 ;
+                    }
+                  }
+                  leaf to-acl-name {
+                    description 'IP ACL for LDP peers (1-31 characters)'
+                                ;
+                    type string {
+                      length 1..31 ;
+                    }
+                  }
+                }
+              }
+              container ipv6-label-advertise {
+                description 'ACL specifying controls on destination prefixes(IP'
+                          + 'v6)'
+                            ;
+                list ipv6-label-advertise-for {
+                  description 'ACL specifying controls on destination prefixes('
+                            + 'IPv6)'
+                              ;
+                  key for-acl-name ;
+                  leaf for-acl-name {
+                    description 'IP ACL for destination prefixes (1-31 characte'
+                              + 'rs)'
+                                ;
+                    type string {
+                      length 1..31 ;
+                    }
+                  }
+                  leaf to-acl-name {
+                    description 'IP ACL for LDP peers (1-31 characters)'
+                                ;
+                    type string {
+                      length 1..31 ;
+                    }
+                  }
+                }
+              }
+            }
+            container lsp-dod-request {
+              description 'Config the ip address which can send request msg'
+                          ;
+              container ipv4-lsp-dod-request {
+                description 'Config the ipv4 address which can send request msg'
+                            ;
+                list ipv4 {
+                  description 'Config the ipv4 address which can send request m'
+                            + 'sg'
+                              ;
+                  key 'ip masklen'
+                      ;
+                  leaf ip {
+                    description 'Destination prefix'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                  leaf masklen {
+                    description 'Destination mask length'
+                                ;
+                    type uint8 {
+                      range 0..32 ;
+                    }
+                  }
+                }
+              }
+              container ipv6-lsp-dod-request {
+                description 'Config the ipv6 address which can send request msg'
+                            ;
+                list ipv6 {
+                  description 'Config the ipv6 address which can send request m'
+                            + 'sg'
+                              ;
+                  key 'ipv6 masklen'
+                      ;
+                  leaf ipv6 {
+                    description 'Destination prefix'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                  leaf masklen {
+                    description 'Destination mask length'
+                                ;
+                    type uint8 {
+                      range 0..128 ;
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2016-06-15 ;
+            }
+          }
+          container ldp-mldp {
+            description 'MLDP config container'
+                        ;
+            presence ldp-mldp ;
+            container recursor-mfec {
+              description 'Recursor mfec configuration'
+                          ;
+              leaf recursor-mfec-enable {
+                description 'Recursor mfec enable or not'
+                            ;
+                type uint8 {
+                  range 0..1 ;
+                }
+                default 0 ;
+              }
+            }
+            container p2mp-bfd {
+              description 'P2mp bfd configuration'
+                          ;
+              presence p2mp-bfd ;
+              choice bfd-config {
+                description 'p2mp BFD related configuration'
+                            ;
+                case time-config {
+                  description 'Configuration of related time parameters of p2mp'
+                            + ' BFD'
+                              ;
+                  leaf interval {
+                    description 'Minimum send interval'
+                                ;
+                    type uint32 {
+                      range 3..990 ;
+                    }
+                    units ms ;
+                    mandatory true ;
+                  }
+                  leaf multiplier {
+                    description Multiplier ;
+                    type uint16 {
+                      range 3..50 ;
+                    }
+                    mandatory true ;
+                  }
+                }
+                case template {
+                  description 'Configuration of template name of p2mp BFD'
+                              ;
+                  leaf template-name {
+                    description 'Template name of p2mp bfd'
+                                ;
+                    type string {
+                      length 1..31 ;
+                    }
+                    mandatory true ;
+                  }
+                  ncd:revise-date 2020-03-30 ;
+                }
+              }
+              ncd:revise-date 2019-01-03 ;
+            }
+            container mldp-mbb {
+              description 'MLDP MBB config cntainer'
+                          ;
+              presence mldp-mbb ;
+              leaf wait-time {
+                description 'MLDP MBB wait time config'
+                            ;
+                type uint32 {
+                  range 1..65535 ;
+                }
+                units s ;
+                default 5 ;
+              }
+            }
+            container mldp-frr {
+              description 'MLDP frr configuration'
+                          ;
+              leaf frr {
+                description 'MLDP frr enabled or not.'
+                            ;
+                type function-switch ;
+                default disable ;
+              }
+              ncd:revise-date 2022-03-29 ;
+            }
+          }
+        }
+      }
+      container bfd {
+        description 'LDP BFD config'
+                    ;
+        container bfd-ipv4 {
+          description 'LDP IPv4 LSP BFD config mode'
+                      ;
+          list ipv4 {
+            description 'LDP IPv4 LSP BFD config mode'
+                        ;
+            key 'instid ip masklen'
+                ;
+            leaf instid {
+              description 'LDP instance id'
+                          ;
+              type uint32 {
+                range 1..65535 ;
+              }
+            }
+            leaf ip {
+              description 'Destination prefix'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf masklen {
+              description 'Destination mask length'
+                          ;
+              type uint8 {
+                range 0..32 ;
+              }
+            }
+            choice bfd-config {
+              description 'IPv4 BFD related configuration'
+                          ;
+              mandatory true ;
+              case time-config {
+                description 'Configuration of related time parameters of IPv4 B'
+                          + 'FD'
+                            ;
+                leaf interval {
+                  description 'Minimum send interval'
+                              ;
+                  type uint32 {
+                    range 3..990 ;
+                  }
+                  units ms ;
+                  mandatory true ;
+                }
+                leaf min-rx {
+                  description 'Minimum receive interval'
+                              ;
+                  type uint32 {
+                    range 3..990 ;
+                  }
+                  units ms ;
+                  mandatory true ;
+                }
+                leaf multiplier {
+                  description Multiplier ;
+                  type uint16 {
+                    range 3..50 ;
+                  }
+                  mandatory true ;
+                }
+              }
+              case template {
+                description 'Configuration of template name of IPv4 BFD'
+                            ;
+                leaf template-name {
+                  description 'Template name of ipv4 bfd'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                  mandatory true ;
+                }
+                ncd:revise-date 2020-03-30 ;
+              }
+            }
+            leaf protect-unbinding {
+              description 'Unbind LDP BFD FRR or ECMP'
+                          ;
+              type uint8 {
+                range 0..1 ;
+              }
+              default 0 ;
+            }
+            leaf source {
+              description 'Source address'
+                          ;
+              type ncd:ipv4-address ;
+              default 0.0.0.0 ;
+            }
+          }
+        }
+        container bfd-ipv6 {
+          description 'LDP IPv6 LSP BFD config mode'
+                      ;
+          list ipv6 {
+            description 'LDP IPv6 LSP BFD config mode'
+                        ;
+            key 'instid ipv6 masklen'
+                ;
+            leaf instid {
+              description 'LDP instance id'
+                          ;
+              type uint32 {
+                range 1..65535 ;
+              }
+            }
+            leaf ipv6 {
+              description 'Destination prefix'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf masklen {
+              description 'Destination mask length'
+                          ;
+              type uint8 ;
+            }
+            choice bfd-config {
+              description 'IPv6 BFD related configuration'
+                          ;
+              mandatory true ;
+              case time-config {
+                description 'Configuration of related time parameters of IPv6 B'
+                          + 'FD'
+                            ;
+                leaf interval {
+                  description 'Minimum send interval'
+                              ;
+                  type uint32 ;
+                  mandatory true ;
+                }
+                leaf min-rx {
+                  description 'Minimum receive interval'
+                              ;
+                  type uint32 ;
+                  mandatory true ;
+                }
+                leaf multiplier {
+                  description Multiplier ;
+                  type uint16 {
+                    range 3..50 ;
+                  }
+                  mandatory true ;
+                }
+              }
+              case template {
+                description 'Configuration of template name of IPv6 BFD'
+                            ;
+                leaf template-name {
+                  description 'Template name of ipv6 bfd'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                  mandatory true ;
+                }
+                ncd:revise-date 2020-03-30 ;
+              }
+            }
+            leaf protect-unbinding {
+              description 'Unbind LDP BFD FRR or ECMP'
+                          ;
+              type uint8 {
+                range 0..1 ;
+              }
+              default 0 ;
+            }
+            leaf source {
+              description 'Source address'
+                          ;
+              type ncd:ipv6-address ;
+              default 0:0::0:0 ;
+            }
+          }
+        }
+      }
+      container peer-bfds {
+        description 'Config LDP peer BFD'
+                    ;
+        list peer-bfd {
+          description 'Config LDP peer BFD'
+                      ;
+          key 'instid ip'
+              ;
+          leaf instid {
+            description 'LDP instance id'
+                        ;
+            type uint32 {
+              range 1..65535 ;
+            }
+          }
+          leaf ip {
+            description 'Set remote router id'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf delay {
+            description 'Delay time or not'
+                        ;
+            type uint8 {
+              range 0..1 ;
+            }
+            default 0 ;
+          }
+          leaf time {
+            description 'Delay times (s)'
+                        ;
+            type uint16 {
+              range 0..720 ;
+            }
+            units s ;
+            default 60 ;
+          }
+          leaf template-name {
+            description 'Template name of peer bfd'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+            ncd:revise-date 2020-03-30 ;
+          }
+        }
+      }
+      container ldp-debug-policy {
+        status obsolete {
+          ncd:revise-date 2016-07-19 ;
+        }
+        description 'Config ldp debug policy'
+                    ;
+        container hello-interfaces {
+          description 'Config debug policy for direct hello'
+                      ;
+          list hello-interface {
+            description 'Config debug policy for direct hello'
+                        ;
+            key 'inst-id if-name'
+                ;
+            leaf inst-id {
+              description 'LDP instance id'
+                          ;
+              type uint32 {
+                range 1..65535 ;
+              }
+            }
+            leaf if-name {
+              description 'Select direct hello on interface for LDP debug policy'
+                          ;
+              type ncd:ifname {
+                length 1..31 ;
+              }
+            }
+          }
+        }
+        container sessions {
+          description 'Config debug policy for direct session'
+                      ;
+          list remote-routeid {
+            description 'Config debug policy for direct session'
+                        ;
+            key 'inst-id ip'
+                ;
+            leaf inst-id {
+              description 'LDP instance id'
+                          ;
+              type uint32 {
+                range 1..65535 ;
+              }
+            }
+            leaf ip {
+              description 'IPv4 address for remote routerid'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf labelspace {
+              status obsolete {
+                ncd:revise-date 2015-10-27 ;
+              }
+              description 'Lable space of neighber'+"\n"
+                        + '0     label space for LDP'+"\n"
+                        + '65535 label space for iccp'
+                          ;
+              type label-space ;
+            }
+            leaf label-space {
+              description 'Lable space of neighber'+"\n"
+                        + '<0-65535> LDP label space range'
+                          ;
+              type uint32 {
+                range 0..65535 ;
+              }
+              default 0 ;
+              ncd:revise-date 2015-10-27 ;
+            }
+          }
+        }
+        container target-hellos {
+          description 'Config debug policy for target hello'
+                      ;
+          container target-hello-ipv4 {
+            description 'Config debug policy for IPv4 target hello'
+                        ;
+            list ipv4 {
+              description 'Config debug policy for IPv4 target hello'
+                          ;
+              key 'inst-id ipv4'
+                  ;
+              leaf inst-id {
+                description 'LDP instance id'
+                            ;
+                type uint32 {
+                  range 1..65535 ;
+                }
+              }
+              leaf ipv4 {
+                description 'IPv4 address for remote routerid'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          container target-hello-ipv6 {
+            description 'Config debug policy for IPv6 target hello'
+                        ;
+            list ipv6 {
+              description 'Config debug policy for IPv6 target hello'
+                          ;
+              key 'inst-id ipv6'
+                  ;
+              leaf inst-id {
+                description 'LDP instance id'
+                            ;
+                type uint32 {
+                  range 1..65535 ;
+                }
+              }
+              leaf ipv6 {
+                description 'IPv6 address for peer transport address'
+                            ;
+                type ncd:ipv6-address ;
+              }
+            }
+          }
+        }
+        container trans-conns {
+          description 'Config debug policy for TCP connections'
+                      ;
+          container peer-tranaddr-ipv4 {
+            description 'Config debug policy for IPv4 TCP connections'
+                        ;
+            list ipv4 {
+              description 'Config debug policy for IPv4 TCP connections'
+                          ;
+              key 'inst-id ipv4'
+                  ;
+              leaf inst-id {
+                description 'LDP instance id'
+                            ;
+                type uint32 {
+                  range 1..65535 ;
+                }
+              }
+              leaf ipv4 {
+                description 'IPv4 address for peer transport address'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          container peer-tranaddr-ipv6 {
+            description 'Config debug policy for IPv6 TCP connections'
+                        ;
+            list ipv6 {
+              description 'Config debug policy for IPv6 TCP connections'
+                          ;
+              key 'inst-id ipv6'
+                  ;
+              leaf inst-id {
+                description 'LDP instance id'
+                            ;
+                type uint32 {
+                  range 1..65535 ;
+                }
+              }
+              leaf ipv6 {
+                description 'IPv6 address for peer transport address'
+                            ;
+                type ncd:ipv6-address ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'LDP state container'
+                ;
+    list ldp {
+      description 'LDP state container'
+                  ;
+      key inst-id ;
+      leaf inst-id {
+        description 'LDP instance id'
+                    ;
+        type uint32 {
+          range 1..65535 ;
+        }
+      }
+      leaf vrf-name {
+        description 'LDP vrf name'
+                    ;
+        type string ;
+      }
+      container session-states {
+        description 'Messeges of LDP session'
+                    ;
+        list session-state {
+          description 'Messeges of LDP session'
+                      ;
+          key 'local-lsr-addr local-label-space peer-lsr-addr peer-label-space'
+              ;
+          leaf local-lsr-addr {
+            description 'The identifier of local lsr address used to identify a'
+                      + ' session.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf local-label-space {
+            description 'The identifier of local label space used to identify a'
+                      + ' session.'
+                        ;
+            type uint16 ;
+          }
+          leaf peer-lsr-addr {
+            description 'The identifier of peer lsr address used to identify a '
+                      + 'session.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf peer-label-space {
+            description 'The identifier of peer label space used to identify a '
+                      + 'session.'
+                        ;
+            type uint16 ;
+          }
+          leaf tcpconn-peeraddr-ipv4 {
+            description 'The peer IPv4 address of TCP connection.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf tcpconn-peeraddr-ipv6 {
+            description 'The peer IPv6 address of TCP connection.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf tcpconn-peerport {
+            description 'The local port of TCP connection.'
+                        ;
+            type uint16 ;
+          }
+          leaf tcpconn-localaddr-ipv4 {
+            description 'The local IPv4 address of TCP connection.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf tcpconn-localaddr-ipv6 {
+            description 'The peer IPv6 address of TCP connection.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf tcpconn-localport {
+            description 'The local port of TCP connection.'
+                        ;
+            type uint16 ;
+            default 0 ;
+          }
+          leaf keepalive-holdtime {
+            description 'The time show how long the session should be keep aliv'
+                      + 'e if no ldp message or the session disappeared.'
+                        ;
+            type uint16 ;
+            units s ;
+            default 0 ;
+          }
+          leaf hello-num {
+            description 'The hello adjacents numbers of the session.'
+                        ;
+            type uint32 ;
+            default 0 ;
+          }
+          leaf sess-state {
+            description 'Indicates the status of the session.'+"\n"
+                      + 'NONEXISTENT             1'+"\n"
+                      + 'INITIALIZED             2'+"\n"
+                      + 'OPENREC                 3'+"\n"
+                      + 'OPENSENT                4'+"\n"
+                      + 'OPERATIONAL             5'+"\n"
+                      + 'TCP_CONNECT_AWAITED     6'
+                        ;
+            type sess-state ;
+            default nonexistent ;
+          }
+          leaf gr-reconn-time {
+            description 'The max time(seconds) of the lsr can wait to reconnect'
+                      + ' with peer lsr in GR processs.'
+                        ;
+            type uint32 ;
+            units s ;
+            default 0 ;
+          }
+          leaf gr-recovery-time {
+            description 'The max time(seconds) of the session maping the label '
+                      + 'from the peer lsr after reconnect with peer lsr in GR '
+                      + 'process.'
+                        ;
+            type uint32 ;
+            units s ;
+            default 0 ;
+          }
+          leaf sess-gr-state {
+            description 'Indicates the status of the GR session.'
+                        ;
+            type sess-gr-state ;
+            default normal ;
+          }
+          leaf sess-uptime {
+            description 'The UP time of session.'
+                        ;
+            type string ;
+            ncd:revise-date 2015-04-30 ;
+          }
+          leaf addr-num {
+            description 'The address adjacents numbers of the session.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2015-04-30 ;
+          }
+          leaf outlabel-ipv4-num {
+            description 'The IPv4 out label numbers of the session.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2015-04-30 ;
+          }
+          leaf outlabel-ipv6-num {
+            description 'The IPv6 out label numbers of the session.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2015-04-30 ;
+          }
+          leaf sess-auth-type {
+            description 'Indicates the type of session authentication.'
+                        ;
+            type sess-auth-type ;
+            ncd:revise-date 2017-03-30 ;
+          }
+          leaf sess-gr-result {
+            description 'Indicates the result of gr session as a gr helper.'
+                        ;
+            type sess-gr-result ;
+            default none ;
+            ncd:revise-date 2017-03-30 ;
+          }
+          leaf gr-recovery-failcnt {
+            description 'LDP gr session recovery fail count.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2017-03-30 ;
+          }
+          leaf sess-link-type {
+            description 'The type of LDP session link'
+                        ;
+            type sess-link-type ;
+            ncd:revise-date 2018-12-05 ;
+          }
+          ncd:select 'local-lsr-addr local-label-space peer-lsr-addr peer-label'
+                   + '-space'
+                     ;
+        }
+      }
+      container hello-states {
+        description 'Messeges of LDP hello'
+                    ;
+        list hello-state {
+          description 'Messeges of LDP hello'
+                      ;
+          key 'local-lsr-addr local-label-space peer-lsr-addr peer-label-space '
+            + 'inf-name hello-ip-type'
+              ;
+          leaf local-lsr-addr {
+            description 'The identifier of local lsr address used to identify a'
+                      + ' session.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf local-label-space {
+            description 'The identifier of local label space used to identify a'
+                      + ' session.'
+                        ;
+            type uint16 ;
+          }
+          leaf peer-lsr-addr {
+            description 'The identifier of peer lsr address used to identify a '
+                      + 'session.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf peer-label-space {
+            description 'The identifier of peer label space used to identify a '
+                      + 'session.'
+                        ;
+            type uint16 ;
+          }
+          leaf inf-name {
+            description 'The name of the interface to send hello messege.'
+                        ;
+            type string ;
+          }
+          leaf hello-ip-type {
+            description 'Hello IP type
+0 IPv4
+1 IPv6'
+                        ;
+            type addr-type ;
+          }
+          leaf discovery-type {
+            description 'The type of hello. If the value is 0 then the hello ty'
+                      + 'pe is direct-hello.If the value is 1 then the hello ty'
+                      + 'pe is targeted-hello.'
+                        ;
+            type hello-type ;
+            default DIRECT ;
+          }
+          leaf src-addr-ipv4 {
+            description 'The source IPv4 address of direct hello.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf src-addr-ipv6 {
+            description 'The source IPv6 address of direct hello.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf target-addr-ipv4 {
+            description 'The source IPv4 address of target hello.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf target-addr-ipv6 {
+            description 'The source IPv6 address of target hello.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf hello-hold-time {
+            description 'The max time between two recving hello message.'
+                        ;
+            type uint32 ;
+            units s ;
+            default 0 ;
+          }
+          leaf hello-send-time {
+            description 'The time span between two sending hello message.'
+                        ;
+            type uint32 ;
+            units s ;
+            default 0 ;
+          }
+          leaf bxmit {
+            description 'The interface sent hello msg or not.'
+                        ;
+            type uint8 ;
+            default 0 ;
+          }
+          leaf brecv {
+            description 'The interface receive hello msg or not.'
+                        ;
+            type uint8 ;
+            default 0 ;
+          }
+          leaf trans-addr-ipv4 {
+            description 'neighbor transport IP address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf trans-addr-ipv6 {
+            description 'neighbor transport IP address.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf local-trans-addr-ipv4 {
+            description 'local transport IP address.'
+                        ;
+            type ncd:ipv4-address ;
+            ncd:revise-date 2018-10-29 ;
+          }
+          leaf local-trans-addr-ipv6 {
+            description 'local transport IP address.'
+                        ;
+            type ncd:ipv6-address ;
+            ncd:revise-date 2018-10-29 ;
+          }
+          leaf hello-prefer {
+            description 'neighbor dual-stack transport-connection prefer'+"\n"
+                      + '0 - None'+"\n"
+                      + '1 - Ipv4'+"\n"
+                      + '2 - Ipv6'
+                        ;
+            type hello-prefer-type ;
+            default None ;
+            ncd:revise-date 2018-10-29 ;
+          }
+          ncd:select 'local-lsr-addr local-label-space peer-lsr-addr peer-label'
+                   + '-space'
+                     ;
+          ncd:select 'local-lsr-addr local-label-space peer-lsr-addr peer-label'
+                   + '-space inf-name'
+                     ;
+        }
+      }
+      container peeraddr-states {
+        description 'Messeges of address from peer neighbor'
+                    ;
+        list peeraddr-state {
+          description 'Messeges of address from peer neighbor'
+                      ;
+          key 'peer-lsr-addr peer-labelspace local-lsr-addr local-labelspace pe'
+            + 'er-addr-ipv4 peer-addr-ipv6'
+              ;
+          leaf peer-lsr-addr {
+            description 'The identifier of peer lsr address used to identify a '
+                      + 'session.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf peer-labelspace {
+            description 'The identifier of peer label space used to identify a '
+                      + 'session.'
+                        ;
+            type uint16 ;
+          }
+          leaf local-lsr-addr {
+            description 'The identifier of local lsr address used to identify a'
+                      + ' session.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf local-labelspace {
+            description 'The identifier of local label space used to identify a'
+                      + ' session.'
+                        ;
+            type uint16 ;
+          }
+          leaf peer-addr-ipv4 {
+            description 'The IPv4 peer address .'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf peer-addr-ipv6 {
+            description 'The IPv6 peer address .'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          ncd:select 'peer-lsr-addr peer-labelspace local-lsr-addr local-labels'
+                   + 'pace'
+                     ;
+          ncd:select 'peer-lsr-addr peer-labelspace local-lsr-addr local-labels'
+                   + 'pace peer-addr-ipv4'
+                     ;
+          ncd:select 'peer-lsr-addr peer-labelspace local-lsr-addr local-labels'
+                   + 'pace peer-addr-ipv6'
+                     ;
+        }
+      }
+      container fec-states {
+        description 'Messeges of FEC'
+                    ;
+        list fec-state {
+          description 'Messeges of FEC'
+                      ;
+          key 'fec-addr-type fec-addr-ipv4 fec-addrlen fec-addr-ipv6'
+              ;
+          leaf fec-addr-type {
+            description 'The value of this object is the type of the Internet a'
+                      + 'ddress.'
+                        ;
+            type addr-type ;
+          }
+          leaf fec-addr-ipv4 {
+            description 'LDP IPv4 FEC.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf fec-addr-ipv6 {
+            description 'LDP IPv6 FEC.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf fec-addrlen {
+            description 'The LDP FEC length (in bits).'
+                        ;
+            type uint8 ;
+          }
+          leaf local-label-type {
+            description 'The type of local label.'+"\n"
+                      + '1--exp-null'+"\n"
+                      + '2-normal'+"\n"
+                      + '3-imp-null'+"\n"
+                      + '0-UnTag'
+                        ;
+            type label-type ;
+            default UnTag ;
+          }
+          leaf local-label {
+            description 'Local label.'
+                        ;
+            type uint32 ;
+          }
+          leaf remote-ipaddr {
+            description 'The remote ip address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf remote-labelspace {
+            description 'The remote labelspace.'
+                        ;
+            type uint16 ;
+            ncd:revise-date 2016-11-11 ;
+          }
+          leaf local-ipaddr {
+            description 'The local ip address.'
+                        ;
+            type ncd:ipv4-address ;
+            ncd:revise-date 2016-11-11 ;
+          }
+          leaf local-labelspace {
+            description 'The local labelspace.'
+                        ;
+            type uint16 ;
+            ncd:revise-date 2016-11-11 ;
+          }
+          leaf remote-label-type {
+            description 'The type of remote lable.'+"\n"
+                      + '1--exp-null'+"\n"
+                      + '2-normal'+"\n"
+                      + '3-imp-null'+"\n"
+                      + '0-UnTag'
+                        ;
+            type label-type ;
+            default UnTag ;
+          }
+          leaf remote-label {
+            description 'The remote label.'
+                        ;
+            type uint32 ;
+            default 0 ;
+          }
+          leaf binuse {
+            description 'The label is used by local or not.'
+                        ;
+            type uint8 ;
+            default 0 ;
+          }
+          leaf adv-peer-count {
+            description 'count of advertised peers'
+                        ;
+            type uint32 ;
+            default 0 ;
+            ncd:revise-date 2015-04-30 ;
+          }
+          leaf rmt-peer-count {
+            description 'count of bindings from remote peers'
+                        ;
+            type uint32 ;
+            default 0 ;
+            ncd:revise-date 2015-04-30 ;
+          }
+          ncd:select 'fec-addr-type fec-addr-ipv4 fec-addrlen'
+                     ;
+          ncd:select 'fec-addr-type fec-addr-ipv6 fec-addrlen'
+                     ;
+        }
+      }
+      container bindings-summary-states {
+        description 'Messeges of bindings summary'
+                    ;
+        leaf prefix-count {
+          description 'prefix count'
+                      ;
+          type uint32 ;
+          default 0 ;
+        }
+        leaf upcb-count {
+          description 'upcb total count'
+                      ;
+          type uint32 ;
+          default 0 ;
+        }
+        leaf downcb-count {
+          description 'downcb total count'
+                      ;
+          type uint32 ;
+          default 0 ;
+        }
+        leaf assigned-label-count {
+          description 'assigned label count'
+                      ;
+          type uint32 ;
+          default 0 ;
+        }
+        leaf learned-outlabel-count {
+          description 'learned outlabel count'
+                      ;
+          type uint32 ;
+          default 0 ;
+        }
+      }
+      container traffic-count-states {
+        description 'Message of LDP LSP Traffic count'
+                    ;
+        list traffic-count-state {
+          description 'Message of LDP LSP Traffic count'
+                      ;
+          key 'fec-addr-type fec-addr-ipv4 fec-addr-ipv6 fec-addrlen'
+              ;
+          leaf fec-addr-type {
+            description 'The value of this object is the type of the Internet a'
+                      + 'ddress.'
+                        ;
+            type addr-type ;
+          }
+          leaf fec-addr-ipv4 {
+            description 'LDP IPv4 FEC.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf fec-addr-ipv6 {
+            description 'LDP IPv6 FEC.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf fec-addrlen {
+            description 'The LDP FEC length (in bits).'
+                        ;
+            type uint8 ;
+          }
+          leaf inflow-count-bytes {
+            description 'Inflow count(byte)'
+                        ;
+            type uint64 ;
+          }
+          leaf inflow-count-packets {
+            description 'Inflow count(packet)'
+                        ;
+            type uint64 ;
+          }
+          leaf inflow-lost-count-bytes {
+            description 'Inflow lost count(byte)'
+                        ;
+            type uint64 ;
+          }
+          leaf inflow-lost-count-packets {
+            description 'Inflow lost count(packet)'
+                        ;
+            type uint64 ;
+          }
+          leaf outflow-count-bytes {
+            description 'Outflow count(byte)'
+                        ;
+            type uint64 ;
+          }
+          leaf outflow-count-packets {
+            description 'Outflow count(packet)'
+                        ;
+            type uint64 ;
+          }
+          leaf outflow-lost-count-bytes {
+            description 'Outflow lost count(byte)'
+                        ;
+            type uint64 ;
+          }
+          leaf outflow-lost-count-packets {
+            description 'Outflow lost count(packet)'
+                        ;
+            type uint64 ;
+          }
+          ncd:select 'fec-addr-type fec-addr-ipv4 fec-addrlen'
+                     ;
+          ncd:select 'fec-addr-type fec-addr-ipv6 fec-addrlen'
+                     ;
+        }
+      }
+      container parameters-states {
+        description 'Message of LDP parameters.'
+                    ;
+        leaf protocol-version {
+          description 'Protocol version.'
+                      ;
+          type uint8 ;
+        }
+        leaf session-holdtime {
+          description 'Session holdtime.(s)'
+                      ;
+          type uint16 ;
+          default 0 ;
+        }
+        leaf keepalive-interval {
+          description 'Keepalive interval.(s)'
+                      ;
+          type uint16 ;
+        }
+        leaf directhello-holdtime {
+          description 'Directhello holdtime.(s)'
+                      ;
+          type uint32 ;
+        }
+        leaf directhello-interval {
+          description 'Directhello interval.(s)'
+                      ;
+          type uint32 ;
+        }
+        leaf targethello-holdtime {
+          description 'Targethello holdtime.(s)'
+                      ;
+          type uint32 ;
+        }
+        leaf targethello-interval {
+          description 'Targethello interval.(s)'
+                      ;
+          type uint32 ;
+        }
+        leaf dod-max-hopcnt {
+          description 'Dod max hop count.'
+                      ;
+          type uint16 ;
+        }
+        leaf backoff-time-initial {
+          description 'Initial backoff time.(s)'
+                      ;
+          type uint32 ;
+        }
+        leaf backoff-time-max {
+          description 'Max backoff time.(s)'
+                      ;
+          type uint32 ;
+        }
+        leaf lsp-ctrlmode-used {
+          description 'The used lsp ctrl mode.
+independent 0
+order       1'
+                      ;
+          type lsp-control-mode ;
+        }
+        leaf lsp-ctrlmode-cfg {
+          description 'The configured lsp control mode.'+"\n"
+                    + 'independent 0'+"\n"
+                    + 'order       1'
+                      ;
+          type lsp-control-mode ;
+        }
+        leaf lbl-retentionmode-used {
+          description 'The used label retention mode.'+"\n"
+                    + 'liberal       0'+"\n"
+                    + 'conservative  1'
+                      ;
+          type label-retention-mode ;
+        }
+        leaf lbl-retentionmode-cfg {
+          description 'The configured label retention mode.'+"\n"
+                    + 'liberal       0'+"\n"
+                    + 'conservative  1'
+                      ;
+          type label-retention-mode ;
+        }
+        leaf loop-detection {
+          description 'Is loop detection on or off.
+0-off
+1-on'
+                      ;
+          type uint8 ;
+        }
+        leaf igpsync-delaytime {
+          description 'igp sync delay time.(s)'
+                      ;
+          type uint32 ;
+        }
+        leaf lsp-req-queuemode-cfg {
+          description 'Is enable lsp dod request queue mode.
+0-disable
+1-enable'
+                      ;
+          type uint8 ;
+          ncd:revise-date 2016-06-15 ;
+        }
+        leaf entropy-label {
+          description 'Is entropy label supported.
+0-disable
+1-enable'
+                      ;
+          type uint8 ;
+          ncd:revise-date 2018-03-14 ;
+        }
+      }
+      container graceful-restart-states {
+        description 'Message of LDP graceful restart.'
+                    ;
+        list graceful-restart-state {
+          description 'Message of LDP graceful restart.'
+                      ;
+          key 'peer-ldpid-addr peer-ldpid-labelspace local-ldpid-addr local-ldp'
+            + 'id-labelspace'
+              ;
+          leaf b-gr-enable {
+            description 'Is enable graceful restart.
+0-disable
+1-enable'
+                        ;
+            type uint8 ;
+          }
+          leaf neighbour-liveness-timer {
+            description 'The time of neighbour liveness.(s)'
+                        ;
+            type uint32 ;
+          }
+          leaf max-recovery-timer {
+            description 'The max time of recovery.(s)'
+                        ;
+            type uint32 ;
+          }
+          leaf peer-ldpid-addr {
+            description 'The address of peer ldpid.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf peer-ldpid-labelspace {
+            description 'The labelspace of peer ldpid.'
+                        ;
+            type uint16 ;
+          }
+          leaf local-ldpid-addr {
+            description 'The address of local ldpid.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf local-ldpid-labelspace {
+            description 'The labelspace of local ldpid.'
+                        ;
+            type uint16 ;
+          }
+          leaf session-state {
+            description 'The state of session.'+"\n"
+                      + 'NONEXISTENT             1'+"\n"
+                      + 'INITIALIZED             2'+"\n"
+                      + 'OPENREC                 3'+"\n"
+                      + 'OPENSENT                4'+"\n"
+                      + 'OPERATIONAL             5'+"\n"
+                      + 'TCP_CONNECT_AWAITED     6'
+                        ;
+            type sess-state ;
+          }
+          ncd:select 'peer-ldpid-addr peer-ldpid-labelspace local-ldpid-addr lo'
+                   + 'cal-ldpid-labelspace'
+                     ;
+        }
+      }
+      container igpsync-states {
+        status obsolete {
+          ncd:revise-date 2015-06-04 ;
+        }
+        description 'Message of LDP IGP sync.'
+                    ;
+        list igpsync-state {
+          status obsolete {
+            ncd:revise-date 2015-06-04 ;
+          }
+          description 'Message of LDP IGP sync.'
+                      ;
+          key 'if-name peer-ldpid-addr peer-ldpid-labelspace'
+              ;
+          leaf if-name {
+            status obsolete {
+              ncd:revise-date 2015-06-04 ;
+            }
+            description 'Interface name.'
+                        ;
+            type string ;
+          }
+          leaf b-igpsync-enable {
+            status obsolete {
+              ncd:revise-date 2015-06-04 ;
+            }
+            description 'Is enable IGP sync.
+0-disable
+1-enable'
+                        ;
+            type uint8 ;
+          }
+          leaf sync-status {
+            status obsolete {
+              ncd:revise-date 2015-06-04 ;
+            }
+            description 'IGP sync status.
+not-ready   0
+ready       1'
+                        ;
+            type sync-status ;
+          }
+          leaf peer-ldpid-addr {
+            status obsolete {
+              ncd:revise-date 2015-06-04 ;
+            }
+            description 'The address of peer ldpid.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf peer-ldpid-labelspace {
+            status obsolete {
+              ncd:revise-date 2015-06-04 ;
+            }
+            description 'The labelspace of peer ldpid.'
+                        ;
+            type uint16 ;
+          }
+          leaf b-gr-enable {
+            status obsolete {
+              ncd:revise-date 2015-06-04 ;
+            }
+            description 'Is GR enable.
+0-disable
+1-enable'
+                        ;
+            type uint8 ;
+          }
+          leaf b-gr-process {
+            status obsolete {
+              ncd:revise-date 2015-06-04 ;
+            }
+            description 'Is GR process.
+0-no
+1-yes'
+                        ;
+            type uint8 ;
+          }
+          leaf b-full {
+            status obsolete {
+              ncd:revise-date 2015-06-04 ;
+            }
+            description 'Is the session fully operational.
+0-No
+1-Yes'
+                        ;
+            type uint8 ;
+          }
+          leaf left-time {
+            status obsolete {
+              ncd:revise-date 2015-06-04 ;
+            }
+            description 'The left time of IGP sync.(s)'
+                        ;
+            type uint32 ;
+          }
+          ncd:select if-name ;
+        }
+      }
+      container igp-synchronism-states {
+        description 'Message of LDP IGP sync.'
+                    ;
+        list igp-synchronism-state {
+          description 'Message of LDP IGP sync.'
+                      ;
+          key 'if-name peer-ldpid-addr peer-ldpid-labelspace if-type'
+              ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type string ;
+          }
+          leaf b-igpsync-enable {
+            description 'Is enable IGP sync.
+0-disable
+1-enable'
+                        ;
+            type uint8 ;
+          }
+          leaf sync-status {
+            description 'IGP sync status.
+not-ready   0
+ready       1'
+                        ;
+            type sync-status ;
+          }
+          leaf peer-ldpid-addr {
+            description 'The address of peer ldpid.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf peer-ldpid-labelspace {
+            description 'The labelspace of peer ldpid.'
+                        ;
+            type uint16 ;
+          }
+          leaf b-gr-enable {
+            description 'Is GR enable.
+0-disable
+1-enable'
+                        ;
+            type uint8 ;
+          }
+          leaf b-gr-process {
+            description 'Is GR process.
+0-no
+1-yes'
+                        ;
+            type uint8 ;
+          }
+          leaf b-full {
+            description 'Is the session fully operational.
+0-No
+1-Yes'
+                        ;
+            type uint8 ;
+          }
+          leaf left-time {
+            description 'The left time of IGP sync.(s)'
+                        ;
+            type uint32 ;
+          }
+          leaf if-type {
+            description 'The type of LDP interface.
+IPv4   1
+IPv6   2'
+                        ;
+            type interface-type ;
+          }
+          ncd:select if-name ;
+        }
+        ncd:revise-date 2015-06-04 ;
+      }
+      container interface-states {
+        description 'Message of LDP interface.'
+                    ;
+        list interface-state {
+          description 'Message of LDP interface.'
+                      ;
+          key 'if-name if-type'
+              ;
+          leaf if-name {
+            description 'The name of LDP interface.'
+                        ;
+            type string ;
+          }
+          leaf if-type {
+            description 'The type of LDP interface.
+IPv4   1
+IPv6   2'
+                        ;
+            type interface-type ;
+          }
+          leaf b-ip {
+            description 'Is support MPLS.
+0-not support
+1-support'
+                        ;
+            type uint8 ;
+          }
+          leaf b-oper {
+            description 'Is operational of LDP inerface.
+0-No
+1-Yes'
+                        ;
+            type uint8 ;
+          }
+          leaf b-userconfig {
+            description 'Is user manual config
+0-No
+1-Yes'
+                        ;
+            type uint8 ;
+          }
+          leaf b-ospf {
+            description 'Is OSPF trigger LDP auto config the interface.'+"\n"
+                      + '0-No'+"\n"
+                      + '1-Yes'
+                        ;
+            type uint8 ;
+          }
+          leaf b-isis {
+            description 'Is ISIS trigger LDP auto config the interface.'+"\n"
+                      + '0-No'+"\n"
+                      + '1-Yes'
+                        ;
+            type uint8 ;
+          }
+          ncd:select if-name ;
+        }
+      }
+      container backoff-states {
+        description 'Message of LDP backoff.'
+                    ;
+        list backoff-state {
+          description 'Message of LDP backoff.'
+                      ;
+          key 'peer-ldpid-addr peer-ldpid-labelspace local-ldpid-addr local-ldp'
+            + 'id-labelspace'
+              ;
+          leaf backoff-time-initial {
+            description 'Initial backoff time.(s)'
+                        ;
+            type uint32 ;
+          }
+          leaf backoff-time-max {
+            description 'Max backoff time.(s)'
+                        ;
+            type uint32 ;
+          }
+          leaf backoff-cnt {
+            description 'The count of backoff.'
+                        ;
+            type uint32 ;
+          }
+          leaf peer-ldpid-addr {
+            description 'The address of peer ldpid.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf peer-ldpid-labelspace {
+            description 'The labelspace of peer ldpid.'
+                        ;
+            type uint16 ;
+          }
+          leaf local-ldpid-addr {
+            description 'The address of local ldpid.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf local-ldpid-labelspace {
+            description 'The labelspace of local ldpid.'
+                        ;
+            type uint16 ;
+          }
+          leaf session-backoff-time {
+            description 'The backoff time of LDP session.(s)'
+                        ;
+            type uint32 ;
+          }
+          leaf session-waiting-time {
+            description 'The waiting backoff time of LDP session.(s)'
+                        ;
+            type uint32 ;
+          }
+          ncd:select 'peer-ldpid-addr peer-ldpid-labelspace local-ldpid-addr lo'
+                   + 'cal-ldpid-labelspace'
+                     ;
+        }
+      }
+      container mldp-parameter-states {
+        description 'Messeges of MLDP cabability'
+                    ;
+        leaf p2mp-enable {
+          description 'Cabability P2MP enable or not'
+                      ;
+          type uint8 {
+            range 0..1 ;
+          }
+          default 0 ;
+        }
+        leaf mp2mp-enable {
+          description 'Cabability MP2MP enable or not'
+                      ;
+          type uint8 {
+            range 0..1 ;
+          }
+          default 0 ;
+        }
+        leaf mbb-enable {
+          description 'Cabability MBB enable or not'
+                      ;
+          type uint8 {
+            range 0..1 ;
+          }
+          default 0 ;
+        }
+        leaf mbb-wait-time {
+          description 'MBB wait time'
+                      ;
+          type uint32 {
+            range 1..65535 ;
+          }
+          units s ;
+          default 5 ;
+        }
+      }
+      container mldp-mfec-states {
+        description 'Messeges of MLDP MFEC'
+                    ;
+        list mfec-states {
+          description 'Messeges of MLDP MFEC'
+                      ;
+          key 'root-addr mfec-opaqueValue mfec-opaqueValue-type neighbor-addr'
+              ;
+          leaf root-addr {
+            description 'Root address of MFEC'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf mfec-opaqueValue {
+            description 'Messeges of MLDP MFEC opaque value'
+                        ;
+            type string {
+              length 1..328 ;
+            }
+          }
+          leaf mfec-opaqueValue-type {
+            description 'MFEC opaque value type'
+                        ;
+            type mldp-mfec-opaqueValue-type ;
+          }
+          leaf neighbor-addr {
+            description 'The neighbor address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf local-label {
+            description 'The local label'
+                        ;
+            type uint32 ;
+          }
+          leaf peer-label {
+            description 'The remote label'
+                        ;
+            type uint32 ;
+          }
+          leaf mfec-state {
+            description 'The state of MFEC
+1 root
+2 tran
+3 leaf'
+                        ;
+            type mfec-state ;
+          }
+          leaf adv-peer-cnt {
+            description 'Count of advertised peers'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2015-08-27 ;
+          }
+          leaf rmt-peer-cnt {
+            description 'Count of bindings from remote peers'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2015-08-27 ;
+          }
+          leaf rmt-binding-state {
+            description 'The state of remote binding'+"\n"
+                      + '0 none'+"\n"
+                      + '1 deleting'+"\n"
+                      + '2 releasing'+"\n"
+                      + '3 stale'+"\n"
+                      + '4 inuse'+"\n"
+                      + '5 stale&inuse'
+                        ;
+            type mdowncb-state ;
+            ncd:revise-date 2016-04-07 ;
+          }
+          ncd:select 'root-addr mfec-opaqueValue-type'
+                     ;
+        }
+      }
+      container debug-policy-dhello {
+        description 'Messeges of debug policy for direct hello'
+                    ;
+        list hello-interfaces {
+          description 'Messeges of debug policy for direct hello'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'The name of LDP interface.'
+                        ;
+            type string ;
+          }
+          ncd:select if-name ;
+        }
+      }
+      container debug-policy-thello {
+        description 'Messeges of debug policy for target hello'
+                    ;
+        list target-hellos {
+          description 'Messeges of debug policy for target hello'
+                      ;
+          key 'target-hello-ipv4 target-hello-ipv6'
+              ;
+          leaf target-hello-ipv4 {
+            description 'IPv4 address for remote routerid'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf target-hello-ipv6 {
+            description 'IPv6 address for peer transport address'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          ncd:select target-hello-ipv4 ;
+          ncd:select target-hello-ipv6 ;
+        }
+      }
+      container debug-policy-session {
+        description 'Messeges of debug policy for session'
+                    ;
+        list sessions {
+          description 'Messeges of debug policy for session'
+                      ;
+          key ip ;
+          leaf ip {
+            description 'IPv4 address for remote routerid'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf label-space {
+            description 'Lable space of neighber
+<0-65535> LDP label space range'
+                        ;
+            type uint32 {
+              range 0..65535 ;
+            }
+          }
+          ncd:select ip ;
+        }
+      }
+      container debug-policy-connections {
+        description 'Messeges of debug policy for TCP connections'
+                    ;
+        list peer-tranaddrs {
+          description 'Messeges of debug policy for TCP connections'
+                      ;
+          key 'peer-tranaddr-ipv4 peer-tranaddr-ipv6'
+              ;
+          leaf peer-tranaddr-ipv4 {
+            description 'IPv4 address for peer transport address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf peer-tranaddr-ipv6 {
+            description 'IPv6 address for peer transport address'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          ncd:select peer-tranaddr-ipv4 ;
+          ncd:select peer-tranaddr-ipv6 ;
+        }
+      }
+      container instance-statistic {
+        description 'LDP instance information statistic'
+                    ;
+        leaf session-cout {
+          description 'The session count of LDP instance.'
+                      ;
+          type uint32 ;
+          default 0 ;
+        }
+        leaf session-oper-cout {
+          description 'The up session count of LDP instance.'
+                      ;
+          type uint32 ;
+          default 0 ;
+        }
+        leaf hello-cout {
+          description 'The hello of LDP instance.'
+                      ;
+          type uint32 ;
+          default 0 ;
+        }
+        leaf binding-cout {
+          description 'The FEC of LDP instance.'
+                      ;
+          type uint32 ;
+          default 0 ;
+        }
+        ncd:revise-date 2015-04-30 ;
+      }
+      container mldp-binding-summary-states {
+        description 'Messeges of mLDP bindings summary'
+                    ;
+        leaf mfec-totalcnt {
+          description 'Total number of mFEC'
+                      ;
+          type uint32 ;
+        }
+        leaf upcb-totalcnt {
+          description 'Total number of upstream LSP control block'
+                      ;
+          type uint32 ;
+        }
+        leaf downcb-totalcnt {
+          description 'Total number of downstream LSP control block'
+                      ;
+          type uint32 ;
+        }
+        leaf assigned-inlabelcnt {
+          description 'The assigned in label count'
+                      ;
+          type uint32 ;
+        }
+        leaf learned-outlabelcnt {
+          description 'The learned outlabel count'
+                      ;
+          type uint32 ;
+        }
+        ncd:revise-date 2015-08-27 ;
+      }
+      ncd:select inst-id ;
+    }
+  }
+}

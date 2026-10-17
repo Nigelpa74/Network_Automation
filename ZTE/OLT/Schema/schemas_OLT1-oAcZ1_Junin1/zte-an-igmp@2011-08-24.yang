@@ -1,0 +1,1097 @@
+module zte-an-igmp {
+    namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/zx_igmp';
+    prefix zx_igmp;
+    import zxr10-netconf-defs {
+        prefix ncd;
+        revision-date 2017-08-15;
+    }
+    organization "ZTE Corporation";
+    contact "Weng Ningning  ZTE Corporation
+                         Mail: wen.ningning@zte.com.cn
+                         Tel : +86-21-68897487";
+    description "This MIB defines Description of zte igmp service objects.";
+    revision 2011-08-24 {
+        description "Initial version of this MIB module.";
+    }
+    container zxAnIgmp {
+        description "";
+        container zxAnIgmpObjects {
+            description "";
+            container zxAnIgmpProtocolObjects {
+                description "";
+                container zxAnIgmpProtoBaseObjects {
+                    description "";
+                    container zxAnIgmpProtoGlobalObjects {
+                        description "";
+                        leaf zxAnIgmpEnable {
+                            description "The administrative status of global IGMP service.";
+                            type enumeration {
+                                enum enabled {
+                                    value 1;
+                                    description "";
+                                }
+                                enum disabled {
+                                    value 2;
+                                    description "";
+                                }
+                            }
+                            default enabled;
+                        }
+                    }
+                    container zxAnIgmpProtoIfTable {
+                        description "A table that contains all IGMP protocol information of an user 
+                                     interface.";
+                        list zxAnIgmpProtoIfEntry {
+                            description "A list of entries of zxAnIgmpProtoIfTable.";
+                            max-elements 1000;
+                            key "ifIndex zxAnSubIfIndex";
+                            leaf ifIndex {
+                                description "A unique value, greater than zero, for each interface.  It
+                                             is recommended that values are assigned contiguously
+                                             starting from 1.  The value for each interface sub-layer
+                                             must remain constant at least from one re-initialization of
+                                             the entity's network management system to the next re-
+                                             initialization.";
+                                type int32 {
+                                    range 1..2147483647;
+                                }
+                            }
+                            leaf zxAnSubIfIndex {
+                                description "Sub-interface index at this interface.";
+                                type int32;
+                            }
+                            leaf zxAnIgmpIfAdminStatus {
+                                description "The administrative status of port's IGMP service. 
+                                             The value 255 means the object is not supported.";
+                                type enumeration {
+                                    enum enabled {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum drop {
+                                        value 3;
+                                        description "";
+                                    }
+                                    enum notSupport {
+                                        value 255;
+                                        description "";
+                                    }
+                                }
+                                default enabled;
+                            }
+                            leaf zxAnIgmpIfProtoVersion {
+                                description "The max version of IGMP protocol which is supported on this port. 
+                                             The value 255 means the object is not supported.";
+                                type enumeration {
+                                    enum igmpv1 {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum igmpv2 {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum igmpv3 {
+                                        value 3;
+                                        description "";
+                                    }
+                                    enum notSupport {
+                                        value 255;
+                                        description "";
+                                    }
+                                }
+                                default igmpv3;
+                            }
+                            leaf zxAnIgmpIfFastLeaveEnable {
+                                description "The administrative status of port's fast-leave property. 
+                                             The value 255 means the object is not supported.";
+                                type enumeration {
+                                    enum enabled {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum disabled {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum notSupport {
+                                        value 255;
+                                        description "";
+                                    }
+                                }
+                                default enabled;
+                            }
+                            leaf zxAnIgmpIfBandwidth {
+                                description "Multicast bandwidth of this port.
+                                             Uplink port/PON port: The valid range is 10240~10240000 kbps, and 
+                                             the default value is 1024000 kbps.
+                                             VPort: The valid range is 100~204800 kbps, and the default value 
+                                             is 102400 kbps.
+                                             The value 2147483647 means the object is not supported.";
+                                type int32 {
+                                    range 100..10240000|2147483647;
+                                }
+                            }
+                            leaf zxAnIgmpIfMaxGroups {
+                                description "Maximum multicast groups that the port may join. 
+                                             The value 0 means the port cannot join any groups. 
+                                             The value 2147483647 means the object is not supported.";
+                                type int32 {
+                                    range 0..8192|2147483647;
+                                }
+                                default 8192;
+                            }
+                        }
+                    }
+                    container zxAnIgmpProtoMVlanTable {
+                        description "A table that contains IGMP protocol information in Multicast
+                                     VLAN.";
+                        list zxAnIgmpProtoMVlanEntry {
+                            description "A list of entries of zxAnIgmpProtoMVlanTable.";
+                            max-elements 1000;
+                            key "zxAnIgmpMVid";
+                            leaf zxAnIgmpMVid {
+                                description "Multicast VLAN ID.";
+                                type int32 {
+                                    range 1..4094;
+                                }
+                            }
+                            leaf zxAnIgmpMVlanIgmpAdminStatus {
+                                description "The administrative status of IGMP service in this MVLAN.";
+                                type enumeration {
+                                    enum enabled {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum drop {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default enabled;
+                            }
+                            leaf zxAnIgmpMVlanIgmpV1OperMode {
+                                description "The operational mode of IGMP v1 packet.";
+                                type enumeration {
+                                    enum accept {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum drop {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default accept;
+                            }
+                            leaf zxAnIgmpMVlanIgmpV2OperMode {
+                                description "The operational mode of IGMP v2 packet.";
+                                type enumeration {
+                                    enum accept {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum drop {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default accept;
+                            }
+                            leaf zxAnIgmpMVlanIgmpV3OperMode {
+                                description "The operational mode of IGMP v3 packet.";
+                                type enumeration {
+                                    enum accept {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum drop {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default accept;
+                            }
+                            leaf zxAnIgmpMVlanIgmpWorkMode {
+                                description "The IGMP work mode in this MVLAN. The meanings of the values
+                                             are:
+                                             snooping(1) - transparently forward IGMP packet, snooping
+                                             is defined in RFC 4541 and TR-101.
+                                             spr(2) - transparently forward IGMP general query and
+                                             suppress IGMP report/leave for existing group membership,
+                                             SPR(Snooping with Proxy Reporting) is defined in TR-101.
+                                             proxy(3) - act as a host on the V interface and act as a
+                                             router on the U interface, proxy is defined in RFC4605.
+                                             router(4) - act as a terminal on the V interface and act as a
+                                             router on the U interface, router is defined in TR-101.";
+                                type enumeration {
+                                    enum snooping {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum spr {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum proxy {
+                                        value 3;
+                                        description "";
+                                    }
+                                    enum router {
+                                        value 4;
+                                        description "";
+                                    }
+                                }
+                                default proxy;
+                            }
+                            leaf zxAnIgmpMVlanIgmpSsmCtrlMode {
+                                description "The ASM/SSM service control model. The meanings of the values
+                                             are:
+                                             asm(1) - only ASM(*, G) requests are permitted, ASM(Any-
+                                             Source Multicast) is defined in RFC 1112.
+                                             ssm(2) - only SSM(S, G) requests are permitted, SSM(Source-
+                                             Specific Multicast) is defined in RFC 3569.
+                                             asmAndSsm(3) --- both ASM and SSM requests are permitted.";
+                                type enumeration {
+                                    enum asm {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum ssm {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum asmAndSsm {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default asmAndSsm;
+                            }
+                            leaf zxAnIgmpMVlanIgmpSsmIpAddr {
+                                description "The SSM IP address in this MVLAN.
+                                             All SSM(S, G) request must be in the same IP network segment as
+                                             the configued SSM IP address and netmask.";
+                                type ncd:ipv4-address;
+                            }
+                            leaf zxAnIgmpMVlanIgmpSsmIpAddrMask {
+                                description "The mask of SSM IP address in this MVLAN.
+                                             All SSM(S, G) request must be in the same IP network segment as
+                                             the configued SSM IP address and netmask.";
+                                type ncd:ipv4-address;
+                            }
+                            leaf zxAnIgmpMVlanIgmpCVid {
+                                description "Multicast C-VID.
+                                             Value 0 means no C-VID tag.";
+                                type int32 {
+                                    range 0..4094;
+                                }
+                                default 0;
+                            }
+                            leaf zxAnIgmpMvlanIgmpMaxGroups {
+                                description "Maximum multicast groups that the MVLAN may join. The value 0 means 
+                                             the MVLAN cannot join any groups.";
+                                type int32 {
+                                    range 0..8192;
+                                }
+                                default 8192;
+                            }
+                            leaf zxAnIgmpMVlanGenQryPktTxGrpMode {
+                                description "The general query packets transmission group mode only on pon
+                                             interfaces.";
+                                type enumeration {
+                                    enum usersInGroup {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum allUsers {
+                                        value 2;
+                                        description "";
+                                    }
+                                }
+                                default usersInGroup;
+                            }
+                        }
+                    }
+                }
+                container zxAnIgmpProxyObjects {
+                    description "";
+                    container zxAnIgmpProxyMVlanTable {
+                        description "A table that contains IGMP proxy informations in Multicast
+                                     VLAN.";
+                        list zxAnIgmpProxyMVlanEntry {
+                            description "A list of entries of zxAnIgmpProxyMVlanTable.";
+                            max-elements 1000;
+                            key "zxAnIgmpMVid";
+                            leaf zxAnIgmpMVid {
+                                description "Multicast VLAN ID.";
+                                type int32 {
+                                    range 1..4094;
+                                }
+                            }
+                            leaf zxAnIgmpMVlanRobustnessVariable {
+                                description "IGMP robustness variable in the MVLAN.";
+                                type int32 {
+                                    range 1..7;
+                                }
+                                default 2;
+                            }
+                            leaf zxAnIgmpMVlanHostVersion {
+                                description "The administrative version of IGMP packet sent on the host
+                                             interface.
+                                             auto(1) - IGMP host version is dynamicly determined by
+                                             the attached router version, according to IGMP Host
+                                             Compatibility Mode described in RFC 3376.
+                                             igmpv2(2) - IGMP host version is IGMP v2.
+                                             igmpv3(3) - IGMP host version is IGMP v3.";
+                                type enumeration {
+                                    enum auto {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum igmpv2 {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum igmpv3 {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default auto;
+                            }
+                            leaf zxAnIgmpMVlanHostIpAddr {
+                                description "The source IP address of IGMP packet sent on the host
+                                             interface.";
+                                type ncd:ipv4-address;
+                            }
+                            leaf zxAnIgmpMVlanUnsolReportInterval {
+                                description "IGMP unsolicited report interval in the MVLAN.";
+                                type int32 {
+                                    range 1..60;
+                                }
+                                default 1;
+                            }
+                            leaf zxAnIgmpMVlanHostQuerier {
+                                description "The IP address of the IGMP Querier attached on the host
+                                             interface which is learned from received IGMP general query.";
+                                type ncd:ipv4-address;
+                            }
+                            leaf zxAnIgmpMVlanHostActualVersion {
+                                description "The running version of IGMP packet sent on the host interface.";
+                                type enumeration {
+                                    enum igmpv1 {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum igmpv2 {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum igmpv3 {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default igmpv3;
+                            }
+                            leaf zxAnIgmpMVlanHostV1QuerierTimer {
+                                description "The time remaining until the host assumes that there are
+                                             no IGMPv1 routers present on the interface.  While this is
+                                             non-zero, the host will reply to all queries with version 1
+                                             membership reports.  This variable applies to IGMPv2 or v3
+                                             hosts that are forced to run in v1 for compatibility with
+                                             v1 routers present on the host interface.";
+                                type uint32;
+                                default 0;
+                            }
+                            leaf zxAnIgmpMVlanHostV2QuerierTimer {
+                                description "The time remaining until the host assumes that there are
+                                             no IGMPv2 routers present on the interface.  While this is
+                                             non-zero, the host will reply to all queries with version 1
+                                             or 2 membership reports.  This variable applies to IGMPv3
+                                             hosts that are forced to run in v2 for compatibility with
+                                             v2 routers present on the host interface.";
+                                type uint32;
+                                default 0;
+                            }
+                            leaf zxAnIgmpMVlanRouterIpAddr {
+                                description "The source IP address of IGMP query packet sent on the router
+                                             interface.";
+                                type ncd:ipv4-address;
+                            }
+                            leaf zxAnIgmpMVlanQueryInterval {
+                                description "IGMP general query interval in the MVLAN.";
+                                type int32 {
+                                    range 30..300;
+                                }
+                                default 125;
+                            }
+                            leaf zxAnIgmpMVlanQueryRespInterval {
+                                description "IGMP query max response time in the MVLAN.";
+                                type int32 {
+                                    range 10..250;
+                                }
+                                default 100;
+                            }
+                            leaf zxAnIgmpMVlanLastMemberQryIntvl {
+                                description "IGMP last member query interval in the MVLAN.";
+                                type int32 {
+                                    range 1..255;
+                                }
+                                default 10;
+                            }
+                            leaf zxAnIgmpMVlanLastMemberQryCount {
+                                description "IGMP last member query count in the MVLAN.";
+                                type int32 {
+                                    range 2..5;
+                                }
+                                default 2;
+                            }
+                            leaf zxAnIgmpMVlanStartUpQryInterval {
+                                description "IGMP startup query interval in the MVLAN.
+                                             When system is start up or port is up";
+                                type int32 {
+                                    range 1..100;
+                                }
+                                default 30;
+                            }
+                            leaf zxAnIgmpMVlanStartUpQryCount {
+                                description "IGMP startup query count in the MVLAN.";
+                                type int32 {
+                                    range 0..10;
+                                }
+                                default 2;
+                            }
+                            leaf zxAnIgmpMVlanIgmpPacketPriority {
+                                description "802.1p priority of IGMP packet sent by the device.
+                                             Note that it only takes effect in proxy and SPR mode.";
+                                type int32 {
+                                    range 0..7;
+                                }
+                                default 0;
+                            }
+                            leaf zxAnIgmpMVlanQryPktProtoVersion {
+                                description "The version of IGMP general query packet.
+                                             igmpv1(1) - IGMPv1.
+                                             igmpv2(2) - IGMPv2.
+                                             igmpv3(3) - IGMPv3.";
+                                type enumeration {
+                                    enum igmpv1 {
+                                        value 1;
+                                        description "";
+                                    }
+                                    enum igmpv2 {
+                                        value 2;
+                                        description "";
+                                    }
+                                    enum igmpv3 {
+                                        value 3;
+                                        description "";
+                                    }
+                                }
+                                default igmpv2;
+                            }
+                            leaf zxAnIgmpMVlanIgmpPktDscp {
+                                description "DSCP of IGMP packet sent by the device.
+                                             Note that it only takes effect in proxy and SPR mode.";
+                                type int32 {
+                                    range 0..63;
+                                }
+                                default 48;
+                            }
+                        }
+                    }
+                }
+            }
+            container zxAnIgmpMgmtObject {
+                description "";
+                container zxAnIgmpMgmtMVlanTable {
+                    description "A table used to create or remove MVLAN.";
+                    list zxAnIgmpMgmtMVlanEntry {
+                        description "A list of entries of zxAnIgmpMgmtMVlanTable.";
+                        max-elements 1000;
+                        key "zxAnIgmpMVid";
+                        leaf zxAnIgmpMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf zxAnIgmpMVlanGroupFilterEnable {
+                            description "The administrative status of group filter in the MVLAN.";
+                            type enumeration {
+                                enum enabled {
+                                    value 1;
+                                    description "";
+                                }
+                                enum disabled {
+                                    value 2;
+                                    description "";
+                                }
+                            }
+                            default enabled;
+                        }
+                    }
+                }
+                container zxAnIgmpMgmtMVlanRecvIfTable {
+                    description "A Table used to add or delete receiving port in a MVLAN.";
+                    list zxAnIgmpMgmtMVlanRecvIfEntry {
+                        description "A list of entries of zxAnIgmpMgmtMVlanRecvIfTable.";
+                        max-elements 1000;
+                        key "zxAnIgmpMVid ifIndex zxAnSubIfIndex";
+                        leaf zxAnIgmpMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf ifIndex {
+                            description "A unique value, greater than zero, for each interface.  It
+                                         is recommended that values are assigned contiguously
+                                         starting from 1.  The value for each interface sub-layer
+                                         must remain constant at least from one re-initialization of
+                                         the entity's network management system to the next re-
+                                         initialization.";
+                            type int32 {
+                                range 1..2147483647;
+                            }
+                        }
+                        leaf zxAnSubIfIndex {
+                            description "Sub-interface index at this interface.";
+                            type int32;
+                        }
+                    }
+                }
+                container zxAnIgmpMgmtMVlanSrcIfTable {
+                    description "A Table used to add or delete source port in a MVLAN.";
+                    list zxAnIgmpMgmtMVlanSrcIfEntry {
+                        description "A list of entries of zxAnIgmpMgmtMVlanSrcIfTable.";
+                        max-elements 1000;
+                        key "zxAnIgmpMVid ifIndex zxAnSubIfIndex";
+                        leaf zxAnIgmpMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf ifIndex {
+                            description "A unique value, greater than zero, for each interface.  It
+                                         is recommended that values are assigned contiguously
+                                         starting from 1.  The value for each interface sub-layer
+                                         must remain constant at least from one re-initialization of
+                                         the entity's network management system to the next re-
+                                         initialization.";
+                            type int32 {
+                                range 1..2147483647;
+                            }
+                        }
+                        leaf zxAnSubIfIndex {
+                            description "Sub-interface index at this interface.";
+                            type int32;
+                        }
+                    }
+                }
+                container zxAnIgmpMgmtGroupFilterTable {
+                    description "A table used to add or delete group-filter group segment.";
+                    list zxAnIgmpMgmtGroupFilterEntry {
+                        description "A list of entries of zxAnIgmpMgmtGroupFilterTable.";
+                        max-elements 1000;
+                        key "zxAnIgmpMVid zxAnIgmpGroupFilterStartGrpIp zxAnIgmpGroupFilterEndGrpIp";
+                        leaf zxAnIgmpMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf zxAnIgmpGroupFilterStartGrpIp {
+                            description "Start group ip address of a group segment.";
+                            type ncd:ipv4-address;
+                        }
+                        leaf zxAnIgmpGroupFilterEndGrpIp {
+                            description "End group ip address of a group segment.";
+                            type ncd:ipv4-address;
+                        }
+                    }
+                }
+                container zxAnIgmpMgmtGroupStaticIfTable {
+                    description "A table used to bind or unbind static receiving port to or from 
+                                 multicast group.";
+                    list zxAnIgmpMgmtGroupStaticIfEntry {
+                        description "A list of entries of zxAnIgmpMgmtGroupStaticIfTable.";
+                        max-elements 1000;
+                        key "zxAnIgmpMVid zxAnIgmpGroupIpAddr zxAnIgmpSourceIpAddr ifIndex zxAnSubIfIndex";
+                        leaf zxAnIgmpMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf zxAnIgmpGroupIpAddr {
+                            description "Multicast group IP Address.";
+                            type ncd:ipv4-address;
+                        }
+                        leaf zxAnIgmpSourceIpAddr {
+                            description "Multicast source IP Address.";
+                            type ncd:ipv4-address;
+                        }
+                        leaf ifIndex {
+                            description "A unique value, greater than zero, for each interface.  It
+                                         is recommended that values are assigned contiguously
+                                         starting from 1.  The value for each interface sub-layer
+                                         must remain constant at least from one re-initialization of
+                                         the entity's network management system to the next re-
+                                         initialization.";
+                            type int32 {
+                                range 1..2147483647;
+                            }
+                        }
+                        leaf zxAnSubIfIndex {
+                            description "Sub-interface index at this interface.";
+                            type int32;
+                        }
+                    }
+                }
+                container zxAnIgmpMgmtGroupUserTable {
+                    description "A table that contains dynamic group user information.";
+                    list zxAnIgmpMgmtGroupUserEntry {
+                        config false;
+                        description "A list of entries of zxAnIgmpMgmtGroupUserTable.";
+                        max-elements 1000;
+                        key "zxAnIgmpMVid zxAnIgmpGroupIpAddr ifIndex zxAnSubIfIndex zxAnIgmpUserMacAddr zxAnIgmpSourceIpAddr";
+                        leaf zxAnIgmpMVid {
+                            config false;
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 0..4094;
+                            }
+                        }
+                        leaf zxAnIgmpGroupIpAddr {
+                            config false;
+                            description "Multicast group IP Address.";
+                            type ncd:ipv4-address;
+                        }
+                        leaf ifIndex {
+                            config false;
+                            description "A unique value, greater than zero, for each interface.  It
+                                         is recommended that values are assigned contiguously
+                                         starting from 1.  The value for each interface sub-layer
+                                         must remain constant at least from one re-initialization of
+                                         the entity's network management system to the next re-
+                                         initialization.";
+                            type int32 {
+                                range 0..2147483647;
+                            }
+                        }
+                        leaf zxAnSubIfIndex {
+                            config false;
+                            description "Sub-interface index at this interface.";
+                            type int32;
+                        }
+                        leaf zxAnIgmpSourceIpAddr {
+                            config false;
+                            description "Multicast source IP Address.";
+                            type ncd:ipv4-address;
+                        }
+                        leaf zxAnIgmpUserMacAddr {
+                            config false;
+                            description "The user MAC address which is tracked from the IGMP request
+                                         packets sent by user device.
+                                         Note that zxAnIgmpUserTrackEnable must be enabled firstly, 
+                                         otherwise the user MAC address will be ALL-ZERO.";
+                            type ncd:mac-address;
+                        }
+                        leaf zxAnIgmpUserIpAddr {
+                            config false;
+                            description "The user IP address which is tracked from the IGMP request
+                                         packets sent by user device.
+                                         Note that zxAnIgmpUserTrackEnable must be enabled firstly, 
+                                         otherwise the user IP address will be ALL-ZERO.";
+                            type ncd:ipv4-address;
+                        }
+                        leaf zxAnIgmpGrpUserSrcFilterMode {
+                            config false;
+                            description "IGMPv3 source filter mode of the group user.";
+                            type enumeration {
+                                enum include {
+                                    value 1;
+                                    description "";
+                                }
+                                enum exclude {
+                                    value 2;
+                                    description "";
+                                }
+                            }
+                        }
+                    }
+                }
+                container zxAnIgmpMgmtGroupConfTable {
+                    description "A table used to configure multicast group information.";
+                    list zxAnIgmpMgmtGroupConfEntry {
+                        description "A list of entries of zxAnIgmpMgmtGroupConfTable.";
+                        max-elements 1000;
+                        key "zxAnIgmpMVid zxAnIgmpGroupIpAddr zxAnIgmpSourceIpAddr";
+                        leaf zxAnIgmpMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf zxAnIgmpGroupIpAddr {
+                            description "Multicast group IP Address.";
+                            type ncd:ipv4-address;
+                        }
+                        leaf zxAnIgmpSourceIpAddr {
+                            description "Multicast source IP Address.";
+                            type ncd:ipv4-address;
+                        }
+                        leaf zxAnIgmpGroupBandwidth {
+                            description "Multicast group bandwidth.";
+                            type int32 {
+                                range 100..65535;
+                            }
+                            default 2048;
+                        }
+                    }
+                }
+                container zxAnIgmpMgmtGlobalObject {
+                    description "";
+                    leaf zxAnIgmpUserTrackEnable {
+                        config false;
+                        description "The administrative status of IGMP explicit host tracking.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default disabled;
+                    }
+                    leaf zxAnIgmpBandwidthCtrlEnable {
+                        config false;
+                        description "Enable/disable the multicast bandwidth control.
+                                     enabled(1): the multicast traffic on the user port will be checked 
+                                     before user attempts to join a new multicast group.
+                                     If the total multicast traffic on the user port has 
+                                     exceeded the configured rate of port, the user will 
+                                     not be allowed to join.
+                                     disabled(2): the user may join any number of multicast groups 
+                                     eventhough the total multicast traffic on the user 
+                                     port has exceeded the configured rate of port.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default disabled;
+                    }
+                    leaf zxAnIgmpGroupPrejoinInterval {
+                        config false;
+                        description "The interval of IGMP requests sent by the multicast group 
+                                     which the prejoin is enabled.";
+                        type int32 {
+                            range 60..300;
+                        }
+                        default 120;
+                    }
+                    leaf zxAnIgmpSpanVlanEnable {
+                        config false;
+                        description "Enable/disable the Span-VLAN multicast. Multicast traffic will be 
+                                     forwarded in all of VLANs if enabled.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default enabled;
+                    }
+                    leaf zxAnIgmpGeneralLeaveEnable {
+                        config false;
+                        description "Enable/disable handling general leave message. 
+                                     The general leave message will be handled if enabled.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default disabled;
+                    }
+                    leaf zxAnIgmpGeneralQueryPktsTxMode {
+                        config false;
+                        description "The transmitting mode of IGMP general query packets.
+                                     Value 'both' means the device will transmit general query packets 
+                                     in unicast mode and broadcast mode at the same time.";
+                        type enumeration {
+                            enum unicast {
+                                value 1;
+                                description "";
+                            }
+                            enum broadcast {
+                                value 2;
+                                description "";
+                            }
+                            enum both {
+                                value 3;
+                                description "";
+                            }
+                        }
+                        default unicast;
+                    }
+                }
+                container zxAnIgmpMgmtSpanVlanTable {
+                    description "A table that contains IGMP span VLAN information for VLANs. 
+                                 IGMP packets of this SVLAN will be processed.";
+                    list zxAnIgmpMgmtSpanVlanEntry {
+                        description "An entries of zxAnIgmpMgmtSpanVlanTable.";
+                        max-elements 4094;
+                        key "zxAnIgmpMgmtSpanVid";
+                        leaf zxAnIgmpMgmtSpanVid {
+                            description "Vlan ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                    }
+                }
+            }
+            container zxAnIgmpStatsObjects {
+                description "";
+                container zxAnIgmpPktStatsTable {
+                    description "A table that contains IGMP packet statistics information.";
+                    list zxAnIgmpPktStatsEntry {
+                        config false;
+                        description "When query IGMP global statistics, all index must be zero.            
+                                     
+                                     When query IGMP statistics of a specific MVLAN, ifIndex and 
+                                     zxAnSubIfIndex must be zero.
+                                     
+                                     When query IGMP statistics of a specific interface, zxAnIgmpMVid 
+                                     must be zero.
+                                     
+                                     When query IGMP statistics of a specific interface in a MVLAN,
+                                     all index must be non zero.";
+                        max-elements 1000;
+                        key "zxAnIgmpMVid ifIndex zxAnSubIfIndex";
+                        leaf zxAnIgmpMVid {
+                            config false;
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 0..4094;
+                            }
+                        }
+                        leaf ifIndex {
+                            config false;
+                            description "A unique value, greater than zero, for each interface.  It
+                                         is recommended that values are assigned contiguously
+                                         starting from 1.  The value for each interface sub-layer
+                                         must remain constant at least from one re-initialization of
+                                         the entity's network management system to the next re-
+                                         initialization.";
+                            type int32 {
+                                range 0..2147483647;
+                            }
+                        }
+                        leaf zxAnSubIfIndex {
+                            config false;
+                            description "Sub-interface index at this interface.";
+                            type int32;
+                        }
+                        leaf zxAnIgmpPktStatsRxCommQry {
+                            config false;
+                            description "The counter of IGMP general query message received.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsRxSpecialQry {
+                            config false;
+                            description "The counter of IGMP special query message received.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsRxV1Report {
+                            config false;
+                            description "The counter of IGMP v1 report message received.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsRxV2Report {
+                            config false;
+                            description "The counter of IGMP v2 report message received.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsRxV3Report {
+                            config false;
+                            description "The counter of IGMP v3 report message received.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsRxLeave {
+                            config false;
+                            description "The counter of IGMP leave message received.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsRxError {
+                            config false;
+                            description "The counter of IGMP error message received.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsRxUnknown {
+                            config false;
+                            description "The counter of IGMP unknown message received.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsTxCommQry {
+                            config false;
+                            description "The counter of IGMP general query message transmitted.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsTxSpecialQry {
+                            config false;
+                            description "The counter of IGMP special query message transmitted.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsTxV1Report {
+                            config false;
+                            description "The counter of IGMP v1 report message transmitted.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsTxV2Report {
+                            config false;
+                            description "The counter of IGMP v2 report message transmitted.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsTxV3Report {
+                            config false;
+                            description "The counter of IGMP v3 report message transmitted.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsTxLeave {
+                            config false;
+                            description "The counter of IGMP leave message transmitted.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsDropRxCommQry {
+                            config false;
+                            description "The counter of IGMP general query message dropped.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsDropRxSpeQry {
+                            config false;
+                            description "The counter of IGMP special query message dropped.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsDropRxV1Report {
+                            config false;
+                            description "The counter of IGMP v1 report message dropped.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsDropRxV2Report {
+                            config false;
+                            description "The counter of IGMP v2 report message dropped.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsDropRxV3Report {
+                            config false;
+                            description "The counter of IGMP v3 report message dropped.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsDropRxLeave {
+                            config false;
+                            description "The counter of IGMP leave message dropped.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsDropRxUnknown {
+                            config false;
+                            description "The counter of IGMP unknown message dropped.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsJoinSuccess {
+                            config false;
+                            description "The counter of successful IGMP joins.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsJoinFailure {
+                            config false;
+                            description "The counter of failure IGMP joins.";
+                            type uint32;
+                        }
+                        leaf zxAnIgmpPktStatsReset {
+                            description "The action object to reset the statistics values.
+                                         When reset the statistics, it must be set to '1', associated
+                                         with corresponding index.
+                                         When be queried, it always returns '0'.";
+                            type int32 {
+                                range 0..1;
+                            }
+                        }
+                    }
+                }
+                container zxAnIgmpIfStatsTable {
+                    description "A table that contains IGMP group statistics information of an 
+                                 user interface.";
+                    list zxAnIgmpIfStatsEntry {
+                        config false;
+                        description "An entry for zxAnIgmpIfStatsTable.";
+                        max-elements 1000;
+                        key "ifIndex zxAnSubIfIndex";
+                        leaf ifIndex {
+                            description "A unique value, greater than zero, for each interface.  It
+                                         is recommended that values are assigned contiguously
+                                         starting from 1.  The value for each interface sub-layer
+                                         must remain constant at least from one re-initialization of
+                                         the entity's network management system to the next re-
+                                         initialization.";
+                            type int32 {
+                                range 0..2147483647;
+                            }
+                        }
+                        leaf zxAnSubIfIndex {
+                            description "Sub-interface index at this interface.";
+                            type int32;
+                        }
+                        leaf zxAnIgmpIfCurrActGroups {
+                            config false;
+                            description "The active multicast group number on this interface.";
+                            type uint32;
+                        }
+                    }
+                }
+                container zxAnIgmpMVlanStatsTable {
+                    description "A table that contains IGMP group statistics information in a 
+                                 MVLAN.";
+                    list zxAnIgmpMVlanStatsEntry {
+                        description "An entry for zxAnIgmpMVlanStatsTable.";
+                        max-elements 1000;
+                        key "zxAnIgmpMVid";
+                        leaf zxAnIgmpMVid {
+                            description "Multicast VLAN ID.";
+                            type int32 {
+                                range 0..4094;
+                            }
+                        }
+                        leaf zxAnIgmpMVlanCurrActGroups {
+                            config false;
+                            description "The active multicast group number in the MVLAN.";
+                            type uint32;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

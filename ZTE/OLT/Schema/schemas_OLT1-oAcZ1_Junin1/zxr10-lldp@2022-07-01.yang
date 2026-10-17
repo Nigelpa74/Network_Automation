@@ -1,0 +1,1524 @@
+module zxr10-lldp {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/lldp'
+            ;
+  prefix lldp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the LLDP.'
+              ;
+  revision 2022-07-01 {
+    description 'Add leaf configuration/lldp/glbcfgs/tlvoption/port-description'
+              + ',system-name,system-description,system-capabilities,manage-add'
+              + 'ress,mac-physic,power,link-aggregation,max-frame-size and leaf'
+              + ' configuration/lldp/portcfgs/tlvoption/port-description,system'
+              + '-name,system-description,system-capabilities,manage-address,ma'
+              + 'c-physic,power,link-aggregation,max-frame-size.'
+                ;
+  }
+  revision 2022-04-29 {
+    description 'Add leaf state/lldp/portstate/detailed-neighbor-info/rem-sys-c'
+              + 'ap-enabled and container state/lldp/portstate/local-ports.'+"\n"
+              + 'Change type from string to ncd:string-all of leaf state/lldp/p'
+              + 'ortstate/basic-neighbor-info/rem-chassis-id, rem-sys-desc, rem'
+              + '-port-id, rem-host-name and leaf state/lldp/portstate/detailed'
+              + '-neighbor-info/rem-chassis-id, rem-port-id, rem-port-desc, rem'
+              + '-sys-name, rem-sys-desc, rem-host-name.'
+                ;
+  }
+  revision 2021-09-15 {
+    description '1.Delete SWITCH(89) and OTN(9700/8700/7000) from feature neigh'
+              + 'bor-notification.'+"\n"
+              + '2.Add PTN(65V5/6700) and OTN(9700/8700/7000) to feature transp'
+              + 'arent.'+"\n"
+              + '3.Add feature ztp, and add if-feature ztp to node zxr10-lldp/c'
+              + 'onfiguration/lldp/glbcfgs/ztp-status, zxr10-lldp/configuration'
+              + '/lldp/glbcfgs/tlvoption/ztp and zxr10-lldp/configuration/lldp/'
+              + 'portcfgs/portcfg/tlvoption/ztp.'+"\n"
+              + '4.Add feature pfc,and add if-feature pfc to node zxr10-lldp/co'
+              + 'nfiguration/lldp/portcfgs/portcfg/tlvoption/dcb-pfc-cfg.'+"\n"
+              + '5.Delete default value of node zxr10-lldp/configuration/lldp/g'
+              + 'lbcfgs/maxneighbor.'
+                ;
+  }
+  revision 2021-03-16 {
+    description '1 Add OTN.M721 9700 8700 7000 to feature node neighbor-notific'
+              + 'ation.'+"\n"
+              + '2 Modify default value of configuration/lldp/glbcfgs/neighborr'
+              + 'eport to per-code.'
+                ;
+  }
+  revision 2021-01-21 {
+    description "1. Add Leaf 'configuration/lldp/glbcfgs/ztp-status'.
+\n2. Add "
+              + "Container 'configuration/lldp/glbcfgs/tlvoption'.
+\n3. Add Lea"
+              + "f 'configuration/lldp/glbcfgs/tlvoption/ztp'.
+\n4. Add Leaf 'c"
+              + "onfiguration/lldp/portcfgs/portcfg/tlvoption/ztp'.
+\n5. Add li"
+              + "st 'configuration/lldp/portcfgs/portcfgv2'."
+                ;
+  }
+  revision 2020-10-30 {
+    description "1. Add List 'lldp-neighbor/neighbor/neighbor-info/rem-man-addr"
+              + "esses/rem-man-address/man-address'."
+                ;
+  }
+  revision 2020-09-17 {
+    description 'Add container zxr10-lldp\configuration\lldp\portcfgs\portcfg\t'
+              + 'lvOption.'
+                ;
+  }
+  revision 2019-10-16 {
+    description 'Add MW.NR8000 to feature node neighbor-notification.'
+                ;
+  }
+  revision 2019-09-02 {
+    description "modify the following contents:
+\n  Add a leaf rem-sys-name on "
+              + "zxr10-lldp\lldp-neighbor\neighbor\neighbor-info.
+\n  Add enum "
+              + "value 'update' for leaf action on zxr10-lldp\lldp-neighbor\nei"
+              + "ghbor\neighbor-info.
+\n  Delete feature neighbor-notification "
+              + "of lldp-neighbor notification table."
+                ;
+  }
+  revision 2019-03-30 {
+    description 'modify the following contents:'+"\n"
+              + 'Modify the leaf type zxr10-lldp\state\lldp\portstate\detail-ne'
+              + 'ighbor-info\rem-chassis-id from string-all to standard string
+'
+              + ''+"\n"
+              + 'Modify the leaf type zxr10-lldp\state\lldp\portstate\detail-ne'
+              + 'ighbor-info\rem-port-id from string-all to standard string'+"\n"
+              + 'Modify the leaf type zxr10-lldp\state\lldp\portstate\detail-ne'
+              + 'ighbor-info\rem-port-desc from string-all to standard string'+"\n"
+              + 'Modify the leaf type zxr10-lldp\state\lldp\portstate\detail-ne'
+              + 'ighbor-info\rem-sys-desc from string-all to standard string'+"\n"
+              + 'Modify the leaf type zxr10-lldp\state\lldp\portstate\detail-ne'
+              + 'ighbor-info\rem-host-name from string-all to standard string'+"\n"
+              + 'Modify the leaf type zxr10-lldp\state\lldp\portstate\detail-ne'
+              + 'ighbor-info\rem-sys-name from string-all to standard string'+"\n"
+              + 'Modify the leaf type zxr10-lldp\state\lldp\portstate\basic-nei'
+              + 'ghbor-info\rem-chassis-id from string-all to standard string'+"\n"
+              + 'Modify the leaf type zxr10-lldp\state\lldp\portstate\basic-nei'
+              + 'ghbor-info\rem-sys-desc from string-all to standard string'+"\n"
+              + 'Modify the leaf type zxr10-lldp\state\lldp\portstate\basic-nei'
+              + 'ghbor-info\rem-port-id from string-all to standard string'+"\n"
+              + 'Modify the leaf type zxr10-lldp\state\lldp\portstate\basic-nei'
+              + 'ghbor-info\rem-host-name from string-all to standard string'
+                ;
+  }
+  revision 2019-03-21 {
+    description 'delete the default value of the following nodes:'+"\n"
+              + 'zxr10-lldp\configuration\lldp\glbcfgs\adminstatus;'+"\n"
+              + 'zxr10-lldp\configuration\lldp\portcfgs\portcfg\adminstatus.'
+                ;
+  }
+  revision 2018-11-07 {
+    description 'modify the following contents:'+"\n"
+              + '  Add a container rem-man-addresses on zxr10-lldp\state\lldp\p'
+              + 'ortstate\detailed-neighbor-info.'+"\n"
+              + '  Modify the length scope of notification leaf rem-chassis-id.'
+              + ''+"\n"
+              + '  Modify the length scope of notification leaf rem-port-id.'+"\n"
+              + '  Modify the leaf type zxr10-lldp\state\lldp\portstate\basic-n'
+              + 'eighbor-info\rem-sys-des from string to string-all'+"\n"
+              + '  Modify the leaf type zxr10-lldp\state\lldp\portstate\detail-'
+              + 'neighbor-info\rem-port-id from string to string-all'+"\n"
+              + '  Modify the leaf type zxr10-lldp\state\lldp\portstate\detail-'
+              + 'neighbor-info\rem-sys-des from string to string-all'
+                ;
+  }
+  revision 2018-07-11 {
+    description 'revision "2018-07-11"'+"\n"
+              + '    Add SWITCH.89 label for neighbor-notification feature node'
+              + '.'
+                ;
+  }
+  revision 2016-05-11 {
+    description 'modify the followin contents:'+"\n"
+              + '    (1)Add a new leaf on zxr10-lldp\configuration\lldp\glbcfgs'
+              + '\reinitdelay;'+"\n"
+              + '    (2)Add a new leaf on zxr10-lldp\configuration\lldp\portcfg'
+              + 's\portcfg\notification.'
+                ;
+  }
+  revision 2016-03-22 {
+    description 'modify the followin contents:'+"\n"
+              + '    (1)Add a leaf node neighborreport of glbcfgs container'+"\n"
+              + '    (2)Add a notification node lldp-neighbor'+"\n"
+              + '    (3)Add feature node neighbor-notification for LLDP neighbo'
+              + 'r report netconf function'
+                ;
+  }
+  revision 2015-10-20 {
+    description 'Change default max value of glbcfgs maxneighbor .'+"\n"
+              + 'Change type of glbcfgs maxneighbor from uint16 to uint32.'+"\n"
+              + 'Change unit of hellotime and msgfast.'+"\n"
+              + 'Change max value of portcfgs maxneighbor .'+"\n"
+              + 'Change type of portcfgs maxneighbor from uint16 to uint32.'+"\n"
+              + 'Change unit of hellotime and msgfast.'+"\n"
+              + 'Change type of basic-neighbor-info rem-sys-desc and detailed-n'
+              + 'eighbor-info rem-sys-desc .'
+                ;
+  }
+  revision 2014-05-05 {
+    description "revision \"2014-05-05\"
+\n    modify the following contents:
+\n"
+              + "            (1)Add a container of state,use it to get LLDP's l"
+              + "ocal system data."
+                ;
+  }
+  revision 2014-04-11 {
+    description 'revision "2014-04-11"'+"\n"
+              + '    modify the following contents:'+"\n"
+              + '            (1)Modify the description of some nodes;'+"\n"
+              + '            (2)Add range of neighbor-id node;'+"\n"
+              + '            (3)Modify rem-plat-desc node name to rem-sys-desc.'
+                ;
+  }
+  revision 2014-03-17 {
+    description 'revision "2014-03-17"'+"\n"
+              + '    modify the following contents:'+"\n"
+              + '	    (1)Add state container node'
+                ;
+  }
+  revision 2014-03-12 {
+    description 'revision "2014-03-12"'+"\n"
+              + '    modify the following contents:'+"\n"
+              + '	    (1)Add if-filter-id for portname node in list portcfg'+"\n"
+              + '	    (2)Modify the description of some nodes'
+                ;
+  }
+  revision 2014-02-11 {
+    description 'revision "2014-02-11"'+"\n"
+              + '    modify the following contents:'+"\n"
+              + '	    (1)Add glbcfg container node'+"\n"
+              + '	    (2)Add feature node for transparent function'
+                ;
+  }
+  revision 2013-09-05 {
+    description 'revision "2013-9-5"'+"\n"
+              + '    modify the following contents:'+"\n"
+              + '	    (1)Modify the MimDataType for MimMap of hellotime node'+"\n"
+              + '	    (2)Modify the AttributeId for MimMap of holdtime node'+"\n"
+              + '	    (3)Add ValueMaps for MimMap transparent node'
+                ;
+  }
+  revision 2013-07-10 {
+    description 'Initial version.'+"\n"
+              + 'revision "2013-09-05"'+"\n"
+              + '    modify the following contents:'+"\n"
+              + '	    (1)Modify the MimDataType for MimMap of hellotime node'+"\n"
+              + '	    (2)Modify the AttributeId for MimMap of holdtime node'+"\n"
+              + '	    (3)Add ValueMaps for MimMap transparent node'
+                ;
+  }
+  feature transparent {
+    description 'This node is used to distinguish whether the transparent node '
+              + 'can be enabled'
+                ;
+  }
+  feature neighbor-notification {
+    description 'This node is used to distinguish whether the LLDP neighbor not'
+              + 'ification function can be enabled.'
+                ;
+  }
+  feature ztp {
+    description 'The LLDP ZTE function.'
+                ;
+    ncd:revise-date 2021-09-15 ;
+  }
+  feature pfc {
+    description 'The PFC TLV function.'
+                ;
+    ncd:revise-date 2021-09-15 ;
+  }
+  feature tlv-optional {
+    description 'This node is used to distinguish whether the tlv-optional node'
+              + ' can be enabled'
+                ;
+  }
+  container configuration {
+    description 'Configuration model information.'
+                ;
+    container lldp {
+      description 'Configure LLDP parameters.'
+                  ;
+      container glbcfgs {
+        description 'Configure LLDP global parameters.'
+                    ;
+        leaf adminstatus {
+          description "The administratively desired status of the local LLDP ag"
+                    + "ent.If the associated rt-enable node has a value of 'txO"
+                    + "nly(1)', then LLDP agent can transmit LLDP frames on all"
+                    + " ports and it will not store any information about the r"
+                    + "emote systems connected.If the associated rt-enable node"
+                    + " has a value of 'rxOnly(2)', then the LLDP agent can rec"
+                    + "eive,but it will not transmit LLDP frames on all ports. "
+                    + "If the associated rt-enable node has a value of 'txAndRx"
+                    + "(3)', then the LLDP agent can transmit and receive LLDP "
+                    + "frames on all ports.If the associated rt-enable node has"
+                    + " a value of 'disabled(4)', then LLDP agent will not tran"
+                    + "smit or receive LLDP frames on all ports. If there is re"
+                    + "mote systems information which is received and stored, b"
+                    + "efore rt-enable becomes disabled, then the information w"
+                    + "ill naturally age out. This leaf has a default value, bu"
+                    + "t value depends on the OS and the device."
+                      ;
+          type enumeration {
+            enum txOnly {
+              value 1 ;
+              description 'Enable transmit function only.'
+                          ;
+            }
+            enum rxOnly {
+              value 2 ;
+              description 'Enable receive function only.'
+                          ;
+            }
+            enum txAndRx {
+              value 3 ;
+              description 'Enable receive and transmit function.'
+                          ;
+            }
+            enum disabled {
+              value 4 ;
+              description 'Disable receive and transmit function.'
+                          ;
+            }
+          }
+        }
+        leaf hellotime {
+          description 'The interval at which LLDP frames are transmitted on beh'
+                    + 'alf of this LLDP agent. The default value for hellotime '
+                    + 'node is 30 seconds. The value of this object must be res'
+                    + 'tored from non-volatile storage after a re-initializatio'
+                    + 'n of the management system'
+                      ;
+          type uint16 {
+            range 5..32768 ;
+          }
+          units second ;
+          default 30 ;
+        }
+        leaf holdtime {
+          description "The time-to-live value expressed as a multiple of the he"
+                    + "llotime node. The actual time-to-live value used in LLDP"
+                    + " frames, transmitted on behalf of this LLDP agent,can be"
+                    + " expressed by the following formula: TTL = min(65535,(ll"
+                    + "dpMessageTxInterval * lldpMessageTxHoldMultiplier)) For "
+                    + "example, if the value of lldpMessageTxInterval is '30', "
+                    + "and the value of holdtime is '4', then the value '120' i"
+                    + "s encoded in the TTL field in the LLDP header.
+\n  The d"
+                    + "efault value for lldpMessageTxHoldMultiplier object is 4"
+                    + ".
+\n  The value of this object must be restored from non"
+                    + "-volatile storage after a re-initialization of the manag"
+                    + "ement system."
+                      ;
+          type uint8 {
+            range 2..10 {
+              description 'Default value is 4.'
+                          ;
+            }
+          }
+          default 4 ;
+        }
+        leaf maxneighbor {
+          description "The max number of the neighbor to save. It's default val"
+                    + "ue and max value depends on ability of the device."
+                      ;
+          type uint32 {
+            range 1..2000 ;
+          }
+        }
+        leaf msgfast {
+          description 'The interval at which LLDP frames are transmitted on beh'
+                    + 'alf of this LLDP agent during fast transmission period ('
+                    + 'e.g. when a new neighbor is detected).The default value '
+                    + 'for msgfast node is 1 second. The value of this object i'
+                    + 's restored from non-volatile storage after a re-initiali'
+                    + 'zation of the management system.'
+                      ;
+          type uint16 {
+            range 1..3600 ;
+          }
+          units second ;
+          default 1 ;
+        }
+        leaf txcreditmax {
+          description 'The maximum number of consecutive LLDP PDUs that can be '
+                    + 'transmitted at any time. The default value for txcreditm'
+                    + 'ax object is 5 PDUs.The value of this object is restored'
+                    + ' from non-volatile storage after a re-initialization of '
+                    + 'the management system.'
+                      ;
+          type uint8 {
+            range 1..10 ;
+          }
+          units PDUs ;
+          default 5 ;
+        }
+        leaf txfastinit {
+          description 'The initial value used to initialize the txFast variable'
+                    + ' which determines the number of transmissions that are m'
+                    + 'ade in fast transmission mode.The default value for txfa'
+                    + 'stinit node is 4.The value of this node is restored from'
+                    + ' non-volatile storage after a re-initialization of the m'
+                    + 'anagement system.'
+                      ;
+          type uint8 {
+            range 1..8 ;
+          }
+          default 4 ;
+        }
+        leaf neighborreport {
+          if-feature neighbor-notification ;
+          description 'Set LLDP neighbor report netconf notification enable or '
+                    + 'disable.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Set LLDP neighbor netconf report disable.'
+                          ;
+            }
+            enum enable {
+              value 1 ;
+              description 'Set LLDP neighbor netconf report enable.'
+                          ;
+            }
+          }
+        }
+        leaf reinitdelay {
+          description "The lldpReinitDelay indicates the delay (in units of sec"
+                    + "onds) from when lldpPortConfigAdminStatus object of a pa"
+                    + "rticular port becomes 'disabled' until re-initialization"
+                    + " will be attempted."
+                      ;
+          type uint8 {
+            range 1..10 {
+              description 'in units of seconds'
+                          ;
+            }
+          }
+          units second ;
+          default 2 ;
+        }
+        leaf ztp-status {
+          if-feature ztp ;
+          description 'Configure ZTP status.'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Enable ZTP status.'
+                          ;
+            }
+            enum disable {
+              value 2 ;
+              description 'Disable ZTP status.'
+                          ;
+            }
+          }
+          default disable ;
+        }
+        container tlvoption {
+          description 'Configure whether TLVs are allowed to be transmitted.'
+                      ;
+          leaf ztp {
+            if-feature ztp ;
+            description 'Configure whether ZTP TLV is allowed to be transmitted.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable ZTP TLV transmission.'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Disable ZTP TLV transmission.'
+                            ;
+              }
+            }
+            default enable ;
+          }
+          leaf port-description {
+            if-feature tlv-optional ;
+            description 'Configure whether port description TLV is allowed to b'
+                      + 'e transmitted.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable port description TLV transmission.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable port description TLV transmission.'
+                            ;
+              }
+            }
+            default enable ;
+            ncd:revise-date 2022-07-01 ;
+          }
+          leaf system-name {
+            if-feature tlv-optional ;
+            description 'Configure whether system name TLV is allowed to be tra'
+                      + 'nsmitted.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable system name TLV transmission.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable system name TLV transmission.'
+                            ;
+              }
+            }
+            default enable ;
+            ncd:revise-date 2022-07-01 ;
+          }
+          leaf system-description {
+            if-feature tlv-optional ;
+            description 'Configure whether system description TLV is allowed to'
+                      + ' be transmitted.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable system description TLV transmission.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable system description TLV transmission.'
+                            ;
+              }
+            }
+            default enable ;
+            ncd:revise-date 2022-07-01 ;
+          }
+          leaf system-capabilities {
+            if-feature tlv-optional ;
+            description 'Configure whether system capabilities TLV is allowed t'
+                      + 'o be transmitted.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable port capabilities TLV transmission.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable port capabilities TLV transmission.'
+                            ;
+              }
+            }
+            default enable ;
+            ncd:revise-date 2022-07-01 ;
+          }
+          leaf manage-address {
+            if-feature tlv-optional ;
+            description 'Configure whether manage address TLV is allowed to be '
+                      + 'transmitted.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable manage address TLV transmission.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable manage address TLV transmission.'
+                            ;
+              }
+            }
+            default enable ;
+            ncd:revise-date 2022-07-01 ;
+          }
+          leaf mac-physic {
+            if-feature tlv-optional ;
+            description 'Configure whether mac physic TLV is allowed to be tran'
+                      + 'smitted.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable mac physic TLV transmission.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable mac physic TLV transmission.'
+                            ;
+              }
+            }
+            default enable ;
+            ncd:revise-date 2022-07-01 ;
+          }
+          leaf power {
+            if-feature tlv-optional ;
+            description 'Configure whether power TLV is allowed to be transmitt'
+                      + 'ed.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable power TLV transmission.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable power TLV transmission.'
+                            ;
+              }
+            }
+            default enable ;
+          }
+          leaf link-aggregation {
+            description 'Configure whether link aggregation TLV is allowed to b'
+                      + 'e transmitted.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable link aggregation TLV transmission.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable link aggregation TLV transmission.'
+                            ;
+              }
+            }
+            default enable ;
+            ncd:revise-date 2022-07-01 ;
+          }
+          leaf max-frame-size {
+            if-feature tlv-optional ;
+            description 'Configure whether max frame size TLV is allowed to be '
+                      + 'transmitted.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable max frame size TLV transmission.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable max frame size TLV transmission.'
+                            ;
+              }
+            }
+            default enable ;
+            ncd:revise-date 2022-07-01 ;
+          }
+        }
+      }
+      container portcfgs {
+        description 'Configure LLDP parameters for interfaces.'
+                    ;
+        list portcfg {
+          description 'Configure LLDP interface parameters.'
+                      ;
+          key portname ;
+          leaf portname {
+            description 'The port name used to identify the port component(cont'
+                      + 'ained in the local chassis with the LLDP agent)associa'
+                      + 'ted with this entry.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf adminstatus {
+            description "The administratively desired status of the local LLDP "
+                      + "agent.If the associated rt-enable node has a value of "
+                      + "'txOnly(1)', then LLDP agent will transmit LLDP frames"
+                      + " on this port and it will not store any information ab"
+                      + "out the remote systems connected.If the associated rt-"
+                      + "enable node object has a value of 'rxOnly(2)', then th"
+                      + "e LLDP agent will receive,but it will not transmit LLD"
+                      + "P frames on this port.If the associated rt-enable node"
+                      + " object has a value of 'txAndRx(3)', then the LLDP age"
+                      + "nt will transmitn and receive LLDP frames on this port"
+                      + ".If the associated lldpPortConfigAdminStatus object ha"
+                      + "s a value of 'disabled(4)', then LLDP agent will not t"
+                      + "ransmit or receive LLDP frames on this port.  If there"
+                      + " is remote systems information which is received on th"
+                      + "is port and stored in other tables, before the port's "
+                      + "rt-enable node becomes disabled, then the information "
+                      + "will naturally age out. This leaf has a default value,"
+                      + " but value depends on the OS and the device."
+                        ;
+            type enumeration {
+              enum txOnly {
+                value 1 ;
+                description 'Enable transmit function only.'
+                            ;
+              }
+              enum rxOnly {
+                value 2 ;
+                description 'Enable receive function only.'
+                            ;
+              }
+              enum txAndRx {
+                value 3 ;
+                description 'Enable transmit and receive function.'
+                            ;
+              }
+              enum disabled {
+                value 4 ;
+                description 'Disable transmit and receive function.'
+                            ;
+              }
+            }
+          }
+          leaf maxneighbor {
+            description "The max number of the neighbor of the port.It's max va"
+                      + "lue depends on ability of the device. The default valu"
+                      + "e is 8."
+                        ;
+            type uint32 {
+              range 1..50 ;
+            }
+            default 8 ;
+          }
+          leaf transparent {
+            if-feature transparent ;
+            description 'The transparent controls, on a per port basis, whether'
+                      + ' or not the received packets are fowarded. The value e'
+                      + 'nable(1) means that the port will foward the received '
+                      + 'packets; the value disable(2) means that the port will'
+                      + ' not foward the received packets.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable transparent function.'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Disable transparent function.'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          leaf notification {
+            description 'Whether or not notifications from the agent are enable'
+                      + 'd.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable notification function.'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Disable notification function.'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          container tlvoption {
+            description 'Configure whether TLVs are allowed to be transmitted.'
+                        ;
+            leaf dcb-pfc-cfg {
+              if-feature pfc ;
+              description 'Configure whether PFC configuration TLV is allowed t'
+                        + 'o be transmitted.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable PFC configuration TLV transmission.'
+                              ;
+                }
+                enum disable {
+                  value 2 ;
+                  description 'Disable PFC configuration TLV transmission.'
+                              ;
+                }
+              }
+              default disable ;
+            }
+            leaf ztp {
+              if-feature ztp ;
+              description 'Configure whether ZTP TLV is allowed to be transmitt'
+                        + 'ed.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable ZTP TLV transmission.'
+                              ;
+                }
+                enum disable {
+                  value 2 ;
+                  description 'Disable ZTP TLV transmission.'
+                              ;
+                }
+              }
+              default disable ;
+            }
+            leaf port-description {
+              if-feature tlv-optional ;
+              description 'Configure whether port description TLV is allowed to'
+                        + ' be transmitted.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable port description TLV transmission.'
+                              ;
+                }
+                enum disable {
+                  value 0 ;
+                  description 'Disable port description TLV transmission.'
+                              ;
+                }
+              }
+              default enable ;
+              ncd:revise-date 2022-07-01 ;
+            }
+            leaf system-name {
+              if-feature tlv-optional ;
+              description 'Configure whether system name TLV is allowed to be t'
+                        + 'ransmitted.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable system name TLV transmission.'
+                              ;
+                }
+                enum disable {
+                  value 0 ;
+                  description 'Disable system name TLV transmission.'
+                              ;
+                }
+              }
+              default enable ;
+              ncd:revise-date 2022-07-01 ;
+            }
+            leaf system-description {
+              if-feature tlv-optional ;
+              description 'Configure whether system description TLV is allowed '
+                        + 'to be transmitted.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable system description TLV transmission.'
+                              ;
+                }
+                enum disable {
+                  value 0 ;
+                  description 'Disable system description TLV transmission.'
+                              ;
+                }
+              }
+              default enable ;
+              ncd:revise-date 2022-07-01 ;
+            }
+            leaf system-capabilities {
+              if-feature tlv-optional ;
+              description 'Configure whether system capabilities TLV is allowed'
+                        + ' to be transmitted.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable port capabilities TLV transmission.'
+                              ;
+                }
+                enum disable {
+                  value 0 ;
+                  description 'Disable port capabilities TLV transmission.'
+                              ;
+                }
+              }
+              default enable ;
+              ncd:revise-date 2022-07-01 ;
+            }
+            leaf manage-address {
+              if-feature tlv-optional ;
+              description 'Configure whether manage address TLV is allowed to b'
+                        + 'e transmitted.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable manage address TLV transmission.'
+                              ;
+                }
+                enum disable {
+                  value 0 ;
+                  description 'Disable manage address TLV transmission.'
+                              ;
+                }
+              }
+              default enable ;
+              ncd:revise-date 2022-07-01 ;
+            }
+            leaf mac-physic {
+              if-feature tlv-optional ;
+              description 'Configure whether mac physic TLV is allowed to be tr'
+                        + 'ansmitted.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable mac physic TLV transmission.'
+                              ;
+                }
+                enum disable {
+                  value 0 ;
+                  description 'Disable mac physic TLV transmission.'
+                              ;
+                }
+              }
+              default enable ;
+              ncd:revise-date 2022-07-01 ;
+            }
+            leaf power {
+              if-feature tlv-optional ;
+              description 'Configure whether power TLV is allowed to be transmi'
+                        + 'tted.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable power TLV transmission.'
+                              ;
+                }
+                enum disable {
+                  value 0 ;
+                  description 'Disable power TLV transmission.'
+                              ;
+                }
+              }
+              default enable ;
+            }
+            leaf link-aggregation {
+              if-feature tlv-optional ;
+              description 'Configure whether link aggregation TLV is allowed to'
+                        + ' be transmitted.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable link aggregation TLV transmission.'
+                              ;
+                }
+                enum disable {
+                  value 0 ;
+                  description 'Disable link aggregation TLV transmission.'
+                              ;
+                }
+              }
+              default enable ;
+              ncd:revise-date 2022-07-01 ;
+            }
+            leaf max-frame-size {
+              if-feature tlv-optional ;
+              description 'Configure whether max frame size TLV is allowed to b'
+                        + 'e transmitted.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable max frame size TLV transmission.'
+                              ;
+                }
+                enum disable {
+                  value 0 ;
+                  description 'Disable max frame size TLV transmission.'
+                              ;
+                }
+              }
+              default enable ;
+              ncd:revise-date 2022-07-01 ;
+            }
+          }
+        }
+        list portcfgv2 {
+          description 'Configuring interface parameters of LLDP Version 2.'
+                      ;
+          key 'portname destmactype'
+              ;
+          leaf portname {
+            description 'The port name used to identify the port component(cont'
+                      + 'ained in the local chassis with the LLDP agent)associa'
+                      + 'ted with this entry.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf destmactype {
+            description "The value used to identify the standard group MAC addr"
+                      + "esses that can be used by LLDP. The choice of address "
+                      + "used determines the scope of propagation of LLDPDUs wi"
+                      + "thin a bridged LAN. If the node is set to a value of '"
+                      + "nearest-non-tpmr-bridge', then LLDP agent transmits LL"
+                      + "DPframes with the destination address 01-80-C2-00-00-0"
+                      + "3. If the node is set to a value of 'nearest-customer-"
+                      + "bridge', then LLDP agent transmits LLDPframes with the"
+                      + " destination address 01-80-C2-00-00-00."
+                        ;
+            type enumeration {
+              enum nearest-non-tpmr-bridge {
+                value 2 ;
+                description 'Propagation constrained by all bridges other than '
+                          + 'TPMRs; intended for use within provider bridged ne'
+                          + 'tworks.'
+                            ;
+              }
+              enum nearest-customer-bridge {
+                value 3 ;
+                description 'Propagation constrained by customer bridges; this '
+                          + 'gives the same coverage as a customer-customer MAC'
+                          + 'Sec connection.'
+                            ;
+              }
+            }
+          }
+          leaf adminstatus {
+            description "The administratively desired status of the local LLDP "
+                      + "agent. If the node is set to a value of 'txOnly(1)', t"
+                      + "hen LLDP agent transmits LLDPframes on this port and i"
+                      + "t does not store any information about the remote syst"
+                      + "ems connected. If the node is set to a value of 'rxOnl"
+                      + "y(2)', then the LLDP agent receives, but it does not t"
+                      + "ransmit LLDP frames on this port. If the node is set t"
+                      + "o a value of 'txAndRx(3)', then the LLDP agent transmi"
+                      + "ts and receives LLDP frames on this port. If the node "
+                      + "is set to a value of 'disabled(4)', then LLDP agent do"
+                      + "es not transmit or receive LLDP frames on this port."
+                        ;
+            type enumeration {
+              enum txOnly {
+                value 1 ;
+                description 'Enable transmit function only.'
+                            ;
+              }
+              enum rxOnly {
+                value 2 ;
+                description 'Enable receive function only.'
+                            ;
+              }
+              enum txAndRx {
+                value 3 ;
+                description 'Enable transmit and receive function.'
+                            ;
+              }
+              enum disabled {
+                value 4 ;
+                description 'Disable transmit and receive function.'
+                            ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model information.'
+                ;
+    container lldp {
+      description 'LLDP state information.'
+                  ;
+      container glbstatics {
+        description 'Global statics information.'
+                    ;
+        leaf tx-frames-total {
+          description 'Global count of sent lldp packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf rx-frames-total {
+          description 'Global count of received lldp packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf rx-frames-errors {
+          description 'Global count of received error lldp packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf rx-frames-discard {
+          description 'Global count of discarded lldp packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf rx-tlvs-discard {
+          description 'Global count of discarded TLVs of lldp packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf rx-tlvs-unrecognized {
+          description 'Global count of unrecognized TLVs of lldp packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf neighbor-add {
+          description 'Global count of having been added new neighbors.'
+                      ;
+          type uint32 ;
+        }
+        leaf neighbor-delete {
+          description 'Global count of having been deleted neighbors.'
+                      ;
+          type uint32 ;
+        }
+        leaf neighbor-ageout {
+          description 'Global count of having been aged neighbors.'
+                      ;
+          type uint32 ;
+        }
+        leaf neighbor-drop {
+          description 'Global count of having been dropped neighbors.'
+                      ;
+          type uint32 ;
+        }
+      }
+      container portstate {
+        description 'Port state information.'
+                    ;
+        list portstatics {
+          description 'Port statics information.'
+                      ;
+          key local-ifname ;
+          leaf local-ifname {
+            description 'Local port name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf tx-frames-total {
+            description 'Count of sent lldp packets of port.'
+                        ;
+            type uint32 ;
+          }
+          leaf rx-frames-total {
+            description 'Count of received lldp packets of port.'
+                        ;
+            type uint32 ;
+          }
+          leaf rx-frames-errors {
+            description 'Count of received error lldp packets of port.'
+                        ;
+            type uint32 ;
+          }
+          leaf rx-frames-discard {
+            description 'Count of discarded lldp packets of port.'
+                        ;
+            type uint32 ;
+          }
+          leaf rx-tlvs-discard {
+            description 'Count of discarded TLVs of lldp packets of port.'
+                        ;
+            type uint32 ;
+          }
+          leaf rx-tlvs-unrecognized {
+            description 'Count of unrecognized TLVs of lldp packets of port.'
+                        ;
+            type uint32 ;
+          }
+          leaf neighbor-add {
+            description 'Count of having been added new neighbors.'
+                        ;
+            type uint32 ;
+          }
+          leaf neighbor-delete {
+            description 'Count of having been deleted new neighbors.'
+                        ;
+            type uint32 ;
+          }
+          leaf neighbor-ageout {
+            description 'Count of having been aged new neighbors'
+                        ;
+            type uint32 ;
+          }
+          leaf neighbor-drop {
+            description 'Count of having been dropped new neighbors.'
+                        ;
+            type uint32 ;
+          }
+          ncd:select local-ifname ;
+        }
+        list basic-neighbor-info {
+          description 'Basic information of neighbors.'
+                      ;
+          key 'local-ifname neighbor-id'
+              ;
+          leaf local-ifname {
+            description 'Local port name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf neighbor-id {
+            description 'Neighbor ID.'
+                        ;
+            type uint32 {
+              range 1..4294967295 ;
+            }
+          }
+          leaf rem-chassis-id {
+            description 'Value to indicate basis identifier in chassis ID field.'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf ttl {
+            description 'Hold on time of neighbor keeping alive.'
+                        ;
+            type uint16 ;
+          }
+          leaf rem-sys-cap {
+            description 'Capability of system of remote neighbor.'
+                        ;
+            type uint16 ;
+          }
+          leaf rem-sys-desc {
+            description 'Description of remote system of remote neighbor.'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf rem-port-id {
+            description 'Remote port name in neighbor.'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf rem-host-name {
+            description 'Host name of remote neighbor.'
+                        ;
+            type ncd:string-all ;
+          }
+          ncd:select local-ifname ;
+          ncd:select 'local-ifname neighbor-id'
+                     ;
+        }
+        list detailed-neighbor-info {
+          description 'Detailed information of neighbors.'
+                      ;
+          key 'local-ifname neighbor-id'
+              ;
+          leaf local-ifname {
+            description 'Local port name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf neighbor-id {
+            description 'Neighbor ID.'
+                        ;
+            type uint32 {
+              range 1..4294967295 ;
+            }
+          }
+          leaf rem-chassis-id {
+            description 'Value to indicate basis identifier in chassis ID field.'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf rem-chassis-id-subtype {
+            description 'Subtype of the chassis ID of remote neighbor.'
+                        ;
+            type uint16 ;
+          }
+          leaf rem-port-id {
+            description 'Identifier in port ID field of neighbor. Value accordi'
+                      + 'ng to PortIdSubType.'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf rem-port-id-subtype {
+            description 'Value to indicate basis identifier in port ID field.'
+                        ;
+            type uint16 ;
+          }
+          leaf ttl {
+            description 'Hold on time of neighbor keeping alive.'
+                        ;
+            type uint16 ;
+          }
+          leaf rem-port-desc {
+            description 'Description of port of remote neighbor.'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf rem-sys-name {
+            description 'System name of remote neighbor.'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf rem-sys-desc {
+            description 'Description of remote system of remote neighbor.'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf rem-sys-cap {
+            description 'Capability of system of remote neighbor.'
+                        ;
+            type uint16 ;
+          }
+          leaf rem-man-addr {
+            description 'Management address of remote neighbor.'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf rem-link-aggregation {
+            description 'Link aggregation information of port of remote neighbo'
+                      + 'r.'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf rem-host-name {
+            description 'Host name of remote neighbor.'
+                        ;
+            type ncd:string-all ;
+          }
+          container rem-man-addresses {
+            description 'Management address of remote neighbor.'
+                        ;
+            list rem-man-address {
+              description 'Management address of remote neighbor.'
+                          ;
+              key 'man-addr-subtype man-address'
+                  ;
+              leaf man-addr-subtype {
+                description "Subtype of the management address.
+\nThe value '1'"
+                          + " indicates the IPv4 address.
+\nThe value '2' indic"
+                          + "ates the IPv6 address.
+\nFor the definition of oth"
+                          + "er values, refer to IANA-ADDRESS-FAMILY-NUMBERS-MI"
+                          + "B."
+                            ;
+                type uint8 {
+                  range 0..255 ;
+                }
+              }
+              leaf man-address {
+                description 'Management address of remote neighbor.'
+                            ;
+                type ncd:string-all ;
+              }
+              ncd:select 'man-addr-subtype man-address'
+                         ;
+            }
+          }
+          leaf rem-sys-cap-enabled {
+            description 'Enabled capability of system of remote neighbor.'
+                        ;
+            type uint16 ;
+          }
+          ncd:select local-ifname ;
+          ncd:select 'local-ifname neighbor-id'
+                     ;
+        }
+        container local-ports {
+          description 'Port list of local system.'
+                      ;
+          list local-port {
+            description 'Port list of local system.'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf port-id-subtype {
+              description 'Value to indicate basis identifier in port ID field.'
+                          ;
+              type uint16 ;
+            }
+            leaf port-id {
+              description 'Identifier in port ID field of local port. Value acc'
+                        + 'ording to port-id-subtype.'
+                          ;
+              type string ;
+            }
+            leaf port-desc {
+              description 'Description of port of local port.'
+                          ;
+              type ncd:string-all ;
+            }
+            leaf port-cap {
+              description 'The capability of local port mode.'+"\n"
+                        + 'The bit 0 indicates eth.'+"\n"
+                        + 'The bit 1 indicates mtn-termination.'+"\n"
+                        + 'The bit 2 indicates flexe-termination.'+"\n"
+                        + 'The bit 3 indicates mtn-aware.'+"\n"
+                        + 'The bit 4 indicates flexe-aware.'
+                          ;
+              type uint16 ;
+            }
+            leaf port-state {
+              description 'The state of local port mode.'+"\n"
+                        + 'The value has the same meaning as port-cap.'
+                          ;
+              type uint16 ;
+            }
+          }
+        }
+      }
+      container localsystemdata {
+        description 'Local system data information of LLDP.'
+                    ;
+        leaf chassis-id-subtype {
+          description 'Chassis ID subtype of LLDP local system data.'
+                      ;
+          type enumeration {
+            enum macAddress {
+              value 4 ;
+              description 'MAC address.'
+                          ;
+            }
+          }
+        }
+        leaf chassis-id {
+          description 'Chassis ID of LLDP local system data.'
+                      ;
+          type ncd:string-all ;
+        }
+        leaf system-name {
+          description 'System name of LLDP local system data.'
+                      ;
+          type ncd:string-all ;
+        }
+        leaf system-desc {
+          description 'System description of LLDP local system data.'
+                      ;
+          type ncd:string-all ;
+        }
+      }
+    }
+  }
+  notification lldp-neighbor {
+    description 'The LLDP notification when neighbor is added or deleted.'
+                ;
+    container neighbor {
+      config false ;
+      description 'The LLDP notification when neighbor is added or deleted.'
+                  ;
+      list neighbor-info {
+        description 'The LLDP notification when neighbor is added or deleted.'
+                    ;
+        key 'local-ifname neighbor-id'
+            ;
+        leaf local-ifname {
+          description 'Local port name.'
+                      ;
+          type ncd:ifname {
+            length 1..31 ;
+          }
+        }
+        leaf neighbor-id {
+          description 'Neighbor ID.'
+                      ;
+          type uint32 {
+            range 1..4294967295 ;
+          }
+        }
+        leaf rem-chassis-id {
+          description 'Value to indicate basis identifier in chassis ID field.'
+                      ;
+          type ncd:string-all {
+            length 0..511 ;
+          }
+        }
+        leaf rem-port-id {
+          description 'Remote port name in neighbor.'
+                      ;
+          type ncd:string-all {
+            length 0..511 ;
+          }
+        }
+        leaf action {
+          description 'LLDP neighbor action type, add or delete.'
+                      ;
+          type enumeration {
+            enum add {
+              value 1 ;
+              description 'LLDP neighbor add.'
+                          ;
+            }
+            enum delete {
+              value 2 ;
+              description 'LLDP neighbor delete.'
+                          ;
+            }
+            enum update {
+              value 3 ;
+              description 'LLDP neighbor update.'
+                          ;
+            }
+          }
+        }
+        leaf rem-sys-name {
+          description 'System name of remote neighbor.'
+                      ;
+          type string ;
+        }
+        container rem-man-addresses {
+          description 'Management address of remote neighbor.'
+                      ;
+          list rem-man-address {
+            description 'Management address of remote neighbor.'
+                        ;
+            key 'man-addr-subtype man-address'
+                ;
+            leaf man-addr-subtype {
+              description "Subtype of the management address.
+\nThe value '1' i"
+                        + "ndicates the IPv4 address.
+\nThe value '2' indicates"
+                        + " the IPv6 address.
+\nFor the definition of other val"
+                        + "ues, refer to IANA-ADDRESS-FAMILY-NUMBERS-MIB."
+                          ;
+              type uint8 {
+                range 0..255 ;
+              }
+            }
+            leaf man-address {
+              description 'Management address of remote neighbor.'
+                          ;
+              type ncd:string-all ;
+            }
+            ncd:select 'man-addr-subtype man-address'
+                       ;
+          }
+        }
+      }
+    }
+  }
+}

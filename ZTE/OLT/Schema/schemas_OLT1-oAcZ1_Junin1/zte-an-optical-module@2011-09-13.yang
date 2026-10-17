@@ -1,0 +1,760 @@
+module zte-an-optical-module {
+    namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/optical';
+    prefix optical;
+    import zxr10-netconf-defs {
+        prefix ncd;
+        revision-date 2017-08-15;
+    }
+    organization "ZTE Corporation";
+    contact "Zhang WeiPing      ZTE Corporation
+                        Mail: zhang.weiping@zte.com.cn
+                        Tel : 021-68896470";
+    description "This MIB defines zte Access Node managed objects.";
+    revision 2011-09-13 {
+        description "Modify this mib according to standard.";
+    }
+    revision 2011-09-10 {
+        description "Add the Optical Module Notifications:zxAnEquipIfFiberLosTrap
+                     and zxAnEquipIfFiberLosCleardTrap.";
+    }
+    revision 2011-08-23 {
+        description "Modify the bias/voltage value range.";
+    }
+    revision 2011-05-31 {
+        description "Initial version of this MIB module.";
+    }
+    container zxAnOpticalModule {
+        description "";
+        container zxAnOpticalModuleGlobalObjects {
+            description "";
+            leaf zxAnOpticalModuleCapabilities {
+                config false;
+                description "The optical module management capabilities of this equipment. 
+                             The bit value 1 means the function represented by this bit is
+                             supported by this equipment.
+                             
+                             opticalModuleConfClass (0): value 1 means
+                             zxAnOpticalModuleConfClass is supported.
+                             opticalAlarmPrfUnit(1): value 1 means some objects in the 
+                             zxAnOpticalModuleAlmPrfTable will use the new unit, for more
+                             information, please see the description of the object in the
+                             zxAnOpticalModuleAlmPrfTable.
+                             opticalModuleConfTechNorms(2): value 1 means 
+                             zxAnOpticalModuleConfTechNorms is supported.
+                             
+                             NOTE: No recommended to display it in NMS.                                                                                       
+                             ";
+                type bits {
+                    bit opticalModuleConfClass {
+                        description "";
+                        reference "";
+                    }
+                    bit opticalAlarmPrfUnit {
+                        description "";
+                        reference "";
+                    }
+                    bit opticalModuleConfTechNorms {
+                        description "";
+                        reference "";
+                    }
+                }
+            }
+            leaf zxAnOptModuleIfShutdownUnplugEn {
+                description "Indicates whether the zxAnOpticalModuleUnpluggedAlm should be 
+                             generated when the port the optical module plugged in has been 
+                             shutdown.
+                             enabled(1) : The zxAnOpticalOfflineTrapEnable indicates whether the 
+                             zxAnOpticalModuleUnpluggedAlm should be generated or not.
+                             disabled(2): The zxAnOpticalModuleUnpluggedAlm should not be 
+                             generated.";
+                type enumeration {
+                    enum enabled {
+                        value 1;
+                        description "";
+                    }
+                    enum disabled {
+                        value 2;
+                        description "";
+                    }
+                }
+                default disabled;
+            }
+            leaf zxAnOptModuleFstUnpluggedNoRptEn {
+                description "Indicates whether the zxAnOpticalModuleUnpluggedAlm should be 
+                             generated when the agent has detected the optical module is offline
+                             for the first time.";
+                type enumeration {
+                    enum enabled {
+                        value 1;
+                        description "";
+                    }
+                    enum disabled {
+                        value 2;
+                        description "";
+                    }
+                }
+                default disabled;
+            }
+        }
+        container zxAnOpticalModuleObjects {
+            description "";
+            container zxAnOpticalModuleAlmPrfTable {
+                description "This table includes the optical module threshold profile.";
+                list zxAnOpticalModuleAlmPrfEntry {
+                    description "An entry in zxAnOpticalModuleAlmPrfTable.";
+                    max-elements 100;
+                    key "zxAnOpticalModuleAlmPrfName ";
+                    leaf zxAnOpticalModuleAlmPrfName {
+                        description "A textual string containing information about the
+                                     optical module alarm threshold profile name .";
+                        type string {
+                            length 1..32;
+                        }
+                    }
+                    leaf zxAnOpticalRxPwrLowerThresh {
+                        description "The lower limit threshold on input optical power.
+                                     The alarm should be generated  when zxAnOpticalIfRxPwrCurrValue
+                                     is lower than this threshold. 
+                                     The unit is 1dBm when the value of opticalAlarmPrfUnit(1) is 1, 
+                                     otherwise the unit is 0.1dBm.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalRxPwrUpperThresh {
+                        description "The upper limit threshold on input optical power. 
+                                     The alarm should be generated when zxAnOpticalIfRxPwrCurrValue
+                                     exceeds this threshold.
+                                     The unit is 1dBm when the value of opticalAlarmPrfUnit(1) is 1, 
+                                     otherwise the unit is 0.1dBm.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalTxPwrLowerThresh {
+                        description "The lower limit threshold on output optical power.
+                                     The alarm should be generated  when zxAnOpticalIfTxPwrCurrValue
+                                     is lower than this threshold. 
+                                     The unit is 1dBm when the value of opticalAlarmPrfUnit(1) is 1, 
+                                     otherwise the unit is 0.1dBm.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalTxPwrUpperThresh {
+                        description "The upper limit threshold on output optical power.
+                                     The alarm should be generated when zxAnOpticalIfTxPwrCurrValue
+                                     exceeds this threshold.
+                                     The unit is 1dBm when the value of opticalAlarmPrfUnit(1) is 1, 
+                                     otherwise the unit is 0.1dBm.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalBiasCurrLowerThresh {
+                        description "The lower limit threshold on optical modules bias
+                                     current.The alarm should be generated  when
+                                     zxAnOpticalBiasCurrent is lower than this threshold.
+                                     The unit is 1mA when the value of opticalAlarmPrfUnit(1) is 1, 
+                                     otherwise the unit is 0.1mA.";
+                        type int32 {
+                            range 0..1500;
+                        }
+                    }
+                    leaf zxAnOpticalBiasCurrUpperThresh {
+                        description "The upper limit threshold on optical modules bias current.
+                                     The alarm should be generated when zxAnOpticalBiasCurrent 
+                                     exceeds this threshold.
+                                     The unit is 1mA when the value of opticalAlarmPrfUnit(1) is 1, 
+                                     otherwise the unit is 0.1mA.";
+                        type int32 {
+                            range 0..1500;
+                        }
+                    }
+                    leaf zxAnOpticalVoltageLowerThresh {
+                        description "The lower limit threshold on optical modules supply voltage.
+                                     The alarm should be generated when zxAnOpticalSupplyVoltage 
+                                     is lower than this threshold.
+                                     The unit is 1 Volt when the value of opticalAlarmPrfUnit(1) is 1, 
+                                     otherwise the unit is 0.1 Volt.";
+                        type int32 {
+                            range 0..100;
+                        }
+                    }
+                    leaf zxAnOpticalVoltageUpperThresh {
+                        description "The upper limit threshold on optical modules supply voltage.
+                                     The alarm should be generated when zxAnOpticalSupplyVoltage 
+                                     exceeds this threshold.
+                                     The unit is 1 Volt when the value of opticalAlarmPrfUnit(1) is 1, 
+                                     otherwise the unit is 0.1 Volt.";
+                        type int32 {
+                            range 0..100;
+                        }
+                    }
+                    leaf zxAnOpticalTempLowerThresh {
+                        description "The lower limit threshold on optical modules temperature.
+                                     The alarm should be generated  when zxAnOpticalTemperature 
+                                     is lower than this threshold.";
+                        type int32 {
+                            range -50..100;
+                        }
+                    }
+                    leaf zxAnOpticalTempUpperThresh {
+                        description "The upper limit threshold on optical modules temperature.
+                                     The alarm should be generated when zxAnOpticalTemperature 
+                                     exceeds this threshold.";
+                        type int32 {
+                            range -50..100;
+                        }
+                    }
+                    leaf zxAnOpticalOfflineTrapEnable {
+                        description "Indicates whether optical module is online/offline traps should 
+                                     be generated for this interface.
+                                     
+                                     By default, this object should have the value enabled(1) for
+                                     interfaces which do not operate on 'top' of any other
+                                     interface (as defined in the ifStackTable), and disabled(2)
+                                     otherwise.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                    }
+                    leaf zxAnOpticalModuleConfClass {
+                        description "The optical module configured class.";
+                        type string {
+                            length 0..32;
+                        }
+                    }
+                }
+            }
+            container zxAnOpticalAlmPrfIfConfTable {
+                description "This table includes the optical module profile configuration.";
+                list zxAnOpticalAlmPrfIfConfEntry {
+                    description "An entry in zxAnOpticalAlmPrfIfConfTable.";
+                    max-elements 65535;
+                    key "ifIndex ";
+                    leaf ifIndex {
+                        description "A unique value, greater than zero, for each interface.  It
+                                     is recommended that values are assigned contiguously
+                                     starting from 1.  The value for each interface sub-layer
+                                     must remain constant at least from one re-initialization of
+                                     the entity's network management system to the next re-
+                                     initialization.";
+                        type int32 {
+                            range 1..2147483647;
+                        }
+                    }
+                    leaf zxAnOpticalIfAlmPrf {
+                        description "A textual string containing information about the
+                                     optical module alarm threshold profile name .";
+                        type string {
+                            length 1..32;
+                        }
+                    }
+                }
+            }
+            container zxAnOpticalModuleInfoTable {
+                description "This table includes the optical module information.";
+                list zxAnOpticalModuleInfoEntry {
+                    description "An entry in zxAnOpticalModuleInfoTable.";
+                    max-elements 65535;
+                    key "ifIndex ";
+                    leaf ifIndex {
+                        description "A unique value, greater than zero, for each interface.  It
+                                     is recommended that values are assigned contiguously
+                                     starting from 1.  The value for each interface sub-layer
+                                     must remain constant at least from one re-initialization of
+                                     the entity's network management system to the next re-
+                                     initialization.";
+                        type int32 {
+                            range 1..2147483647;
+                        }
+                    }
+                    leaf zxAnOpticalIfRxPwrCurrValue {
+                        config false;
+                        description "The optical power monitored at the input.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalIfTxPwrCurrValue {
+                        config false;
+                        description "The optical power monitored at the output.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalIfRate {
+                        config false;
+                        description "The optical module interface rate.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalBiasCurrent {
+                        config false;
+                        description "The optical module bias current .";
+                        type int32;
+                    }
+                    leaf zxAnOpticalSupplyVoltage {
+                        config false;
+                        description "The optical  module supply voltage.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalWavelength {
+                        config false;
+                        description "The optical  module wavelength.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalTemperature {
+                        config false;
+                        description "The optical module temperature .";
+                        type int32;
+                    }
+                    leaf zxAnOpticalFiberType {
+                        config false;
+                        description "The optical module Fiber Type.";
+                        type enumeration {
+                            enum singleMode {
+                                value 1;
+                                description "";
+                            }
+                            enum multiMode {
+                                value 2;
+                                description "";
+                            }
+                            enum unknown {
+                                value 3;
+                                description "";
+                            }
+                        }
+                    }
+                    leaf zxAnOpticalVersionLevel {
+                        config false;
+                        description "The optical module vendor Level.";
+                        type string {
+                            length 0..20;
+                        }
+                    }
+                    leaf zxAnOpticalVendorPn {
+                        config false;
+                        description "The optical module vendor P/N.";
+                        type string {
+                            length 0..64;
+                        }
+                    }
+                    leaf zxAnOpticalVendorName {
+                        config false;
+                        description "The optical  module vendor name.";
+                        type string {
+                            length 0..32;
+                        }
+                    }
+                    leaf zxAnOpticalVendorSn {
+                        config false;
+                        description "The optical  module vendor sn.";
+                        type string {
+                            length 0..20;
+                        }
+                    }
+                    leaf zxAnOpticalProductionDate {
+                        config false;
+                        description "The optical  module production date.";
+                        type string {
+                            length 0..8;
+                        }
+                    }
+                    leaf zxAnOpticalModuleType {
+                        config false;
+                        description "The optical  module type.";
+                        type string {
+                            length 0..20;
+                        }
+                    }
+                    leaf zxAnOpticalFiberInterfaceType {
+                        config false;
+                        description "The optical fiber interface.";
+                        type string {
+                            length 0..20;
+                        }
+                    }
+                    leaf zxAnOpticalMaterialNumber {
+                        config false;
+                        description "The material number of pin(A2).";
+                        type binary {
+                            length 0..20;
+                        }
+                    }
+                    leaf zxAnOpticalRegisterData {
+                        config false;
+                        description "The optical module data is from register.";
+                        type binary {
+                            length 0..128;
+                        }
+                    }
+                    leaf zxAnOpticalOtdrSupport {
+                        config false;
+                        description "The OTDR is supported by the optical module or not. 
+                                     supported(1): The optical module supports OTDR.
+                                     unsupported(2): The optical module doesn't support OTDR.
+                                     unknown(255): Whether the optical module supports OTDR is unknown.";
+                        type enumeration {
+                            enum supported {
+                                value 1;
+                                description "";
+                            }
+                            enum unsupported {
+                                value 2;
+                                description "";
+                            }
+                            enum unknown {
+                                value 255;
+                                description "";
+                            }
+                        }
+                    }
+                    leaf zxAnOpticalModuleActualClass {
+                        config false;
+                        description "The optical module actual class.";
+                        type string {
+                            length 0..32;
+                        }
+                    }
+                    leaf zxAnOpticalOtdrVersion {
+                        config false;
+                        description "The optical module OTDR software version.
+                                     If the optical module doesn't support OTDR or the OTDR 
+                                     has no software version, this object will be set to an 
+                                     empty string.";
+                        type string {
+                            length 0..16;
+                        }
+                    }
+                    leaf zxAnOpticalTransDistanceSmLongR {
+                        config false;
+                        description "This value specifies the transfer distance that is supported by the
+                                     transceiver while operating in compliance with the applicable 
+                                     standards using single mode based long reach fiber. The value is in
+                                     units of kilometers. A value of 255 means the transceiver supports 
+                                     a transfer distance greater than 254 km. A value of zero means the 
+                                     transceiver does not support single mode fiber or that the transfer
+                                     distance information must be determined from the transceiver 
+                                     technology.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalTransDistanceSmShortR {
+                        config false;
+                        description "This value specifies the transfer distance that is supported by the
+                                     transceiver while operating in compliance with the applicable 
+                                     standards using single mode based short reach fiber. The value is 
+                                     in units of 100 meters. A value of 255 means the transceiver 
+                                     supports a transfer distance greater than 25.4 km. A value of zero 
+                                     means the transceiver does not support single mode fiber or that 
+                                     the transfer distance information must be determined from the 
+                                     transceiver technology.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalTransDistanceOm1 {
+                        config false;
+                        description "This value specifies the transfer distance that is supported by the
+                                     transceiver wihle operating in compliance with applicable standards 
+                                     using 62.5 micron multimode OM1(200 MHz*km at 850nm, 500MHz*km at 
+                                     1310mm) fiber. The value is in units of 10 meters. A value of 255 
+                                     means that the transceiver supports a transfer distance greater 
+                                     than 2.54km. A value of zero means that the transceiver does not 
+                                     support 62.5 micron multimode fiber or the transfer distance must 
+                                     determined from the transceiver technology.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalTransDistanceOm2 {
+                        config false;
+                        description "This value specifies the transfer distance that is supported by the
+                                     transceiver wihle operating in compliance with applicable standards
+                                     using 50 micron multimode OM2(500 MHz*km at 850nm) fiber. The value
+                                     is in units of 10 meters. A value of 255 means that the transceiver 
+                                     supports a transfer distance greater than 2.54km. A value of zero 
+                                     means that the transceiver does not support OM2 fiber or the 
+                                     transfer distance must determined from the transceiver technology.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalTransDistanceOm3 {
+                        config false;
+                        description "This value specifies the transfer distance that is supported by the
+                                     transceiver wihle operating in compliance with applicable standards
+                                     using 50 micron multimode OM3(2000 MHz*km) fiber. The value is in 
+                                     units of 10 meters. A value of 255 means that the transceiver 
+                                     supports a transfer distance greater than 2.54km. A value of zero 
+                                     means that the transceiver does not support OM3 fiber or the 
+                                     transfer distance must determined from the transceiver technology.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalTransDistanceCopper {
+                        config false;
+                        description "This value specifies the transfer distance that is supported by the
+                                     transceiver wihle operating in compliance with applicable standards
+                                     using copper cable. For active cable, this value represents actual 
+                                     length. The value is in units of 1 meter. A value of 255 means that
+                                     the transceiver supports a transfer distance greater than 254m. A 
+                                     value of zero means that the transceiver does not support copper or
+                                     active cables or the transfer distance must determined from the 
+                                     transceiver technology.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalPartNumber {
+                        config false;
+                        description "The optical module part number.";
+                        type string {
+                            length 0..32;
+                        }
+                    }
+                    leaf zxAnOpticalModuleStatus {
+                        config false;
+                        description "The optical module status.";
+                        type enumeration {
+                            enum online {
+                                value 1;
+                                description "";
+                            }
+                            enum offline {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default offline;
+                    }
+                }
+            }
+            container zxAnOpticalAlsIfConfTable {
+                description "This table includes the ALS configuration of the optical module.";
+                list zxAnOpticalAlsIfConfEntry {
+                    description "An entry in zxAnOpticalAlsIfConfTable.";
+                    max-elements 65535;
+                    key "ifIndex ";
+                    leaf ifIndex {
+                        description "A unique value, greater than zero, for each interface.  It
+                                     is recommended that values are assigned contiguously
+                                     starting from 1.  The value for each interface sub-layer
+                                     must remain constant at least from one re-initialization of
+                                     the entity's network management system to the next re-
+                                     initialization.";
+                        type int32 {
+                            range 1..2147483647;
+                        }
+                    }
+                    leaf zxAnOptAlsEnable {
+                        description "Enable or disable the ALS function.";
+                        type enumeration {
+                            enum enabled {
+                                value 1;
+                                description "";
+                            }
+                            enum disabled {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default disabled;
+                    }
+                    leaf zxAnOptAlsLaserLosDuration {
+                        description "This attribute specifies the value of the LOS duration. 
+                                     The laser will be shutdown when detected the LOS duration 
+                                     longer than zxAnOptAlsLaserLosDuration value.
+                                     Setting this object will enable the ALS function.
+                                     For C300 Series NE, the default value is 5.
+                                     For C600 Series NE, the default value is 50.";
+                        type int32 {
+                            range 5..200000;
+                        }
+                    }
+                    leaf zxAnOptAlsLaserShutdownDuration {
+                        description "This attribute specifies the value of the laser shutdown 
+                                     duration. 
+                                     Setting this object will enable the ALS function.";
+                        type int32 {
+                            range 5..200000;
+                        }
+                        default 100;
+                    }
+                    leaf zxAnOptAlsLaserStartUpDuration {
+                        description "This attribute specifies the value of the laser re-open 
+                                     duration.
+                                     Setting this object will enable the ALS function.";
+                        type int32 {
+                            range 5..200000;
+                        }
+                        default 50;
+                    }
+                }
+            }
+            container zxAnOpticalModuleConfTable {
+                description "This table includes the optical module configuration.";
+                list zxAnOpticalModuleConfEntry {
+                    description "An entry in zxAnOpticalModuleConfTable.";
+                    max-elements 300;
+                    key "zxAnOpticalModuleConfVendorName zxAnOpticalModuleConfVendorPn ";
+                    leaf zxAnOpticalModuleConfVendorName {
+                        description "The optical module vendor name.";
+                        type string {
+                            length 1..32;
+                        }
+                    }
+                    leaf zxAnOpticalModuleConfVendorPn {
+                        description "The optical module vendor P/N.";
+                        type string {
+                            length 1..64;
+                        }
+                    }
+                    leaf zxAnOpticalModuleConfiguredClass {
+                        description "The optical module configured class. 
+                                     Includes the following:
+                                     GPON/B+,
+                                     GPON/C+,
+                                     GPON/EC+,
+                                     XGPON1/N1,
+                                     XGPON1/N2a,
+                                     EPON/PX20+,
+                                     10G-EPON/PRX30,
+                                     10G-EPON/PR30,
+                                     GPON/D,
+                                     XGS-PON/N1,
+                                     XGS-PON/N2,
+                                     XG-PON&GPON_COMBO/N1-B+,
+                                     XG-PON&GPON_COMB0/N2-C+,
+                                     GPON-OTDR/C+.";
+                        type string {
+                            length 1..32;
+                        }
+                    }
+                    leaf zxAnOpticalModuleConfProperty {
+                        description "The property of the table record.
+                                     default: the default record, it can't be modified or 
+                                     deleted by the user.
+                                     userDefined: the user-defined record.";
+                        type enumeration {
+                            enum default {
+                                value 1;
+                                description "";
+                            }
+                            enum userDefined {
+                                value 2;
+                                description "";
+                            }
+                        }
+                    }
+                    leaf zxAnOpticalModuleConfTechNorms {
+                        description "The optical module configured technical norms.";
+                        type string {
+                            length 1..32;
+                        }
+                    }
+                }
+            }
+            container zxAnOptIfPlugRecordTable {
+                description "This table includes the plugged/unplugged records of the optical module.";
+                list zxAnOptIfPlugRecordEntry {
+                    description "An entry in zxAnOptIfPlugRecordTable.";
+                    max-elements 65535;
+                    key "ifIndex zxAnOptIfPlugRecordNumber ";
+                    leaf ifIndex {
+                        description "A unique value, greater than zero, for each interface.  It
+                                     is recommended that values are assigned contiguously
+                                     starting from 1.  The value for each interface sub-layer
+                                     must remain constant at least from one re-initialization of
+                                     the entity's network management system to the next re-
+                                     initialization.";
+                        type int32 {
+                            range 1..2147483647;
+                        }
+                    }
+                    leaf zxAnOptIfPlugRecordNumber {
+                        description "The plugged/unplugged record number of the optical module, there is the lastest record in number one.";
+                        type int32 {
+                            range 1..10;
+                        }
+                    }
+                    leaf zxAnOptIfPlugRecordPluggedTime {
+                        config false;
+                        description "The plugged time of the optical module.";
+                        type binary;
+                    }
+                    leaf zxAnOptIfPlugRecordUnpluggedTime {
+                        config false;
+                        description "The unplugged time of the optical module.";
+                        type binary;
+                    }
+                    leaf zxAnOptIfPlugRecordMode {
+                        config false;
+                        description "The mode of the optical module.";
+                        type string {
+                            length 1..32;
+                        }
+                    }
+                }
+            }
+            container zxAnOpticalModuleChanInfoTable {
+                description "This table includes the optical module channel information.";
+                list zxAnOpticalModuleChanInfoEntry {
+                    description "An entry in zxAnOpticalModuleChanInfoTable.";
+                    max-elements 65535;
+                    key "ifIndex ";
+                    leaf ifIndex {
+                        description "A unique value, greater than zero, for each interface.  It
+                                     is recommended that values are assigned contiguously
+                                     starting from 1.  The value for each interface sub-layer
+                                     must remain constant at least from one re-initialization of
+                                     the entity's network management system to the next re-
+                                     initialization.";
+                        type int32 {
+                            range 1..2147483647;
+                        }
+                    }
+                    leaf zxAnOpticalChanLaserSwitch {
+                        description "Enables or disables the laser function of the optical module 
+                                     channel.";
+                        type enumeration {
+                            enum open {
+                                value 1;
+                                description "";
+                            }
+                            enum close {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default open;
+                    }
+                    leaf zxAnOpticalChanWavelength {
+                        config false;
+                        description "The wavelength of the optical module channel.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalChanCurrTxPwr {
+                        config false;
+                        description "The transmitted power of the optical module channel.";
+                        type int32;
+                    }
+                    leaf zxAnOpticalChanBiasCurrent {
+                        config false;
+                        description "The bias current of the optical module channel.";
+                        type int32;
+                    }
+                }
+            }
+            container zxAnOpticalModuleClassValueTable {
+                description "This table includes the optical module class value.
+                             NOTE: No recommended to develop this function in EMS.";
+                list zxAnOpticalModuleClassValueEntry {
+                    description "An entry in zxAnOpticalModuleClassValueTable.";
+                    max-elements 100;
+                    key "zxAnOpticalModuleClassId ";
+                    leaf zxAnOpticalModuleClassId {
+                        description "The optical module class id.";
+                        type int32 {
+                            range 1..256;
+                        }
+                    }
+                    leaf zxAnOpticalModuleClassValue {
+                        config false;
+                        description "The optical module class value.";
+                        type string {
+                            length 1..64;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,122 @@
+submodule ctc-epon-logical-link-traffic-descriptor-profile-body {
+  yang-version 1.1;
+  belongs-to ctc-epon-logical-link{
+    prefix ctc-eponll;
+  }
+
+  organization
+    "中国电信股份有限公司上海分公司
+     Shanghai Research Institute of China Telecom Corp. Ltd.";
+
+  description
+    "This module contains traffic descriptor profile data.";
+
+  revision 2018-06-26 {
+    description
+      "CTC OAN SDN Yang Module V1.0";
+  }
+
+  container traffic-descriptor-profiles {
+    description
+      "Traffic descriptor profile configuration.";
+    uses traffic-descriptor-profile-data;
+  }
+
+  grouping traffic-descriptor-profile-data {
+    description
+      "All config data for traffic descriptor profile.";
+    reference
+      "ITU-T G.989.3
+      引用待定
+      traffic-descriptor相关内容和模型目前IEEE的标准暂不涉及，
+      建议先保持现有引用内容";
+
+    list traffic-descriptor-profile {
+      key "name";
+      leaf name {
+        type string;
+        description
+          "Traffic descriptor profile name.";
+      }
+      leaf fixed-bandwidth {
+        type uint64;
+        units "bits/second";
+        description
+          "Represents the reserved portion of the link
+           capacity that is allocated
+           to the given traffic flow, regardless
+           of its traffic demand and the overall
+           traffic load conditions.";
+      }
+      leaf assured-bandwidth {
+        type uint64;
+        units "bits/second";
+        description
+          "Represents a portion of the link capacity
+           that is allocated to the
+           given traffic flow as long as the
+           flow has unsatisfied traffic demand,
+           regardless of the overall traffic conditions.";
+      }
+      leaf maximum-bandwidth {
+        type uint64;
+        units "bits/second";
+        description
+          "Represents the upper limit on the total
+           bandwidth that can be
+           allocated to the traffic flow under any
+           traffic conditions.";
+      }
+      leaf priority {
+        type uint8 {
+          range "1..8";
+        }
+        description
+          "Used for scheduling traffic on a logical link.";
+      }
+      leaf weight {
+        type uint8;
+        description
+          "Used for scheduling traffic on a logical link.";
+      }
+      leaf additional-bw-eligibility-indicator {
+        type enumeration {
+          enum "non-assured-sharing" {
+            description
+              "The LLID is eligible for non-assured bandwidth
+               in addition to the bandwidth described by this
+               traffic descriptor.
+               描述更新";
+          }
+          enum "best-effort-sharing" {
+            description
+              "The LLID is eligible for best effort bandwidth
+               in addition to the bandwidth described by this
+               traffic descriptor.
+               描述更新";
+          }
+          enum "none" {
+            description
+              "The LLID is not eligible for any additional
+               bandwidth beyond the bandwidth described by
+               this traffic descriptor.
+               描述更新";
+          }
+        }
+        description
+          "In case of rate-proportional assignment of
+           additional bandwidth, additional bandwidth
+           eligibility can be provisioned to either value
+           (non-assured-sharing, best-effort-sharing,
+           or none).";
+        reference
+          "ITU-T G.989.3, section 7.3.5
+           引用待定
+           相关内容和模型目前IEEE的标准暂不涉及，
+           建议先保持现有引用内容。";
+      }
+      description
+        "List of traffic descriptor profiles.";
+    }
+  }
+}

@@ -1,0 +1,274 @@
+module zxr10-dcb {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/dcb'
+            ;
+  prefix dcb ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the DCB.'
+              ;
+  revision 2020-10-19 {
+    description 'Add node configuration/dcb/pfc/interfaces/interface/pause-time.'
+                ;
+  }
+  revision 2020-07-20 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'DCB configuration information.'
+                ;
+    container dcb {
+      description 'DCB configuration information.'
+                  ;
+      container pfc {
+        description 'PFC configuration information.'
+                    ;
+        container global {
+          description 'PFC global configuration information.'
+                      ;
+          leaf admin-status {
+            description 'Indicates whether the PFC funtion is enabled.'
+                        ;
+            type enumeration {
+              enum enabled {
+                value 1 ;
+                description 'Enable the PFC function.'
+                            ;
+              }
+              enum disabled {
+                value 2 ;
+                description 'Disable the PFC function.'
+                            ;
+              }
+            }
+            default enabled ;
+          }
+        }
+        container interfaces {
+          description 'PFC configuration information on interfaces.'
+                      ;
+          list interface {
+            description 'PFC configuration information on an interface.'
+                        ;
+            key ifname ;
+            leaf ifname {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf willing {
+              description 'Indicates whether the local interface is willing to '
+                        + 'accept the attribute from the remote interface.'
+                          ;
+              type enumeration {
+                enum enabled {
+                  value 1 ;
+                  description 'The local interface is willing to accept the att'
+                            + 'ribute from the remote interface.'
+                              ;
+                }
+                enum disabled {
+                  value 2 ;
+                  description 'The local interface is not willing to accept the'
+                            + ' attribute from the remote interface.'
+                              ;
+                }
+              }
+              default disabled ;
+            }
+            leaf priority-range {
+              description 'The priority range that the PFC function is enabled.'
+                          ;
+              type ncd:range {
+                pattern '((([0-7]-[0-7])|([0-7])){1,1}(,(([0-7]-[0-7])|([0-7]))'
+                      + '{1,1}){0,7})'
+                        {
+                  description 'Priority range. Single priority value or range(m'
+                            + 'ax num:8; spacing mark:,) in <0-7> are supportte'
+                            + 'd.'
+                              ;
+                }
+              }
+            }
+            leaf pause-time {
+              description 'The pause time in PFC PDU.'
+                          ;
+              type uint32 {
+                range 0..65535 ;
+              }
+              default 65535 ;
+              ncd:revise-date 2020-10-19 ;
+            }
+          }
+        }
+        container priorities {
+          description 'PFC configuration information on priorities.'
+                      ;
+          list priority {
+            description 'PFC configuration information on a priority.'
+                        ;
+            key 'ifname priority'
+                ;
+            leaf ifname {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf priority {
+              description 'Prioity value.'
+                          ;
+              type uint8 {
+                range 0..7 ;
+              }
+            }
+            leaf pause-time {
+              description 'The pause time in PFC PDU.'
+                          ;
+              type uint16 {
+                range 0..65535 ;
+              }
+              default 65535 ;
+            }
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description 'DCB operation information.'
+                ;
+    container dcb {
+      description 'DCB operation information.'
+                  ;
+      container pfc {
+        description 'PFC operation information.'
+                    ;
+        container clear {
+          description 'Clear PFC information.'
+                      ;
+          container pause-frame-statistics {
+            description 'Pause frame statistics.'
+                        ;
+            choice type {
+              case all {
+                description 'All pause frame statistics.'
+                            ;
+                leaf all {
+                  description 'All pause frame statistics.'
+                              ;
+                  type empty ;
+                }
+              }
+              case ifname {
+                description 'Pause frame statistics of interfaces.'
+                            ;
+                list if-statistics {
+                  description 'Pause frame statistics of an interface.'
+                              ;
+                  key ifname ;
+                  leaf ifname {
+                    description 'Interface name.'
+                                ;
+                    type ncd:ifname ;
+                  }
+                }
+              }
+              case ifname-pri {
+                description 'Pause frame statistics of priority on an interface.'
+                            ;
+                list if-pri-statistics {
+                  description 'Pause frame statistics of priority on an interfa'
+                            + 'ce.'
+                              ;
+                  key 'ifname priority'
+                      ;
+                  leaf ifname {
+                    description 'Interface name.'
+                                ;
+                    type ncd:ifname ;
+                  }
+                  leaf priority {
+                    description 'Priority value.'
+                                ;
+                    type uint8 {
+                      range 0..7 ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'DCB state information.'
+                ;
+    container dcb {
+      description 'DCB state information.'
+                  ;
+      container pfc {
+        description 'PFC state information.'
+                    ;
+        container pause-frame-statisticses {
+          description 'Pause frame statistics.'
+                      ;
+          list pause-frame-statistics {
+            description 'Pause frame statistics.'
+                        ;
+            key 'ifname priority'
+                ;
+            leaf ifname {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf priority {
+              description 'Priority value.'
+                          ;
+              type uint8 {
+                range 0..7 ;
+              }
+            }
+            leaf output-total {
+              description 'The total number of pause frames sent.'
+                          ;
+              type uint64 ;
+            }
+            leaf input-total {
+              description 'The total number of pause frames received.'
+                          ;
+              type uint64 ;
+            }
+            leaf output-rate {
+              description 'The current rate of pause frames sent.'
+                          ;
+              type uint64 ;
+            }
+            leaf input-rate {
+              description 'The current rate of pause frames received.'
+                          ;
+              type uint64 ;
+            }
+            ncd:select ifname ;
+            ncd:select 'ifname priority'
+                       ;
+          }
+        }
+      }
+    }
+  }
+}

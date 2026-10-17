@@ -1,0 +1,4231 @@
+module zxr10-snmp {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/snmp'
+            ;
+  prefix snmp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2021-01-19 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2021-11-11 {
+    description '(1) Add container trap-source. path:/configuration/snmp/global'
+              + '-configuration/trap-source.'+"\n"
+              + '(2) Add container inform. path:/configuration/snmp/global-conf'
+              + 'iguration/inform.'+"\n"
+              + '(3) Add the projects T8000 15K M6000-S supported by feature no'
+              + 'de "snmp-trap".'+"\n"
+              + '(4) Add feature node snmp-inform.'
+                ;
+  }
+  revision 2021-03-09 {
+    description 'Add container trap-source-profiles.'
+                ;
+  }
+  revision 2021-01-06 {
+    description 'Add container oid-views.'
+                ;
+  }
+  revision 2020-03-25 {
+    description 'Modify encrypted community length from 64 to 64-200.'
+                ;
+  }
+  revision 2018-10-18 {
+    description 'Add container get-next-cache.'
+                ;
+  }
+  revision 2018-06-21 {
+    description 'Snmp supports all projects.'
+                ;
+  }
+  revision 2018-04-11 {
+    description 'Add domain-hosts container.'
+                ;
+  }
+  revision 2018-02-07 {
+    description 'Add access list configuration.'
+                ;
+  }
+  revision 2017-11-01 {
+    description 'Intial version'
+                ;
+  }
+  feature snmp-trap ;
+  feature snmp-inform {
+    ncd:revise-date 2021-11-11 ;
+  }
+  container configuration {
+    description 'Configuration model.'
+                ;
+    container snmp {
+      description 'SNMP configuration model.'
+                  ;
+      container global-configuration {
+        description 'SNMP global configuration model.'
+                    ;
+        container inform {
+          description 'Inform related information.'
+                      ;
+          container enable-inform {
+            if-feature snmp-inform ;
+            description 'Inform switch.'
+                        ;
+            presence enable-tinform ;
+            list enable-inform-list {
+              description 'Inform switch table.'
+                          ;
+              key inform-bits ;
+              leaf inform-bits {
+                description 'Enable SNMP inform.'
+                            ;
+                type enumeration {
+                  enum snmp {
+                    value 1 ;
+                  }
+                  enum bgp {
+                    value 2 ;
+                  }
+                  enum mac {
+                    value 3 ;
+                  }
+                  enum ospf {
+                    value 4 ;
+                  }
+                  enum stp {
+                    value 5 ;
+                  }
+                  enum ppp {
+                    value 6 ;
+                  }
+                  enum arp {
+                    value 7 ;
+                  }
+                  enum rmon {
+                    value 8 ;
+                  }
+                  enum udld {
+                    value 9 ;
+                  }
+                  enum cfm {
+                    value 10 ;
+                  }
+                  enum efm {
+                    value 11 ;
+                  }
+                  enum lacp {
+                    value 12 ;
+                  }
+                  enum mc-elam {
+                    value 13 ;
+                  }
+                  enum tcp {
+                    value 14 ;
+                  }
+                  enum sctp {
+                    value 15 ;
+                  }
+                  enum stalarm {
+                    value 16 ;
+                  }
+                  enum cps {
+                    value 17 ;
+                  }
+                  enum interface {
+                    value 18 ;
+                  }
+                  enum acl {
+                    value 19 ;
+                  }
+                  enum fib {
+                    value 20 ;
+                  }
+                  enum pim {
+                    value 21 ;
+                  }
+                  enum isis {
+                    value 22 ;
+                  }
+                  enum rip {
+                    value 23 ;
+                  }
+                  enum msdp {
+                    value 24 ;
+                  }
+                  enum aps {
+                    value 25 ;
+                  }
+                  enum config {
+                    value 26 ;
+                  }
+                  enum am {
+                    value 27 ;
+                  }
+                  enum um {
+                    value 28 ;
+                  }
+                  enum system {
+                    value 29 ;
+                  }
+                  enum ldp {
+                    value 30 ;
+                  }
+                  enum pwe3 {
+                    value 31 ;
+                  }
+                  enum vpn {
+                    value 32 ;
+                  }
+                  enum mpls-oam {
+                    value 33 ;
+                  }
+                  enum ptp {
+                    value 34 ;
+                  }
+                  enum tunnel-te {
+                    value 35 ;
+                  }
+                  enum radius {
+                    value 36 ;
+                  }
+                  enum dhcp {
+                    value 37 ;
+                  }
+                  enum bfd {
+                    value 38 ;
+                  }
+                  enum ippool {
+                    value 39 ;
+                  }
+                  enum ntp {
+                    value 40 ;
+                  }
+                  enum ssm {
+                    value 41 ;
+                  }
+                  enum sqa {
+                    value 42 ;
+                  }
+                  enum ipsec {
+                    value 43 ;
+                  }
+                  enum cgn {
+                    value 44 ;
+                  }
+                  enum vrrp {
+                    value 45 ;
+                  }
+                  enum ftp_tftp {
+                    value 46 ;
+                  }
+                  enum ping-trace {
+                    value 47 ;
+                  }
+                  enum gm {
+                    value 48 ;
+                  }
+                }
+              }
+            }
+          }
+          container host {
+            description 'Specify hosts to receive SNMP inform.'
+                        ;
+            container inform {
+              description 'Host information to receive INFORM.'
+                          ;
+              container public-network {
+                description 'Configure the host address as the public network a'
+                          + 'ddress.'
+                            ;
+                container ipv4-hosts {
+                  if-feature snmp-inform ;
+                  description 'The configuration to receive inform of the host '
+                            + 'address is IPv4.'
+                              ;
+                  list ipv4-host {
+                    description 'The host address configured to receive informs'
+                              + ' is the list of hosts for IPv4.(Note: at least'
+                              + ' one of the 48 module types is configured, oth'
+                              + 'erwise the function does not work.)'
+                                ;
+                    key 'ipv4-addr community-or-user'
+                        ;
+                    leaf ipv4-addr {
+                      description 'Configure IPv4 address.'
+                                  ;
+                      type ncd:ipv4-address-none-zero ;
+                    }
+                    leaf community-or-user {
+                      description 'SNMP v2c community string or SNMPv3 user nam'
+                                + 'e (1-32 characters).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    choice version {
+                      description 'SNMP version to use for inform messages.'
+                                  ;
+                      mandatory true ;
+                      case version2 {
+                        description 'Use SNMPv2c.'
+                                    ;
+                        leaf SNMPv2c {
+                          description 'Use SNMPv2c.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version3 {
+                        description 'Use SNMPv3.'
+                                    ;
+                        leaf SNMPv3 {
+                          description 'Use SNMPv3.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                        leaf security-level {
+                          description 'Configure the security level of inform.'
+                                      ;
+                          type enumeration {
+                            enum noauth {
+                              value 1 ;
+                            }
+                            enum auth {
+                              value 2 ;
+                            }
+                            enum priv {
+                              value 3 ;
+                            }
+                          }
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf timeout {
+                      description Timeout. ;
+                      type uint32 {
+                        range 100..3000 ;
+                      }
+                      units 10ms ;
+                    }
+                    leaf retry-count {
+                      description 'The number of retransmission.'
+                                  ;
+                      type uint16 {
+                        range 0..255 ;
+                      }
+                    }
+                    leaf engine-id {
+                      description 'Engine ID.'
+                                  ;
+                      type string {
+                        length 10..64 ;
+                      }
+                    }
+                    leaf udp-port {
+                      description "The inform host's UDP port number."
+                                  ;
+                      type uint32 {
+                        range 1..65535 ;
+                      }
+                      default 162 ;
+                    }
+                    leaf snmp {
+                      description 'Allow SNMP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bgp {
+                      description 'Allow BGP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mac {
+                      description 'Allow MAC-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ospf {
+                      description 'Allow OSPF-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stp {
+                      description 'Allow STP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ppp {
+                      description 'Allow PPP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf arp {
+                      description 'Allow ARP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rmon {
+                      description 'Allow RMON-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf udld {
+                      description 'Allow UDLD-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cfm {
+                      description 'Allow CFM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf efm {
+                      description 'Allow EFM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf lacp {
+                      description 'Allow LACP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mc-elam {
+                      description 'Allow MC-ELAM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tcp {
+                      description 'Allow TCP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sctp {
+                      description 'Allow SCTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stalarm {
+                      description 'Allow STALARM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cps {
+                      description 'Allow CPS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf interface {
+                      description 'Allow INTERFACE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf acl {
+                      description 'Allow ACL-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf fib {
+                      description 'Allow FIB-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pim {
+                      description 'Allow PIM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf isis {
+                      description 'Allow ISIS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rip {
+                      description 'Allow RIP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf msdp {
+                      description 'Allow MSDP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf aps {
+                      description 'Allow APS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf config {
+                      description 'Allow CONFIG-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf am {
+                      description 'Allow AM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf um {
+                      description 'Allow UM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf system {
+                      description 'Allow SYSTEM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ldp {
+                      description 'Allow LDP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pwe3 {
+                      description 'Allow PWE3-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vpn {
+                      description 'Allow VPN-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mpls-oam {
+                      description 'Allow MPLS-OAM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ptp {
+                      description 'Allow PTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tunnel-te {
+                      description 'Allow TUNNEL-TE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf radius {
+                      description 'Allow RADIUS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf dhcp {
+                      description 'Allow DHCP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bfd {
+                      description 'Allow BFD-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ippool {
+                      description 'Allow IPPOOL-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ntp {
+                      description 'Allow NTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ssm {
+                      description 'Allow SSM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sqa {
+                      description 'Allow SQA-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ipsec {
+                      description 'Allow IPSEC-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cgn {
+                      description 'Allow CGN-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vrrp {
+                      description 'Allow VRRP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ftp_tftp {
+                      description 'Allow FTP-TFTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ping-trace {
+                      description 'Allow PING-TRACE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf gm {
+                      description 'Allow GM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+                container ipv6-hosts {
+                  if-feature snmp-inform ;
+                  description 'The configuration to receive inform of the host '
+                            + 'address is IPv6.'
+                              ;
+                  list ipv6-host {
+                    description 'The host address configured to receive informs'
+                              + ' is the list of hosts for IPv6.(Note: at least'
+                              + ' one of the 48 module types is configured, oth'
+                              + 'erwise the function does not work.)'
+                                ;
+                    key 'ipv6-addr community-or-user'
+                        ;
+                    leaf ipv6-addr {
+                      description 'Configure IPv6 address.'
+                                  ;
+                      type ncd:ipv6-address ;
+                    }
+                    leaf community-or-user {
+                      description 'SNMP v2c community string or SNMPv3 user nam'
+                                + 'e (1-32 characters).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    choice version {
+                      description 'SNMP version to use for trap messages.'
+                                  ;
+                      mandatory true ;
+                      case version2c {
+                        description 'Use SNMPv2c.'
+                                    ;
+                        leaf SNMPv2c {
+                          description 'Use SNMPv2c.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version3 {
+                        description 'Use SNMPv3.'
+                                    ;
+                        leaf SNMPv3 {
+                          description 'Use SNMPv3.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                        leaf security-level {
+                          description 'Configure the security level of inform.'
+                                      ;
+                          type enumeration {
+                            enum noauth {
+                              value 1 ;
+                            }
+                            enum auth {
+                              value 2 ;
+                            }
+                            enum priv {
+                              value 3 ;
+                            }
+                          }
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf timeout {
+                      description Timeout. ;
+                      type uint32 {
+                        range 100..3000 ;
+                      }
+                      units 10ms ;
+                    }
+                    leaf retry-count {
+                      description 'The number of retransmission.'
+                                  ;
+                      type uint16 {
+                        range 0..255 ;
+                      }
+                    }
+                    leaf engine-id {
+                      description 'Engine ID.'
+                                  ;
+                      type string {
+                        length 10..64 ;
+                      }
+                    }
+                    leaf udp-port {
+                      description "The inform host's UDP port number."
+                                  ;
+                      type uint32 {
+                        range 1..65535 ;
+                      }
+                      default 162 ;
+                    }
+                    leaf snmp {
+                      description 'Allow SNMP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bgp {
+                      description 'Allow BGP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mac {
+                      description 'Allow MAC-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ospf {
+                      description 'Allow OSPF-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stp {
+                      description 'Allow STP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ppp {
+                      description 'Allow PPP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf arp {
+                      description 'Allow ARP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rmon {
+                      description 'Allow RMON-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf udld {
+                      description 'Allow UDLD-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cfm {
+                      description 'Allow CFM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf efm {
+                      description 'Allow EFM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf lacp {
+                      description 'Allow LACP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mc-elam {
+                      description 'Allow MC-ELAM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tcp {
+                      description 'Allow TCP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sctp {
+                      description 'Allow SCTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stalarm {
+                      description 'Allow STALARM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cps {
+                      description 'Allow CPS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf interface {
+                      description 'Allow INTERFACE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf acl {
+                      description 'Allow ACL-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf fib {
+                      description 'Allow FIB-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pim {
+                      description 'Allow PIM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf isis {
+                      description 'Allow ISIS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rip {
+                      description 'Allow RIP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf msdp {
+                      description 'Allow MSDP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf aps {
+                      description 'Allow APS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf config {
+                      description 'Allow CONFIG-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf am {
+                      description 'Allow AM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf um {
+                      description 'Allow UM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf system {
+                      description 'Allow SYSTEM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ldp {
+                      description 'Allow LDP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pwe3 {
+                      description 'Allow PWE3-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vpn {
+                      description 'Allow VPN-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mpls-oam {
+                      description 'Allow MPLS-OAM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ptp {
+                      description 'Allow PTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tunnel-te {
+                      description 'Allow TUNNEL-TE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf radius {
+                      description 'Allow RADIUS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf dhcp {
+                      description 'Allow DHCP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bfd {
+                      description 'Allow BFD-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ippool {
+                      description 'Allow IPPOOL-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ntp {
+                      description 'Allow NTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ssm {
+                      description 'Allow SSM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sqa {
+                      description 'Allow SQA-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ipsec {
+                      description 'Allow IPSEC-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cgn {
+                      description 'Allow CGN-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vrrp {
+                      description 'Allow VRRP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ftp_tftp {
+                      description 'Allow FTP-TFTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ping-trace {
+                      description 'Allow PING-TRACE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf gm {
+                      description 'Allow GM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+              }
+              container private-network {
+                description 'Configure the host address as private network addr'
+                          + 'ess.'
+                            ;
+                container ipv4-hosts {
+                  if-feature snmp-inform ;
+                  description 'The configuration to receive inform of the host '
+                            + 'address is IPv4.'
+                              ;
+                  list ipv4-host {
+                    description 'The host address configured to receive informs'
+                              + ' is the list of hosts for IPv4.(Note: at least'
+                              + ' one of the 48 module types is configured, oth'
+                              + 'erwise the function does not work.)'
+                                ;
+                    key 'vrf-name ipv4-addr community-or-user'
+                        ;
+                    leaf vrf-name {
+                      description 'VPN routing/forwarding instance(VRF).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    leaf ipv4-addr {
+                      description 'Configure IPv4 address.'
+                                  ;
+                      type ncd:ipv4-address-none-zero ;
+                    }
+                    leaf community-or-user {
+                      description 'SNMP v2c community string or SNMPv3 user nam'
+                                + 'e (1-32 characters).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    choice version {
+                      description 'SNMP version to use for inform messages.'
+                                  ;
+                      mandatory true ;
+                      case version2c {
+                        description 'Use SNMPv2c.'
+                                    ;
+                        leaf SNMPv2c {
+                          description 'Use SNMPv2c.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version3 {
+                        description 'Use SNMPv3.'
+                                    ;
+                        leaf SNMPv3 {
+                          description 'Use SNMPv3.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                        leaf security-level {
+                          description 'Configure the security level of inform.'
+                                      ;
+                          type enumeration {
+                            enum noauth {
+                              value 1 ;
+                            }
+                            enum auth {
+                              value 2 ;
+                            }
+                            enum priv {
+                              value 3 ;
+                            }
+                          }
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf timeout {
+                      description Timeout. ;
+                      type uint32 {
+                        range 100..3000 ;
+                      }
+                      units 10ms ;
+                    }
+                    leaf retry-count {
+                      description 'The number of retransmission.'
+                                  ;
+                      type uint16 {
+                        range 0..255 ;
+                      }
+                    }
+                    leaf engine-id {
+                      description 'Engine ID.'
+                                  ;
+                      type string {
+                        length 10..64 ;
+                      }
+                    }
+                    leaf udp-port {
+                      description "The inform host's UDP port number."
+                                  ;
+                      type uint32 {
+                        range 1..65535 ;
+                      }
+                      default 162 ;
+                    }
+                    leaf snmp {
+                      description 'Allow SNMP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bgp {
+                      description 'Allow BGP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mac {
+                      description 'Allow MAC-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ospf {
+                      description 'Allow OSPF-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stp {
+                      description 'Allow STP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ppp {
+                      description 'Allow PPP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf arp {
+                      description 'Allow ARP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rmon {
+                      description 'Allow RMON-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf udld {
+                      description 'Allow UDLD-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cfm {
+                      description 'Allow CFM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf efm {
+                      description 'Allow EFM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf lacp {
+                      description 'Allow LACP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mc-elam {
+                      description 'Allow MC-ELAM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tcp {
+                      description 'Allow TCP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sctp {
+                      description 'Allow SCTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stalarm {
+                      description 'Allow STALARM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cps {
+                      description 'Allow CPS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf interface {
+                      description 'Allow INTERFACE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf acl {
+                      description 'Allow ACL-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf fib {
+                      description 'Allow FIB-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pim {
+                      description 'Allow PIM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf isis {
+                      description 'Allow ISIS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rip {
+                      description 'Allow RIP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf msdp {
+                      description 'Allow MSDP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf aps {
+                      description 'Allow APS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf config {
+                      description 'Allow CONFIG-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf am {
+                      description 'Allow AM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf um {
+                      description 'Allow UM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf system {
+                      description 'Allow SYSTEM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ldp {
+                      description 'Allow LDP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pwe3 {
+                      description 'Allow PWE3-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vpn {
+                      description 'Allow VPN-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mpls-oam {
+                      description 'Allow MPLS-OAM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ptp {
+                      description 'Allow PTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tunnel-te {
+                      description 'Allow TUNNEL-TE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf radius {
+                      description 'Allow RADIUS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf dhcp {
+                      description 'Allow DHCP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bfd {
+                      description 'Allow BFD-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ippool {
+                      description 'Allow IPPOOL-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ntp {
+                      description 'Allow NTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ssm {
+                      description 'Allow SSM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sqa {
+                      description 'Allow SQA-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ipsec {
+                      description 'Allow IPSEC-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cgn {
+                      description 'Allow CGN-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vrrp {
+                      description 'Allow VRRP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ftp_tftp {
+                      description 'Allow FTP-TFTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ping-trace {
+                      description 'Allow PING-TRACE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf gm {
+                      description 'Allow GM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+                container ipv6-hosts {
+                  if-feature snmp-inform ;
+                  description 'The configuration to receive inform of the host '
+                            + 'address is IPv6.'
+                              ;
+                  list ipv6-host {
+                    description 'The host address configured to receive informs'
+                              + ' is the list of hosts for IPv6.(Note: at least'
+                              + ' one of the 48 module types is configured, oth'
+                              + 'erwise the function does not work.)'
+                                ;
+                    key 'vrf-name ipv6-addr community-or-user'
+                        ;
+                    leaf vrf-name {
+                      description 'VPN routing/forwarding instance(VRF).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    leaf ipv6-addr {
+                      description 'Configure IPv6 address.'
+                                  ;
+                      type ncd:ipv6-address ;
+                    }
+                    leaf community-or-user {
+                      description 'SNMP v2c community string or SNMPv3 user nam'
+                                + 'e (1-32 characters).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    choice version {
+                      description 'SNMP version to use for inform messages.'
+                                  ;
+                      mandatory true ;
+                      case version2c {
+                        description 'Use SNMPv2c.'
+                                    ;
+                        leaf SNMPv2c {
+                          description 'Use SNMPv2c.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version3 {
+                        description 'Use SNMPv3.'
+                                    ;
+                        leaf SNMPv3 {
+                          description 'Use SNMPv3.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                        leaf security-level {
+                          description 'Configure the security level of inform.'
+                                      ;
+                          type enumeration {
+                            enum noauth {
+                              value 1 ;
+                            }
+                            enum auth {
+                              value 2 ;
+                            }
+                            enum priv {
+                              value 3 ;
+                            }
+                          }
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf timeout {
+                      description Timeout. ;
+                      type uint32 {
+                        range 100..3000 ;
+                      }
+                      units 10ms ;
+                    }
+                    leaf retry-count {
+                      description 'The number of retransmission.'
+                                  ;
+                      type uint16 {
+                        range 0..255 ;
+                      }
+                    }
+                    leaf engine-id {
+                      description 'Engine ID.'
+                                  ;
+                      type string {
+                        length 10..64 ;
+                      }
+                    }
+                    leaf udp-port {
+                      description "The inform host's UDP port number."
+                                  ;
+                      type uint32 {
+                        range 1..65535 ;
+                      }
+                      default 162 ;
+                    }
+                    leaf snmp {
+                      description 'Allow SNMP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bgp {
+                      description 'Allow BGP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mac {
+                      description 'Allow MAC-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ospf {
+                      description 'Allow OSPF-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stp {
+                      description 'Allow STP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ppp {
+                      description 'Allow PPP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf arp {
+                      description 'Allow ARP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rmon {
+                      description 'Allow RMON-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf udld {
+                      description 'Allow UDLD-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cfm {
+                      description 'Allow CFM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf efm {
+                      description 'Allow EFM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf lacp {
+                      description 'Allow LACP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mc-elam {
+                      description 'Allow MC-ELAM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tcp {
+                      description 'Allow TCP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sctp {
+                      description 'Allow SCTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stalarm {
+                      description 'Allow STALARM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cps {
+                      description 'Allow CPS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf interface {
+                      description 'Allow INTERFACE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf acl {
+                      description 'Allow ACL-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf fib {
+                      description 'Allow FIB-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pim {
+                      description 'Allow PIM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf isis {
+                      description 'Allow ISIS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rip {
+                      description 'Allow RIP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf msdp {
+                      description 'Allow MSDP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf aps {
+                      description 'Allow APS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf config {
+                      description 'Allow CONFIG-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf am {
+                      description 'Allow AM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf um {
+                      description 'Allow UM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf system {
+                      description 'Allow SYSTEM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ldp {
+                      description 'Allow LDP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pwe3 {
+                      description 'Allow PWE3-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vpn {
+                      description 'Allow VPN-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mpls-oam {
+                      description 'Allow MPLS-OAM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ptp {
+                      description 'Allow PTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tunnel-te {
+                      description 'Allow TUNNEL-TE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf radius {
+                      description 'Allow RADIUS-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf dhcp {
+                      description 'Allow DHCP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bfd {
+                      description 'Allow BFD-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ippool {
+                      description 'Allow IPPOOL-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ntp {
+                      description 'Allow NTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ssm {
+                      description 'Allow SSM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sqa {
+                      description 'Allow SQA-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ipsec {
+                      description 'Allow IPSEC-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cgn {
+                      description 'Allow CGN-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vrrp {
+                      description 'Allow VRRP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ftp_tftp {
+                      description 'Allow FTP-TFTP-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ping-trace {
+                      description 'Allow PING-TRACE-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf gm {
+                      description 'Allow GM-type informs.'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          ncd:revise-date 2021-11-11 ;
+        }
+        container trap {
+          description 'Trap related information.'
+                      ;
+          container enable-trap {
+            description 'TRAP switch.'
+                        ;
+            presence enable-trap ;
+            list enable-trap-list {
+              description 'TRAP switch table.'
+                          ;
+              key trap-bits ;
+              leaf trap-bits {
+                description 'Enable SNMP traps.'
+                            ;
+                type enumeration {
+                  enum snmp {
+                    value 1 ;
+                  }
+                  enum bgp {
+                    value 2 ;
+                  }
+                  enum mac {
+                    value 3 ;
+                  }
+                  enum ospf {
+                    value 4 ;
+                  }
+                  enum stp {
+                    value 5 ;
+                  }
+                  enum ppp {
+                    value 6 ;
+                  }
+                  enum arp {
+                    value 7 ;
+                  }
+                  enum rmon {
+                    value 8 ;
+                  }
+                  enum udld {
+                    value 9 ;
+                  }
+                  enum cfm {
+                    value 10 ;
+                  }
+                  enum efm {
+                    value 11 ;
+                  }
+                  enum lacp {
+                    value 12 ;
+                  }
+                  enum mc-elam {
+                    value 13 ;
+                  }
+                  enum tcp {
+                    value 14 ;
+                  }
+                  enum sctp {
+                    value 15 ;
+                  }
+                  enum stalarm {
+                    value 16 ;
+                  }
+                  enum cps {
+                    value 17 ;
+                  }
+                  enum interface {
+                    value 18 ;
+                  }
+                  enum acl {
+                    value 19 ;
+                  }
+                  enum fib {
+                    value 20 ;
+                  }
+                  enum pim {
+                    value 21 ;
+                  }
+                  enum isis {
+                    value 22 ;
+                  }
+                  enum rip {
+                    value 23 ;
+                  }
+                  enum msdp {
+                    value 24 ;
+                  }
+                  enum aps {
+                    value 25 ;
+                  }
+                  enum config {
+                    value 26 ;
+                  }
+                  enum am {
+                    value 27 ;
+                  }
+                  enum um {
+                    value 28 ;
+                  }
+                  enum system {
+                    value 29 ;
+                  }
+                  enum ldp {
+                    value 30 ;
+                  }
+                  enum pwe3 {
+                    value 31 ;
+                  }
+                  enum vpn {
+                    value 32 ;
+                  }
+                  enum mpls-oam {
+                    value 33 ;
+                  }
+                  enum ptp {
+                    value 34 ;
+                  }
+                  enum tunnel-te {
+                    value 35 ;
+                  }
+                  enum radius {
+                    value 36 ;
+                  }
+                  enum dhcp {
+                    value 37 ;
+                  }
+                  enum bfd {
+                    value 38 ;
+                  }
+                  enum ippool {
+                    value 39 ;
+                  }
+                  enum ntp {
+                    value 40 ;
+                  }
+                  enum ssm {
+                    value 41 ;
+                  }
+                  enum sqa {
+                    value 42 ;
+                  }
+                  enum ipsec {
+                    value 43 ;
+                  }
+                  enum cgn {
+                    value 44 ;
+                  }
+                  enum vrrp {
+                    value 45 ;
+                  }
+                  enum ftp_tftp {
+                    value 46 ;
+                  }
+                  enum ping-trace {
+                    value 47 ;
+                  }
+                  enum gm {
+                    value 48 ;
+                  }
+                }
+              }
+            }
+          }
+          container host {
+            description 'Specify hosts to receive SNMP trap.'
+                        ;
+            container trap {
+              description 'Host information to receive TRAP.'
+                          ;
+              container public-network {
+                description 'Configure the host address as the public network a'
+                          + 'ddress.'
+                            ;
+                container ipv4-hosts {
+                  if-feature snmp-trap ;
+                  description 'The configuration to receive trap of the host ad'
+                            + 'dress is IPv4.'
+                              ;
+                  list ipv4-host {
+                    description 'The host address configured to receive traps i'
+                              + 's the list of hosts for IPv4.(Note: at least o'
+                              + 'ne of the 48 module types is configured, other'
+                              + 'wise the function does not work.)'
+                                ;
+                    key 'ipv4-addr community-or-user'
+                        ;
+                    leaf ipv4-addr {
+                      description 'Configure IPv4 address.'
+                                  ;
+                      type ncd:ipv4-address-none-zero ;
+                    }
+                    leaf community-or-user {
+                      description 'Configure community.'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    choice version {
+                      description 'SNMP version to use for trap messages.'
+                                  ;
+                      mandatory true ;
+                      case version1 {
+                        description 'Use SNMPv1.'
+                                    ;
+                        leaf SNMPv1 {
+                          description 'Use SNMPv1.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version2c {
+                        description 'Use SNMPv2c.'
+                                    ;
+                        leaf SNMPv2c {
+                          description 'Use SNMPv2c.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version3 {
+                        description 'Use SNMPv3.'
+                                    ;
+                        leaf SNMPv3 {
+                          description 'Use SNMPv3.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                        leaf security-level {
+                          description 'Configure the security level of trap.'
+                                      ;
+                          type enumeration {
+                            enum noauth {
+                              value 1 ;
+                            }
+                            enum auth {
+                              value 2 ;
+                            }
+                            enum priv {
+                              value 3 ;
+                            }
+                          }
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf udp-port {
+                      description "The trap host's UDP port number."
+                                  ;
+                      type uint32 {
+                        range 1..65535 ;
+                      }
+                      default 162 ;
+                    }
+                    leaf snmp {
+                      description 'Allow SNMP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bgp {
+                      description 'Allow BGP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mac {
+                      description 'Allow MAC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ospf {
+                      description 'Allow OSPF-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stp {
+                      description 'Allow STP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ppp {
+                      description 'Allow PPP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf arp {
+                      description 'Allow ARP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rmon {
+                      description 'Allow RMON-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf udld {
+                      description 'Allow UDLD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cfm {
+                      description 'Allow CFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf efm {
+                      description 'Allow EFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf lacp {
+                      description 'Allow LACP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mc-elam {
+                      description 'Allow MC-ELAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tcp {
+                      description 'Allow TCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sctp {
+                      description 'Allow SCTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stalarm {
+                      description 'Allow STALARM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cps {
+                      description 'Allow CPS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf interface {
+                      description 'Allow INTERFACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf acl {
+                      description 'Allow ACL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf fib {
+                      description 'Allow FIB-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pim {
+                      description 'Allow PIM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf isis {
+                      description 'Allow ISIS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rip {
+                      description 'Allow RIP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf msdp {
+                      description 'Allow MSDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf aps {
+                      description 'Allow APS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf config {
+                      description 'Allow CONFIG-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf am {
+                      description 'Allow AM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf um {
+                      description 'Allow UM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf system {
+                      description 'Allow SYSTEM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ldp {
+                      description 'Allow LDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pwe3 {
+                      description 'Allow PWE3-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vpn {
+                      description 'Allow VPN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mpls-oam {
+                      description 'Allow MPLS-OAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ptp {
+                      description 'Allow PTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tunnel-te {
+                      description 'Allow TUNNEL-TE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf radius {
+                      description 'Allow RADIUS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf dhcp {
+                      description 'Allow DHCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bfd {
+                      description 'Allow BFD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ippool {
+                      description 'Allow IPPOOL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ntp {
+                      description 'Allow NTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ssm {
+                      description 'Allow SSM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sqa {
+                      description 'Allow SQA-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ipsec {
+                      description 'Allow IPSEC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cgn {
+                      description 'Allow CGN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vrrp {
+                      description 'Allow VRRP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ftp_tftp {
+                      description 'Allow FTP-TFTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ping-trace {
+                      description 'Allow PING-TRACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf gm {
+                      description 'Allow GM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+                container ipv6-hosts {
+                  if-feature snmp-trap ;
+                  description 'The configuration to receive trap of the host ad'
+                            + 'dress is IPv6.'
+                              ;
+                  list ipv6-host {
+                    description 'The host address configured to receive traps i'
+                              + 's the list of hosts for IPv6.(Note: at least o'
+                              + 'ne of the 48 module types is configured, other'
+                              + 'wise the function does not work.)'
+                                ;
+                    key 'ipv6-addr community-or-user'
+                        ;
+                    leaf ipv6-addr {
+                      description 'Configure IPv6 address.'
+                                  ;
+                      type ncd:ipv6-address ;
+                    }
+                    leaf community-or-user {
+                      description 'SNMP v1/v2c community string or SNMPv3 user '
+                                + 'name (1-32 characters).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    choice version {
+                      description 'SNMP version to use for trap messages.'
+                                  ;
+                      mandatory true ;
+                      case version1 {
+                        description 'Use SNMPv1.'
+                                    ;
+                        leaf SNMPv1 {
+                          description 'Use SNMPv1.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version2c {
+                        description 'Use SNMPv2c.'
+                                    ;
+                        leaf SNMPv2c {
+                          description 'Use SNMPv2c.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version3 {
+                        description 'Use SNMPv3.'
+                                    ;
+                        leaf SNMPv3 {
+                          description 'Use SNMPv3.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                        leaf security-level {
+                          description 'Configure the security level of trap.'
+                                      ;
+                          type enumeration {
+                            enum noauth {
+                              value 1 ;
+                            }
+                            enum auth {
+                              value 2 ;
+                            }
+                            enum priv {
+                              value 3 ;
+                            }
+                          }
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf udp-port {
+                      description "The trap host's UDP port number."
+                                  ;
+                      type uint32 {
+                        range 1..65535 ;
+                      }
+                      default 162 ;
+                    }
+                    leaf snmp {
+                      description 'Allow SNMP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bgp {
+                      description 'Allow BGP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mac {
+                      description 'Allow MAC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ospf {
+                      description 'Allow OSPF-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stp {
+                      description 'Allow STP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ppp {
+                      description 'Allow PPP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf arp {
+                      description 'Allow ARP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rmon {
+                      description 'Allow RMON-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf udld {
+                      description 'Allow UDLD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cfm {
+                      description 'Allow CFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf efm {
+                      description 'Allow EFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf lacp {
+                      description 'Allow LACP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mc-elam {
+                      description 'Allow MC-ELAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tcp {
+                      description 'Allow TCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sctp {
+                      description 'Allow SCTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stalarm {
+                      description 'Allow STALARM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cps {
+                      description 'Allow CPS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf interface {
+                      description 'Allow INTERFACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf acl {
+                      description 'Allow ACL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf fib {
+                      description 'Allow FIB-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pim {
+                      description 'Allow PIM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf isis {
+                      description 'Allow ISIS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rip {
+                      description 'Allow RIP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf msdp {
+                      description 'Allow MSDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf aps {
+                      description 'Allow APS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf config {
+                      description 'Allow CONFIG-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf am {
+                      description 'Allow AM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf um {
+                      description 'Allow UM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf system {
+                      description 'Allow SYSTEM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ldp {
+                      description 'Allow LDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pwe3 {
+                      description 'Allow PWE3-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vpn {
+                      description 'Allow VPN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mpls-oam {
+                      description 'Allow MPLS-OAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ptp {
+                      description 'Allow PTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tunnel-te {
+                      description 'Allow TUNNEL-TE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf radius {
+                      description 'Allow RADIUS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf dhcp {
+                      description 'Allow DHCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bfd {
+                      description 'Allow BFD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ippool {
+                      description 'Allow IPPOOL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ntp {
+                      description 'Allow NTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ssm {
+                      description 'Allow SSM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sqa {
+                      description 'Allow SQA-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ipsec {
+                      description 'Allow IPSEC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cgn {
+                      description 'Allow CGN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vrrp {
+                      description 'Allow VRRP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ftp_tftp {
+                      description 'Allow FTP-TFTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ping-trace {
+                      description 'Allow PING-TRACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf gm {
+                      description 'Allow GM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+                container domain-hosts {
+                  description 'The configuration to receive trap of the host ad'
+                            + 'dress is DNS.'
+                              ;
+                  list domain-host {
+                    description 'The host address configured to receive traps i'
+                              + 's the list of hosts for DNS.(Note: at least on'
+                              + 'e of the 48 module types is configured, otherw'
+                              + 'ise the function does not work.)'
+                                ;
+                    key 'name community-or-user'
+                        ;
+                    leaf name {
+                      description 'Configure DNS name.'
+                                  ;
+                      type string {
+                        length 1..128 ;
+                      }
+                    }
+                    leaf community-or-user {
+                      description 'Configure community.'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    leaf dns-ip-type {
+                      description 'The mapping address of DNS name is IPv6 or I'
+                                + 'Pv4.'
+                                  ;
+                      type enumeration {
+                        enum ipv4 {
+                          value 1 ;
+                        }
+                        enum ipv6 {
+                          value 2 ;
+                        }
+                      }
+                      mandatory true ;
+                    }
+                    choice version {
+                      description 'SNMP version to use for trap messages.'
+                                  ;
+                      mandatory true ;
+                      case version1 {
+                        description 'Use SNMPv1.'
+                                    ;
+                        leaf SNMPv1 {
+                          description 'Use SNMPv1.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version2c {
+                        description 'Use SNMPv2c.'
+                                    ;
+                        leaf SNMPv2c {
+                          description 'Use SNMPv2c.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version3 {
+                        description 'Use SNMPv3.'
+                                    ;
+                        leaf SNMPv3 {
+                          description 'Use SNMPv3.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                        leaf security-level {
+                          description 'Configure the security level of trap.'
+                                      ;
+                          type enumeration {
+                            enum noauth {
+                              value 1 ;
+                            }
+                            enum auth {
+                              value 2 ;
+                            }
+                            enum priv {
+                              value 3 ;
+                            }
+                          }
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf udp-port {
+                      description "The trap host's UDP port number."
+                                  ;
+                      type uint32 {
+                        range 1..65535 ;
+                      }
+                      default 162 ;
+                    }
+                    leaf snmp {
+                      description 'Allow SNMP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bgp {
+                      description 'Allow BGP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mac {
+                      description 'Allow MAC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ospf {
+                      description 'Allow OSPF-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stp {
+                      description 'Allow STP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ppp {
+                      description 'Allow PPP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf arp {
+                      description 'Allow ARP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rmon {
+                      description 'Allow RMON-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf udld {
+                      description 'Allow UDLD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cfm {
+                      description 'Allow CFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf efm {
+                      description 'Allow EFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf lacp {
+                      description 'Allow LACP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mc-elam {
+                      description 'Allow MC-ELAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tcp {
+                      description 'Allow TCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sctp {
+                      description 'Allow SCTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stalarm {
+                      description 'Allow STALARM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cps {
+                      description 'Allow CPS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf interface {
+                      description 'Allow INTERFACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf acl {
+                      description 'Allow ACL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf fib {
+                      description 'Allow FIB-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pim {
+                      description 'Allow PIM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf isis {
+                      description 'Allow ISIS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rip {
+                      description 'Allow RIP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf msdp {
+                      description 'Allow MSDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf aps {
+                      description 'Allow APS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf config {
+                      description 'Allow CONFIG-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf am {
+                      description 'Allow AM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf um {
+                      description 'Allow UM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf system {
+                      description 'Allow SYSTEM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ldp {
+                      description 'Allow LDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pwe3 {
+                      description 'Allow PWE3-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vpn {
+                      description 'Allow VPN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mpls-oam {
+                      description 'Allow MPLS-OAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ptp {
+                      description 'Allow PTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tunnel-te {
+                      description 'Allow TUNNEL-TE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf radius {
+                      description 'Allow RADIUS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf dhcp {
+                      description 'Allow DHCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bfd {
+                      description 'Allow BFD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ippool {
+                      description 'Allow IPPOOL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ntp {
+                      description 'Allow NTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ssm {
+                      description 'Allow SSM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sqa {
+                      description 'Allow SQA-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ipsec {
+                      description 'Allow IPSEC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cgn {
+                      description 'Allow CGN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vrrp {
+                      description 'Allow VRRP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ftp_tftp {
+                      description 'Allow FTP-TFTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ping-trace {
+                      description 'Allow PING-TRACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf gm {
+                      description 'Allow GM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                  ncd:revise-date 2018-04-11 ;
+                }
+              }
+              container private-network {
+                description 'Configure the host address as private network addr'
+                          + 'ess.'
+                            ;
+                container ipv4-hosts {
+                  if-feature snmp-trap ;
+                  description 'The configuration to receive trap of the host ad'
+                            + 'dress is IPv4.'
+                              ;
+                  list ipv4-host {
+                    description 'The host address configured to receive traps i'
+                              + 's the list of hosts for IPv4.(Note: at least o'
+                              + 'ne of the 48 module types is configured, other'
+                              + 'wise the function does not work.)'
+                                ;
+                    key 'vrf-name ipv4-addr community-or-user'
+                        ;
+                    leaf vrf-name {
+                      description 'VPN routing/forwarding instance(VRF).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    leaf ipv4-addr {
+                      description 'Configure IPv4 address.'
+                                  ;
+                      type ncd:ipv4-address-none-zero ;
+                    }
+                    leaf community-or-user {
+                      description 'SNMP v1/v2c community string or SNMPv3 user '
+                                + 'name (1-32 characters).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    choice version {
+                      description 'SNMP version to use for trap messages.'
+                                  ;
+                      mandatory true ;
+                      case version1 {
+                        description 'Use SNMPv1.'
+                                    ;
+                        leaf SNMPv1 {
+                          description 'Use SNMPv1.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version2c {
+                        description 'Use SNMPv2c.'
+                                    ;
+                        leaf SNMPv2c {
+                          description 'Use SNMPv2c.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version3 {
+                        description 'Use SNMPv3.'
+                                    ;
+                        leaf SNMPv3 {
+                          description 'Use SNMPv3.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                        leaf security-level {
+                          description 'Configure the security level of trap.'
+                                      ;
+                          type enumeration {
+                            enum noauth {
+                              value 1 ;
+                            }
+                            enum auth {
+                              value 2 ;
+                            }
+                            enum priv {
+                              value 3 ;
+                            }
+                          }
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf udp-port {
+                      description "The trap host's UDP port number."
+                                  ;
+                      type uint32 {
+                        range 1..65535 ;
+                      }
+                      default 162 ;
+                    }
+                    leaf snmp {
+                      description 'Allow SNMP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bgp {
+                      description 'Allow BGP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mac {
+                      description 'Allow MAC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ospf {
+                      description 'Allow OSPF-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stp {
+                      description 'Allow STP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ppp {
+                      description 'Allow PPP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf arp {
+                      description 'Allow ARP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rmon {
+                      description 'Allow RMON-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf udld {
+                      description 'Allow UDLD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cfm {
+                      description 'Allow CFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf efm {
+                      description 'Allow EFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf lacp {
+                      description 'Allow LACP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mc-elam {
+                      description 'Allow MC-ELAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tcp {
+                      description 'Allow TCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sctp {
+                      description 'Allow SCTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stalarm {
+                      description 'Allow STALARM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cps {
+                      description 'Allow CPS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf interface {
+                      description 'Allow INTERFACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf acl {
+                      description 'Allow ACL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf fib {
+                      description 'Allow FIB-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pim {
+                      description 'Allow PIM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf isis {
+                      description 'Allow ISIS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rip {
+                      description 'Allow RIP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf msdp {
+                      description 'Allow MSDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf aps {
+                      description 'Allow APS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf config {
+                      description 'Allow CONFIG-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf am {
+                      description 'Allow AM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf um {
+                      description 'Allow UM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf system {
+                      description 'Allow SYSTEM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ldp {
+                      description 'Allow LDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pwe3 {
+                      description 'Allow PWE3-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vpn {
+                      description 'Allow VPN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mpls-oam {
+                      description 'Allow MPLS-OAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ptp {
+                      description 'Allow PTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tunnel-te {
+                      description 'Allow TUNNEL-TE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf radius {
+                      description 'Allow RADIUS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf dhcp {
+                      description 'Allow DHCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bfd {
+                      description 'Allow BFD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ippool {
+                      description 'Allow IPPOOL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ntp {
+                      description 'Allow NTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ssm {
+                      description 'Allow SSM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sqa {
+                      description 'Allow SQA-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ipsec {
+                      description 'Allow IPSEC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cgn {
+                      description 'Allow CGN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vrrp {
+                      description 'Allow VRRP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ftp_tftp {
+                      description 'Allow FTP-TFTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ping-trace {
+                      description 'Allow PING-TRACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf gm {
+                      description 'Allow GM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+                container ipv6-hosts {
+                  if-feature snmp-trap ;
+                  description 'The configuration to receive trap of the host ad'
+                            + 'dress is IPv6.'
+                              ;
+                  list ipv6-host {
+                    description 'The host address configured to receive traps i'
+                              + 's the list of hosts for IPv6.(Note: at least o'
+                              + 'ne of the 48 module types is configured, other'
+                              + 'wise the function does not work.)'
+                                ;
+                    key 'vrf-name ipv6-addr community-or-user'
+                        ;
+                    leaf vrf-name {
+                      description 'VPN routing/forwarding instance(VRF).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    leaf ipv6-addr {
+                      description 'Configure IPv6 address.'
+                                  ;
+                      type ncd:ipv6-address ;
+                    }
+                    leaf community-or-user {
+                      description 'SNMP v1/v2c community string or SNMPv3 user '
+                                + 'name (1-32 characters).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    choice version {
+                      description 'SNMP version to use for trap messages.'
+                                  ;
+                      mandatory true ;
+                      case version1 {
+                        description 'Use SNMPv1.'
+                                    ;
+                        leaf SNMPv1 {
+                          description 'Use SNMPv1.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version2c {
+                        description 'Use SNMPv2c.'
+                                    ;
+                        leaf SNMPv2c {
+                          description 'Use SNMPv2c.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version3 {
+                        description 'Use SNMPv3.'
+                                    ;
+                        leaf SNMPv3 {
+                          description 'Use SNMPv3.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                        leaf security-level {
+                          description 'Configure the security level of trap.'
+                                      ;
+                          type enumeration {
+                            enum noauth {
+                              value 1 ;
+                            }
+                            enum auth {
+                              value 2 ;
+                            }
+                            enum priv {
+                              value 3 ;
+                            }
+                          }
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf udp-port {
+                      description "The trap host's UDP port number."
+                                  ;
+                      type uint32 {
+                        range 1..65535 ;
+                      }
+                      default 162 ;
+                    }
+                    leaf snmp {
+                      description 'Allow SNMP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bgp {
+                      description 'Allow BGP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mac {
+                      description 'Allow MAC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ospf {
+                      description 'Allow OSPF-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stp {
+                      description 'Allow STP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ppp {
+                      description 'Allow PPP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf arp {
+                      description 'Allow ARP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rmon {
+                      description 'Allow RMON-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf udld {
+                      description 'Allow UDLD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cfm {
+                      description 'Allow CFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf efm {
+                      description 'Allow EFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf lacp {
+                      description 'Allow LACP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mc-elam {
+                      description 'Allow MC-ELAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tcp {
+                      description 'Allow TCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sctp {
+                      description 'Allow SCTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stalarm {
+                      description 'Allow STALARM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cps {
+                      description 'Allow CPS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf interface {
+                      description 'Allow INTERFACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf acl {
+                      description 'Allow ACL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf fib {
+                      description 'Allow FIB-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pim {
+                      description 'Allow PIM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf isis {
+                      description 'Allow ISIS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rip {
+                      description 'Allow RIP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf msdp {
+                      description 'Allow MSDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf aps {
+                      description 'Allow APS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf config {
+                      description 'Allow CONFIG-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf am {
+                      description 'Allow AM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf um {
+                      description 'Allow UM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf system {
+                      description 'Allow SYSTEM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ldp {
+                      description 'Allow LDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pwe3 {
+                      description 'Allow PWE3-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vpn {
+                      description 'Allow VPN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mpls-oam {
+                      description 'Allow MPLS-OAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ptp {
+                      description 'Allow PTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tunnel-te {
+                      description 'Allow TUNNEL-TE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf radius {
+                      description 'Allow RADIUS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf dhcp {
+                      description 'Allow DHCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bfd {
+                      description 'Allow BFD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ippool {
+                      description 'Allow IPPOOL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ntp {
+                      description 'Allow NTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ssm {
+                      description 'Allow SSM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sqa {
+                      description 'Allow SQA-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ipsec {
+                      description 'Allow IPSEC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cgn {
+                      description 'Allow CGN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vrrp {
+                      description 'Allow VRRP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ftp_tftp {
+                      description 'Allow FTP-TFTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ping-trace {
+                      description 'Allow PING-TRACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf gm {
+                      description 'Allow GM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+                container domain-hosts {
+                  description 'The configuration to receive trap of the host ad'
+                            + 'dress is DNS.'
+                              ;
+                  list domain-host {
+                    description 'The host address configured to receive traps i'
+                              + 's the list of hosts for DNS.(Note: at least on'
+                              + 'e of the 48 module types is configured, otherw'
+                              + 'ise the function does not work.)'
+                                ;
+                    key 'name community-or-user vrf-name'
+                        ;
+                    leaf name {
+                      description 'Configure DNS name.'
+                                  ;
+                      type string ;
+                    }
+                    leaf community-or-user {
+                      description 'Configure community.'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    leaf vrf-name {
+                      description 'VPN routing/forwarding instance(VRF).'
+                                  ;
+                      type string {
+                        length 1..32 ;
+                      }
+                    }
+                    leaf dns-ip-type {
+                      description 'The mapping address of DNS name is IPv6 or I'
+                                + 'Pv4.'
+                                  ;
+                      type enumeration {
+                        enum ipv4 {
+                          value 1 ;
+                        }
+                        enum ipv6 {
+                          value 2 ;
+                        }
+                      }
+                      mandatory true ;
+                    }
+                    choice version {
+                      description 'SNMP version to use for trap messages.'
+                                  ;
+                      mandatory true ;
+                      case version1 {
+                        description 'Use SNMPv1.'
+                                    ;
+                        leaf SNMPv1 {
+                          description 'Use SNMPv1.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version2c {
+                        description 'Use SNMPv2c.'
+                                    ;
+                        leaf SNMPv2c {
+                          description 'Use SNMPv2c.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                      }
+                      case version3 {
+                        description 'Use SNMPv3.'
+                                    ;
+                        leaf SNMPv3 {
+                          description 'Use SNMPv3.'
+                                      ;
+                          type empty ;
+                          mandatory true ;
+                        }
+                        leaf security-level {
+                          description 'Configure the security level of trap.'
+                                      ;
+                          type enumeration {
+                            enum noauth {
+                              value 1 ;
+                            }
+                            enum auth {
+                              value 2 ;
+                            }
+                            enum priv {
+                              value 3 ;
+                            }
+                          }
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf udp-port {
+                      description "The trap host's UDP port number."
+                                  ;
+                      type uint32 {
+                        range 1..65535 ;
+                      }
+                      default 162 ;
+                    }
+                    leaf snmp {
+                      description 'Allow SNMP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bgp {
+                      description 'Allow BGP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mac {
+                      description 'Allow MAC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ospf {
+                      description 'Allow OSPF-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stp {
+                      description 'Allow STP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ppp {
+                      description 'Allow PPP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf arp {
+                      description 'Allow ARP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rmon {
+                      description 'Allow RMON-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf udld {
+                      description 'Allow UDLD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cfm {
+                      description 'Allow CFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf efm {
+                      description 'Allow EFM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf lacp {
+                      description 'Allow LACP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mc-elam {
+                      description 'Allow MC-ELAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tcp {
+                      description 'Allow TCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sctp {
+                      description 'Allow SCTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf stalarm {
+                      description 'Allow STALARM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cps {
+                      description 'Allow CPS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf interface {
+                      description 'Allow INTERFACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf acl {
+                      description 'Allow ACL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf fib {
+                      description 'Allow FIB-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pim {
+                      description 'Allow PIM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf isis {
+                      description 'Allow ISIS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf rip {
+                      description 'Allow RIP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf msdp {
+                      description 'Allow MSDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf aps {
+                      description 'Allow APS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf config {
+                      description 'Allow CONFIG-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf am {
+                      description 'Allow AM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf um {
+                      description 'Allow UM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf system {
+                      description 'Allow SYSTEM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ldp {
+                      description 'Allow LDP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf pwe3 {
+                      description 'Allow PWE3-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vpn {
+                      description 'Allow VPN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf mpls-oam {
+                      description 'Allow MPLS-OAM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ptp {
+                      description 'Allow PTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf tunnel-te {
+                      description 'Allow TUNNEL-TE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf radius {
+                      description 'Allow RADIUS-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf dhcp {
+                      description 'Allow DHCP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf bfd {
+                      description 'Allow BFD-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ippool {
+                      description 'Allow IPPOOL-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ntp {
+                      description 'Allow NTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ssm {
+                      description 'Allow SSM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf sqa {
+                      description 'Allow SQA-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ipsec {
+                      description 'Allow IPSEC-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf cgn {
+                      description 'Allow CGN-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf vrrp {
+                      description 'Allow VRRP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ftp_tftp {
+                      description 'Allow FTP-TFTP-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf ping-trace {
+                      description 'Allow PING-TRACE-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                    leaf gm {
+                      description 'Allow GM-type traps.'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                  ncd:revise-date 2018-04-11 ;
+                }
+              }
+            }
+          }
+        }
+        container community {
+          description 'Configure community information.'
+                      ;
+          container clear-communitys {
+            description 'Configure clear community information.'
+                        ;
+            list clear-community {
+              description 'Configure clear community information table.'
+                          ;
+              key name ;
+              leaf name {
+                description 'Configure clear community.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf view-name {
+                description 'Configure view name associated with community.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+                default DefaultView ;
+              }
+              leaf access {
+                description 'Configure the read and write permissions of the co'
+                          + 'mmunity.'
+                            ;
+                type enumeration {
+                  enum read-only {
+                    value 1 ;
+                  }
+                  enum read-write {
+                    value 2 ;
+                  }
+                }
+                default read-only ;
+              }
+              leaf show-clear {
+                description 'Configure whether show the clear community.'
+                            ;
+                type empty ;
+              }
+              leaf ipv4-acl {
+                description 'Configure IPv4 ACL name associated with community.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              leaf ipv6-acl {
+                description 'Configure IPv6 ACL name associated with community.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+          }
+          container encrypted-communitys {
+            description 'Configure encrypted community information.'
+                        ;
+            list encrypted-community {
+              description 'Configure encrypted community information table.'
+                          ;
+              key name ;
+              leaf name {
+                description 'Configure encrypted community.'
+                            ;
+                type string {
+                  length 64..200 ;
+                }
+              }
+              leaf view-name {
+                description 'Configure view name associated with community.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+                default DefaultView ;
+              }
+              leaf access {
+                description 'Configure the read and write permissions of the co'
+                          + 'mmunity.'
+                            ;
+                type enumeration {
+                  enum read-only {
+                    value 1 ;
+                  }
+                  enum read-write {
+                    value 2 ;
+                  }
+                }
+                default read-only ;
+              }
+              leaf ipv4-acl {
+                description 'Configure IPv4 ACL name associated with community.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              leaf ipv6-acl {
+                description 'Configure IPv6 ACL name associated with community.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+          }
+        }
+        container version {
+          description 'Configure the SNMP version'
+                      ;
+          leaf v1 {
+            description 'Configure the SNMPv1 version.'
+                        ;
+            type empty ;
+          }
+          leaf v2c {
+            description 'Configure the SNMPv2c version.'
+                        ;
+            type empty ;
+          }
+          leaf v3 {
+            description 'Configure the SNMPv3 version.'
+                        ;
+            type empty ;
+          }
+          leaf listen-port {
+            description 'Configure the listen port.'
+                        ;
+            type uint16 {
+              range '161 | 1024..20000'
+                    ;
+            }
+            default 161 ;
+          }
+        }
+        container views {
+          description 'Configure the view list.'
+                      ;
+          list view {
+            description 'view list'
+                        ;
+            key 'name subtree-oid'
+                ;
+            leaf name {
+              description 'view name'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf subtree-oid {
+              description 'The oid of subtree'
+                          ;
+              type string {
+                length 1..79 ;
+                pattern '([^.]*)'
+                        ;
+              }
+            }
+            leaf type {
+              description 'type:included or excluded'
+                          ;
+              type enumeration {
+                enum included {
+                  value 1 ;
+                }
+                enum excluded {
+                  value 2 ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+        container access-list {
+          description 'Configure access list'
+                      ;
+          container ipv6-acl {
+            description 'Configure IPv6 ACL'
+                        ;
+            leaf name {
+              description 'Configure an IPv6-type ACL to control the SNMP proto'
+                        + 'col to access the host.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+            }
+          }
+          container ipv4-acl {
+            description 'Configure IPv4 ACL'
+                        ;
+            leaf name {
+              description 'Configure an IPv4-type ACL to control the SNMP proto'
+                        + 'col to access the host.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+            }
+          }
+          ncd:revise-date 2018-02-07 ;
+        }
+        container get-next-cache {
+          description 'Configure SNMP get-next cache aging time.'
+                      ;
+          presence get-next-cache ;
+          leaf age-time {
+            description 'Set cache aging time. Valid range is 1~30 seconds.'
+                        ;
+            type uint8 {
+              range 1..30 ;
+            }
+            mandatory true ;
+          }
+          ncd:revise-date 2018-10-18 ;
+        }
+        container oid-views {
+          description '1. Configuration view. Only the OID mode is supported.'+"\n"
+                    + '2. If this command and the views node are configured at '
+                    + 'the same time, first check whether the packet OID matche'
+                    + 's the OID of the current view. If yes, the rights are su'
+                    + 'bject to this command. If not, the rights are subject to'
+                    + ' the views node.'+"\n"
+                    + '3. The OID name is not unique. One name can correspond t'
+                    + 'o multiple OIDs. If you want to exclude or contain an OI'
+                    + 'D and the views node cannot be controlled, configure thi'
+                    + 's node. For other scenarios, views node is recommended b'
+                    + 'ecause the OID name is more explicit.'
+                      ;
+          list oid-view {
+            description 'View table.'
+                        ;
+            key 'name subtree-oid'
+                ;
+            leaf name {
+              description 'View name. The default view names AllView and Defaul'
+                        + 'tView cannot be configured.'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf subtree-oid {
+              description 'View subtree. Only the OID can be configured.'
+                          ;
+              type string {
+                length 1..250 ;
+              }
+            }
+            leaf type {
+              description 'Subtree type of the view. Options: Include and Exclu'
+                        + 'de.'
+                          ;
+              type enumeration {
+                enum included {
+                  value 1 ;
+                }
+                enum excluded {
+                  value 2 ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          ncd:revise-date 2021-01-06 ;
+        }
+        container trap-source-profiles {
+          description 'Application Scenario'+"\n"
+                    + '1. This command needs to be configured only when it is n'
+                    + 'ecessary to specify a different source address for each '
+                    + 'NM or a different agent address for each NM SNMP v1 vers'
+                    + 'ion trap. Otherwise, the global source address command ('
+                    + 'snmp-server trap-source) is used to configure the source'
+                    + ' address of trap or the agent address of SNMP v1 trap.'+"\n"
+                    + ''+"\n"
+                    + 'Precautions'+"\n"
+                    + '1. When the NM IP address and vrf name exist in this tab'
+                    + 'le, the global source address command is ignored. If the'
+                    + 're are multiple policies with the same IP address and VR'
+                    + 'F name, the first policy is selected in ascending order.'
+                    + ''+"\n"
+                    + ''+"\n"
+                    + '2. If this command is used to associate an interface, if'
+                    + ' the interface fails to obtain the IPv4 or IPv6 address '
+                    + '(the address type is the same as that of the NM), the so'
+                    + 'urce address is specified by the transmission protocol. '
+                    + 'The agent address in SNMP v1 trap is not specified.'+"\n"
+                    + '3. When the NM address is of the IPv4 type, the agent ad'
+                    + 'dress needs to be specified in SNMP v1 trap. When the NM'
+                    + ' address is IPv6, the agent address does not need to be '
+                    + 'specified.'+"\n"
+                    + '4. A maximum of 2048 policies can be configured.'
+                      ;
+          list trap-source-profile {
+            description 'Trap source address profile table.'
+                        ;
+            key name ;
+            leaf name {
+              description 'Profile name.'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            choice host {
+              description 'Configures the host address.'
+                          ;
+              case host-ipv4 {
+                description 'Configure the IPv4 address and VRF name of the NM.'
+                            ;
+                container host-ipv4 {
+                  description 'Configure the IPv4 address and VRF name of the N'
+                            + 'M.'
+                              ;
+                  leaf vrf-name {
+                    description 'VRF name.'
+                                ;
+                    type string {
+                      length 1..32 ;
+                    }
+                  }
+                  leaf ip-address {
+                    description 'Configure the IPv4 address.'
+                                ;
+                    type ncd:ipv4-address-none-zero ;
+                    mandatory true ;
+                  }
+                }
+              }
+              case host-ipv6 {
+                description 'Configure the NM IPv6 address.'
+                            ;
+                container host-ipv6 {
+                  description 'Configure the IPv6 address and VRF name of the N'
+                            + 'M.'
+                              ;
+                  leaf vrf-name {
+                    description 'VRF name.'
+                                ;
+                    type string {
+                      length 1..32 ;
+                    }
+                  }
+                  leaf ip-address {
+                    description 'Configure the IPv6 address.'
+                                ;
+                    type ncd:ipv6-address-none-zero ;
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+            choice source {
+              description 'Configure the trap source address.'
+                          ;
+              mandatory true ;
+              case source-ipv4 {
+                description 'Configure the source address: IPv4.'
+                            ;
+                leaf source-ipv4 {
+                  description 'Configure the source address: IPv4.'
+                              ;
+                  type ncd:ipv4-address-none-zero ;
+                }
+              }
+              case source-ipv6 {
+                description 'Configure the source address: IPv6.'
+                            ;
+                leaf source-ipv6 {
+                  description 'Configure the source address: IPv6.'
+                              ;
+                  type ncd:ipv6-address-none-zero ;
+                }
+              }
+              case source-interface {
+                description 'Configure the source interface.'
+                            ;
+                leaf source-interface {
+                  description 'Configure the source interface.'
+                              ;
+                  type ncd:ifname ;
+                }
+              }
+            }
+          }
+          ncd:revise-date 2021-03-09 ;
+        }
+        container trap-source {
+          description 'Specify the source address of SNMP trap.'
+                      ;
+          leaf source-ipv4 {
+            description 'Configure the source address: IPv4.'
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+          leaf source-ipv6 {
+            description 'Configure the source address: IPv6.'
+                        ;
+            type ncd:ipv6-address-none-zero ;
+          }
+          leaf source-interface {
+            description 'Configure the source interface.'
+                        ;
+            type ncd:ifname ;
+          }
+          ncd:revise-date 2021-11-11 ;
+        }
+      }
+    }
+  }
+}

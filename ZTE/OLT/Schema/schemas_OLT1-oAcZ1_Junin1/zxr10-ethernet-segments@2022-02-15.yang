@@ -1,0 +1,589 @@
+module zxr10-ethernet-segments {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ethernet-segments'
+            ;
+  prefix ethernet-segments ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe ethernet segment info.'
+              ;
+  revision 2022-02-15 {
+    description '1.Add the df-timer leaf node in configuration/ethernet-segment'
+              + 's/ethernet-segment.'
+                ;
+  }
+  revision 2021-08-09 {
+    description '1.Add the df-election container node in configuration/ethernet'
+              + '-segments.'
+                ;
+  }
+  revision 2021-06-24 {
+    description '1.Add the dcb container node in configuration/ethernet-segment'
+              + 's/ethernet-segment.'
+                ;
+  }
+  revision 2021-03-15 {
+    description '1.Add the es-topology leaf node which in configuration/etherne'
+              + 't-segments/ethernet-segment.'
+                ;
+  }
+  revision 2020-12-02 {
+    description '1.Add the df-algorithm leaf which in configuration/ethernet-se'
+              + 'gments/ethernet-segment.'
+                ;
+  }
+  revision 2020-07-23 {
+    description '1.Add asnd-nn type in rd node which in configuration/ethernet-'
+              + 'segments/ethernet-segments-rd.'+"\n"
+              + '2.Add asnd-nn type in rt-value node which in configuration/eth'
+              + 'ernet-segments/route-target-params/route-target.'
+                ;
+  }
+  revision 2020-07-01 {
+    description '1.The range of suspicion-time leaf which in configuration/ethe'
+              + 'rnet-segments/ethernet-segment changed from 3-1200 to 0-1200.'
+                ;
+  }
+  revision 2020-06-08 {
+    description '1.Add the es-import-rt and es-rt-choice-clear case nodes which'
+              + ' in configuration/ethernet-segments/ethernet-segment.'+"\n"
+              + '2.Add the srv6-args container node which in configuration/ethe'
+              + 'rnet-segments.'
+                ;
+  }
+  revision 2020-05-27 {
+    description '1.Add the ac-or-pw-choice-clear case which in configuration/et'
+              + 'hernet-segments/ethernet-segments/ac-or-pw.'
+                ;
+  }
+  revision 2020-05-15 {
+    description '1.Add the eth-seg-id-choice-clear case which in configuration/'
+              + 'ethernet-segments/ethernet-segments/eth-seg-id.'
+                ;
+  }
+  revision 2020-04-18 {
+    description '1.Add the inst-description leaf node in configuration/ethernet'
+              + '-segments/ethernet-segment.'
+                ;
+  }
+  revision 2019-10-29 {
+    description '1.Add the es-label container node in configuration/ethernet-se'
+              + 'gments/ethernet-segment.'
+                ;
+  }
+  revision 2019-07-09 {
+    description '1.Add the pw case node in configuration/ethernet-segments/ethe'
+              + 'rnet-segment/ac-or-pw.'+"\n"
+              + '2.Add auto-derived case node in configuration/ethernet-segment'
+              + 's/ethernet-segment/eth-seg-id.'
+                ;
+  }
+  revision 2019-06-18 {
+    description '1.Add suspicion-time leaf in configuration/ethernet-segments/e'
+              + 'thernet-segment.'+"\n"
+              + '2.Add the service case node in configuration/ethernet-segments'
+              + '/ethernet-segment/ac-or-pw.'
+                ;
+  }
+  revision 2019-06-05 {
+    description '1.Modify the order of the ac-or-pw choice,it must be the last '
+              + 'node in the ethernet-segment list.because the mim object is di'
+              + 'fferent with the other node,or the merge-replace will not be c'
+              + 'orrect.'
+                ;
+  }
+  revision 2019-02-15 {
+    description '1.Add wtr-time leaf in configuration/ethernet-segments/etherne'
+              + 't-segment.'+"\n"
+              + '2.Add the admin-instance-params container node in configuratio'
+              + 'n/ethernet-segments/ethernet-segment.'
+                ;
+  }
+  revision 2019-01-16 {
+    description '1.Add the etree-advertise container in configuration/ethernet-'
+              + 'segments.'
+                ;
+  }
+  revision 2018-07-12 {
+    description '1.Add the ethernet-segment-global container in configuration/e'
+              + 'thernet-segments.'+"\n"
+              + '2.Add the pbb-b-mac leaf node in configuration/ethernet-segmen'
+              + 'ts/ethernet-segment.'
+                ;
+  }
+  revision 2018-07-08 {
+    description '1.Add the ethernet-segments-rd and route-target-params contain'
+              + 'ers in configuration/ethernet-segments/ethernet-segment.'+"\n"
+              + '2.Add the df-election leaf node in configuration/ethernet-segm'
+              + 'ents/ethernet-segment.'+"\n"
+              + '3.active-mode node which in configuration/ethernet-segments/et'
+              + 'hernet-segment delete the mandatory attribute and add the defa'
+              + 'ult value.'
+                ;
+  }
+  revision 2017-04-26 {
+    description 'Create ethernet segment module.'
+                ;
+  }
+  container configuration {
+    description 'ES configuration info.'
+                ;
+    container ethernet-segments {
+      description ethernet-segment ;
+      list ethernet-segment {
+        description ethernet-segment ;
+        key name ;
+        leaf name {
+          description 'Name of the ethernet segment.'
+                      ;
+          type string {
+            length 1..32 {
+              description 'The length of ethernet instance.'
+                          ;
+            }
+          }
+        }
+        choice eth-seg-id {
+          description 'Ethernet segment identification.'
+                      ;
+          case static-octets {
+            description 'Static octets.'
+                        ;
+            leaf static-octets-string {
+              description 'Ethernet segment identifier(ESI).'
+                          ;
+              type string {
+                length 1..26 ;
+              }
+            }
+          }
+          case auto-derived {
+            description 'Auto derived ethernet segment identification.'
+                        ;
+            leaf auto-derived-type {
+              description 'Auto derived ESI type.'
+                          ;
+              type enumeration {
+                enum mac-based {
+                  value 3 ;
+                  description 'The ESI type is mac-based.'
+                              ;
+                }
+              }
+            }
+            ncd:revise-date 2019-07-09 ;
+          }
+          case eth-seg-id-choice-clear {
+            description 'Remove value of any entities which belong to any case '
+                      + 'within this choice.'
+                        ;
+            container eth-seg-id-all-clear {
+              description 'Remove this entitiy means to remove value of any ent'
+                        + 'ities which belong to any case within this choice.'
+                          ;
+              presence eth-seg-id-all-clear ;
+            }
+            ncd:revise-date 2020-05-15 ;
+          }
+        }
+        choice active-mode {
+          description 'Choice of active mode.'
+                      ;
+          default all-active ;
+          case single-active {
+            description single-active-mode ;
+            leaf single-active-mode {
+              description single-active-mode ;
+              type empty ;
+            }
+          }
+          case all-active {
+            description all-active-mode ;
+            leaf all-active-mode {
+              description all-active-mode ;
+              type empty ;
+            }
+          }
+        }
+        leaf df-election {
+          description 'The DF election preference.'
+                      ;
+          type uint16 {
+            range 0..65535 {
+              description 'The range of df-election value.'
+                          ;
+            }
+          }
+          default 32767 ;
+          ncd:revise-date 2018-07-08 ;
+        }
+        leaf suspicion-time {
+          description 'The DF suspicion time,the uint is second.'
+                      ;
+          type uint16 {
+            range 0..1200 {
+              description 'The value of suspicion time.'
+                          ;
+            }
+          }
+          units second ;
+          default 3 ;
+          ncd:revise-date 2019-06-18 ;
+        }
+        leaf pbb-b-mac {
+          description 'The B-MAC of ESI instance.'
+                      ;
+          type ncd:mac-address-none-zero ;
+          ncd:revise-date 2018-07-12 ;
+        }
+        leaf wtr-time {
+          description 'Wait-to-restore time (default:3min)'
+                      ;
+          type uint8 {
+            range 0..12 {
+              description 'The length of wtr-time.'
+                          ;
+            }
+          }
+          units min ;
+          default 3 ;
+          ncd:revise-date 2019-02-15 ;
+        }
+        leaf inst-description {
+          description 'The description of the ES instance.'
+                      ;
+          type ncd:string-with-blank {
+            length 1..104 {
+              description 'The description range of instance.'
+                          ;
+            }
+          }
+          ncd:revise-date 2020-04-18 ;
+        }
+        leaf df-algorithm {
+          description 'Specify DF election algorithm.'
+                      ;
+          type enumeration {
+            enum modulus-based {
+              value 0 ;
+              description 'DF Alg 0 (Modulus-based algorithm [RFC7432]).'
+                          ;
+            }
+            enum preference-based {
+              value 2 ;
+              description 'DF Alg 2 (Preference algorithm [evpn-pref-df]).'
+                          ;
+            }
+            enum none {
+              value 254 ;
+              description 'None of the BGP-based DF algorithms will be used.'
+                          ;
+            }
+          }
+          default preference-based ;
+          ncd:revise-date 2020-12-02 ;
+        }
+        leaf es-topology {
+          description 'The type of ES topology.'
+                      ;
+          type enumeration {
+            enum mhn {
+              value 1 ;
+            }
+          }
+          ncd:revise-date 2021-03-15 ;
+        }
+        container df-timer-params {
+          description 'DF timer parameters.'
+                      ;
+          presence df-timer-params ;
+          leaf df-timer {
+            description 'The timer which wait for other PEs to receive this ES '
+                      + 'route.'
+                        ;
+            type uint16 {
+              range 1..5000 {
+                description 'The range of DF timer.'
+                            ;
+              }
+            }
+            units ms ;
+            mandatory true ;
+          }
+          leaf smoothly {
+            description 'Temporary standby drops packets smoothly.'
+                        ;
+            type empty ;
+          }
+          ncd:revise-date 2022-02-15 ;
+        }
+        container es-label {
+          description 'Ethernet segment label.'
+                      ;
+          leaf assigned-mode {
+            description 'Ethernet segment label assigned mode.'
+                        ;
+            type enumeration {
+              enum downstream-assigned-mode {
+                value 0 ;
+                description 'Ethernet segment label assigned mode is downstream.'
+                            ;
+              }
+              enum upstream-assigned-mode {
+                value 1 ;
+                description 'Ethernet segment label assigned mode is upstream.'
+                            ;
+              }
+            }
+            default downstream-assigned-mode ;
+          }
+          ncd:revise-date 2019-10-29 ;
+        }
+        container dcb {
+          description 'Domain-wide common block.'
+                      ;
+          leaf label {
+            description 'Domain-wide common block label.'
+                        ;
+            type uint32 {
+              range 16..1048575 {
+                description 'The range of domain-wide common block label.'
+                            ;
+              }
+            }
+          }
+          ncd:revise-date 2021-06-24 ;
+        }
+        choice ac-or-pw {
+          description 'Choice of AC or PW.'
+                      ;
+          case ac {
+            description 'Attachment circuit definition.'
+                        ;
+            leaf ac {
+              description 'Eventual reference to standard attachment circuit de'
+                        + 'finition.'
+                          ;
+              type ncd:ifname ;
+            }
+          }
+          case pw {
+            description 'PW definition.'
+                        ;
+            container pw-params {
+              description 'The PW entry parameters.'
+                          ;
+              list pw-entry {
+                description 'The PW entry list.'
+                            ;
+                key pw-name ;
+                leaf pw-name {
+                  description 'The PW binds ES instance.'
+                              ;
+                  type ncd:ifname ;
+                }
+              }
+            }
+            ncd:revise-date 2019-07-09 ;
+          }
+          case service {
+            description 'Service definition.'
+                        ;
+            container service-params {
+              description 'The service instance parameters.'
+                          ;
+              list service-instance {
+                description 'The service instance list.'
+                            ;
+                key service-instance-name ;
+                leaf service-instance-name {
+                  description 'The service instance binds ES instance.'
+                              ;
+                  type string {
+                    length 1..32 {
+                      description 'The length of instance name.'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2019-06-18 ;
+          }
+          case ac-or-pw-choice-clear {
+            description 'Remove value of any entities which belong to any case '
+                      + 'within this choice.'
+                        ;
+            container ac-pw-service-all-clear {
+              description 'Remove this entitiy means to remove value of any ent'
+                        + 'ities which belong to any case within this choice.'
+                          ;
+              presence ac-pw-service-all-clear ;
+            }
+            ncd:revise-date 2020-05-27 ;
+          }
+        }
+        container ethernet-segments-rd {
+          description 'Ethernet segments route distinguisher parameters.'
+                      ;
+          presence ethernet-segments-rd ;
+          leaf rd {
+            description 'The route distinguisher parameter.'
+                        ;
+            type union {
+              type ncd:asn-nn ;
+              type ncd:ipadd-nn ;
+              type ncd:asnd-nn ;
+            }
+            mandatory true ;
+          }
+          ncd:revise-date 2018-07-08 ;
+        }
+        choice es-rt {
+          description 'Choice of ES route target.'
+                      ;
+          case es-rt-params {
+            description 'ES route target parameters.'
+                        ;
+            container route-target-params {
+              description 'The route target parameters.'
+                          ;
+              list route-target {
+                description 'The route target configuration.'
+                            ;
+                key 'rt-value effect-type'
+                    ;
+                leaf rt-value {
+                  description 'RT attribute value.'
+                              ;
+                  type union {
+                    type ncd:asn-nn ;
+                    type ncd:ipadd-nn ;
+                    type ncd:asnd-nn ;
+                  }
+                }
+                leaf effect-type {
+                  description 'The route target effect type.'
+                              ;
+                  type enumeration {
+                    enum export {
+                      value 2 ;
+                      description 'The route target effect type is export.'
+                                  ;
+                    }
+                    enum import {
+                      value 3 ;
+                      description 'The route target effect type is import.'
+                                  ;
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2018-07-08 ;
+            }
+          }
+          case es-import-rt {
+            description 'ES import route target parameters.'
+                        ;
+            container import-rt-params {
+              description 'The import route target parameters.'
+                          ;
+              leaf rt-value {
+                description 'Import RT attribute value.'
+                            ;
+                type ncd:mac-address-none-zero ;
+              }
+            }
+            ncd:revise-date 2020-06-08 ;
+          }
+          case es-rt-choice-clear {
+            description 'Remove value of any entities which belong to any case '
+                      + 'within this choice.'
+                        ;
+            container es-rt-all-clear {
+              description 'Remove this entitiy means to remove value of any ent'
+                        + 'ities which belong to any case within this choice.'
+                          ;
+              presence es-rt-all-clear ;
+            }
+            ncd:revise-date 2020-06-08 ;
+          }
+        }
+        container admin-instance-params {
+          description 'The admin instance parameters.'
+                      ;
+          list admin-instance {
+            description 'The admin instance list.'
+                        ;
+            key admin-evpn-vpls-name ;
+            leaf admin-evpn-vpls-name {
+              description 'The EVPN VPLS as admin instance.'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'The length of instance name.'
+                              ;
+                }
+              }
+            }
+          }
+          ncd:revise-date 2019-02-15 ;
+        }
+      }
+      container ethernet-segment-global {
+        leaf pbb-b-mac {
+          description 'The globel B-MAC of ES.'
+                      ;
+          type ncd:mac-address-none-zero ;
+        }
+        ncd:revise-date 2018-07-12 ;
+      }
+      container etree-advertise {
+        presence etree-advertise ;
+        leaf leaf-label {
+          description 'Advertise leaf label for etree'
+                      ;
+          type empty ;
+          mandatory true ;
+        }
+        ncd:revise-date 2019-01-16 ;
+      }
+      container srv6-args {
+        description 'SRv6 args.'
+                    ;
+        leaf esi-label-length {
+          description 'The ESI label length.'
+                      ;
+          type uint8 {
+            range 4..20 {
+              description 'The range of ESI label length.'
+                          ;
+            }
+          }
+          default 16 ;
+        }
+        ncd:revise-date 2020-06-08 ;
+      }
+      container df-election {
+        description 'Specify DF election mode per ESI.'
+                    ;
+        presence df-election ;
+        leaf capability-negotiate {
+          description 'Capability negotiation parameters for DF algorithm.'
+                      ;
+          type empty ;
+          mandatory true ;
+        }
+        ncd:revise-date 2021-08-09 ;
+      }
+    }
+  }
+}

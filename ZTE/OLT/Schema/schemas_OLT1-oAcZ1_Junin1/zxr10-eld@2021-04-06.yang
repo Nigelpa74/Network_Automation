@@ -1,0 +1,513 @@
+module zxr10-eld {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/eld'
+            ;
+  prefix eld ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2017-08-15 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the ELD.'
+              ;
+  revision 2021-04-06 {
+    description "1 Add the leaf 'configuration/eld/domains/domain/detect-type/v"
+              + "lan-untag'.
+\n2 Add the leaf 'configuration/eld/domains/domain"
+              + "/detect-policy/protect-policy'.
+\n3 Add the leaf 'configuratio"
+              + "n/eld/domains/domain/detect-policy/protect-diag-time'.
+\n4 Add"
+              + " the leaf 'configuration/eld/domains/domain/detect-interfaces'"
+              + ".
+\n5 Addthe leaf 'configuration/eld/interfaces/interface/dete"
+              + "ct-policy/protect-policy'.
+\n6 Add the leaf 'configuration/eld"
+              + "/interfaces/interface/detect-policy/protect-diag-time'."
+                ;
+  }
+  revision 2020-10-24 {
+    description "1 Add the leaf 'state/eld/domains/domain/loop-internal-vlan'.
+"
+              + "\n2 Add the leaf 'state/eld/domains/domain/loop-external-vlan'"
+              + ".
+\n3 Add the enumeration value 'VLSS' for the leaf 'state/eld"
+              + "/domains/domain/vpn-instance-type'."
+                ;
+  }
+  revision 2018-10-11 {
+    description 'Initial version.'
+                ;
+  }
+  feature detect-interface {
+    description 'Detection interface.'
+                ;
+  }
+  feature protect-policy {
+    description 'Protection policy.'
+                ;
+  }
+  feature untag {
+    description 'Untagged detection.'
+                ;
+  }
+  container configuration {
+    description 'The configuration information of Ethernet loop detect.'
+                ;
+    container eld {
+      description 'The configuration information of Ethernet loop detect.'
+                  ;
+      container domains {
+        description 'Detection domain configuration.'
+                    ;
+        list domain {
+          description 'Detection domain configuration.'
+                      ;
+          key name ;
+          leaf name {
+            description 'Detection domain name.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          container detect-type {
+            description 'Detection domain type.'
+                        ;
+            choice type {
+              description 'Detection domain type.'
+                          ;
+              mandatory true ;
+              case vlan {
+                description 'VLAN instance.'
+                            ;
+                leaf vlan-id {
+                  description 'VLAN ID.'
+                              ;
+                  type uint16 {
+                    range 1..4094 ;
+                  }
+                }
+              }
+              case vpn {
+                description 'VPN instance.'
+                            ;
+                leaf vpn-instance-type {
+                  description 'VPN instance type.'
+                              ;
+                  type enumeration {
+                    enum vpls {
+                      value 1 ;
+                      description 'Domain detect VPLS type.'
+                                  ;
+                    }
+                    enum vpws {
+                      value 5 ;
+                      description 'Domain detect VPWS type.'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf vpn-instance-name {
+                  description 'VPN instance name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                  mandatory true ;
+                }
+              }
+              case vlan-untag {
+                if-feature untag ;
+                description 'Untagged detection.'
+                            ;
+                leaf vlan-untag {
+                  description 'Untagged detection.'
+                              ;
+                  type empty ;
+                }
+                ncd:revise-date 2021-04-06 ;
+              }
+            }
+          }
+          leaf status {
+            description 'Detection domain enable status.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'The value indicates detection function is enabled.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'The value indicates detection function is disabled.'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          leaf period {
+            description 'The transmission period of the detection packets.'
+                        ;
+            type uint8 {
+              range 1..20 ;
+            }
+            units s ;
+            default 3 ;
+          }
+          container detect-policy {
+            description 'The processing strategy for loop point.'
+                        ;
+            choice policy {
+              description 'The processing strategy for loop point.'
+                          ;
+              case block {
+                description 'The block processing mode of loop point. When a lo'
+                          + 'op point occurs, port data streams are isolated.'
+                            ;
+                leaf block-policy {
+                  description 'The block processing mode of loop point. When a '
+                            + 'loop point occurs, port data streams are isolate'
+                            + 'd.'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+                leaf diagnosis-time {
+                  description 'The continuous isolated time of data stream on t'
+                            + 'he loop point.'
+                              ;
+                  type uint32 {
+                    range 1..43200 ;
+                  }
+                  units minute ;
+                }
+              }
+              case normal {
+                description 'The normal processing mode of loop point. When a l'
+                          + 'oop point occurs, port data streams are not isolat'
+                          + 'ed.'
+                            ;
+                leaf normal-policy {
+                  description 'The normal processing mode of loop point. When a'
+                            + ' loop point occurs, port data streams are not is'
+                            + 'olated.'
+                              ;
+                  type empty ;
+                }
+              }
+              case protect {
+                if-feature protect-policy ;
+                description 'When a loop point occurs, port data streams are is'
+                          + 'olated and the port physical status will be set to'
+                          + ' down.'
+                            ;
+                leaf protect-policy {
+                  description 'When a loop point occurs, port data streams are '
+                            + 'isolated and the port physical status will be se'
+                            + 't to down.'
+                              ;
+                  type empty ;
+                }
+                leaf protect-diag-time {
+                  description 'The continuous isolated time of data stream on t'
+                            + 'he loop point.'
+                              ;
+                  type uint32 {
+                    range 1..43200 ;
+                  }
+                  units minute ;
+                }
+                ncd:revise-date 2021-04-06 ;
+              }
+            }
+          }
+          leaf manual-specify-port {
+            if-feature detect-interface ;
+            description 'Need to specify detection port.'
+                        ;
+            type boolean ;
+            default false ;
+            ncd:revise-date 2021-04-06 ;
+          }
+          container detect-interfaces {
+            if-feature detect-interface ;
+            description 'Detection interface.'
+                        ;
+            list detect-interface {
+              description 'Detection interface.'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname ;
+              }
+            }
+            ncd:revise-date 2021-04-06 ;
+          }
+        }
+      }
+      container interfaces {
+        description 'Interface configuration.'
+                    ;
+        list interface {
+          description 'Interface configuration.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          container detect-policy {
+            description 'The processing strategy for loop point.'
+                        ;
+            choice policy {
+              description 'The processing strategy for loop point.'
+                          ;
+              case block {
+                description 'Interface block policy. If the port is a loop poin'
+                          + 't,data streams are isolated.'
+                            ;
+                leaf block-policy {
+                  description 'The block processing mode of loop point. When a '
+                            + 'loop point occurs, port data streams are isolate'
+                            + 'd.'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+                leaf diagnosis-time {
+                  description 'The continuous isolated time of data stream on t'
+                            + 'he loop point.'
+                              ;
+                  type uint32 {
+                    range 1..43200 ;
+                  }
+                  units minute ;
+                }
+              }
+              case normal {
+                description 'The normal processing mode of loop point. When a l'
+                          + 'oop point occurs, port data streams are not isolat'
+                          + 'ed.'
+                            ;
+                leaf normal-policy {
+                  description 'The normal processing mode of loop point. When a'
+                            + ' loop point occurs, port data streams are not is'
+                            + 'olated.'
+                              ;
+                  type empty ;
+                }
+              }
+              case protect {
+                if-feature protect-policy ;
+                description 'When a loop point occurs, port data streams are is'
+                          + 'olated and the port physical status will be set to'
+                          + ' down.'
+                            ;
+                leaf protect-policy {
+                  description 'When a loop point occurs, port data streams are '
+                            + 'isolated and the port physical status will be se'
+                            + 't to down.'
+                              ;
+                  type empty ;
+                }
+                leaf protect-diag-time {
+                  description 'The continuous isolated time of data stream on t'
+                            + 'he loop point.'
+                              ;
+                  type uint32 {
+                    range 1..43200 ;
+                  }
+                  units minute ;
+                }
+                ncd:revise-date 2021-04-06 ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description 'The operation of Ethernet loop detect.'
+                ;
+    container eld {
+      description 'The operation of Ethernet loop detect.'
+                  ;
+      container re-detects {
+        description 'Re-detect loop operation.'
+                    ;
+        list re-detect {
+          description 'Re-detect loop operation.'
+                      ;
+          key domain-name ;
+          leaf domain-name {
+            description 'Detection domain name.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'The state information of Ethernet loop detect.'
+                ;
+    container eld {
+      description 'The state information of Ethernet loop detect.'
+                  ;
+      container domains {
+        description 'Detection domain information.'
+                    ;
+        list domain {
+          description 'Detection domain configuration.'
+                      ;
+          key name ;
+          leaf name {
+            description 'Detection domain name.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf entity-name {
+            description 'Detection entity name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf status {
+            description 'Detection domain enable status.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'The value indicates detection function is enabled.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'The value indicates detection function is disabled.'
+                            ;
+              }
+            }
+          }
+          leaf period {
+            description 'The transmission period of the detection packets.'
+                        ;
+            type uint8 {
+              range 1..20 ;
+            }
+          }
+          leaf policy {
+            description 'The processing strategy for loop point.'
+                        ;
+            type enumeration {
+              enum block {
+                value 1 ;
+                description 'Domain block policy.'
+                            ;
+              }
+              enum normal {
+                value 2 ;
+                description 'Domain normal policy.'
+                            ;
+              }
+            }
+          }
+          leaf vlan-id {
+            description 'VLAN ID.'
+                        ;
+            type uint16 {
+              range 1..4094 ;
+            }
+          }
+          leaf vpn-instance-type {
+            description 'VPN instance type.'
+                        ;
+            type enumeration {
+              enum vpls {
+                value 1 ;
+                description 'Domain detect VPLS type.'
+                            ;
+              }
+              enum vpws {
+                value 5 ;
+                description 'Domain detect VPWS type.'
+                            ;
+              }
+              enum VLSS {
+                value 4 ;
+                description 'Domain detect VLSS type.'
+                            ;
+              }
+            }
+          }
+          leaf vpn-instance-name {
+            description 'VPN instance name.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf loop-flag {
+            description 'Loop state of port.'
+                        ;
+            type enumeration {
+              enum true {
+                value 1 ;
+                description 'The boolean value indicates current port is a loop'
+                          + ' point.'
+                            ;
+              }
+              enum false {
+                value 0 ;
+                description 'The boolean value indicates current port is not a '
+                          + 'loop point.'
+                            ;
+              }
+            }
+          }
+          leaf loop-vlans {
+            description 'The port VLANs at loop point.'
+                        ;
+            type ncd:bitmap ;
+          }
+          leaf loop-internal-vlan {
+            description 'The internal VLAN of the loop point.'
+                        ;
+            type uint16 {
+              range 1..4094 ;
+            }
+            ncd:revise-date 2020-10-24 ;
+          }
+          leaf loop-external-vlan {
+            description 'The external VLAN of the loop point.'
+                        ;
+            type uint16 {
+              range 1..4094 ;
+            }
+            ncd:revise-date 2020-10-24 ;
+          }
+          ncd:select name ;
+          ncd:select 'name entity-name'
+                     ;
+        }
+      }
+    }
+  }
+}

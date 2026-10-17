@@ -1,0 +1,835 @@
+module zxr10-pm-database {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-database'
+            ;
+  prefix pm-database ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2021-07-28 {
+    description 'Add container download-files and leaf rollback-enable in rpc d'
+              + 'atabase-operate input parameter.'
+                ;
+  }
+  revision 2021-07-26 {
+    description 'Add back-database and restore-database for database notificati'
+              + 'on.'
+                ;
+  }
+  revision 2021-05-27 {
+    description 'Add leafs for database-operate and get-operate-status.'
+                ;
+  }
+  revision 2019-08-01 {
+    description 'Initial version.'
+                ;
+  }
+  container state {
+    config false ;
+    container database {
+      leaf current-database {
+        description 'Indicates release of current activated database'
+                    ;
+        type string ;
+      }
+      leaf max-db-num {
+        description 'Max number of databases in the device.'
+                    ;
+        type uint8 ;
+      }
+      container backup {
+        description 'Top-level container for system memory data.'
+                    ;
+        leaf backup-file {
+          description 'Backup file name'
+                      ;
+          type string ;
+          mandatory true ;
+        }
+        leaf backup-state {
+          description 'The backup state value of the backup file'
+                      ;
+          type enumeration {
+            enum BACKUP {
+              value 0 ;
+              description 'Uploading state for database management'
+                          ;
+            }
+            enum RESTORING {
+              value 1 ;
+              description 'Restoring state for database management'
+                          ;
+            }
+            enum COMPLETE {
+              value 2 ;
+              description 'Complete state for database management'
+                          ;
+            }
+            enum FAIL {
+              value 3 ;
+              description 'Fail state for database management'
+                          ;
+            }
+          }
+        }
+        leaf backup-time {
+          description 'The backup time value of the backup file'
+                      ;
+          type ncd:string-with-blank {
+            pattern '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-'
+                  + '9]+)?Z[+-][0-9]{2}:[0-9]{2}'
+                    {
+              description 'A date and time, expressed in the format described i'
+                        + 'n RFC3339. YYYY-MM-DDTHH:MM:SSZ+-hh:mm'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+        leaf backup-database {
+          description 'The database version of the database backup file.When th'
+                    + 'e value changes, a notification is required.'
+                      ;
+          type string ;
+        }
+      }
+      container restore {
+        leaf backup-file {
+          description 'Backup file name'
+                      ;
+          type string ;
+          mandatory true ;
+        }
+        leaf restore-state {
+          description 'The restore state value of the backup file'
+                      ;
+          type enumeration {
+            enum BACKUP {
+              value 0 ;
+              description 'Uploading state for database management'
+                          ;
+            }
+            enum RESTORING {
+              value 1 ;
+              description 'Restoring state for database management'
+                          ;
+            }
+            enum COMPLETE {
+              value 2 ;
+              description 'Complete state for database management'
+                          ;
+            }
+            enum FAIL {
+              value 3 ;
+              description 'Fail state for database management'
+                          ;
+            }
+          }
+        }
+        leaf restore-time {
+          description 'The restore time value of the backup file'
+                      ;
+          type ncd:string-with-blank {
+            pattern '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-'
+                  + '9]+)?Z[+-][0-9]{2}:[0-9]{2}'
+                    {
+              description 'A date and time, expressed in the format described i'
+                        + 'n RFC3339. YYYY-MM-DDTHH:MM:SSZ+-hh:mm'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+        leaf restore-database {
+          description 'Database version of the database backup file used for da'
+                    + 'tabase recovery.When the value changes, a notification i'
+                    + 's required.'
+                      ;
+          type string ;
+        }
+      }
+      container download-files {
+        list download-file {
+          key name ;
+          leaf name {
+            description 'Backup file name'
+                        ;
+            type string ;
+          }
+        }
+        ncd:revise-date 2021-07-28 ;
+      }
+    }
+  }
+  rpc database-operate {
+    description 'RPC Operation'
+                ;
+    input {
+      leaf database-operation {
+        config false ;
+        description 'Data operation action.'
+                    ;
+        type enumeration {
+          enum DBOP_NONE {
+            value 0 ;
+            description 'None for database operation'
+                        ;
+          }
+          enum DBOP_BACKUP {
+            value 1 ;
+            description 'Backup for database operation'
+                        ;
+          }
+          enum DBOP_RESTORE {
+            value 2 ;
+            description 'None for database operation'
+                        ;
+          }
+          enum DBOP_DOWNLOAD {
+            value 3 ;
+            description 'Download for database operation'
+                        ;
+          }
+          enum DBOP_UPLOAD {
+            value 4 ;
+            description 'Upload for database operation'
+                        ;
+          }
+          enum DBOP_REMOVE {
+            value 5 ;
+            description 'Remove for database operation'
+                        ;
+          }
+          enum DBOP_ACTIVATE {
+            value 6 ;
+            description 'Activate for database operation'
+                        ;
+          }
+        }
+        mandatory true ;
+      }
+      leaf file-type {
+        config false ;
+        description 'File type for the operation.'
+                    ;
+        type enumeration {
+          enum DATABASE {
+            value 0 ;
+            description 'The file is database'
+                        ;
+          }
+          enum IMAGE {
+            value 1 ;
+            description 'The file is image'
+                        ;
+          }
+          enum IMAGE-DATABASE {
+            value 2 ;
+            description 'The file is image and database'
+                        ;
+          }
+          enum CERTIFICATE {
+            value 3 ;
+            description 'The file is certificate'
+                        ;
+          }
+          enum LICENSE {
+            value 4 ;
+            description 'The file is license'
+                        ;
+          }
+          enum OTDR {
+            value 5 ;
+            description 'The file is otdr'
+                        ;
+          }
+          enum OCM {
+            value 6 ;
+            description 'The file is ocm'
+                        ;
+          }
+        }
+      }
+      leaf file-name {
+        config false ;
+        description 'The filename for sftp server. It indicates one file name'
+                    ;
+        type string ;
+      }
+      leaf reboot-type {
+        config false ;
+        description 'Reboot type.'
+                    ;
+        type enumeration {
+          enum NO_COMMAND {
+            value 0 ;
+            description 'Do nothing'
+                        ;
+          }
+          enum WARM_RESET {
+            value 1 ;
+            description 'Warm reboot'
+                        ;
+          }
+          enum COLD_RESET {
+            value 2 ;
+            description 'Cold reboot'
+                        ;
+          }
+        }
+      }
+      container remote-server {
+        config false ;
+        description 'Sftp server information, it must be existed for operation '
+                  + 'backup/restore.'
+                    ;
+        leaf protocol {
+          description 'Protocol used to connect to the remote server'
+                      ;
+          type enumeration {
+            enum FTP {
+              value 1 ;
+              description 'File Transfer Protocol (FTP)'
+                          ;
+            }
+            enum SFTP {
+              value 2 ;
+              description 'File Transfer Protocol (SFTP)'
+                          ;
+            }
+          }
+        }
+        leaf vrf-name {
+          description 'The vrf-name of sftp IP address'
+                      ;
+          type ncd:string-all ;
+        }
+        leaf address {
+          description 'Sftp IP address'
+                      ;
+          type string {
+            pattern '((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]).){3}('
+                  + '[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(([0-9a'
+                  + '-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:'
+                  + '|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,'
+                  + '4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}'
+                  + '(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-f'
+                  + 'A-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}'
+                  + '){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-'
+                  + '9a-fA-F]{1,4}){1,7}|:))'
+                    {
+              description 'IPv4 or IPv6 address pattern'
+                          ;
+            }
+          }
+        }
+        leaf port {
+          description 'Port number for sftp requests'
+                      ;
+          type uint16 ;
+        }
+        leaf user {
+          description 'The username for sftp server.'
+                      ;
+          type string ;
+        }
+        leaf password {
+          description 'The password for sftp server.'
+                      ;
+          type string ;
+        }
+        leaf download-path {
+          description 'The download path for sftp server. It indicates one dire'
+                    + 'ctory'
+                      ;
+          type string ;
+        }
+        leaf upload-path {
+          description 'The upload path for sftp server. It indicates one direct'
+                    + 'ory'
+                      ;
+          type string ;
+        }
+        leaf source-address {
+          description 'Source address to use on outgoing ftp packets.'
+                      ;
+          type string {
+            pattern '((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]).){3}('
+                  + '[0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(([0-9a'
+                  + '-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:'
+                  + '|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,'
+                  + '4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}'
+                  + '(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-f'
+                  + 'A-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}'
+                  + '){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-'
+                  + '9a-fA-F]{1,4}){1,7}|:))'
+                    {
+              description 'IPv4 or IPv6 address pattern'
+                          ;
+            }
+          }
+        }
+      }
+      leaf file-size {
+        config false ;
+        description 'File size.'
+                    ;
+        type uint32 ;
+      }
+      leaf rollback-enable {
+        config false ;
+        description 'Whether support auto-rollback for the operation.'
+                    ;
+        type enumeration {
+          enum disable {
+            value 0 ;
+            description 'The auto-rollback operation is disable'
+                        ;
+          }
+          enum enable {
+            value 1 ;
+            description 'The auto-rollback operation is enable'
+                        ;
+          }
+        }
+      }
+    }
+    output {
+      leaf result {
+        config false ;
+        description result ;
+        type ncd:string-all ;
+      }
+      leaf text {
+        config false ;
+        description 'reasons for failure, defined by vendor.'
+                    ;
+        type ncd:string-all ;
+      }
+      leaf file-size {
+        config false ;
+        description 'File size.'
+                    ;
+        type uint32 ;
+      }
+      leaf file-signature {
+        config false ;
+        description 'File signature.'
+                    ;
+        type ncd:string-all ;
+      }
+      leaf file-name {
+        config false ;
+        description 'File name.'
+                    ;
+        type ncd:string-all ;
+      }
+    }
+  }
+  rpc get-operate-status {
+    input {
+      leaf operate-type {
+        config false ;
+        description 'Data operation action.'
+                    ;
+        type enumeration {
+          enum DBOP_NONE {
+            value 0 ;
+            description 'None for database operation'
+                        ;
+          }
+          enum DBOP_BACKUP {
+            value 1 ;
+            description 'Backup for database operation'
+                        ;
+          }
+          enum DBOP_RESTORE {
+            value 2 ;
+            description 'None for database operation'
+                        ;
+          }
+          enum DBOP_DOWNLOAD {
+            value 3 ;
+            description 'Download for database operation'
+                        ;
+          }
+          enum DBOP_UPLOAD {
+            value 4 ;
+            description 'Upload for database operation'
+                        ;
+          }
+          enum DBOP_REMOVE {
+            value 5 ;
+            description 'Remove for database operation'
+                        ;
+          }
+          enum DBOP_ACTIVATE {
+            value 6 ;
+            description 'Activate for database operation'
+                        ;
+          }
+        }
+        mandatory true ;
+      }
+      leaf file-type {
+        config false ;
+        description 'File type for the operation.'
+                    ;
+        type enumeration {
+          enum DATABASE {
+            value 0 ;
+            description 'The file is database'
+                        ;
+          }
+          enum IMAGE {
+            value 1 ;
+            description 'The file is image'
+                        ;
+          }
+          enum IMAGE-DATABASE {
+            value 2 ;
+            description 'The file is image and database'
+                        ;
+          }
+          enum CERTIFICATE {
+            value 3 ;
+            description 'The file is certificate'
+                        ;
+          }
+          enum LICENSE {
+            value 4 ;
+            description 'The file is license'
+                        ;
+          }
+          enum OTDR {
+            value 5 ;
+            description 'The file is otdr'
+                        ;
+          }
+          enum OCM {
+            value 6 ;
+            description 'The file is ocm'
+                        ;
+          }
+        }
+      }
+      leaf file-name {
+        config false ;
+        description 'The filename for sftp server. It indicates one file name'
+                    ;
+        type string ;
+      }
+    }
+    output {
+      leaf status {
+        config false ;
+        description 'The status of database operation'
+                    ;
+        type ncd:string-all ;
+      }
+      leaf text {
+        config false ;
+        description 'reasons for failure, defined by vendor.'
+                    ;
+        type ncd:string-all ;
+      }
+      leaf download-bytes {
+        config false ;
+        description 'The bytes of download.'
+                    ;
+        type uint32 ;
+      }
+      leaf active-time {
+        config false ;
+        description 'The time of active operation.'
+                    ;
+        type ncd:string-with-blank {
+          pattern '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(.[0-9]'
+                + '+)?Z[+-][0-9]{2}:[0-9]{2}'
+                  {
+            description 'A date and time, expressed in the format described in '
+                      + 'RFC3339. YYYY-MM-DDTHH:MM:SSZ+-hh:mm'
+                        ;
+          }
+        }
+      }
+      leaf file-name {
+        config false ;
+        description 'File name.'
+                    ;
+        type ncd:string-all ;
+      }
+    }
+  }
+  notification event {
+    description 'hostname banner boot-time domain-name'
+                ;
+    container update {
+      container database {
+        leaf current-database {
+          config false ;
+          description 'Indicates release of current activated database'
+                      ;
+          type string ;
+        }
+        leaf max-db-num {
+          config false ;
+          description 'Max number of databases in the device.'
+                      ;
+          type uint8 ;
+        }
+        container backup {
+          config false ;
+          description 'Top-level container for system memory data.'
+                      ;
+          leaf backup-file {
+            description 'Backup file name'
+                        ;
+            type string ;
+            mandatory true ;
+          }
+          leaf backup-state {
+            description 'The backup state value of the backup file'
+                        ;
+            type enumeration {
+              enum BACKUP {
+                value 0 ;
+                description 'Uploading state for database management'
+                            ;
+              }
+              enum RESTORING {
+                value 1 ;
+                description 'Restoring state for database management'
+                            ;
+              }
+              enum COMPLETE {
+                value 2 ;
+                description 'Complete state for database management'
+                            ;
+              }
+              enum FAIL {
+                value 3 ;
+                description 'Fail state for database management'
+                            ;
+              }
+            }
+          }
+          leaf backup-time {
+            description 'The backup time value of the backup file'
+                        ;
+            type ncd:string-with-blank {
+              pattern '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(.['
+                    + '0-9]+)?Z[+-][0-9]{2}:[0-9]{2}'
+                      {
+                description 'A date and time, expressed in the format described'
+                          + ' in RFC3339. YYYY-MM-DDTHH:MM:SSZ+-hh:mm'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf backup-database {
+            description 'The database version of the database backup file.'
+                        ;
+            type string ;
+            mandatory true ;
+            ncd:revise-date 2021-07-26 ;
+          }
+        }
+        container restore {
+          config false ;
+          leaf backup-file {
+            description 'Backup file name'
+                        ;
+            type string ;
+            mandatory true ;
+          }
+          leaf restore-state {
+            description 'The restore state value of the backup file'
+                        ;
+            type enumeration {
+              enum BACKUP {
+                value 0 ;
+                description 'Uploading state for database management'
+                            ;
+              }
+              enum RESTORING {
+                value 1 ;
+                description 'Restoring state for database management'
+                            ;
+              }
+              enum COMPLETE {
+                value 2 ;
+                description 'Complete state for database management'
+                            ;
+              }
+              enum FAIL {
+                value 3 ;
+                description 'Fail state for database management'
+                            ;
+              }
+            }
+          }
+          leaf restore-time {
+            description 'The restore time value of the backup file'
+                        ;
+            type ncd:string-with-blank {
+              pattern '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(.['
+                    + '0-9]+)?Z[+-][0-9]{2}:[0-9]{2}'
+                      {
+                description 'A date and time, expressed in the format described'
+                          + ' in RFC3339. YYYY-MM-DDTHH:MM:SSZ+-hh:mm'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf restore-database {
+            description 'The database version of the database backup file.'
+                        ;
+            type string ;
+            mandatory true ;
+            ncd:revise-date 2021-07-26 ;
+          }
+        }
+      }
+    }
+    container delete {
+      container database {
+        leaf current-database {
+          config false ;
+          description 'Indicates release of current activated database'
+                      ;
+          type string ;
+        }
+        leaf max-db-num {
+          config false ;
+          description 'Max number of databases in the device.'
+                      ;
+          type uint8 ;
+        }
+        container backup {
+          config false ;
+          description 'Top-level container for system memory data.'
+                      ;
+          leaf backup-file {
+            description 'Backup file name'
+                        ;
+            type string ;
+            mandatory true ;
+          }
+          leaf backup-state {
+            description 'The backup state value of the backup file'
+                        ;
+            type enumeration {
+              enum BACKUP {
+                value 0 ;
+                description 'Uploading state for database management'
+                            ;
+              }
+              enum RESTORING {
+                value 1 ;
+                description 'Restoring state for database management'
+                            ;
+              }
+              enum COMPLETE {
+                value 2 ;
+                description 'Complete state for database management'
+                            ;
+              }
+              enum FAIL {
+                value 3 ;
+                description 'Fail state for database management'
+                            ;
+              }
+            }
+          }
+          leaf backup-time {
+            description 'The backup time value of the backup file'
+                        ;
+            type ncd:string-with-blank {
+              pattern '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(.['
+                    + '0-9]+)?Z[+-][0-9]{2}:[0-9]{2}'
+                      {
+                description 'A date and time, expressed in the format described'
+                          + ' in RFC3339. YYYY-MM-DDTHH:MM:SSZ+-hh:mm'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf backup-database {
+            description 'The database version of the database backup file.'
+                        ;
+            type string ;
+            mandatory true ;
+            ncd:revise-date 2021-07-26 ;
+          }
+        }
+        container restore {
+          config false ;
+          leaf backup-file {
+            description 'Backup file name'
+                        ;
+            type string ;
+            mandatory true ;
+          }
+          leaf restore-state {
+            description 'The restore state value of the backup file'
+                        ;
+            type enumeration {
+              enum BACKUP {
+                value 0 ;
+                description 'Uploading state for database management'
+                            ;
+              }
+              enum RESTORING {
+                value 1 ;
+                description 'Restoring state for database management'
+                            ;
+              }
+              enum COMPLETE {
+                value 2 ;
+                description 'Complete state for database management'
+                            ;
+              }
+              enum FAIL {
+                value 3 ;
+                description 'Fail state for database management'
+                            ;
+              }
+            }
+          }
+          leaf restore-time {
+            description 'The restore time value of the backup file'
+                        ;
+            type ncd:string-with-blank {
+              pattern '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(.['
+                    + '0-9]+)?Z[+-][0-9]{2}:[0-9]{2}'
+                      {
+                description 'A date and time, expressed in the format described'
+                          + ' in RFC3339. YYYY-MM-DDTHH:MM:SSZ+-hh:mm'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf restore-database {
+            description 'The database version of the database backup file.'
+                        ;
+            type string ;
+            mandatory true ;
+            ncd:revise-date 2021-07-26 ;
+          }
+        }
+      }
+    }
+  }
+}

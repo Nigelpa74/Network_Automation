@@ -1,0 +1,98 @@
+module zxr10-network-slice {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/network-slice'
+            ;
+  prefix network-slice ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf model for network slice.'
+              ;
+  revision 2022-06-27 {
+    description 'Initial version.'
+                ;
+  }
+  feature network_slice_feature ;
+  container configuration {
+    description 'Network-Slice configuration.'
+                ;
+    container network-slice {
+      if-feature network_slice_feature ;
+      description 'Network-Slice configure information container.'
+                  ;
+      container slice-instances {
+        description 'Network-Slice id container,Contains attributes under slice'
+                  + '-id.'
+                    ;
+        list slice-instance {
+          description 'Network-Slice id list,Indicates that multiple slice-ids '
+                    + 'can be configured under the network-slice command'
+                      ;
+          key slice-id ;
+          max-elements 65535 ;
+          leaf slice-id {
+            description slice-id. ;
+            type uint32 {
+              range 1..65535 ;
+            }
+          }
+          leaf description {
+            description "slice-id's description."
+                        ;
+            type string {
+              length 1..79 ;
+            }
+          }
+          container interfaces {
+            description 'Network-slice Interface Container.'
+                        ;
+            list interface {
+              description 'Network-Slice Interface list,Indicates that multiple'
+                        + ' interfaces can be configured under the same slice-i'
+                        + 'd.'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'Interface name,Associate 3905 object, Need to supp'
+                          + 'ort Vei port, gei port, sg port.'
+                            ;
+                type ncd:ifname ;
+              }
+              container bandwidths {
+                description 'Bandwidth container,Interface and bandwidth are st'
+                          + 'ored in separate objects, so create a bandwidth co'
+                          + 'ntainer separately.'
+                            ;
+                presence bandwidths ;
+                leaf bandwidth {
+                  description 'Bandwidth,Only one can be configured on an inter'
+                            + 'face.'
+                              ;
+                  type uint32 {
+                    range 1..1000000 ;
+                  }
+                  units Mbps ;
+                  mandatory true ;
+                }
+                leaf service-policy {
+                  description 'Service policy,required to configure the bandwid'
+                            + 'th first before configuring the service-policy.'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

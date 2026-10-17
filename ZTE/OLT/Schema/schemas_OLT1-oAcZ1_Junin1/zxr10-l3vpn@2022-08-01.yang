@@ -1,0 +1,3830 @@
+module zxr10-l3vpn {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/l3vpn'
+            ;
+  prefix l3vpn ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe L3VPN.This netconf module contain'
+            + 's managed object definitions of VRF for L3VPN and 6VPE.'
+              ;
+  revision 2022-08-01 {
+    description 'Add the project label supported for the feature named ttl-mode.'
+                ;
+  }
+  revision 2022-03-30 {
+    description '1.Add four leaves:'+"\n"
+              + '/configuration/vrf/vrf-public-inst/address-family-ipv4/srv6-be'
+              + 'st-effort,'+"\n"
+              + '/configuration/vrf/vrf-public-inst/address-family-ipv4/srv6-tr'
+              + 'affic-engineer,'+"\n"
+              + '/configuration/vrf/vrf-public-inst/address-family-ipv6/srv6-be'
+              + 'st-effort,'+"\n"
+              + '/configuration/vrf/vrf-public-inst/address-family-ipv6/srv6-tr'
+              + 'affic-engineer,'+"\n"
+              + '2.vrf add route-policy:'+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3vpn:vrf-i'
+              + 'nst/l3vpn:address-family-ipv4/l3vpn:export-policy,'+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3vpn:vrf-i'
+              + 'nst/l3vpn:address-family-ipv4/l3vpn:import-policy,'+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3vpn:vrf-i'
+              + 'nst/l3vpn:address-family-ipv4/l3vpn:evpn-export-policy,'+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3vpn:vrf-i'
+              + 'nst/l3vpn:address-family-ipv4/l3vpn:evpn-import-policy,'+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3vpn:vrf-i'
+              + 'nst/l3vpn:address-family-ipv4/l3vpn:gw-ip/l3vpn:route-policy,
+'
+              + ''+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3vpn:vrf-i'
+              + 'nst/l3vpn:address-family-ipv6/l3vpn:export-policy,'+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3vpn:vrf-i'
+              + 'nst/l3vpn:address-family-ipv6/l3vpn:import-policy,'+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3vpn:vrf-i'
+              + 'nst/l3vpn:address-family-ipv6/l3vpn:evpn-export-policy,'+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3vpn:vrf-i'
+              + 'nst/l3vpn:address-family-ipv6/l3vpn:evpn-import-policy,'+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3vpn:vrf-i'
+              + 'nst/l3vpn:address-family-ipv6/l3vpn:gw-ip/l3vpn:route-policy,
+'
+              + ''+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-public-instance/l3vpn'
+              + ':address-family-ipv4/l3vpn:export-policy,'+"\n"
+              + '/l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-public-instance/l3vpn'
+              + ':address-family-ipv6/l3vpn:export-policy'
+                ;
+  }
+  revision 2022-03-08 {
+    description '1.Add leaves:'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/'
+              + 'evpn-auto-originate-route,'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv6/'
+              + 'evpn-auto-originate-route,'
+                ;
+  }
+  revision 2021-11-03 {
+    description 'Add six leaves:'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/'
+              + 'default-color,'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/'
+              + 'default-color-evpn,'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv6/'
+              + 'default-color,'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv6/'
+              + 'default-color-evpn,'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-public-inst/address-famil'
+              + 'y-ipv4/default-color,'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-public-inst/address-famil'
+              + 'y-ipv6/default-color,'
+                ;
+  }
+  revision 2021-07-15 {
+    description '1.Add two containers:'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/'
+              + 'import-vrf-routes and'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv6/'
+              + 'import-vrf-routes.'+"\n"
+              + '2.Add four leaves:'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/'
+              + 'import-unicast/reoriginate-l3vpn,'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/'
+              + 'import-unicast/reoriginate-evpn,'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv6/'
+              + 'import-unicast/reoriginate-l3vpn,and'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv6/'
+              + 'import-unicast/reoriginate-evpn.'+"\n"
+              + '3.Add leaf import-multicast-ipv6-route in address-family-ipv4,'
+              + ' address-family-ipv6.'
+                ;
+  }
+  revision 2021-05-31 {
+    description 'Add two export-map nodes for vrf-publib-instance.'
+                ;
+  }
+  revision 2021-03-06 {
+    description 'Modify the description of ttl-mode.'
+                ;
+  }
+  revision 2021-01-14 {
+    description 'Add some container nodes for mutual import between unicast rou'
+              + 'tes and VRF routes.'
+                ;
+  }
+  revision 2020-09-27 {
+    description 'Add a leaf:/configuration/vrf/vrf-public-instance/added-proper'
+              + 'ty/srv6-locater-name.'
+                ;
+  }
+  revision 2020-09-15 {
+    description '(1)Add new leaf /state/vrf/vrf-instances/vrf-inst/l3vpn-statis'
+              + 'tics/in-traffic-rate;'+"\n"
+              + '(2)Add new leaf /state/vrf/vrf-instances/vrf-inst/l3vpn-statis'
+              + 'tics/in-pkt-rate-kfps;'+"\n"
+              + '(3)Add new leaf /state/vrf/vrf-instances/vrf-inst/l3vpn-statis'
+              + 'tics/out-traffic-rate;'+"\n"
+              + '(4)Add new leaf /state/vrf/vrf-instances/vrf-inst/l3vpn-statis'
+              + 'tics/out-pkt-rate-kfps;'
+                ;
+  }
+  revision 2020-08-18 {
+    description "Add new leaf 'configuration/vrf/vrf-instances/vrf-inst/added-p"
+              + "roperty/l3vpn-tunnel-encapsulation'."
+                ;
+  }
+  revision 2020-08-13 {
+    description 'Add new leafs named srv6-best-effort and srv6-traffic-engineer'
+              + ' for address-family ipv4 and address-family ipv6.'
+                ;
+  }
+  revision 2020-08-04 {
+    description 'Add new leafs named route-reoriginate-from-evpn and route-reor'
+              + 'iginate-from-l3vpn for address-family ipv4 and address-family '
+              + 'ipv6.'
+                ;
+  }
+  revision 2020-07-28 {
+    description 'Add some containers and leaves:'+"\n"
+              + '/configuration/vrf/vrf-public-instance/route-targets'+"\n"
+              + '/configuration/vrf/vrf-public-instance/address-family-ipv4/rou'
+              + 'te-targets'+"\n"
+              + '/configuration/vrf/vrf-public-instance/address-family-ipv6/rou'
+              + 'te-targets'+"\n"
+              + '/configuration/vrf/vrf-public-instance/address-family-ipv6/imp'
+              + 'ort-multicast-route'+"\n"
+              + '/configuration/vrf/vrf-public-instance/address-family-ipv4/imp'
+              + 'ort-multicast-route.'
+                ;
+  }
+  revision 2020-07-01 {
+    description 'Change description of leaf named sid.'+"\n"
+              + 'Change the minimum length of some leaf nodes from 0 to 1.'
+                ;
+  }
+  revision 2020-06-23 {
+    description 'Add container vrf-public and srv6 end-dt-sid/end-dx-sid.'
+                ;
+  }
+  revision 2020-06-08 {
+    description "Change route-map name's maximum length from 31 to 200."
+                ;
+  }
+  revision 2020-04-30 {
+    description 'Add a leaf node:srv6-locator-name.'
+                ;
+  }
+  revision 2020-04-23 {
+    description 'Add new leaf named frr-wtr for address-family ipv4 and address'
+              + '-family ipv6.'
+                ;
+  }
+  revision 2020-03-26 {
+    description 'Add new feature named default-value-common.'+"\n"
+              + 'Add new leaf named ip-frr for address-family ipv4 and address-'
+              + 'family ipv6.'
+                ;
+  }
+  revision 2020-03-02 {
+    description 'Add new leaf reserved-tag for vrf-inst.'+"\n"
+              + 'Add new feature named reserved-vrf.'
+                ;
+  }
+  revision 2020-02-24 {
+    description 'Discard these choies:'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/added-property/srv6-'
+              + 'end-dt-sid'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/'
+              + 'srv6-end-dt-sid'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/'
+              + 'srv6-end-dx-sid'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv6/'
+              + 'srv6-end-dt-sid'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv6/'
+              + 'srv6-end-dx-sid.'+"\n"
+              + 'Add some containers:'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/added-property/srv6-'
+              + 'end-dt'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/'
+              + 'srv6-end-dt'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/'
+              + 'srv6-end-dx'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv6/'
+              + 'srv6-end-dt'+"\n"
+              + '/configuration/vrf/vrf-instances/vrf-inst/address-family-ipv6/'
+              + 'srv6-end-dx.'
+                ;
+  }
+  revision 2019-10-22 {
+    description 'Addr enum by-peer for evpn-tunnel-encapsulation.'
+                ;
+  }
+  revision 2019-08-08 {
+    description 'Obsolete /l3vpn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3'
+              + 'vpn:vrf-inst/l3vpn:address-family-ipv6/l3vpn:evpn-gw,add  /l3v'
+              + 'pn:configuration/l3vpn:vrf/l3vpn:vrf-instances/l3vpn:vrf-inst/'
+              + 'l3vpn:address-family-ipv6/l3vpn:evpn-gw-ex and add feature for'
+              + ' evpn-rt2-import-double-label.'
+                ;
+  }
+  revision 2019-07-09 {
+    description 'Add new leaf vpn-type for route-target.'+"\n"
+              + 'Add new leaf evpn-rt2-import-double-label for address-family-i'
+              + 'pv4 and address-family-ipv6.'
+                ;
+  }
+  revision 2019-05-21 {
+    description 'Add new leaf maximum-exceed-action for address-family-ipv4 and'
+              + ' address-family-ipv6.'
+                ;
+  }
+  revision 2019-05-17 {
+    description 'Add new state node vrf-summary for vrf and add a list for gene'
+              + 'rating host route.'
+                ;
+  }
+  revision 2019-05-01 {
+    description "Add enum srv6 for evpn tunnel-encapsulation ,add new leaf 'con"
+              + "figuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/tunn"
+              + "el-policy-name',add new leaf 'configuration/vrf/vrf-instances/"
+              + "vrf-inst/address-family-ipv6/tunnel-policy-name'."
+                ;
+  }
+  revision 2018-12-11 {
+    description 'Add new nodes evpn-rt2-import-single-label for address-family-'
+              + 'ipv4 and address-family-ipv6.'
+                ;
+  }
+  revision 2018-11-24 {
+    description 'Add new container static-outlabels in address-family-ipv6,Add '
+              + 'some nodes about equivalent VNI label.'
+                ;
+  }
+  revision 2018-10-18 {
+    description "1)Add new leaf 'configuration/vrf/vrf-instances/vrf-inst/addre"
+              + "ss-family-ipv4/evpn-gw-ip-inherit-nexthop';
+\n2)Add new leaf '"
+              + "configuration/vrf/vrf-instances/vrf-inst/address-family-ipv4/e"
+              + "vpn-gw-ip-inherit-nexthop';"
+                ;
+  }
+  revision 2018-09-08 {
+    description "Add new container 'configuration/vrf/reserved-vpnid-range;"
+                ;
+  }
+  revision 2018-06-13 {
+    description 'Modify the descriptions of SRv6 nodes.'
+                ;
+  }
+  revision 2018-03-12 {
+    description 'Add some nodes about srv6 and add some leaves for EVPN.'
+                ;
+  }
+  revision 2017-07-18 {
+    description 'Add some state type nodes and some operation type nodes about '
+              + 'l3vpn statistics info.'
+                ;
+  }
+  revision 2017-07-03 {
+    description "Add new leaf 'configuration/vrf/vrf-instances/vrf-inst/vpnid;"
+                ;
+  }
+  revision 2017-06-07 {
+    description "Add new leaf 'configuration/vrf/vrf-instances/vrf-inst/added-p"
+              + "roperty/evpn-tunnel-encapsulation';"
+                ;
+  }
+  revision 2017-01-11 {
+    description "1)Add new leaf 'configuration/vrf/vrf-instances/vrf-inst/addre"
+              + "ss-family-ipv4/evpn-export-map';
+\n2)Add new leaf 'configurati"
+              + "on/vrf/vrf-instances/vrf-inst/address-family-ipv4/evpn-import-"
+              + "map';"
+                ;
+  }
+  revision 2016-08-26 {
+    description "Add new leaf 'configuration/vrf/vrf-instances/vrf-inst/added-p"
+              + "roperty/vni-label;"
+                ;
+  }
+  revision 2016-05-27 {
+    description "Add new leaf 'configuration/vrf/vrf-instances/vrf-inst/address"
+              + "-family-ipv4/evpn-gw';"
+                ;
+  }
+  revision 2015-07-20 {
+    description "Add new leaf 'configuration/vrf/vrf-instances/vrf-inst/added-p"
+              + "roperty/entroy-label';"
+                ;
+  }
+  revision 2014-11-10 {
+    description "1)Add new container 'configuration/vrf/vrf-instances/vrf-inst/"
+              + "nm-create';
+\n2)Add new leaf 'configuration/vrf/vrf-instances/"
+              + "vrf-inst/nm-create/vrf-type';
+\n3)Add new feature named nm-pri"
+              + "vate."
+                ;
+  }
+  revision 2014-09-22 {
+    description "Change the default value of 'configuration/vrf/vrf-instances/v"
+              + "rf-inst/added-property' leaf 'ttl-mode' from pipe to uniform"
+                ;
+  }
+  revision 2014-07-02 {
+    description "Modify the maximum length range of 'configuration/vrf/vrf-inst"
+              + "ances/vrf-inst/' leaf 'description' from 80 up to 104."
+                ;
+  }
+  revision 2014-04-17 {
+    description "Divide container 'mpls-label-modes' into two containers which "
+              + "named 'mpls-label-mode-ipv4' and 'mpls-label-mode-ipv6'."
+                ;
+  }
+  revision 2014-02-26 {
+    description 'Add the global-vpnid, traffic-statistics, deactive, ttl-mode, '
+              + 'ds-mode, rate-limit, import-multicast-route-ipv6, and protecti'
+              + 'on-ipv6 features.'
+                ;
+  }
+  revision 2014-02-12 {
+    description '1)Add new leaf node named import-multicast-route to address-fa'
+              + 'mily-ipv6.'+"\n"
+              + '2)Amend descriptions.'
+                ;
+  }
+  revision 2013-12-04 {
+    description "1)Change the type of leaf named 'rt-value' under address-famil"
+              + "y-ipv6 from asn-nn to union. The union includes three types: a"
+              + "sn-nn,asnd-nn and ipadd-nn."
+                ;
+  }
+  revision 2013-11-08 {
+    description "1)Change the type of leaf named 'description' from string to s"
+              + "tring-with-blank;
+\n2)Exchange the value of enumeration for le"
+              + "af node 'nat-type': 1 corresponds to inside,and 2 corresponds "
+              + "to none."
+                ;
+  }
+  revision 2013-10-10 {
+    description "(1)Replace one leaf named 'rd' with the choice node under cont"
+              + "ainer node 'rd'.
+\n(2)Combine lists asn-nn,asnd-nn and ipadd-n"
+              + "n under container node 'route-target' to form a new list and r"
+              + "eplace the old container node 'route-target'.
+\n(3)Added leaf "
+              + "nodes to container and rename those nodes under choice node 'd"
+              + "s-mode'.
+\n(4)The leaf node 'mpls-label-node' in the container"
+              + " under vrf is not mandatory any more, and add 'per-prefix' as "
+              + "a default value.
+\n(5)Change the name of container node 'tunne"
+              + "l-popicy' under address-family-mode to 'tunnel-policy'.
+\n(6)D"
+              + "efine a new type named 'global-vpnid-type' for global-vpnid.
+\n"
+              + "(7)Remove the original leaf node 'stat-switch' and change the "
+              + "container node 'traffic-stat' to a leaf node.
+\n(8)Add presenc"
+              + "e to container nodes address-family-ipv4 and address-family-ip"
+              + "v6;
+\n(9)Add a leaf node named 'nat-type' to the container nod"
+              + "e 'added-property'.
+\n(10)Add a leaf node named 'protection' t"
+              + "o the container node 'address-family-ipv6'.
+\n(11)Add outer la"
+              + "yer containers to all lists."
+                ;
+  }
+  revision 2013-08-02 {
+    description "(1) Move the original leaf node 'traffic-stat' to the new cont"
+              + "ainer node 'traffic-stat' and rename the original leaf node 's"
+              + "tat-switch'.
+\n(2) Change the original choice node 'rd' under "
+              + "'vrf-inst' as a child node in an additional container node nam"
+              + "ed 'rd'.
+\n(3) Move the original nodes 'active-status','static"
+              + "-inlabel','ttl-mode' and 'ds-mode' to the new container node '"
+              + "added-property' under 'vrf-inst'.These attributes are optional"
+              + ".
+\n(4) Change the name of leaf node 'vpnid' under vrf-inst to"
+              + " 'global-vpnid', and the name of leaf node 'max-warning' under"
+              + " address-family-ipv6 to 'maximum-warning'.
+\n(5) Change the ty"
+              + "pe of leaf nodes,including 'rd-asn','rd-asnd','rd-ipadd','rt-v"
+              + "alue', and 'import-multicast-route', from 'string' to 'asn-nn'"
+              + ",'asnd-nn', or 'ipadd-nn'. 
+\n(6) Change the minimum length of"
+              + " leaf node 'description' from 0 to 1, and the minimum length o"
+              + "f leaf node 'global-vpnid' from 0 to 3.
+\n(7) Add descriptions"
+              + " to nodes."
+                ;
+  }
+  revision 2013-06-25 {
+    description 'Initial version.'
+                ;
+  }
+  feature global-vpnid {
+    description 'The VPN ID as specified in [RFC2685].'
+                ;
+  }
+  feature traffic-statistics {
+    description 'L3vpn instances traffic statistics function.'
+                ;
+  }
+  feature deactive {
+    description 'VRF deactivation function.'
+                ;
+  }
+  feature ttl-mode {
+    description 'TTL mode.'
+                ;
+  }
+  feature ds-mode {
+    description 'DS mode.'
+                ;
+  }
+  feature rate-limit {
+    description 'The rate limit strategy of VRF.'
+                ;
+  }
+  feature import-multicast-route-ipv6 {
+    description 'VRF route import for multicast in ipv6.'
+                ;
+  }
+  feature protection-ipv6 {
+    description 'Protection for local prefixes in ipv6.'
+                ;
+  }
+  feature nm-private {
+    description 'Only for the use of network management.'
+                ;
+  }
+  feature entroy-label {
+    description 'The entroy label capability of VRF.'
+                ;
+  }
+  feature evpn-rt2-import-double-label {
+    description 'vBRAS-c does not need evpn-rt2-import-double-label.'
+                ;
+  }
+  feature reserved-vrf {
+    description 'Specific certain VRF instance for reserved virtual network,suc'
+              + 'h as management net.'
+                ;
+  }
+  feature default-value-common {
+    description 'Default value is not applicable for v6000.'
+                ;
+  }
+  typedef global-vpnid-type {
+    type string {
+      length 3..15 ;
+      pattern '([0-9a-fA-F]{1,6}):([0-9a-fA-F]{1,8})'
+              {
+        description 'The purpose of a VPN-ID is to uniquely identify a VPN.The '
+                  + 'Global VPN Identifier format is: 3 octet VPN Authority, Or'
+                  + 'ganizationally Unique Identifier followed by 4 octet VPN i'
+                  + 'ndex identifying VPN according to OUI.'
+                    ;
+      }
+    }
+    description 'The type of global-vpnid.Format:(hex) <3 bytes OUI:4 bytes VPN'
+              + '_Index> (3-15 characters).'
+                ;
+  }
+  container configuration {
+    container vrf {
+      description 'This portion represents the MPLS L3VPNs that are configured.'
+                + 'The Virtual Routing and Forwarding (VRF) that is configured '
+                + 'at a particular device represents an instance of some VPN.'
+                  ;
+      container vrf-instances {
+        description 'VRF configuration.Besides name,description,global-vpnid an'
+                  + 'd traffic-stat, other configurations of VRF are dependent '
+                  + 'on rd.'
+                    ;
+        list vrf-inst {
+          description 'VRF configuration.Besides name,description,global-vpnid '
+                    + 'and traffic-stat, other configurations of VRF are depend'
+                    + 'ent on rd.'
+                      ;
+          max-elements 16384 ;
+          key name ;
+          leaf name {
+            description 'The human-readable name of this VPN.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf vpnid {
+            description 'The VPN identifier of VRF instance,it cannot be modifi'
+                      + 'ed and removed unless VRF is deleted.'
+                        ;
+            type uint32 {
+              range 1..16384 ;
+            }
+            ncd:revise-date 2017-07-03 ;
+          }
+          leaf reserved-tag {
+            description 'Tagged for a certain reserved vrf.'
+                        ;
+            type enumeration {
+              enum mng {
+                value 1 ;
+                description 'The VRF instance is used as mng.'
+                            ;
+              }
+            }
+            ncd:revise-date 2020-03-02 ;
+          }
+          leaf description {
+            description 'The human-readable description of this VRF.'
+                        ;
+            type ncd:string-with-blank {
+              length 1..104 ;
+            }
+          }
+          leaf global-vpnid {
+            if-feature global-vpnid ;
+            description 'The VPN ID as specified in [RFC2685]. The global-vpnid'
+                      + ' format is (hex)<3 bytes OUI:4 bytes VPN_Index>.'
+                        ;
+            type global-vpnid-type {
+              length 3..15 ;
+            }
+          }
+          leaf traffic-stat {
+            if-feature traffic-statistics ;
+            description 'L3vpn statistic status of a VPN instance.The traffic-s'
+                      + 'tat of VRF can be changed by the configuration of glob'
+                      + 'al-statistics.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable statistic.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Enable statistic.'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          container rd {
+            description 'The route distinguisher for a VRF.Once rd configured f'
+                      + 'or a VRF,it cannot be modified and removed unless dele'
+                      + 'te the vrf.'
+                        ;
+            presence 'RD configuration.'
+                     ;
+            leaf rd {
+              description 'The route distinguisher for this VRF.Once rd configu'
+                        + 'red for a VRF,it cannot be modified and removed unle'
+                        + 'ss delete the VRF.'
+                          ;
+              type union {
+                type ncd:asn-nn ;
+                type ncd:asnd-nn ;
+                type ncd:ipadd-nn ;
+              }
+              mandatory true ;
+            }
+          }
+          container added-property {
+            description 'Other additional attributes for VRF instance.'
+                        ;
+            leaf active-status {
+              if-feature deactive ;
+              description 'Status of VRF.'
+                          ;
+              type enumeration {
+                enum deactive {
+                  value 1 ;
+                  description 'VRF is deactive.'
+                              ;
+                }
+                enum active {
+                  value 2 ;
+                  description 'VRF is active.'
+                              ;
+                }
+              }
+              default active ;
+            }
+            leaf static-inlabel {
+              description 'Static in-label.The maximum range of static in-label'
+                        + ' is from 16 to 1048575,in fact,it is a dynamic range'
+                        + '.Static in-label just takes effect when mpls-label-m'
+                        + 'ode is per-vrf.'
+                          ;
+              type uint32 {
+                range 16..1048575 ;
+              }
+            }
+            leaf ttl-mode {
+              if-feature ttl-mode ;
+              description 'Ttl mode.The default values for different device typ'
+                        + 'es may be different, usually the value defined here.'
+                          ;
+              type enumeration {
+                enum uniform {
+                  value 1 ;
+                  description 'Select uniform inherit mode.'
+                              ;
+                }
+                enum pipe {
+                  value 2 ;
+                  description 'Select pipe inherit mode.'
+                              ;
+                }
+              }
+              default uniform ;
+            }
+            leaf nat-type {
+              description 'The type of NAT integration with MPLS VPN,if it is s'
+                        + 'et as inside,the traffic in MPLS VPN will be process'
+                        + 'ed with NAT.'
+                          ;
+              type enumeration {
+                enum inside {
+                  value 1 ;
+                  description 'Nat-type is inside.'
+                              ;
+                }
+                enum none {
+                  value 2 ;
+                  description 'Nat-type is none.'
+                              ;
+                }
+              }
+              default none ;
+            }
+            choice ds-mode {
+              if-feature ds-mode ;
+              description 'Ds-mode configuration.'
+                          ;
+              default pipe ;
+              case pipe {
+                if-feature ds-mode ;
+                description 'Ds-mode is pipe.'
+                            ;
+                container ds-mode-pipe {
+                  description 'Configuration of VRF when the mode of ds-mode is'
+                            + ' pipe.'
+                              ;
+                  leaf ds-mode {
+                    description 'Ds-mode of VRF.'
+                                ;
+                    type enumeration {
+                      enum pipe {
+                        value 2 ;
+                        description 'The mode of ds-mode is pipe.'
+                                    ;
+                      }
+                    }
+                  }
+                  leaf service-class {
+                    description 'Ds-mode service class.'
+                                ;
+                    type enumeration {
+                      enum be {
+                        value 1 ;
+                        description 'Best effort.'
+                                    ;
+                      }
+                      enum af1 {
+                        value 2 ;
+                        description 'Assured forwarding class 1.'
+                                    ;
+                      }
+                      enum af2 {
+                        value 3 ;
+                        description 'Assured forwarding class 2.'
+                                    ;
+                      }
+                      enum af3 {
+                        value 4 ;
+                        description 'Assured forwarding class 3.'
+                                    ;
+                      }
+                      enum af4 {
+                        value 5 ;
+                        description 'Assured forwarding class 4.'
+                                    ;
+                      }
+                      enum ef {
+                        value 6 ;
+                        description 'Expedited forward.'
+                                    ;
+                      }
+                      enum cs6 {
+                        value 7 ;
+                        description 'Internetwork control service class.'
+                                    ;
+                      }
+                      enum cs7 {
+                        value 8 ;
+                        description 'Network control service class.'
+                                    ;
+                      }
+                    }
+                  }
+                  leaf color {
+                    description 'Ds-mode color.'
+                                ;
+                    type enumeration {
+                      enum green {
+                        value 1 ;
+                        description 'Green packets.'
+                                    ;
+                      }
+                      enum yellow {
+                        value 2 ;
+                        description 'Yellow packets.'
+                                    ;
+                      }
+                      enum red {
+                        value 3 ;
+                        description 'Red packets.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case short-pipe {
+                description 'Ds-mode is short-pipe.'
+                            ;
+                container ds-mode-short-pipe {
+                  description 'Configuration of VRF when the mode of ds-mode is'
+                            + ' short-pipe.'
+                              ;
+                  leaf ds-mode {
+                    description 'Ds-mode of VRF.'
+                                ;
+                    type enumeration {
+                      enum short-pipe {
+                        value 3 ;
+                        description 'The mode of ds-mode is short-pipe.'
+                                    ;
+                      }
+                    }
+                  }
+                  leaf service-class {
+                    description 'Ds-mode service class.'
+                                ;
+                    type enumeration {
+                      enum be {
+                        value 1 ;
+                        description 'Best effort.'
+                                    ;
+                      }
+                      enum af1 {
+                        value 2 ;
+                        description 'Assured forwarding class 1.'
+                                    ;
+                      }
+                      enum af2 {
+                        value 3 ;
+                        description 'Assured forwarding class 2.'
+                                    ;
+                      }
+                      enum af3 {
+                        value 4 ;
+                        description 'Assured forwarding class 3.'
+                                    ;
+                      }
+                      enum af4 {
+                        value 5 ;
+                        description 'Assured forwarding class 4.'
+                                    ;
+                      }
+                      enum ef {
+                        value 6 ;
+                        description 'Expedited forward.'
+                                    ;
+                      }
+                      enum cs6 {
+                        value 7 ;
+                        description 'Internetwork control service class.'
+                                    ;
+                      }
+                      enum cs7 {
+                        value 8 ;
+                        description 'Network control service class.'
+                                    ;
+                      }
+                    }
+                  }
+                  leaf color {
+                    description 'Ds-mode color.'
+                                ;
+                    type enumeration {
+                      enum green {
+                        value 1 ;
+                        description 'Green packets.'
+                                    ;
+                      }
+                      enum yellow {
+                        value 2 ;
+                        description 'Yellow packets.'
+                                    ;
+                      }
+                      enum red {
+                        value 3 ;
+                        description 'Red packets.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case uniform {
+                description 'Ds-mode is uniform.'
+                            ;
+                container ds-mode-uniform {
+                  description 'Configuration of VRF when the mode of ds-mode is'
+                            + ' uniform.'
+                              ;
+                  leaf ds-mode {
+                    description 'Ds-mode of VRF.'
+                                ;
+                    type enumeration {
+                      enum uniform {
+                        value 1 ;
+                        description 'The mode of ds-mode is uniform.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            leaf entroy-label {
+              if-feature entroy-label ;
+              description 'The entroy label capability of VRF.'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable VRF entroy-label.'
+                              ;
+                }
+                enum disable {
+                  value 2 ;
+                  description 'Disable VRF entroy-label.'
+                              ;
+                }
+              }
+              default disable ;
+              ncd:revise-date 2015-07-20 ;
+            }
+            leaf vni-label {
+              description 'L3 VNI-label.'
+                          ;
+              type uint32 {
+                range 1..16777215 ;
+              }
+              ncd:revise-date 2016-08-26 ;
+            }
+            leaf evpn-tunnel-encapsulation {
+              description 'EVPN tunnel encapsulation type.'
+                          ;
+              type enumeration {
+                enum vxlan {
+                  value 1 ;
+                  description 'VXLAN tunnel encapsulation.'
+                              ;
+                }
+                enum mpls {
+                  value 2 ;
+                  description 'MPLS tunnel encapsulation.'
+                              ;
+                }
+                enum vxlan-vni-symmetric {
+                  value 3 ;
+                  description 'VXLAN tunnel encapsulation,VNI is symmetrical.'
+                              ;
+                }
+                enum srv6 {
+                  value 4 ;
+                  description 'SRv6 tunnel encapsulation.'
+                              ;
+                }
+                enum by-peer {
+                  value 5 ;
+                  description 'By peer.'
+                              ;
+                }
+                enum by-peer-vni-symmetric {
+                  value 6 ;
+                  description 'By peer with VNI symmetric'
+                              ;
+                }
+              }
+              default vxlan ;
+              ncd:revise-date 2017-06-07 ;
+            }
+            leaf l3vpn-tunnel-encapsulation {
+              description 'L3VPN tunnel encapsulation type.'
+                          ;
+              type enumeration {
+                enum mpls {
+                  value 2 ;
+                  description 'MPLS tunnel encapsulation.'
+                              ;
+                }
+                enum srv6 {
+                  value 4 ;
+                  description 'SRv6 tunnel encapsulation.'
+                              ;
+                }
+                enum by-peer {
+                  value 5 ;
+                  description 'By peer.'
+                              ;
+                }
+              }
+              default mpls ;
+              ncd:revise-date 2020-08-18 ;
+            }
+            choice srv6-end-dt-sid {
+              status obsolete {
+                ncd:revise-date 2020-02-24 ;
+              }
+              description 'The SRv6 DT mode of SID.'
+                          ;
+              case dt-auto {
+                description 'Automatic generation of SID.'
+                            ;
+                container dt-auto-mode {
+                  description 'Automatic generation of SID.'
+                              ;
+                  leaf auto {
+                    description 'Automatic generation of SID.'
+                                ;
+                    type enumeration {
+                      enum dt-auto {
+                        value 1 ;
+                        description 'The DT-auto mode of SID.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case dt-static {
+                description 'Specify a SID.'
+                            ;
+                container dt-static-mode {
+                  description 'Specify a SID.'
+                              ;
+                  leaf sid {
+                    description 'The specified SID.'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                }
+              }
+              ncd:revise-date 2018-03-12 ;
+            }
+            container srv6-end-dt {
+              choice srv6-end-dt-sid {
+                description 'The SRv6 DT mode of SID.'
+                            ;
+                case dt-auto {
+                  description 'Automatic generation of SID.'
+                              ;
+                  container dt-auto-mode {
+                    description 'Automatic generation of SID.'
+                                ;
+                    leaf auto {
+                      description 'Automatic generation of SID.'
+                                  ;
+                      type enumeration {
+                        enum dt-auto {
+                          value 1 ;
+                          description 'The DT-auto mode of SID.'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                }
+                case dt-static {
+                  description 'Specify a SID.'
+                              ;
+                  container dt-static-mode {
+                    description 'Specify a SID.'
+                                ;
+                    leaf sid {
+                      description 'The specified SID function code.'
+                                  ;
+                      type ncd:ipv6-address ;
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2020-02-24 ;
+            }
+            leaf srv6-locator-name {
+              description 'SRv6 locator name.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+              ncd:revise-date 2020-04-30 ;
+            }
+          }
+          container mpls-label-modes {
+            description 'Mpls label mode configuration of a VRF.'
+                        ;
+            list mpls-label-mode {
+              description 'Mpls label mode configuration of a VRF.'
+                          ;
+              max-elements 2 ;
+              key address-family ;
+              leaf address-family {
+                description 'Address family information.'
+                            ;
+                type enumeration {
+                  enum ipv4 {
+                    value 0 ;
+                    description 'Ipv4 address family.'
+                                ;
+                  }
+                  enum ipv6 {
+                    value 1 ;
+                    description 'Ipv6 address family.'
+                                ;
+                  }
+                }
+              }
+              leaf mpls-label-mode {
+                description 'Mpls label mode.'
+                            ;
+                type enumeration {
+                  enum per-prefix {
+                    value 2 ;
+                    description 'Per prefix label.'
+                                ;
+                  }
+                  enum per-vrf {
+                    value 3 ;
+                    description 'Per VRF label for entire VRF'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+          }
+          container rate-limits {
+            if-feature rate-limit ;
+            description 'The rate limit strategy of VRF.The maximum number of r'
+                      + 'ate-limit is 255 in the whole system.'
+                        ;
+            list rate-limit {
+              description 'The rate limit strategy of VRF.The maximum number of'
+                        + ' rate-limit is 255 in the whole system.'
+                          ;
+              max-elements 255 ;
+              key peer ;
+              leaf peer {
+                description Peer. ;
+                type ncd:ipv4-address ;
+              }
+              leaf mode {
+                description 'Rate limit mode.'
+                            ;
+                type enumeration {
+                  enum blind {
+                    value 1 ;
+                    description 'Color-Blind mode.'
+                                ;
+                  }
+                  enum aware {
+                    value 2 ;
+                    description 'Color-Aware mode.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+              leaf cir {
+                description 'Committed information rate.'
+                            ;
+                type uint32 {
+                  range 8..20000000 ;
+                }
+                units kbps ;
+                mandatory true ;
+              }
+              leaf cbs {
+                description 'Committed burst size.'
+                            ;
+                type uint32 {
+                  range 1..5120000 ;
+                }
+                units bytes ;
+                mandatory true ;
+              }
+              leaf pir {
+                description 'Peak information rate.'
+                            ;
+                type uint32 {
+                  range 8..20000000 ;
+                }
+                units kbps ;
+                mandatory true ;
+              }
+              leaf pbs {
+                description 'Peak burst size.'
+                            ;
+                type uint32 {
+                  range 1..5120000 ;
+                }
+                units bytes ;
+                mandatory true ;
+              }
+            }
+          }
+          container route-targets {
+            description 'Global route target configured for a VRF supporting a '
+                      + 'MPLS/BGP VPN instance.The maximum number of each type '
+                      + 'of route target is 255.Route target has three formats,'
+                      + '"<0-65535>:<0-4294967295>","<1-65535>.<0-65535>:<0-655'
+                      + '35>" and "A.B.C.D:<0-65535>".'
+                        ;
+            list route-target {
+              description 'Global route target configured for a VRF supporting '
+                        + 'a MPLS/BGP VPN instance.The maximum number of each t'
+                        + 'ype of route target is 255.Route target has three fo'
+                        + 'rmats,"<0-65535>:<0-4294967295>","<1-65535>.<0-65535'
+                        + '>:<0-65535>" and "A.B.C.D:<0-65535>".'
+                          ;
+              max-elements 510 ;
+              key 'rt-value rt-type'
+                  ;
+              leaf rt-value {
+                description 'The route target distribution policy.'
+                            ;
+                type union {
+                  type ncd:asn-nn ;
+                  type ncd:asnd-nn ;
+                  type ncd:ipadd-nn ;
+                }
+              }
+              leaf rt-type {
+                description 'The route target distribution type.'
+                            ;
+                type enumeration {
+                  enum export {
+                    value 2 ;
+                    description 'Export target-VPN community.'
+                                ;
+                  }
+                  enum import {
+                    value 3 ;
+                    description 'Import target-VPN community.'
+                                ;
+                  }
+                }
+              }
+              leaf vpn-type {
+                description 'The type of VPN that this route target applies to.'
+                            ;
+                type enumeration {
+                  enum both {
+                    value 0 ;
+                    description 'The route target is used for VPN and EVPN.'
+                                ;
+                  }
+                  enum vpn {
+                    value 1 ;
+                    description 'The route target is used for VPN.'
+                                ;
+                  }
+                  enum evpn {
+                    value 2 ;
+                    description 'The route target is used for EVPN.'
+                                ;
+                  }
+                }
+                default both ;
+                ncd:revise-date 2019-07-09 ;
+              }
+            }
+          }
+          container address-family-ipv4 {
+            description 'Configuration in address family ipv4 mode.'
+                        ;
+            presence 'Ipv4 address family is active.'
+                     ;
+            leaf export-map {
+              description 'Route map based VRF export.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+            leaf export-policy {
+              description 'Route policy based VRF export.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2022-03-30 ;
+            }
+            leaf import-map {
+              description 'Route map based VRF import.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+            leaf import-policy {
+              description 'Route policy based VRF import.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2022-03-30 ;
+            }
+            leaf maximum-routes {
+              description 'Maximum number of routes allowed in this routing tab'
+                        + 'le.Maximum-routes and maximum-warning must be config'
+                        + 'ured at the same time.'
+                          ;
+              type uint32 {
+                range 1..4294967295 ;
+              }
+            }
+            leaf maximum-warning {
+              description 'Threshold value (%) at which to give a warning.If it'
+                        + ' is set to 0,only give a warning message if limit is'
+                        + ' exceeded.Maximum-routes and maximum-warning must be'
+                        + ' configured at the same time.'
+                          ;
+              type uint32 {
+                range 0..100 ;
+              }
+            }
+            leaf maximum-exceed-action {
+              description 'Close protocol connections when the number of VRF ro'
+                        + 'utes exceeds the percentage of the maximum number.'
+                          ;
+              type enumeration {
+                enum shutdown {
+                  value 1 ;
+                  description max_prefix_exceed_action ;
+                }
+              }
+              ncd:revise-date 2019-05-21 ;
+            }
+            leaf import-multicast-route {
+              description 'VRF route import for multicast.'
+                          ;
+              type ncd:ipadd-nn ;
+            }
+            leaf import-multicast-ipv6-route {
+              description 'VRF route IPv6 import for multicast.'
+                          ;
+              type string {
+                length 1..51 ;
+              }
+              ncd:revise-date 2021-07-15 ;
+            }
+            leaf priority {
+              description Priority. ;
+              type enumeration {
+                enum low {
+                  value 1 ;
+                  description 'Priority is low.'
+                              ;
+                }
+                enum middle {
+                  value 2 ;
+                  description 'Priority is middle.'
+                              ;
+                }
+                enum high {
+                  value 3 ;
+                  description 'Priority is high.'
+                              ;
+                }
+              }
+              default middle ;
+            }
+            leaf protection {
+              description 'Protection for local prefixes.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable protection for local prefixes.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable protection for local prefixes.'
+                              ;
+                }
+              }
+              default disable ;
+            }
+            leaf evpn-gw {
+              description 'Gateway IP address for EVPN.'
+                          ;
+              type ncd:ipv4-address-none-zero ;
+              ncd:revise-date 2016-05-27 ;
+            }
+            leaf evpn-export-map {
+              description 'EVPN route map based VRF export.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2017-01-11 ;
+            }
+            leaf evpn-export-policy {
+              description 'EVPN route policy based VRF export.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2022-03-30 ;
+            }
+            leaf evpn-import-map {
+              description 'EVPN route map based VRF import.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2017-01-11 ;
+            }
+            leaf evpn-import-policy {
+              description 'EVPN route policy based VRF import.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2022-03-30 ;
+            }
+            leaf evpn-rt2-import-single-label {
+              description 'VRF import EVPN RT-2 routes with single label.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable VRF import EVPN routes with single label'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable VRF import EVPN routes with single label'
+                              ;
+                }
+              }
+              ncd:revise-date 2018-12-11 ;
+            }
+            leaf evpn-rt2-import-double-label {
+              if-feature evpn-rt2-import-double-label ;
+              description 'VRF import EVPN RT-2 routes with double label.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable VRF import EVPN routes with double label'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable VRF import EVPN routes with double label'
+                              ;
+                }
+              }
+              default enable ;
+              ncd:revise-date 2019-07-09 ;
+            }
+            container export-unicast {
+              description 'Export VRF routes to unicast routing table.'
+                          ;
+              presence export-unicast ;
+              leaf export-unicast {
+                description 'Export VRF routes to unicast routing table.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf maximum-prefix {
+                description 'Maximum number of routes.'
+                            ;
+                type uint32 {
+                  range 1..4294967295 ;
+                }
+              }
+              container export-policy {
+                description 'The export policy.'
+                            ;
+                choice export-policy {
+                  description 'The export policy.'
+                              ;
+                  case route-map {
+                    description 'Route map.'
+                                ;
+                    leaf route-map-name {
+                      description 'The route map name.'
+                                  ;
+                      type string {
+                        length 1..200 ;
+                      }
+                    }
+                  }
+                  case route-policy {
+                    description 'Route policy.'
+                                ;
+                    leaf route-policy-name {
+                      description 'The route policy name.'
+                                  ;
+                      type string {
+                        length 1..200 ;
+                      }
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2021-01-14 ;
+            }
+            container import-unicast {
+              description 'Import unicast routes to VRF routing table.'
+                          ;
+              presence import-unicast ;
+              leaf import-unicast {
+                description 'Import unicast routes to VRF routing table.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf maximum-prefix {
+                description 'Maximum number of routes.'
+                            ;
+                type uint32 {
+                  range 1..4294967295 ;
+                }
+              }
+              container import-policy {
+                description 'The import policy.'
+                            ;
+                choice import-policy {
+                  description 'The import policy.'
+                              ;
+                  case route-map {
+                    description 'Route map.'
+                                ;
+                    leaf route-map-name {
+                      description 'The route map name.'
+                                  ;
+                      type string {
+                        length 1..200 ;
+                      }
+                    }
+                  }
+                  case route-policy {
+                    description 'Route policy.'
+                                ;
+                    leaf route-policy-name {
+                      description 'The route policy name.'
+                                  ;
+                      type string {
+                        length 1..200 ;
+                      }
+                    }
+                  }
+                }
+              }
+              leaf reoriginate-l3vpn {
+                description 'Reoriginate vpn routes.'
+                            ;
+                type empty ;
+                ncd:revise-date 2021-07-15 ;
+              }
+              leaf reoriginate-evpn {
+                description 'Reoriginate evpn routes.'
+                            ;
+                type empty ;
+                ncd:revise-date 2021-07-15 ;
+              }
+              ncd:revise-date 2021-01-14 ;
+            }
+            choice srv6-end-dt-sid {
+              status obsolete {
+                ncd:revise-date 2020-02-24 ;
+              }
+              description 'The DT mode of SRv6 SID.'
+                          ;
+              case dt-auto {
+                description 'Automatic generation of SID.'
+                            ;
+                container dt-auto-mode {
+                  description 'Automatic generation of SID.'
+                              ;
+                  leaf auto {
+                    description 'Automatic generation of SID.'
+                                ;
+                    type enumeration {
+                      enum dt-auto {
+                        value 1 ;
+                        description 'The DT-auto mode of SID.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case dt-static {
+                description 'Specify a SID.'
+                            ;
+                container dt-static-mode {
+                  description 'Specify a SID.'
+                              ;
+                  leaf sid {
+                    description 'The specified SID.'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                }
+              }
+              ncd:revise-date 2018-03-12 ;
+            }
+            choice srv6-end-dx-sid {
+              status obsolete {
+                ncd:revise-date 2020-02-24 ;
+              }
+              description 'The DX mode of SRv6 SID.'
+                          ;
+              case dx-auto {
+                description 'Automatic generation of SID.'
+                            ;
+                container dx-auto-mode {
+                  description 'Automatic generation of SID.'
+                              ;
+                  leaf auto {
+                    description 'Automatic generation of SID.'
+                                ;
+                    type enumeration {
+                      enum dx-auto {
+                        value 3 ;
+                        description 'The DX-auto mode of SID.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case dx-static {
+                description 'Specify a SID.'
+                            ;
+                container dx-static-instances {
+                  description 'Specify a SID.'
+                              ;
+                  list dx-static {
+                    description 'Specify a SID.'
+                                ;
+                    key 'ifname nexthop'
+                        ;
+                    leaf ifname {
+                      description 'The interface name.'
+                                  ;
+                      type ncd:ifname ;
+                    }
+                    leaf nexthop {
+                      description 'Next hop address.'
+                                  ;
+                      type ncd:ipv4-address ;
+                    }
+                    leaf sid {
+                      description 'The specified SID.'
+                                  ;
+                      type ncd:ipv6-address ;
+                      mandatory true ;
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2018-03-12 ;
+            }
+            container srv6-end-dt {
+              description 'The DT mode of SRv6 SID.'
+                          ;
+              choice srv6-end-dt-sid {
+                description 'The DT mode of SRv6 SID.'
+                            ;
+                case dt-auto {
+                  description 'Automatic generation of SID.'
+                              ;
+                  container dt-auto-mode {
+                    description 'Automatic generation of SID.'
+                                ;
+                    leaf auto {
+                      description 'Automatic generation of SID.'
+                                  ;
+                      type enumeration {
+                        enum dt-auto {
+                          value 1 ;
+                          description 'The DT-auto mode of SID.'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                }
+                case dt-static {
+                  description 'Specify a SID.'
+                              ;
+                  container dt-static-mode {
+                    description 'Specify a SID.'
+                                ;
+                    leaf sid {
+                      description 'The specified SID function code.'
+                                  ;
+                      type ncd:ipv6-address ;
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2020-02-24 ;
+            }
+            container srv6-end-dx {
+              description 'The DX mode of SRv6 SID.'
+                          ;
+              choice srv6-end-dx-sid {
+                description 'The DX mode of SRv6 SID.'
+                            ;
+                case dx-auto {
+                  description 'Automatic generation of SID.'
+                              ;
+                  container dx-auto-mode {
+                    description 'Automatic generation of SID.'
+                                ;
+                    leaf auto {
+                      description 'Automatic generation of SID.'
+                                  ;
+                      type enumeration {
+                        enum dx-auto {
+                          value 3 ;
+                          description 'The DX-auto mode of SID.'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                }
+                case dx-static {
+                  description 'Specify a SID.'
+                              ;
+                  container dx-static-instances {
+                    description 'Specify a SID.'
+                                ;
+                    list dx-static {
+                      description 'Specify a SID.'
+                                  ;
+                      key 'ifname nexthop'
+                          ;
+                      leaf ifname {
+                        description 'The interface name.'
+                                    ;
+                        type ncd:ifname ;
+                      }
+                      leaf nexthop {
+                        description 'Next hop address.'
+                                    ;
+                        type ncd:ipv4-address ;
+                      }
+                      leaf sid {
+                        description 'The specified SID function code.'
+                                    ;
+                        type ncd:ipv6-address ;
+                        mandatory true ;
+                      }
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2020-02-24 ;
+            }
+            container tunnel-policies {
+              description 'Tunnel policy of VRF.'
+                          ;
+              list tunnel-policy {
+                description 'Tunnel policy of VRF.'
+                            ;
+                max-elements 255 ;
+                key peer-addr ;
+                leaf peer-addr {
+                  description 'Neighbor ip address.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf policy-name {
+                  description 'Tunnel policy name.'
+                              ;
+                  type string {
+                    length 1..63 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+            container static-outlabels {
+              description 'VRF static outlabel.'
+                          ;
+              list static-outlabel {
+                description 'VRF static outlabel.'
+                            ;
+                max-elements 255 ;
+                key next-hop ;
+                leaf next-hop {
+                  description 'The IP address of the destination PE(next-hop).'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf outlabel {
+                  description 'Out label.'
+                              ;
+                  type uint32 {
+                    range 16..1048575 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+            container route-targets {
+              description 'Special route target for ipv4 configured for a VRF s'
+                        + 'upporting a MPLS/BGP VPN instance.The maximum number'
+                        + ' of each type of route target is 255 for every VRF i'
+                        + 'n address family ipv4.Route target has three formats'
+                        + ',"<0-65535>:<0-4294967295>","<1-65535>.<0-65535>:<0-'
+                        + '65535>" and "A.B.C.D:<0-65535>".'
+                          ;
+              list route-target {
+                description 'Special route target for ipv4 configured for a VRF'
+                          + ' supporting a MPLS/BGP VPN instance.The maximum nu'
+                          + 'mber of each type of route target is 255 for every'
+                          + ' VRF in address family ipv4.Route target has three'
+                          + ' formats,"<0-65535>:<0-4294967295>","<1-65535>.<0-'
+                          + '65535>:<0-65535>" and "A.B.C.D:<0-65535>".'
+                            ;
+                max-elements 510 ;
+                key 'rt-value rt-type'
+                    ;
+                leaf rt-value {
+                  description 'The route target distribution policy.'
+                              ;
+                  type union {
+                    type ncd:asn-nn ;
+                    type ncd:asnd-nn ;
+                    type ncd:ipadd-nn ;
+                  }
+                }
+                leaf rt-type {
+                  description 'The route target distribution type.'
+                              ;
+                  type enumeration {
+                    enum export {
+                      value 2 ;
+                      description 'Export target-VPN community.'
+                                  ;
+                    }
+                    enum import {
+                      value 3 ;
+                      description 'Import target-VPN community.'
+                                  ;
+                    }
+                  }
+                }
+                leaf vpn-type {
+                  description 'The type of VPN that this route target applies t'
+                            + 'o.'
+                              ;
+                  type enumeration {
+                    enum both {
+                      value 0 ;
+                      description 'The route target is used for VPN and EVPN.'
+                                  ;
+                    }
+                    enum vpn {
+                      value 1 ;
+                      description 'The route target is used for VPN.'
+                                  ;
+                    }
+                    enum evpn {
+                      value 2 ;
+                      description 'The route target is used for EVPN.'
+                                  ;
+                    }
+                  }
+                  default both ;
+                  ncd:revise-date 2019-07-09 ;
+                }
+              }
+            }
+            container gw-ip {
+              presence gw-ip ;
+              leaf evpn-gw-ip-inherit-nexthop {
+                description 'Gw-ip inherit-nexthop for evpn.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf route-map {
+                description 'Apply route map to inherit-nexthop.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+              }
+              leaf route-policy {
+                description 'Apply route policy to inherit-nexthop.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+                ncd:revise-date 2022-03-30 ;
+              }
+              ncd:revise-date 2018-10-18 ;
+            }
+            leaf tunnel-policy-name {
+              description 'Tunnel policy name.'
+                          ;
+              type string {
+                length 1..63 ;
+              }
+              ncd:revise-date 2019-05-01 ;
+            }
+            leaf ip-frr {
+              if-feature default-value-common ;
+              description 'VRF route FRR'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable VRF route FRR.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable VRF route FRR.'
+                              ;
+                }
+              }
+              ncd:revise-date 2020-03-26 ;
+            }
+            leaf frr-wtr {
+              if-feature default-value-common ;
+              type uint32 {
+                range 1..12 ;
+              }
+              default 5 ;
+              ncd:revise-date 2020-04-23 ;
+            }
+            leaf route-reoriginate-from-evpn {
+              description 'Control route reoriginate from evpn to l3vpn.Its def'
+                        + 'ault value which is between [enable,disable] and gen'
+                        + 'erally enable ,depends on product specification.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable route reoriginate from evpn to l3vpn.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable route reoriginate from evpn to l3vpn.'
+                              ;
+                }
+              }
+              ncd:revise-date 2020-08-04 ;
+            }
+            leaf route-reoriginate-from-l3vpn {
+              description 'Control route reoriginate from l3vpn to evpn.Its def'
+                        + 'ault value which is between [enable,disable] and gen'
+                        + 'erally enable ,depends on product specification.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable route reoriginate from l3vpn to evpn.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable route reoriginate from l3vpn to evpn.'
+                              ;
+                }
+              }
+              ncd:revise-date 2020-08-04 ;
+            }
+            leaf srv6-best-effort {
+              description 'Segment routing ipv6 best effort.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable segment routing ipv6 best effort'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable segment routing ipv6 best effort'
+                              ;
+                }
+              }
+              ncd:revise-date 2020-08-13 ;
+            }
+            leaf srv6-traffic-engineer {
+              description 'Segment routing ipv6 traffic engineering policy.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable segment routing ipv6 traffic engineering'
+                            + ' policy'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable segment routing ipv6 traffic engineering '
+                            + 'policy'
+                              ;
+                }
+              }
+              ncd:revise-date 2020-08-13 ;
+            }
+            container import-vrf-routes {
+              description 'Import VRF routes.'
+                          ;
+              presence import-vrf-route ;
+              list import-vrf-route {
+                description 'Import VRF routes.'
+                            ;
+                key vrf-name ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                leaf reoriginate-l3vpn {
+                  description 'Reoriginate vpn routes.'
+                              ;
+                  type empty ;
+                }
+                leaf reoriginate-evpn {
+                  description 'Reoriginate evpn routes.'
+                              ;
+                  type empty ;
+                }
+              }
+              ncd:revise-date 2021-07-15 ;
+            }
+            leaf default-color {
+              description 'Default color value.'
+                          ;
+              type uint32 {
+                range 1..4294967295 ;
+              }
+              ncd:revise-date 2021-11-03 ;
+            }
+            leaf default-color-evpn {
+              description 'Default evpn color value.'
+                          ;
+              type uint32 {
+                range 1..4294967295 ;
+              }
+              ncd:revise-date 2021-11-03 ;
+            }
+            leaf evpn-auto-originate-route {
+              description 'Originate EVPN routes automatically.Its default valu'
+                        + 'e which is between [enable,disable] and generally en'
+                        + 'able ,depends on product specification.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable originate EVPN routes automatically.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable originate EVPN routes automatically.'
+                              ;
+                }
+              }
+              ncd:revise-date 2022-03-08 ;
+            }
+          }
+          container address-family-ipv6 {
+            description 'Configuration in address family ipv6 mode.'
+                        ;
+            presence 'Ipv6 address family is active.'
+                     ;
+            leaf export-map {
+              description 'Route map based VRF export.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+            leaf export-policy {
+              description 'Route policy based VRF export.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2022-03-30 ;
+            }
+            leaf import-map {
+              description 'Route map based VRF import.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+            }
+            leaf import-policy {
+              description 'Route policy based VRF import.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2022-03-30 ;
+            }
+            leaf maximum-routes {
+              description 'Maximum number of routes allowed in this routing tab'
+                        + 'le.Maximum-routes and maximum-warning must be config'
+                        + 'ured at the same time.'
+                          ;
+              type uint32 {
+                range 1..4294967295 ;
+              }
+            }
+            leaf maximum-warning {
+              description 'Threshold value (%) at which to give a warning.If it'
+                        + ' is set to 0,only give a warning message if limit is'
+                        + ' exceeded.Maximum-routes and maximum-warning must be'
+                        + ' configured at the same time.'
+                          ;
+              type uint32 {
+                range 0..100 ;
+              }
+            }
+            leaf maximum-exceed-action {
+              description 'Close protocol connections when the number of VRF ro'
+                        + 'utes exceeds the percentage of the maximum number.'
+                          ;
+              type enumeration {
+                enum shutdown {
+                  value 1 ;
+                  description max_prefix_exceed_action ;
+                }
+              }
+              ncd:revise-date 2019-05-21 ;
+            }
+            leaf import-multicast-route {
+              if-feature import-multicast-route-ipv6 ;
+              description 'VRF route import for multicast.'
+                          ;
+              type ncd:ipadd-nn ;
+            }
+            leaf import-multicast-ipv6-route {
+              description 'VRF route IPv6 import for multicast.'
+                          ;
+              type string {
+                length 1..51 ;
+              }
+              ncd:revise-date 2021-07-15 ;
+            }
+            leaf protection {
+              if-feature protection-ipv6 ;
+              description 'Protection for local prefixes.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable protection for local prefixes.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable protection for local prefixes.'
+                              ;
+                }
+              }
+              default disable ;
+            }
+            container export-unicast {
+              description 'Export VRF routes to unicast routing table.'
+                          ;
+              presence export-unicast ;
+              leaf export-unicast {
+                description 'Export VRF routes to unicast routing table.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf maximum-prefix {
+                description 'Maximum number of routes.'
+                            ;
+                type uint32 {
+                  range 1..4294967295 ;
+                }
+              }
+              container export-policy {
+                description 'The export policy.'
+                            ;
+                choice export-policy {
+                  description 'The export policy.'
+                              ;
+                  case route-map {
+                    description 'Route map.'
+                                ;
+                    leaf route-map-name {
+                      description 'The route map name.'
+                                  ;
+                      type string {
+                        length 1..200 ;
+                      }
+                    }
+                  }
+                  case route-policy {
+                    description 'Route policy.'
+                                ;
+                    leaf route-policy-name {
+                      description 'The route policy name.'
+                                  ;
+                      type string {
+                        length 1..200 ;
+                      }
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2021-01-14 ;
+            }
+            container import-unicast {
+              description 'Import unicast routes to VRF routing table.'
+                          ;
+              presence import-unicast ;
+              leaf import-unicast {
+                description 'Import unicast routes to VRF routing table.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf maximum-prefix {
+                description 'Maximum number of routes.'
+                            ;
+                type uint32 {
+                  range 1..4294967295 ;
+                }
+              }
+              container import-policy {
+                description 'The import policy.'
+                            ;
+                choice import-policy {
+                  description 'The import policy.'
+                              ;
+                  case route-map {
+                    description 'Route map.'
+                                ;
+                    leaf route-map-name {
+                      description 'The route map name.'
+                                  ;
+                      type string {
+                        length 1..200 ;
+                      }
+                    }
+                  }
+                  case route-policy {
+                    description 'Route policy.'
+                                ;
+                    leaf route-policy-name {
+                      description 'The route policy name.'
+                                  ;
+                      type string {
+                        length 1..200 ;
+                      }
+                    }
+                  }
+                }
+              }
+              leaf reoriginate-l3vpn {
+                description 'Reoriginate vpn routes.'
+                            ;
+                type empty ;
+                ncd:revise-date 2021-07-15 ;
+              }
+              leaf reoriginate-evpn {
+                description 'Reoriginate evpn routes.'
+                            ;
+                type empty ;
+                ncd:revise-date 2021-07-15 ;
+              }
+              ncd:revise-date 2021-01-14 ;
+            }
+            container route-targets {
+              description 'Special route target for ipv6 configured for a VRF s'
+                        + 'upporting a MPLS/BGP VPN instance.The maximum number'
+                        + ' of each type of route target is 255 for every VRF i'
+                        + 'n address family ipv6.Route target has three formats'
+                        + ',"<0-65535>:<0-4294967295>","<1-65535>.<0-65535>:<0-'
+                        + '65535>" and "A.B.C.D:<0-65535>".'
+                          ;
+              list route-target {
+                description 'Special route target for ipv6 configured for a VRF'
+                          + ' supporting a MPLS/BGP VPN instance.The maximum nu'
+                          + 'mber of each type of route target is 255 for every'
+                          + ' VRF in address family ipv6.Route target has three'
+                          + ' formats,"<0-65535>:<0-4294967295>","<1-65535>.<0-'
+                          + '65535>:<0-65535>" and "A.B.C.D:<0-65535>".'
+                            ;
+                max-elements 510 ;
+                key 'rt-value rt-type'
+                    ;
+                leaf rt-value {
+                  description 'The route target distribution policy.'
+                              ;
+                  type union {
+                    type ncd:asn-nn ;
+                    type ncd:asnd-nn ;
+                    type ncd:ipadd-nn ;
+                  }
+                }
+                leaf rt-type {
+                  description 'The route target distribution type.'
+                              ;
+                  type enumeration {
+                    enum export {
+                      value 2 ;
+                      description 'Export target-VPN community.'
+                                  ;
+                    }
+                    enum import {
+                      value 3 ;
+                      description 'Import target-VPN community.'
+                                  ;
+                    }
+                  }
+                }
+                leaf vpn-type {
+                  description 'The type of VPN that this route target applies t'
+                            + 'o.'
+                              ;
+                  type enumeration {
+                    enum both {
+                      value 0 ;
+                      description 'The route target is used for VPN and EVPN.'
+                                  ;
+                    }
+                    enum vpn {
+                      value 1 ;
+                      description 'The route target is used for VPN.'
+                                  ;
+                    }
+                    enum evpn {
+                      value 2 ;
+                      description 'The route target is used for EVPN.'
+                                  ;
+                    }
+                  }
+                  default both ;
+                  ncd:revise-date 2019-07-09 ;
+                }
+              }
+            }
+            leaf evpn-export-map {
+              description 'EVPN route map based VRF export.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2018-03-12 ;
+            }
+            leaf evpn-export-policy {
+              description 'EVPN route policy based VRF export.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2022-03-30 ;
+            }
+            leaf evpn-import-map {
+              description 'EVPN route map based VRF import.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2018-03-12 ;
+            }
+            leaf evpn-import-policy {
+              description 'EVPN route policy based VRF import.'
+                          ;
+              type string {
+                length 1..200 ;
+              }
+              ncd:revise-date 2022-03-30 ;
+            }
+            leaf evpn-gw {
+              status obsolete {
+                ncd:revise-date 2019-08-08 ;
+              }
+              description 'Gateway IP address for EVPN.'
+                          ;
+              type ncd:ipv6-address ;
+              ncd:revise-date 2018-03-12 ;
+            }
+            leaf evpn-rt2-import-single-label {
+              description 'VRF import EVPN RT-2 routes with single label.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable VRF import EVPN routes with single label'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable VRF import EVPN routes with single label'
+                              ;
+                }
+              }
+              ncd:revise-date 2018-12-11 ;
+            }
+            leaf evpn-rt2-import-double-label {
+              if-feature evpn-rt2-import-double-label ;
+              description 'VRF import EVPN RT-2 routes with double label.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable VRF import EVPN routes with double label'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable VRF import EVPN routes with double label'
+                              ;
+                }
+              }
+              default enable ;
+              ncd:revise-date 2019-07-09 ;
+            }
+            choice srv6-end-dt-sid {
+              status obsolete {
+                ncd:revise-date 2020-02-24 ;
+              }
+              description 'The DT mode of SRv6 SID.'
+                          ;
+              case dt-auto {
+                description 'Automatic generation of SID.'
+                            ;
+                container dt-auto-mode {
+                  description 'Automatic generation of SID.'
+                              ;
+                  leaf auto {
+                    description 'Automatic generation of SID.'
+                                ;
+                    type enumeration {
+                      enum dt-auto {
+                        value 1 ;
+                        description 'The DT-auto mode of SID.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case dt-static {
+                description 'Specify a SID.'
+                            ;
+                container dt-static-mode {
+                  description 'Specify a SID.'
+                              ;
+                  leaf sid {
+                    description 'The specified SID.'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                }
+              }
+              ncd:revise-date 2018-03-12 ;
+            }
+            choice srv6-end-dx-sid {
+              status obsolete {
+                ncd:revise-date 2020-02-24 ;
+              }
+              description 'The DX mode of SRv6 SID.'
+                          ;
+              case dx-auto {
+                description 'Automatic generation of SID.'
+                            ;
+                container dx-auto-mode {
+                  description 'Automatic generation of SID.'
+                              ;
+                  leaf auto {
+                    description 'Automatic generation of SID.'
+                                ;
+                    type enumeration {
+                      enum dx-auto {
+                        value 3 ;
+                        description 'The DX-auto mode of SID.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case dx-static {
+                description 'Specify a SID.'
+                            ;
+                container dx-static-instances {
+                  description 'Specify a SID.'
+                              ;
+                  list dx-static {
+                    description 'Specify a SID.'
+                                ;
+                    key 'ifname nexthop'
+                        ;
+                    leaf ifname {
+                      description 'The interface name.'
+                                  ;
+                      type ncd:ifname ;
+                    }
+                    leaf nexthop {
+                      description 'Next hop address.'
+                                  ;
+                      type ncd:ipv6-address ;
+                    }
+                    leaf sid {
+                      description 'The specified SID.'
+                                  ;
+                      type ncd:ipv6-address ;
+                      mandatory true ;
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2018-03-12 ;
+            }
+            container srv6-end-dt {
+              description 'The DT mode of SRv6 SID.'
+                          ;
+              choice srv6-end-dt-sid {
+                description 'The DT mode of SRv6 SID.'
+                            ;
+                case dt-auto {
+                  description 'Automatic generation of SID.'
+                              ;
+                  container dt-auto-mode {
+                    description 'Automatic generation of SID.'
+                                ;
+                    leaf auto {
+                      description 'Automatic generation of SID.'
+                                  ;
+                      type enumeration {
+                        enum dt-auto {
+                          value 1 ;
+                          description 'The DT-auto mode of SID.'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                }
+                case dt-static {
+                  description 'Specify a SID.'
+                              ;
+                  container dt-static-mode {
+                    description 'Specify a SID.'
+                                ;
+                    leaf sid {
+                      description 'The specified SID function code.'
+                                  ;
+                      type ncd:ipv6-address ;
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2020-02-24 ;
+            }
+            container srv6-end-dx {
+              choice srv6-end-dx-sid {
+                description 'The DX mode of SRv6 SID.'
+                            ;
+                case dx-auto {
+                  description 'Automatic generation of SID.'
+                              ;
+                  container dx-auto-mode {
+                    description 'Automatic generation of SID.'
+                                ;
+                    leaf auto {
+                      description 'Automatic generation of SID.'
+                                  ;
+                      type enumeration {
+                        enum dx-auto {
+                          value 3 ;
+                          description 'The DX-auto mode of SID.'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                }
+                case dx-static {
+                  description 'Specify a SID.'
+                              ;
+                  container dx-static-instances {
+                    description 'Specify a SID.'
+                                ;
+                    list dx-static {
+                      description 'Specify a SID.'
+                                  ;
+                      key 'ifname nexthop'
+                          ;
+                      leaf ifname {
+                        description 'The interface name.'
+                                    ;
+                        type ncd:ifname ;
+                      }
+                      leaf nexthop {
+                        description 'Next hop address.'
+                                    ;
+                        type ncd:ipv6-address ;
+                      }
+                      leaf sid {
+                        description 'The specified SID function code.'
+                                    ;
+                        type ncd:ipv6-address ;
+                        mandatory true ;
+                      }
+                    }
+                  }
+                }
+              }
+              ncd:revise-date 2020-02-24 ;
+            }
+            container gw-ip {
+              presence gw-ip ;
+              leaf evpn-gw-ip-inherit-nexthop {
+                description 'Gw-ip inherit-nexthop for evpn.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf route-map {
+                description 'Apply route map to inherit-nexthop.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+              }
+              leaf route-policy {
+                description 'Apply route policy to inherit-nexthop.'
+                            ;
+                type string {
+                  length 1..200 ;
+                }
+                ncd:revise-date 2022-03-30 ;
+              }
+              ncd:revise-date 2018-10-18 ;
+            }
+            container tunnel-policies {
+              description 'Tunnel policy of VRF.'
+                          ;
+              list tunnel-policy {
+                description 'Tunnel policy of VRF.'
+                            ;
+                max-elements 255 ;
+                key peer-addr ;
+                leaf peer-addr {
+                  description 'Neighbor ip address.'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf policy-name {
+                  description 'Tunnel policy name.'
+                              ;
+                  type string {
+                    length 1..63 ;
+                  }
+                  mandatory true ;
+                }
+              }
+              ncd:revise-date 2019-05-01 ;
+            }
+            container static-outlabels {
+              description 'VRF static outlabel.'
+                          ;
+              list static-outlabel {
+                description 'VRF static outlabel.'
+                            ;
+                key next-hop ;
+                leaf next-hop {
+                  description 'The IPv6 address of the destination PE(next-hop).'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf outlabel {
+                  description 'Out label.'
+                              ;
+                  type uint32 {
+                    range 16..1048575 ;
+                  }
+                  mandatory true ;
+                }
+              }
+              ncd:revise-date 2018-11-24 ;
+            }
+            leaf tunnel-policy-name {
+              description 'Tunnel policy name.'
+                          ;
+              type string {
+                length 1..63 ;
+              }
+              ncd:revise-date 2019-05-01 ;
+            }
+            leaf evpn-gw-ex {
+              type ncd:ipv6-address-none-zero ;
+              ncd:revise-date 2019-08-08 ;
+            }
+            leaf ip-frr {
+              if-feature default-value-common ;
+              description 'VRF route FRR'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable VRF route FRR'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable VRF route FRR'
+                              ;
+                }
+              }
+              ncd:revise-date 2020-03-26 ;
+            }
+            leaf frr-wtr {
+              if-feature default-value-common ;
+              type uint32 {
+                range 1..12 ;
+              }
+              default 5 ;
+              ncd:revise-date 2020-04-23 ;
+            }
+            leaf route-reoriginate-from-evpn {
+              description 'Control route reoriginate from evpn to l3vpn.Its def'
+                        + 'ault value which is between [enable,disable] and gen'
+                        + 'erally enable ,depends on product specification.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable route reoriginate from evpn to l3vpn.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable route reoriginate from evpn to l3vpn.'
+                              ;
+                }
+              }
+              ncd:revise-date 2020-08-04 ;
+            }
+            leaf route-reoriginate-from-l3vpn {
+              description 'Control route reoriginate from l3vpn to evpn.Its def'
+                        + 'ault value which is between [enable,disable] and gen'
+                        + 'erally enable ,depends on product specification.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable route reoriginate from l3vpn to evpn.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable route reoriginate from l3vpn to evpn.'
+                              ;
+                }
+              }
+              ncd:revise-date 2020-08-04 ;
+            }
+            leaf srv6-best-effort {
+              description 'Segment routing ipv6 best effort.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable segment routing ipv6 best effort'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable segment routing ipv6 best effort'
+                              ;
+                }
+              }
+              ncd:revise-date 2020-08-13 ;
+            }
+            leaf srv6-traffic-engineer {
+              description 'Segment routing ipv6 traffic engineering policy.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable segment routing ipv6 traffic engineering'
+                            + ' policy'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable segment routing ipv6 traffic engineering '
+                            + 'policy'
+                              ;
+                }
+              }
+              ncd:revise-date 2020-08-13 ;
+            }
+            container import-vrf-routes {
+              description 'Import VRF routes.'
+                          ;
+              presence import-vrf-route ;
+              list import-vrf-route {
+                description 'Import VRF routes.'
+                            ;
+                key vrf-name ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                leaf reoriginate-l3vpn {
+                  description 'Reoriginate vpn routes.'
+                              ;
+                  type empty ;
+                }
+                leaf reoriginate-evpn {
+                  description 'Reoriginate evpn routes.'
+                              ;
+                  type empty ;
+                }
+              }
+              ncd:revise-date 2021-07-15 ;
+            }
+            leaf default-color {
+              description 'Default color value.'
+                          ;
+              type uint32 {
+                range 1..4294967295 ;
+              }
+              ncd:revise-date 2021-11-03 ;
+            }
+            leaf default-color-evpn {
+              description 'Default evpn color value.'
+                          ;
+              type uint32 {
+                range 1..4294967295 ;
+              }
+              ncd:revise-date 2021-11-03 ;
+            }
+            leaf evpn-auto-originate-route {
+              description 'Originate EVPN routes automatically.Its default valu'
+                        + 'e which is between [enable,disable] and generally en'
+                        + 'able ,depends on product specification.'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable originate EVPN routes automatically.'
+                              ;
+                }
+                enum enable {
+                  value 1 ;
+                  description 'Enable originate EVPN routes automatically.'
+                              ;
+                }
+              }
+              ncd:revise-date 2022-03-08 ;
+            }
+          }
+          container nm-create {
+            if-feature nm-private ;
+            description 'Use to distinguish the type of VRF.'
+                        ;
+            leaf vrf-type {
+              description 'The type of VRF instance.'
+                          ;
+              type enumeration {
+                enum static {
+                  value 1 ;
+                  description 'The type of creating VRF instance is static.'
+                              ;
+                }
+                enum non-static {
+                  value 3 ;
+                  description 'The type of creating VRF instance is non-static.'
+                              ;
+                }
+              }
+              default non-static ;
+            }
+          }
+          container equivalent-vni-labels {
+            description 'Configure equivalent VNI label.'
+                        ;
+            list equivalent-vni-label {
+              description 'Configure equivalent VNI label.'
+                          ;
+              key vni-label ;
+              leaf vni-label {
+                description 'VNI label value (as in-label)'
+                            ;
+                type uint32 {
+                  range 1..16777215 {
+                    description 'The equivalent vni-label range.'
+                                ;
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2018-11-24 ;
+          }
+        }
+      }
+      container mpls-label-mode-ipv4 {
+        description 'Global mpls label mode configuration for all VRF in ipv4.'
+                    ;
+        leaf mpls-label-mode {
+          description 'Mpls label mode.'
+                      ;
+          type enumeration {
+            enum per-prefix {
+              value 2 ;
+              description 'Per prefix label.'
+                          ;
+            }
+            enum per-vrf {
+              value 3 ;
+              description 'Per VRF label for entire VRF.'
+                          ;
+            }
+          }
+          default per-prefix ;
+        }
+      }
+      container mpls-label-mode-ipv6 {
+        description 'Global mpls label mode configuration for all VRF in ipv6.'
+                    ;
+        leaf mpls-label-mode {
+          description 'Mpls label mode.'
+                      ;
+          type enumeration {
+            enum per-prefix {
+              value 2 ;
+              description 'Per prefix label.'
+                          ;
+            }
+            enum per-vrf {
+              value 3 ;
+              description 'Per VRF label for entire VRF.'
+                          ;
+            }
+          }
+          default per-prefix ;
+        }
+      }
+      container global-statistics {
+        if-feature traffic-statistics ;
+        description 'Global L3VPN statistic configuration.The traffic-stat will'
+                  + ' act on all VPN at once.The statistic status of VPN depend'
+                  + 's on the last traffic-stat configuration between global-st'
+                  + 'atistics and vrf-inst.'
+                    ;
+        leaf traffic-stat {
+          description 'Global l3vpn statistic status.The traffic-stat will act '
+                    + 'on all VPN at once.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Disable statistic.'
+                          ;
+            }
+            enum enable {
+              value 1 ;
+              description 'Enable statistic.'
+                          ;
+            }
+          }
+          default disable ;
+        }
+      }
+      container reserved-vpnid-range {
+        description 'Reserved VPIN ID range.'
+                    ;
+        presence 'Reserved VPIN ID range.'
+                 ;
+        leaf min-value {
+          description 'The minimum value of reserved VPIN ID range.'
+                      ;
+          type uint32 {
+            range 1..4294967295 ;
+          }
+          mandatory true ;
+        }
+        leaf max-value {
+          description 'The maximum value of reserved VPIN ID range.'
+                      ;
+          type uint32 {
+            range 1..4294967295 ;
+          }
+          mandatory true ;
+        }
+        ncd:revise-date 2018-09-08 ;
+      }
+      container vrf-generate-host-routes {
+        description 'To generate host route.'
+                    ;
+        list vrf-generate-host-route {
+          description 'To generate host route.'
+                      ;
+          key 'vrf-name link-type'
+              ;
+          leaf vrf-name {
+            description 'The VPN instance name.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf link-type {
+            description 'ARP or ND.'
+                        ;
+            type enumeration {
+              enum arp {
+                value 1 ;
+                description 'ARP generates host route.'
+                            ;
+              }
+              enum nd {
+                value 2 ;
+                description 'ND generates host route.'
+                            ;
+              }
+            }
+          }
+          leaf route-map {
+            description 'The route map name.'
+                        ;
+            type string {
+              length 1..200 ;
+            }
+          }
+        }
+        ncd:revise-date 2019-05-17 ;
+      }
+      container vrf-public-instance {
+        description 'VRF public configuration.'
+                    ;
+        presence 'VRF public'
+                 ;
+        leaf description {
+          description 'The human-readable description of this VRF.'
+                      ;
+          type ncd:string-with-blank {
+            length 1..104 ;
+          }
+        }
+        container route-targets {
+          description 'Global route target configured for a VRF supporting a MP'
+                    + 'LS/BGP VPN instance.The maximum number of each type of r'
+                    + 'oute target is 255.Route target has three formats,"<0-65'
+                    + '535>:<0-4294967295>","<1-65535>.<0-65535>:<0-65535>" and'
+                    + ' "A.B.C.D:<0-65535>".'
+                      ;
+          list route-target {
+            description 'Global route target configured for a VRF supporting a '
+                      + 'MPLS/BGP VPN instance.The maximum number of each type '
+                      + 'of route target is 255.Route target has three formats,'
+                      + '"<0-65535>:<0-4294967295>","<1-65535>.<0-65535>:<0-655'
+                      + '35>" and "A.B.C.D:<0-65535>".'
+                        ;
+            max-elements 510 ;
+            key 'rt-value rt-type'
+                ;
+            leaf rt-value {
+              description 'The route target distribution policy.'
+                          ;
+              type union {
+                type ncd:asn-nn ;
+                type ncd:asnd-nn ;
+                type ncd:ipadd-nn ;
+              }
+            }
+            leaf rt-type {
+              description 'The route target distribution type.'
+                          ;
+              type enumeration {
+                enum export {
+                  value 2 ;
+                  description 'Export target-VPN community.'
+                              ;
+                }
+                enum import {
+                  value 3 ;
+                  description 'Import target-VPN community.'
+                              ;
+                }
+              }
+            }
+            leaf vpn-type {
+              description 'The type of VPN that this route target applies to.'
+                          ;
+              type enumeration {
+                enum both {
+                  value 0 ;
+                  description 'The route target is used for VPN and EVPN.'
+                              ;
+                }
+                enum vpn {
+                  value 1 ;
+                  description 'The route target is used for VPN.'
+                              ;
+                }
+                enum evpn {
+                  value 2 ;
+                  description 'The route target is used for EVPN.'
+                              ;
+                }
+              }
+              default both ;
+            }
+          }
+          ncd:revise-date 2020-07-28 ;
+        }
+        container added-property {
+          description 'Other additional attributes for VRF instance.'
+                      ;
+          leaf srv6-locator-name {
+            description 'SRv6 locator name.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+            ncd:revise-date 2020-09-27 ;
+          }
+          container srv6-end-dt {
+            choice srv6-end-dt-sid {
+              description 'The SRv6 DT mode of SID.'
+                          ;
+              case dt-auto {
+                description 'Automatic generation of SID.'
+                            ;
+                container dt-auto-mode {
+                  description 'Automatic generation of SID.'
+                              ;
+                  leaf auto {
+                    description 'Automatic generation of SID.'
+                                ;
+                    type enumeration {
+                      enum dt-auto {
+                        value 1 ;
+                        description 'The DT-auto mode of SID.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case dt-static {
+                description 'Specify a SID.'
+                            ;
+                container dt-static-mode {
+                  description 'Specify a SID.'
+                              ;
+                  leaf sid {
+                    description 'The specified SID function code.'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        container address-family-ipv4 {
+          description 'Configuration in address family ipv4 mode.'
+                      ;
+          presence 'Ipv4 address family is active.'
+                   ;
+          leaf import-multicast-route {
+            description 'VRF route import for multicast.'
+                        ;
+            type ncd:ipadd-nn ;
+            ncd:revise-date 2020-07-28 ;
+          }
+          leaf import-multicast-ipv6-route {
+            description 'VRF route IPv6 import for multicast.'
+                        ;
+            type string {
+              length 1..51 ;
+            }
+            ncd:revise-date 2021-07-15 ;
+          }
+          leaf export-map {
+            description 'Route map based VRF export.'
+                        ;
+            type string {
+              length 1..200 ;
+            }
+            ncd:revise-date 2021-05-31 ;
+          }
+          leaf export-policy {
+            description 'Route policy based VRF export.'
+                        ;
+            type string {
+              length 1..200 ;
+            }
+            ncd:revise-date 2022-03-30 ;
+          }
+          container route-targets {
+            description 'Special route target for ipv4 configured for a VRF sup'
+                      + 'porting a MPLS/BGP VPN instance.The maximum number of '
+                      + 'each type of route target is 255 for every VRF in addr'
+                      + 'ess family ipv4.Route target has three formats,"<0-655'
+                      + '35>:<0-4294967295>","<1-65535>.<0-65535>:<0-65535>" an'
+                      + 'd "A.B.C.D:<0-65535>".'
+                        ;
+            list route-target {
+              description 'Special route target for ipv4 configured for a VRF s'
+                        + 'upporting a MPLS/BGP VPN instance.The maximum number'
+                        + ' of each type of route target is 255 for every VRF i'
+                        + 'n address family ipv4.Route target has three formats'
+                        + ',"<0-65535>:<0-4294967295>","<1-65535>.<0-65535>:<0-'
+                        + '65535>" and "A.B.C.D:<0-65535>".'
+                          ;
+              max-elements 510 ;
+              key 'rt-value rt-type'
+                  ;
+              leaf rt-value {
+                description 'The route target distribution policy.'
+                            ;
+                type union {
+                  type ncd:asn-nn ;
+                  type ncd:asnd-nn ;
+                  type ncd:ipadd-nn ;
+                }
+              }
+              leaf rt-type {
+                description 'The route target distribution type.'
+                            ;
+                type enumeration {
+                  enum export {
+                    value 2 ;
+                    description 'Export target-VPN community.'
+                                ;
+                  }
+                  enum import {
+                    value 3 ;
+                    description 'Import target-VPN community.'
+                                ;
+                  }
+                }
+              }
+              leaf vpn-type {
+                description 'The type of VPN that this route target applies to.'
+                            ;
+                type enumeration {
+                  enum both {
+                    value 0 ;
+                    description 'The route target is used for VPN and EVPN.'
+                                ;
+                  }
+                  enum vpn {
+                    value 1 ;
+                    description 'The route target is used for VPN.'
+                                ;
+                  }
+                  enum evpn {
+                    value 2 ;
+                    description 'The route target is used for EVPN.'
+                                ;
+                  }
+                }
+                default both ;
+              }
+            }
+            ncd:revise-date 2020-07-28 ;
+          }
+          container srv6-end-dt {
+            description 'The DT mode of SRv6 SID.'
+                        ;
+            choice srv6-end-dt-sid {
+              description 'The DT mode of SRv6 SID.'
+                          ;
+              case dt-auto {
+                description 'Automatic generation of SID.'
+                            ;
+                container dt-auto-mode {
+                  description 'Automatic generation of SID.'
+                              ;
+                  leaf auto {
+                    description 'Automatic generation of SID.'
+                                ;
+                    type enumeration {
+                      enum dt-auto {
+                        value 1 ;
+                        description 'The DT-auto mode of SID.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case dt-static {
+                description 'Specify a SID.'
+                            ;
+                container dt-static-mode {
+                  description 'Specify a SID.'
+                              ;
+                  leaf sid {
+                    description 'The specified SID function code.'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                }
+              }
+            }
+          }
+          container srv6-end-dx {
+            description 'The DX mode of SRv6 SID.'
+                        ;
+            choice srv6-end-dx-sid {
+              description 'The DX mode of SRv6 SID.'
+                          ;
+              case dx-auto {
+                description 'Automatic generation of SID.'
+                            ;
+                container dx-auto-mode {
+                  description 'Automatic generation of SID.'
+                              ;
+                  leaf auto {
+                    description 'Automatic generation of SID.'
+                                ;
+                    type enumeration {
+                      enum dx-auto {
+                        value 3 ;
+                        description 'The DX-auto mode of SID.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case dx-static {
+                description 'Specify a SID.'
+                            ;
+                container dx-static-instances {
+                  description 'Specify a SID.'
+                              ;
+                  list dx-static {
+                    description 'Specify a SID.'
+                                ;
+                    key 'ifname nexthop'
+                        ;
+                    leaf ifname {
+                      description 'The interface name.'
+                                  ;
+                      type ncd:ifname ;
+                    }
+                    leaf nexthop {
+                      description 'Next hop address.'
+                                  ;
+                      type ncd:ipv4-address ;
+                    }
+                    leaf sid {
+                      description 'The specified SID function code.'
+                                  ;
+                      type ncd:ipv6-address ;
+                      mandatory true ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          leaf default-color {
+            description 'Default color value.'
+                        ;
+            type uint32 {
+              range 1..4294967295 ;
+            }
+            ncd:revise-date 2021-11-03 ;
+          }
+          leaf srv6-best-effort {
+            description 'Segment routing ipv6 best effort.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable segment routing ipv6 best effort'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Enable segment routing ipv6 best effort'
+                            ;
+              }
+            }
+            ncd:revise-date 2022-03-30 ;
+          }
+          leaf srv6-traffic-engineer {
+            description 'Segment routing ipv6 traffic engineering policy.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable segment routing ipv6 traffic engineering p'
+                          + 'olicy'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Enable segment routing ipv6 traffic engineering po'
+                          + 'licy'
+                            ;
+              }
+            }
+            ncd:revise-date 2022-03-30 ;
+          }
+        }
+        container address-family-ipv6 {
+          description 'Configuration in address family ipv6 mode.'
+                      ;
+          presence 'Ipv6 address family is active.'
+                   ;
+          leaf import-multicast-route {
+            if-feature import-multicast-route-ipv6 ;
+            description 'VRF route import for multicast.'
+                        ;
+            type ncd:ipadd-nn ;
+            ncd:revise-date 2020-07-28 ;
+          }
+          leaf import-multicast-ipv6-route {
+            description 'VRF route IPv6 import for multicast.'
+                        ;
+            type string {
+              length 1..51 ;
+            }
+            ncd:revise-date 2021-07-15 ;
+          }
+          leaf export-map {
+            description 'Route map based VRF export.'
+                        ;
+            type string {
+              length 1..200 ;
+            }
+            ncd:revise-date 2021-05-31 ;
+          }
+          leaf export-policy {
+            description 'Route policy based VRF export.'
+                        ;
+            type string {
+              length 1..200 ;
+            }
+            ncd:revise-date 2022-03-30 ;
+          }
+          container route-targets {
+            description 'Special route target for ipv6 configured for a VRF sup'
+                      + 'porting a MPLS/BGP VPN instance.The maximum number of '
+                      + 'each type of route target is 255 for every VRF in addr'
+                      + 'ess family ipv6.Route target has three formats,"<0-655'
+                      + '35>:<0-4294967295>","<1-65535>.<0-65535>:<0-65535>" an'
+                      + 'd "A.B.C.D:<0-65535>".'
+                        ;
+            list route-target {
+              description 'Special route target for ipv6 configured for a VRF s'
+                        + 'upporting a MPLS/BGP VPN instance.The maximum number'
+                        + ' of each type of route target is 255 for every VRF i'
+                        + 'n address family ipv6.Route target has three formats'
+                        + ',"<0-65535>:<0-4294967295>","<1-65535>.<0-65535>:<0-'
+                        + '65535>" and "A.B.C.D:<0-65535>".'
+                          ;
+              max-elements 510 ;
+              key 'rt-value rt-type'
+                  ;
+              leaf rt-value {
+                description 'The route target distribution policy.'
+                            ;
+                type union {
+                  type ncd:asn-nn ;
+                  type ncd:asnd-nn ;
+                  type ncd:ipadd-nn ;
+                }
+              }
+              leaf rt-type {
+                description 'The route target distribution type.'
+                            ;
+                type enumeration {
+                  enum export {
+                    value 2 ;
+                    description 'Export target-VPN community.'
+                                ;
+                  }
+                  enum import {
+                    value 3 ;
+                    description 'Import target-VPN community.'
+                                ;
+                  }
+                }
+              }
+              leaf vpn-type {
+                description 'The type of VPN that this route target applies to.'
+                            ;
+                type enumeration {
+                  enum both {
+                    value 0 ;
+                    description 'The route target is used for VPN and EVPN.'
+                                ;
+                  }
+                  enum vpn {
+                    value 1 ;
+                    description 'The route target is used for VPN.'
+                                ;
+                  }
+                  enum evpn {
+                    value 2 ;
+                    description 'The route target is used for EVPN.'
+                                ;
+                  }
+                }
+                default both ;
+              }
+            }
+            ncd:revise-date 2020-07-28 ;
+          }
+          container srv6-end-dt {
+            description 'The DT mode of SRv6 SID.'
+                        ;
+            choice srv6-end-dt-sid {
+              description 'The DT mode of SRv6 SID.'
+                          ;
+              case dt-auto {
+                description 'Automatic generation of SID.'
+                            ;
+                container dt-auto-mode {
+                  description 'Automatic generation of SID.'
+                              ;
+                  leaf auto {
+                    description 'Automatic generation of SID.'
+                                ;
+                    type enumeration {
+                      enum dt-auto {
+                        value 1 ;
+                        description 'The DT-auto mode of SID.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case dt-static {
+                description 'Specify a SID.'
+                            ;
+                container dt-static-mode {
+                  description 'Specify a SID.'
+                              ;
+                  leaf sid {
+                    description 'The specified SID function code.'
+                                ;
+                    type ncd:ipv6-address ;
+                  }
+                }
+              }
+            }
+          }
+          container srv6-end-dx {
+            choice srv6-end-dx-sid {
+              description 'The DX mode of SRv6 SID.'
+                          ;
+              case dx-auto {
+                description 'Automatic generation of SID.'
+                            ;
+                container dx-auto-mode {
+                  description 'Automatic generation of SID.'
+                              ;
+                  leaf auto {
+                    description 'Automatic generation of SID.'
+                                ;
+                    type enumeration {
+                      enum dx-auto {
+                        value 3 ;
+                        description 'The DX-auto mode of SID.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              case dx-static {
+                description 'Specify a SID.'
+                            ;
+                container dx-static-instances {
+                  description 'Specify a SID.'
+                              ;
+                  list dx-static {
+                    description 'Specify a SID.'
+                                ;
+                    key 'ifname nexthop'
+                        ;
+                    leaf ifname {
+                      description 'The interface name.'
+                                  ;
+                      type ncd:ifname ;
+                    }
+                    leaf nexthop {
+                      description 'Next hop address.'
+                                  ;
+                      type ncd:ipv6-address ;
+                    }
+                    leaf sid {
+                      description 'The specified SID function code.'
+                                  ;
+                      type ncd:ipv6-address ;
+                      mandatory true ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          leaf default-color {
+            description 'Default color value.'
+                        ;
+            type uint32 {
+              range 1..4294967295 ;
+            }
+            ncd:revise-date 2021-11-03 ;
+          }
+          leaf srv6-best-effort {
+            description 'Segment routing ipv6 best effort.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable segment routing ipv6 best effort'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Enable segment routing ipv6 best effort'
+                            ;
+              }
+            }
+            ncd:revise-date 2022-03-30 ;
+          }
+          leaf srv6-traffic-engineer {
+            description 'Segment routing ipv6 traffic engineering policy.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable segment routing ipv6 traffic engineering p'
+                          + 'olicy'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Enable segment routing ipv6 traffic engineering po'
+                          + 'licy'
+                            ;
+              }
+            }
+            ncd:revise-date 2022-03-30 ;
+          }
+        }
+        ncd:revise-date 2020-06-23 ;
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'L3VPN module state info.'
+                ;
+    container vrf {
+      description 'L3VPN instance.'
+                  ;
+      container vrf-instances {
+        description 'L3VPN instance.'
+                    ;
+        list vrf-inst {
+          description 'L3VPN instance.'
+                      ;
+          key name ;
+          leaf name {
+            description 'L3VPN instance name.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          container l3vpn-statistics {
+            description 'The specified L3VPN instance traffic statistics.'
+                        ;
+            leaf last-clear-time {
+              description 'The latest clear traffic statistics time.'
+                          ;
+              type ncd:datetime ;
+            }
+            leaf last-refresh-time {
+              description 'The latest time of system update new data.'
+                          ;
+              type ncd:datetime ;
+            }
+            leaf in-bytes-rate {
+              description 'The average vlaue of receive bytes rate among 120 se'
+                        + 'conds.'
+                          ;
+              type uint64 ;
+              units Bps ;
+            }
+            leaf in-pkts-rate {
+              description 'The average vlaue of receive packets rate among 120 '
+                        + 'seconds.'
+                          ;
+              type uint64 ;
+              units pps ;
+            }
+            leaf out-bytes-rate {
+              description 'The average vlaue of sending bytes rate among 120 se'
+                        + 'conds.'
+                          ;
+              type uint64 ;
+              units Bps ;
+            }
+            leaf out-pkts-rate {
+              description 'The average vlaue of sending packets rate among 120 '
+                        + 'seconds.'
+                          ;
+              type uint64 ;
+              units pps ;
+            }
+            leaf in-bytes {
+              description 'Total bytes received.'
+                          ;
+              type uint64 ;
+            }
+            leaf in-packets {
+              description 'Total packets received.'
+                          ;
+              type uint64 ;
+            }
+            leaf out-bytes {
+              description 'Total bytes sent.'
+                          ;
+              type uint64 ;
+            }
+            leaf out-packets {
+              description 'Total packets sent.'
+                          ;
+              type uint64 ;
+            }
+            leaf in-traffic-rate {
+              description 'The input traffic rate(unit:Mbps) among 120 seconds.'
+                          ;
+              type decimal64 {
+                fraction-digits 4 ;
+              }
+              units Mbps ;
+              ncd:revise-date 2020-09-15 ;
+            }
+            leaf in-pkt-rate-kfps {
+              description 'The input packet rate(unit:Kfps) among 120 seconds.'
+                          ;
+              type decimal64 {
+                fraction-digits 4 ;
+              }
+              units Kfps ;
+              ncd:revise-date 2020-09-15 ;
+            }
+            leaf out-traffic-rate {
+              description 'The output traffic rate(unit:Mbps) among 120 seconds.'
+                          ;
+              type decimal64 {
+                fraction-digits 4 ;
+              }
+              units Mbps ;
+              ncd:revise-date 2020-09-15 ;
+            }
+            leaf out-pkt-rate-kfps {
+              description 'The output packet rate(unit:Kfps) among 120 seconds.'
+                          ;
+              type decimal64 {
+                fraction-digits 4 ;
+              }
+              units Kfps ;
+              ncd:revise-date 2020-09-15 ;
+            }
+          }
+        }
+      }
+      container vrf-summary {
+        description 'Summary of VRF instances.'
+                    ;
+        leaf maximum-num {
+          description 'Maximum number of VRF instances including reserved VRF i'
+                    + 'nstances.'
+                      ;
+          type uint32 ;
+        }
+        leaf configured-num {
+          description 'Number of configured VRF instances including reserved VR'
+                    + 'F instances.'
+                      ;
+          type uint32 ;
+        }
+        ncd:revise-date 2019-05-17 ;
+      }
+    }
+    ncd:revise-date 2017-07-18 ;
+  }
+  container operation {
+    config false ;
+    container clear {
+      description 'Clear L3VPN traffic statistics.'
+                  ;
+      container l3vpn-statistics {
+        description 'Clear L3VPN traffic statistics.'
+                    ;
+        choice statistics {
+          description 'Clear L3VPN traffic statistics.'
+                      ;
+          case all {
+            description 'Clear all L3VPN instances traffic statistics.'
+                        ;
+            container all-instance {
+              description 'Clear all L3VPN instances traffic statistics.'
+                          ;
+              leaf all {
+                description 'Clear all L3VPN instances traffic statistics.'
+                            ;
+                type empty ;
+              }
+            }
+          }
+          case vpn {
+            description 'Clear the specified L3VPN instance traffic statistics.'
+                        ;
+            container vpn-instance {
+              description 'Clear the specified L3VPN instance traffic statistic'
+                        + 's.'
+                          ;
+              list vpn {
+                description 'Clear the specified L3VPN instance traffic statist'
+                          + 'ics.'
+                            ;
+                key name ;
+                leaf name {
+                  description 'L3VPN instance name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    ncd:revise-date 2017-07-18 ;
+  }
+}

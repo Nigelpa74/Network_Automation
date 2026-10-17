@@ -1,0 +1,270 @@
+module zxr10-pm-env-satellite {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-env-satellite'
+            ;
+  prefix pm-env-satellite ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2022-05-18 ;
+  revision 2021-05-18 {
+    description 'Change vendor-name,vendor-pn,vendor-sn,vendor-rev Length to 24.'
+                ;
+  }
+  revision 2021-03-03 {
+    description 'add reload system.'
+                ;
+  }
+  revision 2021-02-02 {
+    description 'add fan temp sa'
+                ;
+  }
+  revision 2021-01-29 {
+    description 'Initialize version.'
+                ;
+  }
+  container state {
+    config false ;
+    container env {
+      container opticals {
+        list optical {
+          key 'peid if-name'
+              ;
+          leaf peid {
+            type uint32 {
+              range 1..255 ;
+            }
+          }
+          leaf if-name {
+            type string ;
+          }
+          leaf optical-status {
+            type enumeration {
+              enum offline {
+                value 0 ;
+                description 'The optical is offline.'
+                            ;
+              }
+              enum online {
+                value 1 ;
+                description 'The optical is online.'
+                            ;
+              }
+            }
+            default offline ;
+          }
+          leaf optical-electric-mode {
+            type uint8 ;
+          }
+          leaf transceiver-type {
+            type ncd:string-all ;
+          }
+          leaf single-fiber-double-orient {
+            type uint8 ;
+          }
+          leaf media-type {
+            type uint8 ;
+          }
+          leaf send-wavelength {
+            type uint32 ;
+          }
+          leaf length-9um-smf {
+            type uint32 ;
+          }
+          leaf length-50um-om2 {
+            type uint32 ;
+          }
+          leaf length-62um-om1 {
+            type uint32 ;
+          }
+          leaf length-50um-om3 {
+            type uint32 ;
+          }
+          leaf copper-line {
+            type uint32 ;
+          }
+          leaf sonet-codes {
+            type ncd:string-all ;
+          }
+          leaf ethernet-codes {
+            type ncd:string-all ;
+          }
+          leaf vendor-name {
+            type ncd:string-all ;
+          }
+          leaf vendor-pn {
+            type ncd:string-all ;
+          }
+          leaf vendor-sn {
+            type ncd:string-all ;
+          }
+          leaf vendor-rev {
+            type ncd:string-all ;
+          }
+          leaf send-power {
+            type ncd:string-all ;
+          }
+          leaf receive-power {
+            type ncd:string-all ;
+          }
+          leaf channel-number {
+            type uint8 ;
+          }
+          leaf connector-type {
+            type ncd:string-all ;
+          }
+          leaf high-warning-threshold-rx {
+            type ncd:string-all ;
+            ncd:revise-date 2022-05-18 ;
+          }
+          leaf low-warning-threshold-rx {
+            type ncd:string-all ;
+            ncd:revise-date 2022-05-18 ;
+          }
+          leaf high-warning-threshold-tx {
+            type ncd:string-all ;
+            ncd:revise-date 2022-05-18 ;
+          }
+          leaf low-warning-threshold-tx {
+            type ncd:string-all ;
+            ncd:revise-date 2022-05-18 ;
+          }
+        }
+      }
+      container temperatures {
+        list temperature {
+          key peid ;
+          leaf peid {
+            type uint32 {
+              range 1..255 ;
+            }
+          }
+          leaf shelf {
+            description 'Shelf no.'
+                        ;
+            type uint8 ;
+          }
+          leaf slot {
+            description 'Slot no.'
+                        ;
+            type uint8 ;
+          }
+          leaf current-temperature {
+            type int32 ;
+          }
+          leaf fatal-threshold {
+            type uint32 ;
+          }
+        }
+        ncd:revise-date 2021-02-02 ;
+      }
+      container fans {
+        list fan {
+          key peid ;
+          leaf peid {
+            type uint32 {
+              range 1..255 ;
+            }
+          }
+          leaf shelf {
+            description 'Shelf no.'
+                        ;
+            type uint8 ;
+          }
+          leaf group {
+            description 'Slot no.'
+                        ;
+            type uint8 ;
+          }
+          leaf index {
+            description 'Shelf no.'
+                        ;
+            type uint8 ;
+          }
+          leaf fan-present {
+            type uint8 ;
+          }
+          leaf work-status {
+            type uint8 ;
+          }
+        }
+        ncd:revise-date 2021-02-02 ;
+      }
+      container powers {
+        list power {
+          key peid ;
+          leaf peid {
+            type uint32 {
+              range 1..255 ;
+            }
+          }
+          leaf shelf {
+            description 'Shelf no.'
+                        ;
+            type uint8 ;
+          }
+          leaf group-num {
+            description 'Group number'
+                        ;
+            type uint8 ;
+          }
+          leaf group-name {
+            description 'Group name'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf power-used {
+            description 'Power used'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf outputorInput1-voltage {
+            description 'Output or input voltage.'
+                        ;
+            type uint32 ;
+          }
+          leaf outputorInput1-current {
+            description 'Output or input current.'
+                        ;
+            type uint32 ;
+          }
+        }
+        ncd:revise-date 2021-05-18 ;
+      }
+    }
+  }
+  container operation {
+    config false ;
+    container env {
+      container reload-systems {
+        list reload-system {
+          key peid ;
+          leaf peid {
+            description Peid. ;
+            type uint32 {
+              range 1..255 ;
+            }
+          }
+          leaf reload-mode {
+            description 'Reload mode.'
+                        ;
+            type enumeration {
+              enum force {
+                value 0 ;
+              }
+            }
+          }
+          ncd:select peid ;
+        }
+      }
+    }
+    ncd:revise-date 2021-03-03 ;
+  }
+}

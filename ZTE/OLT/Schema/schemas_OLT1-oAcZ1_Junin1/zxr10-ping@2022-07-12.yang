@@ -1,0 +1,2659 @@
+module zxr10-ping {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ping'
+            ;
+  prefix ping ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe PING. Ping is typically used to d'
+            + 'etermine whether a path exists between two hosts.'
+              ;
+  revision 2022-07-12 {
+    description '1.Add feature ce-ping'+"\n"
+              + '2.Add container:/ping:operation/ping:ce-ping'+"\n"
+              + '3.Add container:/ping:configuration/ping:ping/ping:global/ping'
+              + ':arp-oam'+"\n"
+              + '4.Add container:/ping:notification/ping:ce-ping-result'
+                ;
+  }
+  revision 2022-06-20 {
+    description '1) Add Leaf /ping:operation/ping:ping/ping:ping6s/ping:ping6/p'
+              + 'ing:ping6-data/ping:srv6-policy-option/ping:segment-list-id;'
+                ;
+  }
+  revision 2022-03-02 {
+    description '1) Add Leaf /ping:operation/ping:ping/ping:ping4s/ping:ping4/p'
+              + 'ing:ping-data/ping:normal-option/ping:segment-list-id;'+"\n"
+              + '2) Add Leaf /ping:operation/ping:ping/ping:ping6s/ping:ping6/p'
+              + 'ing:ping6-data/ping:normal-option/ping:segment-list-id;'
+                ;
+  }
+  revision 2021-12-27 {
+    description '1) Add leaf:/ping:operation/ping:ping/ping:ping6s/ping:ping6/p'
+              + 'ing:ping6-data/ping:srv6/ping:srv6-option/ping:slice-id.'+"\n"
+              + '1) Add leaf:/ping:operation/ping:ping/ping:ping6s/ping:ping6/p'
+              + 'ing:ping6-data/ping:srv6-policy/ping:srv6-policy-option/ping:s'
+              + 'lice.'
+                ;
+  }
+  revision 2021-09-03 {
+    description 'Add 59E for vxlan feature'
+                ;
+  }
+  revision 2021-06-01 {
+    description '1) Add leaf:/ping:operation/ping:ping/ping:ping6s/ping:ping6/p'
+              + 'ing:ping6-data/ping:srv6-policys/ping:srv6-policy-option/ping:'
+              + 'full-notify.'+"\n"
+              + '2) Add leaf:/ping:operation/ping:ping/ping:ping6s/ping:ping6/p'
+              + 'ing:ping6-data/ping:srv6-policys/ping:srv6-policy-option/ping:'
+              + 'destination.'+"\n"
+              + '3) Add container:/ping:notification/ping:ping-path-results/pin'
+              + 'g:ping-path-result/ping:segment-list.'
+                ;
+  }
+  revision 2021-05-28 {
+    description '1) Add leaf:/ping:operation/ping:ping/ping:ping6s/ping:ping6/p'
+              + 'ing:ping6-data/ping:srv6-option/ping:o-flag.'+"\n"
+              + '2) Add leaf:/ping:operation/ping:ping/ping:ping6s/ping:ping6/p'
+              + 'ing:ping6-data/ping:srv6-policys/ping:srv6-policy-option/ping:'
+              + 'o-flag.'
+                ;
+  }
+  revision 2021-03-30 {
+    description '1) Add Feature /ping:uni-nni-ping-ipv6'+"\n"
+              + '2) Add Choice /ping:operation/ping:ping/ping:ip-type/ping:ipv6'
+              + '/ping:ping6s/ping:ping6/ping:status/ping:enable/ping:ping6-dat'
+              + 'a/ping:ping6-type/ping:uni'+"\n"
+              + '3) Add Choice /ping:operation/ping:ping/ping:ip-type/ping:ipv6'
+              + '/ping:ping6s/ping:ping6/ping:status/ping:enable/ping:ping6-dat'
+              + 'a/ping:ping6-type/ping:nni'
+                ;
+  }
+  revision 2021-03-20 {
+    description '1.Add case:/operation/forward-ping/ip-type/ipv6.'
+                ;
+  }
+  revision 2021-03-03 {
+    description '1) Add Choice /ping/ip-type/ipv4/ping4s/ping4/status/enable/pi'
+              + 'ng-data/normal/normal-opt/next-hop-option;'+"\n"
+              + '2) Add Case /ping/ip-type/ipv4/ping4s/ping4/status/enable/ping'
+              + '-data/normal/normal-opt/ipv4-next-hop;'+"\n"
+              + '3) Add Case /ping/ip-type/ipv4/ping4s/ping4/status/enable/ping'
+              + '-data/normal/normal-opt/ipv6-next-hop;'+"\n"
+              + '4) Add Leaf /ping/ip-type/ipv4/ping4s/ping4/status/enable/ping'
+              + '-data/normal/normal-opt/ipv4-next-hop/ipv4-next-hop;'+"\n"
+              + '5) Add Leaf /ping/ip-type/ipv4/ping4s/ping4/status/enable/ping'
+              + '-data/normal/normal-opt/ipv6-next-hop/ipv6-next-hop;'
+                ;
+  }
+  revision 2020-12-01 {
+    description '1)Add leaf /ping/ipv6/ping6S/ping6/status/enable/ping6-data/no'
+              + 'rmal/normals/normal-option/ecmp;'
+                ;
+  }
+  revision 2020-08-11 {
+    description '1) Add Choice /ping/ipv4/ping4S/ping4/status/enable/common-opt'
+              + 'ion/pkt-priority;'+"\n"
+              + '2) Add Case  /ping/ipv4/ping4S/ping4/status/enable/common-opti'
+              + 'on/pkt-priority/tos;'+"\n"
+              + '3) Add Case  /ping/ipv4/ping4S/ping4/status/enable/common-opti'
+              + 'on/pkt-priority/dscp;'+"\n"
+              + '4) Add leaf  /ping/ipv4/ping4S/ping4/status/enable/common-opti'
+              + 'on/pkt-priority/tos/tos;'+"\n"
+              + '5) Add leaf  /ping/ipv4/ping4S/ping4/status/enable/common-opti'
+              + 'on/pkt-priority/dscp/dscp;'+"\n"
+              + '6) Remove leaf /ping/ipv4/ping4S/ping4/status/enable/ping-data'
+              + '/common-option/tos;'+"\n"
+              + '7) Add Choic /ping/ipv6/ping6S/ping6/status/enable/common-opti'
+              + 'on/pkt-priority;'+"\n"
+              + '8) Add Case  /ping/ipv6/ping6S/ping6/status/enable/common-opti'
+              + 'on/pkt-priority/tc;'+"\n"
+              + '9) Add Case  /ping/ipv6/ping6S/ping6/status/enable/common-opti'
+              + 'on/pkt-priority/dscp;'+"\n"
+              + '10) Add leaf /ping/ipv6/ping6S/ping6/status/enable/common-opti'
+              + 'on/pkt-priority/tc/tc;'+"\n"
+              + '11) Add leaf /ping/ipv6/ping6S/ping6/status/enable/common-opti'
+              + 'on/pkt-priority/dscp/dscp;'+"\n"
+              + '12) Add Case /forward-ping/ip-type/ipv4/ipv4-insts/ipv4-inst/s'
+              + 'tatus/enable/common-option/pkt-priority/dscp;'+"\n"
+              + '13) Add leaf /forward-ping/ip-type/ipv4/ipv4-insts/ipv4-inst/s'
+              + 'tatus/enable/common-option/pkt-priority/dscp/dscp;'
+                ;
+  }
+  revision 2020-07-30 {
+    description '1) Add container operaion/forward-ping;'+"\n"
+              + '2) Add feature forward-ping-for-all,forward-ping-send-paras an'
+              + 'd forward-ping-vlan.'
+                ;
+  }
+  revision 2020-07-16 {
+    description '1.Add feature uni-nni-ping 
+2.Add feature uni-nni-oam-cfg'
+                ;
+  }
+  revision 2020-06-23 {
+    description '1 Add leaf /ping:operation/ping:ping/ping:ip-type/ping:ipv6/pi'
+              + 'ng:ping6s/ping:ping6/ping:status/ping:enable/ping:ping6-data/p'
+              + 'ing:ping6-type/ping:srv6/ping:srv6s/ping:dest-type/ping:sid/pi'
+              + 'ng:end-op.'
+                ;
+  }
+  revision 2020-05-15 {
+    description '1 Add operation of srv6-policy'+"\n"
+              + '2 Add notification of ping-path-result'
+                ;
+  }
+  revision 2020-04-13 {
+    description '1:Add      container:/configuraion/global'+"\n"
+              + '2:Add      container:/configuraion/global/vxlan-gpe-echo'+"\n"
+              + '3:Add      case:/operation/ping/ip-type/ipv4/ping4s/ping4/stat'
+              + 'us/enable/ping-data/ping4-type/vxlan/vxlan-option/underlay/ipv'
+              + '6-dynamic'+"\n"
+              + '4:Add      leaf:/operation/ping/ip-type/ipv4/ping4s/ping4/stat'
+              + 'us/enable/ping-data/ping4-type/vxlan/vxlan-option/underlay/ipv'
+              + '6-dynamic/ipv6-local'+"\n"
+              + '5:Add      leaf:/operation/ping/ip-type/ipv4/ping4s/ping4/stat'
+              + 'us/enable/ping-data/ping4-type/vxlan/vxlan-option/underlay/ipv'
+              + '6-dynamic/ipv6-remote'+"\n"
+              + '6:Add container:/ping:operation/ping:ping-vxlan-vni,and all no'
+              + 'des under it.'+"\n"
+              + '7:Add leaf:/operation/ping/ping6s/ping6/ping6-data/normal-opti'
+              + 'on/next-hop'+"\n"
+              + '8:Add SRv6 operation'
+                ;
+  }
+  revision 2019-08-30 {
+    description '1:/ping:operation/ping:ping/ping:ping4s/ping:ping4/ping:ping-d'
+              + 'ata/ping:vxlan/ping:vxlans add dst-ip and vrf-name leaf.'+"\n"
+              + '2:/ping:operation/ping:ping/ping:ping4s/ping:ping4/ping:ping-d'
+              + 'ata/ping:vxlan-option add source/local-ip/remote-ip/vxlan-inte'
+              + 'rface leaf.'+"\n"
+              + '3:/Add vxlan project label to /ping:operation/ping:ping/ping:p'
+              + 'ing4s/ping:ping4/ping:ping-data/ping:vxlan.'
+                ;
+  }
+  revision 2019-07-10 {
+    description '1:/ping:operation/ping:ping/ping:ping4s/ping:ping4/ping:ping-d'
+              + 'ata/ping:unis add pattern leaf'+"\n"
+              + '2:/ping:operation/ping:ping/ping:ping4s/ping:ping4/ping:ping-d'
+              + 'ata/ping:nnis add pattern leaf'+"\n"
+              + '3:/ping:operation/ping:ping/ping:ping6s/ping:ping6/ping:common'
+              + '-option add pattern leaf'
+                ;
+  }
+  revision 2016-06-29 {
+    description '1.Add vrf for /ping:operation/ping:ping/ping:ping4s/ping:ping4'
+              + '/ping:ping-data/ping:unis'+"\n"
+              + '2.Add vrf for /ping:operation/ping:ping/ping:ping4s/ping:ping4'
+              + '/ping:ping-data/ping:nnis'+"\n"
+              + '3.Add /ping:configuration/ping:ping/ping:interface-paras/ping:'
+              + 'interface-para/'+"\n"
+              + '4.Modify leafs /ping:operation/ping:ping/ping:ping6s/ping:ping'
+              + '6/ping:common-option/ping:size and /ping:operation/ping:ping/p'
+              + 'ing:ping4s/ping:ping4/ping:common-option/ping:size the max val'
+              + 'ue from 8192 to 65507'+"\n"
+              + '5.Add leaf /operation/ping/ping6s/ping6/ping6-data/normal/norm'
+              + 'al-option/dcn'
+                ;
+  }
+  revision 2014-12-12 {
+    description 'Add PING netconf notification report function.'
+                ;
+  }
+  revision 2014-05-06 {
+    description 'Initial version.'
+                ;
+  }
+  feature vxlan ;
+  feature srv6 ;
+  feature uni-nni-ping {
+    description 'UNI and NNI ping'
+                ;
+  }
+  feature uni-nni-oam-cfg {
+    description 'UNI and NNI OAM configuration'
+                ;
+  }
+  feature forward-ping-for-all {
+    description 'forward-ping configuration.'
+                ;
+  }
+  feature forward-ping-send-paras {
+    description 'forward-ping configuration for next-hop.'
+                ;
+  }
+  feature forward-ping-vlan {
+    description 'forward-ping configuration for vlan and label-stack-list.'
+                ;
+  }
+  feature forward-ping-ipv6 ;
+  feature uni-nni-ping-ipv6 {
+    description uni-nni-ping-ipv6 ;
+  }
+  feature ce-ping {
+    description ce-ping ;
+    ncd:revise-date 2022-07-12 ;
+  }
+  container operation {
+    config false ;
+    description 'PING operation model info.'
+                ;
+    container ping {
+      description 'PING operation parameters.'
+                  ;
+      presence ping ;
+      choice ip-type {
+        description 'The type of PING operation, IPV4 or IPV6.'
+                    ;
+        mandatory true ;
+        case ipv4 {
+          description 'IPv4 PING operation parameters.'
+                      ;
+          container ping4s {
+            description 'IPv4 PING operation parameters.'
+                        ;
+            list ping4 {
+              description 'IPv4 PING operation parameters.'
+                          ;
+              key serial-num ;
+              leaf serial-num {
+                description 'IPv4 PING serial number.'
+                            ;
+                type uint64 ;
+              }
+              choice status {
+                description 'The switch for turning on/off IPv4 PING.'
+                            ;
+                mandatory true ;
+                case enable {
+                  description 'Start IPv4 PING function.'
+                              ;
+                  leaf ping-enable {
+                    description 'Start IPv4 PING function.'
+                                ;
+                    type empty ;
+                    mandatory true ;
+                  }
+                  container ping-data {
+                    description 'Parameters for IPv4 PING.'
+                                ;
+                    choice ping4-type {
+                      description 'The type of IPv4 PING.'
+                                  ;
+                      mandatory true ;
+                      case normal {
+                        description 'Normal IP PING operation.'
+                                    ;
+                        container normals {
+                          description 'Normal IP PING operation.'
+                                      ;
+                          choice dest-type {
+                            description 'The type of normal PING.'
+                                        ;
+                            mandatory true ;
+                            case ip {
+                              description 'The destination of PING is IP address.'
+                                          ;
+                              leaf dst-ip {
+                                description 'The destination IPv4 address.'
+                                            ;
+                                type ncd:ipv4-address ;
+                                mandatory true ;
+                              }
+                            }
+                            case domain {
+                              description 'The destination of PING is domain name.'
+                                          ;
+                              leaf domain-name {
+                                description 'The domain name.'
+                                            ;
+                                type string {
+                                  length 1..128 {
+                                    description 'The domain name.'
+                                                ;
+                                  }
+                                }
+                                mandatory true ;
+                              }
+                            }
+                          }
+                        }
+                        container normal-option {
+                          description 'Option parameters for normal PING.'
+                                      ;
+                          choice vrf {
+                            description 'The VRF type.'
+                                        ;
+                            case normal-vrf {
+                              description 'The normal VRF.'
+                                          ;
+                              leaf vrf-name {
+                                description 'The VRF name.'
+                                            ;
+                                type string {
+                                  length 1..32 {
+                                    description 'The VRF name.'
+                                                ;
+                                  }
+                                }
+                              }
+                            }
+                            case dcn-vrf {
+                              description 'The DCN VRF.'
+                                          ;
+                              leaf dcn {
+                                description 'Whether DCN VRF or not.'
+                                            ;
+                                type empty ;
+                              }
+                            }
+                          }
+                          leaf interface {
+                            description 'The interface of sending packets.'
+                                        ;
+                            type ncd:ifname {
+                              length 1..31 {
+                                description 'The interface of sending packets.'
+                                            ;
+                              }
+                            }
+                          }
+                          leaf pattern {
+                            description 'The pad bytes.'
+                                        ;
+                            type string {
+                              length 4 {
+                                description 'The pattern string.'
+                                            ;
+                              }
+                            }
+                          }
+                          leaf source {
+                            description 'The source IP address of the packet.'
+                                        ;
+                            type ncd:ipv4-address ;
+                          }
+                          choice next-hop-option {
+                            description 'The next hop address.'
+                                        ;
+                            case ipv4-next-hop {
+                              description 'The next hop address.'
+                                          ;
+                              leaf ipv4-next-hop {
+                                description 'The Ipv4 next hop address.'
+                                            ;
+                                type ncd:ipv4-address-none-zero ;
+                              }
+                            }
+                            case ipv6-next-hop {
+                              description 'The next hop address.'
+                                          ;
+                              leaf ipv6-next-hop {
+                                description 'The Ipv6 next hop address.'
+                                            ;
+                                type ncd:ipv6-address-none-zero ;
+                              }
+                            }
+                            ncd:revise-date 2021-03-03 ;
+                          }
+                          leaf segment-list-id {
+                            description 'Segment list ID.'
+                                        ;
+                            type uint32 {
+                              range 1..4294967295 {
+                                description 'Segment list ID.'
+                                            ;
+                              }
+                            }
+                            ncd:revise-date 2022-03-02 ;
+                          }
+                          container ip-option {
+                            description 'The IP option of packet.'
+                                        ;
+                            choice ip-options {
+                              description 'IP options.'
+                                          ;
+                              case source-route {
+                                description 'Source route option.'
+                                            ;
+                                container route-option {
+                                  description 'Source route options.'
+                                              ;
+                                  leaf route-type {
+                                    description 'The source route type.'
+                                                ;
+                                    type enumeration {
+                                      enum loose {
+                                        value 1 ;
+                                        description 'Loose source route.'
+                                                    ;
+                                      }
+                                      enum strict {
+                                        value 2 ;
+                                        description 'Strict source route.'
+                                                    ;
+                                      }
+                                    }
+                                  }
+                                  list route-ips {
+                                    description 'Route IP.'
+                                                ;
+                                    key route-ip ;
+                                    leaf route-ip {
+                                      description 'Route IP address.'
+                                                  ;
+                                      type ncd:ipv4-address ;
+                                    }
+                                  }
+                                }
+                              }
+                              case route-record {
+                                description 'Route record option.'
+                                            ;
+                                leaf record-num {
+                                  description 'The number of recording route.'
+                                              ;
+                                  type uint8 {
+                                    range 1..9 {
+                                      description 'The number of recording route.'
+                                                  ;
+                                    }
+                                  }
+                                }
+                              }
+                              case timestamp {
+                                description 'Timestamp option.'
+                                            ;
+                                leaf timestamp-num {
+                                  description 'The number of timestamp.'
+                                              ;
+                                  type uint8 {
+                                    range 1..9 {
+                                      description 'The number of timestamp.'
+                                                  ;
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                      case uni {
+                        if-feature uni-nni-ping ;
+                        description UNI-PING. ;
+                        container unis {
+                          description UNI-PING. ;
+                          leaf dst-ip {
+                            description 'The destination IPv4 address.'
+                                        ;
+                            type ncd:ipv4-address ;
+                            mandatory true ;
+                          }
+                          leaf source {
+                            description 'The source IP address of the packet.'
+                                        ;
+                            type ncd:ipv4-address ;
+                          }
+                          leaf vrf-name {
+                            description 'The VRF name.'
+                                        ;
+                            type string {
+                              length 1..32 {
+                                description 'The VRF name.'
+                                            ;
+                              }
+                            }
+                            ncd:revise-date 2016-06-29 ;
+                          }
+                          leaf pattern {
+                            description 'The pad bytes.'
+                                        ;
+                            type string {
+                              length 4 {
+                                description 'The pattern string.'
+                                            ;
+                              }
+                            }
+                            ncd:revise-date 2019-07-10 ;
+                          }
+                        }
+                      }
+                      case nni {
+                        if-feature uni-nni-ping ;
+                        description NNI-PING. ;
+                        container nnis {
+                          description NNI-PING. ;
+                          leaf dst-ip {
+                            description 'The destination IPv4 address.'
+                                        ;
+                            type ncd:ipv4-address ;
+                            mandatory true ;
+                          }
+                          leaf next-hop {
+                            description 'The next hop address for NNI-PING.'
+                                        ;
+                            type ncd:ipv4-address ;
+                            mandatory true ;
+                          }
+                          leaf vrf-name {
+                            description 'The VRF name.'
+                                        ;
+                            type string {
+                              length 1..32 {
+                                description 'The VRF name.'
+                                            ;
+                              }
+                            }
+                            ncd:revise-date 2016-06-29 ;
+                          }
+                          leaf pattern {
+                            description 'The pad bytes.'
+                                        ;
+                            type string {
+                              length 4 {
+                                description 'The pattern string.'
+                                            ;
+                              }
+                            }
+                            ncd:revise-date 2019-07-10 ;
+                          }
+                        }
+                      }
+                      case vxlan {
+                        if-feature vxlan ;
+                        description VXLAN-PING. ;
+                        container vxlans {
+                          description 'VXLAN PING.'
+                                      ;
+                          leaf dst-ip {
+                            description 'The destination IPv4 address.'
+                                        ;
+                            type ncd:ipv4-address ;
+                            mandatory true ;
+                          }
+                          leaf vrf-name {
+                            description 'The VRF name.'
+                                        ;
+                            type string {
+                              length 1..32 {
+                                description 'The VRF name.'
+                                            ;
+                              }
+                            }
+                            mandatory true ;
+                          }
+                        }
+                        container vxlan-option {
+                          description 'Optional parameters of VXLAN PING.'
+                                      ;
+                          leaf source {
+                            description 'The source IP address of the packet.'
+                                        ;
+                            type ncd:ipv4-address ;
+                          }
+                          choice underlay {
+                            description 'underlay VXLAN information.'
+                                        ;
+                            case dynamic {
+                              description 'Dynamic VXLAN Tunnel.'
+                                          ;
+                              leaf local-ip {
+                                description 'The local IPv4 address.'
+                                            ;
+                                type ncd:ipv4-address ;
+                                mandatory true ;
+                              }
+                              leaf remote-ip {
+                                description 'The remote IPv4 address.'
+                                            ;
+                                type ncd:ipv4-address ;
+                                mandatory true ;
+                              }
+                            }
+                            case static {
+                              description 'Static VXLAN Tunnel.'
+                                          ;
+                              leaf vxlan-interface {
+                                description 'The VXLAN interface of sending packets.'
+                                            ;
+                                type ncd:ifname {
+                                  length 1..31 {
+                                    description 'The VXLAN interface of sending packets.'
+                                                ;
+                                  }
+                                }
+                              }
+                            }
+                            case ipv6-dynamic {
+                              description 'Dynamic VXLAN IP address.'
+                                          ;
+                              container ipv6-dynamics {
+                                description 'Dynamic VXLAN IP address.'
+                                            ;
+                                leaf ipv6-remote {
+                                  description 'The remote IPv6 address.'
+                                              ;
+                                  type ncd:ipv6-address ;
+                                  mandatory true ;
+                                }
+                                leaf ipv6-local {
+                                  description 'The local IPv6 address.'
+                                              ;
+                                  type ncd:ipv6-address ;
+                                  mandatory true ;
+                                }
+                              }
+                              ncd:revise-date 2020-04-13 ;
+                            }
+                          }
+                          leaf pattern {
+                            description 'The pad bytes.'
+                                        ;
+                            type string {
+                              length 4 {
+                                description 'The pattern string.'
+                                            ;
+                              }
+                            }
+                            ncd:revise-date 2020-04-13 ;
+                          }
+                        }
+                        ncd:revise-date 2019-08-30 ;
+                      }
+                    }
+                  }
+                  container common-option {
+                    description 'Option parameters for IPv4 PING.'
+                                ;
+                    choice speed {
+                      description 'The mode of sending packets.'
+                                  ;
+                      case limit-mode {
+                        description 'The mode which controls how many packets s'
+                                  + 'ent in a second.'
+                                    ;
+                        leaf limit {
+                          description 'The number of sending packets in a secon'
+                                    + 'd, 0 means no limit.'
+                                      ;
+                          type uint8 {
+                            range 0..100 {
+                              description 'The number of sending packets in a second, 0 means no limit.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                      case interval-mode {
+                        description 'The mode which controls how long between t'
+                                  + 'wo sending packets.'
+                                    ;
+                        leaf interval {
+                          description 'The interval between two sending packets.'
+                                      ;
+                          type uint8 {
+                            range 2..10 {
+                              description 'The interval between two sending packets.'
+                                          ;
+                            }
+                          }
+                          units s ;
+                        }
+                      }
+                    }
+                    leaf df-bit {
+                      description 'Do not frag bit flag.'
+                                  ;
+                      type uint8 {
+                        range 0..1 {
+                          description 'Do not frag bit flag.'
+                                      ;
+                        }
+                      }
+                    }
+                    leaf repeat {
+                      description 'The repeat times of sending packets.'
+                                  ;
+                      type uint16 {
+                        range 1..65535 {
+                          description 'The repeat times of sending packets.'
+                                      ;
+                        }
+                      }
+                      default 5 ;
+                    }
+                    leaf size {
+                      description 'The packet size, include IP header.'
+                                  ;
+                      type uint16 {
+                        range 36..65507 {
+                          description 'The packet size, include IP header.'
+                                      ;
+                        }
+                      }
+                      units bytes ;
+                      default 100 ;
+                    }
+                    leaf timeout {
+                      description Timeout. ;
+                      type uint8 {
+                        range 1..60 {
+                          description Timeout. ;
+                        }
+                      }
+                      units s ;
+                      default 2 ;
+                    }
+                    leaf ttl {
+                      description 'Time to live.'
+                                  ;
+                      type uint8 {
+                        range 1..255 {
+                          description 'Time to live.'
+                                      ;
+                        }
+                      }
+                    }
+                    choice pkt-priority {
+                      description 'The priority of sending packets.'
+                                  ;
+                      case tos {
+                        description 'Type of service.'
+                                    ;
+                        leaf tos {
+                          description 'Type of service.'
+                                      ;
+                          type uint8 {
+                            range 0..255 {
+                              description 'Type of service.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                      case dscp {
+                        description 'Differentiated Services Code Point.'
+                                    ;
+                        leaf dscp {
+                          description 'Differentiated Services Code Point.'
+                                      ;
+                          type uint8 {
+                            range 0..63 {
+                              description 'Differentiated Services Code Point.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                      ncd:revise-date 2020-08-11 ;
+                    }
+                  }
+                }
+                case disable {
+                  description 'Stop IPv4 PING function.'
+                              ;
+                  leaf ping-disable {
+                    description 'Stop IPv4 PING function.'
+                                ;
+                    type empty ;
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        case ipv6 {
+          description 'IPv6 PING operation parameters.'
+                      ;
+          container ping6s {
+            description 'IPv6 PING operation parameters.'
+                        ;
+            list ping6 {
+              description 'IPv6 PING operation parameters.'
+                          ;
+              key serial-num ;
+              leaf serial-num {
+                description 'IPv6 PING serial number.'
+                            ;
+                type uint64 ;
+              }
+              choice status {
+                description 'The switch for turning on/off IPv6 PING.'
+                            ;
+                mandatory true ;
+                case enable {
+                  description 'Start IPv6 PING function.'
+                              ;
+                  leaf ping6-enable {
+                    description 'Start IPv6 PING function.'
+                                ;
+                    type empty ;
+                    mandatory true ;
+                  }
+                  container ping6-data {
+                    description 'Parameters for IPv6 PING.'
+                                ;
+                    choice ping6-type {
+                      description 'The type of IPv6 PING.'
+                                  ;
+                      mandatory true ;
+                      case normal {
+                        description 'Normal IPv6 PING.'
+                                    ;
+                        container normals {
+                          description 'Normal IPv6 PING.'
+                                      ;
+                          choice dest-type {
+                            description 'The type of normal IPv6 PING.'
+                                        ;
+                            case ip {
+                              description 'The destination of PING is IP address.'
+                                          ;
+                              leaf dst-ip {
+                                description 'The destination IPv6 address.'
+                                            ;
+                                type ncd:ipv6-address ;
+                                mandatory true ;
+                              }
+                            }
+                            case domain {
+                              description 'The destination of PING is domain name.'
+                                          ;
+                              leaf domain-name {
+                                description 'The domain name.'
+                                            ;
+                                type string {
+                                  length 1..128 {
+                                    description 'The domain name.'
+                                                ;
+                                  }
+                                }
+                                mandatory true ;
+                              }
+                            }
+                          }
+                        }
+                        container normal-option {
+                          description 'Normal IPv6 PING options.'
+                                      ;
+                          choice vrf {
+                            description 'The VRF type.'
+                                        ;
+                            case normal-vrf {
+                              description 'The normal VRF.'
+                                          ;
+                              leaf vrf-name {
+                                description 'The VRF name.'
+                                            ;
+                                type string {
+                                  length 1..32 {
+                                    description 'The VRF name.'
+                                                ;
+                                  }
+                                }
+                              }
+                            }
+                            case dcn-vrf {
+                              description 'The DCN VRF.'
+                                          ;
+                              leaf dcn {
+                                description 'Whether DCN VRF or not.'
+                                            ;
+                                type empty ;
+                              }
+                              ncd:revise-date 2016-06-29 ;
+                            }
+                          }
+                          leaf interface {
+                            description 'The interface of sending packets.'
+                                        ;
+                            type ncd:ifname {
+                              length 1..31 {
+                                description 'The interface of sending packets.'
+                                            ;
+                              }
+                            }
+                          }
+                          leaf source {
+                            description 'The source IP address of the packet.'
+                                        ;
+                            type ncd:ipv6-address ;
+                          }
+                          choice next-hop-option {
+                            description 'The next hop address.'
+                                        ;
+                            case ipv4-next-hop {
+                              description 'The next hop address.'
+                                          ;
+                              leaf ipv4-next-hop {
+                                description 'The Ipv4 next hop address.'
+                                            ;
+                                type ncd:ipv4-address-none-zero ;
+                              }
+                            }
+                            case ipv6-next-hop {
+                              description 'The next hop address.'
+                                          ;
+                              leaf ipv6-next-hop {
+                                description 'The Ipv6 next hop address.'
+                                            ;
+                                type ncd:ipv6-address-none-zero ;
+                              }
+                            }
+                            ncd:revise-date 2020-04-13 ;
+                          }
+                          leaf ecmp {
+                            description 'If detect all active pathes.'
+                                        ;
+                            type empty ;
+                            ncd:revise-date 2020-12-01 ;
+                          }
+                          leaf segment-list-id {
+                            description 'Segment list ID.'
+                                        ;
+                            type uint32 {
+                              range 1..4294967295 {
+                                description 'Segment list ID.'
+                                            ;
+                              }
+                            }
+                            ncd:revise-date 2022-03-02 ;
+                          }
+                        }
+                      }
+                      case vxlan {
+                        if-feature vxlan ;
+                        description VXLAN-IPv6-PING. ;
+                        container vxlans {
+                          description 'VXLAN IPv6 PING.'
+                                      ;
+                          leaf vrf-name {
+                            description 'The VRF name.'
+                                        ;
+                            type string {
+                              length 1..32 {
+                                description 'The VRF name.'
+                                            ;
+                              }
+                            }
+                            mandatory true ;
+                          }
+                          leaf dst-ip {
+                            description 'The destination IPv6 address.'
+                                        ;
+                            type ncd:ipv6-address ;
+                            mandatory true ;
+                          }
+                        }
+                        container vxlan-option {
+                          description 'Optional parameters of VXLAN IPv6 PING.'
+                                      ;
+                          leaf source {
+                            description 'The source IP address of the packet.'
+                                        ;
+                            type ncd:ipv4-address ;
+                          }
+                          choice underlay {
+                            description 'underlay VXLAN information.'
+                                        ;
+                            case dynamic {
+                              description 'Dynamic VXLAN Tunnel.'
+                                          ;
+                              container dynamics {
+                                description 'Dynamic VXLAN Tunnel.'
+                                            ;
+                                leaf remote-ip {
+                                  description 'The remote IPv4 address.'
+                                              ;
+                                  type ncd:ipv4-address ;
+                                  mandatory true ;
+                                }
+                                leaf local-ip {
+                                  description 'The local IPv4 address.'
+                                              ;
+                                  type ncd:ipv4-address ;
+                                  mandatory true ;
+                                }
+                              }
+                            }
+                            case ipv6-dynamic {
+                              description 'Dynamic VXLAN IP address.'
+                                          ;
+                              container ipv6-dynamics {
+                                description 'Dynamic VXLAN IP address.'
+                                            ;
+                                leaf ipv6-remote {
+                                  description 'The remote IPv6 address.'
+                                              ;
+                                  type ncd:ipv6-address ;
+                                  mandatory true ;
+                                }
+                                leaf ipv6-local {
+                                  description 'The local IPv6 address.'
+                                              ;
+                                  type ncd:ipv6-address ;
+                                  mandatory true ;
+                                }
+                              }
+                            }
+                            case static {
+                              description 'Static VXLAN Tunnel.'
+                                          ;
+                              container statics {
+                                description 'Static VXLAN Tunnel.'
+                                            ;
+                                leaf vxlan-interface {
+                                  description 'The VXLAN interface of sending packets.'
+                                              ;
+                                  type ncd:ifname {
+                                    length 1..31 {
+                                      description 'The VXLAN interface of sending packets.'
+                                                  ;
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                        ncd:revise-date 2020-04-13 ;
+                      }
+                      case srv6 {
+                        if-feature srv6 ;
+                        description 'SRv6 PING'
+                                    ;
+                        container srv6s {
+                          description 'SRv6 PING'
+                                      ;
+                          choice dest-type {
+                            description 'SRv6 PING type'
+                                        ;
+                            case sid {
+                              description 'SRv6 Segment ID.'
+                                          ;
+                              leaf sid {
+                                description 'SRv6 Segment ID.'
+                                            ;
+                                type ncd:ipv6-address-none-zero ;
+                                mandatory true ;
+                              }
+                              leaf end-op {
+                                description 'The END-OP SID.'
+                                            ;
+                                type ncd:ipv6-address-none-zero ;
+                                ncd:revise-date 2020-06-23 ;
+                              }
+                            }
+                            case tunnel {
+                              description 'SRv6 Tunnel'
+                                          ;
+                              leaf tunnel {
+                                description 'SRv6 tunnle ID'
+                                            ;
+                                type uint16 {
+                                  range 1..65535 {
+                                    description 'SRv6 tunnel ID'
+                                                ;
+                                  }
+                                }
+                                mandatory true ;
+                              }
+                              leaf lsp-role {
+                                description 'Lsp role of SRv6-TE lsp ping,include master and slave.'
+                                            ;
+                                type enumeration {
+                                  enum master {
+                                    value 1 ;
+                                    description 'The master lsp of SRv6-TE.'
+                                                ;
+                                  }
+                                  enum slave {
+                                    value 2 ;
+                                    description 'The slave lsp of SRv6-TE'
+                                                ;
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                        container srv6-option {
+                          description 'Optional parameters of SRv6 PING.'
+                                      ;
+                          leaf source {
+                            description 'The source IP address of the packet.'
+                                        ;
+                            type ncd:ipv6-address-none-zero ;
+                          }
+                          leaf o-flag {
+                            description 'OAM flag.'
+                                        ;
+                            type empty ;
+                            ncd:revise-date 2021-05-28 ;
+                          }
+                          leaf slice-id {
+                            description 'Slice ID.'
+                                        ;
+                            type uint32 {
+                              range 1..4294967295 {
+                                description 'Slice ID value'
+                                            ;
+                              }
+                            }
+                            ncd:revise-date 2021-12-27 ;
+                          }
+                        }
+                        ncd:revise-date 2020-04-13 ;
+                      }
+                      case srv6-policy {
+                        if-feature srv6 ;
+                        description 'SRv6 PING'
+                                    ;
+                        container srv6-policys {
+                          description 'SRv6 PING'
+                                      ;
+                          choice dest-type {
+                            description 'SRv6 PING type'
+                                        ;
+                            mandatory true ;
+                            case policy-name {
+                              description 'Policy name.'
+                                          ;
+                              leaf policy-name {
+                                description 'Policy name.'
+                                            ;
+                                type string {
+                                  length 1..63 {
+                                    description 'Policy name'
+                                                ;
+                                  }
+                                }
+                                mandatory true ;
+                              }
+                            }
+                            case endpoint {
+                              description 'Endpoint IP address.'
+                                          ;
+                              leaf endpoint {
+                                description 'Endpoint IP address'
+                                            ;
+                                type ncd:ipv6-address-none-zero ;
+                                mandatory true ;
+                              }
+                              leaf color-id {
+                                description 'Color id.'
+                                            ;
+                                type uint32 {
+                                  range 1..4294967295 {
+                                    description 'Color value'
+                                                ;
+                                  }
+                                }
+                                mandatory true ;
+                              }
+                            }
+                          }
+                          container srv6-policy-option {
+                            description 'Optional parameters of SRv6 PING.'
+                                        ;
+                            choice end-type {
+                              case end-op {
+                                description 'The END-OP SID.'
+                                            ;
+                                leaf end-op {
+                                  description 'The END-OP SID.'
+                                              ;
+                                  type ncd:ipv6-address-none-zero ;
+                                }
+                              }
+                              case destination {
+                                description 'Local IPv6 address or SRv6 local SID of the destination.'
+                                            ;
+                                leaf destination {
+                                  description 'Local IPv6 address or SRv6 local SID of the destination.'
+                                              ;
+                                  type ncd:ipv6-address-none-zero ;
+                                }
+                              }
+                              ncd:revise-date 2021-06-01 ;
+                            }
+                            choice filter-type {
+                              case path-type {
+                                description 'Path type'
+                                            ;
+                                leaf path-type {
+                                  description 'Path type'
+                                              ;
+                                  type enumeration {
+                                    enum master {
+                                      value 0 ;
+                                      description 'Master path.'
+                                                  ;
+                                    }
+                                    enum slave {
+                                      value 1 ;
+                                      description 'Slave path.'
+                                                  ;
+                                    }
+                                  }
+                                }
+                              }
+                              case segment-list {
+                                description 'Segment list.'
+                                            ;
+                                leaf segment-list-id {
+                                  description 'Segment list ID.'
+                                              ;
+                                  type uint32 {
+                                    range 1..4294967295 {
+                                      description 'Segment list ID.'
+                                                  ;
+                                    }
+                                  }
+                                }
+                              }
+                              ncd:revise-date 2022-06-20 ;
+                            }
+                            leaf source {
+                              description 'The source IP address of the packet.'
+                                          ;
+                              type ncd:ipv6-address-none-zero ;
+                            }
+                            leaf o-flag {
+                              description 'OAM flag.'
+                                          ;
+                              type empty ;
+                              ncd:revise-date 2021-05-28 ;
+                            }
+                            leaf full-notify {
+                              description 'Notify all results together after ping done.'
+                                          ;
+                              type empty ;
+                              ncd:revise-date 2021-06-01 ;
+                            }
+                            leaf slice {
+                              description 'Specify path with slice ID.'
+                                          ;
+                              type empty ;
+                              ncd:revise-date 2021-12-27 ;
+                            }
+                          }
+                        }
+                        ncd:revise-date 2020-05-15 ;
+                      }
+                      case uni {
+                        if-feature uni-nni-ping-ipv6 ;
+                        description UNI-PING-IPv6. ;
+                        container unis {
+                          description UNI-PING. ;
+                          leaf dst-ip {
+                            description 'The destination IPv6 address.'
+                                        ;
+                            type ncd:ipv6-address ;
+                            mandatory true ;
+                          }
+                          leaf vrf-name {
+                            description 'The VRF name.'
+                                        ;
+                            type string {
+                              length 1..32 {
+                                description 'The VRF name.'
+                                            ;
+                              }
+                            }
+                          }
+                        }
+                        ncd:revise-date 2021-03-30 ;
+                      }
+                      case nni {
+                        if-feature uni-nni-ping-ipv6 ;
+                        description NNI-PING-IPv6. ;
+                        container nnis {
+                          description NNI-PING-IPv6. ;
+                          leaf dst-ip {
+                            description 'The destination IPv6 address.'
+                                        ;
+                            type ncd:ipv6-address ;
+                            mandatory true ;
+                          }
+                          leaf next-hop {
+                            description 'The next hop IPv6 address for NNI-PING.'
+                                        ;
+                            type ncd:ipv6-address-none-zero ;
+                            mandatory true ;
+                          }
+                          leaf vrf-name {
+                            description 'The VRF name.'
+                                        ;
+                            type string {
+                              length 1..32 {
+                                description 'The VRF name.'
+                                            ;
+                              }
+                            }
+                          }
+                        }
+                        ncd:revise-date 2021-03-30 ;
+                      }
+                    }
+                  }
+                  container common-option {
+                    description 'Option parameters for IPv6 PING.'
+                                ;
+                    choice speed {
+                      description 'The mode of sending packets.'
+                                  ;
+                      case limit-mode {
+                        description 'The mode which controls how many packets s'
+                                  + 'ent in a second.'
+                                    ;
+                        leaf limit {
+                          description 'The number of sending packets in a secon'
+                                    + 'd.'
+                                      ;
+                          type uint8 {
+                            range 0..100 {
+                              description 'The number of sending packets in a second.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                    }
+                    leaf repeat {
+                      description 'The repeat times of sending packets.'
+                                  ;
+                      type uint16 {
+                        range 1..65535 {
+                          description 'The repeat times of sending packets.'
+                                      ;
+                        }
+                      }
+                      default 5 ;
+                    }
+                    leaf size {
+                      description 'The packet size, include IP header.'
+                                  ;
+                      type uint16 {
+                        range 64..65507 {
+                          description 'The packet size, include IP header.'
+                                      ;
+                        }
+                      }
+                      units bytes ;
+                      default 100 ;
+                    }
+                    leaf timeout {
+                      description Timeout. ;
+                      type uint8 {
+                        range 1..60 {
+                          description Timeout. ;
+                        }
+                      }
+                      units s ;
+                      default 2 ;
+                    }
+                    leaf pattern {
+                      description 'The pad bytes.'
+                                  ;
+                      type string {
+                        length 4 {
+                          description 'The pattern string.'
+                                      ;
+                        }
+                      }
+                      ncd:revise-date 2019-07-10 ;
+                    }
+                    choice pkt-priority {
+                      description 'The priority of sending packets.'
+                                  ;
+                      case tc {
+                        description 'Traffic class.'
+                                    ;
+                        leaf tc {
+                          description 'Traffic class.'
+                                      ;
+                          type uint8 {
+                            range 0..255 {
+                              description 'Traffic class.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                      case dscp {
+                        description 'Differentiated Services Code Point.'
+                                    ;
+                        leaf dscp {
+                          description 'Differentiated Services Code Point.'
+                                      ;
+                          type uint8 {
+                            range 0..63 {
+                              description 'Differentiated Services Code Point.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                      ncd:revise-date 2020-08-11 ;
+                    }
+                  }
+                }
+                case disable {
+                  description 'Stop IPv6 PING function.'
+                              ;
+                  leaf ping6-disable {
+                    description 'Stop IPv6 PING function.'
+                                ;
+                    type empty ;
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    container ping-vxlan-vni {
+      if-feature vxlan ;
+      description 'PING VXLAN vni operation parameters.'
+                  ;
+      list ping-vxlan-vnis {
+        description 'PING VXLAN vni operation parameters.'
+                    ;
+        key serial-num ;
+        leaf serial-num {
+          description 'IPv4 PING serial number.'
+                      ;
+          type uint64 ;
+        }
+        choice status {
+          description 'The switch for turning on/off IPv4 PING.'
+                      ;
+          mandatory true ;
+          case enable {
+            description 'Start IPv4 PING function.'
+                        ;
+            leaf ping-enable {
+              description 'Start IPv4 PING function.'
+                          ;
+              type empty ;
+              mandatory true ;
+            }
+            container ping-data {
+              description 'Parameters for IPv4 PING.'
+                          ;
+              leaf vni-id {
+                description 'VXLAN network ID.'
+                            ;
+                type uint32 {
+                  range 1..16777215 {
+                    description 'VNI ID'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+              choice underlay {
+                description 'underlay VXLAN information.'
+                            ;
+                mandatory true ;
+                case dynamic {
+                  description 'Dynamic VXLAN Tunnel.'
+                              ;
+                  container dynamics {
+                    description 'Dynamic VXLAN Tunnel.'
+                                ;
+                    leaf local-ip {
+                      description 'The local IPv4 address.'
+                                  ;
+                      type ncd:ipv4-address ;
+                      mandatory true ;
+                    }
+                    leaf remote-ip {
+                      description 'The remote IPv4 address.'
+                                  ;
+                      type ncd:ipv4-address ;
+                      mandatory true ;
+                    }
+                  }
+                }
+                case ipv6-dynamic {
+                  description 'Dynamic VXLAN IP address.'
+                              ;
+                  container ipv6-dynamics {
+                    description 'Dynamic VXLAN IP address.'
+                                ;
+                    leaf ipv6-local {
+                      description 'The local IPv6 address.'
+                                  ;
+                      type ncd:ipv6-address ;
+                      mandatory true ;
+                    }
+                    leaf ipv6-remote {
+                      description 'The remote IPv6 address.'
+                                  ;
+                      type ncd:ipv6-address ;
+                      mandatory true ;
+                    }
+                  }
+                }
+                case static {
+                  description 'Static VXLAN Tunnel.'
+                              ;
+                  container statics {
+                    description 'Static VXLAN Tunnel.'
+                                ;
+                    leaf vxlan-interface {
+                      description 'The VXLAN interface of sending packets.'
+                                  ;
+                      type ncd:ifname {
+                        length 1..31 {
+                          description 'The VXLAN interface of sending packets.'
+                                      ;
+                        }
+                      }
+                      mandatory true ;
+                    }
+                  }
+                }
+              }
+            }
+            container common-option {
+              description 'Option parameters for IPv4 PING.'
+                          ;
+              leaf repeat {
+                description 'The repeat times of sending packets.'
+                            ;
+                type uint16 {
+                  range 1..65535 {
+                    description 'The repeat times of sending packets.'
+                                ;
+                  }
+                }
+                default 5 ;
+              }
+              leaf size {
+                description 'The packet size, include IP header.'
+                            ;
+                type uint16 {
+                  range 36..65507 {
+                    description 'The packet size, include IP header.'
+                                ;
+                  }
+                }
+                units bytes ;
+                default 100 ;
+              }
+              leaf timeout {
+                description Timeout. ;
+                type uint8 {
+                  range 1..60 {
+                    description Timeout. ;
+                  }
+                }
+                units s ;
+                default 2 ;
+              }
+              leaf pattern {
+                description 'The pad bytes.'
+                            ;
+                type string {
+                  length 4 {
+                    description 'The pattern string.'
+                                ;
+                  }
+                }
+              }
+              choice speed {
+                description 'The mode of sending packets.'
+                            ;
+                case limit-mode {
+                  description 'The mode which controls how many packets sent in'
+                            + ' a second.'
+                              ;
+                  leaf limit {
+                    description 'The number of sending packets in a second, 0 m'
+                              + 'eans no limit.'
+                                ;
+                    type uint8 {
+                      range 0..100 {
+                        description 'The number of sending packets in a second,'
+                                  + ' 0 means no limit.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+                case interval-mode {
+                  description 'The mode which controls how long between two sen'
+                            + 'ding packets.'
+                              ;
+                  leaf interval {
+                    description 'The interval between two sending packets.'
+                                ;
+                    type uint8 {
+                      range 2..10 {
+                        description 'The interval between two sending packets.'
+                                    ;
+                      }
+                    }
+                    units s ;
+                  }
+                }
+              }
+            }
+          }
+          case disable {
+            description 'Stop IPv4 PING function.'
+                        ;
+            leaf ping-disable {
+              description 'Stop IPv4 PING function.'
+                          ;
+              type empty ;
+              mandatory true ;
+            }
+          }
+        }
+      }
+      ncd:revise-date 2020-04-13 ;
+    }
+    container forward-ping {
+      if-feature forward-ping-for-all ;
+      description 'Forward-ping operation parameters.'
+                  ;
+      choice ip-type {
+        description 'The type of forward-ping operation, IPV4 or IPV6.'
+                    ;
+        case ipv4 {
+          description 'IPv4 forward-ping operation parameters.'
+                      ;
+          container ipv4-insts {
+            description 'IPv4 forward-ping operation instances.'
+                        ;
+            list ipv4-inst {
+              description 'IPv4 forward-ping operation instance.'
+                          ;
+              key serial-num ;
+              leaf serial-num {
+                description 'IPv4 forward-ping serial number.'
+                            ;
+                type uint64 ;
+              }
+              choice status {
+                description 'The switch for turning on/off IPv4 forward-ping.'
+                            ;
+                mandatory true ;
+                case enable {
+                  description 'Start IPv4 forward-ping function.'
+                              ;
+                  leaf forward-ping4-enable {
+                    description 'Start IPv4 forward-ping function.'
+                                ;
+                    type empty ;
+                    mandatory true ;
+                  }
+                  container forward-ping4-data {
+                    description 'Parameters for IPv4 forward-ping.'
+                                ;
+                    leaf dst-ip {
+                      description 'The IPv4 destination address.'
+                                  ;
+                      type ncd:ipv4-address ;
+                      mandatory true ;
+                    }
+                    leaf src-ip {
+                      description 'The IPv4 source address.'
+                                  ;
+                      type ncd:ipv4-address ;
+                      mandatory true ;
+                    }
+                    leaf src-interface {
+                      description 'Source interface.'
+                                  ;
+                      type ncd:ifname {
+                        length 1..31 {
+                          description 'Source interface.'
+                                      ;
+                        }
+                      }
+                      mandatory true ;
+                    }
+                    leaf src-mac {
+                      description 'Source mac address.'
+                                  ;
+                      type ncd:mac-address-none-zero ;
+                    }
+                    leaf dst-mac {
+                      description 'Destination mac address.'
+                                  ;
+                      type ncd:mac-address-none-zero ;
+                    }
+                    leaf next-hop {
+                      if-feature forward-ping-send-paras ;
+                      description 'The next hop address.'
+                                  ;
+                      type ncd:ipv4-address ;
+                    }
+                    choice vrf {
+                      if-feature forward-ping-send-paras ;
+                      description 'The VRF type.'
+                                  ;
+                      case normal-vrf {
+                        description 'The normal VRF.'
+                                    ;
+                        leaf vrf-name {
+                          description 'The VRF name.'
+                                      ;
+                          type string {
+                            length 1..32 {
+                              description 'The VRF name.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                    }
+                    leaf-list label-stack-list {
+                      if-feature forward-ping-vlan ;
+                      description 'List of label-stack.'
+                                  ;
+                      type ncd:hex ;
+                      ncd:revise-date 2021-09-03 ;
+                    }
+                    choice vlan {
+                      if-feature forward-ping-vlan ;
+                      description 'Vlan ID.'
+                                  ;
+                      case single-layer-vlan {
+                        description 'Single layer vlan ID.'
+                                    ;
+                        leaf single-layer-vlan {
+                          description 'Single layer vlan ID.'
+                                      ;
+                          type int16 {
+                            range 1..4094 ;
+                          }
+                        }
+                      }
+                      case multi-layer-vlan {
+                        description 'Multi-layer vlan ID.'
+                                    ;
+                        leaf external-vlan {
+                          description 'External vlan ID.'
+                                      ;
+                          type int16 {
+                            range 1..4094 ;
+                          }
+                          mandatory true ;
+                        }
+                        leaf internal-vlan {
+                          description 'Internal vlan ID.'
+                                      ;
+                          type int16 {
+                            range 1..4094 ;
+                          }
+                          mandatory true ;
+                        }
+                      }
+                    }
+                  }
+                  container common-option {
+                    description 'Option parameters for IPv4 forward-ping.'
+                                ;
+                    leaf repeat {
+                      description 'The repeat times of sending packets.'
+                                  ;
+                      type uint16 {
+                        range 1..65535 {
+                          description 'The repeat times of sending packets.'
+                                      ;
+                        }
+                      }
+                      default 5 ;
+                    }
+                    leaf size {
+                      description 'The packet size, include IP header.'
+                                  ;
+                      type uint16 {
+                        range 36..65507 {
+                          description 'The packet size, include IP header.'
+                                      ;
+                        }
+                      }
+                      units bytes ;
+                      default 100 ;
+                    }
+                    leaf timeout {
+                      description Timeout. ;
+                      type uint8 {
+                        range 1..60 {
+                          description Timeout. ;
+                        }
+                      }
+                      units s ;
+                      default 2 ;
+                    }
+                    leaf pattern {
+                      description 'The pad bytes.'
+                                  ;
+                      type string {
+                        length 4 {
+                          description 'The pattern string.'
+                                      ;
+                        }
+                      }
+                    }
+                    choice speed {
+                      description 'The mode of sending packets.'
+                                  ;
+                      case limit-mode {
+                        description 'The mode which controls how many packets s'
+                                  + 'ent in a second.'
+                                    ;
+                        leaf limit {
+                          description 'The number of sending packets in a secon'
+                                    + 'd, 0 means no limit.'
+                                      ;
+                          type uint8 {
+                            range 0..100 {
+                              description 'The number of sending packets in a second, 0 means no limit.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                      case interval-mode {
+                        description 'The mode which controls how long between t'
+                                  + 'wo sending packets.'
+                                    ;
+                        leaf interval {
+                          description 'The interval between two sending packets.'
+                                      ;
+                          type uint8 {
+                            range 2..10 {
+                              description 'The interval between two sending packets.'
+                                          ;
+                            }
+                          }
+                          units s ;
+                        }
+                      }
+                    }
+                    leaf ttl {
+                      description 'Time to live.'
+                                  ;
+                      type uint8 {
+                        range 1..255 {
+                          description 'Time to live.'
+                                      ;
+                        }
+                      }
+                    }
+                    choice pkt-priority {
+                      description 'The priority of sending packets.'
+                                  ;
+                      case tos {
+                        description 'Type of service.'
+                                    ;
+                        leaf tos {
+                          description 'Type of service.'
+                                      ;
+                          type uint8 {
+                            range 0..255 ;
+                          }
+                        }
+                      }
+                      case dscp {
+                        description 'Differentiated Services Code Point.'
+                                    ;
+                        leaf dscp {
+                          description 'Differentiated Services Code Point.'
+                                      ;
+                          type uint8 {
+                            range 0..63 {
+                              description 'Differentiated Services Code Point.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                      ncd:revise-date 2020-08-11 ;
+                    }
+                  }
+                }
+                case disable {
+                  description 'Terminate IPv4 forward-ping function.'
+                              ;
+                  leaf forward-ping4-disable {
+                    description 'Terminate IPv4 forward-ping function.'
+                                ;
+                    type empty ;
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        case ipv6 {
+          if-feature forward-ping-ipv6 ;
+          description 'IPv6 forward-ping operation parameters.'
+                      ;
+          container ipv6-insts {
+            description 'IPv6 forward-ping operation instances.'
+                        ;
+            list ipv6-inst {
+              description 'IPv6 forward-ping operation instance.'
+                          ;
+              key serial-num ;
+              leaf serial-num {
+                description 'IPv6 forward-ping serial number.'
+                            ;
+                type uint64 ;
+              }
+              choice status {
+                description 'The switch for turning on/off IPv6 forward-ping.'
+                            ;
+                mandatory true ;
+                case enable {
+                  description 'Start IPv6 forward-ping function.'
+                              ;
+                  leaf forward-ping6-enable {
+                    description 'Start IPv6 forward-ping function.'
+                                ;
+                    type empty ;
+                    mandatory true ;
+                  }
+                  container forward-ping6-data {
+                    description 'Parameters for IPv6 forward-ping.'
+                                ;
+                    leaf dst-ip {
+                      description 'The IPv6 destination address.'
+                                  ;
+                      type ncd:ipv6-address ;
+                      mandatory true ;
+                    }
+                    leaf src-ip {
+                      description 'The IPv6 source address.'
+                                  ;
+                      type ncd:ipv6-address-none-zero ;
+                      mandatory true ;
+                    }
+                    leaf src-interface {
+                      description 'Source interface.'
+                                  ;
+                      type ncd:ifname {
+                        length 1..31 {
+                          description 'Source interface.'
+                                      ;
+                        }
+                      }
+                      mandatory true ;
+                    }
+                    leaf src-mac {
+                      description 'Source mac address.'
+                                  ;
+                      type ncd:mac-address-none-zero ;
+                    }
+                    leaf dst-mac {
+                      description 'Destination mac address.'
+                                  ;
+                      type ncd:mac-address-none-zero ;
+                    }
+                    choice vrf {
+                      if-feature forward-ping-send-paras ;
+                      description 'The VRF type.'
+                                  ;
+                      case normal-vrf {
+                        description 'The normal VRF.'
+                                    ;
+                        leaf vrf-name {
+                          description 'The VRF name.'
+                                      ;
+                          type string {
+                            length 1..32 {
+                              description 'The VRF name.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                  container common-option {
+                    description 'Option parameters for IPv6 forward-ping.'
+                                ;
+                    leaf repeat {
+                      description 'The repeat times of sending packets.'
+                                  ;
+                      type uint16 {
+                        range 1..65535 {
+                          description 'The repeat times of sending packets.'
+                                      ;
+                        }
+                      }
+                      default 5 ;
+                    }
+                    leaf size {
+                      description 'The packet size, include IP header.'
+                                  ;
+                      type uint16 {
+                        range 64..65507 {
+                          description 'The packet size, include IP header.'
+                                      ;
+                        }
+                      }
+                      units bytes ;
+                      default 100 ;
+                    }
+                    leaf timeout {
+                      description Timeout. ;
+                      type uint8 {
+                        range 1..60 {
+                          description Timeout. ;
+                        }
+                      }
+                      units s ;
+                      default 2 ;
+                    }
+                    leaf pattern {
+                      description 'The pad bytes.'
+                                  ;
+                      type string {
+                        length 4 {
+                          description 'The pattern string.'
+                                      ;
+                        }
+                      }
+                    }
+                    choice speed {
+                      description 'The mode of sending packets.'
+                                  ;
+                      case limit-mode {
+                        description 'The mode which controls how many packets s'
+                                  + 'ent in a second.'
+                                    ;
+                        leaf limit {
+                          description 'The number of sending packets in a secon'
+                                    + 'd, 0 means no limit.'
+                                      ;
+                          type uint8 {
+                            range 0..100 {
+                              description 'The number of sending packets in a second, 0 means no limit.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                      case interval-mode {
+                        description 'The mode which controls how long between t'
+                                  + 'wo sending packets.'
+                                    ;
+                        leaf interval {
+                          description 'The interval between two sending packets.'
+                                      ;
+                          type uint8 {
+                            range 2..10 {
+                              description 'The interval between two sending packets.'
+                                          ;
+                            }
+                          }
+                          units s ;
+                        }
+                      }
+                    }
+                    choice pkt-priority {
+                      description 'The priority of sending packets.'
+                                  ;
+                      case tc {
+                        description 'Traffic class.'
+                                    ;
+                        leaf tc {
+                          description 'Traffic class.'
+                                      ;
+                          type uint8 {
+                            range 0..255 ;
+                          }
+                        }
+                      }
+                      case dscp {
+                        description 'Differentiated Services Code Point.'
+                                    ;
+                        leaf dscp {
+                          description 'Differentiated Services Code Point.'
+                                      ;
+                          type uint8 {
+                            range 0..63 {
+                              description 'Differentiated Services Code Point.'
+                                          ;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                case disable {
+                  description 'Terminate IPv6 forward-ping function.'
+                              ;
+                  leaf forward-ping6-disable {
+                    description 'Terminate IPv6 forward-ping function.'
+                                ;
+                    type empty ;
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+          }
+          ncd:revise-date 2021-03-20 ;
+        }
+      }
+      ncd:revise-date 2020-07-30 ;
+    }
+    container ce-ping {
+      if-feature ce-ping ;
+      description 'CE PING operation parameters.'
+                  ;
+      choice ip-type {
+        description 'The type of ce-ping operation, IPV4 or IPV6.'
+                    ;
+        case ipv4 {
+          description 'IPv4 ce-ping operation parameters.'
+                      ;
+          container ipv4-insts {
+            description 'IPv4 ce-ping operation instances.'
+                        ;
+            list ipv4-inst {
+              description 'IPv4 ce-ping operation instance.'
+                          ;
+              key serial-num ;
+              leaf serial-num {
+                description 'IPv4 ce-ping serial number.'
+                            ;
+                type uint64 ;
+              }
+              choice status {
+                description 'The switch for turning on/off IPv4 ce-ping.'
+                            ;
+                mandatory true ;
+                case enable {
+                  description 'Start IPv4 ce-ping function.'
+                              ;
+                  leaf ping-enable {
+                    description 'Start IPv4 ce-ping function.'
+                                ;
+                    type empty ;
+                    mandatory true ;
+                  }
+                  container ping-data {
+                    description 'Parameters for IPv4 ce-ping.'
+                                ;
+                    leaf dst-ip {
+                      description 'The IPv4 destination address.'
+                                  ;
+                      type ncd:ipv4-address-none-zero ;
+                      mandatory true ;
+                    }
+                    leaf vpls {
+                      description 'VPLS instance name.'
+                                  ;
+                      type string {
+                        length 1..32 {
+                          description 'Instance name.'
+                                      ;
+                        }
+                      }
+                      mandatory true ;
+                    }
+                    leaf src-ip {
+                      description 'The IPv4 source address.'
+                                  ;
+                      type ncd:ipv4-address-none-zero ;
+                      mandatory true ;
+                    }
+                  }
+                  container common-option {
+                    description 'Option parameters for IPv4 PING.'
+                                ;
+                    leaf repeat {
+                      description 'The repeat times of sending packets.'
+                                  ;
+                      type uint16 {
+                        range 1..100 {
+                          description 'The repeat times of sending packets.'
+                                      ;
+                        }
+                      }
+                      default 5 ;
+                    }
+                    leaf timeout {
+                      description Timeout. ;
+                      type uint8 {
+                        range 1..60 {
+                          description Timeout. ;
+                        }
+                      }
+                      units s ;
+                      default 2 ;
+                    }
+                  }
+                }
+                case disable {
+                  description 'Stop IPv4 ce-ping function.'
+                              ;
+                  leaf ping-disable {
+                    description 'Stop IPv4 ce-ping function.'
+                                ;
+                    type empty ;
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      ncd:revise-date 2022-07-12 ;
+    }
+  }
+  container state {
+    config false ;
+    description 'PING state model info.'
+                ;
+    container pings {
+      description 'PING state models.'
+                  ;
+      list ping {
+        description 'The detail result information of PING.'
+                    ;
+        key serial-num ;
+        leaf serial-num {
+          description 'PING serial number.'
+                      ;
+          type uint64 ;
+        }
+        leaf send-pkts {
+          description 'The number of send packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf rcv-pkts {
+          description 'The number of receive packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf min-time {
+          description 'The minimum of round trip time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf max-time {
+          description 'The maximum of round trip time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf avg-time {
+          description 'The average value of round trip time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf wobble-min-time {
+          description 'The minimum of wobble time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf wobble-max-time {
+          description 'The maximum of wobble time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf wobble-avg-time {
+          description 'The average value of wobble time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+      }
+    }
+  }
+  container configuration {
+    description 'PING configuration model info.'
+                ;
+    container ping {
+      description 'PING configuration parameters.'
+                  ;
+      container interface-paras {
+        if-feature uni-nni-oam-cfg ;
+        description 'PING configure interface parameter.'
+                    ;
+        list interface-para {
+          description 'PING configure interface parameter.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name for ping trace'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'Interface name for ping trace'
+                            ;
+              }
+            }
+          }
+          leaf uni-nni-oam {
+            description 'configure UNI NNI ping trace'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable UNI NNI ping trace'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Enable UNI NNI ping trace'
+                            ;
+              }
+            }
+          }
+        }
+      }
+      container global {
+        description 'global configure information.'
+                    ;
+        container vxlan-gpe-echo {
+          if-feature vxlan ;
+          description 'Configure function of sending VXLAN GPE echo reply.'
+                      ;
+          leaf enable {
+            description 'Enable sending VXLAN GPE echo reply or not.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable VXLAN GPE echo reply.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Enable VXLAN GPE echo reply.'
+                            ;
+              }
+            }
+            default disable ;
+          }
+        }
+        container arp-oam {
+          if-feature ce-ping ;
+          description 'Configure arp-oam switch.'
+                      ;
+          leaf enable {
+            description 'Enable or disable arp-oam.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable arp-oam'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Enable arp-oam.'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          ncd:revise-date 2022-07-12 ;
+        }
+        ncd:revise-date 2020-04-13 ;
+      }
+    }
+    ncd:revise-date 2016-06-29 ;
+  }
+  notification notification {
+    description 'ping event notification'
+                ;
+    container pings {
+      config false ;
+      description 'PING event model info.'
+                  ;
+      list ping {
+        description 'The detail notification information of PING.'
+                    ;
+        key serial-num ;
+        leaf serial-num {
+          description 'PING serial number.'
+                      ;
+          type uint64 ;
+        }
+        leaf send-pkts {
+          description 'The number of send packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf rcv-pkts {
+          description 'The number of receive packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf min-time {
+          description 'The minimum of round trip time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf max-time {
+          description 'The maximum of round trip time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf avg-time {
+          description 'The average value of round trip time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf wobble-min-time {
+          description 'The minimum of wobble time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf wobble-max-time {
+          description 'The maximum of wobble time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf wobble-avg-time {
+          description 'The average value of wobble time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+      }
+    }
+    container ping-path-results {
+      config false ;
+      description 'The detail notification information of PING.'
+                  ;
+      list ping-path-result {
+        description 'The detail notification information of PING.'
+                    ;
+        key 'serial-num path-num'
+            ;
+        leaf serial-num {
+          description 'PING serial number.'
+                      ;
+          type uint64 ;
+        }
+        leaf path-num {
+          description 'The detect path number.'
+                      ;
+          type uint32 ;
+        }
+        leaf segment-list-id {
+          description 'Segment-List ID.'
+                      ;
+          type uint32 ;
+        }
+        leaf path-type {
+          description 'Path type.'
+                      ;
+          type enumeration {
+            enum master {
+              value 0 ;
+              description master ;
+            }
+            enum slave {
+              value 1 ;
+              description slave ;
+            }
+          }
+        }
+        leaf protocol-origin {
+          description 'Protocol origin.'
+                      ;
+          type enumeration {
+            enum pcep {
+              value 10 ;
+            }
+            enum bgp {
+              value 20 ;
+            }
+            enum config {
+              value 30 ;
+            }
+            enum unknown {
+              value 0 ;
+            }
+          }
+        }
+        leaf discriminator {
+          description Discriminator. ;
+          type uint32 ;
+        }
+        leaf autonomous-system {
+          description 'Autonomous System ID.'
+                      ;
+          type uint32 ;
+        }
+        leaf originator-address {
+          description 'Originator address.'
+                      ;
+          type string ;
+        }
+        leaf send-pkts {
+          description 'The number of send packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf rcv-pkts {
+          description 'The number of receive packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf min-time {
+          description 'The minimum of round trip time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf max-time {
+          description 'The maximum of round trip time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf avg-time {
+          description 'The average value of round trip time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf wobble-min-time {
+          description 'The minimum of wobble time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf wobble-max-time {
+          description 'The maximum of wobble time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        leaf wobble-avg-time {
+          description 'The average value of wobble time in milliseconds.'
+                      ;
+          type uint32 ;
+          units ms ;
+        }
+        container segment-list {
+          description 'SRv6 segment list.'
+                      ;
+          leaf-list sid {
+            description 'SRv6 Segment ID.'
+                        ;
+            type ncd:ipv6-address-none-zero ;
+            ncd:revise-date 2021-09-03 ;
+          }
+          ncd:revise-date 2021-06-01 ;
+        }
+      }
+      ncd:revise-date 2020-05-15 ;
+    }
+    container ce-ping-results {
+      config false ;
+      description 'The detail notification information of ce-ping.'
+                  ;
+      list ce-ping-result {
+        description 'The detail notification information of ce-ping.'
+                    ;
+        key serial-num ;
+        leaf serial-num {
+          description 'PING serial number.'
+                      ;
+          type uint64 ;
+        }
+        leaf dst-addr {
+          description 'Destination address.'
+                      ;
+          type string {
+            length 1..47 {
+              description 'IP address.'
+                          ;
+            }
+          }
+        }
+        leaf dst-mac {
+          description 'Destination MAC address.'
+                      ;
+          type ncd:mac-address ;
+        }
+      }
+      ncd:revise-date 2022-07-12 ;
+    }
+    ncd:revise-date 2014-12-12 ;
+  }
+}

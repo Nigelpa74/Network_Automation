@@ -1,0 +1,1532 @@
+module zxr10-of-config {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/of-config'
+            ;
+  prefix of-config ;
+  yang-version 1 ;
+  import ietf-inet-types {
+    prefix inet ;
+  }
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ONF Config Management Group'
+               ;
+  contact tbd ;
+  description "NETCONF Operational Considerations\nElements that are configurab"
+            + "le, optional and have a default\nvalue MAY be reported by replie"
+            + "sto NETCONF <get-config>\nrequests. All non-configurable values "
+            + "SHOULD be reported by\nreplies to NETCONF <get> requests.\nAttem"
+            + "psto modify non-configurable elements with a NETCONF\n<edit-conf"
+            + "ig> operation MUST result in an\n'operation-not-supported' error"
+            + " with type 'application'.\nWhen validating an <edit??config> ope"
+            + "ration the following\nerrors MUST be detected:\n* Delete request"
+            + "s fornon-existent data. In this case a\n'data-missing' error is "
+            + "returned.\n* Create requests for existent data. In this case a\n"
+            + "'data-exists' error is returned.\n* If the NETCONF operation cre"
+            + "ates data nodes under a\n'choice', any existing nodes from other"
+            + " branches are\ndeleted."
+              ;
+  revision 2021-08-09 {
+    description 'The globle port list node and all its child nodes do not take '
+              + 'effect.'
+                ;
+  }
+  revision 2021-03-22 {
+    description 'The default diag-mode of the logic switch is changed from sdn '
+              + 'to traditional.'
+                ;
+  }
+  revision 2019-12-23 {
+    description 'Add container tcp-mss with leaf size.'
+                ;
+  }
+  revision 2018-11-16 {
+    description 'The OpenFlow function enables, if enables, the OpenFlow servic'
+              + 'e is provided, and if not, the OpenFlow service is closed.'
+                ;
+  }
+  revision 2018-09-13 {
+    description 'Add IPv6 controller configuration.'
+                ;
+  }
+  revision 2018-09-10 {
+    description 'Add case v6-endpoints and leaf local-endpoint-ipv6-adress, lea'
+              + 'f remote-endpoint-ipv6-adress.'
+                ;
+  }
+  revision 2018-06-22 {
+    description 'Add container probe-interval with leaf time and leaf count and'
+              + ' container local-probe-interval with leaf time and leaf count.'
+                ;
+  }
+  revision 2018-04-26 {
+    description 'Add container ofls-attributes,container vlan,leaf id,leaf vlan'
+              + '-id.'
+                ;
+  }
+  revision 2017-10-23 {
+    description 'Add container max-backoff,leaf time and probel-interval,leaf t'
+              + 'ime.'
+                ;
+  }
+  revision 2017-10-20 {
+    description 'Add diag mode sdn or tradional of  logical switch intance.'
+                ;
+  }
+  revision 2017-08-31 {
+    description 'Add filter condition, get logical switches info by dpid.'
+                ;
+  }
+  revision 2017-08-02 {
+    description 'Add leaf-list node and leaf port and leaf number.'
+                ;
+  }
+  revision 2017-02-10 {
+    description 'Add State for get port no.'
+                ;
+  }
+  revision 2016-11-28 {
+    description 'Add VRF to the controller.'
+                ;
+  }
+  revision 2015-02-13 {
+    description 'Modify the range of the payload.'
+                ;
+  }
+  revision 2015-01-15 {
+    description 'Add port to ofls instance.'
+                ;
+  }
+  revision 2014-10-17 {
+    description 'Add queue/bfd/vxlan configuration'
+                ;
+  }
+  revision 2011-12-07 {
+    description 'First Version'
+                ;
+    reference tbd ;
+  }
+  typedef OFConfigId {
+    type inet:uri ;
+    description 'Generic type of an identifier in OF-CONFIG'
+                ;
+  }
+  typedef OFConfigurationPointProtocolType {
+    type enumeration {
+      enum ssh {
+        value 0 ;
+      }
+      enum soap {
+        value 1 ;
+      }
+      enum tls {
+        value 2 ;
+      }
+      enum beep {
+        value 3 ;
+      }
+    }
+    description 'Possible protocols to connect ot an OFConfiguration Point'
+                ;
+  }
+  typedef OFOpenFlowVersionType {
+    type enumeration {
+      enum not-applicable {
+        value 0 ;
+      }
+      enum 1.0 {
+        value 1 ;
+      }
+      enum 1.0.1 {
+        value 2 ;
+      }
+      enum 1.1 {
+        value 3 ;
+      }
+      enum 1.2 {
+        value 4 ;
+      }
+      enum 1.3 {
+        value 5 ;
+      }
+      enum 1.3.1 {
+        value 6 ;
+      }
+    }
+    description 'This enumeration contains the all OpenFlow'+"\n"
+              + 'versions released so far.'
+                ;
+  }
+  typedef datapath-id-type {
+    type string {
+      pattern '[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){7}'
+              ;
+    }
+    description 'The datapath-id type represents an OpenFlow'+"\n"
+              + 'datapath identifier.'
+                ;
+  }
+  typedef OFTenthOfAPercentType {
+    type uint16 {
+      range 0..1000 ;
+    }
+    description 'This type defines a value in tenth of a percent.'
+                ;
+  }
+  typedef OFUpDownStateType {
+    type enumeration {
+      enum up {
+        value 0 ;
+      }
+      enum down {
+        value 1 ;
+      }
+    }
+    description 'Type to specify state information for a port or a connection.'
+                ;
+  }
+  typedef OFPortRateType {
+    type enumeration {
+      enum 10Mb-HD {
+        value 0 ;
+      }
+      enum 10Mb-FD {
+        value 1 ;
+      }
+      enum 100Mb-HD {
+        value 2 ;
+      }
+      enum 100Mb-FD {
+        value 3 ;
+      }
+      enum 1Gb-HD {
+        value 4 ;
+      }
+      enum 1Gb-FD {
+        value 5 ;
+      }
+      enum 10Gb {
+        value 6 ;
+      }
+      enum 40Gb {
+        value 7 ;
+      }
+      enum 100Gb {
+        value 8 ;
+      }
+      enum 1Tb {
+        value 9 ;
+      }
+      enum other {
+        value 10 ;
+      }
+    }
+    description 'Type to specify the rate of a port including the'+"\n"
+              + 'duplex transmission feature. Possible rates are 10Mb, 100Mb,'+"\n"
+              + '1Gb, 10Gb, 40Gb, 100Gb, 1Tb or other. Rates of 10Mb, 100Mb'+"\n"
+              + 'and 1 Gb can support half or full duplex transmission.'
+                ;
+  }
+  typedef OFActionType {
+    type enumeration {
+      enum output {
+        value 0 ;
+      }
+      enum copy-ttl-out {
+        value 1 ;
+      }
+      enum copy-ttl-in {
+        value 2 ;
+      }
+      enum set-mpls-ttl {
+        value 3 ;
+      }
+      enum dec-mpls-ttl {
+        value 4 ;
+      }
+      enum push-vlan {
+        value 5 ;
+      }
+      enum pop-vlan {
+        value 6 ;
+      }
+      enum push-mpls {
+        value 7 ;
+      }
+      enum pop-mpls {
+        value 8 ;
+      }
+      enum set-queue {
+        value 9 ;
+      }
+      enum group {
+        value 10 ;
+      }
+      enum set-nw-ttl {
+        value 11 ;
+      }
+      enum dec-nw-ttl {
+        value 12 ;
+      }
+      enum set-field {
+        value 13 ;
+      }
+    }
+    description 'The types of actions defined in OpenFlow Switch'+"\n"
+              + 'Specification versions 1.2, 1.3, and 1.3.1'
+                ;
+  }
+  typedef OFInstructionType {
+    type enumeration {
+      enum apply-actions {
+        value 0 ;
+      }
+      enum clear-actions {
+        value 1 ;
+      }
+      enum write-actions {
+        value 2 ;
+      }
+      enum write-metadata {
+        value 3 ;
+      }
+      enum goto-table {
+        value 4 ;
+      }
+    }
+    description 'The types of instructions defined in OpenFlow'+"\n"
+              + 'Switch Specification versions 1.2, 1.3, and 1.3.1.'
+                ;
+  }
+  typedef OFMatchFieldType {
+    type enumeration {
+      enum input-port {
+        value 0 ;
+      }
+      enum physical-input-port {
+        value 1 ;
+      }
+      enum metadata {
+        value 2 ;
+      }
+      enum ethernet-dest {
+        value 3 ;
+      }
+      enum ethernet-src {
+        value 4 ;
+      }
+      enum ethernet-frame-type {
+        value 5 ;
+      }
+      enum vlan-id {
+        value 6 ;
+      }
+      enum vlan-priority {
+        value 7 ;
+      }
+      enum ip-dscp {
+        value 8 ;
+      }
+      enum ip-ecn {
+        value 9 ;
+      }
+      enum ip-protocol {
+        value 10 ;
+      }
+      enum ipv4-src {
+        value 11 ;
+      }
+      enum ipv4-dest {
+        value 12 ;
+      }
+      enum tcp-src {
+        value 13 ;
+      }
+      enum tcp-dest {
+        value 14 ;
+      }
+      enum udp-src {
+        value 15 ;
+      }
+      enum udp-dest {
+        value 16 ;
+      }
+      enum sctp-src {
+        value 17 ;
+      }
+      enum sctp-dest {
+        value 18 ;
+      }
+      enum icmpv4-type {
+        value 19 ;
+      }
+      enum icmpv4-code {
+        value 20 ;
+      }
+      enum arp-op {
+        value 21 ;
+      }
+      enum arp-src-ip-address {
+        value 22 ;
+      }
+      enum arp-target-ip-address {
+        value 23 ;
+      }
+      enum arp-src-hardware-address {
+        value 24 ;
+      }
+      enum arp-target-hardware-address {
+        value 25 ;
+      }
+      enum ipv6-src {
+        value 26 ;
+      }
+      enum ipv6-dest {
+        value 27 ;
+      }
+      enum ipv6-flow-label {
+        value 28 ;
+      }
+      enum icmpv6-type {
+        value 29 ;
+      }
+      enum icmpv6-code {
+        value 30 ;
+      }
+      enum ipv6-nd-target {
+        value 31 ;
+      }
+      enum ipv6-nd-source-link-layer {
+        value 32 ;
+      }
+      enum ipv6-nd-target-link-layer {
+        value 33 ;
+      }
+      enum mpls-label {
+        value 34 ;
+      }
+      enum mpls-tc {
+        value 35 ;
+      }
+    }
+    description 'The types of match field defined in OpenFlow'+"\n"
+              + 'Switch Specification versions 1.2, 1.3, and 1.3.1.'
+                ;
+  }
+  typedef hex-binary {
+    type binary ;
+    description 'hex binary encoded string'
+                ;
+    reference 'http://www.w3.org/TR/2004/REC-xmlschema-2-'+"\n"
+            + '20041028/datatypes.html#hexBinary'
+              ;
+  }
+  container configuration {
+    description 'Configuration model info.'
+                ;
+    container capable-switch {
+      description 'The OpenFlow Capable Switch serves as the root'+"\n"
+                + 'element for an OpenFlow configuration. It contains logical'+"\n"
+                + 'switches and resources that can be assigned to logical'+"\n"
+                + 'switches. It may have relations to OpenFlow Configuration'+"\n"
+                + 'Points.'
+                  ;
+      presence capable-switch-0-default ;
+      leaf id {
+        description "A unique but locally arbitrary identifier that uniquely id"
+                  + "entifies a Capable Switch within the context of potential "
+                  + "OpenFlow Configuration Points. It MUST be persistent acros"
+                  + "s reboots of the OpenFlow Capable Switch. This element MUS"
+                  + "T be present inthe NETCONF data store. If this element is "
+                  + "not present in a NETCONF <edit-config> operation 'create',"
+                  + " 'merge' or 'replace' and the parent element does not exis"
+                  + "t, a 'data-missing' error is returned."
+                    ;
+        type inet:uri {
+          length 1..63 ;
+        }
+        mandatory true ;
+      }
+      leaf enabled {
+        description 'The OpenFlow function enables, if enables, the OpenFlow se'
+                  + 'rvice is provided, and if not, the OpenFlow service is clo'
+                  + 'sed.The default values are read from the performance param'
+                  + 'eters.'
+                    ;
+        type boolean ;
+        ncd:revise-date 2018-11-16 ;
+      }
+      container probe-interval {
+        description 'The global probe interval time and probe count of all Open'
+                  + 'Flow Logical Switches.'
+                    ;
+        presence probe-interval ;
+        leaf time {
+          description 'The global probe interval time (s) of all OpenFlow Logic'
+                    + 'al Switches, range from 1s to 90s.'
+                      ;
+          type uint8 {
+            range 1..90 ;
+          }
+          mandatory true ;
+        }
+        leaf count {
+          description 'The global probe count of all OpenFlow Logical Switches,'
+                    + ' range from 1 to 10.'
+                      ;
+          type uint8 {
+            range 1..10 ;
+          }
+          default 3 ;
+        }
+        ncd:revise-date 2018-06-22 ;
+      }
+      container logical-switches {
+        description 'This element contains a list of all OpenFlow'+"\n"
+                  + 'Logical Switches available at the OpenFlow Capable'+"\n"
+                  + 'Switch.'
+                    ;
+        list switch {
+          description "The list of all OpenFlow Logical Switches on\nthe OpenFl"
+                    + "ow Capable Switch.\nThe element 'resource-id' of OFLogic"
+                    + "alSwitchType MUST be\nunique within this list."
+                      ;
+          key id ;
+          leaf id {
+            description 'A unique but locally arbitrary identifier that'+"\n"
+                      + 'identifies a Logical Switch within the context of an'+"\n"
+                      + 'OpenFlow Capable Switch. It MUST be persistent across'+"\n"
+                      + 'reboots of the OpenFlow Capable Switch.'+"\n"
+                      + 'This element MUST be present to identify the OpenFlow'+"\n"
+                      + 'Logical Switch.'
+                        ;
+            type OFConfigId {
+              length 1..63 ;
+            }
+          }
+          leaf datapath-id {
+            description "The datapath identifier of the Logical Switch\nthat un"
+                      + "iquely identifies this Logical Switch within the\ncont"
+                      + "ext of all OpenFlow Controllers associated with the\nO"
+                      + "penFlow Logical Switch. The datapath identifier is a\n"
+                      + "string value that MUST be formatted as a sequence of 8"
+                      + "\n2-digit hexadecimal numbersthat are separated by col"
+                      + "ons,\nfor example, '01:23:45:67:89:ab:cd:ef'. When pro"
+                      + "cessing a\ndatapath identifier, the caseof the decimal"
+                      + " digits MUST be\nignored.\nThis element MUST be presen"
+                      + "t in the NETCONF data store.\nIf this element is not p"
+                      + "resent in a NETCONF <edit-config>\noperation 'create',"
+                      + " 'merge' or 'replace' and the parent\nelement does not"
+                      + " exist, a'data-missing' error is\nreturned."
+                        ;
+            type datapath-id-type {
+              length 23 ;
+            }
+            mandatory true ;
+          }
+          leaf diag-mode {
+            type enumeration {
+              enum sdn {
+                value 0 ;
+              }
+              enum traditional {
+                value 1 ;
+              }
+            }
+            default traditional ;
+            ncd:revise-date 2017-10-20 ;
+          }
+          leaf enabled {
+            description "This element indicates the administrative state
+\nof t"
+                      + "he OpenFlow Logical Switch. A value of 'false' means
+\n"
+                      + "the OpenFlow Logical Switch MUST NOT communicate with "
+                      + "any
+\nOpenFlow Controllers, MUST NOT conduct any OpenF"
+                      + "low
+\nprocessing, and SHOULD NOT be utilizing computat"
+                      + "ional or
+\nnetwork resourcesof the underlying platform"
+                      + ".
+\nThis element is optional. If this element is not p"
+                      + "resent it
+\ndefaults to 'true'."
+                        ;
+            type boolean ;
+            default true ;
+          }
+          leaf check-controller-certificate {
+            description "This element indicates the behavior of the
+\nOpenFlow "
+                      + "Logical Switch when connecting to an OpenFlow
+\nContro"
+                      + "ller.
+\nIf set to value 'false', the logical switch wi"
+                      + "ll connect to
+\nacontroller without checking any contr"
+                      + "oller certificate.
+\nIf set to value 'true', then the "
+                      + "logical switch will
+\nconnect to a controller with ele"
+                      + "ment <protocol> set to
+\n'TLS', only if the controller"
+                      + " provides a certificate that
+\n
+\ncan beverified with "
+                      + "one of the certificates stored in the
+\nlist called ex"
+                      + "ternal-certificates in the OpenFlow Capable
+\nSwitch.
+"
+                      + "\nIf a certificate cannot be validated, the OpenFlow L"
+                      + "ogical
+\nSwitch MUST terminate communication with the "
+                      + "corresponding
+\nOpenFlow Controller, MUST NOT conduct "
+                      + "any OpenFlow
+\nprocessing on requests of this OpenFlow"
+                      + " controller, and
+\nSHOULD NOT further utilize any comp"
+                      + "utational or network
+\nresources of for dealing with t"
+                      + "his connection.
+\nIf set to value'true', the OpenFlow "
+                      + "Logical Switch MUST
+\nNOT connect to any OpenFlow Cont"
+                      + "roller that does not
+\nprovide a certificate. This imp"
+                      + "lies that it cannot connect
+\nto an OpenFlow controlle"
+                      + "r that has the value of element
+\nprotocol set to 'TCP"
+                      + "'.Only connections with protocol 'TLS'
+\nare possible "
+                      + "in thiscase.
+\nThis element is optional. If this eleme"
+                      + "nt is not present it
+\ndefaults to 'false'."
+                        ;
+            type boolean ;
+            default false ;
+          }
+          leaf lost-connection-behavior {
+            description "This element indicates the the behavior of the
+\nOpenF"
+                      + "low Logical Switch in case it loses contact with all
+\n"
+                      + "OpenFlow Controllers. There are two alternative modes "
+                      + "in
+\nsuch a case: fails secure mode and fail standalon"
+                      + "e mode as
+\ndefined bythe OpenFlow protocol specificat"
+                      + "ion version 1.2,
+\nsection 6.4. These are the only all"
+                      + "owed values for this
+\nelement. Default is the fail se"
+                      + "cure mode.
+\nThis element is optional. If this element"
+                      + " is not present it
+\ndefaults to 'failSecureMode'."
+                        ;
+            type enumeration {
+              enum failSecureMode {
+                value 0 ;
+              }
+              enum failStandaloneMode {
+                value 1 ;
+              }
+            }
+            default failSecureMode ;
+            ncd:revise-date 2014-10-17 ;
+          }
+          container controllers {
+            description "The list of controllers for this Logical switch.\nThe "
+                      + "element 'id' of OFControllerType MUST be unique within"
+                      + "\nthis list."
+                        ;
+            list controller {
+              description "The list of OpenFlow Controllers that are
+\nassigned"
+                        + " to the OpenFlow Logical Switch. The switch MUST
+\nN"
+                        + "OT connect toany OpenFlow Controller that is not
+\nc"
+                        + "ontained in this list.
+\nNETCONF <edit-config> opera"
+                        + "tions MUST be implemented as
+\nfollows:
+\n* The 'id'"
+                        + " element MUST be present at all <edit-config>
+\noper"
+                        + "ations to identify the controller.
+\n* If the operat"
+                        + "ion is 'merge' or 'replace', the element
+\nis create"
+                        + "d if it does not exist, and its value is set
+\nto th"
+                        + "e value found in the XML RPC data.
+\n* If the operat"
+                        + "ion is 'create', the element is created if
+\nit does"
+                        + " not exist. If the element already exists, a
+\n'data"
+                        + "??exists' error is returned.
+\n* If the operation is"
+                        + " 'delete', the element is deleted if
+\nit exists. If"
+                        + " the element does not exist, a
+\n'data??missing' err"
+                        + "or is returned."
+                          ;
+              key id ;
+              leaf id {
+                description 'A unique but locally arbitrary identifier that'+"\n"
+                          + 'uniquely identifies an OpenFlow Controller within '
+                          + 'the'+"\n"
+                          + 'context of an OpenFlow Capable Switch. It MUST be'+"\n"
+                          + 'persistent across reboots of the OpenFlow Capable '
+                          + 'Switch.'+"\n"
+                          + 'This element MUST be present to identify the OpenF'
+                          + 'low'+"\n"
+                          + 'controller.'
+                            ;
+                type OFConfigId {
+                  length 1..63 ;
+                }
+              }
+              leaf role {
+                description "This element indicates the role of the OpenFlow\nC"
+                          + "ontroller. Semantics of these roles are specified "
+                          + "in the\nOpenFlow specifications 1.0 - 1.3.1. It is"
+                          + " RECOMMENDED\nthat the roles of controllers are no"
+                          + "t configured by\nOF-CONFIG 1.1.1 but determined us"
+                          + "ing the OpenFlow protocol.\nOpenFlow Controllers c"
+                          + "onfigured by OF-CONFIG 1.1.1 have the\ndefault rol"
+                          + "e 'equal'. A role other than 'equal' MAY be\nassig"
+                          + "ned to a controller. Roles 'slave' and 'equal' MAY"
+                          + " be\nassignedto multiple controllers. Role 'master"
+                          + "' MUST NOT\nbe assigned to more than one controlle"
+                          + "r.\nThis element is optional. If this element is n"
+                          + "ot present it\ndefaults to 'equal'."
+                            ;
+                type enumeration {
+                  enum master {
+                    value 0 ;
+                  }
+                  enum slave {
+                    value 1 ;
+                  }
+                  enum equal {
+                    value 2 ;
+                  }
+                }
+                default equal ;
+              }
+              leaf ip-address {
+                description "The IP address of the OpenFlow Controller. This\nI"
+                          + "P address is used by the OpenFlow Logical Switch w"
+                          + "hen\nconnectingto the OpenFlow Controller.\nThis e"
+                          + "lement MUST be presentin the NETCONF data store.\n"
+                          + "If this element is not present in a NETCONF <edit-"
+                          + "config>\noperation 'create', 'merge' or 'replace' "
+                          + "and the parent\nelement does not exist, a 'data-mi"
+                          + "ssing' error is\nreturned."
+                            ;
+                type inet:ipv4-address ;
+                mandatory true ;
+              }
+              leaf port {
+                description 'The TCP port number at the OpenFlow Controller.'+"\n"
+                          + 'This port number is used by the OpenFlow Logical S'
+                          + 'witch'+"\n"
+                          + 'when connecting to the OpenFlow Controller using T'
+                          + 'CP or'+"\n"
+                          + 'TLS. The default value is 6633.'+"\n"
+                          + 'This element is optional. If this element is not p'
+                          + 'resent it'+"\n"
+                          + 'defaults to 6653.'
+                            ;
+                type inet:port-number ;
+                default 6653 ;
+              }
+              leaf local-ip-address {
+                description "The local IP address of the OpenFlow Logical\nSwit"
+                          + "ch whenconnecting to this OpenFlow Controller. It "
+                          + "is\nthe sourceIP address of packets sent to this O"
+                          + "penFlow\nController. If present, this element over"
+                          + "rides any default\nIP address.\nThis element is op"
+                          + "tional. Attempts to set this element to\nan IP add"
+                          + "ress that cannot be used by the OpenFlow Logical\n"
+                          + "Switch MUST result in an 'bad-element' error with "
+                          + "type\n'application'. The <error-info> element MUST"
+                          + " contain the\nname of this element in the <bad-ele"
+                          + "ment> element."
+                            ;
+                type inet:ipv4-address ;
+              }
+              leaf local-port {
+                description "The local TCP port number of the OpenFlow
+\nLogica"
+                          + "l Switch when connecting to this OpenFlow Controll"
+                          + "er.
+\nIt is thesource TCP port number of packets s"
+                          + "ent to this
+\nOpenFlowController. If this element "
+                          + "is not present, then
+\nthe port number is chosen a"
+                          + "rbitrarily by the OpenFlow
+\nLogical Switch.
+\nThi"
+                          + "s element is optional. Attempts to set this elemen"
+                          + "t to a
+\nport number that cannot be used by the Op"
+                          + "enFlow Logical
+\nSwitch MUST result in an 'bad-ele"
+                          + "ment' errorwith type
+\n'application'. The <error-i"
+                          + "nfo> element MUST contain the
+\nname of this eleme"
+                          + "nt in the <bad-element> element."
+                            ;
+                type inet:port-number ;
+              }
+              leaf protocol {
+                description "The default protocol tha the OpenFlow Logical
+\nSw"
+                          + "itch uses to connect to this OpenFlow Controller. "
+                          + "'tls'
+\nis the default value.
+\nThis element is op"
+                          + "tional. If this elementis not present it
+\ndefault"
+                          + "s to 'tls'."
+                            ;
+                type enumeration {
+                  enum tcp {
+                    value 0 ;
+                  }
+                  enum tls {
+                    value 1 ;
+                  }
+                }
+                default tls ;
+              }
+              leaf vrf-name {
+                description 'The VRF name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+                ncd:revise-date 2016-11-28 ;
+              }
+              leaf mng-flag {
+                description 'VRF mng flag.'
+                            ;
+                type boolean ;
+                default false ;
+                ncd:revise-date 2016-11-28 ;
+              }
+            }
+            list controller-v6 {
+              description "The list of OpenFlow Controllers that are\nassigned "
+                        + "to theOpenFlow Logical Switch. The switch MUST\nNOT "
+                        + "connect to any OpenFlow Controller that is not\ncont"
+                        + "ained in this list.\nNETCONF <edit-config> operation"
+                        + "s MUST be implemented as\nfollows:\n* The 'id' eleme"
+                        + "nt MUST be present at all <edit-config>\noperations "
+                        + "to identify the controller.\n* If the operation is '"
+                        + "merge' or 'replace', the element\nis created if it d"
+                        + "oes not exist, and its value is set\nto the value fo"
+                        + "undin the XML RPC data.\n* If the operation is 'crea"
+                        + "te', the element is created if\nit does not exist. I"
+                        + "f the element already exists, a\n'data??exists' erro"
+                        + "r is returned.\n* If the operation is 'delete', the "
+                        + "element is deleted if\nit exists. If the element doe"
+                        + "s not exist, a\n'data??missing' erroris returned."
+                          ;
+              key id ;
+              leaf id {
+                description 'A unique but locally arbitrary identifier that'+"\n"
+                          + 'uniquely identifies an OpenFlow Controller within '
+                          + 'the'+"\n"
+                          + 'context of an OpenFlow Capable Switch. It MUST be'+"\n"
+                          + 'persistent across reboots of the OpenFlow Capable '
+                          + 'Switch.'+"\n"
+                          + 'This element MUST be present to identify the OpenF'
+                          + 'low'+"\n"
+                          + 'controller.'
+                            ;
+                type OFConfigId {
+                  length 1..63 ;
+                }
+              }
+              leaf role {
+                description "This element indicates the role of the OpenFlow\nC"
+                          + "ontroller. Semantics of these roles are specified "
+                          + "in the\nOpenFlow specifications 1.0 - 1.3.1. It is"
+                          + " RECOMMENDED\nthat the roles of controllers are no"
+                          + "t configured by\nOF-CONFIG 1.1.1 but determined us"
+                          + "ing the OpenFlow protocol.\nOpenFlow Controllers c"
+                          + "onfigured by OF-CONFIG 1.1.1 have the\ndefault rol"
+                          + "e 'equal'. A role other than 'equal' MAY be\nassig"
+                          + "ned to a controller. Roles 'slave' and 'equal' MAY"
+                          + " be\nassignedto multiple controllers. Role 'master"
+                          + "' MUST NOT\nbe assigned to more than one controlle"
+                          + "r.\nThis element is optional. If this element is n"
+                          + "ot present it\ndefaults to 'equal'."
+                            ;
+                type enumeration {
+                  enum master {
+                    value 0 ;
+                  }
+                  enum slave {
+                    value 1 ;
+                  }
+                  enum equal {
+                    value 2 ;
+                  }
+                }
+                default equal ;
+              }
+              leaf ipv6-address {
+                description "The IP address of the OpenFlow Controller. This
+\n"
+                          + "IP address is used by the OpenFlow Logical Switch "
+                          + "when
+\nconnecting to the OpenFlow Controller.
+\nTh"
+                          + "is element MUST be present in the NETCONF data sto"
+                          + "re.
+\nIf this element is not present in a NETCONF "
+                          + "<edit-config>
+\noperation 'create', 'merge' or 're"
+                          + "place' and the parent
+\nelement does not exist,a '"
+                          + "data-missing' error is
+\nreturned."
+                            ;
+                type inet:ipv6-address ;
+                mandatory true ;
+              }
+              leaf port {
+                description 'The TCP port number at the OpenFlow Controller.'+"\n"
+                          + 'This port number is used by the OpenFlow Logical S'
+                          + 'witch'+"\n"
+                          + 'when connecting to the OpenFlow Controller using T'
+                          + 'CP or'+"\n"
+                          + 'TLS. The default value is 6633.'+"\n"
+                          + 'This element is optional. If this element is not p'
+                          + 'resent it'+"\n"
+                          + 'defaults to 6653.'
+                            ;
+                type inet:port-number ;
+                default 6653 ;
+              }
+              leaf local-ipv6-address {
+                description "The local IP address of the OpenFlow Logical
+\nSwi"
+                          + "tch when connecting to this OpenFlow Controller. I"
+                          + "t is
+\nthe source IP address of packets sent to th"
+                          + "is OpenFlow
+\nController. If present, this element"
+                          + " overrides any default
+\nIP address.
+\nThis elemen"
+                          + "t is optional. Attempts to set this element to
+\na"
+                          + "n IP address that cannot be used by the OpenFlow L"
+                          + "ogical
+\nSwitch MUST result in an 'bad-element' er"
+                          + "ror with type
+\n'application'. The <error-info> el"
+                          + "ement MUST contain the
+\nname of this element in t"
+                          + "he <bad-element> element."
+                            ;
+                type inet:ipv6-address ;
+              }
+              leaf local-port {
+                description "The local TCP port number of the OpenFlow
+\nLogica"
+                          + "l Switch when connecting to this OpenFlow Controll"
+                          + "er.
+\nIt is thesource TCP port number of packets s"
+                          + "ent to this
+\nOpenFlowController. If this element "
+                          + "is not present, then
+\nthe port number is chosen a"
+                          + "rbitrarily by the OpenFlow
+\nLogical Switch.
+\nThi"
+                          + "s element is optional. Attempts to set this elemen"
+                          + "t to a
+\nport number that cannot be used by the Op"
+                          + "enFlow Logical
+\nSwitch MUST result in an 'bad-ele"
+                          + "ment' errorwith type
+\n'application'. The <error-i"
+                          + "nfo> element MUST contain the
+\nname of this eleme"
+                          + "nt in the <bad-element> element."
+                            ;
+                type inet:port-number ;
+              }
+              leaf protocol {
+                description "The default protocol tha the OpenFlow Logical
+\nSw"
+                          + "itch uses to connect to this OpenFlow Controller. "
+                          + "'tls'
+\nis the default value.
+\nThis element is op"
+                          + "tional. If this elementis not present it
+\ndefault"
+                          + "s to 'tls'."
+                            ;
+                type enumeration {
+                  enum tcp {
+                    value 0 ;
+                  }
+                  enum tls {
+                    value 1 ;
+                  }
+                }
+                default tls ;
+              }
+              leaf vrf-name {
+                description 'The VRF name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf mng-flag {
+                description 'VRF mng flag.'
+                            ;
+                type boolean ;
+                default false ;
+              }
+              ncd:revise-date 2018-09-13 ;
+            }
+          }
+          container bfd-sessions {
+            description 'Configure BFD instance parameters.'
+                        ;
+            list bfd-session {
+              description 'Configure BFD instance parameters.'
+                          ;
+              key ld ;
+              leaf ld {
+                description 'Local discriminator for BFD.'
+                            ;
+                type uint32 {
+                  range 1..4294967295 {
+                    description 'Local discriminator for BFD.'
+                                ;
+                  }
+                }
+              }
+              leaf rd {
+                description 'Remote discriminator for BFD.'
+                            ;
+                type uint32 {
+                  range 1..4294967295 {
+                    description 'Remote discriminator for BFD.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+              leaf xmt-time {
+                description 'BFD control packets TX interval.'
+                            ;
+                type uint32 ;
+                units ms ;
+                mandatory true ;
+              }
+              leaf detect-time {
+                description 'Detect time of BFD session.'
+                            ;
+                type uint32 ;
+                units ms ;
+                mandatory true ;
+              }
+              leaf port-no {
+                description 'Output interface index for BFD session.'
+                            ;
+                type uint32 ;
+                mandatory true ;
+              }
+              leaf payload-length {
+                description 'Packet len of BFD session.'
+                            ;
+                type uint32 ;
+                mandatory true ;
+              }
+              leaf payload {
+                description 'The packet content of BFD session.'
+                            ;
+                type binary {
+                  length 1..255 ;
+                }
+                mandatory true ;
+              }
+            }
+            ncd:revise-date 2014-10-17 ;
+          }
+          container resources {
+            description "The list of identifiers of all resources of the
+\nOpen"
+                      + "Flow Capable Switch that the OpenFlow Logical Switch
+\n"
+                      + "has exclusive or non-exclusive access to. A resource i"
+                      + "s
+\nidentified by the value of its resource-identifier"
+                      + " element.
+\nFor each resource identifier value in this"
+                      + " list, there MUST
+\nbe an element with a matching reso"
+                      + "urce identifier value in
+\nthe resources list of the O"
+                      + "penFlow Capable Switch.
+\nIdentifiers ofthis list are "
+                      + "contained in elements
+\nindicating the type of resourc"
+                      + "e: 'port', 'queue',
+\n'certificate', or 'flow-table'. "
+                      + "Depending on the type,
+\ndifferent constraints apply. "
+                      + "These are specified in
+\nseparate descriptions per typ"
+                      + "e.
+\nAt present the elements in this lists are not con"
+                      + "figurable
+\nandcan only be retrieved by NETCONF <get> "
+                      + "or <get-config>
+\noperations. Attemps to modify this e"
+                      + "lement and its children
+\nwith a NETCONF <edit-config>"
+                      + " operation MUST result in an
+\n'operation-not-supporte"
+                      + "d' error with type 'application'."
+                        ;
+            list port {
+              description 'The list of a port of the OpenFlow Capable Switch th'
+                        + 'at the OpenFlow Logical Switch has exclusive access '
+                        + 'to.'+"\n"
+                        + 'port: This element is the name of a port that is bou'
+                        + 'nd by logic switch, and must be a unique.'+"\n"
+                        + 'number: This element is the number of a port that is'
+                        + ' bound by logic switch. And it can be assigned optio'
+                        + 'nally.'
+                          ;
+              key id ;
+              leaf id {
+                description 'A resource identifier of a port of the OpenFlow Ca'
+                          + 'pable Switch that the OpenFlow Logical Switch has '
+                          + 'exclusive access to.'+"\n"
+                          + 'The elements in this list MUST refer to elements a'
+                          + 't the following path:'+"\n"
+                          + '/capable-switch/resources/port/resource-id'+"\n"
+                          + 'Elements in this list MUST be unique. This means e'
+                          + 'ach port element can only be referenced once.'
+                            ;
+                type leafref {
+                  path /configuration/capable-switch/resources/port/resource-id ;
+                }
+              }
+              leaf number {
+                description 'The port number assigned by logic switch optionall'
+                          + 'y when the logic switch bind the port.The range is'
+                          + ' from 1 to 65535.'
+                            ;
+                type uint32 {
+                  range 1..65535 ;
+                }
+                ncd:revise-date 2017-08-02 ;
+              }
+            }
+            ncd:revise-date 2015-01-15 ;
+          }
+          container ofls-attributes {
+            list ofls-attribute {
+              key id ;
+              leaf id {
+                type leafref {
+                  path /configuration/capable-switch/resources/port/resource-id ;
+                }
+              }
+              container vlans {
+                leaf vlan-bitmap {
+                  type ncd:bitmap {
+                    length 1..4094 ;
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2018-04-26 ;
+          }
+          container max-backoff {
+            leaf time {
+              type uint8 {
+                range 1..90 ;
+              }
+            }
+            ncd:revise-date 2017-10-23 ;
+          }
+          container probe-interval {
+            description 'The local probe interval time and probe count of one O'
+                      + 'penFlow Logical Switches.'
+                        ;
+            presence local-probe-interval ;
+            leaf time {
+              description 'The local probe interval time (s) of one OpenFlow Lo'
+                        + 'gical Switches, range from 1s to 90s.'
+                          ;
+              type uint8 {
+                range 1..90 ;
+              }
+              mandatory true ;
+            }
+            leaf count {
+              description 'The local probe count of one OpenFlow Logical Switch'
+                        + 'es, range from 1 to 10.'
+                          ;
+              type uint8 {
+                range 1..10 ;
+              }
+            }
+            ncd:revise-date 2018-06-22 ;
+          }
+          container tcp-mss {
+            description 'TCP initial maximum segment size.'
+                        ;
+            presence ofls-tcp-mss ;
+            leaf size {
+              description 'The MSS size, range from 68 to 10000.'
+                          ;
+              type uint32 {
+                range 68..10000 ;
+              }
+              mandatory true ;
+            }
+            ncd:revise-date 2019-12-23 ;
+          }
+          ncd:select id ;
+          ncd:select datapath-id ;
+        }
+      }
+      container resources {
+        description "The list of identifiers of all resources of the
+\nOpenFlow"
+                  + " Capable Switch that the OpenFlow Logical Switch
+\nhas exc"
+                  + "lusive or non-exclusive access to. A resource is
+\nidentif"
+                  + "ied by the value of its resource-identifier element.
+\nFor"
+                  + " each resource identifier value in this list, there MUST
+\n"
+                  + "be an element witha matching resource identifier value in
+"
+                  + "\nthe resources list of the OpenFlow Capable Switch.
+\nIde"
+                  + "ntifiers of this list arecontained in elements
+\nindicatin"
+                  + "g the type of resource: 'port', 'queue',
+\n'certificate', "
+                  + "or 'flow-table'. Depending on the type,
+\ndifferent constr"
+                  + "aints apply. These are specified in
+\nseparate description"
+                  + "s per type.
+\nAt present the elements in this lists are no"
+                  + "t configurable
+\nand can only be retrieved byNETCONF <get>"
+                  + " or <get-config>
+\noperations. Attemps to modifythis eleme"
+                  + "nt and its children
+\nwith a NETCONF <edit-config> operati"
+                  + "on MUST result in an
+\n'operation-not-supported' error wit"
+                  + "h type 'application'."
+                    ;
+        list port {
+          description "The list contains all port resources of the
+\nOpenFlow C"
+                    + "apable Switch.
+\nThe element 'resource-id' of OFPortType"
+                    + " MUST be unique
+\nwithin this list."
+                      ;
+          key resource-id ;
+          leaf resource-id {
+            description 'A unique but locally arbitrary identifier that'+"\n"
+                      + 'uniquely identifies an OpenFlow Port within the contex'
+                      + 't'+"\n"
+                      + 'of an OpenFlow Logical Switch. It MUST be persistent'+"\n"
+                      + 'across reboots of the OpenFlow Capable Switch.'+"\n"
+                      + 'This element MUST be present to identify the OpenFlow '
+                      + 'resource.'
+                        ;
+            type ncd:ifname {
+              length 1..31 ;
+            }
+          }
+          choice tunnel-type {
+            description "Tunnels are modeled as logical ports.
+\nElements in th"
+                      + "is choice are not configurable and can only
+\nbe retri"
+                      + "eved by NETCONF <get> operations. Attemps to modify
+\n"
+                      + "this element and its children with a NETCONF <edit-con"
+                      + "fig>
+\noperation MUST result in an 'operation-not-supp"
+                      + "orted' error
+\nwith type 'application'.
+\nOnly element"
+                      + "s from one choice must exist at a time."
+                        ;
+            case vxlan-tunnel {
+              description 'Properties of a VxLAN tunnel.'
+                          ;
+              container vxlan-tunnel {
+                description 'Properties of a VxLAN tunnel.'
+                            ;
+                presence vxlan-tunnel ;
+                choice endpoints {
+                  description 'VxLAN tunnel endpoints.'
+                              ;
+                  mandatory true ;
+                  case v4-endpoints {
+                    description 'The IPv4 address of the tunnel endpoint.'
+                                ;
+                    leaf local-endpoint-ipv4-adress {
+                      description 'The IPv4 address of the local tunnel'+"\n"
+                                + 'endpoint.'
+                                  ;
+                      type inet:ipv4-address ;
+                    }
+                    leaf remote-endpoint-ipv4-adress {
+                      description 'The IPv4 address of the remote tunnel'+"\n"
+                                + 'endpoint.'
+                                  ;
+                      type inet:ipv4-address ;
+                    }
+                  }
+                  case v6-endpoints {
+                    description 'The IPv6 address of the tunnel endpoint.'
+                                ;
+                    leaf local-endpoint-ipv6-adress {
+                      description 'The IPv6 address of the local tunnel'+"\n"
+                                + 'endpoint.'
+                                  ;
+                      type inet:ipv6-address ;
+                    }
+                    leaf remote-endpoint-ipv6-adress {
+                      description 'The IPv6 address of the remote tunnel'+"\n"
+                                + 'endpoint.'
+                                  ;
+                      type inet:ipv6-address ;
+                    }
+                    ncd:revise-date 2018-09-10 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        list queue {
+          description "The list contains all queue resources of the
+\nOpenFlow "
+                    + "Capable Switch.
+\nThe element 'resource-id' of OFQueueTy"
+                    + "pe MUST be unique
+\nwithin this list."
+                      ;
+          key resource-id ;
+          leaf resource-id {
+            description 'A unique but locally arbitrary identifier that'+"\n"
+                      + 'uniquely identifies an OpenFlow Queue within the conte'
+                      + 'xt'+"\n"
+                      + 'of an OpenFlow Logical Switch. It MUST be persistent'+"\n"
+                      + 'across reboots of the OpenFlow Capable Switch.'+"\n"
+                      + 'This element MUST be present to identify the OpenFlow '
+                      + 'resource.'
+                        ;
+            type inet:uri {
+              length 1..31 ;
+            }
+          }
+          leaf port {
+            description "Reference to port resources in the Capable Switch.
+\nT"
+                      + "his element associates an OpenFlow Queue with an OpenF"
+                      + "low
+\nPort.If the OpenFlow Queue is associated with an"
+                      + " OpenFlow
+\nLogical Switch S and this element is prese"
+                      + "nt, then it MUST
+\nbe set to the value of element reso"
+                      + "urce-id of an OpenFlow
+\nPort which is associated with"
+                      + " the OpenFlow Logical Switch S.
+\nThe element MUST ref"
+                      + "er to an element at the following path:
+\n '/capable-s"
+                      + "witch/resources/port/resource-id'"
+                        ;
+            type leafref {
+              path /configuration/capable-switch/resources/port/resource-id ;
+            }
+          }
+          container properties {
+            description 'The queue properties currently configured.'
+                        ;
+            leaf min-rate {
+              description "The minimal rate that is reserved for this
+\nqueue i"
+                        + "n 1/10of a percent of the actual rate.
+\nThis elemen"
+                        + "t is optional. If not present a min-rate is
+\n'not s"
+                        + "et.'"
+                          ;
+              type OFTenthOfAPercentType ;
+            }
+            leaf max-rate {
+              description "The maximum rate that is reserved for this
+\nqueue i"
+                        + "n 1/10of a percent of the actual rate.
+\nThis elemen"
+                        + "t is optional. If not present the max-rate is
+\n'not"
+                        + " set.'"
+                          ;
+              type OFTenthOfAPercentType ;
+            }
+          }
+        }
+        ncd:revise-date 2014-10-17 ;
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model info.'
+                ;
+    container capable-switch {
+      description 'The OpenFlow Capable Switch serves as the root'+"\n"
+                + 'element for an OpenFlow configuration. It contains logical'+"\n"
+                + 'switches and resources that can be assigned to logical'+"\n"
+                + 'switches. It may have relations to OpenFlow Configuration'+"\n"
+                + 'Points.'
+                  ;
+      container resources {
+        description "The list of identifiers of all resources of the
+\nOpenFlow"
+                  + " Capable Switch that the OpenFlow Logical Switch
+\nhas exc"
+                  + "lusive or non-exclusive access to. A resource is
+\nidentif"
+                  + "ied by the value of its resource-identifier element.
+\nFor"
+                  + " each resource identifier value in this list, there MUST
+\n"
+                  + "be an element witha matching resource identifier value in
+"
+                  + "\nthe resources list of the OpenFlow Capable Switch.
+\nIde"
+                  + "ntifiers of this list arecontained in elements
+\nindicatin"
+                  + "g the type of resource: 'port', 'queue',
+\n'certificate', "
+                  + "or 'flow-table'. Depending on the type,
+\ndifferent constr"
+                  + "aints apply. These are specified in
+\nseparate description"
+                  + "s per type.
+\nAt present the elements in this lists are no"
+                  + "t configurable
+\nand can only be retrieved byNETCONF <get>"
+                  + " or <get-config>
+\noperations. Attemps to modifythis eleme"
+                  + "nt and its children
+\nwith a NETCONF <edit-config> operati"
+                  + "on MUST result in an
+\n'operation-not-supported' error wit"
+                  + "h type 'application'."
+                    ;
+        list port {
+          description "The list contains all port resources of the
+\nOpenFlow C"
+                    + "apable Switch.
+\nThe element 'resource-id' of OFPortType"
+                    + " MUST be unique
+\nwithin this list."
+                      ;
+          key resource-id ;
+          leaf resource-id {
+            description 'A unique but locally arbitrary identifier that'+"\n"
+                      + 'uniquely identifies an OpenFlow Port within the contex'
+                      + 't'+"\n"
+                      + 'of an OpenFlow Logical Switch. It MUST be persistent'+"\n"
+                      + 'across reboots of the OpenFlow Capable Switch.'+"\n"
+                      + 'This element MUST be present to identify the OpenFlow '
+                      + 'resource.'
+                        ;
+            type ncd:ifname {
+              length 1..31 ;
+            }
+          }
+          leaf number {
+            description 'This number identifies the OpenFlow Port to OpenFlow C'
+                      + 'ontrollers. It is assigned to an OpenFlow Port latest '
+                      + 'when the OpenFlow Port is associated with and OpenFlow'
+                      + ' Logical Switch. If the OpenFlow Port is associated wi'
+                      + 'th an OpenFlow Logical Switch, this element MUST be un'
+                      + 'ique within the context of the OpenFlow Logical Switch'
+                      + '. OpenFlow Capable Switch implementations may choose t'
+                      + 'o assign values to OpenFlow Ports that are unique with'
+                      + 'in the context of the OpenFlow Logical Switch. These n'
+                      + 'umbers can be used independent of assignments to OpenF'
+                      + 'low Logical Switches. Other implementations may assign'
+                      + ' values to this element only if the OpenFlow Port is a'
+                      + 'ssigned to an OpenFlow Logical Switch. If no value is '
+                      + 'currently assigned to this element then this element M'
+                      + 'UST NOT be included in replies to NETCONF <get> reques'
+                      + 'ts. Since this element is not configurable with the NE'
+                      + 'TCONF protocol it MUST NOT be included in replies to N'
+                      + 'ETCONF <get-config> requests.'
+                        ;
+            type uint32 ;
+          }
+          leaf name {
+            description 'This element assists OpenFlow Controllers in identifyi'
+                      + 'ng OpenFlow Ports. This element is not to be set by th'
+                      + 'e OP-CONFIG protocol, but it is set by the switch impl'
+                      + 'ementation. It may be set at start-up time of an OpenF'
+                      + 'low Capable Switch or when the OpenFlow Port is assign'
+                      + 'ed to an OpenFlow Logical Switch. It MAY also be not s'
+                      + 'et at all. If this element is set to a value other tha'
+                      + 'n the empty string when being assigned to an OpenFlow '
+                      + 'Logical Switch, then the value of this element MUST be'
+                      + ' unique within the context of the OpenFlow Logical Swi'
+                      + 'tch. If no value or the empty string is currently assi'
+                      + 'gned to this element then this element MUST not be inc'
+                      + 'luded in replies to NETCONF <get> requests. Since this'
+                      + ' element is not configurable with the NETCONF protocol'
+                      + ' it MUST NOT be included in replies to NETCONF <get-co'
+                      + 'nfig> requests.'
+                        ;
+            type string ;
+          }
+          ncd:select resource-id ;
+        }
+      }
+    }
+    ncd:revise-date 2017-02-10 ;
+  }
+}

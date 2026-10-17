@@ -1,0 +1,320 @@
+module zxr10-nhrp {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/nhrp'
+            ;
+  prefix nhrp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2017-08-15 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2020-06-24 {
+    description '1:Modify mim data type from string to plaintext of leaf "confi'
+              + 'guration/nhrp/interfaces/interface/authentication-string/clear'
+              + '-string"'+"\n"
+              + '2:Modify mim data type from string to ciphertext and modify le'
+              + 'ngth from 12 to 64 of leaf "configuration/nhrp/interfaces/inte'
+              + 'rface/authentication-string/encrypted-string"'
+                ;
+  }
+  revision 2020-05-11 {
+    description '1.Delete default value of leaf "configuration/nhrp/interfaces/'
+              + 'interface/authentication-string/clear-string"'+"\n"
+              + '2.Delete default value of leaf "configuration/nhrp/interfaces/'
+              + 'interface/authentication-string/encrypted-string"'
+                ;
+  }
+  revision 2019-07-05 {
+    description '1.Add container "authentication-string" under configuration/nh'
+              + 'rp/interfaces/interface'+"\n"
+              + '2.Delete an leaf node "configuration/nhrp/interfaces/interface'
+              + '/authentication"'
+                ;
+  }
+  revision 2018-03-06 {
+    description 'Add mandatory attribute for /configuration/nhrp/interfaces/nhr'
+              + 'p-maps/nhrp-map/nbma-ipv4-address.'
+                ;
+  }
+  revision 2018-01-04 {
+    description 'Initial version'
+                ;
+  }
+  container configuration {
+    description Configuration ;
+    container nhrp {
+      description 'NHRP configuration'
+                  ;
+      container interfaces {
+        description 'NHRP interfaces configuration'
+                    ;
+        list interface {
+          description 'NHRP interface configuration'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'set interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf authentication {
+            status obsolete {
+              ncd:revise-date 2019-07-05 ;
+            }
+            description 'authentication information'
+                        ;
+            type string {
+              length 1..8 ;
+            }
+          }
+          leaf holdtime {
+            description 'Set the number of seconds'
+                        ;
+            type uint32 {
+              range 60..65535 ;
+            }
+          }
+          leaf map-multicast-dynamic {
+            description 'Set dynamic map flag'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 0 ;
+              }
+            }
+          }
+          leaf network-id {
+            description 'Set network identification'
+                        ;
+            type uint32 {
+              range 1..4294967295 ;
+            }
+          }
+          container nhrp-servers {
+            description 'Set NHRP server address'
+                        ;
+            list nhrp-server {
+              description 'Set NHRP server address'
+                          ;
+              key ipv4-address ;
+              leaf ipv4-address {
+                description 'Set NHRP server address'
+                            ;
+                type ncd:ipv4-address-none-zero ;
+              }
+            }
+          }
+          container nhrp-multicast-nbmas {
+            description 'Set IP NBMA address'
+                        ;
+            list nhrp-multicast-nbma {
+              description 'Set IP NBMA address'
+                          ;
+              key ipv4-address ;
+              leaf ipv4-address {
+                description 'Set IP NBMA address'
+                            ;
+                type ncd:ipv4-address-none-zero ;
+              }
+            }
+          }
+          container nhrp-maps {
+            description 'Set NHRP static maps'
+                        ;
+            list nhrp-map {
+              description 'Set NHRP static map'
+                          ;
+              key tunnel-ipv4-address ;
+              leaf tunnel-ipv4-address {
+                description 'Set tunnel ipv4 address'
+                            ;
+                type ncd:ipv4-address-none-zero ;
+              }
+              leaf nbma-ipv4-address {
+                description 'Set NBMA address'
+                            ;
+                type ncd:ipv4-address-none-zero ;
+                mandatory true ;
+              }
+            }
+          }
+          container authentication-string {
+            description 'authentication information'
+                        ;
+            presence authentication-string ;
+            choice authentication-string {
+              description 'authentication information'
+                          ;
+              case clear-string {
+                description 'Set clear key'
+                            ;
+                leaf clear-string {
+                  description 'Set clear key'
+                              ;
+                  type string {
+                    length 1..8 ;
+                  }
+                }
+              }
+              case encrypted-string {
+                description 'Set encrypted key'
+                            ;
+                leaf encrypted-string {
+                  description 'Set encrypted key'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2019-07-05 ;
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description State ;
+    container nhrp {
+      description 'NHRP state'
+                  ;
+      container nhrp-maps {
+        description 'NHRP maps'
+                    ;
+        list nhrp-map {
+          description 'NHRP map'
+                      ;
+          key 'ifname target-address'
+              ;
+          leaf ifname {
+            description Interface-name ;
+            type ncd:ifname ;
+          }
+          leaf target-address {
+            description 'Target IP address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf nbma-address {
+            description 'NBMA address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf mode {
+            description 'MAP mode'
+                        ;
+            type enumeration {
+              enum dynamic {
+                value 0 ;
+                description 'mode dynamic'
+                            ;
+              }
+              enum static {
+                value 1 ;
+                description 'mode static'
+                            ;
+              }
+            }
+          }
+          ncd:select ifname ;
+          ncd:select 'ifname target-address'
+                     ;
+        }
+      }
+      container nhrp-packets {
+        description 'NHRP packets statistics'
+                    ;
+        list nhrp-packet {
+          description 'NHRP packets statistics'
+                      ;
+          key ifname ;
+          leaf ifname {
+            description Interface-name ;
+            type ncd:ifname ;
+          }
+          leaf recv-resolution-request {
+            description 'Number of received resolution request'
+                        ;
+            type uint32 ;
+          }
+          leaf recv-resolution-reply {
+            description 'Number of received resolution reply'
+                        ;
+            type uint32 ;
+          }
+          leaf recv-registration-request {
+            description 'Number of received registration request'
+                        ;
+            type uint32 ;
+          }
+          leaf recv-registration-reply {
+            description 'Number of received registration reply'
+                        ;
+            type uint32 ;
+          }
+          leaf recv-purge-request {
+            description 'Number of received purge request'
+                        ;
+            type uint32 ;
+          }
+          leaf recv-purge-reply {
+            description 'Number of received purge reply'
+                        ;
+            type uint32 ;
+          }
+          leaf recv-error-indication {
+            description 'Number of received error indication'
+                        ;
+            type uint32 ;
+          }
+          leaf send-resolution-request {
+            description 'Number of resolution request that has been sent out.'
+                        ;
+            type uint32 ;
+          }
+          leaf send-resolution-reply {
+            description 'Number of resolution reply that has been sent out.'
+                        ;
+            type uint32 ;
+          }
+          leaf send-registration-request {
+            description 'Number of registration request that has been sent out.'
+                        ;
+            type uint32 ;
+          }
+          leaf send-registration-reply {
+            description 'Number of registration reply that has been sent out.'
+                        ;
+            type uint32 ;
+          }
+          leaf send-purge-request {
+            description 'Number of purge request that has been sent out.'
+                        ;
+            type uint32 ;
+          }
+          leaf send-purge-reply {
+            description 'Number of purge reply that has been sent out.'
+                        ;
+            type uint32 ;
+          }
+          leaf send-error-indication {
+            description 'Number of error indication that has been sent out.'
+                        ;
+            type uint32 ;
+          }
+        }
+      }
+    }
+  }
+}

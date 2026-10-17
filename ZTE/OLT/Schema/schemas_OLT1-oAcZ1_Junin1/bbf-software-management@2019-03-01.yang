@@ -1,0 +1,676 @@
+module bbf-software-management {
+  yang-version 1.1;
+  namespace "urn:bbf:yang:bbf-software-management";
+  prefix bbf-swm;
+  
+  import ietf-inet-types {
+    prefix inet;
+  }
+  
+  import ietf-hardware {
+    prefix hw;
+  }
+  
+  import ietf-yang-types {
+    prefix yang;
+  }
+
+  import bbf-yang-types {
+    prefix bbf-yang;
+  }
+
+  organization
+    "Broadband Forum <https://www.broadband-forum.org>
+     Common YANG Work Area";
+
+  contact
+    "Comments or questions about this Broadband Forum YANG module
+     should be directed to <mailto:help@broadband-forum.org>.
+
+     Editor:      Nick Hancock, ADTRAN
+
+     Editor:      Ludwig Pauwels, Nokia
+
+     PS Leader:   Joey Boyd, ADTRAN
+
+     PS Leader:   Ken Kerpez, ASSIA
+
+     WA Director: Joey Boyd, ADTRAN
+
+     WA Director: Sven Ooghe, Nokia";
+
+  description
+    "This module contains a collection of YANG definitions for 
+     supporting the Broadband Forum requirements on software 
+     management as applicable to access network equipment. As such, 
+     this module is specific to access network equipment (e.g., 
+     BBF-specified Access Nodes and FTTdp DPUs).
+
+     This module augments ietf-hardware.
+
+     Copyright (c) 2019, Broadband Forum
+     All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, are permitted provided that the following
+     conditions are met:
+
+     1. Redistributions of source code must retain the above copyright
+        notice, this list of conditions and the following disclaimer.
+
+     2. Redistributions in binary form must reproduce the above
+        copyright notice, this list of conditions and the following
+        disclaimer in the documentation and/or other materials
+        provided with the distribution.
+
+     3. Neither the name of the copyright holder nor the names of its
+        contributors may be used to endorse or promote products
+        derived from this software without specific prior written
+        permission.
+
+     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+     CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+     CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+     STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+     ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+     ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+     The above license is used as a license under copyright only.
+     Please reference the Forum IPR Policy for patent licensing terms.
+
+     Any moral rights which are necessary to exercise under the above
+     license grant are also deemed granted under this license.
+
+     This version of this YANG module is part of TR-355; see
+     the TR itself for full legal notices.";
+
+  revision 2019-03-01 {
+    description
+      "Initial revision.";
+    reference
+      "TBD";
+  }
+  
+  feature software-actions {
+    description
+      "Used to indicate support for invoking actions on software
+       revisions.";
+  }
+  
+  /* error reasons */
+  identity error-tag {
+    description
+      "The reason an error occurred.";
+  }
+  
+  identity no-error {
+    base error-tag;
+    description
+      "No error has occurred.";
+  }
+  
+  identity general-error {
+    base error-tag;
+    description
+      "A general error occurred.";
+  }
+  
+  /* Download States */
+  identity download-state {
+    description
+      "Base identity to represent the state of a software download.";
+  }
+  
+  identity idle {
+    base download-state;
+    description
+      "The download is currently idle. No software download has ever
+       taken place.";
+  }
+  
+  identity in-progress {
+    base download-state;
+    description
+      "A software download is in progress.";
+  }
+
+  identity successful {
+    base download-state;
+    description
+      "The last software download was successful.";
+  }
+
+  identity failed {
+    base download-state;
+    description
+      "The last software download failed to complete.";
+  }
+
+  identity aborted {
+    base download-state;
+    description
+      "The last software download aborted either through an 
+       explicit action or some other means.";
+  }
+  
+  
+  /* Download error reasons */
+  identity download-error-tag {
+    description
+      "The reason the download failed.";
+  }
+  
+  identity download-general-error {
+    base download-error-tag;
+    description
+      "A general error occurred in the download.";
+  }
+  
+  grouping error {
+    description
+      "Data nodes associated with an error.";
+    
+    leaf tag {
+      type identityref {
+        base error-tag;
+      }
+      config false;
+      description
+        "The reason the error occurred.";
+    }
+    
+    leaf message {
+      when "../tag != 'bbf-swm:no-error'" {
+        description
+          "Only valid when an error occurred.";
+      }
+      type string;
+      config false;
+      description
+        "A text string describing the cause of the error when
+         either no defined reason exists or additional information
+         is available beyond that defined by the tag itself.";
+    }
+  }
+
+  grouping download-revision {
+    description
+      "Data nodes, actions and notifications associated with 
+       downloading a software revision.";
+
+    container current-state {
+      config false;
+      description
+        "Data nodes associated with the current state of the download
+         state machine.";
+     
+      leaf state {
+        type enumeration {
+          enum idle {
+            description
+              "No download is currently in progress.";
+          }
+          enum in-progress {
+            description
+              "Download in progress.";
+          }
+        }
+        description
+          "The current state of a software download.";
+      }
+      
+      leaf timestamp {
+        type yang:date-and-time;
+        description
+          "The time at which the download state machine entered
+           its current state.";
+      }
+      
+      leaf revision {
+        when "../state = 'in-progress'" {
+          description
+            "The software revision name is only valid when a download 
+             is in progress.";
+        }
+        type bbf-yang:string-ascii64;
+        description
+          "The name of the software revision currently being 
+           downloaded.";
+      }
+    }
+
+    container previous-download {
+      config false;
+      description
+        "Data nodes associated with the previous attempt to download 
+         a software revision.";
+     
+      leaf result {
+        type enumeration {
+          enum not-available {
+            description
+              "No previous result is available.";
+          }
+          enum successful {
+            description
+              "The last software download was successful.";
+          }
+          enum failed {
+            description
+              "The last software download failed to complete.";
+          }
+          enum aborted {
+            description
+              "The last software download aborted either through an 
+               explicit action or some other means.";
+          }
+        }
+        description
+          "The result of the previous attempt to download a software 
+           revision.";
+      }
+      
+      container error {
+        when "../result = 'failed'" {
+          description
+            "Only applicable if the previous download failed.";
+        }
+        description
+          "Data nodes associated with a failed download.";
+        
+        uses error;
+      }
+
+      leaf timestamp {
+        type yang:date-and-time;
+        description
+          "The time at which the previous download attempt 
+           completed.";
+      }
+      
+      leaf revision {
+        when "../result != 'not-available'" {
+          description
+            "The software revision name is only valid when a download 
+             has been attempted.";
+        }
+        type bbf-yang:string-ascii64;
+        description
+          "The name of the software revision associated with the
+           last download attempt.";
+      }
+    }
+    
+    action download-revision {
+      if-feature software-actions;
+      description
+        "Download the specified software revision to this component.
+        
+         Successful invocation of this action results in the 
+         immediate creation of an entry in the list 'revision', 
+         whereby the leaf 'name' of the new entry is set to the value 
+         of the leaf 'name' in the input of this action.
+         
+         No entry is created in the list 'revision', if the 
+         invocation of this action is unsuccessful.
+         
+         If an implementation of the model limits the maximum number 
+         of entries in the list 'revision', the maximum number of 
+         supported entries should be reported in the leaf 
+         'maximum-number-or-revisions' within the container 
+         'revisions'.
+         
+         Note that a download of a revision for the software is 
+         only possible, if no download of a revision for the 
+         software is in progress.";
+        
+      input {
+        choice download-method {
+          description
+            "Method for retrieving the file.";
+
+          case url {
+            leaf url {
+              type inet:uri;
+              description
+                "URL containing the information required to 
+                 download the specified software included 
+                 protocol, IP address, filepath, etc..";
+            }
+          }
+        }
+        
+        leaf revision {
+          type bbf-yang:string-ascii64;
+          description
+            "A name to be used to identify the revision of the 
+             software when downloaded. For example,the file name 
+             associated with the software to download as specified 
+             in the download method.";
+        }
+      }
+      
+      output {
+      
+        container error {
+          description
+            "Data nodes describing the error that caused an 
+             invocation of the action to fail.";
+
+          uses error;
+        }
+      }
+    }
+    
+    notification revision-downloaded {
+      description
+        "Indicates that the specified software revision has 
+         been successfully downloaded to the target component.";
+
+      leaf revision {
+        type bbf-yang:string-ascii64;
+        description
+          "The name of the software revision that was successfully 
+           downloaded.";
+      }
+    }
+    
+    notification download-revision-failed {
+      description
+        "Indicates that the specified software revision failed to 
+         download to its target component.";
+         
+      leaf revision {
+        type bbf-yang:string-ascii64;
+        description
+          "The name of the software revision.";
+      }
+     
+      container error {
+        description
+          "Data nodes describing the error that caused the download 
+           to fail.";
+
+        uses error;
+      }
+    }
+
+    action abort-download {
+      if-feature software-actions;
+      description
+        "Abort the download process.";
+      
+      input {
+        leaf revision {
+          type bbf-yang:string-ascii64;
+          description
+            "The name of the software revision that is currently 
+             downloading.";
+        }
+      }
+    }
+
+    notification download-revision-aborted {
+      description
+        "Indicates that the download of the specified software 
+         revision has been successfully aborted.";
+
+      leaf revision {
+        type bbf-yang:string-ascii64;
+        description
+          "The name of the software revision.";
+      }
+    }
+  }
+
+  grouping revisions {
+    description
+      "Data nodes associated with all software revisions.";
+      
+    leaf maximum-number-of-revisions {
+      type uint16 {
+        range "2..max";
+      }
+      config false;
+      description
+        "If the device supports a limited number of revisions, 
+         this node will report the maximum number of revisions 
+         supported by the device.";
+    }
+      
+    notification revision-deleted {
+      description
+        "Indicates that a particular software revision was deleted
+         from the list of available revisions.";
+      
+      leaf name {
+        type bbf-yang:string-ascii64;
+        description
+          "The name of the software revision that was deleted.";
+      }    
+    } 
+
+    list revision {
+      must
+        "count(../revision[is-active = 'true']) = 1 and 
+         count(../revision[is-committed = 'true']) = 1" {
+        description
+          "Only one active and one committed revision are allowed.";
+      }
+      key "name";
+      config false;
+      description 
+        "A list of revisions available on the component for a given 
+         software managed on that component.";
+
+      leaf name {
+        type bbf-yang:string-ascii64;
+        description 
+          "The name of the software revision. This is the name used
+           when the software was downloaded, e.g. filename.";
+      }
+      
+      leaf download-timestamp {
+        type yang:date-and-time;
+        description
+          "The time and date when the software was downloaded.";
+      }
+
+      leaf version {
+        type string;
+        description 
+         "Reports the version of the software revision.";
+      }
+      
+      leaf is-valid {
+        type boolean;
+        description 
+          "Reports whether the stored software revision is 
+           valid ('true') or invalid ('false').";
+      }
+
+      leaf is-committed {
+        type boolean;
+        description 
+          "Reports whether the associated software revision is 
+           committed ('true') or uncommitted ('false').";
+      }
+
+      leaf is-active {
+        type boolean;
+        description 
+          "Reports whether the associated software revision is 
+           active ('true') or inactive ('false').";
+      }
+      
+      container activate-revision {
+        when "../is-valid = 'true'" {
+          description
+            "Only valid revisions can be activated.";
+        }
+        description
+          "Actions and notifications associated with activating 
+           a software revision.";
+        
+        action activate {
+          if-feature software-actions;
+          description
+            "Activate this revision.
+            
+             The system performs whatever steps are required to 
+             activate the revision. For example, this includes  
+             restarting the component or device, if this is necessary 
+             to activate the revision and is performed as part of 
+             the activity initiated by a successful invocation of 
+             this action.";
+        }
+        
+        notification revision-activated {
+          description
+            "Indicates that the specified revision has successfully 
+             activated on the target component.";
+        }
+    
+        notification activate-failed {
+          description
+            "Indicates that the specified revision failed to activate 
+             on its target component.";
+             
+          container error {
+            description
+              "Data nodes describing the error that caused the 
+               activation to fail.";
+
+            uses error;
+          }
+        }
+      }
+      
+      container commit-revision {
+        when "../is-valid = 'true'" {
+          description
+            "Only valid revisions can be committed.";
+        }
+        description
+          "Actions and notifications associated with committing 
+           a software revision.";
+        
+        action commit {
+          if-feature software-actions;
+          description
+            "Commit this revision.
+            
+             Note that committing a non-active revision does not 
+             activate that revision.";
+        }
+
+        notification revision-committed {
+          description
+            "Indicates that the specified revision has successfully 
+             committed on the target component.";
+        }
+        
+        notification commit-failed {
+          description
+            "Indicates that the revision software failed to commit 
+             on its target component.";
+
+          container error {
+            description
+              "Data nodes describing the error that caused the 
+               commit to fail.";
+
+            uses error;
+          }
+        }
+      }
+      
+      container delete-revision {
+        when "../is-active = 'false' and ../is-committed = 'false'" {
+          description
+            "Active and/or committed revisions cannot be explicitly
+             deleted.";
+        }
+        description
+          "Action associated with deleting a software revision.";
+      
+        action delete {
+          if-feature software-actions;
+          description
+            "Delete this revision from the stored software 
+             revisions.";
+        }
+      }
+    }
+  }
+
+  augment "/hw:hardware/hw:component" {
+    description 
+      "An augmentation of a hardware component to add support for the
+       management of software. The usage of such software can be for
+       a variety of purposes and this model makes no assumptions 
+       about what the 'software' actually is. Examples could be an 
+       executable application software image, a firmware image for an 
+       onboard chip, or even an executable script.";
+       
+    container software {
+      presence
+        "The component supports management of at least one software.";
+      description
+        "Hardware component data nodes, actions and notifications 
+         associated with software.";
+
+      list software {
+        key "name";
+        min-elements 1;
+        description 
+          "A list of software on this component.";
+          
+        leaf name {
+          type bbf-yang:string-ascii64;
+          description
+            "The name associated with this software. For a given
+             component, there may be more than one type of software 
+             being managed, e.g. application software, firmware or 
+             FPGA firmware. The name should represent this 
+             association, e.g. 'firmware'.";
+        }  
+          
+        container download {
+          description
+            "Information and actions regarding downloading of 
+             revisions of the software.";
+
+          uses download-revision {
+            refine "download-revision/input/revision" {
+              must "../../current-state/state='idle'" {
+                error-message 
+                  "A download of a revision for the software is 
+                   currently in progress.";
+                description
+                  "Ensure that a download is only possible, if a 
+                   download is currently not in progress.";
+              }
+            }
+          }
+        }  
+        
+        container revisions {
+          description
+            "Information and actions regarding all software 
+             revisions.";
+          
+          uses revisions;
+        }         
+      }
+    }
+  }
+  
+}

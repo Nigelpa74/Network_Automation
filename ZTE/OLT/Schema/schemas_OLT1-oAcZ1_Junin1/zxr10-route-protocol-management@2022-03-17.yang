@@ -1,0 +1,1260 @@
+module zxr10-route-protocol-management {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/route-protocol-ma'
+          + 'nagement'
+            ;
+  prefix rpm ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the route protocol management mod'
+            + 'el.'
+              ;
+  revision 2022-03-17 {
+    description "Support show VPN name with '?'."
+                ;
+  }
+  revision 2021-11-11 {
+    description 'Add new nodes to support direct route FRR WTR.'
+                ;
+  }
+  revision 2020-04-21 {
+    description 'Add new nodes to support IP FRR and WTR.'
+                ;
+  }
+  revision 2020-04-09 {
+    description 'Add ISIS-L to enum ROUTE-OWNER-DEF.'
+                ;
+  }
+  revision 2019-12-11 {
+    description 'Add new project label of 6700/65V5 to support rib-max-warning.'
+                ;
+  }
+  revision 2019-08-08 {
+    description 'Add new nodes direct-route-tracks in container ourier for set '
+              + 'the SAMGR track configurations of direct route. The path is "c'
+              + 'onfiguration/courier/direct-route-tracks".'
+                ;
+  }
+  revision 2019-06-19 {
+    description 'Add new nodes ipv4-maxribs and ipv6-maxribs in container ourie'
+              + 'r for set the rib usage-rate threshold. The paths are "configu'
+              + 'ration/courier/ipv4-maxribs"and "configuration/courier/ipv6-ma'
+              + 'xribs".'
+                ;
+  }
+  revision 2019-06-18 {
+    description 'Add new project label of 6100 to support entropy-label.'+"\n"
+              + 'Add reset value in entropy-label ipv4 and entropy-label ipv6.'
+                ;
+  }
+  revision 2019-01-10 {
+    description 'Add route owner type(DL) to the enumeration of ROUTE-OWNER-DEF'
+              + '.'+"\n"
+              + 'Add query protocol type(DL) to the enumeration of QUERY-PROTOC'
+              + 'OL-DEF.'+"\n"
+              + 'Add route type(DL) to the list of ip-route-summary.'
+                ;
+  }
+  revision 2018-09-19 {
+    description 'Add a new node entropy-label in container ourier for set the e'
+              + 'ntropy label. The paths is "configuration/courier/entropy-labe'
+              + 'l".'
+                ;
+  }
+  revision 2018-09-18 {
+    description 'Add a new container. The paths is "configuration/courier/ipv6-'
+              + 'maxroutes".'
+                ;
+  }
+  revision 2018-07-12 {
+    description '1. Obsolete the node ipv4-route. The paths is "state/protocol-'
+              + 'routing/ipv4-routes/ipv4-route".'+"\n"
+              + '2. Add a new node route-infomation to replace ipv4-route. The '
+              + 'paths is "state/protocol-routing/ipv4-routes/route-infomation"'
+              + '.'+"\n"
+              + '3. Add two route owner type(NAT-MASK and ZENIC-LOCAL) to the e'
+              + 'numeration of ROUTE-OWNER-DEF.'+"\n"
+              + '4. Add two query protocol type(NAT-MASK and ZENIC-LOCAL) to th'
+              + 'e enumeration of QUERY-PROTOCOL-DEF.'+"\n"
+              + '5. Add two route type(nat-mask and zenic-local) to the list of'
+              + ' ip-route-summary.'
+                ;
+  }
+  revision 2017-02-06 {
+    description 'Add two route owner type(SGW and BP) to the enumeration of ROU'
+              + 'TE-OWNER-DEF.'+"\n"
+              + 'Add two query protocol type(SGW and BP) to the enumeration of '
+              + 'QUERY-PROTOCOL-DEF.'+"\n"
+              + 'Add two route type(sgw and bras-pool) to the list of ip-route-'
+              + 'summary.'
+                ;
+  }
+  revision 2016-07-01 {
+    description 'Add the state node for protocol routing.'+"\n"
+              + 'Add three typedef node ROUTE-OWNER-DEF, ROUTE-STATUS-DEF and Q'
+              + 'UERY-PROTOCOL-DEF.'+"\n"
+              + 'Add the list of IPv4 protocol route information querying and t'
+              + 'he list of IPv4 protocol route statistics querying.'
+                ;
+  }
+  revision 2014-05-15 {
+    description 'Modify some errors existed in descriptions.'
+                ;
+  }
+  revision 2014-01-26 {
+    description 'Change the minimum value of max-routes and warning-percent fro'
+              + 'm 0 to 1.'
+                ;
+  }
+  revision 2013-11-26 {
+    description 'Initial version.'
+                ;
+  }
+  feature entropy-label {
+    description 'The function of entropy label.'
+                ;
+  }
+  feature rib-max-warning {
+    description 'The function of set maximum ribs and warning percent of total '
+              + 'ribs table.'
+                ;
+  }
+  feature direct-route-track {
+    description 'The function for the SAMGR track configurations of direct rout'
+              + 'e.'
+                ;
+  }
+  typedef ROUTE-OWNER-DEF {
+    type enumeration {
+      enum BOGUS {
+        value 0 ;
+        description 'The route owner is unknown.'
+                    ;
+      }
+      enum NAT {
+        value 1 ;
+        description 'The route owner is NAT.'
+                    ;
+      }
+      enum PAT {
+        value 2 ;
+        description 'The route owner is PAT.'
+                    ;
+      }
+      enum NAT64 {
+        value 3 ;
+        description 'The route owner is NAT64.'
+                    ;
+      }
+      enum PPP {
+        value 4 ;
+        description 'The route owner is PPP.'
+                    ;
+      }
+      enum VES {
+        value 5 ;
+        description 'The route owner is VES.'
+                    ;
+      }
+      enum DIRECT {
+        value 6 ;
+        description 'The route owner is DIRECT.'
+                    ;
+      }
+      enum ADDRESS {
+        value 7 ;
+        description 'The route owner is ADDRESS.'
+                    ;
+      }
+      enum STATIC {
+        value 8 ;
+        description 'The route owner is STATIC.'
+                    ;
+      }
+      enum BROADCAST {
+        value 9 ;
+        description 'The route owner is BROADCAST.'
+                    ;
+      }
+      enum SPECIAL {
+        value 10 ;
+        description 'The route owner is SPECIAL.'
+                    ;
+      }
+      enum P-SPEC {
+        value 11 ;
+        description 'The route owner is P-SPEC.'
+                    ;
+      }
+      enum OSPF {
+        value 12 ;
+        description 'The route owner is OSPF.'
+                    ;
+      }
+      enum OSPF-E {
+        value 13 ;
+        description 'The route owner is OSPF-E.'
+                    ;
+      }
+      enum OSPF-3D {
+        value 14 ;
+        description 'The route owner is OSPF-3D.'
+                    ;
+      }
+      enum OSPF-5D {
+        value 15 ;
+        description 'The route owner is OSPF-5D.'
+                    ;
+      }
+      enum OSPF-7D {
+        value 16 ;
+        description 'The route owner is OSPF-7D.'
+                    ;
+      }
+      enum ISIS-L1 {
+        value 17 ;
+        description 'The route owner is ISIS-L1.'
+                    ;
+      }
+      enum ISIS-L2 {
+        value 18 ;
+        description 'The route owner is ISIS-L2.'
+                    ;
+      }
+      enum BGP-INT {
+        value 19 ;
+        description 'The route owner is BGP-INT.'
+                    ;
+      }
+      enum BGP-EXT {
+        value 20 ;
+        description 'The route owner is BGP-EXT.'
+                    ;
+      }
+      enum BGP-AD {
+        value 21 ;
+        description 'The route owner is BGP-AD.'
+                    ;
+      }
+      enum RIP-D {
+        value 22 ;
+        description 'The route owner is RIP-D.'
+                    ;
+      }
+      enum RIP {
+        value 23 ;
+        description 'The route owner is RIP.'
+                    ;
+      }
+      enum VRRP {
+        value 24 ;
+        description 'The route owner is VRRP.'
+                    ;
+      }
+      enum USER-I {
+        value 25 ;
+        description 'The route owner is USER-I.'
+                    ;
+      }
+      enum USER-N {
+        value 26 ;
+        description 'The route owner is USER-N.'
+                    ;
+      }
+      enum USER-S {
+        value 27 ;
+        description 'The route owner is USER-S.'
+                    ;
+      }
+      enum IPSEC {
+        value 28 ;
+        description 'The route owner is IPSEC.'
+                    ;
+      }
+      enum GW-FWD {
+        value 29 ;
+        description 'The route owner is GW-FWD.'
+                    ;
+      }
+      enum GW-UE {
+        value 30 ;
+        description 'The route owner is GW-UE.'
+                    ;
+      }
+      enum LDP {
+        value 31 ;
+        description 'The route owner is LDP.'
+                    ;
+      }
+      enum DHCP-D {
+        value 32 ;
+        description 'The route owner is DHCP-D.'
+                    ;
+      }
+      enum DHCP-S {
+        value 33 ;
+        description 'The route owner is DHCP-S.'
+                    ;
+      }
+      enum ASBR-V {
+        value 34 ;
+        description 'The route owner is ASBR-V.'
+                    ;
+      }
+      enum TE {
+        value 35 ;
+        description 'The route owner is TE.'
+                    ;
+      }
+      enum HAGP {
+        value 36 ;
+        description 'The route owner is hybrid-access-gateway-protocol.'
+                    ;
+      }
+      enum BP {
+        value 37 ;
+        description 'The route owner is bras-pool.'
+                    ;
+      }
+      enum NAT-MASK {
+        value 38 ;
+        description 'The route owner is NAT-mask.'
+                    ;
+      }
+      enum ZENIC-LOCAL {
+        value 39 ;
+        description 'The route owner is ZENIC-local.'
+                    ;
+      }
+      enum DL {
+        value 40 ;
+        description 'The route owner is dynamic-leased-line.'
+                    ;
+      }
+      enum ISIS-L {
+        value 41 ;
+      }
+    }
+    default BOGUS ;
+    description 'The definition of route owner.'
+                ;
+  }
+  typedef ROUTE-STATUS-DEF {
+    type enumeration {
+      enum INVALID {
+        value 0 ;
+        description 'The route status is invalid.'
+                    ;
+      }
+      enum VALID {
+        value 1 ;
+        description 'The route status is valid.'
+                    ;
+      }
+      enum BEST {
+        value 2 ;
+        description 'The route status is best.'
+                    ;
+      }
+    }
+    default INVALID ;
+    description 'The definition of route status.'
+                ;
+  }
+  typedef QUERY-PROTOCOL-DEF {
+    type enumeration {
+      enum NULL {
+        value 0 ;
+        description 'The default value, indicates that does not specify the que'
+                  + 'ry protocol.'
+                    ;
+      }
+      enum STATIC {
+        value 1 ;
+        description 'The query protocol is STATIC.'
+                    ;
+      }
+      enum CONNECT {
+        value 2 ;
+        description 'The query protocol is CONNECT.'
+                    ;
+      }
+      enum BGP {
+        value 3 ;
+        description 'The query protocol is BGP.'
+                    ;
+      }
+      enum OSPF {
+        value 4 ;
+        description 'The query protocol is OSPF.'
+                    ;
+      }
+      enum RIP {
+        value 5 ;
+        description 'The query protocol is RIP.'
+                    ;
+      }
+      enum ISIS-L1 {
+        value 6 ;
+        description 'The query protocol is ISIS-L1.'
+                    ;
+      }
+      enum ISIS-L2 {
+        value 7 ;
+        description 'The query protocol is ISIS-L2.'
+                    ;
+      }
+      enum USER {
+        value 8 ;
+        description 'The query protocol is USER.'
+                    ;
+      }
+      enum PS-USER {
+        value 9 ;
+        description 'The query protocol is PS-USER.'
+                    ;
+      }
+      enum PS-BUSI {
+        value 10 ;
+        description 'The query protocol is PS-BUSI.'
+                    ;
+      }
+      enum NAT {
+        value 11 ;
+        description 'The query protocol is is NAT.'
+                    ;
+      }
+      enum VRRP {
+        value 12 ;
+        description 'The query protocol is VRRP.'
+                    ;
+      }
+      enum PPP {
+        value 13 ;
+        description 'The query protocol is PPP.'
+                    ;
+      }
+      enum NATPT {
+        value 14 ;
+        description 'The query protocol is NAT-PT.'
+                    ;
+      }
+      enum LDP {
+        value 15 ;
+        description 'The query protocol is LDP.'
+                    ;
+      }
+      enum USER-SPECIAL {
+        value 16 ;
+        description 'The query protocol is USER-SPECIAL.'
+                    ;
+      }
+      enum DHCP-DFT {
+        value 17 ;
+        description 'The query protocol is DHCP-DFT.'
+                    ;
+      }
+      enum DHCP-STATIC {
+        value 18 ;
+        description 'The query protocol is DHCP-STATIC.'
+                    ;
+      }
+      enum SL-NAT64 {
+        value 19 ;
+        description 'The query protocol is SL-NAT64.'
+                    ;
+      }
+      enum VES {
+        value 20 ;
+        description 'The query protocol is VES.'
+                    ;
+      }
+      enum HAGP {
+        value 21 ;
+        description 'The query protocol is HAGP.'
+                    ;
+      }
+      enum BP {
+        value 22 ;
+        description 'The query protocol is bras-pool.'
+                    ;
+      }
+      enum NAT-MASK {
+        value 23 ;
+        description 'The query protocol is NAT-mask.'
+                    ;
+      }
+      enum ZENIC-LOCAL {
+        value 24 ;
+        description 'The query protocol is ZENIC-local.'
+                    ;
+      }
+      enum DL {
+        value 25 ;
+        description 'The query protocol is dynamic-leased-line.'
+                    ;
+      }
+    }
+    default NULL ;
+    description 'The definition of query protocol.'
+                ;
+  }
+  container configuration {
+    description 'The netconf module to describe the configuration of route prot'
+              + 'ocol management model.'
+                ;
+    container courier {
+      description 'This model includes the description of ip max-routes configu'
+                + 'ration.'
+                  ;
+      container ip-maxroutes {
+        description 'The netconf module to describe the function of set maximum'
+                  + ' routes and warning percent of global route table, this fu'
+                  + 'nction can not limit the routes number, but only send user'
+                  + 's an alarm when the routes number reaches the threshold va'
+                  + 'lue.'
+                    ;
+        presence 'ip max-routes'
+                 ;
+        leaf max-routes {
+          description 'The max-routes node means the maximum of the global rout'
+                    + 'e table.This node and warning-percent node must be set t'
+                    + 'ogether.'
+                      ;
+          type uint32 {
+            range 1..4294967295 ;
+          }
+          mandatory true ;
+        }
+        leaf warning-percent {
+          description 'Warning threshold value. When the routes of the global r'
+                    + 'oute table exceeded the threshold value, an alarm will b'
+                    + 'e send to users. This node and max-routes node must be s'
+                    + 'et together.'
+                      ;
+          type uint32 {
+            range 1..100 ;
+          }
+          mandatory true ;
+        }
+      }
+      container ipv6-maxroutes {
+        description 'Set maximum routes and warning percent of IPv6 global rout'
+                  + 'e table. This function can not limit the routes number, bu'
+                  + 't only send users an alarm when the routes number reaches '
+                  + 'the threshold value.'
+                    ;
+        presence 'ipv6 max-routes'
+                 ;
+        leaf max-routes {
+          description 'The max-routes node means the maximum of the IPv6 global'
+                    + ' route table. This node and warning-percent node must be'
+                    + ' set together.'
+                      ;
+          type uint32 {
+            range 1..4294967295 ;
+          }
+          mandatory true ;
+        }
+        leaf warning-percent {
+          description 'Warning threshold value. When the routes of the IPv6 glo'
+                    + 'bal route table exceeded the threshold value, an alarm w'
+                    + 'ill be send to users. This node and max-routes node must'
+                    + ' be set together.'
+                      ;
+          type uint32 {
+            range 1..100 ;
+          }
+          mandatory true ;
+        }
+        ncd:revise-date 2018-09-18 ;
+      }
+      container entropy-label {
+        if-feature entropy-label ;
+        description 'Set the entropy label.'
+                    ;
+        leaf ipv4 {
+          description 'Set the ipv4 entropy label.'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+            }
+            enum disable {
+              value 0 ;
+            }
+          }
+        }
+        leaf ipv6 {
+          description 'Set the ipv6 entropy label.'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+            }
+            enum disable {
+              value 0 ;
+            }
+          }
+        }
+        ncd:revise-date 2018-09-19 ;
+      }
+      container ipv4-maxribs {
+        if-feature rib-max-warning ;
+        description 'The netconf module to describe the function of set maximum'
+                  + ' ribs and warning percent of total ribs table, this functi'
+                  + 'on can not limit the ribs number, but only send users an a'
+                  + 'larm when the ribs number reaches the threshold value.'
+                    ;
+        presence 'ip max-ribs'
+                 ;
+        leaf warning-percent {
+          description 'Warning threshold value. When the count of the total IPv'
+                    + '4 rib table exceeded the threshold value, an alarm will '
+                    + 'be send to users.'
+                      ;
+          type uint8 {
+            range 1..100 ;
+          }
+          mandatory true ;
+        }
+        ncd:revise-date 2019-06-19 ;
+      }
+      container ipv6-maxribs {
+        if-feature rib-max-warning ;
+        description 'The netconf module to describe the function of set maximum'
+                  + ' ribs and warning percent of total ribs table, this functi'
+                  + 'on can not limit the ribs number, but only send users an a'
+                  + 'larm when the ribs number reaches the threshold value.'
+                    ;
+        presence 'ipv6 max-routes'
+                 ;
+        leaf warning-percent {
+          description 'Warning threshold value. When the count of the total IPv'
+                    + '6 rib table exceeded the threshold value, an alarm will '
+                    + 'be send to users.'
+                      ;
+          type uint8 {
+            range 1..100 ;
+          }
+          mandatory true ;
+        }
+        ncd:revise-date 2019-06-19 ;
+      }
+      container direct-route-tracks {
+        if-feature direct-route-track ;
+        description 'The SAMGR track configurations of direct route.'
+                    ;
+        list direct-route-track {
+          description 'The SAMGR track configurations of direct route.'
+                      ;
+          key 'interface af-type'
+              ;
+          leaf interface {
+            description 'The interface name of direct route.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf af-type {
+            description 'Address family of direct route.'
+                        ;
+            type enumeration {
+              enum ipv4 {
+                value 1 ;
+              }
+              enum ipv6 {
+                value 2 ;
+              }
+            }
+          }
+          leaf track-name {
+            description 'Name of a track object.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+          leaf metric {
+            description 'Cost for direct route.'
+                        ;
+            type uint32 {
+              range 1..4294967295 ;
+            }
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2019-08-08 ;
+      }
+    }
+    container ipv4-frr {
+      description 'IPv4 fast reroute.'
+                  ;
+      leaf status {
+        description 'disable:0
+enable:1'
+                    ;
+        type enumeration {
+          enum disable {
+            value 0 ;
+          }
+          enum enable {
+            value 1 ;
+          }
+        }
+      }
+      leaf wtr {
+        description 'WTR time. The range is 1-12(min).'
+                    ;
+        type uint8 {
+          range 1..12 ;
+        }
+      }
+      ncd:revise-date 2020-04-21 ;
+    }
+    container ipv6-frr {
+      description 'IPv6 fast reroute.'
+                  ;
+      leaf status {
+        description 'disable:0
+enable:1'
+                    ;
+        type enumeration {
+          enum disable {
+            value 0 ;
+          }
+          enum enable {
+            value 1 ;
+          }
+        }
+      }
+      leaf wtr {
+        description 'WTR time. The range is 1-12(min).'
+                    ;
+        type uint8 {
+          range 1..12 ;
+        }
+      }
+      ncd:revise-date 2020-04-21 ;
+    }
+    container ipv4-direct-route-frr-wtr {
+      description 'IPv4 direct route FRR WTR.'
+                  ;
+      presence wtr ;
+      leaf wtr {
+        description 'WTR time. The range is 0-12 minute(s).'
+                    ;
+        type uint8 {
+          range 0..12 ;
+        }
+        mandatory true ;
+      }
+      ncd:revise-date 2021-11-11 ;
+    }
+    container ipv6-direct-route-frr-wtr {
+      description 'IPv6 direct route FRR WTR.'
+                  ;
+      presence wtr ;
+      leaf wtr {
+        description 'WTR time. The range is 0-12 minute(s).'
+                    ;
+        type uint8 {
+          range 0..12 ;
+        }
+        mandatory true ;
+      }
+      ncd:revise-date 2021-11-11 ;
+    }
+  }
+  container state {
+    config false ;
+    description 'The information querying of route protocol management model.'
+                ;
+    container protocol-routing {
+      description 'The information querying of protocol route.'
+                  ;
+      container ipv4-routes {
+        description 'The information querying of IPv4 protocol route.'
+                    ;
+        list ipv4-route {
+          status obsolete {
+            ncd:revise-date 2018-07-12 ;
+          }
+          description 'The list of IPv4 protocol route information querying.'+"\n"
+                    + 'For all routes of public network, need select obj-type(1'
+                    + ').'+"\n"
+                    + 'For the special protocol routes of public network, need '
+                    + 'select obj-type(1) and query-protocol.'+"\n"
+                    + 'For exact match the routes of public network according t'
+                    + 'o prefix, need select obj-type(1), dest-addr and mask-ad'
+                    + 'dr.'+"\n"
+                    + 'For exact match the routes of public network according t'
+                    + 'o prefix and protocol, need select obj-type(1), query-pr'
+                    + 'otocol, dest-addr and mask-addr.'+"\n"
+                    + 'For all routes of one VPN, need select obj-type(2) and v'
+                    + 'rf-name.'+"\n"
+                    + 'For the special protocol routes of one VPN, need select '
+                    + 'obj-type(2), vrf-name and query-protocol.'+"\n"
+                    + 'For exact match the routes of one VPN according to prefi'
+                    + 'x, need select obj-type(2), vrf-name, dest-addr and mask'
+                    + '-addr.'+"\n"
+                    + 'For exact match the routes of one VPN according to prefi'
+                    + 'x and protocol, need select obj-type(2), vrf-name, query'
+                    + '-protocol, dest-addr and mask-addr.'
+                      ;
+          key 'obj-type vrf-name query-protocol dest-addr mask-addr nexthop-ind'
+            + 'ex nexthop-addr'
+              ;
+          leaf obj-type {
+            description 'The type of network. The "GLOBAL" means the public rou'
+                      + 'te, the "VPN" means private route.'
+                        ;
+            type enumeration {
+              enum GLOBAL {
+                value 1 ;
+                description 'The routes of public network.'
+                            ;
+              }
+              enum VPN {
+                value 2 ;
+                description 'The routes of VPN network.'
+                            ;
+              }
+            }
+          }
+          leaf vrf-name {
+            description 'The name of the private VPN network.'
+                        ;
+            type string {
+              length 0..32 ;
+            }
+          }
+          leaf query-protocol {
+            description 'The protocol type of querying.'
+                        ;
+            type QUERY-PROTOCOL-DEF ;
+          }
+          leaf dest-addr {
+            description 'The destination IP address of route.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf mask-addr {
+            description 'The mask of route.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf route-owner {
+            description 'The owner of route.'
+                        ;
+            type ROUTE-OWNER-DEF ;
+          }
+          leaf route-status {
+            description 'The status of route.'
+                        ;
+            type ROUTE-STATUS-DEF ;
+          }
+          leaf nexthop-index {
+            description 'Nexthop index of route.'
+                        ;
+            type uint32 {
+              range 1..4294967295 ;
+            }
+          }
+          leaf nexthop-addr {
+            description 'The nexthop of route.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf distance {
+            description 'The management distance of route.'
+                        ;
+            type uint8 {
+              range 0..255 ;
+            }
+            default 0 ;
+          }
+          leaf metric {
+            description 'The metric of route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            default 0 ;
+          }
+          leaf inlabel {
+            description 'The in label of route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            default 0 ;
+          }
+          leaf outlabel {
+            description 'The out label of route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            default 0 ;
+          }
+          ncd:select obj-type ;
+          ncd:select 'obj-type query-protocol'
+                     ;
+          ncd:select 'obj-type query-protocol dest-addr mask-addr'
+                     ;
+          ncd:select 'obj-type dest-addr mask-addr'
+                     ;
+          ncd:select 'obj-type vrf-name'
+                     ;
+          ncd:select 'obj-type vrf-name query-protocol'
+                     ;
+          ncd:select 'obj-type vrf-name query-protocol dest-addr mask-addr'
+                     ;
+          ncd:select 'obj-type vrf-name dest-addr mask-addr'
+                     ;
+        }
+        list route-infomation {
+          description 'The list of IPv4 protocol route information querying.'+"\n"
+                    + 'For all routes of public network, need select obj-type(1'
+                    + ').'+"\n"
+                    + 'For the special protocol routes of public network, need '
+                    + 'select obj-type(1) and query-protocol.'+"\n"
+                    + 'For exact match the routes of public network according t'
+                    + 'o prefix, need select obj-type(1), dest-addr and mask-ad'
+                    + 'dr.'+"\n"
+                    + 'For exact match the routes of public network according t'
+                    + 'o prefix and protocol, need select obj-type(1), query-pr'
+                    + 'otocol, dest-addr and mask-addr.'+"\n"
+                    + 'For all routes of one VPN, need select obj-type(2) and v'
+                    + 'rf-name.'+"\n"
+                    + 'For the special protocol routes of one VPN, need select '
+                    + 'obj-type(2), vrf-name and query-protocol.'+"\n"
+                    + 'For exact match the routes of one VPN according to prefi'
+                    + 'x, need select obj-type(2), vrf-name, dest-addr and mask'
+                    + '-addr.'+"\n"
+                    + 'For exact match the routes of one VPN according to prefi'
+                    + 'x and protocol, need select obj-type(2), vrf-name, query'
+                    + '-protocol, dest-addr and mask-addr.'
+                      ;
+          key 'obj-type vrf-name query-protocol dest-addr mask-addr nexthop-ind'
+            + 'ex'
+              ;
+          leaf obj-type {
+            description 'The type of network. The "GLOBAL" means the public rou'
+                      + 'te, the "VPN" means private route.'
+                        ;
+            type enumeration {
+              enum GLOBAL {
+                value 1 ;
+                description 'The routes of public network.'
+                            ;
+              }
+              enum VPN {
+                value 2 ;
+                description 'The routes of VPN network.'
+                            ;
+              }
+            }
+          }
+          leaf vrf-name {
+            description 'The name of the private VPN network.'
+                        ;
+            type ncd:string-quesiton-mark {
+              length 0..32 ;
+            }
+          }
+          leaf query-protocol {
+            description 'The protocol type of querying.'
+                        ;
+            type QUERY-PROTOCOL-DEF ;
+          }
+          leaf dest-addr {
+            description 'The destination IP address of route.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf mask-addr {
+            description 'The mask of route.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf nexthop-index {
+            description 'Nexthop index of route.'
+                        ;
+            type uint32 {
+              range 1..4294967295 ;
+            }
+          }
+          leaf route-owner {
+            description 'The owner of route.'
+                        ;
+            type ROUTE-OWNER-DEF ;
+          }
+          leaf route-status {
+            description 'The status of route.'
+                        ;
+            type ROUTE-STATUS-DEF ;
+          }
+          leaf nexthop {
+            description 'The nexthop of route.'
+                        ;
+            type string ;
+          }
+          leaf distance {
+            description 'The management distance of route.'
+                        ;
+            type uint8 {
+              range 0..255 ;
+            }
+            default 0 ;
+          }
+          leaf metric {
+            description 'The metric of route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            default 0 ;
+          }
+          leaf inlabel {
+            description 'The in label of route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            default 0 ;
+          }
+          leaf outlabel {
+            description 'The out label of route.'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+            default 0 ;
+          }
+          ncd:select obj-type ;
+          ncd:select 'obj-type query-protocol'
+                     ;
+          ncd:select 'obj-type query-protocol dest-addr mask-addr'
+                     ;
+          ncd:select 'obj-type dest-addr mask-addr'
+                     ;
+          ncd:select 'obj-type vrf-name'
+                     ;
+          ncd:select 'obj-type vrf-name query-protocol'
+                     ;
+          ncd:select 'obj-type vrf-name query-protocol dest-addr mask-addr'
+                     ;
+          ncd:select 'obj-type vrf-name dest-addr mask-addr'
+                     ;
+          ncd:revise-date 2018-07-12 ;
+        }
+      }
+    }
+    container protocol-routing-summary {
+      description 'The querying of protocol route statistics.'
+                  ;
+      container ipv4-routes {
+        description 'The querying of IPv4 protocol route statistics.'
+                    ;
+        list ip-route-summary {
+          description 'The list of IPv4 protocol route statistics querying.'+"\n"
+                    + 'For the route statistics of public network, need select '
+                    + 'obj-type(1).'+"\n"
+                    + 'For the route statistics of one VPN, need select obj-typ'
+                    + 'e(2) and vrf-name.'
+                      ;
+          key 'obj-type vrf-name'
+              ;
+          leaf obj-type {
+            description 'The type of network. The "GLOBAL" means the public rou'
+                      + 'te, the "VPN" means private route.'
+                        ;
+            type enumeration {
+              enum GLOBAL {
+                value 1 ;
+                description 'The routes of public network.'
+                            ;
+              }
+              enum VPN {
+                value 2 ;
+                description 'The routes of VPN network.'
+                            ;
+              }
+            }
+          }
+          leaf vrf-name {
+            description 'The name of the private VPN network.'
+                        ;
+            type ncd:string-quesiton-mark {
+              length 0..32 ;
+            }
+          }
+          leaf connect {
+            description 'The statistic of CONNECT route.'
+                        ;
+            type uint32 ;
+          }
+          leaf static {
+            description 'The statistic of STATIC route.'
+                        ;
+            type uint32 ;
+          }
+          leaf ospf {
+            description 'The statistic of OSPF route.'
+                        ;
+            type uint32 ;
+          }
+          leaf rip {
+            description 'The statistic of RIP route.'
+                        ;
+            type uint32 ;
+          }
+          leaf bgp {
+            description 'The statistic of BGP route.'
+                        ;
+            type uint32 ;
+          }
+          leaf isis {
+            description 'The statistic of ISIS route.'
+                        ;
+            type uint32 ;
+          }
+          leaf nat {
+            description 'The statistic of NAT route.'
+                        ;
+            type uint32 ;
+          }
+          leaf natpt {
+            description 'The statistic of NAT-PAT route.'
+                        ;
+            type uint32 ;
+          }
+          leaf vrrp {
+            description 'The statistic of VRRP route.'
+                        ;
+            type uint32 ;
+          }
+          leaf ppp {
+            description 'The statistic of PPP route.'
+                        ;
+            type uint32 ;
+          }
+          leaf asbr-vpn {
+            description 'The statistic of ASBR-VPN route.'
+                        ;
+            type uint32 ;
+          }
+          leaf rsvpte {
+            description 'The statistic of RSVP-TE route.'
+                        ;
+            type uint32 ;
+          }
+          leaf user-ipaddr {
+            description 'The statistic of USER-IP-ADDRESS route.'
+                        ;
+            type uint32 ;
+          }
+          leaf user-net {
+            description 'The statistic of USER-NETWORK route.'
+                        ;
+            type uint32 ;
+          }
+          leaf ipsec {
+            description 'The statistic of IPSEC route.'
+                        ;
+            type uint32 ;
+          }
+          leaf ps-user {
+            description 'The statistic of PS-USER route.'
+                        ;
+            type uint32 ;
+          }
+          leaf ps-busi {
+            description 'The statistic of PS-BUSI route.'
+                        ;
+            type uint32 ;
+          }
+          leaf ves {
+            description 'The statistic of VES route.'
+                        ;
+            type uint32 ;
+          }
+          leaf ldp {
+            description 'The statistic of LDP route.'
+                        ;
+            type uint32 ;
+          }
+          leaf user-special {
+            description 'The statistic of USER-SPECIAL route.'
+                        ;
+            type uint32 ;
+          }
+          leaf dhcp-dft {
+            description 'The statistic of DHCP-DFT route.'
+                        ;
+            type uint32 ;
+          }
+          leaf dhcp-static {
+            description 'The statistic of DHCP-STATIC route.'
+                        ;
+            type uint32 ;
+          }
+          leaf sl-nat64 {
+            description 'The statistic of SL-NAT64 route.'
+                        ;
+            type uint32 ;
+          }
+          leaf hagp {
+            description 'The statistic of hybrid-access-gateway-protocol route.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2017-02-06 ;
+          }
+          leaf bras-pool {
+            description 'The statistic of bras-pool route.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2017-02-06 ;
+          }
+          leaf nat-mask {
+            description 'The statistic of nat-mask route.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2018-07-12 ;
+          }
+          leaf zenic-local {
+            description 'The statistic of zenic-local route.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2018-07-12 ;
+          }
+          leaf dynamic-leased-line {
+            description 'The statistic of dynamic-leased-line route.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2019-01-10 ;
+          }
+          leaf total {
+            description 'The statistic of all routes.'
+                        ;
+            type uint32 ;
+          }
+          ncd:select obj-type ;
+          ncd:select 'obj-type vrf-name'
+                     ;
+        }
+      }
+    }
+    ncd:revise-date 2016-07-01 ;
+  }
+}

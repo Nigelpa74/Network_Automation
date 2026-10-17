@@ -1,0 +1,1548 @@
+module zxr10-msdp {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/msdp'
+            ;
+  prefix mcast ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module of describing MSDP.'
+              ;
+  revision 2020-07-10 {
+    description '1.modify the leaf node password string length from 120 to 80:/'
+              + 'configuration/router-msdp/msdp/peers/peer/password and /config'
+              + 'uration/router-msdp/vrf-msdps/vrf-msdp/peers/peer/password.'+"\n"
+              + '2.Add the leaf node of password_encrypted: /configuration/rout'
+              + 'er-msdp/msdp/peers/peer/password_encrypted and /configuration/'
+              + 'router-msdp/vrf-msdps/vrf-msdp/peers/peer/password-encrypted.'
+                ;
+  }
+  revision 2016-03-04 {
+    description '1.modify the type of the leaf: /configuration/router-msdp/msdp'
+              + '/peers/peer/description and /configuration/router-msdp/vrf-msd'
+              + 'ps/vrf-msdp/peers/peer/description.'
+                ;
+  }
+  revision 2016-01-08 {
+    description 'Add the leaves of keychain: /configuration/router-msdp/msdp/pe'
+              + 'ers/peer/ and /configuration/router-msdp/vrf-msdps/vrf-msdp/pe'
+              + 'ers/peer/.'
+                ;
+  }
+  revision 2015-08-13 {
+    description '1.modify the type of the leaf:/state/msdp/public/peers/peer/de'
+              + 'scription and /state/msdp/private/peers/peer/description.'+"\n"
+              + '2.modify the range of the leaf:/state/msdp/public/peers/peer/t'
+              + 'tl-security-hops and /state/msdp/private/peers/peer/ttl-securi'
+              + 'ty-hops'
+                ;
+  }
+  revision 2015-07-31 {
+    description '1.modify the name of the container :/configuration/state/publi'
+              + 'c/sa-caches/total-sa-entry.'
+                ;
+  }
+  revision 2015-04-15 {
+    description 'Add state and operation of MSDP.'
+                ;
+  }
+  revision 2015-03-31 {
+    description '1.add the length range of the leaf :/configuration/router-msdp'
+              + '/msdp/default-peers/default-peer/acl.'+"\n"
+              + '2.add the description of the leaf:/configuration/router-msdp/v'
+              + 'rf-msdps/vrf-msdp/vrf-name.'+"\n"
+              + '3.add the length range of the leaf:/configuration/router-msdp/'
+              + 'vrf-msdps/vrf-msdp/default-peers/default-peer/acl.'
+                ;
+  }
+  revision 2015-03-24 {
+    description '1.add the container :/configuration/router-msdp/msdp/global.'+"\n"
+              + '2.add the leaf :/configuration/router-msdp/msdp/peers/peer/hol'
+              + 'dtime,keepalive-period,reconnect-period,inactive-holdtime.'+"\n"
+              + '3.add the leaf :/configuration/vrf-msdps/vrf-msdp/sa-advertise'
+              + 'ment-period,sa-cache-holdtime.'+"\n"
+              + '4.add the leaf :/configuration/router-msdp/vrf-msdps/vrf-msdp/'
+              + 'peers/peer/holdtime,keepalive-period,reconnect-period,inactive'
+              + '-holdtime.'
+                ;
+  }
+  revision 2015-03-02 {
+    description '1.modify the description of the leaf and container :/configura'
+              + 'tion/router-msdp/msdp/peers/peer/sa-limit,description,ttl-secu'
+              + 'rity-hops,ttl-threshold,connect-source.'+"\n"
+              + '2.modify the description of the container :/configuration/rout'
+              + 'er-msdp/msdp/redistribute,originator-id.'+"\n"
+              + '3.modify the description of the leaf and container :/configura'
+              + 'tion/router-msdp/vrf-msdps/vrf-msdp/peers/peer/sa-limit,descri'
+              + 'ption,ttl-security-hops,ttl-threshold,connect-source.'+"\n"
+              + '4.modify the description of the container :/configuration/rout'
+              + 'er-msdp/vrf-msdps/vrf-msdp/redistribute,originator-id.'
+                ;
+  }
+  revision 2015-02-11 {
+    description '1.delete the container :/configuration/router-msdp/vrf-msdps/v'
+              + 'rf-msdp/enable-msdp.'
+                ;
+  }
+  revision 2014-12-24 {
+    description '1.modify the type of the leaf :/configuration/msdp/peers/peer/'
+              + 'shutdown.'+"\n"
+              + '2.modify the type of the leaf :/configuration/msdp/peers/peer/'
+              + 'bfd-enable.'+"\n"
+              + '3.modify the type of the leaf :/configuration/msdp/redistribut'
+              + 'e/redistribute.'
+                ;
+  }
+  revision 2014-08-15 {
+    description '1.add container node for the container msdp :/configuration/ro'
+              + 'uter-msdp.'+"\n"
+              + '2.add the container :/configuration/router-msdp/vrf-msdps,whic'
+              + 'h has samilar members like the container msdp.'
+                ;
+  }
+  revision 2014-08-13 {
+    description '1.add the presence of the container :/configuration/msdp/enabl'
+              + 'e-msdp'+"\n"
+              + '2.modify the type of the leaf :/configuration/msdp/enable-msdp'
+              + '/router-msdp'+"\n"
+              + '3.add the mandatory attribution of the leaf :/configuration/ms'
+              + 'dp/enable-msdp/router-msdp'+"\n"
+              + '4.delete the max-elements of the list:/configuration/msdp/peer'
+              + 's/peer'+"\n"
+              + '5.modify the length range of the leaf :/configuration/msdp/pee'
+              + 'rs/peer/mesh-group'+"\n"
+              + '6.modify the type and length range of the leaf :/configuration'
+              + '/msdp/peers/peer/description'+"\n"
+              + '7.add the default value of the leaf :/configuration/msdp/peers'
+              + '/peer/ttl-threshold'+"\n"
+              + '8.modify the value range of the leaf :/configuration/msdp/peer'
+              + 's/peer/ttl-security-hops'+"\n"
+              + '9.delete the max-elements of the list:/configuration/msdp/defa'
+              + 'ult-peers/default-peer'
+                ;
+  }
+  revision 2013-10-21 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model.'
+                ;
+    container router-msdp {
+      description 'MSDP module configure root node.'
+                  ;
+      container msdp {
+        description 'Multicast Source Discovery Protocol.'
+                    ;
+        container enable-msdp {
+          description 'Enable Multicast Source Discovery Protocol.'
+                      ;
+          presence enable-msdp ;
+          leaf router-msdp {
+            description 'Enable msdp.'
+                        ;
+            type empty ;
+            mandatory true ;
+          }
+        }
+        container global {
+          description 'Global commands.'
+                      ;
+          leaf sa-advertisement-period {
+            description 'SA message interval.'
+                        ;
+            type uint32 {
+              range 1..60 ;
+            }
+            units second ;
+            default 60 ;
+          }
+          leaf sa-cache-holdtime {
+            description 'SA cache holdtime.'
+                        ;
+            type uint32 {
+              range 150..3600 ;
+            }
+            units second ;
+            default 360 ;
+          }
+        }
+        container peers {
+          description 'MSDP peer.'
+                      ;
+          list peer {
+            description 'MSDP peer.'
+                        ;
+            key address ;
+            leaf address {
+              description 'Peer address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf mesh-group {
+              description 'Mesh group name.'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf sa-limit {
+              description 'The limit of SA cache.'
+                          ;
+              type uint32 {
+                range 1..2147483646 ;
+              }
+            }
+            leaf description {
+              description 'Description of peer.'
+                          ;
+              type ncd:string-with-blank {
+                length 1..80 ;
+              }
+            }
+            leaf password {
+              description 'The password of peer.'
+                          ;
+              type string {
+                length 1..80 ;
+              }
+            }
+            leaf ttl-threshold {
+              description 'Source active message encapsulated data TTL threshol'
+                        + 'd.'
+                          ;
+              type uint16 {
+                range 1..255 ;
+              }
+              default 1 ;
+            }
+            leaf ttl-security-hops {
+              description 'TTL security hops of peer.'
+                          ;
+              type uint16 {
+                range 1..254 ;
+              }
+            }
+            leaf shutdown {
+              description 'Shutdown peer.'
+                          ;
+              type empty ;
+            }
+            leaf bfd-enable {
+              description 'Enable bfd function.'
+                          ;
+              type empty ;
+            }
+            leaf holdtime {
+              description 'Msdp peer holdtime.'
+                          ;
+              type uint32 {
+                range 1..75 ;
+              }
+              units second ;
+              default 75 ;
+            }
+            leaf keepalive-period {
+              description 'Peer keepalive message interval.'
+                          ;
+              type uint32 {
+                range 1..60 ;
+              }
+              units second ;
+              default 60 ;
+            }
+            leaf reconnect-period {
+              description 'Peer connect retry interval.'
+                          ;
+              type uint32 {
+                range 1..60 ;
+              }
+              units second ;
+              default 30 ;
+            }
+            leaf inactive-holdtime {
+              description 'Peer inactive state holdtime.'
+                          ;
+              type uint32 {
+                range 1..60 ;
+              }
+              units second ;
+              default 60 ;
+            }
+            leaf keychain {
+              description 'Keychain name.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+              ncd:revise-date 2016-01-08 ;
+            }
+            leaf password-encrypted {
+              description 'The encrypted password of peer.'
+                          ;
+              type string {
+                length 64..172 ;
+              }
+              ncd:revise-date 2020-07-10 ;
+            }
+            container connect-source {
+              description 'Configuration connect source interface with peer.'
+                          ;
+              leaf interface {
+                description 'Configure interface as tcp connect address peer'
+                            ;
+                type ncd:ifname ;
+              }
+            }
+            container sa-filter-in {
+              description 'Enable incoming SA filtering.'
+                          ;
+              presence sa-filter-in ;
+              leaf sa-filter-in {
+                description 'Enable incoming SA filtering.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf acl {
+                description 'IP extended access list.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+            container sa-filter-out {
+              description 'Enable outgoing SA filtering.'
+                          ;
+              presence sa-filter-out ;
+              leaf sa-filter-out {
+                description 'Enable outgoing SA filtering.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf acl {
+                description 'IP extended access list.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+          }
+        }
+        container default-peers {
+          description 'Default peer.'
+                      ;
+          list default-peer {
+            description 'Default peer.'
+                        ;
+            key address ;
+            leaf address {
+              description 'Default peer address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf acl {
+              description 'IP extended access list.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+            }
+          }
+        }
+        container redistribute {
+          description 'Redistribute of SA message.'
+                      ;
+          presence redistribute ;
+          leaf redistribute {
+            description 'Redistribute of SA message.'
+                        ;
+            type empty ;
+            mandatory true ;
+          }
+          leaf acl {
+            description 'IP access list.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+        }
+        container originator-id {
+          description 'SA message originator ID interface.'
+                      ;
+          leaf interface {
+            description 'SA message originator ID interface.'
+                        ;
+            type ncd:ifname ;
+          }
+        }
+        container connect-source {
+          description 'TCP connect source interface.'
+                      ;
+          leaf interface {
+            description 'TCP connect source interface.'
+                        ;
+            type ncd:ifname ;
+          }
+        }
+      }
+      container vrf-msdps {
+        description 'Private mode of MSDP module configure root node.'
+                    ;
+        list vrf-msdp {
+          description 'Private mode of MSDP module configure root node.'
+                      ;
+          key vrf-name ;
+          leaf vrf-name {
+            description 'VRF name.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf sa-advertisement-period {
+            description 'SA message interval.'
+                        ;
+            type uint32 {
+              range 1..60 ;
+            }
+            units second ;
+            default 60 ;
+          }
+          leaf sa-cache-holdtime {
+            description 'SA cache holdtime.'
+                        ;
+            type uint32 {
+              range 150..3600 ;
+            }
+            units second ;
+            default 360 ;
+          }
+          container peers {
+            description 'MSDP peer.'
+                        ;
+            list peer {
+              description 'MSDP peer.'
+                          ;
+              key address ;
+              leaf address {
+                description 'Peer address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf mesh-group {
+                description 'Mesh group name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+              leaf sa-limit {
+                description 'The limit of SA cache.'
+                            ;
+                type uint32 {
+                  range 1..2147483646 ;
+                }
+              }
+              leaf description {
+                description 'Description of peer.'
+                            ;
+                type ncd:string-with-blank {
+                  length 1..80 ;
+                }
+              }
+              leaf password {
+                description 'The password of peer.'
+                            ;
+                type string {
+                  length 1..80 ;
+                }
+              }
+              leaf ttl-threshold {
+                description 'Source active message encapsulated data TTL thresh'
+                          + 'old.'
+                            ;
+                type uint16 {
+                  range 1..255 ;
+                }
+                default 1 ;
+              }
+              leaf ttl-security-hops {
+                description 'TTL security hops of peer.'
+                            ;
+                type uint16 {
+                  range 1..254 ;
+                }
+              }
+              leaf shutdown {
+                description 'Shutdown peer.'
+                            ;
+                type empty ;
+              }
+              leaf bfd-enable {
+                description 'Enable bfd function.'
+                            ;
+                type empty ;
+              }
+              leaf holdtime {
+                description 'Msdp peer holdtime.'
+                            ;
+                type uint32 {
+                  range 1..75 ;
+                }
+                units second ;
+                default 75 ;
+              }
+              leaf keepalive-period {
+                description 'Peer keepalive message interval.'
+                            ;
+                type uint32 {
+                  range 1..60 ;
+                }
+                units second ;
+                default 60 ;
+              }
+              leaf reconnect-period {
+                description 'Peer connect retry interval.'
+                            ;
+                type uint32 {
+                  range 1..60 ;
+                }
+                units second ;
+                default 30 ;
+              }
+              leaf inactive-holdtime {
+                description 'Peer inactive state holdtime.'
+                            ;
+                type uint32 {
+                  range 1..60 ;
+                }
+                units second ;
+                default 60 ;
+              }
+              leaf keychain {
+                description 'Keychain name.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                ncd:revise-date 2016-01-08 ;
+              }
+              leaf password-encrypted {
+                description 'The encrypted password of peer.'
+                            ;
+                type string {
+                  length 64..172 ;
+                }
+                ncd:revise-date 2020-07-10 ;
+              }
+              container connect-source {
+                description 'Configuration connect source interface with peer.'
+                            ;
+                leaf interface {
+                  description 'Configure interface as tcp connect address peer'
+                              ;
+                  type ncd:ifname ;
+                }
+              }
+              container sa-filter-in {
+                description 'Enable incoming SA filtering.'
+                            ;
+                presence sa-filter-in ;
+                leaf sa-filter-in {
+                  description 'Enable incoming SA filtering.'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+                leaf acl {
+                  description 'IP extended access list.'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+              }
+              container sa-filter-out {
+                description 'Enable outgoing SA filtering.'
+                            ;
+                presence sa-filter-out ;
+                leaf sa-filter-out {
+                  description 'Enable outgoing SA filtering.'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+                leaf acl {
+                  description 'IP extended access list.'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+              }
+            }
+          }
+          container default-peers {
+            description 'Default peer.'
+                        ;
+            list default-peer {
+              description 'Default peer.'
+                          ;
+              key address ;
+              leaf address {
+                description 'Default peer address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf acl {
+                description 'IP extended access list.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+          }
+          container redistribute {
+            description 'Redistribute of SA message.'
+                        ;
+            presence redistribute ;
+            leaf redistribute {
+              description 'Redistribute of SA message.'
+                          ;
+              type empty ;
+              mandatory true ;
+            }
+            leaf acl {
+              description 'IP access list.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+            }
+          }
+          container originator-id {
+            description 'SA message originator ID interface.'
+                        ;
+            leaf interface {
+              description 'SA message originator ID interface.'
+                          ;
+              type ncd:ifname ;
+            }
+          }
+          container connect-source {
+            description 'TCP connect source interface.'
+                        ;
+            leaf interface {
+              description 'TCP connect source interface.'
+                          ;
+              type ncd:ifname ;
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'Information of show.'
+                ;
+    container msdp {
+      description 'Information of msdp.'
+                  ;
+      container private {
+        description 'Private root node.'
+                    ;
+        container peers {
+          description 'Information of MSDP peer.'
+                      ;
+          list peer {
+            description 'Information of MSDP peer.'
+                        ;
+            key 'vrf-name address'
+                ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf address {
+              description 'Peer address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf state {
+              description 'Peer connection status:'+"\n"
+                        + '1 - down;'+"\n"
+                        + '2 - shutdown;'+"\n"
+                        + '3 - inactive;'+"\n"
+                        + '4 - connnect;'+"\n"
+                        + '5 - listen;'+"\n"
+                        + '6 - up.'
+                          ;
+              type enumeration {
+                enum down {
+                  value 1 ;
+                }
+                enum shutdown {
+                  value 2 ;
+                }
+                enum inactive {
+                  value 3 ;
+                }
+                enum connect {
+                  value 4 ;
+                }
+                enum listen {
+                  value 5 ;
+                }
+                enum up {
+                  value 6 ;
+                }
+              }
+            }
+            leaf reset {
+              description 'Peer reset times.'
+                          ;
+              type uint32 ;
+            }
+            leaf connect-source {
+              description 'Connect source interface name.'
+                          ;
+              type ncd:ifname {
+                length 0..31 ;
+              }
+            }
+            leaf local-address {
+              description 'Local IP address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf up-down-time {
+              description 'Peer uptime or downtime.'
+                          ;
+              type string {
+                length 0..15 ;
+              }
+            }
+            leaf sent-messages {
+              description 'The number of messages sent to the peer.'
+                          ;
+              type uint32 ;
+            }
+            leaf received-messages {
+              description 'The number of messages received from the peer.'
+                          ;
+              type uint32 ;
+            }
+            leaf last-clear-time {
+              description 'Last clear time.'
+                          ;
+              type string {
+                length 0..15 ;
+              }
+            }
+            leaf mesh-group {
+              description 'Mesh group name.'
+                          ;
+              type string {
+                length 0..32 ;
+              }
+            }
+            leaf sa-filter-in {
+              description 'SA-filter in.'
+                          ;
+              type string {
+                length 1..39 ;
+              }
+            }
+            leaf sa-filter-out {
+              description 'SA-filter out.'
+                          ;
+              type string {
+                length 1..39 ;
+              }
+            }
+            leaf ttl-threadhold {
+              description 'TTL threshold of source active message.'
+                          ;
+              type uint16 {
+                range 1..255 ;
+              }
+            }
+            leaf ttl-security-hops {
+              description 'TTL security hops of peer.'
+                          ;
+              type uint16 {
+                range 0..254 ;
+              }
+            }
+            leaf sa-learned {
+              description 'SA number learned from the peer.'
+                          ;
+              type uint32 ;
+            }
+            leaf sa-limit {
+              description 'The limit of SA number.'
+                          ;
+              type uint32 ;
+            }
+            leaf description {
+              description 'Description of peer.'
+                          ;
+              type ncd:string-all {
+                length 0..80 ;
+              }
+            }
+            ncd:select vrf-name ;
+            ncd:select 'vrf-name address'
+                       ;
+          }
+        }
+        container summarys {
+          description 'The summary information of MSDP peer.'
+                      ;
+          list summary {
+            description 'The summary information of MSDP peer.'
+                        ;
+            key 'vrf-name address'
+                ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf address {
+              description 'Peer address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf up-down-time {
+              description 'Peer uptime or downtime.'
+                          ;
+              type string {
+                length 0..15 ;
+              }
+            }
+            leaf reset {
+              description 'Peer reset times.'
+                          ;
+              type uint32 ;
+            }
+            leaf sa-learned {
+              description 'SA number learned from the peer.'
+                          ;
+              type uint32 ;
+            }
+            leaf state {
+              description 'Peer connection status:'+"\n"
+                        + '1 - down;'+"\n"
+                        + '2 - shutdown;'+"\n"
+                        + '3 - inactive;'+"\n"
+                        + '4 - connnect;'+"\n"
+                        + '5 - listen;'+"\n"
+                        + '6 - up.'
+                          ;
+              type enumeration {
+                enum down {
+                  value 1 ;
+                }
+                enum shutdown {
+                  value 2 ;
+                }
+                enum inactive {
+                  value 3 ;
+                }
+                enum connect {
+                  value 4 ;
+                }
+                enum listen {
+                  value 5 ;
+                }
+                enum up {
+                  value 6 ;
+                }
+              }
+            }
+            leaf peer-flag {
+              description 'If peer is configured as default-peer without ACL,ad'
+                        + 'd *.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            ncd:select vrf-name ;
+            ncd:select 'vrf-name address'
+                       ;
+          }
+        }
+        container counts {
+          description 'SA count.'
+                      ;
+          list count {
+            description 'SA count.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            list peer {
+              description Peer. ;
+              key address ;
+              leaf address {
+                description 'Peer address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf sa-learned {
+                description 'SA number learned from the peer.'
+                            ;
+                type uint32 ;
+              }
+              ncd:select address ;
+            }
+            container total-sa-entry {
+              description 'Total number of SA.'
+                          ;
+              leaf total-sa {
+                description 'Total number of SA.'
+                            ;
+                type uint32 ;
+              }
+            }
+            ncd:select vrf-name ;
+          }
+        }
+        container sa-caches {
+          description 'MSDP SA-cache information.'
+                      ;
+          list sa-cache {
+            description 'MSDP SA-cache information.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            container total-sa-entry {
+              description 'Total number of SA.'
+                          ;
+              leaf total-sa {
+                description 'Total number of SA.'
+                            ;
+                type uint32 ;
+              }
+            }
+            list cache-item {
+              description 'MSDP SA-cache information.'
+                          ;
+              key 'group-address source-address rp-address'
+                  ;
+              leaf group-address {
+                description 'Group address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf source-address {
+                description 'Source address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf rp-address {
+                description 'RP address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf uptime {
+                description 'SA-cache uptime.'
+                            ;
+                type string {
+                  length 0..15 ;
+                }
+              }
+              leaf expire-time {
+                description 'SA-cache expire time.'
+                            ;
+                type string {
+                  length 0..15 ;
+                }
+              }
+              ncd:select group-address ;
+              ncd:select 'group-address source-address'
+                         ;
+            }
+          }
+        }
+      }
+      container public {
+        description 'Public root node.'
+                    ;
+        container peers {
+          description 'Information of MSDP peer.'
+                      ;
+          list peer {
+            description 'Information of MSDP peer.'
+                        ;
+            key address ;
+            leaf address {
+              description 'Peer address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf state {
+              description 'Peer connection status:'+"\n"
+                        + '1 - down;'+"\n"
+                        + '2 - shutdown;'+"\n"
+                        + '3 - inactive;'+"\n"
+                        + '4 - connnect;'+"\n"
+                        + '5 - listen;'+"\n"
+                        + '6 - up.'
+                          ;
+              type enumeration {
+                enum down {
+                  value 1 ;
+                }
+                enum shutdown {
+                  value 2 ;
+                }
+                enum inactive {
+                  value 3 ;
+                }
+                enum connect {
+                  value 4 ;
+                }
+                enum listen {
+                  value 5 ;
+                }
+                enum up {
+                  value 6 ;
+                }
+              }
+            }
+            leaf reset {
+              description 'Peer reset times.'
+                          ;
+              type uint32 ;
+            }
+            leaf connect-source {
+              description 'Connect source interface name.'
+                          ;
+              type ncd:ifname {
+                length 0..31 ;
+              }
+            }
+            leaf local-address {
+              description 'Local IP address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf up-down-time {
+              description 'Peer uptime or downtime.'
+                          ;
+              type string {
+                length 0..15 ;
+              }
+            }
+            leaf sent-messages {
+              description 'The number of messages sent to the peer.'
+                          ;
+              type uint32 ;
+            }
+            leaf received-messages {
+              description 'The number of messages received from the peer.'
+                          ;
+              type uint32 ;
+            }
+            leaf last-clear-time {
+              description 'Last clear time.'
+                          ;
+              type string {
+                length 0..15 ;
+              }
+            }
+            leaf mesh-group {
+              description 'Mesh group name.'
+                          ;
+              type string {
+                length 0..32 ;
+              }
+            }
+            leaf sa-filter-in {
+              description 'SA-filter in.'
+                          ;
+              type string {
+                length 1..39 ;
+              }
+            }
+            leaf sa-filter-out {
+              description 'SA-filter out.'
+                          ;
+              type string {
+                length 1..39 ;
+              }
+            }
+            leaf ttl-threadhold {
+              description 'TTL threshold of source active message.'
+                          ;
+              type uint16 {
+                range 1..255 ;
+              }
+            }
+            leaf ttl-security-hops {
+              description 'TTL security hops of peer.'
+                          ;
+              type uint16 {
+                range 0..254 ;
+              }
+            }
+            leaf sa-learned {
+              description 'SA number learned from the peer.'
+                          ;
+              type uint32 ;
+            }
+            leaf sa-limit {
+              description 'The limit of SA number.'
+                          ;
+              type uint32 ;
+            }
+            leaf description {
+              description 'Description of peer.'
+                          ;
+              type ncd:string-all {
+                length 0..80 ;
+              }
+            }
+            ncd:select address ;
+          }
+        }
+        container summarys {
+          description 'The summary information of MSDP peer.'
+                      ;
+          list summary {
+            description 'The summary information of MSDP peer.'
+                        ;
+            key address ;
+            leaf address {
+              description 'Peer address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf up-down-time {
+              description 'Peer uptime or downtime.'
+                          ;
+              type string {
+                length 0..15 ;
+              }
+            }
+            leaf reset {
+              description 'Peer reset times.'
+                          ;
+              type uint32 ;
+            }
+            leaf sa-learned {
+              description 'SA number learned from the peer.'
+                          ;
+              type uint32 ;
+            }
+            leaf state {
+              description 'Peer connection status:'+"\n"
+                        + '1 - down;'+"\n"
+                        + '2 - shutdown;'+"\n"
+                        + '3 - inactive;'+"\n"
+                        + '4 - connnect;'+"\n"
+                        + '5 - listen;'+"\n"
+                        + '6 - up.'
+                          ;
+              type enumeration {
+                enum down {
+                  value 1 ;
+                }
+                enum shutdown {
+                  value 2 ;
+                }
+                enum inactive {
+                  value 3 ;
+                }
+                enum connect {
+                  value 4 ;
+                }
+                enum listen {
+                  value 5 ;
+                }
+                enum up {
+                  value 6 ;
+                }
+              }
+            }
+            leaf peer-flag {
+              description 'If peer is configured as default-peer without ACL,ad'
+                        + 'd *.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            ncd:select address ;
+          }
+        }
+        container count {
+          description 'SA count.'
+                      ;
+          container peers {
+            description Peer. ;
+            list peer {
+              description Peer. ;
+              key address ;
+              leaf address {
+                description 'Peer address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf sa-learned {
+                description 'SA number learned from the peer.'
+                            ;
+                type uint32 ;
+              }
+              ncd:select address ;
+            }
+          }
+          container total-sa-entry {
+            description 'Total number of SA.'
+                        ;
+            leaf total-sa {
+              description 'Total number of SA.'
+                          ;
+              type uint32 ;
+            }
+          }
+        }
+        container sa-caches {
+          description 'MSDP SA-cache information.'
+                      ;
+          container total-sa-entry {
+            description 'Total number of SA.'
+                        ;
+            leaf total-sa {
+              description 'Total number of SA.'
+                          ;
+              type uint32 ;
+            }
+            ncd:revise-date 2015-07-31 ;
+          }
+          container cache-items {
+            description 'MSDP SA-cache information.'
+                        ;
+            list cache-item {
+              description 'MSDP SA-cache information.'
+                          ;
+              key 'source-address group-address rp-address'
+                  ;
+              leaf rp-address {
+                description 'RP address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf group-address {
+                description 'Group address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf source-address {
+                description 'Source address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf uptime {
+                description 'SA-cache uptime.'
+                            ;
+                type string {
+                  length 0..15 ;
+                }
+              }
+              leaf expire-time {
+                description 'SA-cache expire time.'
+                            ;
+                type string {
+                  length 0..15 ;
+                }
+              }
+              ncd:select group-address ;
+              ncd:select 'group-address source-address'
+                         ;
+            }
+          }
+        }
+      }
+    }
+    ncd:revise-date 2015-04-15 ;
+  }
+  container operation {
+    config false ;
+    description 'MSDP module operation info.'
+                ;
+    container msdp {
+      description 'Multicast Source Discovery Protocol.'
+                  ;
+      container public {
+        description 'Public root node.'
+                    ;
+        container clear {
+          description 'Clear operation.'
+                      ;
+          container peer {
+            description 'Clear MSDP peer information.'
+                        ;
+            container peer-items {
+              description 'MSDP peer.'
+                          ;
+              list peer-item {
+                description 'MSDP peer.'
+                            ;
+                key address ;
+                leaf address {
+                  description 'Peer address.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                ncd:select address ;
+              }
+            }
+            container instance {
+              description 'MSDP instance.'
+                          ;
+              leaf all {
+                description 'All peers.'
+                            ;
+                type empty ;
+              }
+            }
+          }
+          container sa-cache {
+            description 'Clear MSDP SA-cache information.'
+                        ;
+            container cache-items {
+              description 'SA-cache item.'
+                          ;
+              list cache-item {
+                description 'SA-cache item.'
+                            ;
+                key group-address ;
+                leaf group-address {
+                  description 'Group address.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                ncd:select group-address ;
+              }
+            }
+            container instance {
+              description 'MSDP instance.'
+                          ;
+              leaf all {
+                description 'All peers.'
+                            ;
+                type empty ;
+              }
+            }
+          }
+          container statistics {
+            description 'Clear MSDP statistics information.'
+                        ;
+            container peers {
+              description 'MSDP peer.'
+                          ;
+              list peer {
+                description 'MSDP peer.'
+                            ;
+                key address ;
+                leaf address {
+                  description 'Peer address.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                ncd:select address ;
+              }
+            }
+            container instance {
+              description 'MSDP instance.'
+                          ;
+              leaf all {
+                description 'All peers.'
+                            ;
+                type empty ;
+              }
+            }
+          }
+        }
+      }
+      container private {
+        description 'Private root node.'
+                    ;
+        container clear {
+          description 'Clear operation.'
+                      ;
+          container peer {
+            description 'Clear MSDP peer information.'
+                        ;
+            container peer-items {
+              description 'MSDP peer.'
+                          ;
+              list peer-item {
+                description 'MSDP peer.'
+                            ;
+                key 'vrf-name address'
+                    ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                leaf address {
+                  description 'Peer address.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                ncd:select 'vrf-name address'
+                           ;
+              }
+            }
+            container instances {
+              description 'MSDP instance.'
+                          ;
+              list instance {
+                description 'MSDP instance.'
+                            ;
+                key vrf-name ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                ncd:select vrf-name ;
+              }
+            }
+          }
+          container sa-cache {
+            description 'Clear MSDP SA-cache information.'
+                        ;
+            container cache-items {
+              description 'SA-cache item.'
+                          ;
+              list cache-item {
+                description 'SA-cache item.'
+                            ;
+                key 'group-address vrf-name'
+                    ;
+                leaf group-address {
+                  description 'Group address.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                ncd:select 'group-address vrf-name'
+                           ;
+              }
+            }
+            container instances {
+              description 'MSDP instance.'
+                          ;
+              list instance {
+                description 'MSDP instance.'
+                            ;
+                key vrf-name ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                ncd:select vrf-name ;
+              }
+            }
+          }
+          container statistics {
+            description 'Clear MSDP statistics information.'
+                        ;
+            container peers {
+              description 'MSDP peer.'
+                          ;
+              list peer {
+                description 'MSDP peer.'
+                            ;
+                key 'address vrf-name'
+                    ;
+                leaf address {
+                  description 'Peer address.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                ncd:select 'address vrf-name'
+                           ;
+              }
+            }
+            container instances {
+              description 'MSDP instance.'
+                          ;
+              list instance {
+                description 'MSDP instance.'
+                            ;
+                key vrf-name ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                ncd:select vrf-name ;
+              }
+            }
+          }
+        }
+      }
+    }
+    ncd:revise-date 2015-04-15 ;
+  }
+}

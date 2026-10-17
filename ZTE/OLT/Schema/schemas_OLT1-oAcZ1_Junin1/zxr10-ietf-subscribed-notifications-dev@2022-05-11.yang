@@ -1,0 +1,161 @@
+module zxr10-ietf-subscribed-notifications-dev {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ietf-subscribed-n'
+          + 'otifications-dev'
+            ;
+  prefix sn-dev ;
+  yang-version 1.1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  import ietf-subscribed-notifications {
+    prefix sn ;
+  }
+  import ietf-yang-types {
+    prefix yang ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2022-05-11 ;
+  identity stream-unavailable {
+    base sn:establish-subscription-error ;
+    description 'The event stream is not supported by the publisher.'
+                ;
+  }
+  identity establish-subscription-over-limit {
+    base sn:establish-subscription-error ;
+    description 'The number of established subscriptions exceeded the limit.'
+                ;
+  }
+  deviation '/sn:establish-subscription/sn:input/sn:target/sn:stream/sn:stream-'
+          + 'filter/sn:by-reference'
+            {
+    deviate not-supported ;
+  }
+  deviation '/sn:modify-subscription/sn:input/sn:target/sn:stream/sn:stream-fil'
+          + 'ter/sn:by-reference'
+            {
+    deviate not-supported ;
+  }
+  deviation /sn:streams/sn:stream/sn:name {
+    deviate replace {
+      type string {
+        length 1..255 ;
+      }
+    }
+  }
+  deviation /sn:streams/sn:stream/sn:description {
+    deviate replace {
+      type string {
+        length 1..255 ;
+      }
+    }
+  }
+  deviation /sn:subscription-suspended {
+    deviate not-supported ;
+  }
+  deviation /sn:subscription-modified {
+    deviate not-supported ;
+  }
+  deviation /sn:subscription-resumed {
+    deviate not-supported ;
+  }
+  deviation /sn:filters {
+    deviate not-supported ;
+  }
+  deviation /sn:subscriptions/sn:subscription {
+    deviate not-supported ;
+  }
+  augment /sn:subscriptions {
+    description 'Contains the list of currently subscriptions.'
+                ;
+    list dynamic-subscription {
+      description 'Netconf dynamic subscription data query model.'
+                  ;
+      config false ;
+      key id ;
+      leaf id {
+        description 'Identifier of a subscription; unique in a given publisher.'
+                    ;
+        type uint32 {
+          range 1..4294967295 ;
+        }
+      }
+      choice target {
+        description 'Identifies the source of information against which a subsc'
+                  + 'ription is being applied as well as specifics on the subse'
+                  + 't of information desired from that source.'
+                    ;
+        case stream {
+          choice stream-filter {
+            description 'An event stream filter can be applied to a subscriptio'
+                      + 'n.'
+                        ;
+            case within-subscription {
+              description 'A local definition allows a filter to have the same '
+                        + 'lifecycle as the subscription.'
+                          ;
+              choice filter-spec {
+                description 'The content filter specification for this request.'
+                            ;
+                case stream-subtree-filter {
+                  list stream-subtree-filter {
+                    description 'The subtree filter'
+                                ;
+                    key 'top-name namespace'
+                        ;
+                    ncd:select 'top-name namespace'
+                               ;
+                    leaf top-name {
+                      description 'Top Node Name'
+                                  ;
+                      type string ;
+                    }
+                    leaf namespace {
+                      description 'The namespace'
+                                  ;
+                      type string ;
+                    }
+                  }
+                }
+                case stream-xpath-filter {
+                  leaf-list xpath-filter {
+                    description 'The XPath expression'
+                                ;
+                    type ncd:long-text ;
+                  }
+                }
+              }
+            }
+          }
+          leaf stream {
+            description 'Indicates the event stream to be considered for this s'
+                      + 'ubscription.'
+                        ;
+            type string ;
+          }
+        }
+      }
+      leaf stop-time {
+        description 'Identifies a time after which notification messages for a '
+                  + 'subscription should not be sent.'
+                    ;
+        type yang:date-and-time ;
+      }
+      leaf encoding {
+        description 'The type of encoding for notification messages.'
+                    ;
+        type sn:encoding ;
+      }
+      leaf session-id {
+        description 'Create the subscribed session id.'
+                    ;
+        type uint32 ;
+      }
+    }
+  }
+}

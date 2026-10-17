@@ -1,0 +1,221 @@
+module ctc-test-hardware {
+    yang-version 1.1;
+    namespace "urn:ctc:yang:test:hardware";
+    prefix testHW;
+
+    import ietf-yang-types {
+        prefix yang;
+    }
+    import iana-hardware {
+        prefix ianahw;
+    }
+
+    revision "2019-06-24" { // TODO change revision to date of model creation
+        description "Initial revision of helloworld model";
+    }
+    rpc hello {
+        input {
+            leaf name {
+                type string;
+            }
+        }
+        output {
+            leaf greeting {
+                type string;
+            }
+        }
+    }
+    
+    rpc light-interface-test {
+        input {
+            leaf deviceNode {
+                type string;
+            }
+            leaf componentName {
+                type string;
+            }
+        }
+        output {
+            leaf temperature {
+            	type int16;
+            	description
+                    "Internally measured transceiver temperature Temperature
+                     accuracy is vendor specific but must be better than +/- 3
+                     degrees Celsius over specified operating temperature and
+                     voltage. ";
+                  reference 
+                    "SFF-8472 Revision 12.2, Section 9 - Diagnostics";
+            }
+            leaf supply-voltage {
+            	type uint16;
+            	units "100 uV";
+                description
+                  "Internally measured transceiver supply voltage. Practical
+                   considerations to be defined by transceiver manufacturer
+                   will tend to limit the actual bounds of the supply voltage
+                   measurement. Accuracy is vendor specific but must be better
+                   than +/- 3% of the manufacturer's nominal value over
+                   specified operating temperature and voltage. Note that in
+                   some transceivers, transmitter supply voltage and receiver
+                   supply voltage are isolated. In that case, only one supply
+                   is monitored. Refer to the device specification for more
+                   detail."; 
+                reference 
+                  "SFF-8472 Revision 12.2, Section 9 - Diagnostics";
+            }
+            leaf tx-bias {
+            	type uint16;
+                units "2 uA";
+                description
+                  "Measured TX bias current in mA. Accuracy is vendor specific
+                   but must be better than +/- 10% of the manufacturer's
+                   nominal value over specified operating temperature and
+                   voltage.";   
+                reference 
+                  "SFF-8472 Revision 12.2, Section 9 - Diagnostics";
+            }
+            leaf tx-power {
+            	type uint16;
+                units "0.1 mW";
+                description
+                  "Measured TX output power in mW. Data is assumed to be based
+                   on measurement of laser monitor photodiode current. It is
+                   factory calibrated to absolute units using the most
+                   representative fiber output type. Accuracy is vendor
+                   specific but must be better than +/- 3dB over specified
+                   temperature and voltage. Data is not valid when the
+                   transmitter is disabled."; 
+                reference 
+                  "SFF-8472 Revision 12.2, Section 9 - Diagnostics";
+            }
+            leaf rx-power {
+            	type uint16;
+                units "0.1 mW";
+                description
+                  "Measured RX received optical power in mW. Absolute accuracy
+                   is dependent upon the exact optical wavelength. For the
+                   vendor specified wavelength, accuracy shall be better than
+                   +/- 3dB over specified temperature and voltage. This
+                   accuracy shall be maintained for input power levels up to
+                   the lesser of maximum transmitted or maximum received
+                   optical power per the appropriate standard. It shall be
+                   maintained down to the minimum transmitted power minus cable
+                   plant loss (insertion loss or passive loss) per the
+                   appropriate standard. Absolute accuracy beyond this minimum
+                   required received input optical power range is vendor
+                   specific."; 
+                reference 
+                  "SFF-8472 Revision 12.2, Section 9 - Diagnostics";
+            }
+        }
+    }
+    
+    rpc hardware-reset-test {
+        input {
+            leaf node {
+                type string;
+            }
+        }
+    }
+    
+    rpc hardware-change-test {
+        input {
+            leaf node {
+                type string;
+            }
+        }
+        output {
+            leaf last-change {
+                type yang:date-and-time;
+            }
+            list components {
+                key name;
+                leaf name {
+                    type string;
+                    description
+                      "The name assigned to this component.
+
+                       This name is not required to be the same as
+                       entPhysicalName.";
+                }
+                leaf class {
+                    type identityref {
+                      base ianahw:hardware-class;
+                    }
+                    description
+                      "An indication of the general hardware type of the
+                       component.";
+                    reference
+                      "RFC 6933: Entity MIB (Version 4) - entPhysicalClass";
+                }
+                leaf software-rev {
+                    type string;
+                    description
+                      "The vendor-specific software revision string for the
+                       component.";
+                    reference
+                      "RFC 6933: Entity MIB (Version 4) -
+                                 entPhysicalSoftwareRev";
+                }
+            }
+        }
+    }
+    
+    rpc get-system-test {
+        input {
+            leaf node {
+                type string;
+            }
+        }
+        output {
+        	leaf os-name {
+                type string;
+                description
+                  "The name of the operating system in use -
+                   for example, 'Linux'.";
+                reference
+                  "IEEE Std 1003.1-2008 - utsname.sysname";
+              }
+              leaf os-version {
+                type string;
+                description
+                  "The current version level of the operating
+                   system in use.  This string MAY indicate
+                   the specific OS build date and target variant
+                   information.";
+                reference
+                  "IEEE Std 1003.1-2008 - utsname.version";
+              }
+              leaf machine {
+                type string;
+                description
+                  "A vendor-specific identifier string representing
+                   the hardware in use.";
+                reference
+                  "IEEE Std 1003.1-2008 - utsname.machine";
+              }
+        }
+    }
+    
+    rpc get-hardware-softrev {
+        input {
+            leaf node {
+                type string;
+            }
+            leaf componentName {
+                type string;
+            }
+        }
+        output {
+        	leaf software-rev {
+                type string;
+                description
+                  "The vendor-specific software revision string for the
+                   component.";
+                reference
+                  "RFC 6933: Entity MIB (Version 4) -
+                             entPhysicalSoftwareRev";
+              }
+        }
+    }
+}

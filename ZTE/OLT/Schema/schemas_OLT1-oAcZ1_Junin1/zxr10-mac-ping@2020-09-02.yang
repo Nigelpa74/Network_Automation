@@ -1,0 +1,804 @@
+module zxr10-mac-ping {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/mac-ping'
+            ;
+  prefix mac-ping ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe MAC-PING/TRACE. MAC-PING/TRACE pr'
+            + 'ovides a simple and efficient mechanism that can be used to dete'
+            + 'ct level-2 plane failures.'
+              ;
+  revision 2020-09-02 {
+    description '1)Obsolete /operation/mac-oam/mac-pings/mac-ping-type/evpn-pin'
+              + 'g/broadcast.'
+                ;
+  }
+  revision 2019-10-16 {
+    description '1)Add operation about evpn-pings'+"\n"
+              + '2)Add operation about evpn-traces'
+                ;
+  }
+  revision 2015-06-08 {
+    description '1 Add notification-mac-ping node.'+"\n"
+              + '2 Add notification-mac-trace node.'+"\n"
+              + '3 Add notification-mac-trace-result node.'+"\n"
+              + '4 Delete notification node.'
+                ;
+  }
+  revision 2015-01-14 {
+    description 'Add notification model info.'
+                ;
+  }
+  revision 2014-04-29 {
+    description 'Fix errors, add "dst-mac-addr" and "src-mac-addr" in mac-ping '
+              + 'state table.'
+                ;
+  }
+  revision 2014-04-17 {
+    description 'Initial revision.'
+                ;
+  }
+  container configuration {
+    description 'MAC-OAM configurations model info.'
+                ;
+    container mac-oam {
+      description 'MAC-OAM configuration info.'
+                  ;
+      container global-config {
+        description 'MAC-OAM global configuration info.'
+                    ;
+        leaf zmac-oam-enable {
+          description 'Enable or disable MAC-OAM.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Disable MAC-OAM'
+                          ;
+            }
+            enum enable {
+              value 1 ;
+              description 'Enable MAC-OAM'
+                          ;
+            }
+          }
+          default disable ;
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description 'MAC-OAM operations model info.'
+                ;
+    container mac-oam {
+      description 'MAC-OAM operation parameters.'
+                  ;
+      container mac-pings {
+        description 'MAC-PING operation parameters.'
+                    ;
+        list mac-ping {
+          description 'MAC-PING operation parameter.'
+                      ;
+          key serial-num ;
+          leaf serial-num {
+            description 'MAC-PING serial number.'
+                        ;
+            type uint64 ;
+          }
+          choice status {
+            description 'The switch to start/stop MAC-PING.'
+                        ;
+            mandatory true ;
+            case enable {
+              description 'Start MAC-PING function.'
+                          ;
+              leaf ping-enable {
+                description 'Start MAC-PING.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf dst-mac {
+                description 'Destination MAC address.'
+                            ;
+                type ncd:mac-address ;
+                mandatory true ;
+              }
+              container mac-ping-type {
+                description 'MAC-PING type.'
+                            ;
+                choice ping-type {
+                  description 'MAC-PING type.'
+                              ;
+                  mandatory true ;
+                  case ce-pings {
+                    description 'MAC-PING CE.'
+                                ;
+                    leaf interface {
+                      description 'Interface for sending packets.'
+                                  ;
+                      type ncd:ifname ;
+                      mandatory true ;
+                    }
+                  }
+                  case pe-pings {
+                    description 'MAC-PING PE.'
+                                ;
+                    container pe-ping {
+                      description 'MAC-PING ping parameter.'
+                                  ;
+                      choice vpls-vpws {
+                        description 'VPLS or VPWS.'
+                                    ;
+                        mandatory true ;
+                        case vpls {
+                          description 'VPLS type.'
+                                      ;
+                          leaf vpls-name {
+                            description 'VPLS name.'
+                                        ;
+                            type string {
+                              length 1..32 {
+                                description 'VPLS name.'
+                                            ;
+                              }
+                            }
+                            mandatory true ;
+                          }
+                        }
+                        case vpws {
+                          description 'VPWS type.'
+                                      ;
+                          leaf vpws-name {
+                            description 'VPWS name.'
+                                        ;
+                            type string {
+                              length 1..32 {
+                                description 'VPWS name.'
+                                            ;
+                              }
+                            }
+                            mandatory true ;
+                          }
+                        }
+                      }
+                      leaf peer-addr {
+                        description 'Peer address.'
+                                    ;
+                        type ncd:ipv4-address ;
+                        mandatory true ;
+                      }
+                    }
+                  }
+                  case evpn-pings {
+                    description 'MAC-PING EVPN'
+                                ;
+                    container evpn-ping {
+                      description 'MAC-PING EVPN'
+                                  ;
+                      leaf evpn-name {
+                        description 'EVPN name.'
+                                    ;
+                        type string {
+                          length 1..32 {
+                            description 'VPLS name.'
+                                        ;
+                          }
+                        }
+                        mandatory true ;
+                      }
+                      leaf interface {
+                        description 'Access point'
+                                    ;
+                        type ncd:ifname ;
+                        mandatory true ;
+                      }
+                      leaf broadcast {
+                        status obsolete {
+                          ncd:revise-date 2020-09-02 ;
+                        }
+                        description 'Broadcast if MAC entry does not exist.'
+                                    ;
+                        type uint8 {
+                          range 0..1 ;
+                        }
+                        default 0 ;
+                      }
+                    }
+                    ncd:revise-date 2019-10-16 ;
+                  }
+                }
+              }
+              container mac-ping-option {
+                description 'MAC-PING options.'
+                            ;
+                leaf repeat {
+                  description 'Repeat number of MAC-PING.'
+                              ;
+                  type uint16 {
+                    range 1..65535 {
+                      description 'Repeat number.'
+                                  ;
+                    }
+                  }
+                  default 5 ;
+                }
+                leaf timeout {
+                  description 'Timeout of MAC-PING.'
+                              ;
+                  type uint32 ;
+                  units seconds ;
+                  default 2 ;
+                }
+                leaf external-vlan {
+                  description 'External VLAN ID.'
+                              ;
+                  type uint16 {
+                    range 1..4094 {
+                      description 'External VLAN ID.'
+                                  ;
+                    }
+                  }
+                }
+                leaf internal-vlan {
+                  description 'Internal VLAN ID.'
+                              ;
+                  type uint16 {
+                    range 1..4094 {
+                      description 'Internal VLAN ID.'
+                                  ;
+                    }
+                  }
+                }
+                leaf vlan {
+                  description 'VLAN ID.'
+                              ;
+                  type uint16 {
+                    range 1..4094 {
+                      description 'VLAN ID.'
+                                  ;
+                    }
+                  }
+                }
+                leaf reply-option {
+                  type enumeration {
+                    enum default {
+                      value 0 ;
+                      description 'Default relpy option.'
+                                  ;
+                    }
+                    enum physical-port {
+                      value 1 ;
+                      description 'Reply from physical port.'
+                                  ;
+                    }
+                  }
+                  ncd:revise-date 2019-10-16 ;
+                }
+              }
+            }
+            case disable {
+              description 'Stop MAC-PING function.'
+                          ;
+              leaf ping-disable {
+                description 'Stop MAC-PING.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+            }
+          }
+        }
+      }
+      container mac-traces {
+        description 'MAC-TRACE operation parameters.'
+                    ;
+        list mac-trace {
+          description 'MAC-TRACE operation parameter.'
+                      ;
+          key serial-num ;
+          leaf serial-num {
+            description 'MAC-TRACE serial number.'
+                        ;
+            type uint64 ;
+          }
+          choice status {
+            description 'The switch to start/stop MAC-TRACE.'
+                        ;
+            mandatory true ;
+            case enable {
+              description 'Start MAC-TRACE function.'
+                          ;
+              leaf trace-enable {
+                description 'Start MAC-TRACE.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf dst-mac {
+                description 'Destination MAC address.'
+                            ;
+                type ncd:mac-address ;
+                mandatory true ;
+              }
+              container mac-trace-type {
+                description 'MAC-TRACE type.'
+                            ;
+                choice trace-type {
+                  description 'MAC-TRACE type.'
+                              ;
+                  mandatory true ;
+                  case ce-traces {
+                    description 'MAC-TRACE CE.'
+                                ;
+                    leaf interface {
+                      description 'Interface for sending packets.'
+                                  ;
+                      type ncd:ifname ;
+                      mandatory true ;
+                    }
+                  }
+                  case pe-traces {
+                    description 'MAC-TRACE PE.'
+                                ;
+                    container pe-trace {
+                      description 'MAC-TRACE PE parameter.'
+                                  ;
+                      choice vpls-vpws {
+                        description 'VPLS or VPWS.'
+                                    ;
+                        mandatory true ;
+                        case vpls {
+                          description 'VPLS type.'
+                                      ;
+                          leaf vpls-name {
+                            description 'VPLS name.'
+                                        ;
+                            type string ;
+                            mandatory true ;
+                          }
+                        }
+                        case vpws {
+                          description 'VPWS type.'
+                                      ;
+                          leaf vpws-name {
+                            description 'VPWS name.'
+                                        ;
+                            type string ;
+                            mandatory true ;
+                          }
+                        }
+                      }
+                      leaf peer-addr {
+                        description 'Peer address.'
+                                    ;
+                        type ncd:ipv4-address ;
+                        mandatory true ;
+                      }
+                    }
+                  }
+                  case evpn-traces {
+                    description 'EVPN MAC-TRACE'
+                                ;
+                    container evpn-trace {
+                      description 'EVPN MAC-TRACE'
+                                  ;
+                      leaf evpn-name {
+                        description 'EVPN name.'
+                                    ;
+                        type string {
+                          length 1..32 {
+                            description 'VPLS name.'
+                                        ;
+                          }
+                        }
+                        mandatory true ;
+                      }
+                      leaf interface {
+                        description 'Access point'
+                                    ;
+                        type ncd:ifname ;
+                        mandatory true ;
+                      }
+                    }
+                    ncd:revise-date 2019-10-16 ;
+                  }
+                }
+              }
+              container mac-trace-option {
+                description 'MAC-TRACE options.'
+                            ;
+                leaf external-vlan {
+                  description 'External VLAN ID.'
+                              ;
+                  type uint16 {
+                    range 1..4094 {
+                      description 'External VLAN ID.'
+                                  ;
+                    }
+                  }
+                }
+                leaf internal-vlan {
+                  description 'Internal VLAN ID.'
+                              ;
+                  type uint16 {
+                    range 1..4094 {
+                      description 'Internal VLAN ID.'
+                                  ;
+                    }
+                  }
+                }
+                leaf vlan {
+                  description 'VLAN ID.'
+                              ;
+                  type uint16 {
+                    range 1..4094 {
+                      description 'VLAN ID.'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+            case disable {
+              description 'Stop MAC-TRACE function.'
+                          ;
+              leaf trace-disable {
+                description 'Stop MAC-TRACE.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'MAC-OAM state model info.'
+                ;
+    container mac-oam {
+      description 'MAC-OAM state model.'
+                  ;
+      container mac-pings {
+        description 'MAC-PING state model info.'
+                    ;
+        list mac-ping {
+          description 'The detail result information of MAC-PING.'
+                      ;
+          key serial-num ;
+          leaf serial-num {
+            description 'MAC-PING serial number.'
+                        ;
+            type uint64 ;
+          }
+          leaf send-pkts {
+            description 'Sent packets.'
+                        ;
+            type uint32 ;
+          }
+          leaf rcv-pkts {
+            description 'Received packets.'
+                        ;
+            type uint32 ;
+          }
+          leaf min-rtt {
+            description 'Minimum round-trip-time.'
+                        ;
+            type uint32 ;
+            units millisecond ;
+          }
+          leaf max-rtt {
+            description 'Maximum round-trip-time.'
+                        ;
+            type uint32 ;
+            units millisecond ;
+          }
+          leaf avg-rtt {
+            description 'Average round-trip-time.'
+                        ;
+            type uint32 ;
+            units millisecond ;
+          }
+          leaf min-rwt {
+            description 'Minimum round-wobble-time.'
+                        ;
+            type uint32 ;
+            units millisecond ;
+          }
+          leaf max-rwt {
+            description 'Maximum round-wobble-time.'
+                        ;
+            type uint32 ;
+            units millisecond ;
+          }
+          leaf avg-rwt {
+            description 'Average round-wobble-time.'
+                        ;
+            type uint32 ;
+            units millisecond ;
+          }
+          leaf dst-host-name {
+            description 'Host name of destination.'
+                        ;
+            type string ;
+          }
+          leaf dst-if-name {
+            description 'Interface name of destination.'
+                        ;
+            type string ;
+          }
+          leaf dst-mac-addr {
+            description 'MAC address of destination.'
+                        ;
+            type string ;
+          }
+          leaf src-hostname {
+            description 'Host name of source.'
+                        ;
+            type string ;
+          }
+          leaf src-if-name {
+            description 'Interface name of source.'
+                        ;
+            type string ;
+          }
+          leaf src-mac-addr {
+            description 'MAC address of source.'
+                        ;
+            type string ;
+          }
+        }
+      }
+      container mac-traces {
+        description 'MAC-TRACE state model info.'
+                    ;
+        list mac-trace {
+          description 'The detail result information of MAC-TRACE.'
+                      ;
+          key 'serial-num hop-num'
+              ;
+          leaf serial-num {
+            description 'MAC-TRACE serial number.'
+                        ;
+            type uint64 ;
+          }
+          leaf hop-num {
+            description 'Hop number.'
+                        ;
+            type uint8 ;
+          }
+          leaf hop-status {
+            description 'Hop status.'
+                        ;
+            type enumeration {
+              enum success {
+                value 1 ;
+                description 'MAC-TRACE success.'
+                            ;
+              }
+              enum fail {
+                value 2 ;
+                description 'MAC-TRACE fail.'
+                            ;
+              }
+            }
+          }
+          leaf hop-host-name {
+            description 'Hop host name.'
+                        ;
+            type string ;
+          }
+          leaf hop-mac-addr {
+            description 'Hop MAC address.'
+                        ;
+            type string ;
+          }
+          leaf hop-if-name {
+            description 'Hop interface name.'
+                        ;
+            type string ;
+          }
+          ncd:select 'serial-num hop-num'
+                     ;
+          ncd:select serial-num ;
+        }
+      }
+    }
+  }
+  notification notification-mac-ping {
+    description 'MAC-PING notification model info.'
+                ;
+    container mac-pings {
+      config false ;
+      description 'MAC-PING notification model info.'
+                  ;
+      list mac-ping {
+        description 'The detail result information of MAC-PING.'
+                    ;
+        key serial-num ;
+        leaf serial-num {
+          description 'MAC-PING serial number.'
+                      ;
+          type uint64 ;
+        }
+        leaf send-pkts {
+          description 'Sent packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf rcv-pkts {
+          description 'Received packets.'
+                      ;
+          type uint32 ;
+        }
+        leaf min-rtt {
+          description 'Minimum round-trip-time.'
+                      ;
+          type uint32 ;
+          units millisecond ;
+        }
+        leaf max-rtt {
+          description 'Maximum round-trip-time.'
+                      ;
+          type uint32 ;
+          units millisecond ;
+        }
+        leaf avg-rtt {
+          description 'Average round-trip-time.'
+                      ;
+          type uint32 ;
+          units millisecond ;
+        }
+        leaf min-rwt {
+          description 'Minimum round-wobble-time.'
+                      ;
+          type uint32 ;
+          units millisecond ;
+        }
+        leaf max-rwt {
+          description 'Maximum round-wobble-time.'
+                      ;
+          type uint32 ;
+          units millisecond ;
+        }
+        leaf avg-rwt {
+          description 'Average round-wobble-time.'
+                      ;
+          type uint32 ;
+          units millisecond ;
+        }
+        leaf dst-host-name {
+          description 'Host name of destination.'
+                      ;
+          type string ;
+        }
+        leaf dst-if-name {
+          description 'Interface name of destination.'
+                      ;
+          type string ;
+        }
+        leaf dst-mac-addr {
+          description 'MAC address of destination.'
+                      ;
+          type string ;
+        }
+        leaf src-hostname {
+          description 'Host name of source.'
+                      ;
+          type string ;
+        }
+        leaf src-if-name {
+          description 'Interface name of source.'
+                      ;
+          type string ;
+        }
+        leaf src-mac-addr {
+          description 'MAC address of source.'
+                      ;
+          type string ;
+        }
+      }
+    }
+    ncd:revise-date 2015-06-08 ;
+  }
+  notification notification-mac-trace {
+    description 'MAC-TRACE notification model info.'
+                ;
+    container mac-traces {
+      config false ;
+      description 'MAC-TRACE notification model info.'
+                  ;
+      list mac-trace {
+        description 'The detail result information of MAC-TRACE.'
+                    ;
+        key 'serial-num hop-num'
+            ;
+        leaf serial-num {
+          description 'MAC-TRACE serial number.'
+                      ;
+          type uint64 ;
+        }
+        leaf hop-num {
+          description 'The number of mac-trace hop.'
+                      ;
+          type uint8 ;
+        }
+        leaf hop-status {
+          description 'Hop status.'
+                      ;
+          type enumeration {
+            enum success {
+              value 1 ;
+              description 'MAC-TRACE success.'
+                          ;
+            }
+            enum fail {
+              value 2 ;
+              description 'MAC-TRACE fail.'
+                          ;
+            }
+          }
+        }
+        leaf hop-host-name {
+          description 'Hop host name.'
+                      ;
+          type string ;
+        }
+        leaf hop-mac-addr {
+          description 'Hop MAC address.'
+                      ;
+          type string ;
+        }
+        leaf hop-if-name {
+          description 'Hop interface name.'
+                      ;
+          type string ;
+        }
+        ncd:select 'serial-num hop-num'
+                   ;
+        ncd:select serial-num ;
+      }
+    }
+    ncd:revise-date 2015-06-08 ;
+  }
+  notification notification-mac-trace-result {
+    description 'MAC-TRACE result notification model info.'
+                ;
+    container mac-trace-results {
+      config false ;
+      description 'MAC-TRACE result notification model info.'
+                  ;
+      list mac-trace-result {
+        description 'The detail result information of MAC-TRACE.'
+                    ;
+        key serial-num ;
+        leaf serial-num {
+          description 'MAC-TRACE serial number.'
+                      ;
+          type uint64 ;
+        }
+        leaf hops-count {
+          description 'The number of mac-trace hops.'
+                      ;
+          type uint8 ;
+        }
+        ncd:select serial-num ;
+      }
+    }
+    ncd:revise-date 2015-06-08 ;
+  }
+}

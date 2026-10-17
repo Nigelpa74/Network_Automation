@@ -1,0 +1,147 @@
+module zte-an-qos-global {
+    namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/zx-qos-sched';
+    prefix zx-qos-sched;
+    import zxr10-netconf-defs {
+        prefix ncd;
+        revision-date 2017-08-15;
+    }
+    organization "ZTE Corporation";
+    contact "Luo Feima     ZTE Corporation
+                    Mail : luo.feima@zte.com.cn
+                    Tel  : +86-21-68896470.";
+    description "This MIB defines ZTE Access Node QoS managed objects.";
+    revision 2016-11-21 {
+        description "1.Supplement of the zxAnQosCosToDropPrecedePrfTable.
+                     2.Supplement of the zxAnQosQueueWredIIPrfTable.
+                     3.Supplement of the zxAnQosIfQueueStatsTable.";
+    }
+    revision 2013-03-29 {
+        description "Supplement of the queue shaping profile.";
+    }
+    revision 2011-08-18 {
+        description "Modification of the descriptions for this MIB module.";
+    }
+    revision 2011-08-08 {
+        description "Modification of the comments for this MIB module.";
+    }
+    revision 2011-07-05 {
+        description "Conformance supplement for this MIB module.";
+    }
+    revision 2010-10-28 {
+        description "Initial version of this MIB module.";
+    }
+    container zxAnQos {
+        description "";
+        container zxAnQosObjects {
+            description "";
+            container zxAnQosQueueObjects {
+                description "";
+                container zxAnQosQueueGlobalObjects {
+                    description "";
+                    leaf zxAnQosGlobalMaxQueues {
+                        config false;
+                        description "The global maximum queues.";
+                        type enumeration {
+                            enum four {
+                                value 1;
+                                description "";
+                            }
+                            enum eight {
+                                value 2;
+                                description "";
+                            }
+                        }
+                        default eight;
+                    }
+                    leaf zxAnQosGlobalCosToQueue {
+                        config false;
+                        description "The queues of CoS.
+                                     For example, the value '01 01 02 03 04 06 06 07' means that the
+                                     queue of CoS 5 is 6, ..., the queue of CoS 7 is 7.
+                                     The range of each queue is 0 to 7.
+                                     The number of queues is fixed to zxAnQosGlobalMaxQueues.";
+                        type binary;
+                    }
+                    leaf zxAnQosGlobalQueueWeight {
+                        config false;
+                        description "The weight of queues.
+                                     For example, the value '01 02 04 06 02 02 02 02' means that the
+                                     weight of queue0 is 1, ..., the weight of queue7 is 2.
+                                     The range of each weight is 0 to 100.
+                                     The number of queues is fixed to zxAnQosGlobalMaxQueues.";
+                        type binary;
+                    }
+                    leaf zxAnQosGlobalQueueMode {
+                        config false;
+                        description "The global queue mode configuration.
+                                     pon(1) - The queue configuration is effective on PON interfaces.
+                                     vportNormal(2) - The queue configuration is effective on VPort,
+                                     the priority of unicast or multicast green
+                                     packets is higher than yellow packets. Only
+                                     four queues is supported.
+                                     vportCir(3) - The queue configuration is effective on VPort,
+                                     the priority of unicast green packets is higher than
+                                     multicast packets, the priority of multicast packets
+                                     is higher than yellow packets.
+                                     vportPir(4) - The queue configuration is effective on VPort,
+                                     the priority of unicast or multicast green packets
+                                     is higher than yellow packets. Only eight queues is
+                                     supported.
+                                     vportNormalBidirectional(5) - The queue configuration supports
+                                     egress or ingress direction based on
+                                     vportNormal.";
+                        type enumeration {
+                            enum pon {
+                                value 1;
+                                description "";
+                            }
+                            enum vportNormal {
+                                value 2;
+                                description "";
+                            }
+                            enum vportCir {
+                                value 3;
+                                description "";
+                            }
+                            enum vportPir {
+                                value 4;
+                                description "";
+                            }
+                            enum vportNormalBidirectional {
+                                value 5;
+                                description "";
+                            }
+                        }
+                        default pon;
+                    }
+                    leaf zxAnQosGlobalQueueToQueue {
+                        config false;
+                        description "The mapping of queue to queue.
+                                     For example, the value '00 02 03 05' means that queue0 is mapping
+                                     queue0, queue2 is mapping queue1, queue3 is mapping queue2, queue5
+                                     is mapping queue3.
+                                     The range of each queue is 0 to 7.
+                                     The number of queues is fixed to 4.";
+                        type binary;
+                    }
+                    leaf zxAnQosGlbQStatShortInterval {
+                        config false;
+                        description "The short interval of queue statistics.";
+                        type int32 {
+                            range 5..60;
+                        }
+                        default 5;
+                    }
+                    leaf zxAnQosGlbQStatLongInterval {
+                        config false;
+                        description "The long interval of queue statistics.";
+                        type int32 {
+                            range 60..86400;
+                        }
+                        default 60;
+                    }
+                }
+            }
+        }
+    }
+}

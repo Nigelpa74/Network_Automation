@@ -1,0 +1,471 @@
+module zxr10-sflow {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/sflow'
+            ;
+  prefix sflow ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'ZXR10 ROSNG:the netconf model for sflow.'
+              ;
+  revision 2020-09-14 {
+    description '1.Add choice node mode:/sflow:configuration/sflow:sflow/sflow:'
+              + 'receivers/sflow:receiver/sflow:rcvr-dst-addr/sflow:vrf-mode'+"\n"
+              + '2.Add case mode:/sflow:configuration/sflow:sflow/sflow:receive'
+              + 'rs/sflow:receiver/sflow:rcvr-dst-addr/sflow:vrf-mode/sflow:vrf'
+              + '-common'+"\n"
+              + '3.Add case mode:/sflow:configuration/sflow:sflow/sflow:receive'
+              + 'rs/sflow:receiver/sflow:rcvr-dst-addr/sflow:vrf-mode/sflow:vrf'
+              + '-dcn'+"\n"
+              + '4.Add leaf mode:/sflow:configuration/sflow:sflow/sflow:receive'
+              + 'rs/sflow:receiver/sflow:rcvr-dst-addr/sflow:vrf-mode/sflow:vrf'
+              + '-dcn/sflow:dcn'+"\n"
+              + '5.Add case mode:/sflow:configuration/sflow:sflow/sflow:receive'
+              + 'rs/sflow:receiver/sflow:rcvr-dst-addr/sflow:vrf-mode/sflow:vrf'
+              + '-config-choice-clear'+"\n"
+              + '6.Add container mode:/sflow:configuration/sflow:sflow/sflow:re'
+              + 'ceivers/sflow:receiver/sflow:rcvr-dst-addr/sflow:vrf-mode/sflo'
+              + 'w:vrf-config-choice-clear/sflow:vrf-config-all-clear'
+                ;
+  }
+  revision 2020-07-31 {
+    description 'Support binding ACL on the interface.'+"\n"
+              + 'Add leaf node bind-acl: /configuration/sflow/intf-flow-sampler'
+              + 's/intf-flow-sampler/bind-acl.'
+                ;
+  }
+  revision 2019-05-22 {
+    description 'Support IPv6.'+"\n"
+              + '1. Add choice node agent-address: /state/sflow/agent/agent-add'
+              + 'ress.'+"\n"
+              + '   Add case ipv4 in choice node agent-address, then move leaf '
+              + '/state/sflow/agent/agent-addr to case ipv4;'+"\n"
+              + '   Add case ipv6 in choice node agent-address: /state/sflow/ag'
+              + 'ent/agent-address/ipv6.'+"\n"
+              + '2.Change node /configuration/sflow/agent/agent-address/ipv6/ag'
+              + 'ent-addr-ipv6 value type from 16unipv6 to 16ipv6'
+                ;
+  }
+  revision 2019-04-25 {
+    description 'Support IPv6.'+"\n"
+              + '1. Add choice node agent-address: /configuration/sflow/agent/a'
+              + 'gent-address.'+"\n"
+              + 'Add case ipv4 in choice node agent-address, then move leaf /co'
+              + 'nfiguration/sflow/agent/agent-addr to case ipv4;'+"\n"
+              + 'Add case ipv6 in choice node agent-address: /configuration/sfl'
+              + 'ow/agent/agent-address/ipv6.'+"\n"
+              + '2. Add choice node address: /configuration/sflow/receivers/rec'
+              + 'eiver/rcvr-dst-addr/address.'+"\n"
+              + 'Add case ipv4 in choice node address, then move leaf /configur'
+              + 'ation/sflow/receivers/receiver/rcvr-dst-addr/ipv4-addr to case'
+              + ' ipv4;'+"\n"
+              + 'Add case ipv6 to choice node address.'+"\n"
+              + '3. Add leaf node export-format-ipv4: /configuration/sflow/flow'
+              + '-samplers/flow-sampler/export-format-ipv4.'+"\n"
+              + '4. Add container node export-formats: /configuration/sflow/flo'
+              + 'w-samplers/flow-sampler/export-formats.'+"\n"
+              + '5. Change leaf status absolete:'+"\n"
+              + '/configuration/sflow/agent/agent-addr-family;'+"\n"
+              + '/configuration/sflow/receivers/receiver/rcvr-dst-addr/addr-fam'
+              + 'ily.'
+                ;
+  }
+  revision 2015-11-27 {
+    description 'modefy rcvr-port range from 0 to 65535 into from 1 to 65535.'
+                ;
+  }
+  revision 2015-07-28 {
+    description 'modify the config flag for the state node and its children.'
+                ;
+  }
+  revision 2013-12-23 {
+    description 'Initial version'
+                ;
+  }
+  container configuration {
+    description 'SFLOW module configuration model'
+                ;
+    container sflow {
+      description 'SFLOW module configuration root node'
+                  ;
+      container receivers {
+        description 'SFLOW receiver info'
+                    ;
+        list receiver {
+          description 'SFLOW receiver info'
+                      ;
+          key rcvr-name ;
+          leaf rcvr-name {
+            description 'SFLOW receiver name'
+                        ;
+            type string {
+              length 1..35 ;
+            }
+          }
+          leaf rcvr-port {
+            description 'SFLOW receiver port'
+                        ;
+            type uint16 {
+              range 1..65535 ;
+            }
+            default 6343 ;
+          }
+          container rcvr-dst-addr {
+            description 'SFLOW receiver destination address'
+                        ;
+            presence 'receiver destination address'
+                     ;
+            choice address {
+              description 'SFLOW receiver destination address'
+                          ;
+              case ipv4 {
+                description 'SFLOW receiver destination IPv4 address'
+                            ;
+                leaf ipv4-addr {
+                  description 'SFLOW receiver destination address'
+                              ;
+                  type ncd:ipv4-address ;
+                  mandatory true ;
+                }
+              }
+              case ipv6 {
+                description 'SFLOW receiver destination IPv6 address'
+                            ;
+                leaf ipv6-addr {
+                  description 'SFLOW receiver destination IPv6 address'
+                              ;
+                  type ncd:ipv6-address ;
+                  mandatory true ;
+                }
+                ncd:revise-date 2019-04-25 ;
+              }
+            }
+            leaf addr-family {
+              status obsolete {
+                ncd:revise-date 2019-04-25 ;
+              }
+              description 'SFLOW receiver destination address family'
+                          ;
+              type enumeration {
+                enum ipv4 {
+                  value 1 ;
+                }
+              }
+            }
+            choice vrf-mode {
+              description 'Specify the type and name of vrf.'
+                          ;
+              case vrf-common {
+                description 'Specify vrf name which is not reserved.'
+                            ;
+                leaf vrf-name {
+                  description 'SFLOW receiver vrf name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+              }
+              case vrf-dcn {
+                description 'Specify dcn vrf.'
+                            ;
+                leaf dcn {
+                  description 'Specify dcn vrf.'
+                              ;
+                  type empty ;
+                }
+		ncd:revise-date 2020-09-14 ;
+              }
+              case vrf-config-choice-clear {
+                description 'Remove all VRF configuration within this choice.'
+                            ;
+                container vrf-config-all-clear {
+                  description 'Remove all VRF configuration of this instance.'
+                              ;
+                  presence vrf-config-all-clear ;
+                }
+		ncd:revise-date 2020-09-14 ;
+              }
+              
+            }
+          }
+        }
+      }
+      container flow-samplers {
+        description 'Flow sampler strategy'
+                    ;
+        list flow-sampler {
+          description 'Flow sampler strategy'
+                      ;
+          key fs-name ;
+          leaf fs-name {
+            description 'Flow sampler name'
+                        ;
+            type string {
+              length 1..35 ;
+            }
+          }
+          leaf rcvr-name {
+            description 'Receiver name'
+                        ;
+            type string {
+              length 1..35 ;
+            }
+          }
+          leaf sampler-rate {
+            description 'Sampler rate'
+                        ;
+            type uint32 {
+              range 128..65535 ;
+            }
+            default 400 ;
+          }
+          leaf export-format-ipv4 {
+            description 'Sflow export packet format IPv4'
+                        ;
+            type empty ;
+            ncd:revise-date 2019-04-25 ;
+          }
+          container export-formats {
+            description 'Sflow export packet format'
+                        ;
+            list export-format {
+              description 'Sflow export packet format'
+                          ;
+              key export-type ;
+              leaf export-type {
+                description 'Sflow export packet format type'
+                            ;
+                type enumeration {
+                  enum ipv6 {
+                    value 2 ;
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2019-04-25 ;
+          }
+        }
+      }
+      container intf-flow-samplers {
+        description 'Flow sampler on interface'
+                    ;
+        list intf-flow-sampler {
+          description 'Flow sampler on interface'
+                      ;
+          key intf-name ;
+          leaf intf-name {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf fs-name {
+            description 'Flow sampler name'
+                        ;
+            type string {
+              length 1..35 ;
+            }
+          }
+          leaf direction {
+            description 'Flow sampler direction'
+                        ;
+            type enumeration {
+              enum input {
+                value 1 ;
+              }
+              enum output {
+                value 2 ;
+              }
+              enum all {
+                value 3 ;
+              }
+            }
+            default all ;
+          }
+          leaf bind-acl {
+            description 'Whether bind ACL on the interface'
+                        ;
+            type boolean ;
+            ncd:revise-date 2020-07-31 ;
+          }
+        }
+      }
+      container counter-pollers {
+        description 'Counter poller strategy'
+                    ;
+        list counter-poller {
+          description 'Counter poller strategy'
+                      ;
+          key cp-name ;
+          leaf cp-name {
+            description 'Counter poller name'
+                        ;
+            type string {
+              length 1..35 ;
+            }
+          }
+          leaf rcvr-name {
+            description 'Receiver name'
+                        ;
+            type string {
+              length 1..35 ;
+            }
+          }
+          leaf cp-interval {
+            description 'Counter poller interval'
+                        ;
+            type uint32 {
+              range 10..400 ;
+            }
+            units second ;
+            default 20 ;
+          }
+        }
+      }
+      container intf-counter-pollers {
+        description 'Counter poller on interface'
+                    ;
+        list intf-counter-poller {
+          description 'Counter poller on interface'
+                      ;
+          key intf-name ;
+          leaf intf-name {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf cp-name {
+            description 'Counter poller name'
+                        ;
+            type string {
+              length 1..35 ;
+            }
+          }
+        }
+      }
+      container agent {
+        description 'SFLOW agent'
+                    ;
+        presence 'sflow agent'
+                 ;
+        leaf agent-addr-family {
+          status obsolete {
+            ncd:revise-date 2019-04-25 ;
+          }
+          description 'Agent address family'
+                      ;
+          type enumeration {
+            enum ipv4 {
+              value 1 ;
+            }
+          }
+        }
+        choice agent-address {
+          description 'SFLOW agent address'
+                      ;
+          mandatory true ;
+          case ipv4 {
+            description 'SFLOW agent IPv4 address'
+                        ;
+            leaf agent-addr {
+              description 'Agent address'
+                          ;
+              type ncd:ipv4-address ;
+              mandatory true ;
+            }
+          }
+          case ipv6 {
+            description 'SFLOW agent IPv6 address'
+                        ;
+            leaf agent-addr-ipv6 {
+              description 'Agent IPv6 address'
+                          ;
+              type ncd:ipv6-address ;
+              mandatory true ;
+            }
+            ncd:revise-date 2019-04-25 ;
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'SFLOW module state model.'
+                ;
+    container sflow {
+      description 'SFLOW module query root node'
+                  ;
+      container agent {
+        description 'SFLOW agent address'
+                    ;
+        leaf sflow-version {
+          description 'SFLOW version'
+                      ;
+          type ncd:string-all ;
+        }
+        leaf agent-addr-family {
+          description 'SFLOW agent address family'
+                      ;
+          type enumeration {
+            enum invaild {
+              value 0 ;
+            }
+            enum ipv4 {
+              value 1 ;
+            }
+            enum ipv6 {
+              value 2 ;
+            }
+          }
+        }
+        choice agent-address {
+          description 'SFLOW agent address'
+                      ;
+          case ipv4 {
+            description 'SFLOW agent IPv4 address'
+                        ;
+            leaf agent-addr {
+              description 'Agent address'
+                          ;
+              type ncd:ipv4-address ;
+              mandatory true ;
+            }
+          }
+          case ipv6 {
+            description 'SFLOW agent IPv6 address'
+                        ;
+            leaf agent-addr-ipv6 {
+              description 'Agent IPv6 address'
+                          ;
+              type ncd:ipv6-address ;
+              mandatory true ;
+            }
+	    ncd:revise-date 2019-05-22 ;
+          }
+          
+        }
+        leaf agent-addr-from {
+          description 'SFLOW agent address user config flag'
+                      ;
+          type enumeration {
+            enum AutomaticAcquisition {
+              value 0 ;
+            }
+            enum MannualyConfiged {
+              value 1 ;
+            }
+          }
+          default AutomaticAcquisition ;
+        }
+      }
+    }
+  }
+}

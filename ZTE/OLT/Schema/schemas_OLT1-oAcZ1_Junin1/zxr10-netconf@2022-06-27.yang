@@ -1,0 +1,585 @@
+module zxr10-netconf {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/netconf'
+            ;
+  prefix netc ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  import ietf-netconf-time {
+    prefix nct ;
+    revision-date 2016-01-26 ;
+  }
+  import ietf-yang-types {
+    prefix yang ;
+    revision-date 2013-07-15 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation '+"\n"
+        + '         Nanjing Institute of ZTE Corporation'+"\n"
+        + '         '+"\n"
+        + '         No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China'+"\n"
+        + '         '+"\n"
+        + '         Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe netconf own service'
+              ;
+  revision 2022-06-27 {
+    description 'Add container configuration/netconf/operate-log/detail.'
+                ;
+  }
+  revision 2021-06-21 {
+    description 'Add container configuration/netconf/cert-to-names.'
+                ;
+  }
+  revision 2021-01-05 {
+    description 'Add container configuration/netconf/operate-log.'+"\n"
+              + 'Add container configuration/netconf/operate-log/type.'+"\n"
+              + 'Add leaf configuration/netconf/operate-log/status.'+"\n"
+              + 'Add leaf configuration/netconf/operate-log/type/get.'+"\n"
+              + 'Add leaf configuration/netconf/operate-log/type/set.'+"\n"
+              + 'Add leaf configuration/netconf/operate-log/type/operation.'
+                ;
+  }
+  revision 2020-10-09 {
+    description 'Add container configuration/netconf/reply-info.'+"\n"
+              + 'Add container configuration/netconf/reply-info/reply-with-exe-'
+              + 'time.'+"\n"
+              + 'Add leaf configuration/netconf/reply-info/reply-with-exe-time/'
+              + 'status.'
+                ;
+  }
+  revision 2019-12-10 {
+    description 'Add augmnet node nct:netconf-scheduled-message.'+"\n"
+              + 'Add leaf node nct:netconf-scheduled-message/session-id.'+"\n"
+              + 'Add leaf node nct:netconf-scheduled-message/message-id.'+"\n"
+              + 'Add import ietf-netconf-time.'+"\n"
+              + 'Add container configuration/netconf/sched-max-future.'+"\n"
+              + 'Add container configuration/netconf/sched-max-past.'+"\n"
+              + 'Add container configuration/netconf/sched-max-cache.'
+                ;
+  }
+  revision 2019-07-15 {
+    description 'Modify leaf configuration/netconf/session/absolute-timeout def'
+              + 'ault value.'
+                ;
+  }
+  revision 2017-02-16 {
+    description 'obsolete node /state/netconf/streams'
+                ;
+  }
+  revision 2015-01-11 {
+    description 'support get schema conformance info'
+                ;
+  }
+  revision 2014-11-26 {
+    description 'support get notification event mode'
+                ;
+  }
+  revision 2013-11-25 {
+    description 'add description to some nodes;modify absolute-time node; add r'
+              + 'ange to active-sessions and sessionid node;'
+                ;
+  }
+  revision 2013-08-23 ;
+  feature sched-time ;
+  container configuration {
+    description 'Configuration model'
+                ;
+    container netconf {
+      description 'Configure NETCONF parameters'
+                  ;
+      container server {
+        description 'Configure netconf server parameters'
+                    ;
+        choice status {
+          description 'The status of netconf server'
+                      ;
+          default disable ;
+          case disable {
+            leaf disable {
+              description 'Disable netconf server'
+                          ;
+              type empty ;
+            }
+          }
+          case enable {
+            leaf enable {
+              description 'Enable netconf server'
+                          ;
+              type empty ;
+            }
+          }
+        }
+      }
+      container session {
+        description 'Configure netconf session parameters'
+                    ;
+        leaf max-sessions {
+          description 'The max sessions that netconf supports'
+                      ;
+          type uint8 {
+            range 1..30 ;
+          }
+          default 10 ;
+        }
+        leaf absolute-timeout {
+          description 'The max time of duration for a netconf session. '+"\n"
+                    + ' 0 indicates the session will be online forever, unless '
+                    + 'the session is closed. The range of configuration is fro'
+                    + 'm 0 to 10000 minutes,the default value is 0 minutes;'
+                      ;
+          type uint16 {
+            range 0..10000 ;
+          }
+          units minute ;
+          default 0 ;
+        }
+        leaf idle-timeout {
+          description 'The max idle time for a netconf session,'+"\n"
+                    + '  0 indicates the session will not be closed by idle.The'
+                    + ' range of configuration is from 0 to 10000 minutes,the d'
+                    + 'efault value is 30 minutes;'
+                      ;
+          type uint16 {
+            range 0..10000 ;
+          }
+          units minute ;
+          default 30 ;
+        }
+      }
+      container sched-max-future {
+        if-feature sched-time ;
+        description 'The maximal difference between the scheduled time in the f'
+                  + 'uture '+"\n"
+                  + 'and the present time that the server is willing to accept.'
+                    ;
+        leaf time {
+          description Time ;
+          type nct:time-interval ;
+          default 00:00:15.0 ;
+        }
+      }
+      container sched-max-past {
+        if-feature sched-time ;
+        description 'The maximal difference between the scheduled time in the p'
+                  + 'ast '+"\n"
+                  + 'and the present time that the server is willing to accept.'
+                    ;
+        leaf time {
+          description Time ;
+          type nct:time-interval ;
+          default 00:00:15.0 ;
+        }
+      }
+      container sched-max-cache {
+        if-feature sched-time ;
+        description 'Configure netconf max cache scheduled time RPC num'
+                    ;
+        leaf number {
+          description Number ;
+          type uint32 {
+            range 0..100 ;
+          }
+          default 10 ;
+        }
+      }
+      container reply-info {
+        description 'Configure the elements carried in NETCONF rpc-reply.'
+                    ;
+        container reply-with-exe-time {
+          if-feature sched-time ;
+          description 'The <execution-time> element in rpc-reply.'
+                      ;
+          leaf status {
+            description 'Whether the NETCONF response message carries the <exec'
+                      + 'ution-time> element. When the server supports the time'
+                      + '1.0 capability, but there is no <get-time> element in '
+                      + 'the request message.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+              }
+              enum enable {
+                value 1 ;
+              }
+            }
+            default disable ;
+          }
+        }
+      }
+      container operate-log {
+        description 'Configure NETCONF log function switch  parameters'
+                    ;
+        leaf status {
+          description 'Enable or disable NETCONF log function'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+            }
+            enum disable {
+              value 0 ;
+            }
+          }
+        }
+        container type {
+          description 'NETCONF log type'
+                      ;
+          leaf get {
+            description 'Enable or disable log type of get function'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 2 ;
+              }
+            }
+            default enable ;
+          }
+          leaf set {
+            description 'Enable or disable log type of set function'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 2 ;
+              }
+            }
+            default enable ;
+          }
+          leaf operation {
+            description 'Enable or disable log type of operation function'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 2 ;
+              }
+            }
+            default enable ;
+          }
+        }
+        container detail {
+          description 'NETCONF log detail type'
+                      ;
+          leaf get {
+            description 'Enable or disable log detail type of get function'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Set NETCONF operate-log detail get enable'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Set NETCONF operate-log detail get disable'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          leaf set {
+            description 'Enable or disable log detail type of set function'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Set NETCONF operate-log detail set enable'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Set NETCONF operate-log detail set disable'
+                            ;
+              }
+            }
+            default enable ;
+          }
+          leaf operation {
+            description 'Enable or disable log detail type of operation function'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Set NETCONF operate-log detail operation enable'
+                            ;
+              }
+              enum disable {
+                value 2 ;
+                description 'Set NETCONF operate-log detail operation disable'
+                            ;
+              }
+            }
+            default enable ;
+          }
+        }
+      }
+      container cert-to-names {
+        description 'Defines nodes for mapping certificates to names.'
+                    ;
+        list cert-to-name {
+          description "This list defines how certificates are mapped to names. "
+                    + "The cert-to-name entry's fingerprint determines whether "
+                    + "the list entry is a match."
+                      ;
+          key fingerprint ;
+          leaf fingerprint {
+            description 'Specifies a value with which the fingerprint of the fu'
+                      + 'll certificate presented by the peer is compared.  If '
+                      + 'the fingerprint of the full certificate presented by t'
+                      + 'he peer does not match the fingerprint configured, the'
+                      + 'n the entry is skipped, and the search for a match con'
+                      + 'tinues.'
+                        ;
+            type yang:hex-string ;
+          }
+          leaf map-type {
+            description 'Specifies the algorithm used to map the certificate pr'
+                      + 'esented by the peer to a name.'
+                        ;
+            type enumeration {
+              enum specified {
+                value 1 ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf name {
+            description "Directly specifies the NETCONF username when the map-t"
+                      + "ype is 'specified'"
+                        ;
+            type string ;
+            mandatory true ;
+          }
+        }
+      }
+    }
+  }
+  container state {
+    description 'State model'
+                ;
+    config false ;
+    container netconf {
+      description 'Netconf state parameters'
+                  ;
+      container sessions {
+        description 'The detail info of current active sessions'
+                    ;
+        leaf active-sessions {
+          description 'The number of current active sessions.'
+                      ;
+          type uint8 {
+            range 1..30 ;
+          }
+        }
+        list session {
+          description 'The detail info of an active session.'
+                      ;
+          key sessionid ;
+          leaf sessionid {
+            description 'The identifier of a session'
+                        ;
+            type uint8 {
+              range 1..30 ;
+            }
+          }
+          leaf type {
+            description 'The type of transport layer'
+                        ;
+            type enumeration {
+              enum ssh {
+                value 1 ;
+                description 'The netconf connect over ssh transport protocol.'
+                            ;
+              }
+              enum soap {
+                value 2 ;
+                description 'The netconf connect over soap transport protocol.'
+                            ;
+              }
+              enum beep {
+                value 3 ;
+                description 'The netconf connect over beep transport protocol.'
+                            ;
+              }
+              enum tls {
+                value 4 ;
+                description 'The netconf connect over tls transport protocol.'
+                            ;
+              }
+            }
+            default ssh ;
+          }
+          leaf username {
+            description 'The username associated with this session.'
+                        ;
+            type string ;
+          }
+          leaf ipaddress {
+            description "The IP address associated with this session, it is the"
+                      + " peer's IP address."
+                        ;
+            type string ;
+          }
+          leaf logintime {
+            description 'The login time associated with this session, '+"\n"
+                      + '												             it is the time this session w'
+                      + 'as established'
+                        ;
+            type ncd:string-with-blank ;
+          }
+        }
+      }
+      container streams {
+        description 'event streams list'
+                    ;
+        status obsolete ;
+        list stream {
+          description 'event stream'
+                      ;
+          key name ;
+          leaf name {
+            description 'stream mode name'
+                        ;
+            type enumeration {
+              enum NETCONF {
+                value 1 ;
+                description 'netconf mode'
+                            ;
+              }
+              enum SNMP {
+                value 2 ;
+                description 'snmp mode'
+                            ;
+              }
+              enum SYSLOG {
+                value 3 ;
+                description 'syslog mode'
+                            ;
+              }
+            }
+          }
+          leaf description {
+            description 'stream mode description'
+                        ;
+            type ncd:string-all {
+              length 1..255 ;
+            }
+          }
+          leaf replaysupport {
+            description 'whether to support historical event resend'
+                        ;
+            type boolean ;
+            default false ;
+          }
+        }
+      }
+      container conformance {
+        description 'The conformance-info of the yang modules defined by device.'
+                    ;
+        container modules {
+          description 'The modules info of yang defined by device.'
+                      ;
+          list module {
+            description 'The module info of yang.'
+                        ;
+            key name ;
+            leaf name {
+              description 'The name of yang module.'
+                          ;
+              type string {
+                length 1..127 {
+                  description 'The length of module name.'
+                              ;
+                }
+              }
+            }
+            leaf namespace {
+              description 'The namespace of yang module.'
+                          ;
+              type string {
+                length 1..255 {
+                  description 'The Length of namespace info.'
+                              ;
+                }
+              }
+            }
+            leaf prefix {
+              description 'The prefix of yang module.'
+                          ;
+              type string {
+                length 1..31 {
+                  description 'The length of prefix info'
+                              ;
+                }
+              }
+            }
+            leaf revision {
+              description 'The revision of yang module.'
+                          ;
+              type string {
+                length 1..10 {
+                  description 'The length of revision info.'
+                              ;
+                }
+              }
+            }
+            container features {
+              description 'The features info of yang module.'
+                          ;
+              list feature {
+                description 'The feature info of yang module.'
+                            ;
+                key name ;
+                leaf name {
+                  description 'The name of feature'
+                              ;
+                  type string {
+                    length 1..31 {
+                      description 'The length of feature name.'
+                                  ;
+                    }
+                  }
+                }
+                leaf status {
+                  description 'The feature status,disable or enable.'
+                              ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+                    enum enable {
+                      value 1 ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  augment /nct:netconf-scheduled-message {
+    if-feature sched-time ;
+    leaf session-id {
+      description 'The session ID of the execution scheduled RPC.'
+                  ;
+      type uint8 ;
+    }
+    leaf message-id {
+      description 'The message ID of the scheduled RPC.'
+                  ;
+      type string ;
+    }
+  }
+}

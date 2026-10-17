@@ -1,0 +1,746 @@
+module zxr10-sftp {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/sftp'
+            ;
+  prefix sftp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the SFTP.'
+              ;
+  revision 2021-11-04 {
+    description 'add sftp-server max-login'
+                ;
+  }
+  revision 2021-04-01 {
+    description 'expand password max length from 64 to 128.'
+                ;
+  }
+  revision 2021-03-01 {
+    description 'Add choice node:/configuration/sftp/sftp-server/status/enable.'
+                ;
+  }
+  revision 2020-03-23 {
+    description 'Add choice node:/operation/sftp/sftp-client/copy/trans-directi'
+              + 'on/upload/remote-dest-param.'+"\n"
+              + 'Add choice node:/operation/sftp/sftp-client/copy/trans-directi'
+              + 'on/download/remote-source-param.'
+                ;
+  }
+  revision 2019-06-12 {
+    description '1 Extend the length of node /sftp:operation/sftp:sftp/sftp:sft'
+              + 'p-client/sftp:copy/sftp:trans-direction/sftp:upload/sftp:remot'
+              + 'e-dest-file'+"\n"
+              + '2 Extend the length of node /sftp:operation/sftp:sftp/sftp:sft'
+              + 'p-client/sftp:copy/sftp:trans-direction/sftp:download/sftp:rem'
+              + 'ote-source-file'
+                ;
+  }
+  revision 2019-01-03 {
+    description "The feature node 'sftp-copt-dcn' support project OTN(7000/8700"
+              + "/9700)"
+                ;
+  }
+  revision 2018-06-20 {
+    description '1.Add container configuration/sftp/sftp-server/acl.'+"\n"
+              + '2.Add container configuration/sftp/sftp-server/acl/acl-ipv4.'+"\n"
+              + '3.Add container configuration/sftp/sftp-server/acl/acl-ipv6.'+"\n"
+              + '4.Add leaf configuration/sftp/sftp-server/acl/acl-ipv4/acl-nam'
+              + 'e.'+"\n"
+              + '5.Add leaf configuration/sftp/sftp-server/acl/acl-ipv6/acl-nam'
+              + 'e.'+"\n"
+              + '6.Add container configuration/sftp/sftp-server/idle-timeout.'+"\n"
+              + '7.Add leaf configuration/sftp/sftp-server/idle-timeout/idle-ti'
+              + 'me.'+"\n"
+              + '8.Obsolete leaf operation/sftp/sftp-client/copy/vrf-name.'+"\n"
+              + '9.Add choice operation/sftp/sftp-client/copy/copy-mode,which c'
+              + 'ontains the branches vrf and dcn.'+"\n"
+              + '10.Add the leaf vrf of choice branch operation/sftp/sftp-clien'
+              + 't/copy/copy-mode/vrf.'+"\n"
+              + '11.Add the leaf dcn of choice branch operation/sftp/sftp-clien'
+              + 't/copy/copy-mode/dcn.'+"\n"
+              + '12.Add the leaf upload-cpu-node of the choice branch operation'
+              + '/sftp/sftp-client/copy/trans-direction/upload.'+"\n"
+              + '13.Add the leaf download-cpu-node of the choice branch operati'
+              + 'on/sftp/sftp-client/copy/trans-direction/download.'
+                ;
+  }
+  revision 2018-06-06 {
+    description 'Add performance parameter for configuration/sftp/sftp-server/t'
+              + 'op-directory/directory-name.'
+                ;
+  }
+  revision 2018-04-28 {
+    description '1.add container configuration/sftp/sftp-client.'+"\n"
+              + '2.add container configuration/sftp/sftp-client/source-interfac'
+              + 'e.'+"\n"
+              + '3.add container configuration/sftp/sftp-client/source-ip.'
+                ;
+  }
+  revision 2018-03-28 {
+    description '1.Remove Mandatory of operation/sftp/sftp-client/copy/encrypt.'
+              + ''+"\n"
+              + '2.Remove Mandatory of operation/sftp/sftp-client/copy/compress'
+              + '.'+"\n"
+              + '3.Remove Mandatory of operation/sftp/sftp-client/copy/mac.'
+                ;
+  }
+  revision 2014-04-21 {
+    description '1.Modified configuration/sftp/sftp-server/top-directory/permis'
+              + 'sion/write-copy/'+"\n"
+              + '  write-copy/read-write node type from empty to enumeration.'+"\n"
+              + '2.Modified configuration/sftp/sftp-server/top-directory//permi'
+              + 'ssion/write-copy/'+"\n"
+              + '  write-copy/copy node type from empty to enumeration.'+"\n"
+              + '3.Add MimFilter of /sftp/sftp-server/top-directory/permission/'
+              + 'write-copy/write-copy.'
+                ;
+  }
+  revision 2014-03-02 {
+    description '1.Modified the length of state/sftp/sftp-server/user-state/use'
+              + 'r-name from 64 to 65.'
+                ;
+  }
+  revision 2013-09-23 {
+    description 'Initial version'
+                ;
+  }
+  feature sftp-copy-dcn ;
+  container configuration {
+    description 'The configuration model of SFTP.'
+                ;
+    container sftp {
+      description 'Configure the SFTP parameters.'
+                  ;
+      container sftp-server {
+        description 'Configure the SFTP server parameters.'
+                    ;
+        container top-directory {
+          description 'To configure the top directory of SFTP server and permis'
+                    + 'sion.'
+                      ;
+          leaf directory-name {
+            description 'The SFTP server top directory name.'
+                        ;
+            type string {
+              length 1..159 ;
+            }
+            default /datadisk0/ ;
+          }
+          choice permission {
+            description 'To configure the permission of the top directory'
+                        ;
+            default write-copy ;
+            case read-only {
+              description 'To configure the permission of read-only.'
+                          ;
+              leaf read-only {
+                description 'To configure the permission of read-only.'
+                            ;
+                type empty ;
+              }
+            }
+            case write-copy {
+              description 'To configure the permission of read-write,copy.'
+                          ;
+              container write-copy {
+                description 'To configure the permission of read-write,copy.'
+                            ;
+                leaf read-write {
+                  description 'To configure the permission of read-write.'
+                              ;
+                  type enumeration {
+                    enum no {
+                      value 0 ;
+                      description 'To cancel the permission of SFTP top directo'
+                                + 'ry.'
+                                  ;
+                    }
+                    enum yes {
+                      value 1 ;
+                      description 'To configure the permission of SFTP top dire'
+                                + 'ctory.'
+                                  ;
+                    }
+                  }
+                }
+                leaf copy {
+                  description 'To configure the permission of copy.'
+                              ;
+                  type enumeration {
+                    enum no {
+                      value 0 ;
+                      description 'To cancel the permission of SFTP top directo'
+                                + 'ry.'
+                                  ;
+                    }
+                    enum yes {
+                      value 1 ;
+                      description 'To configure the permission of SFTP top dire'
+                                + 'ctory.'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        container acl {
+          description 'To configure the ACL name which is binded to the SFTP se'
+                    + 'rver.'
+                      ;
+          container acl-ipv4 {
+            description 'To configure the IPv4 ACL name which is binded to the '
+                      + 'SFTP server.'
+                        ;
+            leaf acl-name {
+              description 'The ACL name which is binded to the SFTP server.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+            }
+          }
+          container acl-ipv6 {
+            description 'To configure the IPv6 ACL name which is binded to the '
+                      + 'SFTP server.'
+                        ;
+            leaf acl-name {
+              description 'The ACL name which is binded to the SFTP server.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+            }
+          }
+          ncd:revise-date 2018-06-20 ;
+        }
+        container idle-timeout {
+          description 'To configure the idle timeout of SFTP.'
+                      ;
+          leaf idle-time {
+            description 'To configure the idle timeout of SFTP.'
+                        ;
+            type uint16 {
+              range 0..1440 ;
+            }
+            default 0 ;
+          }
+          ncd:revise-date 2018-06-20 ;
+        }
+        container status {
+          description 'To configure the SFTP server enable or disable.'
+                      ;
+          leaf enable {
+            description 'To configure the SFTP server enable or disable.'
+                        ;
+            type boolean ;
+            default true ;
+          }
+          ncd:revise-date 2021-03-01 ;
+        }
+        leaf max-login {
+          description 'The maximum number of concurrent users.'
+                      ;
+          type uint32 {
+            range 1..32 ;
+          }
+          default 32 ;
+          ncd:revise-date 2021-11-04 ;
+        }
+      }
+      container sftp-client {
+        description 'Configure the SFTP client parameters.'
+                    ;
+        container source-interface {
+          description 'To configure the source IP interface of SFTP client copy'
+                    + ' command.'
+                      ;
+          presence 'Mandatory leaves are included.'
+                   ;
+          leaf interface-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+        }
+        container source-ip {
+          description 'To configure the source IP address of SFTP client copy c'
+                    + 'ommand.'
+                      ;
+          container source-ipv4 {
+            description 'To configure the source IPv4 address of SFTP client co'
+                      + 'py command.'
+                        ;
+            presence 'Mandatory leaves are included.'
+                     ;
+            leaf ipv4-addr {
+              description 'IPv4 address.'
+                          ;
+              type ncd:ipv4-address ;
+              mandatory true ;
+            }
+          }
+          container source-ipv6 {
+            choice ipv6-addr {
+              description 'The source IPv6 address of SFTP client copy command.'
+                          ;
+              case unlink-local-addr {
+                description unlink-local-addr ;
+                leaf ipv6-address {
+                  description 'IPv6 address.'
+                              ;
+                  type ncd:ipv6-address ;
+                  mandatory true ;
+                }
+              }
+              case link-local-addr {
+                description 'Link local address.'
+                            ;
+                leaf link-local-address {
+                  description 'Link local address.'
+                              ;
+                  type ncd:ipv6-address {
+                    pattern '^[Ff][Ee][8-9a-bA-B][0-9a-fA-F]'
+                            ;
+                  }
+                  mandatory true ;
+                }
+                leaf interface-name {
+                  description 'Interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model of SFTP.'
+                ;
+    container sftp {
+      description 'State model of SFTP.'
+                  ;
+      container sftp-server {
+        description 'State model of SFTP server.'
+                    ;
+        list user-state {
+          description 'Show SFTP user state.'
+                      ;
+          key user-id ;
+          leaf user-id {
+            description 'User id.'
+                        ;
+            type uint16 {
+              range 1..32 ;
+            }
+          }
+          leaf user-name {
+            description 'User name.'
+                        ;
+            type string {
+              length 1..65 ;
+            }
+          }
+          leaf status {
+            description 'user current state.'
+                        ;
+            type enumeration {
+              enum offline {
+                value 0 ;
+              }
+              enum online {
+                value 1 ;
+              }
+            }
+          }
+          leaf ip-type {
+            description 'The type of IP address.'
+                        ;
+            type enumeration {
+              enum IPv4 {
+                value 0 ;
+              }
+              enum IPv6 {
+                value 1 ;
+              }
+            }
+          }
+          leaf ipv4-address {
+            description 'IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf ipv6-address {
+            description 'IPv6 address.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf port {
+            description 'Port number.'
+                        ;
+            type uint16 {
+              range 1..65535 ;
+            }
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description 'The operation model of SFTP.'
+                ;
+    container sftp {
+      description 'The operation model of SFTP.'
+                  ;
+      container sftp-client {
+        description 'The operation of SFTP client.'
+                    ;
+        container copy {
+          description 'To copy a file over the network.'
+                      ;
+          presence 'The choice trans-direction is mandatory'
+                   ;
+          leaf vrf-name {
+            status obsolete {
+              ncd:revise-date 2018-06-20 ;
+            }
+            description 'To specify VRF name.'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          choice copy-mode {
+            description 'To specify the mode of file transmition.'
+                        ;
+            case vrf {
+              description 'To transmit file by VRF.'
+                          ;
+              leaf vrf {
+                description 'To specify VRF name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+            }
+            case dcn {
+              if-feature sftp-copy-dcn ;
+              description 'To transmit file by DCN.'
+                          ;
+              leaf dcn {
+                description 'DCN mode.'
+                            ;
+                type empty ;
+              }
+            }
+            ncd:revise-date 2018-06-20 ;
+          }
+          choice trans-direction {
+            description 'To specify transmition direction.'
+                        ;
+            mandatory true ;
+            case upload {
+              description Upload. ;
+              leaf local-source-file {
+                description 'To Specify the local source file name.'
+                            ;
+                type string {
+                  length 1..159 ;
+                }
+                mandatory true ;
+              }
+              choice remote-dest-param {
+                description 'Remote dest SFTP server param'
+                            ;
+                mandatory true ;
+                case spliced-remote-param {
+                  description 'Spliced remote param'
+                              ;
+                  leaf remote-dest-file {
+                    description 'To Specify the remote destination params.the f'
+                              + 'ormat is: '+"\n"
+                              + '//ip-address/filename@username:password.'
+                                ;
+                    type string {
+                      length 1..300 ;
+                    }
+                    mandatory true ;
+                  }
+                }
+                case splited-remote-param {
+                  description 'Splited remote param'
+                              ;
+                  container splited-remote-dest-param {
+                    description 'Splited remote param'
+                                ;
+                    choice ip-addr {
+                      description 'IP address'
+                                  ;
+                      mandatory true ;
+                      case ipv4 {
+                        description IPv4 ;
+                        leaf remote-ipv4-address {
+                          description 'IPv4 address of SFTP server'
+                                      ;
+                          type ncd:ipv4-address ;
+                          mandatory true ;
+                        }
+                      }
+                      case ipv6 {
+                        description IPv6 ;
+                        leaf remote-ipv6-address {
+                          description 'IPv6 address of SFTP server'
+                                      ;
+                          type ncd:ipv6-address ;
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf username {
+                      description Username ;
+                      type string {
+                        length 1..65 ;
+                      }
+                      mandatory true ;
+                    }
+                    leaf password {
+                      description Password ;
+                      type string {
+                        length 1..128 ;
+                      }
+                      mandatory true ;
+                    }
+                    leaf path {
+                      description path ;
+                      type string {
+                        length 1..159 ;
+                      }
+                      mandatory true ;
+                    }
+                  }
+                  ncd:revise-date 2020-03-23 ;
+                }
+              }
+              leaf upload-cpu-node {
+                description 'To specify the CPU node Information.'
+                            ;
+                type ncd:cpu ;
+                ncd:revise-date 2018-06-20 ;
+              }
+            }
+            case download {
+              description Download. ;
+              choice remote-source-param {
+                description 'Remote dest SFTP server param'
+                            ;
+                mandatory true ;
+                case spliced-remote-param {
+                  leaf remote-source-file {
+                    description 'To Specify the remote source params.the format'
+                              + ' is: '+"\n"
+                              + '//ip-address/filename@username:password.'
+                                ;
+                    type string {
+                      length 1..300 ;
+                    }
+                    mandatory true ;
+                  }
+                }
+                case splited-remote-param {
+                  description 'Splited remote param'
+                              ;
+                  container splited-remote-source-param {
+                    description 'Splited remote param'
+                                ;
+                    choice ip-addr {
+                      description 'IP address'
+                                  ;
+                      mandatory true ;
+                      case ipv4 {
+                        description IPv4 ;
+                        leaf remote-ipv4-address {
+                          description 'IPv4 address of SFTP server'
+                                      ;
+                          type ncd:ipv4-address ;
+                          mandatory true ;
+                        }
+                      }
+                      case ipv6 {
+                        description IPv6 ;
+                        leaf remote-ipv6-address {
+                          description 'IPv6 address of SFTP server'
+                                      ;
+                          type ncd:ipv6-address ;
+                          mandatory true ;
+                        }
+                      }
+                    }
+                    leaf username {
+                      description Username ;
+                      type string {
+                        length 1..65 ;
+                      }
+                      mandatory true ;
+                    }
+                    leaf password {
+                      description Password ;
+                      type string {
+                        length 1..128 ;
+                      }
+                      mandatory true ;
+                    }
+                    leaf path {
+                      description path ;
+                      type string {
+                        length 1..159 ;
+                      }
+                      mandatory true ;
+                    }
+                  }
+                  ncd:revise-date 2020-03-23 ;
+                }
+              }
+              leaf local-dest-file {
+                description 'To Specify the local destination file name.'
+                            ;
+                type string {
+                  length 1..159 ;
+                }
+                mandatory true ;
+              }
+              leaf download-cpu-node {
+                description 'To specify the CPU node Information.'
+                            ;
+                type ncd:cpu ;
+                ncd:revise-date 2018-06-20 ;
+              }
+            }
+          }
+          choice source-addr {
+            description 'To specify the source ip address.'
+                        ;
+            case ipv4 {
+              description 'IPv4 address.'
+                          ;
+              leaf ipv4-address {
+                description 'IPv4 address.'
+                            ;
+                type ncd:ipv4-address ;
+                mandatory true ;
+              }
+            }
+            case ipv6 {
+              description 'IPv6 address.'
+                          ;
+              leaf ipv6-address {
+                description 'IPv6 address.'
+                            ;
+                type ncd:ipv6-address ;
+                mandatory true ;
+              }
+              leaf interface-name {
+                description 'Interface name.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+              }
+            }
+          }
+          leaf server-port {
+            description 'To specify the listen port of SFTP server.'
+                        ;
+            type uint16 {
+              range 1..65535 ;
+            }
+            default 22 ;
+          }
+          leaf encrypt {
+            description 'Encryption algorithm.'
+                        ;
+            type enumeration {
+              enum none {
+                value 0 ;
+                description 'No encryption.'
+                            ;
+              }
+              enum aes128 {
+                value 1 ;
+                description 'AES with a 128-bit key encryption.'
+                            ;
+              }
+              enum blowfish {
+                value 2 ;
+                description 'Blowfish encryption.'
+                            ;
+              }
+              enum 3des {
+                value 3 ;
+                description 'Three-key triple-DES encryption'
+                            ;
+              }
+            }
+          }
+          leaf compress {
+            description 'Compress algorithm.'
+                        ;
+            type enumeration {
+              enum none {
+                value 0 ;
+                description 'No compression.'
+                            ;
+              }
+              enum zlib {
+                value 1 ;
+                description 'ZLIB compression'
+                            ;
+              }
+            }
+          }
+          leaf mac {
+            description 'Mac check algorithm.'
+                        ;
+            type enumeration {
+              enum none {
+                value 0 ;
+                description 'No MAC check algorithm.'
+                            ;
+              }
+              enum sha1 {
+                value 1 ;
+                description 'SHA1 MAC check algorithm.'
+                            ;
+              }
+              enum md5 {
+                value 2 ;
+                description 'MD5 MAC check algorithm.'
+                            ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+module zte-an-qos {
+    namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/zx-qos-pbit';
+    prefix zx-qos-pbit;
+    import zxr10-netconf-defs {
+        prefix ncd;
+        revision-date 2017-08-15;
+    }
+    organization "ZTE Corporation";
+    contact "Luo Feima     ZTE Corporation
+                    Mail : luo.feima@zte.com.cn
+                    Tel  : +86-21-68896470.";
+    description "This MIB defines ZTE Access Node QoS managed objects.";
+    revision 2016-11-21 {
+        description "1.Supplement of the zxAnQosCosToDropPrecedePrfTable.
+                     2.Supplement of the zxAnQosQueueWredIIPrfTable.
+                     3.Supplement of the zxAnQosIfQueueStatsTable.";
+    }
+    revision 2013-03-29 {
+        description "Supplement of the queue shaping profile.";
+    }
+    revision 2011-08-18 {
+        description "Modification of the descriptions for this MIB module.";
+    }
+    revision 2011-08-08 {
+        description "Modification of the comments for this MIB module.";
+    }
+    revision 2011-07-05 {
+        description "Conformance supplement for this MIB module.";
+    }
+    revision 2010-10-28 {
+        description "Initial version of this MIB module.";
+    }
+    container zxAnQos {
+        description "";
+        container zxAnQosObjects {
+            description "";
+            container zxAnQosMapObjects {
+                description "";
+                container zxAnQosCosToCosPrfTable {
+                    description "This table contains CosToCos mapping information. One entry in
+                                 this table reflects a profile defined which can be used to
+                                 configure an interface.";
+                    list zxAnQosCosToCosPrfEntry {
+                        description "zxAnQosCosToCosPrfTable entry.
+                                     
+                                     The multi-variables binding rule should be complied with when a
+                                     manager creates an entry. According to this rule, all the related
+                                     mib variables must be included in one SNMP set operation.
+                                     
+                                     There are two types of variables: mandatory and optional.
+                                     All of the mandatory variables must be included in one SNMP set 
+                                     operation. Optional variables may be included in one SNMP set 
+                                     operation with the mandatory variables, but must not be used alone. 
+                                     
+                                     To create an entry, the mandatory and optional variables are as
+                                     follows:
+                                     mandatory: zxAnQosCosToCos, zxAnQosCosToCosPrfRowStatus.
+                                     optional : none.
+                                     
+                                     To delete an entry, only zxAnQosCosToCosPrfRowStatus is needed in
+                                     one SNMP setOperation.
+                                     
+                                     After an entry is created, only variable zxAnQosCosToCos can be
+                                     modified. If a manager tries to modify any other variables
+                                     in this entry, agent will return error with SNMP error code
+                                     inconsistentValue.";
+                        max-elements 100;
+                        key "zxAnQosCosToCosPrfName";
+                        leaf zxAnQosCosToCosPrfName {
+                            description "The profile name is a display string. It is an index of this
+                                         table.";
+                            type string {
+                                length 1..32;
+                            }
+                        }
+                        leaf zxAnQosCosToCos {
+                            description "The values for CoS remarking. For example, the value
+                                         '00 01 02 03 04 05 06 07' means CoS 0 is remarked to CoS 0,...,
+                                         CoS 7 is remarked to CoS 7. The range of CoS is 0-7.";
+                            type binary;
+                                length 1..8;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

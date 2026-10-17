@@ -1,0 +1,139 @@
+module zte-an-vlan {
+    namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/msvlan';
+    prefix msvlan;
+    import zxr10-netconf-defs {
+        prefix ncd;
+        revision-date 2017-08-15;
+    }
+    organization "ZTE Corporation";
+    contact "Wang Yuke     ZTE Corporation
+                        Mail: wang.yuke@zte.com.cn
+                        Tel : +86-21-68897487";
+    description "VLAN MIB definition.";
+    revision 2011-05-24 {
+        description "Initial MIB creation.";
+    }
+    container zxAnVlan {
+        description "";
+        container zxAnVlanObjects {
+            description "";
+            container zxAnVlanBaseObjects {
+                description "";
+                container zxAnVlanIfConfVlanTable {
+                    description "VLAN configuration table.
+                                 This table is only used for getting VLAN information (network-side
+                                 SVLAN of service port function) when operating on EPON/GPON ports.
+                                 This table is used for setting and getting VLAN information when
+                                 operating on uplink ports.
+                                 This table is used for setting and getting VLAN information when
+                                 operating on DSL ports.";
+                    list zxAnVlanIfConfVlanEntry {
+                        description "VLAN configuration entry.";
+                        max-elements 1000;
+                        key "ifIndex zxAnSubIfIndex ";
+                        leaf ifIndex {
+                            description "A unique value, greater than zero, for each interface.  It
+                                         is recommended that values are assigned contiguously
+                                         starting from 1.  The value for each interface sub-layer
+                                         must remain constant at least from one re-initialization of
+                                         the entity's network management system to the next re-
+                                         initialization.";
+                            type int32 {
+                                range 1..2147483647;
+                            }
+                        }
+                        leaf zxAnSubIfIndex {
+                            description "Sub-interface index at this interface.";
+                            type int32;
+                        }
+                        leaf zxAnVlanIfConfVlanTagVlanList {
+                            description "Tagged VLAN list in the port.
+                                         A bit value of 1 indicates the associated VLAN is in the port.";
+                            type ncd:bitmap;
+                        }
+                        leaf zxAnVlanIfConfVlanUntagVlanList {
+                            description "Untagged VLAN list in the port.
+                                         A bit value of 1 indicates the associated VLAN is in the port.";
+                            type ncd:bitmap;
+                        }						
+                    }
+                }
+            }
+			container zxAnVlanBasedForwardingObjects {
+                description "";
+                container zxAnVlanBasedFwdTable {
+                    description "This table includes VLAN based forward rule configuration.";
+                    list zxAnVlanBasedFwdEntry {
+                        description "An entry in zxAnVlanBasedFwdTable.
+                                     ";
+                        max-elements 4094;
+                        key "zxAnVlanBasedFwdSVid zxAnVlanBasedFwdCVid";
+                        leaf zxAnVlanBasedFwdSVid {
+                            description "SVlan ,it shouled be included in the zxAnBasedFwdVlanTable";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf zxAnVlanBasedFwdCVid {
+                            description "cvlan";
+                            type int32 {
+                                range 0..4094;
+                            }
+                        }
+                        leaf zxAnVlanBasedFwdIfIndex {
+                            description "An index for port.";
+                            type int32;
+                        }
+                        leaf zxAnVlanBasedFwdSubIfIndex {
+                            description "An index for port.";
+                            type int32;
+                        }
+                        leaf zxAnVlanBasedFwdOtherIfIndex {
+                            description "An index of the other port.";
+                            type int32;
+                        }
+                        leaf zxAnVlanBasedFwdOtherSubIfIndex {
+                            description "An index of the other port.";
+                            type int32;
+                        }
+                    }
+                }
+				container zxAnVlanBasedFwdConfTable {
+                    description "This table includes VLAN based forward configuration information.";
+                    list zxAnVlanBasedFwdConfEntry {
+                        description "An entry in zxAnVlanBasedFwdConfTable.";
+                        max-elements 4094;
+                        key "zxAnVid";
+                        leaf zxAnVid {
+                            description "The VlanId to which
+                                         this entry's filtering information applies.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf zxAnVlanBasedFwdConfMode {
+                            description "VLAN based forwarding mode.
+                                         vlan1To1(1) - Forwarding the packets with the S-VID configured in
+                                         the zxAnVlanBasedFwdTable. When user-side interface
+                                         in the zxAnVlanBasedFwdTable is deleted, the packet
+                                         with the S-VID will be discarded.
+                                         vlanAndMac(2) - Forwarding the packets with VLAN ID and MAC
+                                         address.";
+                            type enumeration {
+                                enum vlan1To1 {
+                                    value 1;
+                                    description "";
+                                }
+                                enum vlanAndMac {
+                                    value 2;
+                                    description "";
+                                }
+                            }
+                            default vlanAndMac;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

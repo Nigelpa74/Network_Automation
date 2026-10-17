@@ -1,0 +1,146 @@
+module zte-an-vlan-qos-cos2dei {
+    namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/zx-vlan-qos-cos2dei';
+    prefix zx-vlan-qos-cos2dei;
+    import zxr10-netconf-defs {
+        prefix ncd;
+        revision-date 2017-08-15;
+    }
+    organization "ZTE Corporation";
+    contact "Luo Feima     ZTE Corporation
+                    Mail : luo.feima@zte.com.cn
+                    Tel  : +86-21-68896470.";
+    description "This MIB defines ZTE Access Node QoS managed objects.";
+    revision 2016-11-21 {
+        description "1.Supplement of the zxAnQosCosToDropPrecedePrfTable.
+                     2.Supplement of the zxAnQosQueueWredIIPrfTable.
+                     3.Supplement of the zxAnQosIfQueueStatsTable.";
+    }
+    revision 2013-03-29 {
+        description "Supplement of the queue shaping profile.";
+    }
+    revision 2011-08-18 {
+        description "Modification of the descriptions for this MIB module.";
+    }
+    revision 2011-08-08 {
+        description "Modification of the comments for this MIB module.";
+    }
+    revision 2011-07-05 {
+        description "Conformance supplement for this MIB module.";
+    }
+    revision 2010-10-28 {
+        description "Initial version of this MIB module.";
+    }
+    container zxAnQos {
+        description "";
+        container zxAnQosObjects {
+            description "";
+            container zxAnQosMapObjects {
+                description "";
+                container zxAnQosCosToDeiPrfTable {
+                    description "This table contains CoS to DEI (Drop Eligible Indicator) mapping
+                                 information.
+                                 One entry in this table reflects a profile defined which can be
+                                 used to configure an interface.";
+                    list zxAnQosCosToDeiPrfEntry {
+                        description "zxAnQosCosToDeiPrfTable entry.
+                                     The multi-variables binding rule should be complied with when a
+                                     manager creates an entry. According to this rule, all the related
+                                     mib variables must be included in one SNMP set operation.
+                                     There are two types of variables: mandatory and optional.
+                                     All of the mandatory variables must be included in one SNMP set
+                                     operation. Optional variables may be included in one SNMP set
+                                     operation with the mandatory variables, but must not be used alone.
+                                     To create an entry, the mandatory and optional variables are as
+                                     follows:
+                                     mandatory: zxAnQosCosToDeiMappingType,
+                                     zxAnQosCosToDei,
+                                     zxAnQosCosToDeiRowStatus.
+                                     optional: none.
+                                     To delete an entry, only zxAnQosCosToDeiRowStatus is needed
+                                     in one SNMP set operation.
+                                     After an entry is created, variable zxAnQosCosToDeiMappingType,
+                                     zxAnQosCosToDei can be modified. If a manager tries to modify any
+                                     other variables in this entry, agent will return error with SNMP
+                                     error code inconsistentValue.";
+                        max-elements 100;
+                        key "zxAnQosCosToDeiPrfName";
+                        leaf zxAnQosCosToDeiPrfName {
+                            description "The profile name is a display string. It is an index of
+                                         this table.";
+                            type string {
+                                length 1..32;
+                            }
+                        }
+                        leaf zxAnQosCosToDeiMappingType {
+                            description "ccosToSdei(1)  -- mapping C-Tag CoS to S-DEI.
+                                         ccosToCdei(2)  -- mapping C-Tag CoS to C-DEI.
+                                         scosToSdei(3)  -- mapping S-Tag CoS to S-DEI.";
+                            type enumeration {
+                                enum ccosToSdei {
+                                    value 1;
+                                    description "";
+                                }
+                                enum ccosToCdei {
+                                    value 2;
+                                    description "";
+                                }
+                                enum scosToSdei {
+                                    value 3;
+                                    description "";
+                                }
+                            }
+                        }
+                        leaf zxAnQosCosToDei {
+                            description "The CoS mapping to DEI value.
+                                         For example, '00 01 02 00 01 02 01 02' means CoS 0 is
+                                         mapping to DEI 0, CoS 1 is mapping to DEI 1, ..., CoS 7 is mapping
+                                         to DEI 2. The range of DEI is 0-2.
+                                         '0'  -- green packet.
+                                         '1'  -- yellow packet.
+                                         '2'  -- discarded.";
+                            type binary;
+                        }
+                    }
+                }
+            }
+            container zxAnQosVlanObjects {
+                description "";
+                container zxAnQosVlanCosToDeiPrfConfTable {
+                    description "A table containing VLAN CoS to DEI (Drop Eligible Indicator)
+                                 profile information.";
+                    list zxAnQosVlanCosToDeiPrfEntry {
+                        description "Entry for zxAnQosVlanCosToDeiPrfConfTable.";
+                        max-elements 100;
+                        key "zxAnQosVlanCosToDeiPrfConfVid";
+                        leaf zxAnQosVlanCosToDeiPrfConfVid {
+                            description "VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                        leaf zxAnQosVlanCosToDeiPrfConfName {
+                            description "CoS to DEI profile name.";
+                            type string {
+                                length 1..32;
+                            }
+                        }
+                    }
+                }
+                container zxAnQosVlanEgressDeiTable {
+                    description "A table containing VLAN egress DEI information.";
+                    list zxAnQosVlanEgressDeiEntry {
+                        description "Entry for zxAnQosVlanEgressDeiTable.";
+                        max-elements 100;
+                        key "zxAnQosVlanEgressDeiVid";
+                        leaf zxAnQosVlanEgressDeiVid {
+                            description "VLAN ID.";
+                            type int32 {
+                                range 1..4094;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
