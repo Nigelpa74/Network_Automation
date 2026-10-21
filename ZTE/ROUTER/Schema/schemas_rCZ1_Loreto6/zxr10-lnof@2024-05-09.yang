@@ -1,0 +1,638 @@
+module zxr10-lnof {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/lnof" ;
+  prefix lnof ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the configuration of LNOF.' ;
+  revision 2024-05-09 {
+    description 'Change the leaf /configuration/lnof/service/service-address/ipv4/ipv4/ipv4-port-id 10000-57999.
+Change the leaf /configuration/lnof/service/service-address/ipv6/ipv6/ipv6-port-id 10000-57999.' ;
+  }
+
+  revision 2024-03-12 ;
+
+  feature lnof-switch-connect {
+    description 'LNOF switch connect function.' ;
+  }
+
+  feature zone-configuration {
+    description 'LNOF zone configuration.' ;
+  }
+
+  feature template-configuration {
+    description 'LNOF BFD template configuration.' ;
+  }
+
+  feature lnof-switch {
+    description 'The LNOF function.' ;
+  }
+
+  feature lnof-bfd-switch {
+    description 'The LNOF BFD function.' ;
+  }
+
+  feature default-zone-switch {
+    description 'The default zone function.' ;
+  }
+
+  feature isolate-zone-switch {
+    description 'The isolate zone function.' ;
+  }
+
+  feature clear {
+    description 'The clear function.' ;
+  }
+
+  container configuration {
+    description 'Describe the configuration nodes of LNOF.' ;
+    container lnof {
+      description 'The parameters of LNOF to be configured.' ;
+      leaf role {
+        if-feature lnof-switch-connect ;
+
+        description 'Configuring switch role.' ;
+        type enumeration {
+          enum reflector {
+            value 1 ;
+            description 'Configuring switch reflector role' ;
+          }
+
+          enum reflect-client {
+            value 2 ;
+            description 'Configuring switch reflect-client role' ;
+          }
+
+          enum no-role {
+            value 0 ;
+            description 'Configuring switch no role' ;
+          }
+
+        }
+
+      }
+
+      leaf lnof-switch {
+        if-feature lnof-switch ;
+
+        description 'Configuring LNOF switch.' ;
+        type enumeration {
+          enum disable {
+            value 0 ;
+            description 'Disable LNOF function.' ;
+          }
+
+          enum enable {
+            value 1 ;
+            description 'Enable LNOF function.' ;
+          }
+
+        }
+
+        default enable ;
+      }
+
+      leaf lnof-bfd-switch {
+        if-feature lnof-bfd-switch ;
+
+        description 'Configuring LNOF BFD switch.' ;
+        type enumeration {
+          enum disable {
+            value 0 ;
+            description 'Disable LNOF BFD function.' ;
+          }
+
+          enum enable {
+            value 1 ;
+            description 'Enable LNOF BFD function.' ;
+          }
+
+        }
+
+        default enable ;
+      }
+
+      leaf default-zone-switch {
+        if-feature default-zone-switch ;
+
+        description 'Configuring LNOF default zone switch.' ;
+        type enumeration {
+          enum disable {
+            value 0 ;
+            description 'Disable default zone function.' ;
+          }
+
+          enum enable {
+            value 1 ;
+            description 'Enable default zone function.' ;
+          }
+
+        }
+
+        default enable ;
+      }
+
+      leaf isolate-zone-switch {
+        if-feature isolate-zone-switch ;
+
+        description 'Configuring LNOF isolate zone switch.' ;
+        type enumeration {
+          enum disable {
+            value 0 ;
+            description 'Disable isolate zone function.' ;
+          }
+
+          enum enable {
+            value 1 ;
+            description 'Enable isolate zone function.' ;
+          }
+
+        }
+
+        default disable ;
+      }
+
+      container service {
+        description 'Configuring switch service.' ;
+        choice service-address {
+          description 'Configuring switch service address.' ;
+          case ipv4 {
+            description 'Configuring switch IPv4 service.' ;
+            container ipv4 {
+              description 'Configuring switch IPv4 service.' ;
+              presence ipv4 ;
+              leaf ipv4-address {
+                if-feature lnof-switch-connect ;
+
+                description 'Configuring switch IPv4 service address' ;
+                type ncd:ipv4-address ;
+
+                mandatory true ;
+              }
+
+              leaf ipv4-port-id {
+                if-feature lnof-switch-connect ;
+
+                description 'Configuring switch IPv4 service port id.' ;
+                type uint16 {
+                  range 10000..57999 ;
+
+                }
+
+                default 19516 ;
+              }
+
+            }
+
+          }
+
+          case ipv6 {
+            description 'Configuring switch IPv6 service.' ;
+            container ipv6 {
+              description 'Configuring switch IPv6 service.' ;
+              presence ipv6 ;
+              leaf ipv6-address {
+                if-feature lnof-switch-connect ;
+
+                description 'Configuring switch IPv6 service address' ;
+                type ncd:ipv6-address ;
+
+                mandatory true ;
+              }
+
+              leaf ipv6-port-id {
+                if-feature lnof-switch-connect ;
+
+                description 'Configuring switch IPv6 service port id.' ;
+                type uint16 {
+                  range 10000..57999 ;
+
+                }
+
+                default 19516 ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container peers {
+        description 'Configuring switch peer.' ;
+        list ipv4 {
+          description 'Configuring switch IPv4 peer.' ;
+          key address ;
+          leaf address {
+            if-feature lnof-switch-connect ;
+
+            description 'Configuring switch IPv4 peer address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+        }
+
+        list ipv6 {
+          description 'Configuring switch IPv6 peer.' ;
+          key address ;
+          leaf address {
+            if-feature lnof-switch-connect ;
+
+            description 'Configuring switch IPv6 peer address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+        }
+
+      }
+
+      container zones {
+        description 'Describe the parameters of zones to be configured.' ;
+        list zone {
+          description 'The list of zone for configuring parameters.' ;
+          key name ;
+          leaf name {
+            if-feature zone-configuration ;
+
+            description 'The name of the zone.' ;
+            type string ;
+
+          }
+
+          list host-ipv4 {
+            description 'The list of IPv4 zone members for configuring parameters.' ;
+            key address ;
+            leaf address {
+              if-feature zone-configuration ;
+
+              description 'IPv4 zone members address .' ;
+              type ncd:ipv4-address ;
+
+            }
+
+          }
+
+          list host-ipv6 {
+            description 'The list of IPv6 zone members for configuring parameters.' ;
+            key address ;
+            leaf address {
+              if-feature zone-configuration ;
+
+              description 'IPv6 zone members address .' ;
+              type ncd:ipv6-address ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container templates {
+        description 'Describe the parameters of LNOF BFD template to be configured.' ;
+        presence peer ;
+        container template-all {
+          description 'Describe the parameters of LNOF BFD template that apply to all peers to be configured.' ;
+          list template-all {
+            description 'The list of LNOF BFD template that apply to all peers for configuring parameters.' ;
+            key name ;
+            max-elements 1 ;
+            leaf name {
+              if-feature template-configuration ;
+
+              description 'Configuring LNOF BFD template name.' ;
+              type string ;
+
+            }
+
+          }
+
+        }
+
+        container template-ipv4 {
+          description 'Describe the parameters of LNOF BFD template that apply to ipv4 peers to be configured.' ;
+          list template-ipv4 {
+            description 'The list of LNOF BFD template that apply to ipv4 peers for configuring parameters.' ;
+            key 'name address' ;
+            leaf name {
+              if-feature template-configuration ;
+
+              description 'Configuring LNOF BFD template name.' ;
+              type string ;
+
+            }
+
+            leaf address {
+              if-feature template-configuration ;
+
+              description 'Configure the specified IPv4 peer address.' ;
+              type ncd:ipv4-address ;
+
+            }
+
+          }
+
+        }
+
+        container template-ipv6 {
+          description 'Describe the parameters of LNOF BFD template that apply to ipv6 peers to be configured.' ;
+          list template-ipv6 {
+            description 'The list of LNOF BFD template that apply to ipv6 peers for configuring parameters.' ;
+            key 'name address' ;
+            leaf name {
+              if-feature template-configuration ;
+
+              description 'Configuring LNOF BFD template name.' ;
+              type string ;
+
+            }
+
+            leaf address {
+              if-feature template-configuration ;
+
+              description 'Configure the specified IPv6 peer address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container operation {
+    description 'Describe the operation nodes of LNOF.' ;
+    config false ;
+    container clear {
+      description 'Clear config Items. This command is used to clear configuration items that remain after a chain break. It cannot be used to clear database configurations.' ;
+      leaf ipv4-address {
+        if-feature clear ;
+
+        description 'ipv4 source address' ;
+        type ncd:ipv4-address ;
+
+      }
+
+      leaf ipv6-address {
+        if-feature clear ;
+
+        description 'ipv6 source address' ;
+        type ncd:ipv6-address ;
+
+      }
+
+    }
+
+  }
+
+  container state {
+    description 'Data nodes for the operational state of LNOF.' ;
+    config false ;
+    container peers {
+      description 'Describe the data nodes for the operational state of peers.' ;
+      list ipv4 {
+        description 'The list of ipv4 peer on the device.' ;
+        key address ;
+        leaf address {
+          description 'The ipv4 address of the peer.' ;
+          type ncd:ipv4-address ;
+
+        }
+
+        leaf connect-status {
+          description 'The connect status of the peer.' ;
+          type enumeration {
+            enum idel {
+              value 1 ;
+            }
+
+            enum connect {
+              value 2 ;
+            }
+
+            enum active {
+              value 3 ;
+            }
+
+            enum opensent {
+              value 4 ;
+            }
+
+            enum openconfirm {
+              value 5 ;
+            }
+
+            enum established {
+              value 6 ;
+            }
+
+          }
+
+        }
+
+        leaf establish-time {
+          description 'The establish time of the peer.' ;
+          type ncd:string-with-blank ;
+
+        }
+
+      }
+
+      list ipv6 {
+        description 'The list of ipv6 peer on the device.' ;
+        key address ;
+        leaf address {
+          description 'The ipv6 address of the peer.' ;
+          type ncd:ipv6-address ;
+
+        }
+
+        leaf connect-status {
+          description 'The connect status of the peer.' ;
+          type enumeration {
+            enum idel {
+              value 1 ;
+            }
+
+            enum connect {
+              value 2 ;
+            }
+
+            enum active {
+              value 3 ;
+            }
+
+            enum opensent {
+              value 4 ;
+            }
+
+            enum openconfirm {
+              value 5 ;
+            }
+
+            enum established {
+              value 6 ;
+            }
+
+          }
+
+        }
+
+        leaf establish-time {
+          description 'The establish time of the peer.' ;
+          type ncd:string-with-blank ;
+
+        }
+
+      }
+
+    }
+
+    container zones {
+      description 'Describe the data nodes for the operational state of zones.' ;
+      list zones {
+        description 'The list of zones on the device.' ;
+        key zone ;
+        leaf zone {
+          description 'Zone name.' ;
+          type string ;
+
+        }
+
+        container members {
+          description 'Describe the data nodes for the operational state of zone members.' ;
+          list ipv4 {
+            description 'The list of ipv4 zone members on the device.' ;
+            key address ;
+            leaf address {
+              description 'The ipv4 address of the zone member.' ;
+              type ncd:ipv4-address ;
+
+            }
+
+            leaf status {
+              description 'The status of the zone member.' ;
+              type enumeration {
+                enum online {
+                  value 0 ;
+                }
+
+                enum offline {
+                  value 1 ;
+                }
+
+              }
+
+            }
+
+          }
+
+          list ipv6 {
+            description 'The list of ipv6 zone members on the device.' ;
+            key address ;
+            leaf address {
+              description 'The ipv6 address of the zone member.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf status {
+              description 'The status of the zone member.' ;
+              type enumeration {
+                enum online {
+                  value 0 ;
+                }
+
+                enum offline {
+                  value 1 ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    container hosts {
+      description 'Describe the data nodes for the operational state of hosts.' ;
+      list host {
+        description 'The list of hosts on the device.' ;
+        key 'address access-interface access-device' ;
+        leaf address {
+          description 'The address of the host.' ;
+          type string ;
+
+        }
+
+        leaf access-interface {
+          description 'The access interface of the host.' ;
+          type string ;
+
+        }
+
+        leaf access-device {
+          description 'The access device of the host.' ;
+          type string ;
+
+        }
+
+        leaf status {
+          description 'The status of the host.' ;
+          type enumeration {
+            enum normal {
+              value 0 ;
+            }
+
+            enum deleting {
+              value 1 ;
+            }
+
+          }
+
+        }
+
+        leaf access-type {
+          description 'The access type of the host.' ;
+          type enumeration {
+            enum local {
+              value 0 ;
+            }
+
+            enum remote {
+              value 1 ;
+            }
+
+          }
+
+        }
+
+        ncd:select "address access-interface access-device" ;
+      }
+
+    }
+
+  }
+
+}

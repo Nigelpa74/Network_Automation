@@ -1,0 +1,127 @@
+module zxr10-acc-performance {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/zxr10-acc-perform'
+          + 'ance'
+            ;
+  prefix zxr10-acc-pm ;
+  yang-version 1 ;
+  import ietf-yang-types {
+    prefix yang ;
+  }
+  import zxr10-acc-yang-types {
+    prefix zxr10-acc-type ;
+  }
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2019-07-16 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation '+"\n"
+        + '         Nanjing Institute of ZTE Corporation'+"\n"
+        + '         No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China'+"\n"
+        + '         Tel: +86-25-52870000'
+          ;
+  description 'This module defines an interface for managing performances.'
+              ;
+  revision 2021-05-20 {
+    description 'change import acc-yang-types to zxr10-acc-yang-types.'
+                ;
+  }
+  revision 2020-08-28 {
+    description 'Initial revision.'
+                ;
+  }
+  container state {
+    description 'State info.'
+                ;
+    config false ;
+    container history-performances {
+      description 'History performances.'
+                  ;
+      list performance {
+        description 'Performance list.'
+                    ;
+        key 'object-name pm-parameter-name granularity start-time end-time'
+            ;
+        leaf object-name {
+          description 'Object name.'
+                      ;
+          type ncd:string-all {
+            length 1..64 ;
+          }
+        }
+        leaf pm-parameter-name {
+          description 'Performance parameter name.'
+                      ;
+          type ncd:string-all {
+            length 1..64 ;
+          }
+        }
+        leaf granularity {
+          description Granularity. ;
+          type zxr10-acc-type:granularity ;
+        }
+        leaf start-time {
+          description 'Start time.'
+                      ;
+          type yang:date-and-time ;
+        }
+        leaf end-time {
+          description 'End time.'
+                      ;
+          type yang:date-and-time ;
+        }
+        leaf object-type {
+          description 'Object type.'
+                      ;
+          type ncd:string-all {
+            length 1..64 ;
+          }
+          mandatory true ;
+        }
+        choice digital-or-analog {
+          description 'Digital or analog performance.'
+                      ;
+          case digital {
+            description 'Digital performance.'
+                        ;
+            leaf digital-pm-value {
+              description 'Digital performance value.'
+                          ;
+              type zxr10-acc-type:real ;
+            }
+          }
+          case analog {
+            description 'Analog performance.'
+                        ;
+            container analog-pm-value {
+              description 'Analog performance value.'
+                          ;
+              leaf max-value {
+                description 'Max value.'
+                            ;
+                type zxr10-acc-type:real ;
+              }
+              leaf min-value {
+                description 'Min value.'
+                            ;
+                type zxr10-acc-type:real ;
+              }
+              leaf average-value {
+                description 'Average value.'
+                            ;
+                type zxr10-acc-type:real ;
+              }
+              leaf current-value {
+                description 'Current value.'
+                            ;
+                type zxr10-acc-type:real ;
+                mandatory true ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

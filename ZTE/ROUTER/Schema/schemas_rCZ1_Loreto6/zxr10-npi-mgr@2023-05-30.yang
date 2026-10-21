@@ -1,0 +1,419 @@
+module zxr10-npi-mgr {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/npi-mgr'
+            ;
+  prefix npi-mgr ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf model for performance measurement.'
+              ;
+  revision 2023-05-30 {
+    description '1.Change leaf configuration/performance-measurement/delay-meas'
+              + 'urements/delay-measurement/threshold to configuration/performa'
+              + 'nce-measurement/delay-measurements/delay-measurement/threshold'
+              + '-configuration/manual-config/threshold.'
+              + '2.Change leaf configuration/performance-measurement/delay-meas'
+              + 'urements/delay-measurement/period to configuration/performance'
+              + '-measurement/delay-measurements/delay-measurement/threshold-co'
+              + 'nfiguration/manual-config/period.'
+              + '3.Change container configuration/performance-measurement/delay'
+              + '-measurements/delay-measurement/options to configuration/perfo'
+              + 'rmance-measurement/delay-measurements/delay-measurement/thresh'
+              + 'old-configuration/manual-config/options.'
+              + '4.Add case configuration/performance-measurement/delay-measure'
+              + 'ments/delay-measurement/threshold-configuration.'
+              + '5.Add container configuration/performance-measurement/template'
+              + 's.'
+                ;
+  }
+  revision 2023-04-30 {
+    description '1.modify the range of the session-id'
+                ;
+  }
+  revision 2022-05-30 {
+    description '1.Add container configuration/performance-measurement/normaliz'
+              + 'e-delay.'
+                ;
+  }
+  revision 2021-11-09 {
+    description '1.Change leaf configuration/performance-measurement/delay-meas'
+              + 'urements/delay-measurement/diff-absolute to configuration/perf'
+              + 'ormance-measurement/delay-measurements/delay-measurement/optio'
+              + 'ns/diff-absolute.'
+                ;
+  }
+  revision 2021-10-12 {
+    description '1.Add leaf configuration/performance-measurement/delay-measure'
+              + 'ments/delay-measurement/absolute.'
+                ;
+  }
+  revision 2021-08-28 {
+    description '1. Add list configuration/performance-measurement/delay-measur'
+              + 'ements/delay-measurement-inherit.'
+                ;
+  }
+  revision 2021-03-10 {
+    description '1. Add container configuration/performance-measurement/availab'
+              + 'le-bw.'
+                ;
+  }
+  revision 2021-01-13 {
+    description '1. Add container configuration/performance-measurement/packet-'
+              + 'loss-ratio-measurements.'
+                ;
+  }
+  revision 2020-12-07 {
+    description '1. Add container configuration/performance-measurement/utilize'
+              + 'd-bw.'
+                ;
+  }
+  revision 2020-03-19 {
+    description '1. Add case configuration/performance-measurement/delay-measur'
+              + 'ements/delay-measurement/measure-method/cfm.'
+                ;
+  }
+  revision 2019-10-17 {
+    description 'Initial version.'
+                ;
+  }
+  feature template {
+    ncd:revise-date 2023-05-30 ;
+  }
+  feature normalized-delay {
+    ncd:revise-date 2022-05-30 ;
+  }
+  container configuration {
+    description 'The branch of configuration model.'
+                ;
+    container performance-measurement {
+      description 'Configure performance measurement parameters.'
+                  ;
+      container delay-measurements {
+        description 'Configure delay measurement parameters'
+                    ;
+        list delay-measurement {
+          description 'Configure delay measurement parameters'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          choice measure-method {
+            description 'Measurement type'
+                        ;
+            mandatory true ;
+            case twamp-light {
+              description 'TWAMP light'
+                          ;
+              leaf session-id {
+                description Session-ID ;
+                type uint32 {
+                  range 1..4294967295 ;
+                }
+                mandatory true ;
+              }
+            }
+            case cfm {
+              description CFM ;
+              leaf md {
+                description MD. ;
+                type uint32 {
+                  range 1..65535 ;
+                }
+                mandatory true ;
+              }
+              leaf ma {
+                description MA. ;
+                type uint32 {
+                  range 1..65535 ;
+                }
+                mandatory true ;
+              }
+              leaf remote-mep {
+                description 'Remote MEP.'
+                            ;
+                type uint32 {
+                  range 1..8191 ;
+                }
+                mandatory true ;
+              }
+              ncd:revise-date 2020-03-19 ;
+            }
+          }
+          choice threshold-configuration
+          {
+            description 'Threshold configuration type'
+                        ;
+            mandatory true ;
+            case template {
+              description template ;
+              leaf template-name {
+                description 'Template name.'
+                            ;
+                type string {
+                  length 1..63 ;
+                }
+                mandatory true ;
+              }
+            }
+            case manual-config {
+              leaf threshold {
+                description 'Announcement difference percent threshold.'
+                            ;
+                type uint32 {
+                  range 0..100 ;
+                }
+                units % ;
+                mandatory true ;
+              }
+              leaf period {
+                description 'Measurement period'
+                            ;
+                type uint32 {
+                  range 30..3600 ;
+                }
+                units s ;
+                mandatory true ;
+              }
+              container options {
+                description 'Optional parameters.'
+                            ;
+                leaf diff-absolute {
+                  description 'Announcement difference absolute threshold.'
+                              ;
+                  type uint32 {
+                    range 1..10000 ;
+                  }
+                  units us ;
+                }
+                ncd:revise-date 2021-11-09 ;
+              }
+            }
+            ncd:revise-date 2023-05-30 ;
+          }
+        }
+        list delay-measurement-inherit {
+          description 'Only subport can configure inherit measure result from f'
+                    + 'atherport.For a subport, node delay-measurement-inherit '
+                    + 'cannot be configured with node delay-measurement for the'
+                    + ' same time.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          ncd:revise-date 2021-08-28 ;
+        }
+      }
+      container utilized-bw {
+        description 'Configure bandwidth measurement parameters.'
+                    ;
+        list threshold {
+          description 'Configure bandwidth measurement threshold parameters.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf diff-ratio {
+            description 'Announcement threshold(percent).'
+                        ;
+            type uint32 {
+              range 10..100 ;
+            }
+            units % ;
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2020-12-07 ;
+      }
+      container packet-loss-ratio-measurements {
+        description 'Configure packet-loss-ratio measurement parameters.'
+                    ;
+        list packet-loss-ratio-measurement {
+          description 'Configure packet-loss-ratio measurement parameters.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf session-id {
+            description Session-ID. ;
+            type uint32 {
+              range 1..4294967295 ;
+            }
+            mandatory true ;
+          }
+          leaf diff-ratio {
+            description 'Announcement threshold(percent).'
+                        ;
+            type uint32 {
+              range 10..100 ;
+            }
+            units % ;
+            mandatory true ;
+          }
+          leaf period {
+            description 'Measurement period.'
+                        ;
+            type uint32 {
+              range 30..3600 ;
+            }
+            units s ;
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2021-01-13 ;
+      }
+      container available-bw {
+        description 'Configure available bandwidth measurement parameters.'
+                    ;
+        list measurement {
+          description 'Configure available bandwidth measurement parameters.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf diff-ratio {
+            description 'Announcement threshold(percent).'
+                        ;
+            type uint32 {
+              range 5..100 ;
+            }
+            units % ;
+            mandatory true ;
+          }
+          leaf period {
+            description 'Measurement period.'
+                        ;
+            type uint32 {
+              range 30..3600 ;
+            }
+            units s ;
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2021-03-10 ;
+      }
+      container normalize-delay {
+        if-feature normalized-delay ;
+        description 'Configure normalized delay parameters.'
+                    ;
+        presence normalize-delay ;
+        leaf interval {
+          description 'Normalized delay interval value.'
+                      ;
+          type uint32 {
+            range 1..16777215 ;
+          }
+          units us ;
+          mandatory true ;
+        }
+        leaf offset {
+          description 'Normalized delay offset value.'
+                      ;
+          type uint32 {
+            range 0..16777214 ;
+          }
+          units us ;
+          default 0 ;
+        }
+        ncd:revise-date 2022-05-30 ;
+      }
+      container templates {
+        description 'Templates of delay parameters or jitter parameters.'
+                    ;
+        presence 'Configuration of template'
+                 ;
+        list template {
+          description 'Template of delay parameters or jitter parameters.'
+                      ;
+          key template-name ;
+          leaf template-name {
+            description 'Template name.'
+                        ;
+            type string {
+              length 1..63 ;
+            }
+          }
+          leaf period {
+            description 'Measurement period'
+                        ;
+            type uint32 {
+              range 30..3600 ;
+            }
+            units s ;
+          }
+          leaf delay-ratio {
+            description 'Announcement difference percent threshold of delay.'
+                        ;
+            type uint32 {
+              range 0..100 ;
+            }
+            units % ;
+          }
+          leaf delay-absolute {
+            description 'Announcement difference absolute threshold of delay.'
+                        ;
+            type uint32 {
+              range 0..10000 ;
+            }
+            units us ;
+          }
+          leaf jitter-ratio {
+            description 'Announcement difference percent threshold of jitter.'
+                        ;
+            type uint32 {
+              range 0..100 ;
+            }
+            units % ;
+          }
+          leaf jitter-absolute {
+            description 'Announcement difference absolute threshold of jitter.'
+                        ;
+            type uint32 {
+              range 0..10000 ;
+            }
+            units us ;
+          }
+          leaf delay-average-ratio {
+            description 'Announcement average difference percent threshold of delay.'
+                        ;
+            type uint32 {
+              range 0..100 ;
+            }
+            units % ;
+          }
+          leaf delay-average-absolute {
+            description 'Announcement average difference absolute threshold of delay.'
+                        ;
+            type uint32 {
+              range 0..10000 ;
+            }
+            units us ;
+          }
+        }
+        ncd:revise-date 2023-05-30 ;
+      }
+    }
+  }
+}

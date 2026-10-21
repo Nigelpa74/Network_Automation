@@ -1,0 +1,5052 @@
+module zxr10-log {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/log" ;
+  prefix log ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'This module describes the netconf model about log' ;
+  revision 2025-03-24 {
+    description "1.Add leaf 'zxr10-log/configuration/log/file-policy/default/almlog/file-type'.
+    2.Add leaf 'zxr10-log/configuration/log/file-policy/default/cmdlog/file-type'.
+    3.Add leaf 'zxr10-log/configuration/log/file-policy/default/srvlog/file-type'.
+    4.Add feature 'log-file-type' and apply the feature to leaf 'file-type'." ;
+  }
+
+  revision 2024-07-29 {
+    description '(1) Modify the description information of the log module.' ;
+  }
+
+  revision 2024-07-09 {
+    description "(1)Add MSR.ASR;MSR.ZSRV2;PTN.6100;PTN.6500;PTN.6700;PTN.65V5;PTN.61-SSP;PTN.61V5_1;SWITCH.59;SWITCH.89;SWITCH.99;SWITCH.5960;SWITCH.59E;SWITCH.99X;SWITCH.5960X;SWITCH.5960M;SWITCH.59X-ES;高端路由器HighEndRouter.T8000;高端分组HighEndPacket.MCG-5000;PC.SWITCH;MSE.M6000;MSE.xGW;FN.C600;FN.C89E;OTN.9700;OTN.M721;OTN.8700;OTN.7000;MW.NR8000;V6000.vRouter;V6000.vBRAS-C;V6000.CDB;ZENIC.VDC;ROSNG-V.COMMON;ROSNG-V.VEG in 'logging-sftp' feature node.
+    (2)Add FN.C300 in 'log-directory' feature node.
+    (3)Add PTN.6700;PTN.65V5;OTN.8700;OTN.7000;OTN.9700 in 'log-nat' feature node.
+    (4)Add PTN.6700;PTN.65V5;OTN.8700;OTN.7000;OTN.9700 in 'portal-ftp' feature node." ;
+  }
+
+  revision 2023-05-08 {
+    description "1. Modify the max range of leaf'operation/log/file-policy/default/almlog/buffer-item-save-num' from 1024 to 5000." ;
+  }
+
+  revision 2023-02-13 {
+    description "1. Add container'operation/log/file-policy/default/snmplog/flush'.
+    2. Add leaf 'operation/log/file-policy/default/snmplog/flush/destination'." ;
+  }
+
+  revision 2022-10-31 {
+    description '1.Add 8700 project tag to logging-cmdlog-timestamps feature.
+2.Add 61V5_1,9700,M721,8700,7000,6500,6700,65V5,C600 project tag to alarm-threshold feature.' ;
+  }
+
+  revision 2022-04-16 {
+    description "1. Add leaf 'configuration/log/global-config/timestamps-format';
+    2. Add leaf 'configuration/log/global-config/cmdlog-timestamps-format'." ;
+  }
+
+  revision 2022-04-08 {
+    description "1. Add leaf 'configuration/log/file-policy/default/almlog/buffer-item-save-num'.
+    2. Add leaf 'configuration/log/file-policy/default/cmdlog/buffer-item-save-num'.
+    3. Add leaf 'configuration/log/file-policy/default/srvlog/buffer-item-save-num'.
+    4. Add leaf 'configuration/log/file-policy/default/snmplog/buffer-item-save-num'.
+    5. Add leaf 'configuration/log/file-policy/default/weblog/buffer-item-save-num'.
+    6. Add leaf 'configuration/log/file-policy/default/netclog/buffer-item-save-num'.
+    7. Add leaf 'configuration/log/file-policy/self-defined-policies/policy/buffer-item-save-num'." ;
+  }
+
+  revision 2022-01-07 {
+    description "1. Add leaf 'configuration/log/global-config/cmdlog-timestamps'." ;
+  }
+
+  revision 2021-06-01 {
+    description "1.Modify DerivedType of leaf 'state/log/file-policy/get-buffer/policy/records/record/body' from ncd:string-all to ncd:string-all-with-chinese." ;
+  }
+
+  revision 2021-05-28 {
+    description "1.Add enum trap item to leaf 'state/log/file-policy/get-buffer/policy/records/record/log-class'." ;
+  }
+
+  revision 2021-05-13 {
+    description "1. Add leaf 'operation/log/file-policy/default/cmdlog/clear-buffer';
+    2. Add container'operation/log/file-policy/default/snmplog';
+    3. Add leaf 'operation/log/file-policy/default/snmplog/clear-buffer'." ;
+  }
+
+  revision 2021-03-25 {
+    description '1. Modify the length of clear-text password in FTP-related leaf from 64 to 128.;
+2. Modify the length of clear-text password in SFTP-related leaf from 64 to 128.;
+3. Modify the length of encrypted password in FTP-related leaf from 148 to 236.;
+4. Modify the length of encrypted password in SFTP-related leaf from 148 to 236.' ;
+  }
+
+  revision 2021-03-19 {
+    description '1. Change the leaf /configuration/log/nat/sftp/encrypt mandatory true to false;
+2. Change the leaf /configuration/log/nat/sftp/compress mandatory true to false;
+3. Change the leaf /configuration/log/nat/sftp/mac mandatory true to false.' ;
+  }
+
+  revision 2021-01-18 {
+    description '1. Add traplog match type to self-defined-policies node.' ;
+  }
+
+  revision 2020-10-26 {
+    description "1.Modify the range of the leaf /log:configuration/log:log/log:alarm/log:sftp/log:remotePort.
+    2.Add 'Logging sftp feature'." ;
+  }
+
+  revision 2020-08-22 {
+    description "1. Add leaf 'configuration/log/alarm/filesavetime/protocol-type'.
+    2. Add leaf 'configuration/log/alarm/filesavetime/remote-listen-port'.
+    3. Add container'configuration/log/portal/sftp'.
+    4. Add container'configuration/log/file-policy/default/almlog/sftp-server'.
+    5. Add container'configuration/log/file-policy/default/cmdlog/sftp-server'.
+    6. Add container'configuration/log/file-policy/default/srvlog/sftp-server'.
+    7. Add container'configuration/log/file-policy/default/netclog/sftp-server'.
+    8. Add container'configuration/log/file-policy/default/weblog/sftp-server'.
+    9. Add container'configuration/log/file-policy/self-defined/policy/sftp-server'.
+    10.Add container'configration/log/alarm/sftp'." ;
+  }
+
+  revision 2020-06-16 {
+    description '1. Modify the length of encrypted password in FTP-related leaf from 128 to 148.;
+2. Modify the length of encrypted password in SFTP-related leaf from 128 to 148.;' ;
+  }
+
+  revision 2020-05-04 {
+    description "1. Add leaf 'configuration/log/file-policy/default/snmplog/buffer-size'." ;
+  }
+
+  revision 2020-04-22 {
+    description "1. Add leaf 'configuration/log/file-policy/default/almlog/alarm-threshold'." ;
+  }
+
+  revision 2020-04-21 {
+    description "1.Obsolete the leavs 'encrypt-switch' and 'password' of'/configuration/log/nat'." ;
+  }
+
+  revision 2020-02-29 {
+    description "1. Add container'configuration/log/global-config/header-info'.
+    2. Add leaf 'configuration/log/global-config/header-info/header-flag'." ;
+  }
+
+  revision 2019-06-25 {
+    description '1. Modify length of leaf configuration/log/alarm/ftp/pwd-type/enc-pwd/enc-password from 64 to 128.
+2. Modify length of leaf configuration/log/alarm/filesavetime/pwd-type/enc-pwd/enc-password from 64 to 128.
+3. Modify length of leaf configuration/log/nat/ftp/pwd-type/enc-pwd/enc-password from 64 to 128.
+4. Modify length of leaf configuration/log/nat/sftp/pwd-type/enc-pwd/enc-password from 64 to 128.
+5. Modify length of leaf configuration/log/portal/ftp/pwd-type/enc-pwd/enc-password from 64 to 128.
+6. Modify length of leaf configuration/log/file-policy/default/almlog/ftp-server/password/clear-text/clear-text-password from 32 to 64.
+7. Modify length of leaf configuration/log/file-policy/default/almlog/ftp-server/password/encrypted/encrypted-password from 64 to 128.
+8. Modify length of leaf configuration/log/file-policy/default/cmdlog/ftp-server/password/clear-text/clear-text-password from 32 to 64.
+9. Modify length of leaf configuration/log/file-policy/default/cmdlog/ftp-server/password/encrypted/encrypted-password from 64 to 128.
+10. Modify length of leaf configuration/log/file-policy/default/srvlog/ftp-server/password/clear-text/clear-text-password from 32 to 64.
+11. Modify length of leaf configuration/log/file-policy/default/srvlog/ftp-server/password/encrypted/encrypted-password from 64 to 128.
+12. Modify length of leaf configuration/log/file-policy/default/netclog/ftp-server/password/clear-text/clear-text-password from 32 to 64.
+13. Modify length of leaf configuration/log/file-policy/default/netclog/ftp-server/password/encrypted/encrypted-password from 64 to 128.
+14. Modify length of leaf configuration/log/file-policy/default/weblog/ftp-server/password/clear-text/clear-text-password from 32 to 64.
+15. Modify length of leaf configuration/log/file-policy/default/weblog/ftp-server/password/encrypted/encrypted-password from 64 to 128.
+16. Modify length of leaf configuration/log/file-policy/default/self-defined-policies/ftp-server/password/clear-text/clear-text-password from 32 to 64.
+17. Modify length of leaf configuration/log/file-policy/default/self-defined-policies/ftp-server/password/encrypted/encrypted-password from 64 to 128.' ;
+  }
+
+  revision 2019-04-09 {
+    description "1. Add leaf 'configuration/log/global-config/zip'." ;
+  }
+
+  revision 2019-03-05 {
+    description "1.Add match-type to leaf '/configuration/log/file-policy/self-defined-policies/policy/match-substrings/match-substring'" ;
+  }
+
+  revision 2019-01-31 {
+    description "(1)Change the leaf /configuration/log/alarm/ftp/password to choice 'pwd-type' including two cases 'clear-pwd' and 'enc-password'.
+    (2)Change the leaf /configuration/log/alarm/filesavetime/password to choice 'pwd-type' including two cases 'clear-pwd' and 'enc-password'.
+    (3)Change the leaf /configuration/log/nat/ftp/password to choice 'pwd-type' including two cases 'clear-pwd' and 'enc-password'.
+    (4)Change the leaf /configuration/log/nat/sftp/password to choice 'pwd-type' including two cases 'clear-pwd' and 'enc-password'.
+    (5)Change the leaf /configuration/log/portal/ftp/password to choice 'pwd-type' including two cases 'clear-pwd' and 'enc-password'." ;
+  }
+
+  revision 2018-12-26 {
+    description '1. Add weblog default file-policy to configuration node.
+2. Add weblog match type to self-defined-policies node.
+3. Add weblog default file-policy to operation node.
+4. Add web log type to log-class of get-buffer in state.' ;
+  }
+
+  revision 2018-08-21 {
+    description '1.Obsolete the leaves /configuration/log/file-policy/default/almlog/file-capacity/file-num ,
+/configuration/log/file-policy/default/cmdlog/file-capacity/file-num ,
+/configuration/log/file-policy/default/srvlog/file-capacity/file-num,
+/configuration/log/file-policy/default/netclog/file-capacity/file-num,
+/configuration/log/file-policy/self-defined-policies/policy/file-capacity/file-num
+2.Add leaves /configuration/log/file-policy/default/almlog/file-capacity/file-number ,
+/configuration/log/file-policy/default/cmdlog/file-capacity/file-number ,
+/configuration/log/file-policy/default/srvlog/file-capacity/file-number,
+/configuration/log/file-policy/default/netclog/file-capacity/file-number,
+/configuration/log/file-policy/self-defined-policies/policy/file-capacity/file-number,
+/configuration/log/file-policy/default/almlog/file-capacity/file-day ,
+/configuration/log/file-policy/default/cmdlog/file-capacity/file-day ,
+/configuration/log/file-policy/default/srvlog/file-capacity/file-day,
+/configuration/log/file-policy/default/netclog/file-capacity/file-day,
+/configuration/log/file-policy/self-defined-policies/policy/file-capacity/file-day' ;
+  }
+
+  revision 2018-01-18 {
+    description "(1) Modify range of 'length' of leaf /configuration/log/alarm/ftp/password from 32 to 64.
+    (2) Modify range of 'length' of leaf /configuration/log/alarm/filesavetime/password from 32 to 64.
+    (3) Modify range of 'length' of leaf /configuration/log/nat/ftp/password from 32 to 64.
+    (4) Modify range of 'length' of leaf /configuration/log/nat/sftp/password from 32 to 64.
+    (5) Modify range of 'length' of leaf /configuration/log/portal/ftp/password from 32 to 64." ;
+  }
+
+  revision 2017-07-27 {
+    description '1. Add snmplog default file-policy to configuration node.
+2. Add snmplog match type to self-defined-policies node.
+3. Add snmplog default file-policy to operation node.
+4. Add snmp log type to log-class of get-buffer in state.' ;
+  }
+
+  revision 2017-01-22 {
+    description "(1)Add MCG-5000 in 'portal-ftp' feature node.
+    (2)Add MCG-5000 in 'log-nat' feature node.
+    (3)Add MCG-5000 in 'log-nat-sftp' feature node." ;
+  }
+
+  revision 2016-05-26 {
+    description "1.Modify default value of leaf 'file-num' /configuration/log/nat/file-config/file-num." ;
+  }
+
+  revision 2016-02-23 {
+    description '1. Add netclog default file-policy to configuration node.
+2. Add netclog match type to self-defined-policies node.
+3. Add netclog default file-policy to operation node.
+4. Add netconf log type to log-class of get-buffer in state.' ;
+  }
+
+  revision 2015-09-09 {
+    description 'correct /state/log/file-policy/get-buffer/policy/records/record/start-time and end-time attrbution of default value.' ;
+  }
+
+  revision 2015-04-20 {
+    description "(1)Add feature node 'portal-ftp' and apply the feature to the container of portal-ftp.
+    (2)Add feature node 'log-nat' and apply the feature to the leafs of nat-buffer-size and nat-description-type and nat-encrypt-switch and nat-zip-switch and nat-terminal-switch and nat-file-config and nat-password and nat-ftp.
+    (3)Add feature node 'log-nat-sftp' and apply the feature to the leaf of log-nat-sftp." ;
+  }
+
+  revision 2015-04-15 {
+    description 'Add project info to log-directory feature.' ;
+  }
+
+  revision 2015-01-27 {
+    description 'Modify the minimum value of the file-num leaf in self-defined-policies from 1 to 2.' ;
+  }
+
+  revision 2014-07-21 {
+    description "(1)Delete the presence of the address in FTP-related leaf.
+    (2)Add the range of the leaf 'name' '/operation/log/file-policy/self-defined-policies/clear-buffer/policy/name'." ;
+  }
+
+  revision 2014-05-19 {
+    description '(1) Modify the length of username in FTP-related leaf from 31 to 65.;
+(2) Modify the length of password in FTP-related leaf from 31 to 32.;' ;
+  }
+
+  revision 2014-05-13 {
+    description "Modify the pattern of the leaf 'link-local-ipv6' of address." ;
+  }
+
+  revision 2014-04-10 {
+    description "Modify the range of leaf 'file-size' '/configuration/log/nat/file-config/file-size'." ;
+  }
+
+  revision 2014-03-10 {
+    description 'Initial revision' ;
+  }
+
+  feature log-directory {
+    description 'The configured path of the policy' ;
+  }
+
+  feature portal-ftp {
+    description 'Portal ftp feature.' ;
+  }
+
+  feature log-nat {
+    description 'Log nat feature.' ;
+  }
+
+  feature log-nat-sftp {
+    description 'Log nat sftp feature.' ;
+  }
+
+  feature alarm-threshold {
+    description 'The alarm threshold of logging buffer.' ;
+  }
+
+  feature logging-sftp {
+    description 'Logging sftp feature.' ;
+  }
+
+  feature logging-cmdlog-timestamps {
+    description 'logging cmdlog-timestamps feature.' ;
+    ncd:revise-date 2022-01-07 ;
+  }
+
+  feature log-file-type {
+    description 'Log file type feature.' ;
+    ncd:revise-date 2025-03-24 ;
+  }
+
+  typedef alarm-level {
+    type enumeration {
+      enum emergencies {
+        value 1 ;
+        description 'Level of emergence.' ;
+      }
+
+      enum alerts {
+        value 2 ;
+        description 'Level of alert.' ;
+      }
+
+      enum critical {
+        value 3 ;
+        description 'Level of  critical.' ;
+      }
+
+      enum errors {
+        value 4 ;
+        description 'Level of error.' ;
+      }
+
+      enum warnings {
+        value 5 ;
+        description 'Level of warning.' ;
+      }
+
+      enum notifications {
+        value 6 ;
+        description 'Level of notification.' ;
+      }
+
+      enum informational {
+        value 7 ;
+        description 'Level of information.' ;
+      }
+
+      enum debugging {
+        value 8 ;
+        description 'Level of debug.' ;
+      }
+
+    }
+
+    description 'Alarm level.' ;
+  }
+
+  typedef overflow-mode {
+    type enumeration {
+      enum clear {
+        value 2 ;
+        description 'Clear logging buffer when logging buffer is full.' ;
+      }
+
+      enum part-removed {
+        value 3 ;
+        description 'Clear 1/3 logging buffer when logging buffer is full.' ;
+      }
+
+      enum cycle {
+        value 4 ;
+        description 'Cycle when logging buffer is full.' ;
+      }
+
+      enum drop {
+        value 5 ;
+        description 'No logging to buffer and file when logging buffer is full.' ;
+      }
+
+    }
+
+    default part-removed ;
+    description 'The clear mode of logging buffer.' ;
+  }
+
+  typedef severity-relation {
+    type enumeration {
+      enum higher-or-equal {
+        value 1 ;
+      }
+
+      enum equal {
+        value 2 ;
+      }
+
+      enum lower-or-equal {
+        value 3 ;
+      }
+
+    }
+
+    description 'Severity relation.' ;
+  }
+
+  typedef flush-destination {
+    type enumeration {
+      enum local {
+        value 0 ;
+        description 'Flush to local file.' ;
+      }
+
+      enum ftp {
+        value 1 ;
+        description 'Flush to FTP/SFTP server.' ;
+      }
+
+    }
+
+    description 'Destination' ;
+  }
+
+  typedef switch-type {
+    type enumeration {
+      enum off {
+        value 0 ;
+        description 'Switch off.' ;
+      }
+
+      enum on {
+        value 1 ;
+        description 'Switch on.' ;
+      }
+
+    }
+
+    description 'Swtich.' ;
+  }
+
+  typedef protocol-type {
+    type enumeration {
+      enum ftp {
+        value 0 ;
+        description 'FTP transmission protocol.' ;
+      }
+
+      enum sftp {
+        value 1 ;
+        description 'SFTP transmission protocol.' ;
+      }
+
+    }
+
+    default ftp ;
+    description 'FTP or SFTP transmission protocol.' ;
+  }
+
+  typedef date-format {
+    type enumeration {
+      enum format1 {
+        value 1 ;
+        description 'YYYY-MM-DD hh:mm:ss' ;
+      }
+
+      enum format2 {
+        value 2 ;
+        description 'YYYY-DD-MM hh:mm:ss' ;
+      }
+
+      enum format3 {
+        value 3 ;
+        description 'hh:mm:ss YYYY-DD-MM' ;
+      }
+
+      enum format4 {
+        value 4 ;
+        description 'hh:mm:ss YYYY-MM-DD' ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'Configuration info.' ;
+    container log {
+      description 'Log module.' ;
+      container global-config {
+        description 'Set logging global configuration.' ;
+        leaf timestamps {
+          description 'Set logging timestamps of alarm and debug information.' ;
+          type enumeration {
+            enum localtime {
+              value 1 ;
+              description 'Use local time zone for timestamps.' ;
+            }
+
+            enum uptime {
+              value 2 ;
+              description 'Timestamp with system uptime.' ;
+            }
+
+            enum precisetime {
+              value 3 ;
+              description 'Timestamp with high precision time.' ;
+            }
+
+          }
+
+          default localtime ;
+        }
+
+        leaf timestamps-format {
+          description 'Set the date format of alarm and debug information.The leaf of timestamps-format can be valid only when the leaf of timestamps is not uptime.' ;
+          type date-format ;
+
+          ncd:revise-date 2022-04-16 ;
+        }
+
+        leaf switch {
+          description 'Logging switch to all supported destinations.' ;
+          type switch-type ;
+
+          default on ;
+        }
+
+        leaf zip {
+          description 'Set logging zip.' ;
+          type enumeration {
+            enum off {
+              value 0 ;
+              description 'Logging zip off.' ;
+            }
+
+            enum on {
+              value 1 ;
+              description 'Logging zip on.' ;
+            }
+
+          }
+
+          default off ;
+          ncd:revise-date 2019-04-09 ;
+        }
+
+        leaf cmdlog-timestamps {
+          if-feature logging-cmdlog-timestamps ;
+
+          description 'Set logging timestamps for cmdlog.' ;
+          type enumeration {
+            enum datetime {
+              value 1 ;
+              description 'Timestamp with date and time.' ;
+            }
+
+            enum precisetime {
+              value 2 ;
+              description 'Timestamp with high precision time.' ;
+            }
+
+          }
+
+          default datetime ;
+          ncd:revise-date 2022-01-07 ;
+        }
+
+        leaf cmdlog-timestamps-format {
+          if-feature logging-cmdlog-timestamps ;
+
+          description 'Set the date format of cmdlog.' ;
+          type date-format ;
+
+          ncd:revise-date 2022-04-16 ;
+        }
+
+        container header-info {
+          description 'Logging header info.' ;
+          leaf header-flag {
+            description 'Set logging header flag.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Logging header disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Logging header enable.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          ncd:revise-date 2020-02-29 ;
+        }
+
+      }
+
+      container alarm {
+        description 'Set alarm logging parameters.' ;
+        choice realtime-upload {
+          description 'Set realtime upload parameters.' ;
+          case ftp {
+            description 'Set FTP logging parameters.' ;
+            container ftp {
+              description 'Set FTP logging parameters.' ;
+              presence "Set FTP logging parameters" ;
+              leaf vrf-name {
+                description 'VPN routing/forwarding instance (VRF) name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf file-name {
+                description 'File name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+                default zxralarm.log ;
+              }
+
+              leaf level {
+                description 'The alarm level.' ;
+                type alarm-level ;
+
+                mandatory true ;
+              }
+
+              leaf user-name {
+                description 'The FTP user name.' ;
+                type string {
+                  length 1..65 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              choice pwd-type {
+                description 'FTP password.' ;
+                mandatory true ;
+                case clear-pwd {
+                  description 'Clear-text choice.' ;
+                  leaf password {
+                    description 'The FTP password, when configuration can only enter the clear password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case enc-pwd {
+                  description 'Encrypted choice.' ;
+                  leaf enc-password {
+                    description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                    type string {
+                      length 64..236 {
+                        description 'Length must be 64,84,108,148,172,192,212 or 236..' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  ncd:revise-date 2019-01-31 ;
+                }
+
+              }
+
+              choice server-addr {
+                description 'The FTP server address.' ;
+                mandatory true ;
+                case ipv4 {
+                  description 'IPv4 address.' ;
+                  container ipv4-addr {
+                    description 'IPv4 address.' ;
+                    leaf ipv4-address {
+                      description 'IPv4 address.' ;
+                      type ncd:ipv4-address ;
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+                case ipv6 {
+                  description 'IPv6 address.' ;
+                  container ipv6-addr {
+                    description 'IPv6 address.' ;
+                    choice ipv6-type {
+                      description 'IPv6 address type.' ;
+                      mandatory true ;
+                      case linklocal {
+                        description 'Link-local type.' ;
+                        container ipv6-linklocal {
+                          description 'IPv6 link-local type.' ;
+                          leaf ipv6-linklocal {
+                            description 'IPv6 address.' ;
+                            type ncd:ipv6-address {
+                              pattern "^[Ff][Ee][8-9a-bA-B][0-9a-fA-F]" ;
+
+                            }
+
+                            mandatory true ;
+                          }
+
+                          leaf interface-name {
+                            description 'Interface name.' ;
+                            type ncd:ifname {
+                              length 0..31 ;
+
+                            }
+
+                            mandatory true ;
+                          }
+
+                        }
+
+                      }
+
+                      case non-linklocal {
+                        description 'Non link-local type.' ;
+                        container ipv6-non-linklocal {
+                          description 'IPv6 non link-local type.' ;
+                          leaf ipv6-non-linklocal {
+                            description 'IPv6 address.' ;
+                            type ncd:ipv6-address ;
+
+                            mandatory true ;
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          case sftp {
+            description 'Set SFTP logging parameters.' ;
+            container sftp {
+              if-feature logging-sftp ;
+
+              description 'Set SFTP logging parameters.' ;
+              presence "Set SFTP logging parameters" ;
+              leaf vrf-name {
+                description 'VPN routing/forwarding instance (VRF) name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf file-name {
+                description 'File name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+                default zxralarm.log ;
+              }
+
+              leaf level {
+                description 'The alarm level.' ;
+                type alarm-level ;
+
+                mandatory true ;
+              }
+
+              leaf user-name {
+                description 'The user name.' ;
+                type string {
+                  length 1..65 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              choice pwd-type {
+                description 'FTP password.' ;
+                mandatory true ;
+                case clear-pwd {
+                  description 'Clear-text choice.' ;
+                  leaf password {
+                    description 'The password, when configuration can only enter the clear password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case enc-pwd {
+                  description 'Encrypted choice.' ;
+                  leaf enc-password {
+                    description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                    type string {
+                      length 64..236 {
+                        description 'Length must be 64,84,108,148,172,192,212 or 236' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              choice server-addr {
+                description 'The FTP server address.' ;
+                mandatory true ;
+                case ipv4 {
+                  description 'IPv4 address.' ;
+                  container ipv4-addr {
+                    description 'IPv4 address.' ;
+                    leaf ipv4-address {
+                      description 'IPv4 address.' ;
+                      type ncd:ipv4-address-none-zero ;
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+                case ipv6 {
+                  description 'IPv6 address.' ;
+                  container ipv6-addr {
+                    description 'IPv6 address.' ;
+                    choice ipv6-type {
+                      description 'IPv6 address type.' ;
+                      mandatory true ;
+                      case linklocal {
+                        description 'Link-local type.' ;
+                        container ipv6-linklocal {
+                          description 'IPv6 link-local type.' ;
+                          leaf ipv6-linklocal {
+                            description 'IPv6 address.' ;
+                            type ncd:ipv6-address-none-zero {
+                              pattern "^[Ff][Ee][8-9a-bA-B][0-9a-fA-F]" ;
+
+                            }
+
+                            mandatory true ;
+                          }
+
+                          leaf interface-name {
+                            description 'Interface name.' ;
+                            type ncd:ifname {
+                              length 0..31 ;
+
+                            }
+
+                            mandatory true ;
+                          }
+
+                        }
+
+                      }
+
+                      case non-linklocal {
+                        description 'Non link-local type.' ;
+                        container ipv6-non-linklocal {
+                          description 'IPv6 non link-local type.' ;
+                          leaf ipv6-non-linklocal {
+                            description 'IPv6 address.' ;
+                            type ncd:ipv6-address-none-zero ;
+
+                            mandatory true ;
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf remotePort {
+                description 'The remote port.' ;
+                type uint16 {
+                  range 1..65535 {
+                    description 'The remoteport.' ;
+                  }
+
+                }
+
+                default 22 ;
+              }
+
+            }
+
+            ncd:revise-date 2020-08-22 ;
+          }
+
+        }
+
+        container filesavetime {
+          description 'Set interval of sending alarm log file to FTP server.' ;
+          presence "Set interval of sending alarm-log file to FTP server" ;
+          leaf vrf-name {
+            description 'VPN routing/forwarding instance (VRF) name.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf file-prefix {
+            description 'File name prefix.' ;
+            type string {
+              length 1..31 ;
+
+            }
+
+            default zxralarm.log ;
+          }
+
+          leaf user-name {
+            description 'The FTP user name.' ;
+            type string {
+              length 1..65 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          choice pwd-type {
+            description 'FTP password.' ;
+            mandatory true ;
+            case clear-pwd {
+              description 'Clear-text choice.' ;
+              leaf password {
+                description 'The clear-text password, when configuration can only enter the clear password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                type string {
+                  length 1..128 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+            case enc-pwd {
+              description 'Encrypted choice.' ;
+              leaf enc-password {
+                description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                type string {
+                  length 64..236 {
+                    description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              ncd:revise-date 2019-01-31 ;
+            }
+
+          }
+
+          choice time {
+            description 'The interval time.' ;
+            mandatory true ;
+            case interval {
+              description 'Interval.' ;
+              leaf interval-time {
+                description 'The interval (1:00:00-23:59:59).' ;
+                type ncd:time ;
+
+                mandatory true ;
+              }
+
+            }
+
+            case everyday {
+              description 'Everyday.' ;
+              leaf day-time {
+                description 'The time for saving alarm log (00:00:00-23:59:59).' ;
+                type ncd:time ;
+
+                mandatory true ;
+              }
+
+            }
+
+            case everyweek {
+              description 'Everyweek.' ;
+              leaf weekday {
+                description 'The weekday for saving alarm log.' ;
+                type uint16 {
+                  range 1..7 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf weekday-time {
+                description 'The time for saving alarm log (00:00:00-23:59:59).' ;
+                type ncd:time ;
+
+                mandatory true ;
+              }
+
+            }
+
+            case everymonth {
+              description 'Everymonth.' ;
+              leaf monthday {
+                description 'The monthday for saving alarm log.' ;
+                type uint16 {
+                  range 1..31 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf monthday-time {
+                description 'The time for saving alarm log (00:00:00-23:59:59).' ;
+                type ncd:time ;
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          choice server-addr {
+            description 'The FTP server address.' ;
+            mandatory true ;
+            case ipv4 {
+              description 'IPv4 address.' ;
+              container ipv4-addr {
+                description 'IPv4 address.' ;
+                leaf ipv4-address {
+                  description 'IPv4 address.' ;
+                  type ncd:ipv4-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case ipv6 {
+              description 'IPv6 address.' ;
+              container ipv6-addr {
+                description 'IPv6 address.' ;
+                choice ipv6-type {
+                  description 'IPv6 address type.' ;
+                  mandatory true ;
+                  case linklocal {
+                    description 'Link-local type.' ;
+                    container ipv6-linklocal {
+                      description 'IPv6 link-local type.' ;
+                      leaf ipv6-linklocal {
+                        description 'IPv6 address.' ;
+                        type ncd:ipv6-address {
+                          pattern "^[Ff][Ee][8-9a-bA-B][0-9a-fA-F]" ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname {
+                          length 0..31 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  case non-linklocal {
+                    description 'Non link-local type.' ;
+                    container ipv6-non-linklocal {
+                      description 'IPv6 non link-local type.' ;
+                      leaf ipv6-non-linklocal {
+                        description 'IPv6 address.' ;
+                        type ncd:ipv6-address ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          leaf protocol-type {
+            description 'FTP or SFTP transmission protocol.' ;
+            type enumeration {
+              enum ftp {
+                value 0 ;
+                description 'FTP transmission protocol.' ;
+              }
+
+              enum sftp {
+                value 1 ;
+                description 'SFTP transmission protocol.' ;
+              }
+
+            }
+
+            default ftp ;
+            ncd:revise-date 2020-08-22 ;
+          }
+
+          leaf remote-listen-port {
+            description 'Remote server listen-port.' ;
+            type uint16 {
+              range 1..65535 ;
+
+            }
+
+            ncd:revise-date 2020-08-22 ;
+          }
+
+        }
+
+        leaf trap-level {
+          description 'Set trap logging level.' ;
+          type alarm-level ;
+
+        }
+
+        leaf console-level {
+          description 'Console logging level.' ;
+          type alarm-level ;
+
+          default notifications ;
+        }
+
+      }
+
+      container nat {
+        description 'Set nat logging parameters.' ;
+        leaf buffer-size {
+          if-feature log-nat ;
+
+          description 'The number of NAT logging items.' ;
+          type uint16 {
+            range 10..1000 ;
+
+          }
+
+          default 1000 ;
+        }
+
+        leaf description-type {
+          if-feature log-nat ;
+
+          description 'The nat log description-type config.' ;
+          type enumeration {
+            enum basemac {
+              value 0 ;
+              description 'Set logging nat description-type basemac.' ;
+            }
+
+            enum hostname {
+              value 1 ;
+              description 'Set logging nat description-type hostname.' ;
+            }
+
+          }
+
+          default basemac ;
+        }
+
+        leaf encrypt-switch {
+          if-feature log-nat ;
+
+          status obsolete {
+            ncd:revise-date 2020-04-21 ;
+          }
+
+          description 'The nat log encrypt config.' ;
+          type enumeration {
+            enum off {
+              value 0 ;
+              description 'Set logging nat encrypt off.' ;
+            }
+
+            enum on {
+              value 1 ;
+              description 'Set logging nat encrypt on.' ;
+            }
+
+          }
+
+          default off ;
+        }
+
+        leaf zip-switch {
+          if-feature log-nat ;
+
+          description 'The nat log zip config.' ;
+          type enumeration {
+            enum off {
+              value 0 ;
+              description 'Set logging nat zip off.' ;
+            }
+
+            enum on {
+              value 1 ;
+              description 'Set logging nat zip on.' ;
+            }
+
+          }
+
+          default on ;
+        }
+
+        leaf terminal-switch {
+          if-feature log-nat ;
+
+          description 'Set logging nat terminal off/local.' ;
+          type enumeration {
+            enum local {
+              value 0 ;
+              description 'Set logging nat terminal local.' ;
+            }
+
+            enum off {
+              value 1 ;
+              description 'Set logging nat terminal off.' ;
+            }
+
+          }
+
+          default local ;
+        }
+
+        container file-config {
+          if-feature log-nat ;
+
+          description 'Size of nat logging file.' ;
+          presence "file-size mandatory" ;
+          leaf file-size {
+            description 'Size of nat logging file (MByte) 50 default.' ;
+            type uint32 {
+              range 5..100 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf file-num {
+            description 'Number of nat logging file.The default value is specified by Perf-code.' ;
+            type uint32 {
+              range 2..300 ;
+
+            }
+
+            default 300 ;
+          }
+
+        }
+
+        container password {
+          if-feature log-nat ;
+
+          status obsolete {
+            ncd:revise-date 2020-04-21 ;
+          }
+
+          description 'An password of nat log.' ;
+          choice password-type {
+            status obsolete {
+              ncd:revise-date 2020-04-21 ;
+            }
+
+            description 'password-type.' ;
+            default encrypt-password ;
+            case password {
+              status obsolete {
+                ncd:revise-date 2020-04-21 ;
+              }
+
+              description 'An unencrypted password of nat log.' ;
+              leaf password {
+                status obsolete {
+                  ncd:revise-date 2020-04-21 ;
+                }
+
+                description 'An unencrypted password of nat log.' ;
+                type string {
+                  length 8..32 ;
+
+                }
+
+              }
+
+            }
+
+            case encrypt-password {
+              status obsolete {
+                ncd:revise-date 2020-04-21 ;
+              }
+
+              description 'An encrypted password of nat log.' ;
+              leaf encrypt-password {
+                status obsolete {
+                  ncd:revise-date 2020-04-21 ;
+                }
+
+                description 'An encrypted password of nat log.' ;
+                type string {
+                  length 64 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container ftp {
+          if-feature log-nat ;
+
+          description 'Set FTP logging parameters.' ;
+          presence "Set FTP logging parameters" ;
+          leaf vrf-name {
+            description 'VPN routing/forwarding instance (VRF) name.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf user-name {
+            description 'The FTP user name.' ;
+            type string {
+              length 1..65 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          choice pwd-type {
+            description 'FTP password.' ;
+            mandatory true ;
+            case clear-pwd {
+              description 'Clear-text choice.' ;
+              leaf password {
+                description 'The FTP password, when configuration can only enter the clear password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                type string {
+                  length 1..128 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+            case enc-pwd {
+              description 'Encrypted choice.' ;
+              leaf enc-password {
+                description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                type string {
+                  length 64..236 {
+                    description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              ncd:revise-date 2019-01-31 ;
+            }
+
+          }
+
+          choice server-addr {
+            description 'The FTP server address.' ;
+            mandatory true ;
+            case ipv4 {
+              description 'IPv4 address.' ;
+              container ipv4-addr {
+                description 'IPv4 address.' ;
+                leaf ipv4-address {
+                  description 'IPv4 address.' ;
+                  type ncd:ipv4-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case ipv6 {
+              description 'IPv6 address.' ;
+              container ipv6-addr {
+                description 'IPv6 address.' ;
+                choice ipv6-type {
+                  description 'IPv6 address type.' ;
+                  mandatory true ;
+                  case linklocal {
+                    description 'Link-local type.' ;
+                    container ipv6-linklocal {
+                      description 'IPv6 link-local type.' ;
+                      leaf ipv6-linklocal {
+                        description 'IPv6 address.' ;
+                        type ncd:ipv6-address {
+                          pattern "^[Ff][Ee][8-9a-bA-B][0-9a-fA-F]" ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname {
+                          length 0..31 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  case non-linklocal {
+                    description 'Non link-local type.' ;
+                    container ipv6-non-linklocal {
+                      description 'IPv6 non link-local type.' ;
+                      leaf ipv6-non-linklocal {
+                        description 'IPv6 address.' ;
+                        type ncd:ipv6-address ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container sftp {
+          if-feature log-nat-sftp ;
+
+          description 'Set SFTP logging parameters.' ;
+          presence "Set SFTP logging parameters" ;
+          leaf vrf-name {
+            description 'VPN routing/forwarding instance (VRF) name.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf remote-listen-port {
+            description 'SSH server listen-port.' ;
+            type uint16 ;
+
+            default 22 ;
+          }
+
+          leaf user-name {
+            description 'The SFTP user name.' ;
+            type string {
+              length 1..65 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          choice pwd-type {
+            description 'SFTP password.' ;
+            mandatory true ;
+            case clear-pwd {
+              description 'Clear-text choice.' ;
+              leaf password {
+                description 'The SFTP password, when configuration can only enter the clear password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                type string {
+                  length 1..128 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+            case enc-pwd {
+              description 'Encrypted choice.' ;
+              leaf enc-password {
+                description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                type string {
+                  length 64..236 {
+                    description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              ncd:revise-date 2019-01-31 ;
+            }
+
+          }
+
+          leaf encrypt {
+            description 'The encryption algorithm.' ;
+            type enumeration {
+              enum none {
+                value 0 ;
+                description 'No encryption.' ;
+              }
+
+              enum aes128 {
+                value 1 ;
+                description 'AES with a 128-bit key encryption.' ;
+              }
+
+              enum blowfish {
+                value 2 ;
+                description 'Blowfish encryption.' ;
+              }
+
+              enum 3des {
+                value 3 ;
+                description 'Three-key triple-DES encryption.' ;
+              }
+
+            }
+
+          }
+
+          leaf compress {
+            description 'The compress algorithm.' ;
+            type enumeration {
+              enum none {
+                value 0 ;
+                description 'No compression.' ;
+              }
+
+              enum zlib {
+                value 1 ;
+                description 'ZLIB compression.' ;
+              }
+
+            }
+
+          }
+
+          leaf mac {
+            description 'The mac check algorithm.' ;
+            type enumeration {
+              enum none {
+                value 0 ;
+                description 'No MAC check algorithm.' ;
+              }
+
+              enum sha1 {
+                value 1 ;
+                description 'SHA1 MAC check algorithm.' ;
+              }
+
+              enum md5 {
+                value 2 ;
+                description 'MD5 MAC check algorithm.' ;
+              }
+
+            }
+
+          }
+
+          choice server-addr {
+            description 'The SFTP server address.' ;
+            mandatory true ;
+            case ipv4 {
+              description 'IPv4 address.' ;
+              container ipv4-addr {
+                description 'IPv4 address.' ;
+                leaf ipv4-address {
+                  description 'IPv4 address.' ;
+                  type ncd:ipv4-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case ipv6 {
+              description 'IPv6 address.' ;
+              container ipv6-addr {
+                description 'IPv6 address.' ;
+                choice ipv6-type {
+                  description 'IPv6 address type.' ;
+                  mandatory true ;
+                  case linklocal {
+                    description 'Link-local type.' ;
+                    container ipv6-linklocal {
+                      description 'IPv6 link-local type.' ;
+                      leaf ipv6-linklocal {
+                        description 'IPv6 address.' ;
+                        type ncd:ipv6-address {
+                          pattern "^[Ff][Ee][8-9a-bA-B][0-9a-fA-F]" ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname {
+                          length 0..31 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  case non-linklocal {
+                    description 'Non link-local type.' ;
+                    container ipv6-non-linklocal {
+                      description 'IPv6 non link-local type.' ;
+                      leaf ipv6-non-linklocal {
+                        description 'IPv6 address.' ;
+                        type ncd:ipv6-address ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container portal {
+        description 'Set portal logging parameters.' ;
+        choice upload-type {
+          description 'The portal log file uploaded server.' ;
+          case ftp {
+            description 'FTP server parameters.' ;
+            container ftp {
+              if-feature portal-ftp ;
+
+              description 'Set FTP logging parameters.' ;
+              presence "Set FTP logging parameters" ;
+              leaf vrf-name {
+                description 'VPN routing/forwarding instance (VRF) name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf user-name {
+                description 'The FTP user name.' ;
+                type string {
+                  length 1..65 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              choice pwd-type {
+                description 'FTP password.' ;
+                mandatory true ;
+                case clear-pwd {
+                  description 'Clear-text choice.' ;
+                  leaf password {
+                    description 'The FTP password, when configuration can only enter the clear password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case enc-pwd {
+                  description 'Encrypted choice.' ;
+                  leaf enc-password {
+                    description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                    type string {
+                      length 64..236 {
+                        description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  ncd:revise-date 2019-01-31 ;
+                }
+
+              }
+
+              choice server-addr {
+                description 'The FTP server address.' ;
+                mandatory true ;
+                case ipv4 {
+                  description 'IPv4 address.' ;
+                  container ipv4-addr {
+                    description 'IPv4 address.' ;
+                    leaf ipv4-address {
+                      description 'IPv4 address.' ;
+                      type ncd:ipv4-address ;
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+                case ipv6 {
+                  description 'IPv6 address.' ;
+                  container ipv6-addr {
+                    description 'IPv6 address.' ;
+                    choice ipv6-type {
+                      description 'IPv6 address type.' ;
+                      mandatory true ;
+                      case linklocal {
+                        description 'Link-local type.' ;
+                        container ipv6-linklocal {
+                          description 'IPv6 link-local type.' ;
+                          leaf ipv6-linklocal {
+                            description 'IPv6 address.' ;
+                            type ncd:ipv6-address {
+                              pattern "^[Ff][Ee][8-9a-bA-B][0-9a-fA-F]" ;
+
+                            }
+
+                            mandatory true ;
+                          }
+
+                          leaf interface-name {
+                            description 'Interface name.' ;
+                            type ncd:ifname {
+                              length 0..31 ;
+
+                            }
+
+                            mandatory true ;
+                          }
+
+                        }
+
+                      }
+
+                      case non-linklocal {
+                        description 'Non link-local type.' ;
+                        container ipv6-non-linklocal {
+                          description 'IPv6 non link-local type.' ;
+                          leaf ipv6-non-linklocal {
+                            description 'IPv6 address.' ;
+                            type ncd:ipv6-address ;
+
+                            mandatory true ;
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          case sftp {
+            description 'SFTP server parameters.' ;
+            container sftp {
+              if-feature portal-ftp ;
+
+              description 'Set SFTP logging parameters.' ;
+              presence "Set SFTP logging parameters" ;
+              leaf vrf-name {
+                description 'VPN routing/forwarding instance (VRF) name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf user-name {
+                description 'The SFTP user name.' ;
+                type string {
+                  length 1..65 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              choice pwd-type {
+                description 'FTP password.' ;
+                mandatory true ;
+                case clear-pwd {
+                  description 'Clear-text choice.' ;
+                  leaf password {
+                    description 'The SFTP password, when configuration can only enter the clear password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case enc-pwd {
+                  description 'Encrypted choice.' ;
+                  leaf enc-password {
+                    description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                    type string {
+                      length 64..236 {
+                        description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              choice server-addr {
+                description 'The FTP server address.' ;
+                mandatory true ;
+                case ipv4 {
+                  description 'IPv4 address.' ;
+                  container ipv4-addr {
+                    description 'IPv4 address.' ;
+                    leaf ipv4-address {
+                      description 'IPv4 address.' ;
+                      type ncd:ipv4-address ;
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+                case ipv6 {
+                  description 'IPv6 address.' ;
+                  container ipv6-addr {
+                    description 'IPv6 address.' ;
+                    choice ipv6-type {
+                      description 'IPv6 address type.' ;
+                      mandatory true ;
+                      case linklocal {
+                        description 'Link-local type.' ;
+                        container ipv6-linklocal {
+                          description 'IPv6 link-local type.' ;
+                          leaf ipv6-linklocal {
+                            description 'IPv6 address.' ;
+                            type ncd:ipv6-address {
+                              pattern "^[Ff][Ee][8-9a-bA-B][0-9a-fA-F]" ;
+
+                            }
+
+                            mandatory true ;
+                          }
+
+                          leaf interface-name {
+                            description 'Interface name.' ;
+                            type ncd:ifname {
+                              length 0..31 ;
+
+                            }
+
+                            mandatory true ;
+                          }
+
+                        }
+
+                      }
+
+                      case non-linklocal {
+                        description 'Non link-local type.' ;
+                        container ipv6-non-linklocal {
+                          description 'IPv6 non link-local type.' ;
+                          leaf ipv6-non-linklocal {
+                            description 'IPv6 address.' ;
+                            type ncd:ipv6-address ;
+
+                            mandatory true ;
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf remote-listen-port {
+                description 'Remote server listen-port.' ;
+                type uint16 {
+                  range 1..65535 ;
+
+                }
+
+                default 22 ;
+              }
+
+            }
+
+            ncd:revise-date 2020-08-22 ;
+          }
+
+        }
+
+      }
+
+      container debug-redirect {
+        description 'Set the parameters of debugmsg.' ;
+        presence "Set the parameters of debugmsg" ;
+        leaf filename {
+          description 'The filename of debug log.' ;
+          type string {
+            length 2..32 ;
+
+          }
+
+          mandatory true ;
+        }
+
+        leaf size {
+          description 'Size of the debug logging file(1-100MB).' ;
+          type int16 {
+            range 1..100 ;
+
+          }
+
+          mandatory true ;
+        }
+
+        leaf mode {
+          description 'The operation of reaching the maximum.' ;
+          type enumeration {
+            enum for-end {
+              value 1 ;
+              description 'While reaching the size stop saving debug msg.' ;
+            }
+
+            enum for-cycle {
+              value 2 ;
+              description 'While reaching the size delete it and save new.' ;
+            }
+
+          }
+
+          mandatory true ;
+        }
+
+      }
+
+      container snmp-policy {
+        description 'The mutex record of LogPolicy is four.' ;
+        container matchs {
+          description 'Set match rule to logging.' ;
+          list match {
+            description 'Set match rule to logging.' ;
+            key log-type ;
+            leaf log-type {
+              description 'Match log type.' ;
+              type enumeration {
+                enum cmdlog {
+                  value 2 ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container match-substrings {
+          description 'Set match rule to logging with substring.' ;
+          list match-substring {
+            description 'Set match rule to logging with substring.' ;
+            key 'log-type substring' ;
+            leaf log-type {
+              description 'Match log type.' ;
+              type enumeration {
+                enum cmdlog {
+                  value 2 ;
+                  description 'The command log.' ;
+                }
+
+              }
+
+            }
+
+            leaf substring {
+              description 'Match substring.' ;
+              type ncd:string-all {
+                length 1..40 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+        leaf accept {
+          description 'Set acception to logging.' ;
+          type enumeration {
+            enum off {
+              value 0 ;
+              description 'Disable to trap logging.' ;
+            }
+
+            enum on {
+              value 1 ;
+              description 'Enable to trap logging.' ;
+            }
+
+          }
+
+          default off ;
+        }
+
+      }
+
+      container file-policy {
+        description 'Log file policy.' ;
+        container default {
+          description 'Default policy.' ;
+          container almlog {
+            description 'Config default alarm log policy.' ;
+            leaf buffer-size {
+              description 'Size of buffer.The size of buffer can be configured only when the item-save num of buffer is the invalid value(0).' ;
+              type uint32 {
+                range 100..1000 {
+                  description 'In KB.' ;
+                }
+
+              }
+
+              units KB ;
+              default 200 ;
+            }
+
+            leaf dump-interval {
+              description 'Interval to dump log in the buffer to file.' ;
+              type uint32 {
+                range 2..1800000 {
+                  description 'In second.' ;
+                }
+
+              }
+
+              units second ;
+              default 600 ;
+            }
+
+            leaf overflow-mode {
+              description 'Set the clear mode of logging buffer.' ;
+              type enumeration {
+                enum end {
+                  value 1 ;
+                  description 'No logging to buffer but file when logging buffer is full.' ;
+                }
+
+                enum clear {
+                  value 2 ;
+                  description 'Clear logging buffer when logging buffer is full.' ;
+                }
+
+                enum part-removed {
+                  value 3 ;
+                  description 'Clear 1/3 logging buffer when logging buffer is full.' ;
+                }
+
+                enum cycle {
+                  value 4 ;
+                  description 'Cycle when logging buffer is full.' ;
+                }
+
+                enum drop {
+                  value 5 ;
+                  description 'No logging to buffer and file when logging buffer is full.' ;
+                }
+
+              }
+
+              default part-removed ;
+            }
+
+            leaf accept {
+              description 'Set acception to logging.' ;
+              type switch-type ;
+
+              default off ;
+            }
+
+            leaf directory {
+              if-feature log-directory ;
+
+              description 'Log directory.' ;
+              type string {
+                length 0..80 ;
+
+              }
+
+              default '' ;
+            }
+
+            leaf alarm-threshold {
+              if-feature alarm-threshold ;
+
+              description 'Alarm threshold of buffer.' ;
+              type uint8 {
+                range 75..90 {
+                  description 'In %.' ;
+                }
+
+              }
+
+              units "%" ;
+              ncd:revise-date 2020-04-22 ;
+            }
+
+            leaf buffer-item-save-num {
+              description 'Item-save num of buffer.The item-save num of buffer can be configured only when the size of buffer is the default value(200).' ;
+              type uint16 {
+                range 1..5000 ;
+
+              }
+
+              ncd:revise-date 2022-04-08 ;
+            }
+
+            container level-filter {
+              description 'The alarm level filter.' ;
+              presence "The alarm level filter" ;
+              leaf level {
+                description 'The alarm level.' ;
+                type alarm-level ;
+
+                mandatory true ;
+              }
+
+              leaf relation {
+                description 'Severity relation.' ;
+                type severity-relation ;
+
+                default higher-or-equal ;
+              }
+
+            }
+
+            container file-capacity {
+              description 'Set file capacity.' ;
+              presence "Set file capacity" ;
+              leaf file-num {
+                status obsolete {
+                  ncd:revise-date 2018-08-21 ;
+                }
+
+                description 'Set file num.' ;
+                type uint16 {
+                  range 7..300 {
+                    description 'File number.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              choice save-mode {
+                description 'Set saving mode of the files.' ;
+                mandatory true ;
+                case file-number {
+                  description 'Set file num.' ;
+                  leaf file-number {
+                    description 'Set file num.' ;
+                    type uint16 {
+                      range 7..300 {
+                        description 'File number.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case file-day {
+                  description 'Set file days.' ;
+                  leaf file-day {
+                    description 'Set file days.' ;
+                    type uint16 {
+                      range 7..365 {
+                        description 'File day.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                ncd:revise-date 2018-08-21 ;
+              }
+
+              leaf file-size {
+                description 'Set file size of one file,the default value is defined in perfcode.' ;
+                type uint32 {
+                  range 100..102400 {
+                    description 'In KB.' ;
+                  }
+
+                }
+
+                units KB ;
+                mandatory true ;
+              }
+
+            }
+
+            choice upload-type {
+              description 'The almlog file uploaded server.' ;
+              case ftp {
+                description 'FTP server parameters.' ;
+                container ftp-server {
+                  description 'Set FTP logging parameters.' ;
+                  presence "Set FTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              case sftp {
+                description 'SFTP server parameters.' ;
+                container sftp-server {
+                  description 'Set SFTP logging parameters.' ;
+                  presence "Set SFTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf remote-listen-port {
+                    description 'Remote server listen-port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    default 22 ;
+                  }
+
+                }
+
+                ncd:revise-date 2020-08-22 ;
+              }
+
+            }
+
+            leaf file-type {
+              type enumeration {
+                enum txt {
+                  value 0 ;
+                  description 'File type is text.' ;
+                }
+
+                enum xml {
+                  value 1 ;
+                  description 'File type is XML.' ;
+                }
+
+              }
+
+              description 'Log file type.' ;
+              default txt ;
+              config true ;
+              if-feature log-file-type ;
+
+              ncd:revise-date 2025-03-24 ;
+            }
+
+          }
+
+          container cmdlog {
+            description 'Config default command log policy.' ;
+            leaf buffer-size {
+              description 'Size of buffer.The size of buffer can be configured only when the item-save num of buffer is the invalid value(0).' ;
+              type uint32 {
+                range 100..1000 {
+                  description 'In KB.' ;
+                }
+
+              }
+
+              units KB ;
+              default 200 ;
+            }
+
+            leaf dump-interval {
+              description 'Interval to dump log in the buffer to file.' ;
+              type uint32 {
+                range 2..1800000 {
+                  description 'In second.' ;
+                }
+
+              }
+
+              units second ;
+              default 2 ;
+            }
+
+            leaf buffer-item-save-num {
+              description 'Item-save num of buffer.The item-save num of buffer can be configured only when the size of buffer is the default value(200).' ;
+              type uint16 {
+                range 1..1024 ;
+
+              }
+
+              ncd:revise-date 2022-04-08 ;
+            }
+
+            container file-capacity {
+              description 'Set file capacity.' ;
+              presence "Set file capacity" ;
+              leaf file-num {
+                status obsolete {
+                  ncd:revise-date 2018-08-21 ;
+                }
+
+                description 'Set file num.' ;
+                type uint16 {
+                  range 7..300 {
+                    description 'File number.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              choice save-mode {
+                description 'Set saving mode of the files.' ;
+                mandatory true ;
+                case file-number {
+                  description 'Set file num.' ;
+                  leaf file-number {
+                    description 'Set file num.' ;
+                    type uint16 {
+                      range 7..300 {
+                        description 'File number.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case file-day {
+                  description 'Set file days.' ;
+                  leaf file-day {
+                    description 'Set file days.' ;
+                    type uint16 {
+                      range 7..365 {
+                        description 'File day.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                ncd:revise-date 2018-08-21 ;
+              }
+
+              leaf file-size {
+                description 'Set file size of one file,the default value is defined in perfcode.' ;
+                type uint32 {
+                  range 100..102400 {
+                    description 'In KB.' ;
+                  }
+
+                }
+
+                units KB ;
+                mandatory true ;
+              }
+
+            }
+
+            choice upload-type {
+              description 'The cmdlog file uploaded server.' ;
+              case ftp {
+                description 'FTP server parameters.' ;
+                container ftp-server {
+                  description 'Set FTP logging parameters.' ;
+                  presence "Set FTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password,the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              case sftp {
+                description 'SFTP server parameters.' ;
+                container sftp-server {
+                  description 'Set SFTP logging parameters.' ;
+                  presence "Set SFTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf remote-listen-port {
+                    description 'Remote server listen-port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    default 22 ;
+                  }
+
+                }
+
+                ncd:revise-date 2020-08-22 ;
+              }
+
+            }
+
+            leaf file-type {
+              type enumeration {
+                enum txt {
+                  value 0 ;
+                  description 'File type is text.' ;
+                }
+
+                enum xml {
+                  value 1 ;
+                  description 'File type is XML.' ;
+                }
+
+              }
+
+              description 'Log file type.' ;
+              default txt ;
+              config true ;
+              if-feature log-file-type ;
+
+              ncd:revise-date 2025-03-24 ;
+            }
+
+          }
+
+          container srvlog {
+            description 'Config default service log policy.' ;
+            leaf buffer-size {
+              description 'Size of buffer.The size of buffer can be configured only when the item-save num of buffer is the invalid value(0).' ;
+              type uint32 {
+                range 100..1000 {
+                  description 'In KB.' ;
+                }
+
+              }
+
+              units KB ;
+              default 200 ;
+            }
+
+            leaf dump-interval {
+              description 'Interval to dump log in the buffer to file.' ;
+              type uint32 {
+                range 2..1800000 {
+                  description 'In second.' ;
+                }
+
+              }
+
+              units second ;
+              default 600 ;
+            }
+
+            leaf overflow-mode {
+              description 'Set the clear mode of logging buffer.' ;
+              type overflow-mode ;
+
+              default part-removed ;
+            }
+
+            leaf accept {
+              description 'Set acception to logging.' ;
+              type switch-type ;
+
+              default off ;
+            }
+
+            leaf buffer-item-save-num {
+              description 'Item-save num of buffer.The item-save num of buffer can be configured only when the size of buffer is the default value(200).' ;
+              type uint16 {
+                range 1..1024 ;
+
+              }
+
+              ncd:revise-date 2022-04-08 ;
+            }
+
+            container file-capacity {
+              description 'Set file capacity.' ;
+              presence "Set file capacity" ;
+              leaf file-num {
+                status obsolete {
+                  ncd:revise-date 2018-08-21 ;
+                }
+
+                description 'Set file num.' ;
+                type uint16 {
+                  range 7..300 {
+                    description 'File number.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              choice save-mode {
+                description 'Set saving mode of the files.' ;
+                mandatory true ;
+                case file-number {
+                  description 'Set file num.' ;
+                  leaf file-number {
+                    description 'Set file num.' ;
+                    type uint16 {
+                      range 7..300 {
+                        description 'File number.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case file-day {
+                  description 'Set file days.' ;
+                  leaf file-day {
+                    description 'Set file days.' ;
+                    type uint16 {
+                      range 7..365 {
+                        description 'File day.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                ncd:revise-date 2018-08-21 ;
+              }
+
+              leaf file-size {
+                description 'Set file size of one file,the default value is defined in perfcode.' ;
+                type uint32 {
+                  range 100..102400 {
+                    description 'In KB.' ;
+                  }
+
+                }
+
+                units KB ;
+                mandatory true ;
+              }
+
+            }
+
+            choice upload-type {
+              description 'The srvlog file uploaded server.' ;
+              case ftp {
+                description 'FTP server parameters.' ;
+                container ftp-server {
+                  description 'Set FTP logging parameters.' ;
+                  presence "Set FTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password,the length range is 1 to 128.The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              case sftp {
+                description 'SFTP server parameters.' ;
+                container sftp-server {
+                  description 'Set SFTP logging parameters.' ;
+                  presence "Set SFTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf remote-listen-port {
+                    description 'Remote server listen-port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    default 22 ;
+                  }
+
+                }
+
+                ncd:revise-date 2020-08-22 ;
+              }
+
+            }
+
+            leaf file-type {
+              type enumeration {
+                enum txt {
+                  value 0 ;
+                  description 'File type is text.' ;
+                }
+
+                enum xml {
+                  value 1 ;
+                  description 'File type is XML.' ;
+                }
+
+              }
+
+              description 'Log file type.' ;
+              default txt ;
+              config true ;
+              if-feature log-file-type ;
+
+              ncd:revise-date 2025-03-24 ;
+            }
+
+          }
+
+          container snmplog {
+            description 'Config default SNMP log policy.' ;
+            leaf accept {
+              description 'Set acception to logging.' ;
+              type switch-type ;
+
+              default off ;
+            }
+
+            leaf buffer-size {
+              description 'Size of buffer.The size of buffer can be configured only when the item-save num of buffer is the invalid value(0).' ;
+              type uint32 {
+                range 100..1000 {
+                  description 'In KB.' ;
+                }
+
+              }
+
+              units KB ;
+              default 200 ;
+              ncd:revise-date 2020-05-04 ;
+            }
+
+            leaf buffer-item-save-num {
+              description 'Item-save num of buffer.The item-save num of buffer can be configured only when the size of buffer is the default value(200).' ;
+              type uint16 {
+                range 1..1024 ;
+
+              }
+
+              ncd:revise-date 2022-04-08 ;
+            }
+
+            ncd:revise-date 2017-07-27 ;
+          }
+
+          container netclog {
+            description 'Config default NETCONF log policy.' ;
+            leaf buffer-size {
+              description 'Size of buffer.The size of buffer can be configured only when the item-save num of buffer is the invalid value(0).' ;
+              type uint32 {
+                range 100..1000 {
+                  description 'In KB.' ;
+                }
+
+              }
+
+              units KB ;
+              default 200 ;
+            }
+
+            leaf dump-interval {
+              description 'Interval to dump log in the buffer to file.' ;
+              type uint32 {
+                range 2..1800000 {
+                  description 'In second.' ;
+                }
+
+              }
+
+              units second ;
+              default 600 ;
+            }
+
+            leaf overflow-mode {
+              description 'Set the clear mode of logging buffer.' ;
+              type overflow-mode ;
+
+              default part-removed ;
+            }
+
+            leaf accept {
+              description 'Set acception to logging.' ;
+              type switch-type ;
+
+              default off ;
+            }
+
+            leaf buffer-item-save-num {
+              description 'Item-save num of buffer.The item-save num of buffer can be configured only when the size of buffer is the default value(200).' ;
+              type uint16 {
+                range 1..1024 ;
+
+              }
+
+              ncd:revise-date 2022-04-08 ;
+            }
+
+            container file-capacity {
+              description 'Set file capacity.' ;
+              presence "Set file capacity" ;
+              leaf file-num {
+                status obsolete {
+                  ncd:revise-date 2018-08-21 ;
+                }
+
+                description 'Set file num.' ;
+                type uint16 {
+                  range 2..300 {
+                    description 'File number.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              choice save-mode {
+                description 'Set saving mode of the files.' ;
+                mandatory true ;
+                case file-number {
+                  description 'Set file num.' ;
+                  leaf file-number {
+                    description 'Set file num.' ;
+                    type uint16 {
+                      range 2..300 {
+                        description 'File number.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case file-day {
+                  description 'Set file days.' ;
+                  leaf file-day {
+                    description 'Set file days.' ;
+                    type uint16 {
+                      range 7..365 {
+                        description 'File day.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                ncd:revise-date 2018-08-21 ;
+              }
+
+              leaf file-size {
+                description 'Set file size of one file,the default value is defined in perfcode.' ;
+                type uint32 {
+                  range 100..102400 {
+                    description 'In KB.' ;
+                  }
+
+                }
+
+                units KB ;
+                mandatory true ;
+              }
+
+            }
+
+            choice upload-type {
+              description 'The netconf log file uploaded server.' ;
+              case ftp {
+                description 'FTP server parameters.' ;
+                container ftp-server {
+                  description 'Set FTP logging parameters.' ;
+                  presence "Set FTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password,the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              case sftp {
+                description 'SFTP server parameters.' ;
+                container sftp-server {
+                  description 'Set SFTP logging parameters.' ;
+                  presence "Set SFTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf remote-listen-port {
+                    description 'Remote server listen-port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    default 22 ;
+                  }
+
+                }
+
+                ncd:revise-date 2020-08-22 ;
+              }
+
+            }
+
+            ncd:revise-date 2016-02-23 ;
+          }
+
+          container weblog {
+            description 'Config default WEB log policy.' ;
+            leaf buffer-size {
+              description 'Size of buffer.The size of buffer can be configured only when the item-save num of buffer is the invalid value(0).' ;
+              type uint32 {
+                range 100..1000 {
+                  description 'In KB.' ;
+                }
+
+              }
+
+              units KB ;
+              default 200 ;
+            }
+
+            leaf dump-interval {
+              description 'Interval to dump log in the buffer to file.' ;
+              type uint32 {
+                range 2..1800000 {
+                  description 'In second.' ;
+                }
+
+              }
+
+              units second ;
+              default 600 ;
+            }
+
+            leaf overflow-mode {
+              description 'Set the clear mode of logging buffer.' ;
+              type overflow-mode ;
+
+              default part-removed ;
+            }
+
+            leaf accept {
+              description 'Set acception to logging.' ;
+              type switch-type ;
+
+              default off ;
+            }
+
+            leaf buffer-item-save-num {
+              description 'Item-save num of buffer.The item-save num of buffer can be configured only when the size of buffer is the default value(200).' ;
+              type uint16 {
+                range 1..1024 ;
+
+              }
+
+              ncd:revise-date 2022-04-08 ;
+            }
+
+            container file-capacity {
+              description 'Set file capacity.' ;
+              presence "Set file capacity" ;
+              leaf file-num {
+                status obsolete {
+                  ncd:revise-date 2018-12-26 ;
+                }
+
+                description 'Set file num.' ;
+                type uint16 {
+                  range 2..300 {
+                    description 'File number.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              choice save-mode {
+                description 'Set saving mode of the files.' ;
+                mandatory true ;
+                case file-number {
+                  description 'Set file num.' ;
+                  leaf file-number {
+                    description 'Set file num.' ;
+                    type uint16 {
+                      range 2..300 {
+                        description 'File number.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case file-day {
+                  description 'Set file days.' ;
+                  leaf file-day {
+                    description 'Set file days.' ;
+                    type uint16 {
+                      range 7..365 {
+                        description 'File day.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              leaf file-size {
+                description 'Set file size of one file,the default value is defined in perfcode.' ;
+                type uint32 {
+                  range 100..102400 {
+                    description 'In KB.' ;
+                  }
+
+                }
+
+                units KB ;
+                mandatory true ;
+              }
+
+            }
+
+            choice upload-type {
+              description 'The web log file uploaded server.' ;
+              case ftp {
+                description 'FTP server parameters.' ;
+                container ftp-server {
+                  description 'Set FTP logging parameters.' ;
+                  presence "Set FTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password,the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              case sftp {
+                description 'SFTP server parameters.' ;
+                container sftp-server {
+                  description 'Set SFTP logging parameters.' ;
+                  presence "Set SFTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf remote-listen-port {
+                    description 'Remote server listen-port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    default 22 ;
+                  }
+
+                }
+
+                ncd:revise-date 2020-08-22 ;
+              }
+
+            }
+
+            ncd:revise-date 2018-12-26 ;
+          }
+
+        }
+
+        container self-defined-policies {
+          description 'Self defined policy.' ;
+          list policy {
+            description 'Self defined policy.' ;
+            max-elements 32 ;
+            key name ;
+            leaf name {
+              description 'Log policy name.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf accept {
+              description 'Set acception to logging.' ;
+              type switch-type ;
+
+              default off ;
+            }
+
+            leaf buffer-size {
+              description 'Size of buffer.The size of buffer can be configured only when the item-save num of buffer is the invalid value(0).' ;
+              type uint32 {
+                range 100..1000 ;
+
+              }
+
+              units KB ;
+              default 200 ;
+            }
+
+            leaf dump-interval {
+              description 'Interval to dump log in the buffer to file.' ;
+              type uint32 {
+                range 2..1800000 ;
+
+              }
+
+              units second ;
+              default 600 ;
+            }
+
+            leaf overflow-mode {
+              description 'Set the clear mode of logging buffer.' ;
+              type overflow-mode ;
+
+              default part-removed ;
+            }
+
+            leaf buffer-item-save-num {
+              description 'Item-save num of buffer.The item-save num of buffer can be configured only when the size of buffer is the default value(200).' ;
+              type uint16 {
+                range 1..1024 ;
+
+              }
+
+              ncd:revise-date 2022-04-08 ;
+            }
+
+            container file-capacity {
+              description 'Set file capacity.' ;
+              presence "Set file capacity" ;
+              leaf file-num {
+                status obsolete {
+                  ncd:revise-date 2018-08-21 ;
+                }
+
+                description 'Set file num.' ;
+                type uint16 {
+                  range 2..300 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              choice save-mode {
+                description 'Set saving mode of the files.' ;
+                mandatory true ;
+                case file-number {
+                  description 'Set file num.' ;
+                  leaf file-number {
+                    description 'Set file num.' ;
+                    type uint16 {
+                      range 2..300 {
+                        description 'File number.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case file-day {
+                  description 'Set file days.' ;
+                  leaf file-day {
+                    description 'Set file days.' ;
+                    type uint16 {
+                      range 7..365 {
+                        description 'File day.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                ncd:revise-date 2018-08-21 ;
+              }
+
+              leaf file-size {
+                description 'Set file size of one file,the default value is defined in perfcode.' ;
+                type uint32 {
+                  range 100..102400 {
+                    description 'In KB.' ;
+                  }
+
+                }
+
+                units KB ;
+                mandatory true ;
+              }
+
+            }
+
+            container level-filter {
+              description 'The alarm level filter.' ;
+              presence "The alarm level filter" ;
+              leaf level {
+                description 'The alarm level.' ;
+                type alarm-level ;
+
+                mandatory true ;
+              }
+
+              leaf relation {
+                description 'Severity relation.' ;
+                type severity-relation ;
+
+                default higher-or-equal ;
+              }
+
+            }
+
+            container file-name {
+              description 'Set the file name.' ;
+              presence "Set the file name" ;
+              leaf prefix {
+                description 'Prefix the file name part.' ;
+                type string {
+                  length 1..30 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf middle {
+                description 'The middle part of the file name.' ;
+                type enumeration {
+                  enum utc {
+                    value 1 ;
+                    description 'Intermediate information including the file creation time, format for YYYYMMDDHHMMSS, to use the default UTC time.' ;
+                  }
+
+                  enum local {
+                    value 2 ;
+                    description 'Intermediate information including local time file creation, time zone, daylight saving time.' ;
+                  }
+
+                }
+
+                default utc ;
+              }
+
+              leaf suffix {
+                description "Log file name extension. Default is \"log\", not at the beginning '.'." ;
+                type string {
+                  length 1..9 ;
+
+                }
+
+                default log ;
+              }
+
+            }
+
+            choice upload-type {
+              description 'The self-defined-policies log file uploaded server.' ;
+              case ftp {
+                description 'FTP server parameters.' ;
+                container ftp-server {
+                  description 'Set FTP logging parameters.' ;
+                  presence "Set FTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password,the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              case sftp {
+                description 'SFTP server parameters.' ;
+                container sftp-server {
+                  description 'Set SFTP logging parameters.' ;
+                  presence "Set SFTP logging parameters" ;
+                  leaf vrf-name {
+                    description 'VPN routing/forwarding instance (VRF) name.' ;
+                    type string {
+                      length 1..32 {
+                        description 'Length range from 1 to 32.' ;
+                      }
+
+                    }
+
+                  }
+
+                  choice ip-addr {
+                    description 'The FTP server address.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4 choice.' ;
+                      container ipv4-addr {
+                        description 'IPv4 address.' ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPv6 choice.' ;
+                      container ipv6-addr {
+                        description 'IPv6 address.' ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname {
+                            length 0..31 ;
+
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf user-name {
+                    description 'FTP user name.' ;
+                    type string {
+                      length 1..65 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice password {
+                    description 'FTP password.' ;
+                    mandatory true ;
+                    case clear-text {
+                      description 'Clear-text choice.' ;
+                      leaf clear-text-password {
+                        description 'Clear-text password, the length range is 1 to 128. The query result returns the encrypted password with a fixed length 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 1..128 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case encrypted {
+                      description 'Encrypted choice.' ;
+                      leaf encrypted-password {
+                        description 'Encrypted password,fixed length is 64,84,108,148,172,192,212 or 236.' ;
+                        type string {
+                          length 64..236 {
+                            description 'Length must be 64,84,108,148,172,192,212 or 236.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf remote-listen-port {
+                    description 'Remote server listen-port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    default 22 ;
+                  }
+
+                }
+
+                ncd:revise-date 2020-08-22 ;
+              }
+
+            }
+
+            container matchs {
+              description 'Set match rule to logging.' ;
+              list match {
+                description 'Set match rule to logging.' ;
+                key log-type ;
+                leaf log-type {
+                  description 'Match log type.' ;
+                  type enumeration {
+                    enum all {
+                      value 0 ;
+                      description 'Match all the logging.' ;
+                    }
+
+                    enum alarmlog {
+                      value 1 ;
+                      description 'Match the alarm logging.' ;
+                    }
+
+                    enum cmdlog {
+                      value 2 ;
+                      description 'Match the command logging.' ;
+                    }
+
+                    enum service {
+                      value 3 ;
+                      description 'Match the service logging.' ;
+                    }
+
+                    enum netconflog {
+                      value 7 ;
+                      description 'Match the NETCONF logging.' ;
+                    }
+
+                    enum snmplog {
+                      value 8 ;
+                      description 'Match the SNMP logging.' ;
+                    }
+
+                    enum weblog {
+                      value 9 ;
+                      description 'Match the WEB logging.' ;
+                    }
+
+                    enum traplog {
+                      value 10 ;
+                      description 'Match the TRAP logging.' ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            container match-substrings {
+              description 'Set match rule to logging with substring.' ;
+              list match-substring {
+                description 'Set match rule to logging with substring.' ;
+                key 'log-type substring' ;
+                leaf log-type {
+                  description 'Match log type.' ;
+                  type enumeration {
+                    enum all {
+                      value 0 ;
+                      description 'Match all the logging.' ;
+                    }
+
+                    enum alarmlog {
+                      value 1 ;
+                      description 'Match the alarm logging.' ;
+                    }
+
+                    enum cmdlog {
+                      value 2 ;
+                      description 'Match the command logging.' ;
+                    }
+
+                    enum service {
+                      value 3 ;
+                      description 'Match the service logging.' ;
+                    }
+
+                    enum netclog {
+                      value 7 ;
+                      description 'Match the NETCONF logging.' ;
+                    }
+
+                    enum snmplog {
+                      value 8 ;
+                      description 'Match the SNMP logging.' ;
+                    }
+
+                    enum weblog {
+                      value 9 ;
+                      description 'Match the WEB logging.' ;
+                    }
+
+                    enum traplog {
+                      value 10 ;
+                      description 'Match the TRAP logging.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf substring {
+                  description 'Match substring.' ;
+                  type ncd:string-all {
+                    length 1..40 ;
+
+                  }
+
+                }
+
+                leaf match-type {
+                  description 'Match type.' ;
+                  type enumeration {
+                    enum include {
+                      value 0 ;
+                      description 'Include.' ;
+                    }
+
+                    enum exclude {
+                      value 1 ;
+                      description 'Exclude.' ;
+                    }
+
+                  }
+
+                  default include ;
+                  ncd:revise-date 2019-03-05 ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State Info.' ;
+    container log {
+      container file-policy {
+        container default {
+          container almlog {
+            description 'The directory of alarmlog.' ;
+            leaf cfg-directory {
+              if-feature log-directory ;
+
+              description 'The configured path of the policy.' ;
+              type ncd:string-all ;
+
+            }
+
+            leaf working-directory {
+              description 'The working path of the policy.' ;
+              type ncd:string-all ;
+
+            }
+
+          }
+
+        }
+
+        container get-buffer {
+          description 'The log cache information query.' ;
+          list policy {
+            description 'Log strategy.' ;
+            key name ;
+            leaf name {
+              description 'Log policy name.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            container records {
+              description 'The cached record.' ;
+              list record {
+                description 'The cached record.' ;
+                key 'flow-id time-stamps millisec' ;
+                leaf flow-id {
+                  description 'Log sequence number.' ;
+                  type uint32 ;
+
+                }
+
+                leaf time-stamps {
+                  description 'Log time. UTC time.' ;
+                  type ncd:datetime ;
+
+                }
+
+                leaf millisec {
+                  description 'Log time,million second.' ;
+                  type uint16 ;
+
+                }
+
+                leaf log-class {
+                  description 'Log category.' ;
+                  type enumeration {
+                    enum command {
+                      value 0 ;
+                      description 'The command log.' ;
+                    }
+
+                    enum alarm {
+                      value 1 ;
+                    }
+
+                    enum service {
+                      value 2 ;
+                    }
+
+                    enum netconf {
+                      value 11 ;
+                    }
+
+                    enum snmp {
+                      value 12 ;
+                    }
+
+                    enum web {
+                      value 13 ;
+                    }
+
+                    enum trap {
+                      value 14 ;
+                    }
+
+                  }
+
+                  default command ;
+                }
+
+                leaf body {
+                  description 'The log contents.' ;
+                  type ncd:string-all-with-chinese ;
+
+                }
+
+                leaf start-time {
+                  description 'The start time for search,when return is useless.' ;
+                  type ncd:datetime ;
+
+                  default "2001-01-01 00:00:00" ;
+                }
+
+                leaf end-time {
+                  description 'The end time for search,when return is useless.' ;
+                  type ncd:datetime ;
+
+                  default "2037-12-31 23:59:59" ;
+                }
+
+                ncd:select start-time ;
+                ncd:select end-time ;
+                ncd:select "start-time end-time" ;
+              }
+
+            }
+
+            ncd:select name ;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'Operation Info.' ;
+    container log {
+      description 'Log module.' ;
+      container write-log {
+        description 'Write log to file manually.' ;
+        leaf log-type {
+          description 'Log Type.' ;
+          type enumeration {
+            enum command-log {
+              value 0 ;
+              description 'command log.' ;
+            }
+
+            enum alarm-log {
+              value 1 ;
+              description 'alarm log.' ;
+            }
+
+            enum NAT-log {
+              value 2 ;
+              description 'NAT log.' ;
+            }
+
+            enum service-log {
+              value 3 ;
+              description 'service log.' ;
+            }
+
+            enum BRAS-log {
+              value 4 ;
+              description 'BRAS log.' ;
+            }
+
+            enum portal-log {
+              value 5 ;
+              description 'Portal log.' ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container file-policy {
+        container default {
+          container cmdlog {
+            description 'Operate default command log policy.' ;
+            container flush {
+              description 'Flush log in buffer to specified destination.' ;
+              leaf destination {
+                description 'Destination.' ;
+                type flush-destination ;
+
+              }
+
+            }
+
+            leaf clear-buffer {
+              description 'Clear default command cmd policy logging buffer.' ;
+              type empty ;
+
+              ncd:revise-date 2021-05-13 ;
+            }
+
+          }
+
+          container almlog {
+            description 'Config default command alarm policy.' ;
+            container flush {
+              description 'Flush log in buffer to specified destination.' ;
+              leaf destination {
+                description 'Destination.' ;
+                type flush-destination ;
+
+              }
+
+            }
+
+            leaf clear-buffer {
+              description 'Clear default command alarm policy logging buffer.' ;
+              type empty ;
+
+            }
+
+          }
+
+          container srvlog {
+            description 'Config default command service policy.' ;
+            container flush {
+              description 'Flush log in buffer to specified destination.' ;
+              leaf destination {
+                description 'Destination.' ;
+                type flush-destination ;
+
+              }
+
+            }
+
+            leaf clear-buffer {
+              description 'Clear default command service policy logging buffer.' ;
+              type empty ;
+
+            }
+
+          }
+
+          container netclog {
+            description 'Config default NETCONF policy.' ;
+            container flush {
+              description 'Flush log in buffer to specified destination.' ;
+              leaf destination {
+                description 'Destination.' ;
+                type flush-destination ;
+
+              }
+
+            }
+
+            leaf clear-buffer {
+              description 'Clear default NETCONF policy logging buffer.' ;
+              type empty ;
+
+            }
+
+            ncd:revise-date 2016-02-23 ;
+          }
+
+          container weblog {
+            description 'Config default WEB policy.' ;
+            container flush {
+              description 'Flush log in buffer to specified destination.' ;
+              leaf destination {
+                description 'Destination.' ;
+                type flush-destination ;
+
+              }
+
+            }
+
+            leaf clear-buffer {
+              description 'Clear default WEB policy logging buffer.' ;
+              type empty ;
+
+            }
+
+            ncd:revise-date 2018-12-26 ;
+          }
+
+          container snmplog {
+            description 'Config default SNMP policy.' ;
+            leaf clear-buffer {
+              description 'Clear default SNMP policy logging buffer.' ;
+              type empty ;
+
+            }
+
+            container flush {
+              description 'Flush log in buffer to specified destination.' ;
+              leaf destination {
+                description 'Destination.' ;
+                type enumeration {
+                  enum local {
+                    value 0 ;
+                    description 'Flush to local file.' ;
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2023-02-13 ;
+            }
+
+            ncd:revise-date 2021-05-13 ;
+          }
+
+        }
+
+        container self-defined-policies {
+          description 'Self defined policy.' ;
+          container clear-buffer {
+            description 'Clear default command alarm policy logging buffer.' ;
+            list policy {
+              description 'Self defined policy.' ;
+              max-elements 32 ;
+              key name ;
+              leaf name {
+                description 'Log policy name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container flush {
+            description 'Flush log in buffer to specified destination.' ;
+            list policy {
+              description 'Self defined policy.' ;
+              max-elements 32 ;
+              key name ;
+              leaf name {
+                description 'Log policy name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf destination {
+                description 'Destination.' ;
+                type flush-destination ;
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

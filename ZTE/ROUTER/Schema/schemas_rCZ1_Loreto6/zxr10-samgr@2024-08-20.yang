@@ -1,0 +1,982 @@
+module zxr10-samgr {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/samgr" ;
+  prefix samgr ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe SAMGR.' ;
+  revision 2024-08-20 {
+    description '1. Moidfy the range of group-policy from 0-10 to 0-1024.' ;
+  }
+
+  revision 2024-07-24 {
+    description '1.Add description of nodes as follows:
+ configuration/samgr/tracks/track/hagp-track;
+ configuration/samgr/tracks/track/hagp-track/hagp-event-type;
+ configuration/samgr/tracks/track/sr-policy;
+ configuration/samgr/tracks/track/sr-policy-track/end-point/ip-family;
+ configuration/samgr/tracks/track/sr-policy-track/end-point/ip-family/ipv4;
+ configuration/samgr/tracks/track/sr-policy-track/end-point/ip-family/ipv6;
+2.Modify description of nodes as follows:
+  configuration/samgr/tracks/track/cfm-track/md;
+  configuration/samgr/tracks/track/cfm-track/ma;
+  configuration/samgr/tracks/track/cfm-track/remote-mep;
+  configuration/samgr/tracks/track/efm;
+  configuration/samgr/tracks/track/efm-track;
+  configuration/samgr/tracks/track/ping-detect;
+  configuration/samgr/tracks/track/vrrp;
+  configuration/samgr/tracks/track/vrrp-track;
+  configuration/samgr/tracks/track/vrrp-track/group-id;
+  configuration/samgr/tracks/track/sqa;
+  configuration/samgr/tracks/track/sqa-track;
+  configuration/samgr/tracks/track/bfd;
+  configuration/samgr/tracks/track/bfd-track;
+  configuration/samgr/tracks/track/pw;
+  configuration/samgr/tracks/track/pw-track;
+  configuration/samgr/tracks/track/mpls-tp-oam;
+  configuration/samgr/tracks/track/mpls-tp-oam-track;
+  configuration/samgr/tracks/track/interface;
+  configuration/samgr/tracks/track/interface-track;
+  configuration/samgr/tracks/track/interface-track/interface-status-type;
+  configuration/samgr/tracks/track/p2mp-tunnel-track;
+  configuration/samgr/tracks/track/p2mp-tunnel-track/tunnel-id;
+  configuration/samgr/tracks/track/prefix-list-track/prefix-name;
+  configuration/samgr/tracks/track/prefix-list-track/vrf-name;
+  configuration/samgr/tracks/track/te-ecmp-group-track;
+  configuration/samgr/tracks/track/ipsec-track;
+  configuration/samgr/tracks/track/sr-policy-track;
+  configuration/samgr/tracks/track/sr-policy-track/color;
+  configuration/samgr/tracks/track/sr-policy-track/end-point;
+  configuration/samgr/tracks/track/sr-policy-track/end-point/end-point-v4;
+  configuration/samgr/tracks/track/sr-policy-track/end-point/end-point-v6;
+  configuration/samgr/track-groups;
+  configuration/samgr/track-groups/track-group;
+  configuration/samgr/track-groups/track-group/track-group-name;
+  configuration/samgr/track-groups/track-group/group-policy;
+  configuration/samgr/track-groups/track-group/up-delay;
+  configuration/samgr/track-groups/track-group/group-down-weight;
+  configuration/samgr/track-groups/track-group/group-members;
+  configuration/samgr/track-groups/track-group/group-members/group-member;
+  configuration/samgr/sa-binds;
+  configuration/samgr/sa-binds/sa-bind;
+  configuration/samgr/sa-binds/sa-bind/active-group/group;
+  configuration/samgr/sa-binds/sa-bind/active-group/group/active-group-name;
+  state/samgr/track-groups;
+  state/samgr/track-groups/track-group;
+  state/samgr/track-groups/track-group/track-group-name;
+  state/samgr/track-groups/track-group/track-group-state;' ;
+  }
+
+  revision 2023-08-15 {
+    description '1.add configuration/samgr/tracks/track/sr-policy-track' ;
+  }
+
+  revision 2022-07-12 {
+    description '1.modify the configuration/samgr/tracks/track/ipsec-track' ;
+  }
+
+  revision 2022-04-11 {
+    description '1.Add configuration/samgr/track-groups/track-group/group-down-weight.
+1.Add configuration/samgr/track-groups/track-group/group-members/group-member/down-weight.' ;
+  }
+
+  revision 2021-11-10 {
+    description '1.modify the configuration/samgr/tracks/track/hagp-track' ;
+  }
+
+  revision 2021-04-07 {
+    description '1.modify the length of configuration/samgr/tracks/track/bfd-track/session-name' ;
+  }
+
+  revision 2021-01-19 {
+    description '1. Add feature of te-ecmp-group.
+2. Add case of configuration/samgr/tracks/track/te-ecmp-group.' ;
+  }
+
+  revision 2020-07-13 {
+    description '1.modify the length of configuration/samgr/tracks/track/prefix-list-track/prefix-name' ;
+  }
+
+  revision 2020-05-06 {
+    description '1.Add configuration/samgr/tracks/track/bfd-track/session-desc.' ;
+  }
+
+  revision 2020-02-06 {
+    description '1.add configuration/samgr/tracks/track/prefix-list-track' ;
+  }
+
+  revision 2018-06-27 {
+    description '1.modify the description and range of configuration/samgr/tracks/track/mpls-tp-oam-track/meg' ;
+  }
+
+  revision 2018-06-25 {
+    description '1.modify the range of configuration/samgr/tracks/track/sqa-track/instance-id and configuration/samgr/tracks/track/te-tunnel-track/tunnel-id
+2.modify the description of configuration/samgr/tracks/track/mpls-oam-track/tunnel-id' ;
+  }
+
+  revision 2018-05-03 {
+    description '1.add configuration/samgr/tracks/track/te-tunnel-track
+2.add configuration/samgr/tracks/track/p2mp-tunnel-track' ;
+  }
+
+  revision 2017-07-07 {
+    description 'modify configuration/samgr/tracks/track/interface-track/interface-status-type.' ;
+  }
+
+  revision 2015-07-15 {
+    description 'Add configuration/samgr/tracks/track/interface-track/interface-status-type.' ;
+  }
+
+  revision 2014-03-11 {
+    description 'Add configuration/samgr/track-groups/track-group/up-delay.' ;
+  }
+
+  revision 2014-02-18 {
+    description '1.modify configuration/samgr/tracks/track/type/ping-detect/ping-detect-track/group-id.
+2.modify configuration/samgr/tracks/track/type/mpls-oam/mpls-oam-track/tunnel-id.' ;
+  }
+
+  revision 2013-12-27 {
+    description '1.modify state/samgr/tracks/track/last-state-change type.
+2.modify state/samgr/track-groups/track-group/last-state-change type.
+3.add configuration/samgr/tracks/track/efm-track/interface-name the length of type.
+4.add configuration/samgr/tracks/track/vrrp-track/interface-name the length of type.
+5.add configuration/samgr/tracks/track/interface-track/interface-name the length of type.' ;
+  }
+
+  revision 2013-10-08 {
+    description 'Initial version.' ;
+  }
+
+  feature prefix-list {
+    description 'Prefix list track instance.' ;
+  }
+
+  feature te-ecmp-group {
+    description 'Te-ecmp group track instance.' ;
+  }
+
+  container configuration {
+    description 'Configuration model info.' ;
+    container samgr {
+      description 'SAMGR configuration.' ;
+      container tracks {
+        description 'Configure track instance.' ;
+        list track {
+          description 'Configure track instance.' ;
+          key name ;
+          leaf name {
+            description 'Track name.' ;
+            type string {
+              length 1..31 {
+                description 'The length of track name.' ;
+              }
+
+            }
+
+          }
+
+          choice type {
+            description 'Detect type.' ;
+            mandatory true ;
+            case cfm {
+              description 'Configure CFM track instance.' ;
+              container cfm-track {
+                description 'Configure CFM track instance.' ;
+                leaf md {
+                  description 'The maintaining index of CFM,ranges from 1 to 65535.' ;
+                  type uint16 {
+                    range 1..65535 {
+                      description 'The value of md.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf ma {
+                  description 'The maintaining alliance index of CFM,ranges from 1 to 65535.' ;
+                  type uint16 {
+                    range 1..65535 {
+                      description 'The value of ma.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf remote-mep {
+                  description 'The remote mep of CFM,ranges from 1 to 8191.' ;
+                  type uint16 {
+                    range 1..8191 {
+                      description 'The value of remote-mep.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case efm {
+              description 'Configure EFM track instance.This track object is dependent on interface.If interface is deleted,the track object will be deleted.' ;
+              container efm-track {
+                description 'Configure EFM track instance.This track object is dependent on interface.If interface is deleted,the track object will be deleted.' ;
+                leaf interface-name {
+                  description 'Interface name of EFM.' ;
+                  type ncd:ifname {
+                    length 1..31 {
+                      description 'The length of interface name.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case ping-detect {
+              description 'Configure PING detect track instance.' ;
+              container ping-detect-track {
+                description 'Configure PING detect track instance.' ;
+                leaf group-id {
+                  description 'PING detect group ID,the upper limit of this parameter depend on the device.' ;
+                  type uint32 {
+                    range 1..4294967295 {
+                      description 'The value of group id.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case mpls-oam {
+              description 'Configure MPLS-OAM track instance.' ;
+              container mpls-oam-track {
+                description 'Configure MPLS-OAM track instance.' ;
+                leaf tunnel-id {
+                  description 'MPLS-OAM tunnel ID,the upper limit of this parameter depends on the device.' ;
+                  type uint32 {
+                    range 1..4294967295 {
+                      description 'MPLS-OAM tunnel ID, the upper limit of this parameter depends on the device.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf ingress-id {
+                  description 'MPLS-OAM ingress ID.' ;
+                  type ncd:ipv4-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case vrrp {
+              description 'Configure VRRP track instance.This track object is dependent on interface.If interface is deleted,the track object will be deleted.' ;
+              container vrrp-track {
+                description 'Configure VRRP track instance.This track object is dependent on interface.If interface is deleted,the track object will be deleted.' ;
+                leaf interface-name {
+                  description 'Interface name of VRRP.' ;
+                  type ncd:ifname {
+                    length 1..31 {
+                      description 'The length of interface name.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf group-id {
+                  description 'The virtual router ID of VRRP group,ranges from 1 to 255.' ;
+                  type uint8 {
+                    range 1..255 {
+                      description 'The value of group id.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case sqa {
+              description 'Configure SQA track instance.' ;
+              container sqa-track {
+                description 'Configure SQA track instance.' ;
+                leaf instance-id {
+                  description 'SQA instance ID, the upper limit of this parameter depends on the device.' ;
+                  type uint16 {
+                    range 1..65535 {
+                      description 'The value of instance id, and the upper limit of this parameter depends on the device.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case bfd {
+              description 'Configure BFD track instance.' ;
+              container bfd-track {
+                description 'Configure BFD track instance.' ;
+                leaf session-name {
+                  description 'BFD session name.' ;
+                  type string {
+                    length 1..64 {
+                      description 'The length of session name.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf session-desc {
+                  description 'BFD session description.' ;
+                  type string {
+                    length 1..64 {
+                      description 'The length of bfd session description.' ;
+                    }
+
+                  }
+
+                  ncd:revise-date 2020-05-06 ;
+                }
+
+              }
+
+            }
+
+            case pw {
+              description 'Configure PW track instance.' ;
+              container pw-track {
+                description 'Configure PW track instance.' ;
+                leaf pw-name {
+                  description 'PW name.' ;
+                  type string {
+                    length 1..31 {
+                      description 'The length of pw name.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case mpls-tp-oam {
+              description 'Configure MPLS-TP OAM track instance.' ;
+              container mpls-tp-oam-track {
+                description 'Configure MPLS-TP OAM track instance.' ;
+                leaf meg {
+                  description 'MPLS-TP OAM meg index, the upper limit of this parameter depends on the device.' ;
+                  type uint32 {
+                    range 1..4294967295 {
+                      description 'The value of meg ID.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case interface {
+              description 'Configure interface track instance.This track object is dependent on interface.If interface is deleted,the track object will be deleted.' ;
+              container interface-track {
+                description 'Configure interface track instance.This track object is dependent on interface.If interface is deleted,the track object will be deleted.' ;
+                leaf interface-name {
+                  description 'Interface name.' ;
+                  type ncd:ifname {
+                    length 1..31 {
+                      description 'The length of interface name.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf interface-status-type {
+                  description 'The type of interface protocol status,ranges from 0 to 5,the full set of status values as follows:0 Layer2 status(default);1 Layer3 status;2 layer2 exclude SD status; 3 layer3 exclude SD status; 4 bidirectional SD status; 5 RX SD status.' ;
+                  type uint8 {
+                    range 0..5 {
+                      description 'The type of interface protocol status.' ;
+                    }
+
+                  }
+
+                  default 0 ;
+                  ncd:revise-date 2015-07-15 ;
+                }
+
+              }
+
+            }
+
+            case te-tunnel {
+              description 'Configure TE tunnel track instance.' ;
+              container te-tunnel-track {
+                description 'Configure TE tunnel track instance.' ;
+                leaf tunnel-id {
+                  description 'Tunnel ID,the upper limit of this parameter depends on the device.' ;
+                  type uint32 {
+                    range 1..4294967295 {
+                      description 'The value of tunnel ID, and the upper limit of this parameter depends on the device.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              ncd:revise-date 2018-05-03 ;
+            }
+
+            case p2mp-tunnel {
+              description 'Configure P2MP tunnel track instance.' ;
+              container p2mp-tunnel-track {
+                description 'Configure P2MP tunnel track instance.' ;
+                leaf tunnel-id {
+                  description 'Tunnel ID.' ;
+                  type uint32 {
+                    range 1..4294967294 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              ncd:revise-date 2018-05-03 ;
+            }
+
+            case prefix-list {
+              if-feature prefix-list ;
+
+              description 'Configure prefix list track instance.' ;
+              container prefix-list-track {
+                description 'Configure prefix list track instance.' ;
+                leaf type {
+                  description 'IP type.' ;
+                  type enumeration {
+                    enum ipv4 {
+                      value 1 ;
+                      description 'IPv4' ;
+                    }
+
+                    enum ipv6 {
+                      value 2 ;
+                      description 'IPv6' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf prefix-name {
+                  description 'Name of a prefix list.' ;
+                  type string {
+                    length 1..169 {
+                      description 'Name of a prefix list.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf vrf-name {
+                  description 'VPN Routing/Forwarding instance name.' ;
+                  type string {
+                    length 1..32 {
+                      description 'VPN Routing/Forwarding instance name.' ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2020-02-06 ;
+            }
+
+            case te-ecmp-group {
+              if-feature te-ecmp-group ;
+
+              description 'Configure TE ECMP group track instance.' ;
+              container te-ecmp-group-track {
+                description 'Configure TE ECMP group track instance.' ;
+                leaf group-id {
+                  description 'Group ID.' ;
+                  type uint32 {
+                    range 1..128 {
+                      description 'The value of tunnel ECMP group ID, and the upper limit of this parameter depends on the device.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              ncd:revise-date 2021-01-19 ;
+            }
+
+            case hagp {
+              description 'Configure HAGP track instance.' ;
+              container hagp-track {
+                leaf hagp-event-type {
+                  type enumeration {
+                    enum load-balance-change {
+                      value 1 ;
+                    }
+
+                  }
+
+                  description 'The HAGP event type. It only supports notification events for user online rate changes currently.' ;
+                  mandatory true ;
+                }
+
+                description 'Configure HAGP track instance.' ;
+              }
+
+              ncd:revise-date 2021-11-10 ;
+            }
+
+            case ipsec {
+              description 'Configure IPSEC track instance.' ;
+              container ipsec-track {
+                description 'Configure IPSEC track instance.' ;
+                leaf tunnel-group-id {
+                  description 'Tunnel group ID.' ;
+                  type uint8 {
+                    range 1..64 {
+                      description 'The value of tunnel group ID' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              ncd:revise-date 2022-07-12 ;
+            }
+
+            case sr-policy {
+              container sr-policy-track {
+                leaf color {
+                  type uint32 {
+                    range 1..4294967295 ;
+
+                  }
+
+                  description 'Color of the SR policy.' ;
+                  mandatory true ;
+                }
+
+                container end-point {
+                  choice ip-family {
+                    case ipv4 {
+                      leaf end-point-v4 {
+                        type ncd:ipv4-address-none-zero ;
+
+                        description 'The IPv4 address of SR policy end point.' ;
+                        mandatory true ;
+                      }
+
+                      description 'IPv4 type.' ;
+                    }
+
+                    case ipv6 {
+                      leaf end-point-v6 {
+                        type ncd:ipv6-address-none-zero ;
+
+                        description 'The IPv6 address of SR policy end point.' ;
+                        mandatory true ;
+                      }
+
+                      description 'IPv6 type.' ;
+                    }
+
+                    description 'IP address family.' ;
+                    mandatory true ;
+                  }
+
+                  description 'End point IP address of the SR policy.' ;
+                }
+
+                description 'Configure SR policy track instance.' ;
+              }
+
+              description 'Configure SR policy track instance.' ;
+              ncd:revise-date 2023-08-15 ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container track-groups {
+        description 'Track group instance.' ;
+        list track-group {
+          description 'Track group instance.' ;
+          key track-group-name ;
+          leaf track-group-name {
+            description 'Track group name.' ;
+            type string {
+              length 1..31 {
+                description 'The length of track-group name.' ;
+              }
+
+            }
+
+          }
+
+          leaf group-policy {
+            description 'Track group policy,ranges from 0 to 1024, the upper limit of this parameter depends on the device.The default value is 0,when the default value is 0,and all the members state is down in the track-group, the track-group state will be down.' ;
+            type uint16 {
+              range 0..1024 {
+                description 'The value of group policy.' ;
+              }
+
+            }
+
+            default 0 ;
+          }
+
+          leaf up-delay {
+            description 'Track group delay up time, ranges from 0s to 600s(default:0s).' ;
+            type uint16 {
+              range 0..600 {
+                description 'delay time.' ;
+              }
+
+            }
+
+            default 0 ;
+          }
+
+          leaf group-down-weight {
+            description 'Track group down weight, ranges from 1 to 65535.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'Group down weight.' ;
+              }
+
+            }
+
+            ncd:revise-date 2022-04-11 ;
+          }
+
+          container group-members {
+            description 'The member object of group.When the track is added to the track group as a member,the track must be existed.If the track is deleted,the member track will be deleted from the track group.' ;
+            list group-member {
+              description 'The member object of group.When the track is added to the track group as a member,the track must be existed.If the track is deleted,the member track will be deleted from the track group.' ;
+              key track-name ;
+              leaf track-name {
+                description 'The member name.' ;
+                type string {
+                  length 1..31 {
+                    description 'The length of member name' ;
+                  }
+
+                }
+
+              }
+
+              leaf down-weight {
+                description 'The member down weight.' ;
+                type uint16 {
+                  range 1..1000 {
+                    description 'The member down weight.' ;
+                  }
+
+                }
+
+                default 10 ;
+                ncd:revise-date 2022-04-11 ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container sa-binds {
+        description 'The bind instance.When the bind instance is created,the track and track group that is used to create the bind relation must be existed.If the track or track group is deleted, the bind relation will be deleted.' ;
+        list sa-bind {
+          description 'The bind instance.When the bind instance is created,the track and track group that is used to create the bind relation must be existed.If the track or track group is deleted, the bind relation will be deleted.' ;
+          key passive-name ;
+          leaf passive-name {
+            description 'The passive track name.' ;
+            type string {
+              length 1..31 {
+                description 'The length of passive name.' ;
+              }
+
+            }
+
+          }
+
+          choice active-type {
+            description 'The active type.' ;
+            mandatory true ;
+            case active-track {
+              description 'The active track.' ;
+              container track {
+                description 'The active track name.' ;
+                leaf active-track-name {
+                  description 'The active track name.' ;
+                  type string {
+                    length 1..31 {
+                      description 'The length of active track name.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case active-group {
+              description 'The active group.' ;
+              container group {
+                description 'The active track group name.' ;
+                leaf active-group-name {
+                  description 'The active track group name.' ;
+                  type string {
+                    length 1..31 {
+                      description 'The length of active group name.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'SAMGR state model Info.' ;
+    container samgr {
+      description 'SAMGR state parameters.' ;
+      container tracks {
+        description 'Track info.' ;
+        list track {
+          description 'Track info.' ;
+          key track-name ;
+          leaf track-name {
+            description 'Track name.' ;
+            type string {
+              length 1..31 {
+                description 'The length of track name.' ;
+              }
+
+            }
+
+          }
+
+          leaf trans-state {
+            description 'Track transfer state.' ;
+            type enumeration {
+              enum trans-ok {
+                value 0 ;
+                description 'Track trans state is ok.' ;
+              }
+
+              enum trans-down {
+                value 1 ;
+                description 'Track trans state is down.' ;
+              }
+
+            }
+
+          }
+
+          leaf track-state {
+            description 'Track state.' ;
+            type enumeration {
+              enum unknown {
+                value 0 ;
+                description 'Track state is unknown.' ;
+              }
+
+              enum up {
+                value 1 ;
+                description 'Track state is up.' ;
+              }
+
+              enum local-down {
+                value 2 ;
+                description 'Track state is local-down.' ;
+              }
+
+              enum admin-down {
+                value 3 ;
+                description 'Track state is admin-down.' ;
+              }
+
+              enum local-sd {
+                value 4 ;
+                description 'Track state is local-sd.' ;
+              }
+
+            }
+
+          }
+
+          leaf state-change {
+            description 'The amount of state changing.' ;
+            type uint32 ;
+
+          }
+
+          leaf last-state-change {
+            description 'The time of last state changing.' ;
+            type ncd:string-with-blank {
+              length 1..31 {
+                description 'The length of time.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container track-groups {
+        description 'Track group info.' ;
+        list track-group {
+          description 'Track group info.' ;
+          key track-group-name ;
+          leaf track-group-name {
+            description 'Track group name.' ;
+            type string {
+              length 1..31 {
+                description 'The length of track-group name' ;
+              }
+
+            }
+
+          }
+
+          leaf track-group-state {
+            description 'Track group state.' ;
+            type enumeration {
+              enum unknown {
+                value 0 ;
+                description 'Track-group state is unknown.' ;
+              }
+
+              enum up {
+                value 1 ;
+                description 'Track-group state is up.' ;
+              }
+
+              enum down {
+                value 2 ;
+                description 'Track-group state is down.' ;
+              }
+
+            }
+
+          }
+
+          leaf state-change {
+            description 'The amount of state changing.' ;
+            type uint32 ;
+
+          }
+
+          leaf last-state-change {
+            description 'The time of last state changing.' ;
+            type ncd:string-with-blank {
+              length 1..31 {
+                description 'The length of time.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

@@ -1,0 +1,913 @@
+module zxr10-bier-oam {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/bier-oam" ;
+  prefix bier-oam ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe BIER-OAM. BIER-OAM describes a simple and efficient mechanism that can be used to detect data plane failures in MPLS Label Switched Paths.' ;
+  revision 2023-12-04 {
+    description 'Initial version.' ;
+  }
+
+  typedef return-code {
+    description 'Return code enumeration.' ;
+    type enumeration {
+      enum x {
+        value 0 ;
+        description 'No return code.' ;
+      }
+
+      enum M {
+        value 1 ;
+        description 'Malformed request.' ;
+      }
+
+      enum m {
+        value 2 ;
+        description 'Not understand tlv.' ;
+      }
+
+      enum "!" {
+        value 3 ;
+        description 'Unique bfer.' ;
+      }
+
+      enum V {
+        value 4 ;
+        description 'No unique bfer.' ;
+      }
+
+      enum PKT_FWD_SUCCESS {
+        value 5 ;
+        description 'Pkt fwd success.' ;
+      }
+
+      enum i {
+        value 6 ;
+        description 'Invalid multipath.' ;
+      }
+
+      enum X {
+        value 7 ;
+        description 'Reserved.' ;
+      }
+
+      enum F {
+        value 8 ;
+        description 'No forwarding table.' ;
+      }
+
+      enum s {
+        value 9 ;
+        description 'Mismatch identifier.' ;
+      }
+
+      enum D {
+        value 10 ;
+        description 'Ddmap mismatch.' ;
+      }
+
+      enum R {
+        value 11 ;
+        description 'Transit router.' ;
+      }
+
+      enum . {
+        value 12 ;
+        description 'Timeout.' ;
+      }
+
+      enum Q {
+        value 13 ;
+        description 'Question.' ;
+      }
+
+    }
+
+  }
+
+  typedef role {
+    description 'Hop role' ;
+    type enumeration {
+      enum Ingress {
+        value 0 ;
+      }
+
+      enum Transit {
+        value 1 ;
+      }
+
+      enum Egress {
+        value 2 ;
+      }
+
+      enum Unknown {
+        value 3 ;
+      }
+
+      enum Branch {
+        value 4 ;
+      }
+
+      enum Bud {
+        value 5 ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'Configuration of BIER-OAM.' ;
+    container bier-oam {
+      description 'Configure BIER ping/trace.' ;
+      container enable {
+        description 'Configure BIER ping/trace.' ;
+        leaf bier-enable {
+          description 'Enable bier ping/trace.' ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'enable.' ;
+            }
+
+            enum disable {
+              value 0 ;
+              description 'disable.' ;
+            }
+
+          }
+
+          mandatory true ;
+        }
+
+        leaf udp-port {
+          description 'UDP port.' ;
+          type uint16 {
+            range 1..65535 ;
+
+          }
+
+          default 49100 ;
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2023-12-04 ;
+  }
+
+  container operation {
+    description 'BIER-OAM operations model info.' ;
+    config false ;
+    container bier-oam {
+      description 'BIER-OAM operation parameters.' ;
+      container bier-pings {
+        description 'Bier ping operation parameters.' ;
+        list bier-ping {
+          description 'Bier ping operation parameters.' ;
+          key serial-num ;
+          leaf serial-num {
+            description 'Bier ping serial number.' ;
+            type uint64 ;
+
+            mandatory true ;
+          }
+
+          choice status {
+            description 'The switch for turning on/off bier ping.' ;
+            mandatory true ;
+            case enable {
+              description 'Start bier ping function.' ;
+              leaf ping-enable {
+                description 'Start bier ping function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+              container bier-ping-type {
+                description 'Detect type parameters for bier ping.' ;
+                choice bier-type {
+                  description 'Detect type for bier ping.' ;
+                  mandatory true ;
+                  case ipv6 {
+                    description 'IPv6 detect type.' ;
+                    container ipv6-underlay {
+                      description 'IPv6 bier detect type.' ;
+                      leaf subdomain-id {
+                        description 'Sub domain ID.' ;
+                        type uint8 {
+                          range 0..255 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                      leaf bsl {
+                        description 'Bitstring length' ;
+                        type enumeration {
+                          enum 256 {
+                            value 256 ;
+                            description '256.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                      choice destination {
+                        description 'destination.' ;
+                        mandatory true ;
+                        case bfr-id {
+                          description 'BFR-ID.' ;
+                          container bfr-id {
+                            description 'BFR-ID.' ;
+                            leaf bfr-id {
+                              description 'BFR-ID value.' ;
+                              type uint16 {
+                                range 1..65535 ;
+
+                              }
+
+                              mandatory true ;
+                            }
+
+                          }
+
+                        }
+
+                        case bfr-id-range {
+                          description 'BFR-ID range.' ;
+                          container bfr-id-range {
+                            description 'BFR-ID range.' ;
+                            leaf bfr-id-start {
+                              description 'BFR-ID start value.' ;
+                              type uint16 {
+                                range 1..65535 ;
+
+                              }
+
+                              mandatory true ;
+                            }
+
+                            leaf bfr-id-end {
+                              description 'BFR-ID end value' ;
+                              type uint16 {
+                                range 1..65535 ;
+
+                              }
+
+                              mandatory true ;
+                            }
+
+                          }
+
+                        }
+
+                      }
+
+                      leaf udp-port {
+                        description 'UDP port.' ;
+                        type uint16 {
+                          range 1..65535 ;
+
+                        }
+
+                        default 49100 ;
+                      }
+
+                      leaf encap-type {
+                        description 'Encapsulation type.' ;
+                        type enumeration {
+                          enum g-bier {
+                            value 0 ;
+                          }
+
+                          enum msr6-be {
+                            value 1 ;
+                          }
+
+                        }
+
+                        default g-bier ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container bier-ping-option {
+                description 'Option parameters for bier ping.' ;
+                leaf pattern {
+                  description 'The pad bytes.' ;
+                  type string {
+                    length 4 {
+                      description 'The pattern string.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf repeat {
+                  description 'Repeat count of bier ping.' ;
+                  type uint16 {
+                    range 1..65535 {
+                      description 'Repeat count of bier ping.' ;
+                    }
+
+                  }
+
+                  default 5 ;
+                }
+
+                leaf time-out {
+                  description 'Timeout of bier ping.' ;
+                  type uint8 {
+                    range 1..60 {
+                      description 'Timeout of bier ping.' ;
+                    }
+
+                  }
+
+                  units s ;
+                  default 2 ;
+                }
+
+                leaf size {
+                  description 'Datagram size of bier ping packets,the range of this parameter depends on the device,default range 100-1500.' ;
+                  type uint16 {
+                    range 120..65535 {
+                      description 'Datagram size of bier ping packets,the range of this parameter depends on the device,default range 100-1500.' ;
+                    }
+
+                  }
+
+                  units byte ;
+                  default 120 ;
+                }
+
+                leaf ttl {
+                  description 'Time to live of bier ping packets.' ;
+                  type uint8 {
+                    range 1..255 {
+                      description 'Time to live of bier ping packets.' ;
+                    }
+
+                  }
+
+                  default 255 ;
+                }
+
+                leaf source {
+                  description 'Source IPv6 address.' ;
+                  type ncd:ipv6-address ;
+
+                }
+
+              }
+
+            }
+
+            case disable {
+              description 'Stop bier ping function.' ;
+              leaf ping-disable {
+                description 'Stop bier ping function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container bier-traces {
+        description 'Bier trace operation parameters.' ;
+        list bier-trace {
+          description 'Bier trace operation parameters.' ;
+          key serial-num ;
+          leaf serial-num {
+            description 'Bier trace serial number.' ;
+            type uint64 ;
+
+            mandatory true ;
+          }
+
+          choice status {
+            description 'The switch for turning on/off bier trace.' ;
+            mandatory true ;
+            case enable {
+              description 'Start bier trace function.' ;
+              leaf trace-enable {
+                description 'Start bier trace function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+              container bier-trace-type {
+                description 'Detect type parameters for bier trace.' ;
+                choice bier-type {
+                  description 'Detect type for bier trace.' ;
+                  mandatory true ;
+                  case ipv6 {
+                    description 'IPv6 bier detect type.' ;
+                    container ipv6-underlay {
+                      description 'IPv6 bier detect type.' ;
+                      leaf subdomain-id {
+                        description 'Sub domain ID.' ;
+                        type uint8 {
+                          range 0..255 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                      leaf bsl {
+                        description 'Bitstring length' ;
+                        type enumeration {
+                          enum 256 {
+                            value 256 ;
+                            description '256.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                      choice destination {
+                        description 'Destination.' ;
+                        mandatory true ;
+                        case bfr-id {
+                          description 'BFR-ID.' ;
+                          container bfr-id {
+                            description 'BFR-ID.' ;
+                            leaf bfr-id {
+                              description 'BFR-ID value.' ;
+                              type uint16 {
+                                range 1..65535 ;
+
+                              }
+
+                              mandatory true ;
+                            }
+
+                          }
+
+                        }
+
+                        case bfr-id-range {
+                          description 'BFR-ID range.' ;
+                          container bfr-id-range {
+                            description 'BFR-ID range.' ;
+                            leaf bfr-id-start {
+                              description 'BFR-ID start value.' ;
+                              type uint16 {
+                                range 1..65535 ;
+
+                              }
+
+                              mandatory true ;
+                            }
+
+                            leaf bfr-id-end {
+                              description 'BFR-ID end value' ;
+                              type uint16 {
+                                range 1..65535 ;
+
+                              }
+
+                              mandatory true ;
+                            }
+
+                          }
+
+                        }
+
+                      }
+
+                      leaf udp-port {
+                        description 'UDP port.' ;
+                        type uint16 {
+                          range 1..65535 ;
+
+                        }
+
+                        default 49100 ;
+                      }
+
+                      leaf encap-type {
+                        description 'Encapsulation type.' ;
+                        type enumeration {
+                          enum g-bier {
+                            value 0 ;
+                          }
+
+                          enum msr6-be {
+                            value 1 ;
+                          }
+
+                        }
+
+                        default g-bier ;
+                      }
+
+                      leaf with-downstream-tlv {
+                        description 'Packet with downstream TLV.' ;
+                        type empty ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container bier-trace-option {
+                description 'Option parameters for bier trace.' ;
+                leaf ttl {
+                  description 'Max time to live of bier trace.' ;
+                  type uint8 {
+                    range 1..255 {
+                      description 'Max time to live of bier trace.' ;
+                    }
+
+                  }
+
+                  default 30 ;
+                }
+
+                leaf pattern {
+                  description 'The pad bytes.' ;
+                  type string {
+                    length 4 {
+                      description 'The pattern string.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf time-out {
+                  description 'Timeout of bier trace.' ;
+                  type uint8 {
+                    range 1..60 {
+                      description 'Timeout of bier trace.' ;
+                    }
+
+                  }
+
+                  units s ;
+                  default 2 ;
+                }
+
+                leaf size {
+                  description 'Datagram size of bier trace packets,the range of this parameter depends on the device,default range 300-1500.' ;
+                  type uint16 {
+                    range 120..65535 {
+                      description 'Datagram size of bier trace packets,the range of this parameter depends on the device,default range 300-1500.' ;
+                    }
+
+                  }
+
+                  units byte ;
+                  default 200 ;
+                }
+
+                leaf source {
+                  description 'Source IPv6 address.' ;
+                  type ncd:ipv6-address ;
+
+                }
+
+              }
+
+            }
+
+            case disable {
+              description 'Stop bier trace function.' ;
+              leaf trace-disable {
+                description 'Stop bier trace function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2023-12-04 ;
+  }
+
+  notification notification-bier-pings {
+    description 'Notification of BIER ping.' ;
+    container bier-ping-single-replies {
+      description 'Notification of BIER single ping.' ;
+      config false ;
+      list bier-ping-single-reply {
+        description 'The detail result information of bier single ping.' ;
+        key 'serial-num request-num' ;
+        leaf serial-num {
+          description 'Bier muticast ping serial number.' ;
+          type uint64 ;
+
+        }
+
+        leaf request-num {
+          description 'Bier muticast ping request number.' ;
+          type uint32 ;
+
+        }
+
+        leaf bfr-prefix {
+          description 'Bier muticast ping bfr prefix.' ;
+          type ncd:ipv6-prefix ;
+
+        }
+
+        leaf bfr-id {
+          description 'bfr ID.' ;
+          type uint16 {
+            range 0..65535 ;
+
+          }
+
+        }
+
+        leaf rtt {
+          description 'The round trip time of current hop.' ;
+          type uint32 ;
+
+          units ms ;
+        }
+
+        leaf return-code {
+          description 'The return code.' ;
+          type return-code ;
+
+        }
+
+      }
+
+    }
+
+    container bier-ping-statistics-for-single-request {
+      description 'Results of BIER multicast ping.' ;
+      config false ;
+      list bier-ping-statistic-for-single-request {
+        description 'Results of BIER single request ping.' ;
+        key 'serial-num request-num' ;
+        leaf serial-num {
+          description 'Bier ping serial number.' ;
+          type uint64 ;
+
+        }
+
+        leaf request-num {
+          description 'Bier muticast ping request number.' ;
+          type uint32 ;
+
+        }
+
+        leaf expect-reply {
+          description 'Expect replies.' ;
+          type uint32 ;
+
+        }
+
+        leaf rcv-reply {
+          description 'Receive replies.' ;
+          type uint32 ;
+
+        }
+
+      }
+
+    }
+
+    container bier-ping-statistical-summary {
+      description 'Notification of BIER ping.' ;
+      config false ;
+      list bier-ping-statistical-summary {
+        description 'The detail result information of BIER ping.' ;
+        key serial-num ;
+        leaf serial-num {
+          description 'BIER ping serial number.' ;
+          type uint64 ;
+
+        }
+
+        leaf send-pkts {
+          description 'The number of send packets.' ;
+          type uint32 ;
+
+        }
+
+        leaf rcv-pkts {
+          description 'The number of receive packets.' ;
+          type uint32 ;
+
+        }
+
+        leaf min-time {
+          description 'The minimum of round trip time in milliseconds.' ;
+          type uint32 ;
+
+          units ms ;
+        }
+
+        leaf max-time {
+          description 'The maximum of round trip time in milliseconds.' ;
+          type uint32 ;
+
+          units ms ;
+        }
+
+        leaf avg-time {
+          description 'The average value of round trip time in milliseconds.' ;
+          type uint32 ;
+
+          units ms ;
+        }
+
+        leaf wobble-min-time {
+          description 'The minimum of wobble time in milliseconds.' ;
+          type uint32 ;
+
+          units ms ;
+        }
+
+        leaf wobble-max-time {
+          description 'The maximum of wobble time in milliseconds.' ;
+          type uint32 ;
+
+          units ms ;
+        }
+
+        leaf wobble-avg-time {
+          description 'The average value of wobble time in milliseconds.' ;
+          type uint32 ;
+
+          units ms ;
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2023-12-04 ;
+  }
+
+  notification notification-bier-traces {
+    description 'Notification of BIER trace.' ;
+    container bier-multicast-traces {
+      description 'Notification of BIER multicast trace.' ;
+      config false ;
+      list bier-multicast-trace {
+        description 'Notification of BIER multicast trace.' ;
+        key 'serial-num hop-num' ;
+        leaf serial-num {
+          description 'Bier trace serial number.' ;
+          type uint64 ;
+
+        }
+
+        leaf hop-num {
+          description 'The num of current hop.' ;
+          type uint8 ;
+
+        }
+
+        leaf hop-address {
+          description 'Hop address.' ;
+          type string ;
+
+        }
+
+        leaf bfr-id {
+          type uint16 {
+            range 0..65535 ;
+
+          }
+
+        }
+
+        leaf return-code {
+          description 'The return code.' ;
+          type return-code ;
+
+        }
+
+        leaf hop-role {
+          description 'The type of current hop.' ;
+          type role ;
+
+        }
+
+        leaf hop-rtt {
+          description 'The round trip time of current hop.' ;
+          type uint32 ;
+
+        }
+
+        container downstream-info {
+          description 'Downstream info.' ;
+          list downstream {
+            description 'Downstream detail.' ;
+            key id ;
+            leaf id {
+              description 'Downstream identify.' ;
+              type uint16 ;
+
+            }
+
+            leaf ds-address {
+              description 'Downstream address.' ;
+              type string ;
+
+            }
+
+            leaf if-address {
+              description 'Interface address.' ;
+              type string ;
+
+            }
+
+            leaf mtu {
+              description 'Interface MTU.' ;
+              type uint16 ;
+
+            }
+
+            leaf return-code {
+              description 'The return code.' ;
+              type return-code ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    container bier-multicast-trace-results {
+      description 'Notification of BIER multicast trace.' ;
+      config false ;
+      list bier-multicast-trace-result {
+        description 'Notification of BIER multicast trace.' ;
+        key serial-num ;
+        leaf serial-num {
+          description 'Bier trace serial number.' ;
+          type uint64 ;
+
+        }
+
+        leaf finish {
+          description 'Operation state.' ;
+          type uint8 ;
+
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2023-12-04 ;
+  }
+
+}

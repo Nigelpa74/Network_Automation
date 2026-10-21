@@ -1,0 +1,722 @@
+module zxr10-vlan {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/vlan" ;
+  prefix vlan ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe vlan.' ;
+  revision 2023-06-15 {
+    description "1.Featuer vlan-cap-table support '高端路由器HighEndRouter.T8000' project." ;
+  }
+
+  revision 2023-01-09 {
+    description '1.Add /vlan:state/vlan:vlan/vlan:vlan-cap-tables/vlan-cap-table/vlan-count.
+2.Add /vlan:state/vlan:vlan/vlan:vlan-cap-tables/vlan-cap-table/vlan-capability.' ;
+  }
+
+  revision 2022-11-02 {
+    description '1.Add featuer vlan-tpid,vlan-qinq-any,vlan-nnis,vlan-range-brdcst-flag.
+2.Featuer alarm-threshold support vBRAS-C and CDB project.
+3.Featuer user-dynamic-vlan support 6500,6700,65V5 and 7000 project.
+4.Featuer vlan-untag support 61V5_1 and 59X-ES project.
+5.Module zxr10-vlan remove C300 and M6000-S project.' ;
+  }
+
+  revision 2022-08-03 {
+    description 'change /vlan:configuration/vlan:vlan/vlan:vlan-range-brdcst-flag/vlan:vlan-range-brdcst/vlan:range-enable,set this node mandatory and no default value.' ;
+  }
+
+  revision 2021-08-18 {
+    description 'Add /vlan:state/vlan:vlan/vlan:vlan-cap-tables.' ;
+  }
+
+  revision 2021-01-16 {
+    description 'Add /vlan:vlan-encapsulation/vlan:mapping-vlans.' ;
+  }
+
+  revision 2021-01-10 {
+    description '/vlan:configuration/vlan:vlan/vlan:vlan-tpid/vlan:vlan-pidtag support default value get.' ;
+  }
+
+  revision 2020-08-13 {
+    description 'Add /vlan:configuration/vlan:vlan/vlan:alarm-threshold/vlan:alarm-threshold/vlan:ratio range 1..100.' ;
+  }
+
+  revision 2020-05-20 {
+    description 'Add /vlan:vlan-descriptions.' ;
+  }
+
+  revision 2019-04-16 {
+    description 'Add /vlan:vlan-encapsulation/vlan:vlan-nni.' ;
+  }
+
+  revision 2018-02-27 {
+    description 'Add /vlan:vlan-encapsulation/vlan:vlan-qinq-inter-any.
+Add /vlan:vlan-encapsulation/vlan:vlan-qinq-exter-any.' ;
+  }
+
+  revision 2017-03-27 {
+    description 'Add /vlan:configuration/vlan:vlan/vlan:vlan-encapsulation/vlan:vlan-untag.' ;
+  }
+
+  revision 2017-03-23 {
+    description '1. Featuer alarm-threshold and any-other-vlan support 15K project.' ;
+  }
+
+  revision 2016-05-10 {
+    description '1.Add container /vlan:configuration/vlan:vlan/vlan:vlan-dynamic-encapsulation and 
+/vlan:configuration/vlan:vlan/vlan:alarm-threshold.
+2.Add featuer alarm-threshold,any-other-vlan and user-dynamic-vlan.' ;
+  }
+
+  revision 2015-05-19 {
+    description 'exchange the position of two nodes, /vlan:configuration/vlan:vlan/vlan:vlan-encapsulation and /vlan:configuration/vlan:vlan/vlan:vlan-range-brdcst-flag.' ;
+  }
+
+  revision 2013-12-02 {
+    description 'Add if-filter-id.' ;
+  }
+
+  revision 2013-09-25 {
+    description 'Delete state and operation mode.' ;
+  }
+
+  revision 2013-09-01 {
+    description 'Modify vlan-range-brdcst model definition.' ;
+  }
+
+  revision 2013-07-31 {
+    description 'Delete vlan-if-cfg model,new edit vlan-dot1q,vlan-dot1q-range,vlan-qinq,vlan-qinq-rangemodel definition.' ;
+  }
+
+  revision 2013-06-25 {
+    description 'initial version.' ;
+  }
+
+  feature alarm-threshold {
+    description 'The info for the alarm threshold.' ;
+  }
+
+  feature any-other-vlan {
+    description 'The feature for the function of any other VLAN.' ;
+  }
+
+  feature user-dynamic-vlan {
+    description 'The info for the dynamic vlan.' ;
+  }
+
+  feature vlan-untag {
+    description 'The feature for the function of untag.' ;
+  }
+
+  feature mapping-vlans {
+    description 'The feature for the function of mapping VLAN.' ;
+  }
+
+  feature vlan-cap-table {
+    description 'vlan cap info' ;
+  }
+
+  feature vlan-tpid {
+    description 'The feature for the function of VLAN tpid.' ;
+    ncd:revise-date 2022-11-02 ;
+  }
+
+  feature vlan-qinq-any {
+    description 'The feature for the function of vlan-qinq-any.' ;
+    ncd:revise-date 2022-11-02 ;
+  }
+
+  feature vlan-nnis {
+    description 'The feature for the function of nni VLAN.' ;
+    ncd:revise-date 2022-11-02 ;
+  }
+
+  feature vlan-range-brdcst-flag {
+    description 'The feature for the function of VLAN range broadcast flag.' ;
+    ncd:revise-date 2022-11-02 ;
+  }
+
+  container configuration {
+    description 'configuration model info.' ;
+    container vlan {
+      description 'Configure VLAN parameters.' ;
+      container vlan-tpid {
+        if-feature vlan-tpid {
+          ncd:revise-date 2022-11-02 ;
+        }
+
+        description 'The sub port configurate TPID.' ;
+        list vlan-pidtag {
+          description 'The sub port configurate PID TAG info.' ;
+          key if-name ;
+          leaf if-name {
+            description 'The interface will configurate pid tag.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf external-tpid {
+            description 'External pid-tag info of this port.' ;
+            type enumeration {
+              enum pidtag88a8 {
+                value 1 ;
+                description 'Pid tag 0x88a8.' ;
+              }
+
+              enum pidtag8100 {
+                value 2 ;
+                description 'Pid tag 0x8100.' ;
+              }
+
+              enum pidtag9100 {
+                value 3 ;
+                description 'Pid tag 0x9100.' ;
+              }
+
+              enum pidtag9200 {
+                value 4 ;
+                description 'Pid tag 0x9200.' ;
+              }
+
+              enum pidtag9300 {
+                value 5 ;
+                description 'Pid tag 0x9300.' ;
+              }
+
+              enum pidtag88e8 {
+                value 6 ;
+                description 'Pid tag 0x88e8.' ;
+              }
+
+            }
+
+            default pidtag8100 ;
+          }
+
+          leaf internal-tpid {
+            description 'Internal pid-tag info of this port.' ;
+            type enumeration {
+              enum pidtag88a8 {
+                value 1 ;
+                description 'Pig tag 0x88a8.' ;
+              }
+
+              enum pidtag8100 {
+                value 2 ;
+                description 'Pid tag 0x8100.' ;
+              }
+
+              enum pidtag9100 {
+                value 3 ;
+                description 'Pig tag 0x9100.' ;
+              }
+
+              enum pidtag9200 {
+                value 4 ;
+                description 'Pid tag 0x9200.' ;
+              }
+
+              enum pidtag9300 {
+                value 5 ;
+                description 'Pig tag 0x9300.' ;
+              }
+
+              enum pidtag88e8 {
+                value 6 ;
+                description 'Pid tag 0x88e8.' ;
+              }
+
+            }
+
+            default pidtag8100 ;
+          }
+
+        }
+
+      }
+
+      container vlan-dynamic-encapsulation {
+        description 'The sub port encapsulate dynamic VLAN info.' ;
+        list any-other-vlan {
+          if-feature any-other-vlan ;
+
+          description 'The sub port encapsulate the flag of any-other-vlan.' ;
+          key if-name ;
+          leaf if-name {
+            description 'The interface will be encapsulated the flag of any-other-vlan.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf vlan-anyother {
+            description 'The flag of any-other-vlan.' ;
+            type enumeration {
+              enum qinq {
+                value 32 ;
+                description 'QinQ type.' ;
+              }
+
+              enum dot1q {
+                value 16 ;
+                description 'Dot1q type.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        list user-dynamic-vlan {
+          if-feature user-dynamic-vlan ;
+
+          description 'The sub port encapsulate the flag of dynamic VLAN.' ;
+          key if-name ;
+          leaf if-name {
+            description 'The interface will be encapsulated dynamic VLAN.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf dynamic-flag {
+            description 'The flag of dynamic VLAN.' ;
+            type enumeration {
+              enum any-other-dot1q {
+                value 1 ;
+                description 'User-Dynamic-Vlan Any-other-Dot1q.' ;
+              }
+
+              enum any-other-qinq {
+                value 2 ;
+                description 'User-Dynamic-Vlan Any-other-Qinq.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2016-05-10 ;
+      }
+
+      container vlan-encapsulation {
+        description 'The sub port encapsulate VLAN info.' ;
+        list vlan-dot1q {
+          description 'The sub port encapsulate VLAN info of the DOT1Q type.' ;
+          key if-name ;
+          leaf if-name {
+            description 'The interface will be encapsulated VLAN of the DOT1Q type.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf vlan {
+            description 'The VLAN info of the sub port which be encapsulated VLAN of the DOT1Q type.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        list vlan-do1q-range {
+          description 'The sub port encapsulate VLAN info of the DOT1Q range type.' ;
+          key 'if-name vlan' ;
+          leaf if-name {
+            description 'The interface will be encapsulated VLAN of the DOT1Q range type.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf vlan {
+            description 'The VLAN info of the sub port which be encapsulated VLAN of the DOT1Q range type.' ;
+            type ncd:single-range ;
+
+          }
+
+          ncd:select if-name ;
+          ncd:select "if-name vlan" ;
+        }
+
+        list vlan-qinq {
+          description 'The sub port encapsulate VLAN info of the QinQ type.' ;
+          key if-name ;
+          leaf if-name {
+            description 'The interface will be encapsulated VLAN of the QinQ type.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf inter-vlan {
+            description 'The internal VLAN info of the sub port which be encapsulated VLAN of the QinQ type.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf exter-vlan {
+            description 'The external VLAN info of the sub port which be encapsulated VLAN of the QinQ type.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        list vlan-qinq-range {
+          description 'The sub port encapsulate VLAN info of the QinQ range type.' ;
+          key 'if-name inter-range-vlan exter-range-vlan' ;
+          leaf if-name {
+            description 'The interface will be encapsulated VLAN of the QinQ range type.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf inter-range-vlan {
+            description 'The Internal range VLAN info of the sub port which be encapsulated VLAN of the QinQ range type.' ;
+            type ncd:single-range ;
+
+          }
+
+          leaf exter-range-vlan {
+            description 'The external VLAN info of the sub port which be encapsulated VLAN of the QinQ range type.' ;
+            type ncd:single-range ;
+
+          }
+
+          ncd:select if-name ;
+          ncd:select "if-name inter-range-vlan exter-range-vlan" ;
+        }
+
+        list vlan-untag {
+          if-feature vlan-untag ;
+
+          description 'The sub port encapsulate VLAN info of the untag type.' ;
+          key if-name ;
+          leaf if-name {
+            description 'The interface will be encapsulated VLAN of the untag type.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf untag {
+            description 'Untag flag.' ;
+            type empty ;
+
+            mandatory true ;
+          }
+
+          ncd:revise-date 2017-03-27 ;
+        }
+
+        list vlan-qinq-inter-any {
+          if-feature vlan-qinq-any {
+            ncd:revise-date 2022-11-02 ;
+          }
+
+          description 'The sub port encapsulate VLAN info of the QinQ range type and inter-vlan is any.' ;
+          key 'if-name exter-range-vlan' ;
+          leaf if-name {
+            description 'The interface will be encapsulated VLAN of the QinQ range type.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf exter-range-vlan {
+            description 'The external VLAN info of the sub port which be encapsulated VLAN of the QinQ range type.' ;
+            type ncd:single-range ;
+
+          }
+
+          ncd:revise-date 2018-02-27 ;
+        }
+
+        list vlan-qinq-exter-any {
+          if-feature vlan-qinq-any {
+            ncd:revise-date 2022-11-02 ;
+          }
+
+          description 'The sub port encapsulate VLAN info of the QinQ range type and exter-vlan is any.' ;
+          key 'if-name inter-range-vlan' ;
+          leaf if-name {
+            description 'The interface will be encapsulated VLAN of the QinQ range type and exter-vlan is any.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf inter-range-vlan {
+            description 'The Internal range VLAN info of the sub port which be encapsulated VLAN of the QinQ range type.' ;
+            type ncd:single-range ;
+
+          }
+
+          ncd:revise-date 2018-02-27 ;
+        }
+
+        container vlan-nnis {
+          if-feature vlan-nnis {
+            ncd:revise-date 2022-11-02 ;
+          }
+
+          description 'The sub port encapsulate nni VLAN.' ;
+          list vlan-nni {
+            description 'The sub port encapsulate nni VLAN.' ;
+            key if-name ;
+            leaf if-name {
+              description 'The interface will be encapsulated nni VLAN.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf nni-vlan {
+              description 'The nni VLAN info of the sub port.' ;
+              type uint16 {
+                range 1..4094 {
+                  description 'The value of VLAN,it must between 1 to 4094.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf leaf-vlan {
+              description 'The leaf VLAN info of the sub port.' ;
+              type uint16 {
+                range 1..4094 {
+                  description 'The value of VLAN,it must between 1 to 4094.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2019-04-16 ;
+        }
+
+        container mapping-vlans {
+          if-feature mapping-vlans ;
+
+          description 'The sub port encapsulate mapping VLAN.' ;
+          list mapping-vlan {
+            description 'The sub port encapsulate mapping VLAN.' ;
+            key if-name ;
+            leaf if-name {
+              description 'The interface will be encapsulated mapping VLAN.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf mapping-vlan {
+              description 'The mapping VLAN info of the sub port.' ;
+              type uint16 {
+                range 1..4094 {
+                  description 'The value of VLAN,it must between 1 to 4094.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          ncd:revise-date 2021-01-16 ;
+        }
+
+      }
+
+      container vlan-range-brdcst-flag {
+        if-feature vlan-range-brdcst-flag {
+          ncd:revise-date 2022-11-02 ;
+        }
+
+        description 'VLAN range broadcast flag configuration.' ;
+        list vlan-range-brdcst {
+          description 'VLAN range broadcast flag configuration.' ;
+          key if-name ;
+          leaf if-name {
+            description 'The interface will configurate vlan range broadcast flag.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf range-enable {
+            description 'VLAN range broadcast enable.' ;
+            type enumeration {
+              enum disable {
+                value 1 ;
+              }
+
+              enum enable {
+                value 2 ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf single-layer-enable {
+            description 'VLAN single layer enable.' ;
+            type enumeration {
+              enum disable {
+                value 1 ;
+              }
+
+              enum enable {
+                value 2 ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+        }
+
+      }
+
+      container alarm-threshold {
+        if-feature alarm-threshold ;
+
+        description 'The alarm of resource count.' ;
+        list alarm-threshold {
+          description 'The alarm of resource count.' ;
+          key board-name ;
+          leaf board-name {
+            description 'The name of the board.' ;
+            type ncd:board ;
+
+          }
+
+          leaf ratio {
+            description 'The threshold value of alarm.' ;
+            type uint32 {
+              range 1..100 ;
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2016-05-10 ;
+      }
+
+      container vlan-descriptions {
+        description 'The sub port configurate description info.' ;
+        list vlan-description {
+          description 'The sub port configurate description info.' ;
+          key if-name ;
+          leaf if-name {
+            description 'The interface will configurate description.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf description {
+            description 'A textual description of the VLAN sub-interface.' ;
+            type ncd:string-with-blank {
+              length 1..104 {
+                description 'max be 104 characters.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2020-05-20 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'VLAN state info.' ;
+    container vlan {
+      description 'VLAN state info.' ;
+      container vlan-cap-tables {
+        description 'VLAN count information.' ;
+        list vlan-cap-table {
+          if-feature vlan-cap-table ;
+
+          description 'VLAN count information.' ;
+          key 'shelf slot' ;
+          leaf shelf {
+            description 'Shelf No.' ;
+            type uint8 ;
+
+          }
+
+          leaf slot {
+            description 'Slot No.' ;
+            type uint8 ;
+
+          }
+
+          leaf vlan-count {
+            description 'VLAN count on the board.' ;
+            type uint32 ;
+
+            ncd:revise-date 2023-01-09 ;
+          }
+
+          leaf vlan-capability {
+            description 'VLAN capacity on the board.' ;
+            type uint32 ;
+
+            ncd:revise-date 2023-01-09 ;
+          }
+
+          leaf ratio {
+            description 'VLAN usage on the shelf slot, The range is 0-100, 0xFFFFFFFF indicates invalid value.' ;
+            type uint32 ;
+
+          }
+
+          ncd:select "shelf slot" ;
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2021-08-18 ;
+  }
+
+}

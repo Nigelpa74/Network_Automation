@@ -1,0 +1,413 @@
+module zxr10-hdlc {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/hdlc'
+            ;
+  prefix hdlc ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe HDLC'
+              ;
+  revision 2018-10-25 {
+    description 'Change the range of leaf node configuration/hdlc/mhdlc/posgrou'
+              + 'p-instance/posgroup/active-num from 1-16 to 1-128.'+"\n"
+              + 'Change the range of leaf node configuration/hdlc/mhdlc/port-in'
+              + 'stance/port/groupid from 1-64 to 1-256.'
+                ;
+  }
+  revision 2015-03-15 {
+    description '1. Change type of /state/hdlc/chdlc/bidirection-info-instance/'
+              + 'bidirection-info/illegal-peerinfo from string to ncd:string-al'
+              + 'l'+"\n"
+              + '2. Change node type of /state/hdlc/chdlc/clear/illegal-info fr'
+              + 'om container to list'
+                ;
+  }
+  revision 2014-06-04 {
+    description '1)Remove the leaf node bidirection'+"\n"
+              + '2)Remove the leaf node localinfo'+"\n"
+              + '3)Remove the leaf node peerinfo'+"\n"
+              + '4)Add the choise node bidirection-mode'
+                ;
+  }
+  revision 2014-05-06 {
+    description '1.Change the type of the following two Leaves from uint16 to u'
+              + 'int32:'+"\n"
+              + '1) configuration:hdlc:mhdlc:posgroup-instance:posgroup:active-'
+              + 'num'+"\n"
+              + '2) configuration:hdlc:mhdlc:port-instance:port:groupid'+"\n"
+              + '2.Change some description:'+"\n"
+              + '1) Modify description of leaf node if-name of list port in con'
+              + 'figuration container'+"\n"
+              + '2) Modify description of leaf nodes bidirection,localinfo,peer'
+              + 'info of list bidirection in configuration container'+"\n"
+              + '3) Modify description of leaf nodes lb,active-num of list posg'
+              + 'roup in configuration container'+"\n"
+              + '4) Modify description of leaf node if-name of mhdlc configurat'
+              + 'ion container'+"\n"
+              + '5) Modify description of leaf node groupid of mhdlc configurat'
+              + 'ion container'+"\n"
+              + '6) Modify description of container node port-instance of mhdlc'
+              + ' configuration container'+"\n"
+              + '7) Modify description of leaf node if-name of hdlc state conta'
+              + 'iner'+"\n"
+              + '8) Modify description of leaf node illegal-peerinfo of hdlc st'
+              + 'ate container'+"\n"
+              + '9) Modify description of list node bidirection-info of hdlc st'
+              + 'ate container'+"\n"
+              + '10) Modify description of container node bidirection-info of h'
+              + 'dlc state container'+"\n"
+              + '11) Modify description of leaf node groupid of mhdlc state con'
+              + 'tainer'+"\n"
+              + '12) Modify description of leaf node activenum of mhdlc state c'
+              + 'ontainer'+"\n"
+              + '13) Modify description of leaf node lb of mhdlc state containe'
+              + 'r'+"\n"
+              + '14) Modify description of illegal-info operation container'+"\n"
+              + '15) Modify description of leaf node if-name of hdlc operation '
+              + 'container'
+                ;
+  }
+  revision 2013-11-15 {
+    description 'Initial version'
+                ;
+  }
+  container configuration {
+    description Configuration ;
+    container hdlc {
+      description 'Describe the parameters to be configured'
+                  ;
+      container chdlc {
+        description 'HDLC configuration'
+                    ;
+        container port-instance {
+          description 'HDLC port configuration'
+                      ;
+          list port {
+            description 'HDLC port configuration'
+                        ;
+            max-elements 4094 ;
+            key if-name ;
+            leaf if-name {
+              description 'The pos interface name'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf keepalive {
+              description 'Use to specify the keepalive timeout value'
+                          ;
+              type uint16 {
+                range 0..32767 ;
+              }
+              units second ;
+              default 10 ;
+            }
+          }
+        }
+        container bidirection-instance {
+          description 'The expand HDLC configuration'
+                      ;
+          list bidirection {
+            description 'The expand HDLC configuration'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'The pos interface name'
+                          ;
+              type ncd:ifname ;
+            }
+            choice bidirection-mode {
+              description 'Set the bidirection mode:'+"\n"
+                        + 'loose:loose mode-0'+"\n"
+                        + 'strict:strict mode-1'+"\n"
+                        + 'expand:expand mode-2'
+                          ;
+              default loose-case ;
+              case loose-case {
+                description 'Set the bidirection mode loose'
+                            ;
+                leaf loose {
+                  description 'bidirection mode loose'
+                              ;
+                  type empty ;
+                }
+              }
+              case strict-case {
+                description 'Set the bidirection mode strict'
+                            ;
+                leaf strict {
+                  description 'bidirection mode strict'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+                leaf strict-type {
+                  description 'bidirection mode strict type'
+                              ;
+                  type enumeration {
+                    enum short {
+                      value 4 ;
+                      description 'strict type short'
+                                  ;
+                    }
+                    enum long {
+                      value 6 ;
+                      description 'strict type long'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+              case expand-case {
+                description 'Set the bidirection mode expand'
+                            ;
+                leaf expand {
+                  description 'bidirection mode expand'
+                              ;
+                  type empty ;
+                }
+                leaf localinfo {
+                  description 'Set the local information,strings:1-63'
+                              ;
+                  type string {
+                    length 0..63 {
+                      description 'local information'
+                                  ;
+                    }
+                  }
+                  default ''
+                          ;
+                }
+                leaf peerinfo {
+                  description 'Set the peer informations,strings:1-63'
+                              ;
+                  type string {
+                    length 0..63 {
+                      description 'peer informations'
+                                  ;
+                    }
+                  }
+                  default ''
+                          ;
+                }
+              }
+            }
+          }
+        }
+      }
+      container mhdlc {
+        description 'MHDLC configuration'
+                    ;
+        container posgroup-instance {
+          description 'Set posgroup information'
+                      ;
+          list posgroup {
+            description 'Set posgroup information'
+                        ;
+            max-elements 64 ;
+            key pgname ;
+            leaf pgname {
+              description 'The posgroup interface name'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf lb {
+              description 'Set the MHDLC load-balance'+"\n"
+                        + 'per-destination,MHDLC load balance by destination'+"\n"
+                        + 'per-packet,MHDLC load balance by packet'
+                          ;
+              type enumeration {
+                enum per-destination {
+                  value 10 ;
+                  description 'MHDLC load balance by destination'
+                              ;
+                }
+                enum per-packet {
+                  value 11 ;
+                  description 'MHDLC load balance by packet'
+                              ;
+                }
+              }
+              default per-destination ;
+            }
+            leaf active-num {
+              description 'Set the MHDLC active number. Its maximum value depen'
+                        + 'ds on the performance parameters.'
+                          ;
+              type uint32 {
+                range 1..128 {
+                  description 'Set MHDLC minimum-member. The maximum value depe'
+                            + 'nds on the performance parameters.'
+                              ;
+                }
+              }
+              default 1 ;
+            }
+          }
+        }
+        container port-instance {
+          description 'Set MHDLC member information'
+                      ;
+          list port {
+            description 'Set MHDLC member information'
+                        ;
+            max-elements 4096 ;
+            key if-name ;
+            leaf if-name {
+              description 'The pos interface name'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf groupid {
+              description 'The posgroup id, its maximum value depends on the pe'
+                        + 'rformance parameters.'
+                          ;
+              type uint32 {
+                range 1..256 {
+                  description 'Set the groupid. The maximum value depends on th'
+                            + 'e performance parameters.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description State ;
+    container hdlc {
+      description 'HDLC state information'
+                  ;
+      container chdlc {
+        description 'HDLC state'
+                    ;
+        container bidirection-info-instance {
+          description 'Show expand HDLC information'
+                      ;
+          list bidirection-info {
+            description 'Show expand HDLC information'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'The pos interface name'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf illegal-peerinfo {
+              description 'The peer illegal information'
+                          ;
+              type ncd:string-all {
+                length 0..63 ;
+              }
+            }
+          }
+        }
+      }
+      container mhdlc {
+        description 'MHDLC state'
+                    ;
+        container posgroup-info-instance {
+          description 'Show posgroup information'
+                      ;
+          list posgroup-info {
+            description 'Show posgroup information'
+                        ;
+            key groupid ;
+            leaf groupid {
+              description 'The posgroup id'
+                          ;
+              type uint16 ;
+            }
+            leaf activenum {
+              description 'The MHDLC active number'
+                          ;
+              type uint16 ;
+              default 1 ;
+            }
+            leaf lb {
+              description 'The MHDLC load-balance'+"\n"
+                        + 'per-destination,MHDLC load balance by destination'+"\n"
+                        + 'per-packet,MHDLC load balance by packet'
+                          ;
+              type enumeration {
+                enum per-destination {
+                  value 10 ;
+                  description 'MHDLC load balance by destination'
+                              ;
+                }
+                enum per-packet {
+                  value 11 ;
+                  description 'MHDLC load balance by packet'
+                              ;
+                }
+              }
+            }
+            leaf member-port {
+              description 'The number of MHDLC member port'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf active-state {
+              description 'The member port state'
+                          ;
+              type enumeration {
+                enum inactive {
+                  value 0 ;
+                  description 'The member port state is inactive'
+                              ;
+                }
+                enum active {
+                  value 1 ;
+                  description 'The member port state is active'
+                              ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description Operation ;
+    container hdlc {
+      description 'HDLC operation information'
+                  ;
+      container chdlc {
+        description 'HDLC operation'
+                    ;
+        container clear {
+          description 'Clear information'
+                      ;
+          container illegal-info-instance {
+            description 'Clear the illegal peer information'
+                        ;
+            list illegal-info {
+              description 'Clear the illegal peer information'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'The pos interface name'
+                            ;
+                type ncd:ifname ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

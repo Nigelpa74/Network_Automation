@@ -1,0 +1,551 @@
+module zxr10-netconf-defs {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/netconf-defs'
+            ;
+  prefix ncd ;
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation '+"\n"
+        + '         Nanjing Institute of ZTE Corporation'+"\n"
+        + '         No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China'+"\n"
+        + '         Tel: +86-25-52870000'
+          ;
+  description 'ZXR10 ROSNG:the netconf model for netconf.'
+              ;
+  revision 2015-11-09 {
+    description 'add typedef:ipv6-prefix'
+                ;
+  }
+  revision 2015-10-14 {
+    description 'add typedef:long-text'
+                ;
+  }
+  revision 2015-07-30 {
+    description '1. Modify regular expression of ipv4-imask.'+"\n"
+              + '2. Delete regular expression of ipv6-mask.'+"\n"
+              + '3. Modify regular expression of range.'
+                ;
+  }
+  revision 2014-10-13 {
+    description '1. Modify regular expression of area-id.'
+                ;
+  }
+  revision 2014-08-13 {
+    description '1. Modify regular expression of area-id.'+"\n"
+              + '2. Modify regular expression of asn-dot.'+"\n"
+              + '3. Modify regular expression of mac-address-none-zero.'
+                ;
+  }
+  revision 2014-06-24 {
+    description 'add typedef:ipv4-address-none-zero,mac-address-none-zero'
+                ;
+  }
+  revision 2014-04-14 {
+    description '1. Modify regular expression of ipv4-address.'+"\n"
+              + '2. Modify regular expression of ipv6-address.'+"\n"
+              + '3. Modify regular expression of asn-nn.'+"\n"
+              + '4. Modify regular expression of asnd-nn.'+"\n"
+              + '5. Modify regular expression of ipadd-nn.'+"\n"
+              + '6. Modify regular expression of string-quesiton-mark.'+"\n"
+              + '7. Modify regular expression of string-with-blank.'+"\n"
+              + '8. Modify regular expression of area-id.'+"\n"
+              + '9. Modify regular expression of asn-dot.'
+                ;
+  }
+  revision 2014-01-27 {
+    description "All typedefs based string are added '^$' restriction. Add type"
+              + "def: cpu/board."
+                ;
+  }
+  revision 2013-11-22 {
+    description 'add typedef:bitmap'
+                ;
+  }
+  revision 2013-11-11 {
+    description 'add typedef:ifname.'
+                ;
+  }
+  revision 2013-11-06 {
+    description 'add typedef:summer-clock'
+                ;
+  }
+  revision 2013-09-27 {
+    description 'add typedef string-question-mark/string-with-blank/uint64-8byt'
+              + 'es/string-all/url/area-id/hex/asn-dot'
+                ;
+  }
+  revision 2013-09-03 {
+    description 'add typedef:terminal-based-uint32'
+                ;
+  }
+  revision 2013-07-25 {
+    description 'add typedef single-range/asn-nn/asnd-nn/ipadd-nn, modify typed'
+              + 'ef range (add description and pattern)'
+                ;
+  }
+  revision 2013-06-08 {
+    description 'delete ipaddress /ip mask /ip mask length'
+                ;
+  }
+  revision 2013-05-15 {
+    description 'add extensions: select/history/archieve/revise-date.'
+                ;
+  }
+  extension select {
+    argument fields ;
+    description 'This extension can be used to define condition to be '+"\n"
+              + '                     selected in a list. If a list defined sel'
+              + 'ects, user '+"\n"
+              + '                     can use these selects to retrive the info'
+              + 'rmation of '+"\n"
+              + '                     this list. If no select is defined, user '
+              + 'can only use'+"\n"
+              + '                     keys to retrive information.'
+                ;
+  }
+  extension history {
+    argument name ;
+    description 'The statement "history" can be used to record the history of r'
+              + 'evisions.'+"\n"
+              + '                     After a revision of a module was publishe'
+              + 'd, some modification'+"\n"
+              + '                     may be occured.For example, some nodes ma'
+              + 'y be added, or the '+"\n"
+              + '                     definition of some nodes may be changed.I'
+              + 'n these circumstances,'+"\n"
+              + '                     a new revision must be added, and the dat'
+              + 'a definition of history revision'+"\n"
+              + '                     was changed should be archieved to a hist'
+              + 'ory.'+"\n"
+              + '                     '+"\n"
+              + '                     The statement "history" has one argument '
+              + '"name", this argument is a string,'+"\n"
+              + '                     the format is "YYYY-MM-DD". It means the '
+              + 'revision-date that the revision '+"\n"
+              + '                     was updated.'+"\n"
+              + '                     '+"\n"
+              + '                     substatements:'+"\n"
+              + '                       +--------------+-------------+  '+"\n"
+              + ' 											 | substatement | cardinality |  '+"\n"
+              + '											 +--------------+-------------+  '+"\n"
+              + '											 | description  | 0..1        |  '+"\n"
+              + ' 											 | status       | 0..1        |  '+"\n"
+              + '                       | reference    | 0..1        |  '+"\n"
+              + '                       | archieve     | 0..n        |  '+"\n"
+              + '                       +--------------+-------------+'
+                ;
+  }
+  extension archieve {
+    argument name ;
+    description 'The "archieve" statement records the history revision detail o'
+              + 'f the target node '+"\n"
+              + '    		             was changed in a new revision.  Only change'
+              + 'd part can be recorded.'+"\n"
+              + '    		             '+"\n"
+              + '    		             The statement has on argument "name",this a'
+              + 'rgument is a string,the format is an '+"\n"
+              + '    		             absolute schema node identifier.'+"\n"
+              + '    		             substatements:'+"\n"
+              + '                       +--------------+-------------+  '+"\n"
+              + ' 											 | substatement | cardinality |  '+"\n"
+              + '											 +--------------+-------------+  '+"\n"
+              + '											 | config       | 0..1        |  '+"\n"
+              + ' 											 | default      | 0..1        |  '+"\n"
+              + '                       | mandatory    | 0..1        |  '+"\n"
+              + '                       | max-elements | 0..1        |  '+"\n"
+              + ' 											 | min-elements | 0..1        |  '+"\n"
+              + '                       | type         | 0..1        |  '+"\n"
+              + '                       | unique       | 0..n        |'+"\n"
+              + '                       | units        | 0..1        |  '+"\n"
+              + '                       +--------------+-------------+'
+                ;
+  }
+  extension revise-date {
+    argument date ;
+    description 'The statement "revise-date" is used to specify the exact'+"\n"
+              + '                      revise,"revise-date" has a argument "dat'
+              + 'e", it must match '+"\n"
+              + '                      a name of a revision. If a node is added'
+              + ' in one revision, this'+"\n"
+              + '                      statement must be occured in the definit'
+              + 'ion of this node.'
+                ;
+  }
+  typedef date {
+    type string {
+      pattern '([0-9]{4}-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[2469'
+            + ']|11)-(0[1-9]|[12][0-9]|30))))'
+              ;
+    }
+    description 'the definition of date type,format:yyyy-mm-dd.'
+                ;
+  }
+  typedef time {
+    type string {
+      pattern '((20|21|22|23|[0-1][0-9]):[0-5][0-9]:[0-5][0-9])'
+              ;
+    }
+    description 'the definition of time, format:hh:mm:ss'
+                ;
+  }
+  typedef datetime {
+    type string {
+      pattern '([0-9]{4}-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[2469'
+            + ']|11)-(0[1-9]|[12][0-9]|30)))\s(20|21|22|23|[0-1][0-9]):[0-5][0-'
+            + '9]:[0-5][0-9])'
+              ;
+    }
+    description 'the definition of datetime, format:yyyy-mm-dd hh:mm:ss.'
+                ;
+  }
+  typedef mac-address {
+    type string {
+      pattern '([0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5})'
+              ;
+    }
+    description 'The mac-address type represents an IEEE 802 MAC address.'+"\n"
+              + '                     The canonical representation uses lowerca'
+              + 'se characters.'+"\n"
+              + '                     In the value set and its semantics, this '
+              + 'type is equivalent'+"\n"
+              + '                     to the MacAddress textual convention of t'
+              + 'he SMIv2.'
+                ;
+    reference 'IEEE 802: IEEE Standard for Local and Metropolitan Area'+"\n"
+            + '                   Networks: Overview and Architecture'+"\n"
+            + '                   RFC 2579: Textual Conventions for SMIv2'
+              ;
+  }
+  typedef ipv4-address {
+    type string {
+      pattern '((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9'
+            + ']|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))'
+              ;
+    }
+    description 'The ipv4-address type represents an IPv4 address in'+"\n"
+              + '        		dotted-quad notation.  The IPv4 address may include '
+              + 'a zone'+"\n"
+              + '        		index, separated by a % sign.'+"\n"
+              + ''+"\n"
+              + '        		The zone index is used to disambiguate identical add'
+              + 'ress'+"\n"
+              + '        		values.  For link-local addresses, the zone index wi'
+              + 'll'+"\n"
+              + '        		typically be the interface index number or the name '
+              + 'of an'+"\n"
+              + '        		interface.  If the zone index is not present, the de'
+              + 'fault'+"\n"
+              + '        		zone of the device will be used.'+"\n"
+              + ''+"\n"
+              + '        		The canonical format for the zone index is the numer'
+              + 'ical'+"\n"
+              + '        		format'
+                ;
+  }
+  typedef ipv6-address {
+    type string {
+      pattern '(((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}((([0-9a-fA-F]{'
+            + '0,4}:)?(:|[0-9a-fA-F]{0,4}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?['
+            + '0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9]))))'
+              ;
+      pattern '((([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|((([^:]+:)*[^:]+)?::(([^'
+            + ':]+:)*[^:]+)?))'
+              ;
+    }
+    description 'The ipv6-address type represents an IPv6 address in full,'+"\n"
+              + '       		 mixed, shortened, and shortened-mixed notation.  The'
+              + ' IPv6'+"\n"
+              + '       		 address may include a zone index, separated by a % s'
+              + 'ign.'+"\n"
+              + ''+"\n"
+              + '       		 The zone index is used to disambiguate identical add'
+              + 'ress'+"\n"
+              + '       		 values.  For link-local addresses, the zone index wi'
+              + 'll'+"\n"
+              + '       		 typically be the interface index number or the name '
+              + 'of an'+"\n"
+              + '       		 interface.  If the zone index is not present, the de'
+              + 'fault'+"\n"
+              + '       		 zone of the device will be used.'+"\n"
+              + ''+"\n"
+              + '        		The canonical format of IPv6 addresses uses the comp'
+              + 'ressed'+"\n"
+              + '       		 format described in RFC 4291, Section 2.2, item 2 wi'
+              + 'th the'+"\n"
+              + '       		 following additional rules: the :: substitution must'
+              + ' be'+"\n"
+              + '       		 applied to the longest sequence of all-zero 16-bit c'
+              + 'hunks'+"\n"
+              + '       		 in an IPv6 address.  If there is a tie, the first se'
+              + 'quence'+"\n"
+              + '       		 of all-zero 16-bit chunks is replaced by ::.  Single'
+              + ''+"\n"
+              + '       		 all-zero 16-bit chunks are not compressed.  The cano'
+              + 'nical'+"\n"
+              + '       		 format uses lowercase characters and leading zeros a'
+              + 're'+"\n"
+              + '       		 not allowed.  The canonical format for the zone inde'
+              + 'x is'+"\n"
+              + '       		 the numerical format as described in RFC 4007, Secti'
+              + 'on'+"\n"
+              + '       		 11.2.'
+                ;
+    reference 'RFC 4291: IP Version 6 Addressing Architecture'+"\n"
+            + '       		 RFC 4007: IPv6 Scoped Address Architecture'+"\n"
+            + '       		 RFC 5952: A Recommendation for IPv6 Address Text Repre'
+            + 'sentation'
+              ;
+  }
+  typedef ipv4-mask {
+    type ipv4-address ;
+  }
+  typedef ipv4-mask-length {
+    type uint8 {
+      range 0..32 ;
+    }
+  }
+  typedef ipv6-mask-length {
+    type uint8 {
+      range 0..128 ;
+    }
+  }
+  typedef range {
+    type string {
+      pattern '(((([0-9]+-[0-9]+)|([0-9]+)),){0,}(([0-9]+-[0-9]+)|([0-9]+)){1,'
+            + '1})'
+              ;
+    }
+    description "This typedef provide the capability that user can use it to in"
+              + "put multi-sections parameter. For example,\"1-300,400,450-500\""
+              + ",etc. The format of one section is \"from-to\" or a fixed digi"
+              + "t, \"from\" and \"to\" are also a digit and \"to\" must be gre"
+              + "ater than \"from\", the next section's \"from\" or fixed digit"
+              + " must be greater than the previous's \"to\" or fixed digit. se"
+              + "ctions are concatenated by comma(\",\")."
+                ;
+  }
+  typedef single-range {
+    type string {
+      pattern '((([0-9]+-[0-9]+)|([0-9]+)){1,1})'
+              ;
+    }
+    description 'This typedef provide the capability that user can use it to in'
+              + 'put a range parameter. For example,"1-300","50",etc.  The form'
+              + 'at of this type is "from-to" or a fixed digit, "from" and "to"'
+              + ' are also a digit and "to" must be greater than "from".'
+                ;
+  }
+  typedef asn-nn {
+    type string {
+      pattern '((([1-9][0-9]{1,3})|([1-9][0-9]{0,0})|0|([0-5][0-9]{4,4})|(6[0-'
+            + '4][0-9]{3,3})|(65[0-4][0-9]{2,2})|(655[0-2][0-9]{1,1})|(6553[0-4'
+            + '][0-9]{0,0})|65535):(([1-9][0-9]{1,8})|([1-9][0-9]{0,0})|0|([0-3'
+            + '][0-9]{9,9})|(4[0-1][0-9]{8,8})|(42[0-8][0-9]{7,7})|(429[0-3][0-'
+            + '9]{6,6})|(4294[0-8][0-9]{5,5})|(42949[0-5][0-9]{4,4})|(429496[0-'
+            + '6][0-9]{3,3})|(4294967[0-1][0-9]{2,2})|(42949672[0-8][0-9]{1,1})'
+            + '|(429496729[0-4][0-9]{0,0})|4294967295))'
+              ;
+    }
+    description 'This typedef provide the capability that user can use it to in'
+              + 'put asn_nn format parameters. The format is "<0-65535>:<0-4294'
+              + '967265>", such as "20:12000","0:567890",etc.'
+                ;
+  }
+  typedef asnd-nn {
+    type string {
+      pattern '((([1-9][0-9]{1,3})|([2-9][0-9]{0,0})|1|([0-5][0-9]{4,4})|(6[0-'
+            + '4][0-9]{3,3})|(65[0-4][0-9]{2,2})|(655[0-2][0-9]{1,1})|(6553[0-4'
+            + '][0-9]{0,0})|65535)\.(([1-9][0-9]{1,3})|([1-9][0-9]{0,0})|0|([0-'
+            + '5][0-9]{4,4})|(6[0-4][0-9]{3,3})|(65[0-4][0-9]{2,2})|(655[0-2][0'
+            + '-9]{1,1})|(6553[0-4][0-9]{0,0})|65535):(([1-9][0-9]{1,3})|([1-9]'
+            + '[0-9]{0,0})|0|([0-5][0-9]{4,4})|(6[0-4][0-9]{3,3})|(65[0-4][0-9]'
+            + '{2,2})|(655[0-2][0-9]{1,1})|(6553[0-4][0-9]{0,0})|65535))'
+              ;
+    }
+    description 'This typedef provide the capability that user can use it to in'
+              + 'put asnd_nn format parameters. The format is "<1-65535>.<0-655'
+              + '35>:<0-65535>", such as "20.40:1000","1.0:65534",etc.'
+                ;
+  }
+  typedef ipadd-nn {
+    type string {
+      pattern '((([1-9][0-9]{1,1})|([1-9][0-9]{0,0})|0|([0-1][0-9]{2,2})|(2[0-'
+            + '4][0-9]{1,1})|(25[0-4][0-9]{0,0})|255)\.(([1-9][0-9]{1,1})|([1-9'
+            + '][0-9]{0,0})|0|([0-1][0-9]{2,2})|(2[0-4][0-9]{1,1})|(25[0-4][0-9'
+            + ']{0,0})|255)\.(([1-9][0-9]{1,1})|([1-9][0-9]{0,0})|0|([0-1][0-9]'
+            + '{2,2})|(2[0-4][0-9]{1,1})|(25[0-4][0-9]{0,0})|255)\.(([1-9][0-9]'
+            + '{1,1})|([1-9][0-9]{0,0})|0|([0-1][0-9]{2,2})|(2[0-4][0-9]{1,1})|'
+            + '(25[0-4][0-9]{0,0})|255):(([1-9][0-9]{1,3})|([1-9][0-9]{0,0})|0|'
+            + '([0-5][0-9]{4,4})|(6[0-4][0-9]{3,3})|(65[0-4][0-9]{2,2})|(655[0-'
+            + '2][0-9]{1,1})|(6553[0-4][0-9]{0,0})|65535))'
+              ;
+    }
+    description 'This typedef provide the capability that user can use it to in'
+              + 'put asnd_nn format parameters. The format is "<0-255>.<0-255>.'
+              + '<0-255>.<0-255>:<0-65535>", such as "1.2.3.4:1000","0.0.255.25'
+              + '5:65535",etc.'
+                ;
+  }
+  typedef terminal-based-uint32 {
+    type uint32 ;
+    description 'This typedef provide the capability that user can use it to in'
+              + 'put terminal-based uint32 parameters. If a uint32 value is inp'
+              + 'utted, system will calculate another terminal-based uint32 val'
+              + 'ue according to terminal type and terminal id, and two uint32 '
+              + 'values will be merged to one uint64 value (terminal-based valu'
+              + 'e will be high 32-bits and original value will be low 32-bits)'
+              + '.'
+                ;
+  }
+  typedef string-quesiton-mark {
+    type string {
+      pattern '\S*'
+              ;
+    }
+    description 'This typedef provides the capability that quesition mark can b'
+              + 'e accepted as valid input.'
+                ;
+  }
+  typedef string-with-blank {
+    type string {
+      pattern '([^?]*)'
+              ;
+    }
+    description 'This typedef provides the capability that blank can be accepte'
+              + 'd as valid input.'
+                ;
+  }
+  typedef uint64-8bytes {
+    type uint64 ;
+    description 'This typedef provides the capability that uint64 value will be'
+              + ' transformed to 8 bytes sequence.'
+                ;
+  }
+  typedef string-all {
+    type string ;
+    description 'This typedef provides the capability that quesition mark or bl'
+              + 'ank can be accepted as valid input.'
+                ;
+  }
+  typedef url {
+    type string-quesiton-mark ;
+    description 'This typedef provides the capability that url(include question'
+              + ' mark) can be accepted as valid input.'
+                ;
+  }
+  typedef area-id {
+    type string {
+      pattern '(([0-9a-fA-F]{2,2})|([0-9a-fA-F]{4,4})|([0-9a-fA-F]{2,2}(\.[0-9'
+            + 'a-fA-F]{4,4}){1,6})|([0-9a-fA-F]{4,4}(\.[0-9a-fA-F]{4,4}){1,5}))'
+              {
+        description 'format：[XX.]XXXX.XXXX.XXXX.XXXX.XXXX.XXXX  , X matching [0'
+                  + '-9a-fA-F].'
+                    ;
+      }
+    }
+    description 'This typedef provides the capability that area-id can be accep'
+              + 'ted as valid input.The format of area-id is XX or XX:XXXX..and'
+              + ' up to XX:XXXX:XXXX:XXXX:XXXX:XXXX:XXXX.'+"\n"
+              + 'X presents digital or character a to f or A to F.'
+                ;
+  }
+  typedef hex {
+    type string {
+      pattern '(0[xX][0-9a-fA-F]{1,8})'
+              ;
+    }
+    description 'This typedef provides the capability that hex can be accepted '
+              + 'as valid input.The hex value must begin with 0x and 0X, and up'
+              + ' to 8 hex digitals followed. For example 0x1f,0xffe,0x12345678'
+              + '.'
+                ;
+  }
+  typedef asn-dot {
+    type string {
+      pattern '((([1-9]{1,1})|([1-9][0-9]{1,3})|([1-5][0-9]{4,4})|(6[0-4][0-9]'
+            + '{3,3})|(65[0-4][0-9]{2,2})|(655[0-2][0-9]{1,1})|(6553[0-4])|6553'
+            + '5)|((([1-9]{1,1})|([1-9][0-9]{1,3})|([1-5][0-9]{4,4})|(6[0-4][0-'
+            + '9]{3,3})|(65[0-4][0-9]{2,2})|(655[0-2][0-9]{1,1})|(6553[0-4])|65'
+            + '535)\.(([0-9]{1,2})|([0-9][0-9]{1,3})|([1-5][0-9]{4,4})|(6[0-4]['
+            + '0-9]{3,3})|(65[0-4][0-9]{2,2})|(655[0-2][0-9]{1,1})|(6553[0-4])|'
+            + '65535)){0,1})'
+              ;
+    }
+    description 'This typedef provide the capability that user can use it to in'
+              + 'put asn_dot format parameters. The format is "<1-65535>.<0-655'
+              + '35>" or <1-65535>,such as "20.12000","1.56789","65535"etc.'
+                ;
+  }
+  typedef ipv4-imask {
+    type ipv4-address ;
+  }
+  typedef summer-clock {
+    type string {
+      pattern '((20|21|22|23|[0-1][0-9]):[0-5][0-9])'
+              ;
+    }
+    description 'the definition of summer clock time, format:hh:mm'
+                ;
+  }
+  typedef ifname {
+    type string ;
+    description 'This typedef is used to define interface name.'
+                ;
+  }
+  typedef bitmap {
+    type string {
+      pattern '(((([0-9]+-[0-9]+)|([0-9]+)),){0,}(([0-9]+-[0-9]+)|([0-9]+)){1,'
+            + '1})'
+              ;
+    }
+    description "This typedef provide the capability that user can use it to in"
+              + "put multi-sections parameter and these parameters will be stor"
+              + "ed with bit style. For example,\"1-300,400,450-500\",etc.  The"
+              + " format of one section is \"from-to\" or a fixed digit, \"from"
+              + "\" and \"to\" are also a digit and \"to\" must be greater than"
+              + " \"from\", the next section's \"from\" or fixed digit must be "
+              + "greater than the previous's \"to\" or fixed digit. sections ar"
+              + "e concatenated by comma(\",\")."
+                ;
+  }
+  typedef cpu {
+    type string ;
+    description 'This typedef is used to define cpu name.'
+                ;
+  }
+  typedef board {
+    type string ;
+    description 'This typedef is used to define board name.'
+                ;
+  }
+  typedef ipv4-address-none-zero {
+    type string {
+      pattern '((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}([0-9'
+            + ']|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))'
+              ;
+    }
+    description 'ipv4-address without all zero (0.0.0.0)configuration;'
+                ;
+  }
+  typedef mac-address-none-zero {
+    type string {
+      pattern '([0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){5})'
+              ;
+    }
+    description 'mac-address without all zero (00:00:00:00:00:00)configuration;'
+                ;
+  }
+  typedef long-text {
+    type string {
+      length 0..4095 ;
+    }
+    description 'This typedef provide the capability that user can use it to in'
+              + 'put char parameter, the length is 0-4095. Quesition mark and b'
+              + 'lank can be accepted as valid input.'
+                ;
+  }
+  typedef ipv6-prefix {
+    type string ;
+    description 'This typedef is used to define an ipv6 address with prefix.'
+                ;
+  }
+}

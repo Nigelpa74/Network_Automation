@@ -1,0 +1,2922 @@
+module zxr10-monitor {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/monitor" ;
+  prefix monitor ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  revision 2025-07-17 {
+    description '1. Add acl-rule-feature to control the acl-rules node:
+/configuration/monitor/sessions/session/acl-rules.
+2. Add comments to the following values of flow-type about to be abandoned: openflow-lldp, openflow-arp, openflow-dhcp, openflow-bgp, openflow-ospf, openflow-icmp.' ;
+  }
+
+  revision 2024-12-10 {
+    description 'Modify acl-type nodes to support ipv6-mixed-acl：
+/configuration/monitor/sessions/session/multi-acl-destinations/multi-interface/acl-type;
+/configuration/monitor/sessions/session/multi-acl-destinations/multi-vpws/acl-type;
+/configuration/monitor/sessions/session/multi-acl-destinations/multi-cpu/acl-type.' ;
+  }
+
+  revision 2024-10-19 {
+    description 'Add case type2 with erspan-type2-feature to support ERSAPAN type2:
+/configuration/monitor/sessions/session/erspan-type/encapsulation/type2.' ;
+  }
+
+  revision 2024-10-16 {
+    description 'Modify description.' ;
+  }
+
+  revision 2024-07-29 {
+    description 'Add choice node encapsulation into container node erspan-type:
+/configuration/monitor/sessions/session/erspan-type/encapsulation.
+Move leaf nodes erspan-type and erspan-id into case type3:
+/configuration/monitor/sessions/session/erspan-type/encapsulation/type3/erspan-id;
+/configuration/monitor/sessions/session/erspan-type/encapsulation/type3/erspan-type.
+Add case type1 with erspan-type1-feature to support ERSAPAN type1:
+/configuration/monitor/sessions/session/erspan-type/encapsulation/type1.' ;
+  }
+
+  revision 2024-05-21 {
+    description 'Support service-class with service-class-feature:
+/configuration/monitor/sessions/session/service-class.' ;
+  }
+
+  revision 2024-03-12 {
+    description 'Support mac-layer and ip-layer with feature:
+/configuration/monitor/sessions/session/sources/interface-source/mac-layer;
+/configuration/monitor/sessions/session/sources/interface-source/ip-layer.' ;
+  }
+
+  revision 2024-01-08 {
+    description 'Support cbsUnit and pbsUnit with feature:
+/configuration/monitor/rate-limits/rate-limit/cbs-unit;
+/configuration/monitor/rate-limits/rate-limit/pir-pbs/pbs-unit.' ;
+  }
+
+  revision 2024-01-04 {
+    description 'Add mmrp to flow-type.' ;
+  }
+
+  revision 2023-08-30 {
+    description 'Support uni-acl-destinations with feature:
+/configuration/monitor/sessions/session/uni-acl-destinations.' ;
+  }
+
+  revision 2023-05-30 {
+    description 'Support mirror sample with feature sample-feature:
+/configuration/monitor/sessions/session/sample.' ;
+  }
+
+  revision 2023-05-15 {
+    description 'Support default CPU openflow destination with feature default-openflow-feature:
+/configuration/monitor/sessions/session/default-openflow.' ;
+  }
+
+  revision 2023-04-06 {
+    description 'Modify the range of session-id from 1-64 to 1-200:
+/configuration/monitor/sessions/session/session-id' ;
+  }
+
+  revision 2023-02-27 {
+    description 'Support packet head with feature packet-head-feature:
+/configuration/monitor/sessions/session/packet-heads.' ;
+  }
+
+  revision 2023-02-06 {
+    description 'Support multiple openflow destination with feature multi-openflow-feature:
+/configuration/monitor/sessions/session/multi-acl-destinations/multi-openflow.' ;
+  }
+
+  revision 2022-11-23 {
+    description 'Modify packet length value range from 64-9600 to control by performance parameter:
+/configuration/monitor/sessions/session/packet-length;
+/configuration/monitor/sessions/session/sources/interface-source/packet-length;
+/configuration/monitor/sessions/session/sources/vpws-source/packet-length;
+/configuration/monitor/sessions/session/sources/gre-sources/gre-source/packet-length.' ;
+  }
+
+  revision 2022-09-24 {
+    description 'Support configure ERSPAN type:
+/configuration/monitor/sessions/session/erspan-type.' ;
+  }
+
+  revision 2022-06-15 {
+    description 'Change board name length from 1-19 to 1-35:
+/configuration/monitor/rate-limits/rate-limit/board-name.' ;
+  }
+
+  revision 2022-01-12 {
+    description 'Support VNI in VXLAN destination with feature vni-feature:
+/configuration/monitor/sessions/session/default-vxlans/ipv4s/ipv4/vni;
+/configuration/monitor/sessions/session/default-vxlans/ipv6s/ipv6/vni.' ;
+  }
+
+  revision 2021-09-15 {
+    description '1. Support the mirror session packet length with feature packet-length by add node:
+/configuration/monitor/sessions/session/packet-length.
+2. Support the mirrored source interface packet length with feature packet-length by add nodes:
+/configuration/monitor/sessions/session/sources/interface-source/packet-length;
+/configuration/monitor/sessions/session/sources/vpws-source/packet-length;
+/configuration/monitor/sessions/session/sources/gre-sources/gre-source/packet-length.' ;
+  }
+
+  revision 2021-08-09 {
+    description '1. Support description of the interface monitor source by add node:
+/configuration/monitor/sessions/session/sources/interface-source/source-desc.' ;
+  }
+
+  revision 2021-03-31 {
+    description '1 Add multi-cpu with feature multi-cpu-feature to support CPU destination:
+/configuration/monitor/sessions/session/multi-acl-destination/multi-cpu.
+2 Add default-cpu with feature default-cpu-feature to support default CPU destination:
+/configuration/monitor/sessions/session/default-cpu.' ;
+  }
+
+  revision 2021-03-03 {
+    description 'Add gre-sources with feature gre-source-feature to support GRE monitor source:
+/configuration/monitor/sessions/session/sources/gre-sources.' ;
+  }
+
+  revision 2021-01-05 {
+    description '1 Add default-vxlans with feature default-vxlan-feature to support destination VXLAN:
+/configuration/monitor/sessions/session/default-vxlans;
+2 Add remote-monitor with feature remote-monitor-feature to support RSPAN:
+/configuration/monitor/sessions/session/default-interfaces/default-interface/remote-monitor;
+3 Add encap-remote-monitor with feature encap-remote-monitor-feature to support ERSPAN:
+/configuration/monitor/sessions/session/default-gres/default-gre/encap-remote-monitor;
+4 Add switchvlan-sources with feature switchvlan-source-feature to support switchvlan as monitor source:
+/configuration/monitor/sessions/session/sources/switchvlan-sources.
+5 Add cpu-sources with feature cpu-source-feature to support CPU monitor source:
+/configuration/monitor/sessions/session/sources/cpu-sources.' ;
+  }
+
+  revision 2020-06-15 {
+    description 'Support description for session:
+/configuration/monitor/sessions/session/description.' ;
+  }
+
+  revision 2020-04-13 {
+    description '1. Support multi-acl-destinations with feature multi-acl-feature:
+/configuration/monitor/sessions/session/multi-acl-rules;
+2. Support default-interfaces with feature default-interface-feature:
+/configuration/monitor/sessions/session/default-interfaces.
+3. Add enumeration value ipv4-mixed-acl:
+/configuration/monitor/sessions/session/acl-rules/acl-rule/acl-type' ;
+  }
+
+  revision 2017-05-16 {
+    description 'add destination of gre.' ;
+  }
+
+  revision 2017-04-14 {
+    description '1.add vpws case to /configuration/monitor/sessions/session/acl-rules/acl-rule/destination-type/.
+2.add default-vpwss container to /configuration/monitor/sessions/session/. 
+3.add default-observers container to /configuration/monitor/sessions/session/. 
+4.add rule-observers container to /configuration/monitor/sessions/session/.
+5.add flow-type leaf to /configuration/monitor/sessions/session/sources/interface-source/.
+6.add vpws-source list to /configuration/monitor/sessions/session/sources/.' ;
+  }
+
+  revision 2015-07-13 {
+    description 'Initial version' ;
+  }
+
+  feature multi-acl-feature {
+    description 'Mark multiple ACL destination.' ;
+  }
+
+  feature default-interface-feature {
+    description 'Mark multiple default destination.' ;
+  }
+
+  feature default-vxlan-feature {
+    description 'Mark default destination VXLAN.' ;
+  }
+
+  feature switchvlan-source-feature {
+    description 'Mark switchvlan source.' ;
+  }
+
+  feature remote-monitor-feature {
+    description 'Mark remote monitor.' ;
+  }
+
+  feature encap-remote-monitor-feature {
+    description 'Mark encapsulated remote monitor.' ;
+  }
+
+  feature cpu-source-feature {
+    description 'Mark CPU source.' ;
+  }
+
+  feature gre-source-feature {
+    description 'Mark GER source.' ;
+  }
+
+  feature default-cpu-feature {
+    description 'Mark default CPU destination.' ;
+  }
+
+  feature multi-cpu-feature {
+    description 'Mark multiple CPU destination.' ;
+  }
+
+  feature packet-length {
+    description 'Mark the packet length for interception.' ;
+    ncd:revise-date 2021-09-15 ;
+  }
+
+  feature vni-feature {
+    description 'Mark VXLAN destination support VNI.' ;
+    ncd:revise-date 2022-01-12 ;
+  }
+
+  feature erspan-type {
+    description 'Mark ERSPAN type.' ;
+    ncd:revise-date 2022-09-24 ;
+  }
+
+  feature erspan-type1-feature {
+    description 'Mark ERSPAN type1.' ;
+    ncd:revise-date 2024-07-29 ;
+  }
+
+  feature erspan-type2-feature {
+    description 'Mark ERSPAN type2.' ;
+    ncd:revise-date 2024-10-19 ;
+  }
+
+  feature multi-openflow-feature {
+    description 'Mark multiple CPU openflow destination.' ;
+    ncd:revise-date 2023-02-06 ;
+  }
+
+  feature packet-head-feature {
+    description 'Mark the packet head for interception.' ;
+    ncd:revise-date 2023-02-27 ;
+  }
+
+  feature default-openflow-feature {
+    description 'Mark default CPU openflow destination.' ;
+    ncd:revise-date 2023-05-15 ;
+  }
+
+  feature sample-feature {
+    description 'Mark mirror sample.' ;
+    ncd:revise-date 2023-05-30 ;
+  }
+
+  feature uni-acl-ipv4-feature {
+    description 'Mark one-to-one IPv4 ACL destination.' ;
+    ncd:revise-date 2023-08-30 ;
+  }
+
+  feature uni-acl-ipv6-feature {
+    description 'Mark one-to-one IPv6 ACL destination.' ;
+    ncd:revise-date 2023-08-30 ;
+  }
+
+  feature uni-acl-link-feature {
+    description 'Mark one-to-one link ACL destination.' ;
+    ncd:revise-date 2023-08-30 ;
+  }
+
+  feature uni-acl-ipv4-mixed-feature {
+    description 'Mark one-to-one IPv4 mixed ACL destination.' ;
+    ncd:revise-date 2023-08-30 ;
+  }
+
+  feature uni-acl-intf-feature {
+    description 'Mark one-to-one interface destination.' ;
+    ncd:revise-date 2023-08-30 ;
+  }
+
+  feature uni-acl-vpws-feature {
+    description 'Mark one-to-one VPWS destination.' ;
+    ncd:revise-date 2023-08-30 ;
+  }
+
+  feature uni-acl-gre-feature {
+    description 'Mark one-to-one GRE destination.' ;
+    ncd:revise-date 2023-08-30 ;
+  }
+
+  feature uni-acl-cpu-feature {
+    description 'Mark one-to-one CPU destination.' ;
+    ncd:revise-date 2023-08-30 ;
+  }
+
+  feature uni-acl-openflow-feature {
+    description 'Mark one-to-one CPU openflow destination.' ;
+    ncd:revise-date 2023-08-30 ;
+  }
+
+  feature uni-acl-remote-vlan-feature {
+    description 'Mark one-to-one remote VLAN destination.' ;
+    ncd:revise-date 2023-08-30 ;
+  }
+
+  feature cbs-unit-feature {
+    description 'Mark the unit of CBS.' ;
+    ncd:revise-date 2024-01-08 ;
+  }
+
+  feature pbs-unit-feature {
+    description 'Mark the unit of PBS.' ;
+    ncd:revise-date 2024-01-08 ;
+  }
+
+  feature mac-layer-feature {
+    description 'Mark the MAC layer matching type of packets.' ;
+    ncd:revise-date 2024-03-12 ;
+  }
+
+  feature ip-layer-feature {
+    description 'Mark the IP layer matching type of packets.' ;
+    ncd:revise-date 2024-03-12 ;
+  }
+
+  feature service-class-feature {
+    description 'Mark the service class of packets.' ;
+    ncd:revise-date 2024-05-21 ;
+  }
+
+  feature acl-rule-feature {
+    description 'Mark ACL destination.' ;
+    ncd:revise-date 2025-07-17 ;
+  }
+
+  typedef flow-type {
+    type enumeration {
+      enum default {
+        value 0 ;
+      }
+
+      enum bgp-default {
+        value 1 ;
+      }
+
+      enum bgp-config {
+        value 2 ;
+      }
+
+      enum bgp-known {
+        value 3 ;
+      }
+
+      enum ospf-default {
+        value 4 ;
+      }
+
+      enum ospf-config {
+        value 5 ;
+      }
+
+      enum ospf-known {
+        value 6 ;
+      }
+
+      enum isis-default {
+        value 7 ;
+      }
+
+      enum isis-known {
+        value 8 ;
+      }
+
+      enum rip {
+        value 9 ;
+      }
+
+      enum pim-suppress {
+        value 10 ;
+      }
+
+      enum pim {
+        value 11 ;
+      }
+
+      enum igmp-suppress {
+        value 12 ;
+      }
+
+      enum igmp-default {
+        value 13 ;
+      }
+
+      enum msdp-default {
+        value 14 ;
+      }
+
+      enum msdp-known {
+        value 15 ;
+      }
+
+      enum mld {
+        value 16 ;
+      }
+
+      enum mvpn {
+        value 17 ;
+      }
+
+      enum msdp-config {
+        value 18 ;
+      }
+
+      enum ospf-hello {
+        value 19 ;
+      }
+
+      enum isis-hello {
+        value 20 ;
+      }
+
+      enum pim-hello {
+        value 21 ;
+      }
+
+      enum pim-known {
+        value 22 ;
+      }
+
+      enum ldp-default {
+        value 25 ;
+      }
+
+      enum ldp-config {
+        value 26 ;
+      }
+
+      enum ldp-known {
+        value 27 ;
+      }
+
+      enum ldp-udp {
+        value 28 ;
+      }
+
+      enum rsvp {
+        value 29 ;
+      }
+
+      enum ldp-known-hello {
+        value 30 ;
+      }
+
+      enum pcep-default {
+        value 31 ;
+      }
+
+      enum pcep-known {
+        value 32 ;
+      }
+
+      enum telnet-default {
+        value 35 ;
+      }
+
+      enum telnet-known {
+        value 36 ;
+      }
+
+      enum snmp-default {
+        value 37 ;
+      }
+
+      enum snmp-known {
+        value 38 ;
+      }
+
+      enum ssh-default {
+        value 39 ;
+      }
+
+      enum ssh-known {
+        value 40 ;
+      }
+
+      enum rta-default {
+        value 41 ;
+      }
+
+      enum rta-known {
+        value 42 ;
+      }
+
+      enum http-default {
+        value 51 ;
+      }
+
+      enum "tacacs+" {
+        value 52 ;
+      }
+
+      enum radius {
+        value 54 ;
+      }
+
+      enum dhcp {
+        value 55 ;
+      }
+
+      enum ntp {
+        value 56 ;
+      }
+
+      enum ftp-default {
+        value 57 ;
+      }
+
+      enum ftp-known {
+        value 58 ;
+      }
+
+      enum tftp {
+        value 59 ;
+      }
+
+      enum lsp-ping {
+        value 60 ;
+      }
+
+      enum mac-ping {
+        value 61 ;
+      }
+
+      enum bfd-default {
+        value 62 ;
+      }
+
+      enum bfd-known {
+        value 63 ;
+      }
+
+      enum vrrp {
+        value 64 ;
+      }
+
+      enum ipsec {
+        value 65 ;
+      }
+
+      enum l2tp {
+        value 66 ;
+      }
+
+      enum icmp-app {
+        value 67 ;
+      }
+
+      enum portal {
+        value 68 ;
+      }
+
+      enum eap-authentication {
+        value 69 ;
+      }
+
+      enum dns {
+        value 72 ;
+      }
+
+      enum http-known {
+        value 74 ;
+      }
+
+      enum twamp-tcp-default {
+        value 75 ;
+      }
+
+      enum twamp-tcp-known {
+        value 76 ;
+      }
+
+      enum twamp-udp-default {
+        value 77 ;
+      }
+
+      enum twamp-udp-known {
+        value 78 ;
+      }
+
+      enum sibmgr-known {
+        value 80 ;
+      }
+
+      enum radius-coa-dm {
+        value 82 ;
+      }
+
+      enum dhcp-known {
+        value 83 ;
+      }
+
+      enum sqa-general-flow {
+        value 84 ;
+      }
+
+      enum meap-authentication {
+        value 86 ;
+      }
+
+      enum nhrp {
+        value 87 ;
+      }
+
+      enum openflow-default {
+        value 88 ;
+      }
+
+      enum openflow-known {
+        value 89 ;
+      }
+
+      enum pcp {
+        value 90 ;
+      }
+
+      enum icmp-default {
+        value 91 ;
+      }
+
+      enum icmp-control {
+        value 92 ;
+      }
+
+      enum tcp-default {
+        value 93 ;
+      }
+
+      enum udp-default {
+        value 94 ;
+      }
+
+      enum nd {
+        value 95 ;
+      }
+
+      enum ah {
+        value 96 ;
+      }
+
+      enum esp {
+        value 97 ;
+      }
+
+      enum gre {
+        value 98 ;
+      }
+
+      enum sctp-default {
+        value 99 ;
+      }
+
+      enum arp-suppress {
+        value 101 ;
+      }
+
+      enum arp-default {
+        value 102 ;
+      }
+
+      enum ppp-connect {
+        value 103 ;
+      }
+
+      enum arp-known {
+        value 104 ;
+      }
+
+      enum hdlc-control {
+        value 105 ;
+      }
+
+      enum fr-control {
+        value 107 ;
+      }
+
+      enum lacp {
+        value 109 ;
+      }
+
+      enum udld {
+        value 110 ;
+      }
+
+      enum lldp {
+        value 111 ;
+      }
+
+      enum stp {
+        value 112 ;
+      }
+
+      enum pppoe-disc {
+        value 113 ;
+      }
+
+      enum pppoe-session {
+        value 114 ;
+      }
+
+      enum efm {
+        value 119 ;
+      }
+
+      enum slow-cfm {
+        value 120 ;
+      }
+
+      enum mc-elam {
+        value 121 ;
+      }
+
+      enum ssm {
+        value 122 ;
+      }
+
+      enum evb {
+        value 123 ;
+      }
+
+      enum nd-known {
+        value 124 ;
+      }
+
+      enum pppoe-keepalive {
+        value 127 ;
+      }
+
+      enum pppoe-padi {
+        value 128 ;
+      }
+
+      enum noarp {
+        value 142 ;
+      }
+
+      enum nosupervlan {
+        value 143 ;
+      }
+
+      enum vplsmac {
+        value 144 ;
+      }
+
+      enum netflow-up {
+        value 146 ;
+      }
+
+      enum nond {
+        value 147 ;
+      }
+
+      enum pmtu {
+        value 148 ;
+      }
+
+      enum special-multidata {
+        value 151 ;
+      }
+
+      enum ttl1 {
+        value 152 ;
+      }
+
+      enum ipfrag {
+        value 154 ;
+      }
+
+      enum ipoption {
+        value 155 ;
+      }
+
+      enum ipv6-special {
+        value 156 ;
+      }
+
+      enum netflow-down {
+        value 159 ;
+      }
+
+      enum nosa {
+        value 160 ;
+      }
+
+      enum unihttp {
+        value 161 ;
+      }
+
+      enum special-multidata6 {
+        value 163 ;
+      }
+
+      enum tunnel-special {
+        value 165 ;
+      }
+
+      enum nat-alg {
+        value 167 ;
+      }
+
+      enum nat-nonat {
+        value 168 ;
+      }
+
+      enum nat-pcp {
+        value 169 ;
+      }
+
+      enum nat-p2mp-local {
+        value 170 ;
+      }
+
+      enum ptp-normal {
+        value 174 ;
+      }
+
+      enum mpls-oam-cv {
+        value 176 ;
+      }
+
+      enum ip-unreachable {
+        value 177 ;
+      }
+
+      enum atm-oam {
+        value 178 ;
+      }
+
+      enum slow-mpls-tp-oam {
+        value 180 ;
+      }
+
+      enum mpls-tp-aps {
+        value 182 ;
+      }
+
+      enum multi-hop-access {
+        value 183 ;
+      }
+
+      enum up-slow-cfm {
+        value 184 ;
+      }
+
+      enum sdc-access {
+        value 185 ;
+      }
+
+      enum unihttp_syn {
+        value 186 ;
+      }
+
+      enum down-fast-cfm {
+        value 187 ;
+      }
+
+      enum up-fast-cfm {
+        value 188 ;
+      }
+
+      enum radius-proxy-traffic {
+        value 191 ;
+      }
+
+      enum ipv6-ah-or-esp {
+        value 195 ;
+      }
+
+      enum openflow-controller {
+        value 196 ;
+      }
+
+      enum openflow-normal {
+        value 197 ;
+      }
+
+      enum cps-log {
+        value 199 ;
+      }
+
+      enum no-nhrp {
+        value 200 ;
+      }
+
+      enum fast-unihttp {
+        value 202 ;
+      }
+
+      enum erps {
+        value 203 ;
+      }
+
+      enum uni-arp-default {
+        value 204 ;
+      }
+
+      enum uni-arp-known {
+        value 205 ;
+      }
+
+      enum uni-nd {
+        value 206 ;
+      }
+
+      enum uni-dhcp {
+        value 208 ;
+      }
+
+      enum openflow-tblmissing {
+        value 209 ;
+      }
+
+      enum arp-nni {
+        value 210 ;
+      }
+
+      enum openflow-lldp {
+        value 211 ;
+        description 'About to be abandoned.' ;
+      }
+
+      enum openflow-arp {
+        value 212 ;
+        description 'About to be abandoned.' ;
+      }
+
+      enum openflow-dhcp {
+        value 213 ;
+        description 'About to be abandoned.' ;
+      }
+
+      enum openflow-bgp {
+        value 214 ;
+        description 'About to be abandoned.' ;
+      }
+
+      enum openflow-ospf {
+        value 215 ;
+        description 'About to be abandoned.' ;
+      }
+
+      enum openflow-icmp {
+        value 216 ;
+        description 'About to be abandoned.' ;
+      }
+
+      enum static-arp-trust {
+        value 217 ;
+      }
+
+      enum vrrp-known {
+        value 218 ;
+      }
+
+      enum arp-protect {
+        value 223 ;
+      }
+
+      enum nd-protect {
+        value 224 ;
+      }
+
+      enum mmrp {
+        value 131 ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'MONITOR module configuration model.' ;
+    container monitor {
+      description 'MONITOR module configuration root node.' ;
+      container sessions {
+        description 'MONITOR sessions.' ;
+        list session {
+          description 'MONITOR session.' ;
+          key session-id ;
+          leaf session-id {
+            description 'MONITOR session ID.' ;
+            type uint32 {
+              range 1..200 ;
+
+            }
+
+          }
+
+          leaf description {
+            description 'Description for use.' ;
+            type ncd:string-with-blank {
+              length 1..79 ;
+
+            }
+
+            ncd:revise-date 2020-06-15 ;
+          }
+
+          leaf packet-length {
+            if-feature packet-length ;
+
+            description 'Configure the mirror packet length in bytes for interception.' ;
+            type uint32 {
+              range 64..9600 {
+                description 'The packet length for interception.' ;
+              }
+
+            }
+
+            ncd:revise-date 2021-09-15 ;
+          }
+
+          container acl-rules {
+            description 'MONITOR destinations for ACL rules.' ;
+            list acl-rule {
+              description 'MONITOR destination for one ACL rule.' ;
+              key 'acl-type acl-name' ;
+              leaf acl-type {
+                description 'The ACL type.' ;
+                type enumeration {
+                  enum ipv4-acl {
+                    value 1 ;
+                    description 'The type of ACL is IPv4' ;
+                  }
+
+                  enum ipv6-acl {
+                    value 2 ;
+                    description 'The type of ACL is IPv6' ;
+                  }
+
+                  enum link-acl {
+                    value 3 ;
+                    description 'The type of ACL is LINK' ;
+                  }
+
+                  enum ipv4-mixed-acl {
+                    value 4 ;
+                    description 'The type of ACL is IPv4 mixed' ;
+                  }
+
+                }
+
+              }
+
+              leaf acl-name {
+                description 'The ACL name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              choice destination-type {
+                description 'The type of MONITOR destination.' ;
+                mandatory true ;
+                case interface {
+                  description 'The type of MONITOR destination is interface.' ;
+                  leaf interface-name {
+                    description 'The interface name.' ;
+                    type ncd:ifname ;
+
+                  }
+
+                }
+
+                case vpws {
+                  description 'The type of MONITOR destination is VPWS.' ;
+                  leaf vpws-name {
+                    description 'The VPWS name.' ;
+                    type string {
+                      length 1..32 ;
+
+                    }
+
+                  }
+
+                  ncd:revise-date 2017-04-14 ;
+                }
+
+              }
+
+            }
+
+            if-feature acl-rule-feature {
+              ncd:revise-date 2025-07-17 ;
+            }
+
+          }
+
+          container default {
+            description 'The default MONITOR destination.' ;
+            presence "Default destination interface of mirror" ;
+            choice destination-type {
+              description 'The type of MONITOR destination.' ;
+              mandatory true ;
+              case interface {
+                description 'The type of MONITOR destination is interface.' ;
+                leaf interface-name {
+                  description 'The interface name of MONITOR destination.' ;
+                  type ncd:ifname ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container default-vpwss {
+            description 'Configuration port mirror of remote mirror by VPWS.' ;
+            list default-vpws {
+              description 'Configuration list of port mirror of remote mirror by VPWS.' ;
+              key vpws-name ;
+              leaf vpws-name {
+                description 'The VPWS name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2017-04-14 ;
+          }
+
+          container sources {
+            description 'The MONITOR sources.' ;
+            list interface-source {
+              description 'The MONITOR source whose type is interface.' ;
+              key 'interface-name direction' ;
+              leaf interface-name {
+                description 'The interface name of MONITOR source.' ;
+                type ncd:ifname ;
+
+              }
+
+              leaf direction {
+                description 'The direction for MONITOR source.' ;
+                type enumeration {
+                  enum rx {
+                    value 2 ;
+                    description 'The MONITOR direction is receive' ;
+                  }
+
+                  enum tx {
+                    value 3 ;
+                    description 'The MONITOR direction is transmit' ;
+                  }
+
+                }
+
+              }
+
+              leaf flow-type {
+                description 'Flow type.' ;
+                type enumeration {
+                  enum bfd-default {
+                    value 62 ;
+                    description 'Packets from unknown BFD sessions' ;
+                  }
+
+                }
+
+                ncd:revise-date 2017-04-14 ;
+              }
+
+              leaf source-desc {
+                description 'Description of the interface monitor source, support 1-79 characters.' ;
+                type ncd:string-with-blank {
+                  length 1..79 {
+                    description 'Description of the interface monitor source, support 1-79 characters.' ;
+                  }
+
+                }
+
+                ncd:revise-date 2021-08-09 ;
+              }
+
+              leaf packet-length {
+                if-feature packet-length ;
+
+                description 'Configure the packet length in bytes for interception of mirrored source interface.' ;
+                type uint32 {
+                  range 64..9600 {
+                    description 'The packet length for interception.' ;
+                  }
+
+                }
+
+                ncd:revise-date 2021-09-15 ;
+              }
+
+              leaf mac-layer {
+                type enumeration {
+                  enum srv6-inner {
+                    value 1 ;
+                    description 'Specify matching inner layer of SRv6 packets.' ;
+                  }
+
+                }
+
+                if-feature mac-layer-feature ;
+
+                description 'Specify MAC layer matching type of packets.' ;
+                ncd:revise-date 2024-03-12 ;
+              }
+
+              leaf ip-layer {
+                type enumeration {
+                  enum srv6-inner {
+                    value 1 ;
+                    description 'Specify matching inner layer of SRv6 packets.' ;
+                  }
+
+                }
+
+                if-feature ip-layer-feature ;
+
+                description 'Specify IP layer matching type of packets.' ;
+                ncd:revise-date 2024-03-12 ;
+              }
+
+            }
+
+            list vpws-source {
+              description 'The MONITOR source whose type is VPWS.' ;
+              key 'vpws-name direction' ;
+              leaf vpws-name {
+                description 'The VPWS name of MONITOR source.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf direction {
+                description 'The direction for MONITOR source.' ;
+                type enumeration {
+                  enum rx {
+                    value 2 ;
+                    description 'The MONITOR direction is receive' ;
+                  }
+
+                }
+
+              }
+
+              leaf packet-length {
+                if-feature packet-length ;
+
+                description 'Configure the packet length in bytes for interception of mirrored VPWS source.' ;
+                type uint32 {
+                  range 64..9600 {
+                    description 'The packet length for interception.' ;
+                  }
+
+                }
+
+                ncd:revise-date 2021-09-15 ;
+              }
+
+              ncd:revise-date 2017-04-14 ;
+            }
+
+            container switchvlan-sources {
+              if-feature switchvlan-source-feature ;
+
+              description 'The switchvlan source.' ;
+              list switchvlan-source {
+                description 'The switchvlan source.' ;
+                key 'switchvlan-id direction' ;
+                leaf switchvlan-id {
+                  description 'The VLAN ID of switchvlan source.' ;
+                  type uint16 {
+                    range 1..4094 ;
+
+                  }
+
+                }
+
+                leaf direction {
+                  description 'The direction for monitor source.' ;
+                  type enumeration {
+                    enum rx {
+                      value 2 ;
+                      description 'The monitor source direction is receive' ;
+                    }
+
+                    enum tx {
+                      value 3 ;
+                      description 'The monitor source direction is transmit' ;
+                    }
+
+                    enum both {
+                      value 1 ;
+                      description 'Set direction to both rx and tx' ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2021-01-05 ;
+            }
+
+            container cpu-sources {
+              if-feature cpu-source-feature ;
+
+              description 'The CPU source.' ;
+              list cpu-source {
+                description 'The CPU source.' ;
+                key 'interface-name direction flow-type' ;
+                leaf interface-name {
+                  description 'The interface name of MONITOR source.' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf direction {
+                  description 'The direction for MONITOR source.' ;
+                  type enumeration {
+                    enum rx {
+                      value 5 ;
+                    }
+
+                    enum tx {
+                      value 6 ;
+                    }
+
+                  }
+
+                }
+
+                leaf flow-type {
+                  description 'Flow type.' ;
+                  type flow-type ;
+
+                }
+
+              }
+
+              ncd:revise-date 2021-01-05 ;
+            }
+
+            container gre-sources {
+              if-feature gre-source-feature ;
+
+              description 'The MONITOR source whose type is GRE.' ;
+              list gre-source {
+                description 'The MONITOR source whose type is GRE.' ;
+                key 'gre-interface direction' ;
+                leaf gre-interface {
+                  description 'GRE interface name of MONITOR source.' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf direction {
+                  description 'The direction for MONITOR source.' ;
+                  type enumeration {
+                    enum rx {
+                      value 2 ;
+                    }
+
+                    enum tx {
+                      value 3 ;
+                    }
+
+                  }
+
+                }
+
+                leaf packet-length {
+                  if-feature packet-length ;
+
+                  description 'Configure the packet length in bytes for interception of mirrored GRE tunnel source.' ;
+                  type uint32 {
+                    range 64..9600 {
+                      description 'The packet length for interception.' ;
+                    }
+
+                  }
+
+                  ncd:revise-date 2021-09-15 ;
+                }
+
+              }
+
+              ncd:revise-date 2021-03-03 ;
+            }
+
+          }
+
+          container default-observers {
+            description 'Specify the source address and destination address of port mirror.' ;
+            list default-observer {
+              description 'Specify the source address and destination address of port mirror.' ;
+              key 'source-ipv4-addr server-ipv4-addr' ;
+              leaf source-ipv4-addr {
+                description 'Specify source IPv4 address.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+              leaf server-ipv4-addr {
+                description 'Specify server IPv4 address.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+            }
+
+            ncd:revise-date 2017-04-14 ;
+          }
+
+          container rule-observers {
+            description 'Specify the source address and destination address of ACL mirror.' ;
+            list rule-observer {
+              description 'Specify the source address and destination address of ACL mirror.' ;
+              key 'acl-type acl-name source-ipv4-addr server-ipv4-addr' ;
+              leaf acl-type {
+                description 'ACL type.' ;
+                type enumeration {
+                  enum ipv4-acl {
+                    value 1 ;
+                    description 'The type of ACL is IPv4' ;
+                  }
+
+                  enum ipv6-acl {
+                    value 2 ;
+                    description 'The type of ACL is IPv6' ;
+                  }
+
+                  enum link-acl {
+                    value 3 ;
+                    description 'The type of ACL is LINK' ;
+                  }
+
+                }
+
+              }
+
+              leaf acl-name {
+                description 'The ACL name.' ;
+                type string {
+                  length 1..31 {
+                    description 'The acl name' ;
+                  }
+
+                }
+
+              }
+
+              leaf source-ipv4-addr {
+                description 'Specify source IPv4 address.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+              leaf server-ipv4-addr {
+                description 'Specify server IPv4 address.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+            }
+
+            ncd:revise-date 2017-04-14 ;
+          }
+
+          container default-gres {
+            description 'Specify the destination of GRE interface.' ;
+            list default-gre {
+              description 'Specify the destination of GRE interface.' ;
+              key gre-interface ;
+              leaf gre-interface {
+                description 'Specify the GRE tunnel interface.' ;
+                type ncd:ifname ;
+
+              }
+
+              container encap-remote-monitor {
+                if-feature encap-remote-monitor-feature ;
+
+                description 'Configure the ERSPAN.' ;
+                leaf tpid {
+                  description 'Configure the MAC header TPID of ERSPAN.' ;
+                  type enumeration {
+                    enum 0x8100 {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default 0x8100 ;
+                }
+
+                leaf precedence {
+                  description 'Configure the IP precedence value of ERSPAN, the larger the value, the higher the priority.' ;
+                  type uint8 {
+                    range 0..7 ;
+
+                  }
+
+                  default 0 ;
+                }
+
+                leaf flags {
+                  description 'Configure the VLAN flags of ERSPAN traffic.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf ttl {
+                  description 'Configure the IP time-to-live (TTL) value.' ;
+                  type uint8 {
+                    range 1..255 ;
+
+                  }
+
+                  default 128 ;
+                }
+
+                leaf dscp {
+                  description 'Configure the IP DSCP value, the larger the value, the higher the priority.' ;
+                  type uint8 {
+                    range 0..63 {
+                      description 'dscp range' ;
+                    }
+
+                  }
+
+                  default 0 ;
+                }
+
+                ncd:revise-date 2021-01-05 ;
+              }
+
+            }
+
+            ncd:revise-date 2017-05-16 ;
+          }
+
+          container multi-acl-destinations {
+            if-feature multi-acl-feature ;
+
+            description 'Specify multiply ACL destination.' ;
+            list multi-interface {
+              description 'Specify interface destination.' ;
+              key 'acl-type acl-name interface-name' ;
+              leaf acl-type {
+                description 'Specify ACL type.' ;
+                type enumeration {
+                  enum ipv4-acl {
+                    value 1 ;
+                  }
+
+                  enum ipv6-acl {
+                    value 2 ;
+                  }
+
+                  enum link-acl {
+                    value 3 ;
+                  }
+
+                  enum ipv4-mixed-acl {
+                    value 4 ;
+                  }
+
+                  enum ipv6-mixed-acl {
+                    value 5 ;
+                  }
+
+                }
+
+              }
+
+              leaf acl-name {
+                description 'Specify ACL name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf interface-name {
+                description 'Specify interface name.' ;
+                type ncd:ifname ;
+
+              }
+
+            }
+
+            list multi-vpws {
+              description 'Specify VPWS destination.' ;
+              key 'acl-type acl-name vpws-name' ;
+              leaf acl-type {
+                description 'Specify ACL type.' ;
+                type enumeration {
+                  enum ipv4-acl {
+                    value 1 ;
+                  }
+
+                  enum ipv6-acl {
+                    value 2 ;
+                  }
+
+                  enum link-acl {
+                    value 3 ;
+                  }
+
+                  enum ipv4-mixed-acl {
+                    value 4 ;
+                  }
+
+                  enum ipv6-mixed-acl {
+                    value 5 ;
+                  }
+
+                }
+
+              }
+
+              leaf acl-name {
+                description 'Specify ACL name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf vpws-name {
+                description 'Specify VPWS name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+            list multi-cpu {
+              if-feature multi-cpu-feature ;
+
+              description 'Specify CPU destination.' ;
+              key 'acl-type acl-name' ;
+              leaf acl-type {
+                description 'Specify ACL type.' ;
+                type enumeration {
+                  enum ipv4-acl {
+                    value 1 ;
+                  }
+
+                  enum ipv6-acl {
+                    value 2 ;
+                  }
+
+                  enum link-acl {
+                    value 3 ;
+                  }
+
+                  enum ipv4-mixed-acl {
+                    value 4 ;
+                  }
+
+                  enum ipv6-mixed-acl {
+                    value 5 ;
+                  }
+
+                }
+
+              }
+
+              leaf acl-name {
+                description 'Specify ACL name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              ncd:revise-date 2021-03-31 ;
+            }
+
+            container multi-openflows {
+              if-feature multi-openflow-feature ;
+
+              description 'Specify CPU openflow destination.' ;
+              list multi-openflow {
+                description 'Specify CPU openflow destination.' ;
+                key 'acl-type acl-name' ;
+                leaf acl-type {
+                  description 'Specify ACL type.' ;
+                  type enumeration {
+                    enum ipv4-acl {
+                      value 1 ;
+                    }
+
+                    enum ipv6-acl {
+                      value 2 ;
+                    }
+
+                  }
+
+                }
+
+                leaf acl-name {
+                  description 'Specify ACL name.' ;
+                  type string {
+                    length 1..31 ;
+
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2023-02-06 ;
+            }
+
+            ncd:revise-date 2020-04-13 ;
+          }
+
+          container default-interfaces {
+            if-feature default-interface-feature ;
+
+            description 'Specify interface destination.' ;
+            list default-interface {
+              description 'Specify interface destination.' ;
+              key interface-name ;
+              leaf interface-name {
+                description 'Specify interface name.' ;
+                type ncd:ifname ;
+
+              }
+
+              container remote-monitor {
+                if-feature remote-monitor-feature ;
+
+                description 'Configure remote monitor.' ;
+                presence "Configuration rspan" ;
+                leaf vlan-id {
+                  description 'Configure the VLAN ID of RSPAN.' ;
+                  type uint16 {
+                    range 1..4094 {
+                      description 'RSPAN VLAN ID' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                container tpid-priority {
+                  description 'Configure the TPID and priority.' ;
+                  leaf tpid {
+                    description 'Configure the MAC header TPID.' ;
+                    type enumeration {
+                      enum 0x8100 {
+                        value 1 ;
+                      }
+
+                      enum 0x88A8 {
+                        value 2 ;
+                      }
+
+                      enum 0x9100 {
+                        value 3 ;
+                      }
+
+                      enum 0x9200 {
+                        value 4 ;
+                      }
+
+                    }
+
+                    default 0x8100 ;
+                  }
+
+                  leaf priority {
+                    description 'Configure the priority, the larger the value, the higher the priority.' ;
+                    type uint8 {
+                      range 0..7 ;
+
+                    }
+
+                    default 0 ;
+                  }
+
+                }
+
+                ncd:revise-date 2021-01-05 ;
+              }
+
+            }
+
+            ncd:revise-date 2020-04-13 ;
+          }
+
+          container default-vxlans {
+            if-feature default-vxlan-feature ;
+
+            description 'The destination of VXLAN.' ;
+            container ipv4s {
+              description 'Specify IPv4 address.' ;
+              list ipv4 {
+                description 'Specify IPv4 address.' ;
+                key 'source-ipv4-addr server-ipv4-addr' ;
+                leaf source-ipv4-addr {
+                  description 'Source IPv4 address.' ;
+                  type ncd:ipv4-address ;
+
+                }
+
+                leaf server-ipv4-addr {
+                  description 'Server IPv4 address.' ;
+                  type ncd:ipv4-address ;
+
+                }
+
+                leaf vpls {
+                  description 'VPLS instance.' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf vni {
+                  if-feature vni-feature ;
+
+                  description 'Specify VXLAN ID.' ;
+                  type uint32 {
+                    range 1..16777215 ;
+
+                  }
+
+                  ncd:revise-date 2022-01-12 ;
+                }
+
+              }
+
+            }
+
+            container ipv6s {
+              description 'Specify IPv6 address.' ;
+              list ipv6 {
+                description 'Specify IPv6 address.' ;
+                key 'source-ipv6-addr server-ipv6-addr' ;
+                leaf source-ipv6-addr {
+                  description 'Source IPv6 address.' ;
+                  type ncd:ipv6-address ;
+
+                }
+
+                leaf server-ipv6-addr {
+                  description 'Server IPv6 address.' ;
+                  type ncd:ipv6-address ;
+
+                }
+
+                leaf vpls {
+                  description 'VPLS instance.' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf vni {
+                  if-feature vni-feature ;
+
+                  description 'Specify VXLAN ID.' ;
+                  type uint32 {
+                    range 1..16777215 ;
+
+                  }
+
+                  ncd:revise-date 2022-01-12 ;
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2021-01-05 ;
+          }
+
+          container default-cpu {
+            if-feature default-cpu-feature ;
+
+            description 'Specify default CPU destination.' ;
+            presence "default destination cpu" ;
+            leaf cpu {
+              description 'Specify default CPU destination.' ;
+              type empty ;
+
+              mandatory true ;
+            }
+
+            ncd:revise-date 2021-03-31 ;
+          }
+
+          container erspan-type {
+            if-feature erspan-type ;
+
+            choice encapsulation {
+              case type3 {
+                leaf erspan-id {
+                  type uint16 {
+                    range 0..63 ;
+
+                  }
+
+                  description 'Value of ERSPAN ID.' ;
+                  mandatory true ;
+                }
+
+                leaf erspan-type {
+                  type enumeration {
+                    enum type3 {
+                      value 2 ;
+                    }
+
+                  }
+
+                  description 'Specify the ERSPAN encapsulation type.' ;
+                  mandatory true ;
+                }
+
+                description 'Specify the ERSPAN encapsulation type 3 information.' ;
+              }
+
+              description 'Specify the ERSPAN encapsulation type information.' ;
+              mandatory true ;
+              case type1 {
+                leaf type1 {
+                  type empty ;
+
+                  description 'Specify the ERSPAN encapsulation type 1.' ;
+                  mandatory true ;
+                }
+
+                description 'Specify the ERSPAN encapsulation type 1 information.' ;
+                if-feature erspan-type1-feature ;
+
+                ncd:revise-date 2024-07-29 ;
+              }
+
+              case type2 {
+                description 'Specify the ERSPAN encapsulation type 2 information.' ;
+                leaf type2 {
+                  type empty ;
+
+                  description 'Specify the ERSPAN encapsulation type 2.' ;
+                  mandatory true ;
+                }
+
+                if-feature erspan-type2-feature ;
+
+                ncd:revise-date 2024-10-19 ;
+              }
+
+            }
+
+            description 'Specify the ERSPAN encapsulation type information.' ;
+            presence "ERSPAN type" ;
+            ncd:revise-date 2022-09-24 ;
+          }
+
+          container packet-heads {
+            if-feature packet-head-feature ;
+
+            description 'Configure the mirror packet head for interception.' ;
+            container packet-head-erspans {
+              description 'Configure the ERSPAN mirror packet head for interception.' ;
+              list packet-head-erspan {
+                description 'Configure the ERSPAN mirror packet head for interception.' ;
+                key head-type ;
+                leaf head-type {
+                  description 'Configure the packet head type for interception.' ;
+                  type enumeration {
+                    enum tcp-udp {
+                      value 1 ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2023-02-27 ;
+          }
+
+          container default-openflow {
+            if-feature default-openflow-feature ;
+
+            description 'Specify default CPU openflow destination.' ;
+            presence default-destination-openflow ;
+            leaf openflow {
+              description 'Specify default CPU openflow destination.' ;
+              type empty ;
+
+              mandatory true ;
+            }
+
+            ncd:revise-date 2023-05-15 ;
+          }
+
+          container sample {
+            presence "Sample rate" ;
+            description 'Specify sampling rate.' ;
+            if-feature sample-feature ;
+
+            leaf rate {
+              mandatory true ;
+              description 'Specify the 1-out-of window size to select packet.' ;
+              type uint32 {
+                range 1..65535 ;
+
+              }
+
+            }
+
+            ncd:revise-date 2023-05-30 ;
+          }
+
+          container uni-acl-destinations {
+            container uni-acl-destination-ipv4s {
+              list uni-acl-destination-ipv4 {
+                leaf acl-type {
+                  type enumeration {
+                    enum ipv4-acl {
+                      value 1 ;
+                    }
+
+                  }
+
+                  description 'Specify the ACL type.' ;
+                }
+
+                leaf acl-name {
+                  type string {
+                    length 1..31 ;
+
+                  }
+
+                  description 'Specify the ACL name.' ;
+                }
+
+                key 'acl-type acl-name' ;
+                container destination {
+                  choice destination {
+                    case interface {
+                      container interface {
+                        leaf interface-name {
+                          type ncd:ifname ;
+
+                          mandatory true ;
+                          description 'Specify the interface name.' ;
+                        }
+
+                        container remote-monitor {
+                          leaf vlan-id {
+                            type uint16 {
+                              range 1..4094 {
+                                description 'RSPAN VLAN ID' ;
+                              }
+
+                            }
+
+                            description 'Configure the VLAN ID of RSPAN.' ;
+                            mandatory true ;
+                          }
+
+                          container tpid-priority {
+                            leaf tpid {
+                              type enumeration {
+                                enum 0x8100 {
+                                  value 1 ;
+                                }
+
+                                enum 0x88A8 {
+                                  value 2 ;
+                                }
+
+                                enum 0x9100 {
+                                  value 3 ;
+                                }
+
+                                enum 0x9200 {
+                                  value 4 ;
+                                }
+
+                              }
+
+                              description 'Configure the MAC header TPID.' ;
+                              default 0x8100 ;
+                            }
+
+                            leaf priority {
+                              type uint8 {
+                                range 0..7 ;
+
+                              }
+
+                              description 'Configure the priority, the larger the value, the higher the priority.' ;
+                              default 0 ;
+                            }
+
+                            description 'Configure the TPID and priority.' ;
+                          }
+
+                          description 'Configure remote monitor.' ;
+                          presence "Configuration rspan" ;
+                          if-feature uni-acl-remote-vlan-feature ;
+
+                        }
+
+                        description 'The type of MONITOR destination is interface.' ;
+                      }
+
+                      if-feature uni-acl-intf-feature ;
+
+                      description 'The type of MONITOR destination is interface.' ;
+                    }
+
+                    case vpws {
+                      container vpws {
+                        leaf vpws-name {
+                          type string {
+                            length 1..32 ;
+
+                          }
+
+                          mandatory true ;
+                          description 'Specify the VPWS name.' ;
+                        }
+
+                        description 'The type of MONITOR destination is VPWS.' ;
+                      }
+
+                      if-feature uni-acl-vpws-feature ;
+
+                      description 'The type of MONITOR destination is VPWS.' ;
+                    }
+
+                    case gre {
+                      container gre {
+                        leaf gre-interface {
+                          type ncd:ifname ;
+
+                          mandatory true ;
+                          description 'Specify the GRE tunnel interface.' ;
+                        }
+
+                        description 'The type of MONITOR destination is GRE tunnel.' ;
+                      }
+
+                      if-feature uni-acl-gre-feature ;
+
+                      description 'The type of MONITOR destination is GRE tunnel.' ;
+                    }
+
+                    case cpu {
+                      container cpu {
+                        leaf cpu {
+                          type empty ;
+
+                          description 'Specify CPU destination.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is CPU.' ;
+                      }
+
+                      if-feature uni-acl-cpu-feature ;
+
+                      description 'The type of MONITOR destination is CPU.' ;
+                    }
+
+                    case openflow {
+                      container openflow {
+                        leaf openflow {
+                          type empty ;
+
+                          description 'Specify CPU openflow destination.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is openflow.' ;
+                      }
+
+                      if-feature uni-acl-openflow-feature ;
+
+                      description 'The type of MONITOR destination is openflow.' ;
+                    }
+
+                    mandatory true ;
+                    description 'Specify the destination.' ;
+                  }
+
+                  description 'Specify the destination.' ;
+                }
+
+                description 'Specify one-to-one IPv4 ACL destination.' ;
+              }
+
+              description 'Specify one-to-one IPv4 ACL destination.' ;
+              if-feature uni-acl-ipv4-feature ;
+
+            }
+
+            description 'Specify one-to-one ACL destination.' ;
+            container uni-acl-destination-ipv6s {
+              if-feature uni-acl-ipv6-feature ;
+
+              list uni-acl-destination-ipv6 {
+                leaf acl-type {
+                  type enumeration {
+                    enum ipv6-acl {
+                      value 2 ;
+                    }
+
+                  }
+
+                  description 'Specify the ACL type.' ;
+                }
+
+                leaf acl-name {
+                  type string {
+                    length 1..31 ;
+
+                  }
+
+                  description 'Specify the ACL name.' ;
+                }
+
+                container destination {
+                  choice destination {
+                    case interface {
+                      if-feature uni-acl-intf-feature ;
+
+                      container interface {
+                        leaf interface-name {
+                          type ncd:ifname ;
+
+                          description 'Specify the interface name.' ;
+                          mandatory true ;
+                        }
+
+                        container remote-monitor {
+                          if-feature uni-acl-remote-vlan-feature ;
+
+                          leaf vlan-id {
+                            type uint16 {
+                              range 1..4094 {
+                                description 'RSPAN VLAN ID' ;
+                              }
+
+                            }
+
+                            description 'Configure the VLAN ID of RSPAN.' ;
+                            mandatory true ;
+                          }
+
+                          container tpid-priority {
+                            leaf tpid {
+                              type enumeration {
+                                enum 0x8100 {
+                                  value 1 ;
+                                }
+
+                                enum 0x88A8 {
+                                  value 2 ;
+                                }
+
+                                enum 0x9100 {
+                                  value 3 ;
+                                }
+
+                                enum 0x9200 {
+                                  value 4 ;
+                                }
+
+                              }
+
+                              description 'Configure the MAC header TPID.' ;
+                              default 0x8100 ;
+                            }
+
+                            leaf priority {
+                              type uint8 {
+                                range 0..7 ;
+
+                              }
+
+                              description 'Configure the priority, the larger the value, the higher the priority.' ;
+                              default 0 ;
+                            }
+
+                            description 'Configure the TPID and priority.' ;
+                          }
+
+                          description 'Configure remote monitor.' ;
+                          presence "Configuration rspan" ;
+                        }
+
+                        description 'The type of MONITOR destination is interface.' ;
+                      }
+
+                      description 'The type of MONITOR destination is interface.' ;
+                    }
+
+                    case vpws {
+                      if-feature uni-acl-vpws-feature ;
+
+                      container vpws {
+                        leaf vpws-name {
+                          type string {
+                            length 1..32 ;
+
+                          }
+
+                          description 'Specify the VPWS name.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is VPWS.' ;
+                      }
+
+                      description 'The type of MONITOR destination is VPWS.' ;
+                    }
+
+                    case gre {
+                      if-feature uni-acl-gre-feature ;
+
+                      container gre {
+                        leaf gre-interface {
+                          type ncd:ifname ;
+
+                          description 'Specify the GRE tunnel interface.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is GRE tunnel.' ;
+                      }
+
+                      description 'The type of MONITOR destination is GRE tunnel.' ;
+                    }
+
+                    case cpu {
+                      if-feature uni-acl-cpu-feature ;
+
+                      container cpu {
+                        leaf cpu {
+                          type empty ;
+
+                          description 'Specify CPU destination.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is CPU.' ;
+                      }
+
+                      description 'The type of MONITOR destination is CPU.' ;
+                    }
+
+                    case openflow {
+                      if-feature uni-acl-openflow-feature ;
+
+                      container openflow {
+                        leaf openflow {
+                          type empty ;
+
+                          description 'Specify CPU openflow destination.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is openflow.' ;
+                      }
+
+                      description 'The type of MONITOR destination is openflow.' ;
+                    }
+
+                    description 'Specify the destination.' ;
+                    mandatory true ;
+                  }
+
+                  description 'Specify the destination.' ;
+                }
+
+                description 'Specify one-to-one IPv6 ACL destination.' ;
+                key 'acl-type acl-name' ;
+              }
+
+              description 'Specify one-to-one IPv6 ACL destination.' ;
+            }
+
+            container uni-acl-destination-links {
+              if-feature uni-acl-link-feature ;
+
+              list uni-acl-destination-link {
+                leaf acl-type {
+                  type enumeration {
+                    enum link-acl {
+                      value 3 ;
+                    }
+
+                  }
+
+                  description 'Specify the ACL type.' ;
+                }
+
+                leaf acl-name {
+                  type string {
+                    length 1..31 ;
+
+                  }
+
+                  description 'Specify the ACL name.' ;
+                }
+
+                container destination {
+                  choice destination {
+                    case interface {
+                      if-feature uni-acl-intf-feature ;
+
+                      container interface {
+                        leaf interface-name {
+                          type ncd:ifname ;
+
+                          description 'Specify the interface name.' ;
+                          mandatory true ;
+                        }
+
+                        container remote-monitor {
+                          if-feature uni-acl-remote-vlan-feature ;
+
+                          leaf vlan-id {
+                            type uint16 {
+                              range 1..4094 {
+                                description 'RSPAN VLAN ID' ;
+                              }
+
+                            }
+
+                            description 'Configure the VLAN ID of RSPAN.' ;
+                            mandatory true ;
+                          }
+
+                          container tpid-priority {
+                            leaf tpid {
+                              type enumeration {
+                                enum 0x8100 {
+                                  value 1 ;
+                                }
+
+                                enum 0x88A8 {
+                                  value 2 ;
+                                }
+
+                                enum 0x9100 {
+                                  value 3 ;
+                                }
+
+                                enum 0x9200 {
+                                  value 4 ;
+                                }
+
+                              }
+
+                              description 'Configure the MAC header TPID.' ;
+                              default 0x8100 ;
+                            }
+
+                            leaf priority {
+                              type uint8 {
+                                range 0..7 ;
+
+                              }
+
+                              description 'Configure the priority, the larger the value, the higher the priority.' ;
+                              default 0 ;
+                            }
+
+                            description 'Configure the TPID and priority.' ;
+                          }
+
+                          description 'Configure remote monitor.' ;
+                          presence "Configuration rspan" ;
+                        }
+
+                        description 'The type of MONITOR destination is interface.' ;
+                      }
+
+                      description 'The type of MONITOR destination is interface.' ;
+                    }
+
+                    case vpws {
+                      if-feature uni-acl-vpws-feature ;
+
+                      container vpws {
+                        leaf vpws-name {
+                          type string {
+                            length 1..32 ;
+
+                          }
+
+                          description 'Specify the VPWS name.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is VPWS.' ;
+                      }
+
+                      description 'The type of MONITOR destination is VPWS.' ;
+                    }
+
+                    case gre {
+                      if-feature uni-acl-gre-feature ;
+
+                      container gre {
+                        leaf gre-interface {
+                          type ncd:ifname ;
+
+                          description 'Specify the GRE tunnel interface.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is GRE tunnel.' ;
+                      }
+
+                      description 'The type of MONITOR destination is GRE tunnel.' ;
+                    }
+
+                    case cpu {
+                      if-feature uni-acl-cpu-feature ;
+
+                      container cpu {
+                        leaf cpu {
+                          type empty ;
+
+                          description 'Specify CPU destination.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is CPU.' ;
+                      }
+
+                      description 'The type of MONITOR destination is CPU.' ;
+                    }
+
+                    description 'Specify the destination.' ;
+                    mandatory true ;
+                  }
+
+                  description 'Specify the destination.' ;
+                }
+
+                description 'Specify one-to-one link ACL destination.' ;
+                key 'acl-type acl-name' ;
+              }
+
+              description 'Specify one-to-one link ACL destination.' ;
+            }
+
+            container uni-acl-destination-ipv4-mixeds {
+              if-feature uni-acl-ipv4-mixed-feature ;
+
+              list uni-acl-destination-ipv4-mixed {
+                leaf acl-type {
+                  type enumeration {
+                    enum ipv4-mixed-acl {
+                      value 4 ;
+                    }
+
+                  }
+
+                  description 'Specify the ACL type.' ;
+                }
+
+                leaf acl-name {
+                  type string {
+                    length 1..31 ;
+
+                  }
+
+                  description 'Specify the ACL name.' ;
+                }
+
+                container destination {
+                  choice destination {
+                    case interface {
+                      if-feature uni-acl-intf-feature ;
+
+                      container interface {
+                        leaf interface-name {
+                          type ncd:ifname ;
+
+                          description 'Specify the interface name.' ;
+                          mandatory true ;
+                        }
+
+                        container remote-monitor {
+                          if-feature uni-acl-remote-vlan-feature ;
+
+                          leaf vlan-id {
+                            type uint16 {
+                              range 1..4094 {
+                                description 'RSPAN VLAN ID' ;
+                              }
+
+                            }
+
+                            description 'Configure the VLAN ID of RSPAN.' ;
+                            mandatory true ;
+                          }
+
+                          container tpid-priority {
+                            leaf tpid {
+                              type enumeration {
+                                enum 0x8100 {
+                                  value 1 ;
+                                }
+
+                                enum 0x88A8 {
+                                  value 2 ;
+                                }
+
+                                enum 0x9100 {
+                                  value 3 ;
+                                }
+
+                                enum 0x9200 {
+                                  value 4 ;
+                                }
+
+                              }
+
+                              description 'Configure the MAC header TPID.' ;
+                              default 0x8100 ;
+                            }
+
+                            leaf priority {
+                              type uint8 {
+                                range 0..7 ;
+
+                              }
+
+                              description 'Configure the priority, the larger the value, the higher the priority.' ;
+                              default 0 ;
+                            }
+
+                            description 'Configure the TPID and priority.' ;
+                          }
+
+                          description 'Configure remote monitor.' ;
+                          presence "Configuration rspan" ;
+                        }
+
+                        description 'The type of MONITOR destination is interface.' ;
+                      }
+
+                      description 'The type of MONITOR destination is interface.' ;
+                    }
+
+                    case vpws {
+                      if-feature uni-acl-vpws-feature ;
+
+                      container vpws {
+                        leaf vpws-name {
+                          type string {
+                            length 1..32 ;
+
+                          }
+
+                          description 'Specify the VPWS name.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is VPWS.' ;
+                      }
+
+                      description 'The type of MONITOR destination is VPWS.' ;
+                    }
+
+                    case gre {
+                      if-feature uni-acl-gre-feature ;
+
+                      container gre {
+                        leaf gre-interface {
+                          type ncd:ifname ;
+
+                          description 'Specify the GRE tunnel interface.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is GRE tunnel.' ;
+                      }
+
+                      description 'The type of MONITOR destination is GRE tunnel.' ;
+                    }
+
+                    case cpu {
+                      if-feature uni-acl-cpu-feature ;
+
+                      container cpu {
+                        leaf cpu {
+                          type empty ;
+
+                          description 'Specify CPU destination.' ;
+                          mandatory true ;
+                        }
+
+                        description 'The type of MONITOR destination is CPU.' ;
+                      }
+
+                      description 'The type of MONITOR destination is CPU.' ;
+                    }
+
+                    description 'Specify the destination.' ;
+                    mandatory true ;
+                  }
+
+                  description 'Specify the destination.' ;
+                }
+
+                description 'Specify one-to-one IPv4 mixed ACL destination.' ;
+                key 'acl-type acl-name' ;
+              }
+
+              description 'Specify one-to-one IPv4 mixed ACL destination.' ;
+            }
+
+            ncd:revise-date 2023-08-30 ;
+          }
+
+          container service-class {
+            presence "Service class" ;
+            description 'Specify the service class of packets.' ;
+            if-feature service-class-feature ;
+
+            leaf service-class {
+              type uint8 {
+                range 0..7 ;
+
+              }
+
+              mandatory true ;
+              description 'Specify the service class of packets.' ;
+            }
+
+            ncd:revise-date 2024-05-21 ;
+          }
+
+        }
+
+      }
+
+      container rate-limits {
+        description 'MONITOR rate limit configuration.' ;
+        list rate-limit {
+          description 'MONITOR rate limit configuration list.' ;
+          key board-name ;
+          leaf board-name {
+            description 'The board name supported rate limit by monitor.' ;
+            type ncd:board {
+              length 1..35 ;
+
+            }
+
+          }
+
+          leaf cir {
+            description 'Configure Committed Information Rate value,Unit is Mbps.' ;
+            type uint32 {
+              range 1..80000 {
+                description 'CIR value(Mbps)' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf cbs {
+            description 'Configure Committed Burst Size value, default unit is MB.' ;
+            type uint32 {
+              range 1..16000 {
+                description 'CBS value(MB)' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf cbs-unit {
+            type enumeration {
+              enum KB {
+                value 1 ;
+              }
+
+            }
+
+            description 'Configure the unit of Committed Burst Size value.' ;
+            if-feature cbs-unit-feature ;
+
+            ncd:revise-date 2024-01-08 ;
+          }
+
+          container pir-pbs {
+            description 'Configure Peak Information Rate value and Peak Burst Size value.' ;
+            presence pir-pbs ;
+            leaf pir {
+              description 'Configure Peak Information Rate value,Unit is Mbps.' ;
+              type uint32 {
+                range 1..80000 {
+                  description 'PIR value(Mbps)' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf pbs {
+              description 'Configure Peak Burst Size value, default unit is MB.' ;
+              type uint32 {
+                range 1..16000 {
+                  description 'PBS value(MB)' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf pbs-unit {
+              description 'Configure the unit of Peak Burst Size value.' ;
+              type enumeration {
+                enum KB {
+                  value 1 ;
+                }
+
+              }
+
+              if-feature pbs-unit-feature ;
+
+              ncd:revise-date 2024-01-08 ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2017-04-14 ;
+      }
+
+    }
+
+  }
+
+}

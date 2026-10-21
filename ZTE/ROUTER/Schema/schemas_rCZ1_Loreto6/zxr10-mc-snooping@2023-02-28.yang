@@ -1,0 +1,306 @@
+module zxr10-mc-snooping {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/mc-snooping'
+            ;
+  prefix mcs ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2017-08-15 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe MC snooping'
+              ;
+  revision 2023-02-28 {
+    description 'add leaf node :/mcs:configuration/mcs:mc-snooping/mcs:evpn-vpl'
+              + 's/mcs:evpn-vpls-config/mcs:forwarding-policy'
+                ;
+  }
+  revision 2022-06-14 {
+    description 'add leaf node :/mcs:configuration/mcs:mc-snooping/mcs:vlan/mcs'
+              + ':vlan-config/mcs:forward-mrouter'+"\n"
+              + 'add feature forward-mrouter'
+                ;
+  }
+  revision 2019-10-08 {
+    description 'Remove the project tag of 99 from the vxlan feature.'
+                ;
+  }
+  revision 2018-08-21 {
+    description 'add leaf node :/mcs:configuration/mcs:mc-snooping/mcs:global/m'
+              + 'cs:forwarding-mode'+"\n"
+              + 'add feature forwarding-mode'
+                ;
+  }
+  revision 2018-05-17 {
+    description 'add path:/mcs:configuration/mcs:mc-snooping/mcs:evpn-vpls'
+                ;
+  }
+  revision 2017-09-12 {
+    description 'add path:/mcs:configuration/mcs:mc-snooping/mcs:vxlan'
+                ;
+  }
+  revision 2014-02-19 {
+    description 'Initial version.'
+                ;
+  }
+  feature vpls {
+    description 'Support configuration under VPLS instance.'
+                ;
+  }
+  feature vlan {
+    description 'Support configuration under VLAN instance.'
+                ;
+  }
+  feature vxlan {
+    description 'Support configuration under VXLAN instance.'
+                ;
+  }
+  feature evpn-vpls {
+    description 'Support configuration under EVPN VPLS instance.'
+                ;
+  }
+  feature forwarding-mode {
+    description 'Support configuration of forwarding mode.'
+                ;
+  }
+  feature forward-mrouter {
+    description 'Support configuration of forwarding all-unknown-group to mrout'
+              + 'er.'
+                ;
+    ncd:revise-date 2022-06-14 ;
+  }
+  feature forwarding-policy {
+    description 'Support configuration of forwarding policy.'
+                ;
+    ncd:revise-date 2023-02-28 ;
+  }
+  typedef drop-type {
+    type enumeration {
+      enum disable {
+        value 0 ;
+        description 'Disable drop all-known-group'
+                    ;
+      }
+      enum all {
+        value 1 ;
+        description 'Enable drop all-known-group'
+                    ;
+      }
+      enum ipv4 {
+        value 2 ;
+        description 'Enable drop all-known-group only for ipv4'
+                    ;
+      }
+      enum ipv6 {
+        value 3 ;
+        description 'Enable drop all-known-group only for ipv6'
+                    ;
+      }
+    }
+    description 'Type of drop.'
+                ;
+  }
+  typedef forward-mrouter-type {
+    type enumeration {
+      enum disable {
+        value 0 ;
+        description 'Disable forward all-unknown-group to mrouter.'
+                    ;
+      }
+      enum all {
+        value 1 ;
+        description 'Enable forward all-unknown-group to mrouter'
+                    ;
+      }
+    }
+    description 'Type of forward-mrouter.'
+                ;
+  }
+  typedef forwarding-policy-type {
+    type enumeration {
+      enum df-mode {
+        value 0 ;
+        description 'Designated forward mode.'
+                    ;
+      }
+      enum oe-mode {
+        value 1 ;
+        description 'Odd-even forward mode.'
+                    ;
+      }
+    }
+    description 'Type of forwarding policy.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model.'
+                ;
+    container mc-snooping {
+      description 'Configure MC snooping parameters.'
+                  ;
+      container global {
+        description 'MC snooping global configure.'
+                    ;
+        leaf drop {
+          description 'Configure global drop command.'
+                      ;
+          type drop-type ;
+          default disable ;
+        }
+        leaf forwarding-mode {
+          if-feature forwarding-mode ;
+          description 'Configure forwarding mode.'
+                      ;
+          type enumeration {
+            enum mac {
+              value 0 ;
+              description 'MAC forwarding mode.'
+                          ;
+            }
+            enum ip {
+              value 1 ;
+              description 'IP forwarding mode.'
+                          ;
+            }
+          }
+          default mac ;
+          ncd:revise-date 2018-08-21 ;
+        }
+      }
+      container vpls {
+        if-feature vpls ;
+        description "MC snooping VPLS configure.Can't config MC snooping in VPL"
+                  + "S if the VPLS instance not exist.If MC snooping configurat"
+                  + "ion exist in VPLS,the VPLS instance can't be deleted."
+                    ;
+        list vpls-config {
+          description 'The config of instance VPLS.'
+                      ;
+          key name ;
+          leaf name {
+            description 'VPLS name.'
+                        ;
+            type string {
+              length 1..32 {
+                description 'VPLS name length'
+                            ;
+              }
+            }
+          }
+          leaf drop {
+            description 'Configure VPLS drop command.'
+                        ;
+            type drop-type ;
+            default disable ;
+          }
+        }
+      }
+      container vlan {
+        if-feature vlan ;
+        description "MC snooping VLAN configure.Can't config MC snooping in VLA"
+                  + "N if the VLAN instance not exist.If MC snooping configurat"
+                  + "ion exist in VLAN,the VLAN instance can't be deleted."
+                    ;
+        list vlan-config {
+          description 'The config of instance VLAN.'
+                      ;
+          key id ;
+          leaf id {
+            description 'VLAN id.'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'VLAN id range'
+                            ;
+              }
+            }
+          }
+          leaf drop {
+            description 'Configure VLAN drop command.'
+                        ;
+            type drop-type ;
+            default disable ;
+          }
+          leaf forward-mrouter {
+            if-feature forward-mrouter ;
+            description 'Configure VLAN mrouter-forwarding function.'
+                        ;
+            type forward-mrouter-type ;
+            default disable ;
+            ncd:revise-date 2022-06-14 ;
+          }
+        }
+      }
+      container vxlan {
+        if-feature vxlan ;
+        description "MC snooping VXLAN configure.Can't config MC snooping in VX"
+                  + "LAN if the VXLAN instance not exist.If MC snooping configu"
+                  + "ration exist in VXLAN,the VXLAN instance can't be deleted."
+                    ;
+        list vxlan-config {
+          description 'The config of instance VXLAN.'
+                      ;
+          key id ;
+          leaf id {
+            description 'VXLAN id.'
+                        ;
+            type uint32 {
+              range 1..16777215 ;
+            }
+          }
+          leaf drop {
+            description 'Configure VXLAN drop command.'
+                        ;
+            type drop-type ;
+            default disable ;
+          }
+        }
+      }
+      container evpn-vpls {
+        if-feature evpn-vpls ;
+        description "MC snooping EVPN VPLS configure.Can't config MC snooping i"
+                  + "n EVPN VPLS if the EVPN VPLS instance not exist.If MC snoo"
+                  + "ping configuration exist in EVPN VPLS,the EVPN VPLS instan"
+                  + "ce can't be deleted."
+                    ;
+        list evpn-vpls-config {
+          description 'The config of instance EVPN VPLS.'
+                      ;
+          key name ;
+          leaf name {
+            description 'EVPN VPLS name.'
+                        ;
+            type string {
+              length 1..32 {
+                description 'VPLS name length'
+                            ;
+              }
+            }
+          }
+          leaf drop {
+            description 'Configure EVPN VPLS drop command.'
+                        ;
+            type drop-type ;
+            default disable ;
+          }
+          leaf forwarding-policy {
+            if-feature forwarding-policy ;
+            description 'Configure EVPN VPLS attachment circuit forwarding poli'
+                      + 'cy.'
+                        ;
+            type forwarding-policy-type ;
+            default df-mode ;
+            ncd:revise-date 2023-02-28 ;
+          }
+        }
+        ncd:revise-date 2018-05-17 ;
+      }
+    }
+  }
+}

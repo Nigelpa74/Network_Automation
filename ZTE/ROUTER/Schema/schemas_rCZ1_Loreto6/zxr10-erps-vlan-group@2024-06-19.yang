@@ -1,0 +1,219 @@
+module zxr10-erps-vlan-group {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/erps-vlan-group" ;
+  prefix erps-vlan-group ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the ERPS(Ethernet Ring Protection Switching) group.' ;
+  revision 2024-06-19 {
+    description '1.Add project label OTN.M721 PTN.61V5_1 PTN.6100 to the whole model' ;
+  }
+
+  revision 2023-09-04 {
+    description 'The container /configuration/erps/VLAN-groups/VLAN-group-instance/protect-vlan add C89E label.' ;
+  }
+
+  revision 2023-03-22 {
+    description '1.Add a protect-instance container.
+2.Add erps-group-protect-instance feature and erps-group-protect-vlan feature.' ;
+  }
+
+  revision 2021-04-02 {
+    description 'Add C89E project label.' ;
+  }
+
+  revision 2021-03-16 {
+    description '1.Add 5960X and 99X project label.' ;
+  }
+
+  revision 2020-06-30 {
+    description '1.Create the ERPS(Ethernet Ring Protection Switching)VLAN group netconf model.' ;
+  }
+
+  feature erps-group-protect-vlan {
+    ncd:revise-date 2023-03-22 ;
+  }
+
+  feature erps-group-protect-instance {
+    ncd:revise-date 2023-03-22 ;
+  }
+
+  typedef erps-group-port-role {
+    description 'Port role of ERPS VLAN group.' ;
+    type enumeration {
+      enum rpl-normal {
+        value 0 ;
+        description 'RPL normal port.' ;
+      }
+
+      enum rpl-owner {
+        value 1 ;
+        description 'RPL owner port.' ;
+      }
+
+      enum rpl-neighbour {
+        value 2 ;
+        description 'RPL neighbour port.' ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'Configuration model information of ERPS VLAN group.' ;
+    container erps {
+      description 'The configuration information of ERPS VLAN group.' ;
+      container VLAN-groups {
+        description 'Configure ERPS VLAN groups.' ;
+        list VLAN-group-instance {
+          description 'ERPS VLAN group instance.' ;
+          key group-id ;
+          leaf group-id {
+            description 'Group ID of ERPS VLAN group.' ;
+            type uint32 {
+              range 1..239 {
+                description 'The range of ERPS VLAN group id.' ;
+              }
+
+            }
+
+          }
+
+          container control-vlan {
+            description 'Control VLAN of ERPS VLAN group.' ;
+            presence "control vlan" ;
+            leaf vlan-id {
+              description 'Control protect VLAN of ERPS VLAN group.' ;
+              type uint16 {
+                range 1..4094 {
+                  description 'The range of VLAN id.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container east-port {
+            description 'East port of ERPS VLAN group.' ;
+            presence east-port ;
+            leaf port-role {
+              description 'Configure east port role of ERPS VLAN group.' ;
+              type erps-group-port-role ;
+
+              default rpl-normal ;
+            }
+
+            leaf if-name {
+              description 'Configure east port of ERPS VLAN group.' ;
+              type ncd:ifname ;
+
+              mandatory true ;
+            }
+
+          }
+
+          container west-port {
+            description 'West port of ERPS VLAN group.' ;
+            presence west-port ;
+            leaf port-role {
+              description 'Configure west port role of ERPS VLAN group.' ;
+              type erps-group-port-role ;
+
+              default rpl-normal ;
+            }
+
+            leaf if-name {
+              description 'Configure east port of ERPS VLAN group.' ;
+              type ncd:ifname ;
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-strategy {
+            description 'Protection strategy of ERPS VLAN group.' ;
+            presence protection-strategy ;
+            leaf switch-strategy {
+              description 'Protection strategy type.' ;
+              type enumeration {
+                enum aps {
+                  value 1 ;
+                  description 'Protection strategy type is aps.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-vlan {
+            if-feature erps-group-protect-vlan {
+              ncd:revise-date 2023-03-22 ;
+            }
+
+            description 'Protection VLAN of ERPS VLAN group.' ;
+            presence protection-instance ;
+            list protect-vlan {
+              description 'Protection VLAN of ERPS VLAN group.' ;
+              key vlan-id ;
+              leaf vlan-id {
+                description 'Control protect VLAN of ERPS VLAN group.' ;
+                type uint16 {
+                  range 1..4094 {
+                    description 'The range of VLAN id.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container protect-instance {
+            if-feature erps-group-protect-instance ;
+
+            description 'Protect instance of ERPS VLAN group.' ;
+            presence "protect instance" ;
+            list protect-instance {
+              description 'Protect instance of ERPS VLAN group.' ;
+              key instance-id ;
+              leaf instance-id {
+                description 'Protect instance of ERPS VLAN group.' ;
+                type uint32 {
+                  range 1..64 {
+                    description 'The value of protect instance.The max value depends on the performance parameter' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2023-03-22 ;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

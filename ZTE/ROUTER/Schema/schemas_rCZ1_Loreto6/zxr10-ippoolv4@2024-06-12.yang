@@ -1,0 +1,998 @@
+module zxr10-ippoolv4 {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ippoolv4'
+            ;
+  prefix ippoolv4 ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2015-11-09 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe IPPOOLv4.'
+              ;
+  revision 2024-06-12 {
+    description '1)Modify leaf node threshold default value from 100 to 90 under this path:/configuration/ippool/pools/pool/.' ;
+  }
+  revision 2021-11-11 {
+    description 'Add new container clear-ip-addr-pool-usage-peak under operatio'
+              + 'n/;'+"\n"
+              + 'Add new container usage-peak under state/ippool/;'+"\n"
+              + 'Modify leaf vrf-instance description under configuration/ippoo'
+              + 'l/pools/pool/ranges-vrf/range-vrf/;'+"\n"
+              + 'Modify list exclude-range-vrf description under configuration/'
+              + 'ippool/pools/pool/exclude-ranges-vrf/;'+"\n"
+              + 'Modify leaf vrf-name description under state/ippool/used-exclu'
+              + 'de-ip/detail/;'
+                ;
+  }
+  revision 2021-06-24 {
+    description 'Add new container ippool-ip-aging under configuration/ippool/;'
+              + ''+"\n"
+              + 'Change the name of binds-feature to switch-feature;'+"\n"
+              + 'Remove default and add reset-value under configuration/ippool/'
+              + 'pools/pool/assign-policy.'
+                ;
+  }
+  revision 2021-06-01 {
+    description 'Add new container binds under configuration/ippool/pools/pool/'
+              + ';'+"\n"
+              + 'Add new container binds-vrf under configuration/ippool/pools/p'
+              + 'ool/.'
+                ;
+  }
+  revision 2020-05-16 {
+    description 'Change the length of the poolname to 64.'
+                ;
+  }
+  revision 2019-03-12 {
+    description 'Add container node ippool-openflow-disconnect under this path:'
+              + '/configuration/ippool/.'
+                ;
+  }
+  revision 2018-11-23 {
+    description 'Add new leaf lock under configuration/ippool/pools/pool/ranges'
+              + '/range/'+"\n"
+              + 'Add new leaf lock under configuration/ippool/pools/pool/ranges'
+              + '-vrf/range-vrf/'
+                ;
+  }
+  revision 2017-12-28 {
+    description 'Add new leaf include-edge under configuration/ippool/pools/pool'
+                ;
+  }
+  revision 2017-10-10 {
+    description 'Add new leaf resource-utilization-ratio under state/ippool/con'
+              + 'fig-info/detail'+"\n"
+              + 'Add new leaf resource-utilization-ratio under state/ippool/exc'
+              + 'lude-ip/detail'
+                ;
+  }
+  revision 2016-11-08 {
+    description 'Add new ippool assign-policy random under configure/ippool/poo'
+              + 'ls/pool/assign-policy'
+                ;
+  }
+  revision 2016-06-01 {
+    description '1)Add container node ranges-vrf under this path:/configuration'
+              + '/ippool/pools/pool/.'+"\n"
+              + '2)Add container node exclude-ranges-vrf under this path:/confi'
+              + 'guration/ippools/pools/pool/.'
+                ;
+  }
+  revision 2016-05-19 {
+    description '1)Add leaf node threshold under this path:/configuration/ippoo'
+              + 'l/pools/pool/.'
+                ;
+  }
+  revision 2015-08-11 {
+    description 'Modify the config from true to false under the state and opera'
+              + 'tion containers.'
+                ;
+  }
+  revision 2015-06-11 {
+    description 'Change free-addr-faild in state/ippool/spec-statistics-info/de'
+              + 'tail/free-addr-faild to free-addr-fail.'
+                ;
+  }
+  revision 2015-03-12 {
+    description 'Add the default of this leaf under the path:/configuration/ipp'
+              + 'ool/pools/pool/assign-policy.'
+                ;
+  }
+  revision 2015-02-28 {
+    description '1.Set leaf type from string(string:all) to string:'+"\n"
+              + '(1)state/ippool/exclude-ip/detail/pool-name;'+"\n"
+              + '(2)state/ippool/exclude-ip/detail/vrf-instance;'+"\n"
+              + '(3)state/ippool/used-ip/detail/pool-name;'+"\n"
+              + '(4)state/ippool/used-ip/detail/vrf-instance;'+"\n"
+              + '(5)state/ippool/used-exclude-ip/detail/pool-name;'+"\n"
+              + '(6)state/ippool/used-exclude-ip/detail/vrf-instance;'+"\n"
+              + '2.Set state/ippool/exclude-ip/detail/end-ip as key;'+"\n"
+              + '3.Set operation/clear-ip-addr-pool-conflict/type/pool/pool-nam'
+              + 'e mandatory.'
+                ;
+  }
+  revision 2014-03-12 {
+    description 'Initial version.'
+                ;
+  }
+  feature switch-feature {
+    description 'The feature for switch.'
+                ;
+  }
+  container configuration {
+    description Configuration. ;
+    container ippool {
+      description 'IPPOOLv4 config.'
+                  ;
+      container pools {
+        description 'Configuration of IPPOOLv4.'
+                    ;
+        list pool {
+          description 'Configuration of IPPOOLv4.'
+                      ;
+          key name ;
+          leaf name {
+            description 'IP pool name.'
+                        ;
+            type string {
+              length 1..64 {
+                description 'Set IP pool name,length is 1 to 64.'
+                            ;
+              }
+            }
+          }
+          leaf conflict-time {
+            description 'Set IP address conflict time.'
+                        ;
+            type uint32 {
+              range 1..18000 ;
+            }
+            default 30 ;
+          }
+          leaf assign-policy {
+            description 'Set IP address assign policy.'
+                        ;
+            type enumeration {
+              enum forward {
+                value 0 ;
+                description 'Set IP address assign policy forward.'
+                            ;
+              }
+              enum backward {
+                value 1 ;
+                description 'Set IP address assign policy backward.'
+                            ;
+              }
+              enum random {
+                value 2 ;
+                description 'Set IP address assign policy random.'
+                            ;
+              }
+            }
+          }
+          leaf threshold {
+            description 'Set IP pool alarm threshold.'
+                        ;
+            type uint32 {
+              range 1..100 ;
+            }
+            default 90 ;
+            ncd:revise-date 2016-05-19 ;
+          }
+          leaf include-edge {
+            description 'Include network edge IP address.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable include network edge IP address.'
+                            ;
+              }
+              enum disable {
+                value 0 ;
+                description 'Disable include network edge IP address.'
+                            ;
+              }
+            }
+            default disable ;
+            ncd:revise-date 2017-12-28 ;
+          }
+          container ranges {
+            description 'IP address ranges.'
+                        ;
+            list range {
+              description 'IP address range.'
+                          ;
+              key 'begin-ip end-ip mask-ip'
+                  ;
+              leaf begin-ip {
+                description 'Begin IP address of range.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf end-ip {
+                description 'End IP address of range.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf mask-ip {
+                description 'IP address mask.'
+                            ;
+                type ncd:ipv4-mask ;
+              }
+              leaf lock {
+                description 'Lock IP address range.'
+                            ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable lock IP address range.'
+                                ;
+                  }
+                  enum disable {
+                    value 0 ;
+                    description 'Disable lock IP address range.'
+                                ;
+                  }
+                }
+                default disable ;
+                ncd:revise-date 2018-11-23 ;
+              }
+            }
+          }
+          container ranges-vrf {
+            description 'IP address ranges with VRF.'
+                        ;
+            list range-vrf {
+              description 'IP address range with VRF.'
+                          ;
+              key 'vrf-instance begin-ip end-ip mask-ip'
+                  ;
+              leaf vrf-instance {
+                description 'VPN Routing/Forwarding instance name.'
+                            ;
+                type string {
+                  length 1..32 {
+                    description 'The length of VRF instance.'
+                                ;
+                  }
+                }
+              }
+              leaf begin-ip {
+                description 'Begin IP address of range.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf end-ip {
+                description 'End IP address of range.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf mask-ip {
+                description 'IP address mask.'
+                            ;
+                type ncd:ipv4-mask ;
+              }
+              leaf lock {
+                description 'Lock IP address range.'
+                            ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable lock IP address range.'
+                                ;
+                  }
+                  enum disable {
+                    value 0 ;
+                    description 'Disable lock IP address range.'
+                                ;
+                  }
+                }
+                default disable ;
+                ncd:revise-date 2018-11-23 ;
+              }
+            }
+            ncd:revise-date 2016-06-01 ;
+          }
+          container exclude-ranges {
+            description 'Set exclude ranges.'
+                        ;
+            list exclude-range {
+              description 'Set exclude range.'
+                          ;
+              key 'begin-ip end-ip'
+                  ;
+              leaf begin-ip {
+                description 'Begin IP of exclude range.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf end-ip {
+                description 'End IP of exclude range.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          container exclude-ranges-vrf {
+            description 'Set exclude ranges with VRF.'
+                        ;
+            list exclude-range-vrf {
+              description 'Set exclude range with VRF.'
+                          ;
+              key 'vrf-instance begin-ip end-ip'
+                  ;
+              leaf vrf-instance {
+                description 'VPN Routing/Forwarding instance name.'
+                            ;
+                type string {
+                  length 1..32 {
+                    description 'The length of VRF instance.'
+                                ;
+                  }
+                }
+              }
+              leaf begin-ip {
+                description 'Begin IP of exclude range.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf end-ip {
+                description 'End IP of exclude range.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+            ncd:revise-date 2016-06-01 ;
+          }
+          container binds {
+            if-feature switch-feature ;
+            description 'Bind key and IP address.'
+                        ;
+            list bind {
+              description 'Bind key and IP address.'
+                          ;
+              key 'mac ip'
+                  ;
+              leaf mac {
+                description 'Key type of MAC address.'
+                            ;
+                type ncd:mac-address ;
+              }
+              leaf ip {
+                description 'IP address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+            ncd:revise-date 2021-06-01 ;
+          }
+          container binds-vrf {
+            if-feature switch-feature ;
+            description 'Bind key and IP address with VRF.'
+                        ;
+            list bind-vrf {
+              description 'Bind key and IP address with VRF.'
+                          ;
+              key 'mac ip vrf-instance'
+                  ;
+              leaf mac {
+                description 'Key type of MAC address.'
+                            ;
+                type ncd:mac-address ;
+              }
+              leaf ip {
+                description 'IP address.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf vrf-instance {
+                description 'VPN Routing/Forwarding instance name.'
+                            ;
+                type string {
+                  length 1..32 {
+                    description 'The length of VRF instance.'
+                                ;
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2021-06-01 ;
+          }
+        }
+      }
+      container ippool-openflow-disconnect {
+        description 'Configure IP address pool openflow disconnect.'
+                    ;
+        choice response-delay {
+          description 'Response delay.'
+                      ;
+          case delay-time {
+            description 'Delay time (default:240 minutes).'
+                        ;
+            leaf delay-time {
+              description 'Delay time (default:240 minutes).'
+                          ;
+              type uint32 {
+                range 0..2880 ;
+              }
+            }
+          }
+          case forever {
+            description 'Set no time limit.'
+                        ;
+            leaf forever {
+              description 'Set no time limit.'
+                          ;
+              type empty ;
+            }
+          }
+        }
+        ncd:revise-date 2019-03-12 ;
+      }
+      container ippool-ip-aging {
+        if-feature switch-feature ;
+        description 'Remember IP freed by user for next allocation.'
+                    ;
+        leaf aging-time {
+		  description 'Timeout(minute).'
+					  ;
+          type uint32 {
+            range 0..5256000 ;
+          }
+        }
+        ncd:revise-date 2021-06-24 ;
+      }
+    }
+  }
+  container state {
+    config false ;
+    description state. ;
+    container ippool {
+      description 'IPPOOLv4 state.'
+                  ;
+      container conflict-ip {
+        description 'Show conflict address statistics of IPPOOLv4.'
+                    ;
+        list detail {
+          description 'Show conflict address statistics of IPPOOLv4.'
+                      ;
+          key 'pool-name vrf-name conflict-ip'
+              ;
+          leaf pool-name {
+            description 'IPPOOL name.'
+                        ;
+            type string {
+              length 1..64 ;
+            }
+          }
+          leaf vrf-name {
+            description 'VRF name.'
+                        ;
+            type string ;
+          }
+          leaf conflict-ip {
+            description 'Conflict IP.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf conflict-time {
+            description 'Conflict time.'
+                        ;
+            type uint32 ;
+          }
+          leaf time-stamp {
+            description 'Time stamp.'
+                        ;
+            type uint32 ;
+          }
+          ncd:select pool-name ;
+        }
+      }
+      container exclude-ip {
+        description 'Show exclude address statistics of IPPOOLv4.'
+                    ;
+        list detail {
+          description 'Show exclude address statistics of IPPOOLv4.'
+                      ;
+          key 'pool-name vrf-instance begin-ip end-ip'
+              ;
+          leaf pool-name {
+            description 'IPPOOL name.'
+                        ;
+            type string {
+              length 1..64 ;
+            }
+          }
+          leaf vrf-instance {
+            description 'VRF name.'
+                        ;
+            type string ;
+          }
+          leaf begin-ip {
+            description 'Begin IP of the exclude IP range.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf end-ip {
+            description 'End IP of the exclude IP range.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf mask-ip {
+            description 'Mask IP of the exclude IP range.'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          leaf free-number {
+            description 'Free number of exclude IP range.'
+                        ;
+            type uint32 ;
+          }
+          leaf used-number {
+            description 'Used number of exclude IP range.'
+                        ;
+            type uint32 ;
+          }
+          leaf range-num-per-pool {
+            description 'The exclude range number in this ippool.'
+                        ;
+            type uint32 ;
+          }
+          leaf resource-utilization-ratio {
+            description 'The resource utilization ratio of the pool.'
+                        ;
+            type string ;
+            ncd:revise-date 2017-10-10 ;
+          }
+          ncd:select pool-name ;
+        }
+      }
+      container spec-statistics-info {
+        description 'Show statistic information of a specific IPPOOLv4.'
+                    ;
+        list detail {
+          description 'Show statistic information of IPPOOLv4.'
+                      ;
+          key pool-name ;
+          leaf pool-name {
+            description 'IPPOOL name.'
+                        ;
+            type ncd:string-all {
+              length 1..64 ;
+            }
+          }
+          leaf get-addr-success {
+            description 'The number of client get address success from this poo'
+                      + 'l.'
+                        ;
+            type uint32 ;
+          }
+          leaf get-addr-fail {
+            description 'The number of client get address failed from this pool.'
+                        ;
+            type uint32 ;
+          }
+          leaf get-addr-total {
+            description 'The total number of client get address from this pool.'
+                        ;
+            type uint32 ;
+          }
+          leaf free-addr-success {
+            description 'The number of client free address success to this pool.'
+                        ;
+            type uint32 ;
+          }
+          leaf free-addr-fail {
+            description 'The number of client free address failed to this pool.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2015-06-11 ;
+          }
+          leaf free-addr-total {
+            description 'The total number of client free address to this pool.'
+                        ;
+            type uint32 ;
+          }
+          ncd:select pool-name ;
+        }
+      }
+      container total-statistics-info {
+        description 'Show total statistic information of IPPOOLv4.'
+                    ;
+        leaf get-appoint-addr-succ {
+          description 'The number of client get appoint address success.'
+                      ;
+          type uint32 ;
+        }
+        leaf get-appoint-addr-fail {
+          description 'The number of client get appoint address failed.'
+                      ;
+          type uint32 ;
+        }
+        leaf get-appoint-addr-total {
+          description 'The total number of client get appoint address.'
+                      ;
+          type uint32 ;
+        }
+        leaf get-addr-gw-succ {
+          description 'The number of client get address by gateway success.'
+                      ;
+          type uint32 ;
+        }
+        leaf get-addr-gw-fail {
+          description 'The number of client get address by gateway failed.'
+                      ;
+          type uint32 ;
+        }
+        leaf get-addr-gw-total {
+          description 'The total number of client get address by gateway.'
+                      ;
+          type uint32 ;
+        }
+        leaf get-addr-pool-succ {
+          description 'The number of client get address by pool success.'
+                      ;
+          type uint32 ;
+        }
+        leaf get-addr-pool-fail {
+          description 'The number of client get address by pool failed.'
+                      ;
+          type uint32 ;
+        }
+        leaf get-addr-pool-total {
+          description 'The total number of client get address by pool.'
+                      ;
+          type uint32 ;
+        }
+        leaf get-resv-addr-success {
+          description 'The number of client get reserved address success.'
+                      ;
+          type uint32 ;
+        }
+        leaf get-resv-addr-fail {
+          description 'The number of client get reserved address failed.'
+                      ;
+          type uint32 ;
+        }
+        leaf get-resv-addr-total {
+          description 'The total number of client get reserved address.'
+                      ;
+          type uint32 ;
+        }
+        leaf free-normal-addr-succ {
+          description 'The number of client free address success.'
+                      ;
+          type uint32 ;
+        }
+        leaf free-normal-addr-fail {
+          description 'The number of client free address failed.'
+                      ;
+          type uint32 ;
+        }
+        leaf free-normal-addr-total {
+          description 'The total number of client free address.'
+                      ;
+          type uint32 ;
+        }
+        leaf add-conflict-addr-succ {
+          description 'The number of add conflict address success.'
+                      ;
+          type uint32 ;
+        }
+        leaf add-conflict-addr-fail {
+          description 'The number of add conflict address failed.'
+                      ;
+          type uint32 ;
+        }
+        leaf add-conflict-addr-total {
+          description 'The total number of add conflict address.'
+                      ;
+          type uint32 ;
+        }
+        leaf free-resv-addr-succ {
+          description 'The number of free reserved address success.'
+                      ;
+          type uint32 ;
+        }
+        leaf free-resv-addr-fail {
+          description 'The number of free reserved address failed.'
+                      ;
+          type uint32 ;
+        }
+        leaf free-resv-addr-total {
+          description 'The total number of free reserved address.'
+                      ;
+          type uint32 ;
+        }
+      }
+      container used-ip {
+        description 'Used address statistics.'
+                    ;
+        list detail {
+          description 'Used address statistics.'
+                      ;
+          key 'pool-name vrf-name used-ip'
+              ;
+          leaf pool-name {
+            description 'IPPOOL name.'
+                        ;
+            type string {
+              length 1..64 ;
+            }
+          }
+          leaf vrf-name {
+            description 'VRF name.'
+                        ;
+            type string ;
+          }
+          leaf used-ip {
+            description 'The used IP address in this ippool.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf if-conflict-ip {
+            description 'This IP address if or not a conflict IP.'
+                        ;
+            type enumeration {
+              enum no {
+                value 0 ;
+                description 'This IP address is not a conflict IP.'
+                            ;
+              }
+              enum yes {
+                value 1 ;
+                description 'This IP address is a conflict IP.'
+                            ;
+              }
+            }
+            default no ;
+          }
+          ncd:select pool-name ;
+        }
+      }
+      container used-exclude-ip {
+        description 'Used exclude address statistics.'
+                    ;
+        list detail {
+          description 'Used exclude address statistics.'
+                      ;
+          key 'pool-name vrf-name used-exclude-ip'
+              ;
+          leaf pool-name {
+            description 'IPPOOL name.'
+                        ;
+            type string {
+              length 1..64 ;
+            }
+          }
+          leaf vrf-name {
+            description 'VRF name.'
+                        ;
+            type string ;
+          }
+          leaf used-exclude-ip {
+            description 'The used IP address in reserved range.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          ncd:select pool-name ;
+        }
+      }
+      container config-info {
+        description 'Show address allocation for pool.'
+                    ;
+        list detail {
+          description 'Show address allocation for pool.'
+                      ;
+          key 'pool-name vrf-name begin-ip end-ip'
+              ;
+          leaf pool-name {
+            description 'IPPOOL name.'
+                        ;
+            type string {
+              length 1..64 ;
+            }
+          }
+          leaf vrf-name {
+            description 'VRF name.'
+                        ;
+            type string ;
+          }
+          leaf begin-ip {
+            description 'Begin IP of this IPPOOL.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf end-ip {
+            description 'End IP of this IPPOOL.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf mask-ip {
+            description 'Mask IP of this IPPOOL.'
+                        ;
+            type ncd:ipv4-mask ;
+          }
+          leaf free-number {
+            description 'Free number IP address of this IPPOOL.'
+                        ;
+            type uint32 ;
+          }
+          leaf used-number {
+            description 'Used number IP address of this IPPOOL.'
+                        ;
+            type uint32 ;
+          }
+          leaf range-num-per-pool {
+            description 'The range number in this ippool.'
+                        ;
+            type uint32 ;
+          }
+          leaf resource-utilization-ratio {
+            description 'The resource utilization ratio of the pool.'
+                        ;
+            type string ;
+            ncd:revise-date 2017-10-10 ;
+          }
+          ncd:select pool-name ;
+        }
+      }
+      container usage-peak {
+        description 'Show the usage peak of pool.'
+                    ;
+        list detail {
+          description 'Show the usage peak of pool.'
+                      ;
+          key pool-name ;
+          leaf pool-name {
+            description 'The name of pool.'
+                        ;
+            type string {
+              length 1..64 ;
+            }
+          }
+          leaf day-usage-peak {
+            description 'The usage peak of pool in the last day.'
+                        ;
+            type string {
+              length 1..7 ;
+            }
+          }
+          leaf day-usage-peak-time {
+            description 'The occurrence time of the usage peak of pool in the l'
+                      + 'ast day.'
+                        ;
+            type string {
+              length 1..19 ;
+            }
+          }
+          leaf week-usage-peak {
+            description 'The usage peak of pool in the last week.'
+                        ;
+            type string {
+              length 1..7 ;
+            }
+          }
+          leaf week-usage-peak-time {
+            description 'The occurrence time of the usage peak of pool in the l'
+                      + 'ast week.'
+                        ;
+            type string {
+              length 1..19 ;
+            }
+          }
+          leaf month-usage-peak {
+            description 'The usage peak of pool in the last month.'
+                        ;
+            type string {
+              length 1..7 ;
+            }
+          }
+          leaf month-usage-peak-time {
+            description 'The occurrence time of the usage peak of pool in the l'
+                      + 'ast month.'
+                        ;
+            type string {
+              length 1..19 ;
+            }
+          }
+        }
+        ncd:revise-date 2021-11-11 ;
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description Operation. ;
+    container clear-ip-addr-pool-conflict {
+      description 'Clear conflict address of IP address pool.'
+                  ;
+      choice type {
+        description 'The way to clear conflict address.'
+                    ;
+        case address {
+          description 'Clear specific conflict address.'
+                      ;
+          leaf ip-address {
+            description 'The specific conflict address.'
+                        ;
+            type ncd:ipv4-address ;
+            mandatory true ;
+          }
+          leaf vrf-instance {
+            description 'The VRF instance of the address.'
+                        ;
+            type string ;
+          }
+        }
+        case all {
+          description 'Clear all conflict address.'
+                      ;
+          leaf all {
+            description 'Clear all conflict address.'
+                        ;
+            type enumeration {
+              enum none {
+                value 0 ;
+              }
+              enum all {
+                value 1 ;
+              }
+            }
+            default none ;
+          }
+        }
+        case pool {
+          description 'Clear conflict address of a specific address pool.'
+                      ;
+          leaf pool-name {
+            description "Clear a specific pool's conflict address by its name."
+                        ;
+            type string {
+              length 1..64 ;
+            }
+            mandatory true ;
+          }
+        }
+      }
+    }
+    container clear-ip-addr-pool-usage-peak {
+      description 'Clear the usage peak of pool.'
+                  ;
+      choice type {
+        description 'The way to clear the usage peak of pool.'
+                    ;
+        case all {
+          description 'Clear the usage peak of all pools.'
+                      ;
+          leaf all {
+            description 'Clear the usage peak of all pools.'
+                        ;
+            type empty ;
+          }
+        }
+        case pool {
+          description 'Clear the usage peak of a specific pool.'
+                      ;
+          leaf pool-name {
+            description 'Clear the usage peak of a specific pool.'
+                        ;
+            type string {
+              length 1..64 ;
+            }
+            mandatory true ;
+          }
+        }
+      }
+      ncd:revise-date 2021-11-11 ;
+    }
+  }
+}

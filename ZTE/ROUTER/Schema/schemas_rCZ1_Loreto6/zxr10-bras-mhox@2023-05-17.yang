@@ -1,0 +1,223 @@
+module zxr10-bras-mhox {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/bras/mhox'
+            ;
+  prefix mhox ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2023-05-17 {
+    description 'netconf encrypted-password <datatype>ciphertext</datatype>  ad'
+              + 'd <log-type>password</log-type>'
+                ;
+  }
+  revision 2020-12-22 {
+    description 'Initial version.'
+                ;
+  }
+  container Configuration {
+    container mhox {
+      container ipv4-user-access-list {
+        list access-list {
+          key 'if-name access-type acl-ip-address mask'
+              ;
+          leaf if-name {
+            type ncd:ifname ;
+          }
+          leaf access-type {
+            type enumeration {
+              enum flow {
+                value 2 ;
+                description 'mhox flow user'
+                            ;
+              }
+            }
+          }
+          leaf acl-ip-address {
+            type ncd:ipv4-address-none-zero ;
+          }
+          leaf mask {
+            type ncd:ipv4-mask ;
+          }
+          leaf author-temp-name {
+            type string {
+              length 1..31 ;
+            }
+          }
+          container user-info {
+            presence user-info ;
+            leaf user-name {
+              type string {
+                length 1..127 ;
+              }
+              mandatory true ;
+            }
+            leaf domain-name {
+              type string {
+                length 1..31 ;
+              }
+              mandatory true ;
+            }
+            choice choose-password {
+              mandatory true ;
+              case password {
+                leaf password {
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+              }
+              case encrypted-password {
+                leaf encrypted-password {
+                  type string {
+                    length 64..84 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      container ipv4-multi-host {
+        list ipv4-multi-host {
+          key 'if-name access-type start-ip end-ip'
+              ;
+          leaf if-name {
+            type ncd:ifname ;
+          }
+          leaf access-type {
+            type enumeration {
+              enum static {
+                value 1 ;
+                description 'mhox static user'
+                            ;
+              }
+            }
+          }
+          leaf start-ip {
+            type ncd:ipv4-address-none-zero ;
+          }
+          leaf end-ip {
+            type ncd:ipv4-address-none-zero ;
+          }
+          container vlan {
+            choice vlan-encapsulation-type {
+              case dot1q {
+                leaf vlan {
+                  type uint16 {
+                    range 1..4094 ;
+                  }
+                }
+              }
+              case qinq {
+                leaf ex-vlan {
+                  type uint16 {
+                    range 1..4094 ;
+                  }
+                  mandatory true ;
+                }
+                leaf in-vlan {
+                  type uint16 {
+                    range 1..4094 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+          }
+          container authen-author-info {
+            choice authen-author-info {
+              case authen-none {
+                leaf authen-none {
+                  type enumeration {
+                    enum authen-none {
+                      value 4 ;
+                    }
+                  }
+                }
+              }
+              case author-info {
+                leaf auhtor-temp-name {
+                  type string {
+                    length 1..31 ;
+                  }
+                  mandatory true ;
+                }
+                container user-info {
+                  presence user-info ;
+                  leaf use-name {
+                    type string {
+                      length 1..127 ;
+                    }
+                    mandatory true ;
+                  }
+                  leaf domain-name {
+                    type string {
+                      length 1..31 ;
+                    }
+                    mandatory true ;
+                  }
+                  choice choose-password {
+                    mandatory true ;
+                    case password {
+                      leaf password {
+                        type string {
+                          length 1..31 ;
+                        }
+                      }
+                    }
+                    case encrypted-password {
+                      leaf encrypted-password {
+                        type string {
+                          length 64..84 ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              case user-info {
+                leaf use-name {
+                  type string {
+                    length 1..127 ;
+                  }
+                  mandatory true ;
+                }
+                leaf domain-name {
+                  type string {
+                    length 1..31 ;
+                  }
+                  mandatory true ;
+                }
+                choice choose-password {
+                  mandatory true ;
+                  case password {
+                    leaf password {
+                      type string {
+                        length 1..31 ;
+                      }
+                    }
+                  }
+                  case encrypted-password {
+                    leaf encrypted-password {
+                      type string {
+                        length 64..84 ;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,243 @@
+module zxr10-dupsend {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/dupsend' ;
+  prefix dupsend ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation' ;
+  contact "ZTE Corporation  
+\n"
+        + "   Nanjing Institute of ZTE Corporation 
+\n"
+        + "   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'Dupsend Model' ;
+  revision 2014-06-30 {
+    description 'Add the function of setting external VLAN priority of the ARP/'
+              + "ND dupsend packet.
+\n"
+              + '(configuration/dupsend/dupsend-container/dupsend-list/arp-ext-'
+              + 'vlan-pri; configuration/dupsend/dupsend-container/dupsend-list'
+              + "/nd-ext-vlan-pri)
+\n"
+              + 'Add the function of setting EXP value of the ARP/ND dupsend pa'
+              + "cket.
+\n"
+              + '(configuration/dupsend/dupsend-container/dupsend-list/arp-exp-'
+              + 'pri;configuration/dupsend/dupsend-container/dupsend-list/nd-ex'
+              + 'p-pri)'
+                ;
+  }
+  revision 2014-04-28 {
+    description 'Modify the pw-name node and delete the pw-group-id and pw-inde'
+              + "x nodes.
+\n"
+              + 'The state node is divided into two parts of ARP and Nd.'
+                ;
+  }
+  revision 2014-03-21 {
+    description 'Initial version' ;
+  }
+  container configuration {
+    description 'ARP dupsend configuration commands.' ;
+    container dupsend {
+      description 'ARP and ND dupsend functions.' ;
+      container dupsend-container {
+        description 'ARP and ND dupsend functions.' ;
+        list dupsend-list {
+          description 'ARP and ND dupsend functions.' ;
+          key pw-name ;
+          leaf pw-name {
+            description 'Pw interface name.' ;
+            type ncd:ifname ;
+          }
+          leaf dupsend-arp-flag {
+            description 'ARP dupsend function.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description Enable. ;
+              }
+              enum disable {
+                value 2 ;
+                description Disable. ;
+              }
+            }
+            default disable ;
+          }
+          leaf dupsend-arp-send-flag {
+            description 'Gratuitous ARP send function.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description Enable. ;
+              }
+              enum disable {
+                value 2 ;
+                description Disable. ;
+              }
+            }
+            default disable ;
+          }
+          leaf arp-send-periodic {
+            description 'Gratuitous ARP sending interval.' ;
+            type uint32 {
+              range 1..2147483 {
+                description 'From 1 to 2147483.' ;
+              }
+            }
+            units seconds ;
+            default 600 ;
+          }
+          leaf dupsend-nd-flag {
+            description 'ND dupsend function.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description Enable. ;
+              }
+              enum disable {
+                value 2 ;
+                description Disable. ;
+              }
+            }
+            default disable ;
+          }
+          leaf dupsend-nd-send-flag {
+            description 'ND send function.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description Enable. ;
+              }
+              enum disable {
+                value 2 ;
+                description Disable. ;
+              }
+            }
+            default disable ;
+          }
+          leaf nd-send-periodic {
+            description 'ND sending interval.' ;
+            type uint32 {
+              range 1..2147483 {
+                description 'From 1 to 2147483.' ;
+              }
+            }
+            default 600 ;
+          }
+          leaf arp-ext-vlan-pri {
+            description 'Set external VLAN priority of the ARP dupsend packet.' ;
+            type uint8 {
+              range 0..7 {
+                description 'From 0 to 7.' ;
+              }
+            }
+          }
+          leaf nd-ext-vlan-pri {
+            description 'Set external VLAN priority of the ND dupsend packet.' ;
+            type uint8 {
+              range 0..7 {
+                description 'From 0 to 7.' ;
+              }
+            }
+          }
+          leaf arp-exp-pri {
+            description 'Set EXP value of the ARP dupsend packet.' ;
+            type uint8 {
+              range 0..7 {
+                description 'From 0 to 7.' ;
+              }
+            }
+          }
+          leaf nd-exp-pri {
+            description 'Set EXP value of the ND dupsend packet.' ;
+            type uint8 {
+              range 0..7 {
+                description 'From 0 to 7.' ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    description 'Dupsend State Commod' ;
+    config false ;
+    container dupsend {
+      description Dupsend ;
+      container arp-item {
+        description 'Show Duplicate ARP' ;
+        list brief {
+          description 'Show Duplicate ARP Item' ;
+          key interface-name ;
+          ncd:select interface-name ;
+          leaf interface-name {
+            description 'Interface Name' ;
+            type ncd:ifname ;
+          }
+          leaf ipv4-address {
+            description 'IPV4 Address' ;
+            type ncd:ipv4-address ;
+          }
+          leaf hardware-address {
+            description 'Hardware Address' ;
+            type ncd:mac-address ;
+          }
+          leaf exter-vlan-id {
+            description 'Exter Vlan Id' ;
+            type uint16 ;
+            default 0 ;
+          }
+          leaf inter-vlan-id {
+            description 'Inter Vlan ID' ;
+            type uint16 ;
+            default 0 ;
+          }
+          leaf age {
+            description Age ;
+            type ncd:string-all ;
+          }
+        }
+      }
+      container nd-item {
+        description 'Show Duplicate ND' ;
+        list brief {
+          description 'Show Duplicate ND Item' ;
+          key interface-name ;
+          ncd:select interface-name ;
+          leaf interface-name {
+            description 'Interface Name' ;
+            type ncd:ifname ;
+          }
+          leaf ipv6-address {
+            description 'IPV6 Address' ;
+            type ncd:ipv6-address ;
+          }
+          leaf hardware-address {
+            description 'Hardware Address' ;
+            type ncd:mac-address ;
+          }
+          leaf exter-vlan-id {
+            description 'Exter Vlan Id' ;
+            type uint16 ;
+            default 0 ;
+          }
+          leaf inter-vlan-id {
+            description 'Inter Vlan ID' ;
+            type uint16 ;
+            default 0 ;
+          }
+          leaf age {
+            description Age ;
+            type ncd:string-all ;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1635 @@
+module zxr10-rtm-sfc {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/rtm-sfc" ;
+  prefix sfc ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  revision 2024-09-23 {
+    description 'Add new container /sfc:configuration/sfc:service-function-chain for sfc configuration.Add /sfc:state/sfc:sfc for displaying sfc status information.Set /sfc:configuration/sfc:sfc obsolete status.' ;
+  }
+
+  revision 2019-10-10 {
+    description 'service-index nexthop sf nsh-proxy supports specify interface' ;
+  }
+
+  revision 2018-08-16 {
+    description 'The initial version.' ;
+  }
+
+  typedef sfp-nexthop-type {
+    description 'The nexthop node type.' ;
+    type enumeration {
+      enum sff {
+        value 1 ;
+        status current ;
+
+      }
+
+      enum sf {
+        value 2 ;
+        status current ;
+
+      }
+
+    }
+
+  }
+
+  typedef true-or-false {
+    description 'The state of some attributes.' ;
+    type enumeration {
+      enum false {
+        value 0 ;
+        status current ;
+
+      }
+
+      enum true {
+        value 1 ;
+        status current ;
+
+      }
+
+    }
+
+  }
+
+  typedef sfp-nexthop-sf {
+    type enumeration {
+      enum sf {
+        value 2 ;
+        status current ;
+
+      }
+
+    }
+
+  }
+
+  typedef true {
+    type enumeration {
+      enum true {
+        value 1 ;
+        status current ;
+
+      }
+
+    }
+
+  }
+
+  feature product-label {
+    description 'Projects supporting the service function chain function.' ;
+    ncd:revise-date 2024-09-23 ;
+  }
+
+  container configuration {
+    description 'The configuration for SFC.' ;
+    container sfc {
+      description 'The configuration for SFC.' ;
+      status obsolete {
+        ncd:revise-date 2024-09-23 ;
+      }
+
+      leaf enable {
+        description 'Enable SFC.' ;
+        status obsolete ;
+
+        type enumeration {
+          enum disable {
+            value 0 ;
+            status current ;
+
+          }
+
+          enum enable {
+            value 1 ;
+            status current ;
+
+          }
+
+        }
+
+        default disable ;
+        config true ;
+        mandatory false ;
+      }
+
+      container sfps {
+        description 'The configuration for SFP.' ;
+        status obsolete ;
+
+        list sfp {
+          description 'The configuration for SFP.' ;
+          status obsolete ;
+
+          key spi ;
+          leaf spi {
+            description 'Service path index.' ;
+            status obsolete ;
+
+            type uint32 {
+              range 1..16777215 ;
+
+            }
+
+            config true ;
+            mandatory false ;
+          }
+
+          container nexthop {
+            description 'The configuration for SFP nexthop.' ;
+            status obsolete ;
+
+            container eth-nexthop {
+              description 'The configuration for SFP nexthop which encapsulation type is ethernet.' ;
+              status obsolete ;
+
+              container ip-nexthop {
+                description 'The configuration for SFP nexthop which specifies the remote IP address.' ;
+                status obsolete ;
+
+                container public-nexthops {
+                  description 'The configuration for SFP nexthop which specifies the public remote IP address.' ;
+                  status obsolete ;
+
+                  list public-nexthop {
+                    description 'The configuration for SFP nexthop which specifies the public remote IP address.' ;
+                    status obsolete ;
+
+                    key 'si nh-node-type sfc-proxy remote-ip' ;
+                    leaf si {
+                      description 'Service index.' ;
+                      status obsolete ;
+
+                      type uint32 {
+                        range 1..255 ;
+
+                      }
+
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf nh-node-type {
+                      description 'Nexthop node type.' ;
+                      status obsolete ;
+
+                      type sfp-nexthop-type ;
+
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf sfc-proxy {
+                      description 'Whether is SF proxy.' ;
+                      status obsolete ;
+
+                      type true-or-false ;
+
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf remote-ip {
+                      description 'Remote IP address.' ;
+                      status obsolete ;
+
+                      type ncd:ipv4-address ;
+
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf metric {
+                      description 'Forwarding metric.' ;
+                      status obsolete ;
+
+                      type uint16 {
+                        range 0..65535 ;
+
+                      }
+
+                      default 0 ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    config true ;
+                  }
+
+                  config true ;
+                }
+
+                container private-nexthops {
+                  description 'The configuration for SFP nexthop which specifies the private remote IP address.' ;
+                  status obsolete ;
+
+                  list private-nexthop {
+                    description 'The configuration for SFP nexthop which specifies the private remote IP address.' ;
+                    status obsolete ;
+
+                    key 'si nh-node-type sfc-proxy vrf-name remote-ip' ;
+                    leaf si {
+                      description 'Service index.' ;
+                      status obsolete ;
+
+                      type uint32 {
+                        range 1..255 ;
+
+                      }
+
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf nh-node-type {
+                      description 'Nexthop node type.' ;
+                      status obsolete ;
+
+                      type sfp-nexthop-type ;
+
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf sfc-proxy {
+                      description 'Whether is SF proxy.' ;
+                      status obsolete ;
+
+                      type true-or-false ;
+
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf vrf-name {
+                      description 'VRF name.' ;
+                      status obsolete ;
+
+                      type ncd:string-all {
+                        length 1..32 ;
+
+                      }
+
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf remote-ip {
+                      description 'Remote IP address.' ;
+                      status obsolete ;
+
+                      type ncd:ipv4-address ;
+
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf metric {
+                      description 'Forwarding metric.' ;
+                      status obsolete ;
+
+                      type uint16 {
+                        range 0..65535 ;
+
+                      }
+
+                      default 0 ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    config true ;
+                  }
+
+                  config true ;
+                }
+
+                config true ;
+              }
+
+              container mac-nexthops {
+                description 'The configuration for SFP nexthop which specifies the MAC address.' ;
+                status obsolete ;
+
+                list mac-nexthop {
+                  description 'The configuration for SFP nexthop which specifies the MAC address.' ;
+                  status obsolete ;
+
+                  key 'si nh-node-type sfc-proxy mac' ;
+                  leaf si {
+                    description 'Service index.' ;
+                    status obsolete ;
+
+                    type uint32 {
+                      range 1..255 ;
+
+                    }
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf nh-node-type {
+                    description 'Nexthop node type.' ;
+                    status obsolete ;
+
+                    type sfp-nexthop-type ;
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf sfc-proxy {
+                    description 'Whether is SF proxy.' ;
+                    status obsolete ;
+
+                    type true-or-false ;
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf mac {
+                    description 'MAC address.' ;
+                    status obsolete ;
+
+                    type ncd:mac-address ;
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf metric {
+                    description 'Forwarding metric.' ;
+                    status obsolete ;
+
+                    type uint16 {
+                      range 0..65535 ;
+
+                    }
+
+                    default 0 ;
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  config true ;
+                }
+
+                config true ;
+              }
+
+              config true ;
+            }
+
+            container vxlan-nexthop {
+              description 'The configuration for SFP nexthop which encapsulation type is VXLAN.' ;
+              status obsolete ;
+
+              container static-tunnels {
+                description 'The configuration for SFP nexthop which specifies the tunnel name.' ;
+                status obsolete ;
+
+                list static-tunnel {
+                  description 'The configuration for SFP nexthop which specifies the tunnel name.' ;
+                  status obsolete ;
+
+                  key 'si nh-node-type sfc-proxy vxlan-if' ;
+                  leaf si {
+                    description 'Service index.' ;
+                    status obsolete ;
+
+                    type uint32 {
+                      range 1..255 ;
+
+                    }
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf nh-node-type {
+                    description 'Nexthop node type.' ;
+                    status obsolete ;
+
+                    type sfp-nexthop-type ;
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf sfc-proxy {
+                    description 'Whether is SF proxy.' ;
+                    status obsolete ;
+
+                    type true-or-false ;
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf vxlan-if {
+                    description 'The VXLAN interface name.' ;
+                    status obsolete ;
+
+                    type ncd:ifname {
+                      length 1..31 ;
+
+                    }
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf vni {
+                    description 'VNI value.' ;
+                    status obsolete ;
+
+                    type uint32 {
+                      range 1..16777215 ;
+
+                    }
+
+                    config true ;
+                    mandatory true ;
+                  }
+
+                  leaf metric {
+                    description 'Forwarding metric.' ;
+                    status obsolete ;
+
+                    type uint16 {
+                      range 0..65535 ;
+
+                    }
+
+                    default 0 ;
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  config true ;
+                }
+
+                config true ;
+              }
+
+              container dynamic-tunnels {
+                description 'The configuration for SFP nexthop which specifies the source IP and destination IP.' ;
+                presence vni ;
+                status obsolete ;
+
+                list dynamic-tunnel {
+                  description 'The configuration for SFP nexthop which specifies the source IP and destination IP.' ;
+                  status obsolete ;
+
+                  key 'si nh-node-type sfc-proxy source-ip destination-ip' ;
+                  leaf si {
+                    description 'Service index.' ;
+                    status obsolete ;
+
+                    type uint32 {
+                      range 1..255 ;
+
+                    }
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf nh-node-type {
+                    description 'Nexthop node type.' ;
+                    status obsolete ;
+
+                    type sfp-nexthop-type ;
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf sfc-proxy {
+                    description 'Whether is SF proxy.' ;
+                    status obsolete ;
+
+                    type true-or-false ;
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf source-ip {
+                    description 'The source IP address.' ;
+                    status obsolete ;
+
+                    type ncd:ipv4-address ;
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf destination-ip {
+                    description 'The destination address.' ;
+                    status obsolete ;
+
+                    type ncd:ipv4-address ;
+
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  leaf vni {
+                    description 'VNI value.' ;
+                    status obsolete ;
+
+                    type uint32 {
+                      range 1..16777215 ;
+
+                    }
+
+                    config true ;
+                    mandatory true ;
+                  }
+
+                  leaf metric {
+                    description 'Forwarding metric.' ;
+                    status obsolete ;
+
+                    type uint16 {
+                      range 0..65535 ;
+
+                    }
+
+                    default 0 ;
+                    config true ;
+                    mandatory false ;
+                  }
+
+                  config true ;
+                }
+
+                config true ;
+              }
+
+              config true ;
+            }
+
+            container interfaces {
+              status obsolete ;
+
+              list interface {
+                description 'The configuration for SFP nexthop which specifies the interface Name.' ;
+                status obsolete ;
+
+                key 'si nh-node-type sfc-proxy name' ;
+                leaf si {
+                  description 'Service index.' ;
+                  status obsolete ;
+
+                  type uint32 {
+                    range 1..255 ;
+
+                  }
+
+                  config true ;
+                  mandatory false ;
+                }
+
+                leaf nh-node-type {
+                  description 'Nexthop node type.' ;
+                  status obsolete ;
+
+                  type sfp-nexthop-sf ;
+
+                  config true ;
+                  mandatory false ;
+                }
+
+                leaf sfc-proxy {
+                  description 'SF proxy.' ;
+                  status obsolete ;
+
+                  type true ;
+
+                  config true ;
+                  mandatory false ;
+                }
+
+                leaf name {
+                  description 'interface name.' ;
+                  status obsolete ;
+
+                  type ncd:ifname ;
+
+                  config true ;
+                  mandatory false ;
+                }
+
+                leaf metric {
+                  description 'Forwarding metric.' ;
+                  status obsolete ;
+
+                  type uint16 {
+                    range 0..65535 ;
+
+                  }
+
+                  default 0 ;
+                  config true ;
+                  mandatory false ;
+                }
+
+                config true ;
+              }
+
+              config true ;
+            }
+
+            config true ;
+          }
+
+          container terminals {
+            description 'The configuration for SFP terminal.' ;
+            status obsolete ;
+
+            list terminal {
+              description 'The configuration for SFP terminal.' ;
+              status obsolete ;
+
+              key si ;
+              leaf si {
+                description 'Service index.' ;
+                status obsolete ;
+
+                type uint32 {
+                  range 1..255 ;
+
+                }
+
+                config true ;
+                mandatory false ;
+              }
+
+              leaf terminal {
+                description 'This SFP is terminal.' ;
+                status obsolete ;
+
+                type empty ;
+
+                config true ;
+                mandatory true ;
+              }
+
+              container redirect-nexthop {
+                description 'The configuration for SFP terminal redirecting nexthop.' ;
+                status obsolete ;
+
+                presence redirect-nexthop ;
+                leaf redirect {
+                  description 'Whether has redirecting nexthop.' ;
+                  status obsolete ;
+
+                  type true-or-false ;
+
+                  config true ;
+                  mandatory true ;
+                }
+
+                leaf vrf-name {
+                  description 'VRF name.' ;
+                  status obsolete ;
+
+                  type ncd:string-all {
+                    length 1..32 ;
+
+                  }
+
+                  config true ;
+                  mandatory false ;
+                }
+
+                choice ipv4 {
+                  description 'The configuration for IPv4 redirecting nexthop.' ;
+                  case ipv4-nexthop {
+                    description 'The configuration for IPv4 redirecting nexthop.' ;
+                    container ipv4-nexthop {
+                      description 'The configuration for IPv4 redirecting nexthop.' ;
+                      leaf remote-ip {
+                        description 'Remote IP address.' ;
+                        type ncd:ipv4-address ;
+
+                        config true ;
+                        mandatory true ;
+                      }
+
+                      config true ;
+                    }
+
+                  }
+
+                  config true ;
+                  mandatory false ;
+                }
+
+                config true ;
+              }
+
+              config true ;
+            }
+
+            config true ;
+          }
+
+          config true ;
+        }
+
+        config true ;
+      }
+
+      config true ;
+    }
+
+    container service-function-chain {
+      container sfp {
+        list spi {
+          key spi-index ;
+          leaf spi-index {
+            type uint32 ;
+
+            description 'Service path identifier.' ;
+            config true ;
+            mandatory false ;
+          }
+
+          container config {
+            container next-hop {
+              container sff {
+                container nsh-eth {
+                  container ipv4-global {
+                    list config {
+                      key 'si-index remote-address' ;
+                      leaf si-index {
+                        type uint32 ;
+
+                        description 'Service index.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf remote-address {
+                        type ncd:ipv4-address ;
+
+                        description 'Nexthop address.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf track-name {
+                        type string ;
+
+                        description 'Track name.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      description 'Configuration.' ;
+                      config true ;
+                    }
+
+                    description 'IPv4 Public Network Configuration.' ;
+                    config true ;
+                  }
+
+                  container ipv6-global {
+                    list config {
+                      key 'si-index remote-address' ;
+                      leaf si-index {
+                        type uint32 ;
+
+                        description 'Service index.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf remote-address {
+                        type ncd:ipv6-address ;
+
+                        description 'Nexthop address.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf track-name {
+                        type string ;
+
+                        description 'Track name.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      description 'Configuration.' ;
+                      config true ;
+                    }
+
+                    description 'IPv6 Public Network Configuration.' ;
+                    config true ;
+                  }
+
+                  container ipv4-vrf {
+                    list config {
+                      key 'si-index remote-address vrf-name' ;
+                      leaf si-index {
+                        type uint32 ;
+
+                        description 'Service index.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf remote-address {
+                        type ncd:ipv4-address ;
+
+                        description 'Nexthop address.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf vrf-name {
+                        type string ;
+
+                        description 'Vrf name.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf track-name {
+                        type string ;
+
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      description 'Configuration.' ;
+                      config true ;
+                    }
+
+                    description 'IPv4 Private Network.' ;
+                    config true ;
+                  }
+
+                  container ipv6-vrf {
+                    list config {
+                      key 'si-index remote-address vrf-name' ;
+                      leaf si-index {
+                        type uint32 ;
+
+                        description 'Service index.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf remote-address {
+                        type ncd:ipv6-address ;
+
+                        description 'Nexthop address.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf vrf-name {
+                        type string ;
+
+                        description 'Vrf name.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf track-name {
+                        type string ;
+
+                        description 'Track name.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      description 'Configuration.' ;
+                      config true ;
+                    }
+
+                    description 'IPv6 Private Network.' ;
+                    config true ;
+                  }
+
+                  description 'Ethernet Configuration.' ;
+                  config true ;
+                }
+
+                container nsh-vxlan {
+                  container static-tunnels {
+                    list config {
+                      key 'si-index interface-name' ;
+                      leaf si-index {
+                        type uint32 ;
+
+                        description 'Service index.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf interface-name {
+                        type ncd:ifname ;
+
+                        description 'The name for vxlan interface.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf vni {
+                        type uint32 ;
+
+                        description 'The value for vni.' ;
+                        config true ;
+                        mandatory true ;
+                      }
+
+                      leaf track-name {
+                        type string ;
+
+                        description 'Track name.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      description 'Configuration.' ;
+                      config true ;
+                    }
+
+                    presence vni ;
+                    description 'Static vxlan configuration.' ;
+                    config true ;
+                    ncd:revise-date 2024-09-23 ;
+                  }
+
+                  container dynamic-tunnels-ipv4 {
+                    list config {
+                      key 'si-index source-address dest-address' ;
+                      leaf si-index {
+                        type uint32 ;
+
+                        description 'Service index.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf source-address {
+                        type ncd:ipv4-address ;
+
+                        description 'Source address.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf dest-address {
+                        type ncd:ipv4-address ;
+
+                        description 'Destination address.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf vni {
+                        type uint32 ;
+
+                        description 'The value for vni.' ;
+                        config true ;
+                        mandatory true ;
+                      }
+
+                      leaf track-name {
+                        type string ;
+
+                        description 'Track name.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      description 'Configuration.' ;
+                      config true ;
+                    }
+
+                    presence vni ;
+                    description 'The configuration for IPv4 dynamic vxlans.' ;
+                    config true ;
+                    ncd:revise-date 2024-09-23 ;
+                  }
+
+                  container dynamic-tunnels-ipv6 {
+                    list config {
+                      key 'si-index source-address dest-address' ;
+                      leaf si-index {
+                        type uint32 ;
+
+                        description 'Service index.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf source-address {
+                        type ncd:ipv6-address ;
+
+                        description 'Source address.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf dest-address {
+                        type ncd:ipv6-address ;
+
+                        description 'Destination address.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      leaf vni {
+                        type uint32 ;
+
+                        description 'The value for vni.' ;
+                        config true ;
+                        mandatory true ;
+                      }
+
+                      leaf track-name {
+                        type string ;
+
+                        description 'Track name.' ;
+                        config true ;
+                        mandatory false ;
+                      }
+
+                      description 'Configuration.' ;
+                      config true ;
+                    }
+
+                    presence vni ;
+                    description 'The configuration for IPv6 dynamic vxlans.' ;
+                    config true ;
+                  }
+
+                  description 'The configuration for vxlan nexthops.' ;
+                  config true ;
+                }
+
+                description 'The configuration for sff.' ;
+                config true ;
+              }
+
+              container sf {
+                container eth-ipv4-global {
+                  list config {
+                    key 'si-index remote-address' ;
+                    leaf si-index {
+                      type uint32 ;
+
+                      description 'Service index.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf remote-address {
+                      type ncd:ipv4-address ;
+
+                      description 'Nexthop address.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf track-name {
+                      type string ;
+
+                      description 'Track name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    description 'Configuration.' ;
+                    config true ;
+                  }
+
+                  description 'IPv4 public network configuration.' ;
+                  config true ;
+                }
+
+                container eth-ipv6-global {
+                  list config {
+                    key 'si-index remote-address' ;
+                    leaf si-index {
+                      type uint32 ;
+
+                      description 'Service index.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf remote-address {
+                      type ncd:ipv6-address ;
+
+                      description 'Nexthop address.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf track-name {
+                      type string ;
+
+                      description 'Track name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    description 'Configuration.' ;
+                    config true ;
+                  }
+
+                  description 'IPv6 public network configuration.' ;
+                  config true ;
+                }
+
+                container eth-ipv4-vrf {
+                  list config {
+                    key 'si-index remote-address vrf-name' ;
+                    leaf si-index {
+                      type uint32 ;
+
+                      description 'Service index.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf remote-address {
+                      type ncd:ipv4-address ;
+
+                      description 'Nexthop address.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf vrf-name {
+                      type string ;
+
+                      description 'Vrf name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf track-name {
+                      type string ;
+
+                      description 'Track name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    description 'Configuration.' ;
+                    config true ;
+                  }
+
+                  description 'IPv4 private network.' ;
+                  config true ;
+                }
+
+                container eth-ipv6-vrf {
+                  list config {
+                    key 'si-index remote-address vrf-name' ;
+                    leaf si-index {
+                      type uint32 ;
+
+                      description 'Service index.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf remote-address {
+                      type ncd:ipv6-address ;
+
+                      description 'Nexthop address.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf vrf-name {
+                      type string ;
+
+                      description 'Vrf name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf track-name {
+                      type string ;
+
+                      description 'Track name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    description 'Configuration.' ;
+                    config true ;
+                  }
+
+                  description 'IPv6 private network.' ;
+                  config true ;
+                }
+
+                container proxy-ipv4-global {
+                  list config {
+                    key 'si-index remote-address' ;
+                    leaf si-index {
+                      type uint32 ;
+
+                      description 'Service index.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf remote-address {
+                      type ncd:ipv4-address ;
+
+                      description 'Nexthop address.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf track-name {
+                      type string ;
+
+                      description 'Track name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    description 'Configuration.' ;
+                    config true ;
+                  }
+
+                  description 'IPv4 public proxy configuration.' ;
+                  config true ;
+                }
+
+                container proxy-ipv6-global {
+                  list config {
+                    key 'si-index remote-address' ;
+                    leaf si-index {
+                      type uint32 ;
+
+                      description 'Service index.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf remote-address {
+                      type ncd:ipv6-address ;
+
+                      description 'Nexthop address.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf track-name {
+                      type string ;
+
+                      description 'Track name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    description 'Configuration.' ;
+                    config true ;
+                  }
+
+                  description 'IPv6 public proxy configuration.' ;
+                  config true ;
+                }
+
+                container proxy-ipv4-vrf {
+                  list config {
+                    key 'si-index remote-address vrf-name' ;
+                    leaf si-index {
+                      type uint32 ;
+
+                      description 'Service index.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf remote-address {
+                      type ncd:ipv4-address ;
+
+                      description 'Nexthop address.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf vrf-name {
+                      type string ;
+
+                      description 'Vrf name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf track-name {
+                      type string ;
+
+                      description 'Track name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    description 'Configuration.' ;
+                    config true ;
+                  }
+
+                  description 'IPv4 private proxy configuration.' ;
+                  config true ;
+                }
+
+                container proxy-ipv6-vrf {
+                  list config {
+                    key 'si-index remote-address vrf-name' ;
+                    leaf si-index {
+                      type uint32 ;
+
+                      description 'Service index.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf remote-address {
+                      type ncd:ipv6-address ;
+
+                      description 'Nexthop address.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf vrf-name {
+                      type string ;
+
+                      description 'Vrf name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    leaf track-name {
+                      type string ;
+
+                      description 'Track name.' ;
+                      config true ;
+                      mandatory false ;
+                    }
+
+                    description 'Configuration.' ;
+                    config true ;
+                  }
+
+                  description 'IPv6 private proxy configuration.' ;
+                  config true ;
+                }
+
+                description 'The configuration for sf.' ;
+                config true ;
+              }
+
+              description 'The configuration for nexthops.' ;
+              config true ;
+            }
+
+            container terminal {
+              list terminal {
+                key si-index ;
+                leaf si-index {
+                  type uint32 ;
+
+                  description 'Service index.' ;
+                  config true ;
+                  mandatory false ;
+                }
+
+                leaf vrf-name {
+                  type string ;
+
+                  description 'Vrf name.' ;
+                  config true ;
+                  mandatory false ;
+                }
+
+                description 'Terminal configuration.' ;
+                config true ;
+              }
+
+              description 'Terminal configuration.' ;
+              config true ;
+            }
+
+            container escape {
+              description 'Escape configuration.' ;
+              config true ;
+              container drop {
+                list config {
+                  leaf si-index {
+                    type uint32 ;
+
+                    description 'Service index.' ;
+                  }
+
+                  description 'Configuration.' ;
+                  key si-index ;
+                }
+
+                description 'Drop the traffic.' ;
+                ncd:revise-date 2024-09-23 ;
+              }
+
+              container service-index {
+                list config {
+                  leaf si-index {
+                    type uint32 ;
+
+                    description 'Service index.' ;
+                  }
+
+                  leaf escape-si {
+                    type uint32 ;
+
+                    description 'Service index for escaping.' ;
+                    mandatory true ;
+                  }
+
+                  description 'Configuration.' ;
+                  key si-index ;
+                }
+
+                description 'Specifies the escape path.' ;
+                ncd:revise-date 2024-09-23 ;
+              }
+
+              container terminal {
+                list config {
+                  leaf si-index {
+                    type uint32 ;
+
+                    description 'Service index.' ;
+                  }
+
+                  leaf vrf-name {
+                    type string ;
+
+                    description 'Vrf name.' ;
+                  }
+
+                  description 'Configuration.' ;
+                  key si-index ;
+                }
+
+                description 'Terminates at this node.' ;
+                ncd:revise-date 2024-09-23 ;
+              }
+
+            }
+
+            description 'The configuration for SFI.' ;
+            config true ;
+          }
+
+          description 'The configuration for SFP.' ;
+          config true ;
+        }
+
+        description 'The configuration for SFP.' ;
+        config true ;
+      }
+
+      description 'The configuration for service function chain.' ;
+      config true ;
+      if-feature product-label {
+        ncd:revise-date 2024-09-23 ;
+      }
+
+    }
+
+    config true ;
+  }
+
+  container state {
+    description 'Displays sfc status information.' ;
+    config false ;
+    container sfc {
+      list spi-status {
+        leaf service-path-index {
+          type uint32 ;
+
+          description 'Service path index.' ;
+        }
+
+        leaf service-index {
+          type uint32 ;
+
+          description 'Service index.' ;
+        }
+
+        leaf service-index-status {
+          type ncd:string-all ;
+
+          description 'Service index status.' ;
+        }
+
+        leaf service-type {
+          type ncd:string-all ;
+
+          description 'Service type.' ;
+        }
+
+        leaf escape-strategy {
+          type ncd:string-all ;
+
+          description 'Service escape strategy.' ;
+        }
+
+        leaf fwd-type {
+          type ncd:string-all ;
+
+          description 'Forwarding type.' ;
+        }
+
+        leaf fwd-index {
+          type uint32 ;
+
+          description 'Forwarding index.' ;
+        }
+
+        leaf nexthop-remote-address {
+          type ncd:string-all ;
+
+          description 'Ethernet next-hop address.' ;
+        }
+
+        leaf nexthop-vrf-name {
+          type ncd:string-all ;
+
+          description 'Ethernet next-hop vrf name.' ;
+        }
+
+        leaf vxlan-interface {
+          type ncd:string-all ;
+
+          description 'The interface name for static vxlan.' ;
+        }
+
+        leaf vxlan-source-address {
+          type ncd:string-all ;
+
+          description 'Dynamic vxlan source address.' ;
+        }
+
+        leaf vxlan-dest-address {
+          type ncd:string-all ;
+
+          description 'Dynamic vxlan destination address.' ;
+        }
+
+        leaf vxlan-vni {
+          type uint32 ;
+
+          description 'The vni value for vxlan.' ;
+        }
+
+        leaf nexthop-status {
+          type ncd:string-all ;
+
+          description 'Ethernet next-hop status.' ;
+        }
+
+        description 'Spi status information.' ;
+        key 'service-path-index service-index fwd-index' ;
+        ncd:select service-path-index ;
+        ncd:select "service-path-index service-index" ;
+      }
+
+      description 'Sfc status information.' ;
+      if-feature product-label {
+        ncd:revise-date 2024-09-23 ;
+      }
+
+    }
+
+    ncd:revise-date 2024-09-23 ;
+  }
+
+}

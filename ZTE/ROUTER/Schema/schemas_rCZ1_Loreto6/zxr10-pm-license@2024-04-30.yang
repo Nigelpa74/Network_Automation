@@ -1,0 +1,1278 @@
+module zxr10-pm-license {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-license" ;
+  prefix pm-license ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  revision 2024-04-30 {
+    description 'Add leaf node porttype to permit port container,and add leaf node ifname to resource-permanent-briefs container.' ;
+  }
+
+  revision 2024-04-22 {
+    description 'add license grace mode info.' ;
+  }
+
+  revision 2023-10-10 {
+    description 'Add authorize old license file.' ;
+  }
+
+  revision 2022-10-30 {
+    description 'Add container card-item to show licnese item of card.Add container performance to show performance item of port license.' ;
+  }
+
+  revision 2022-08-31 {
+    description 'Add container functions,performances to show the functions and performances of license.' ;
+  }
+
+  revision 2022-04-19 {
+    description 'Add container cards to show the information of license-card.Add container files, performances,devids to show the details of license file.Add container permit-ports to support to permit the ports.Add container license-install,license-uninstall,license-update to support to install/uninstall/update the licnese file.' ;
+  }
+
+  revision 2022-04-07 {
+    description 'add container devids to show the shelf number and devid of the devid.' ;
+  }
+
+  revision 2022-02-10 {
+    description 'add container resource-permanents,resource-permanent-briefs,port-states and port-type-summarys to show port license information.' ;
+  }
+
+  revision 2021-01-28 {
+    description 'Initial version.' ;
+  }
+
+  container configuration {
+    container ports {
+      container active-ports {
+        list active-port {
+          key 'shelf slot subslot portno restype itemname' ;
+          leaf shelf {
+            type uint8 ;
+
+          }
+
+          leaf slot {
+            type uint8 ;
+
+          }
+
+          leaf subslot {
+            type uint8 ;
+
+          }
+
+          leaf portno {
+            type uint32 ;
+
+          }
+
+          leaf restype {
+            type uint16 ;
+
+          }
+
+          leaf itemname {
+            type string {
+              length 1..64 ;
+
+            }
+
+          }
+
+          leaf activeflag {
+            type enumeration {
+              enum active {
+                value 1 ;
+              }
+
+              enum inactive {
+                value 0 ;
+              }
+
+            }
+
+            default inactive ;
+          }
+
+        }
+
+      }
+
+      container permit-ports {
+        description 'Permit port license with license file.' ;
+        list permit-port-with-file {
+          description 'Permit port license with license file.' ;
+          key 'itemname shelf slot subslot demoname' ;
+          leaf itemname {
+            description 'The name of port control item.' ;
+            type ncd:string-all {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf shelf {
+            description 'The shelf number.' ;
+            type uint8 {
+              range 0..255 ;
+
+            }
+
+          }
+
+          leaf slot {
+            description 'The slot number.' ;
+            type uint8 {
+              range 0..255 ;
+
+            }
+
+          }
+
+          leaf subslot {
+            description 'The subslot number.' ;
+            type uint8 {
+              range 0..3 ;
+
+            }
+
+          }
+
+          leaf demoname {
+            description 'The name of demo license file.' ;
+            type string {
+              length 1..79 ;
+
+            }
+
+          }
+
+          leaf portno {
+            description 'The port number.' ;
+            type ncd:bitmap {
+              length 0..200 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf porttype {
+            type string {
+              length 1..31 ;
+
+            }
+
+            description 'The Interface type.' ;
+            ncd:revise-date 2024-04-30 ;
+          }
+
+        }
+
+        list permit-port {
+          description 'Permit port license.' ;
+          key 'itemname shelf slot subslot' ;
+          leaf itemname {
+            description 'The name of port control item.' ;
+            type ncd:string-all {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf shelf {
+            description 'The shelf number.' ;
+            type uint8 {
+              range 0..255 ;
+
+            }
+
+          }
+
+          leaf slot {
+            description 'The slot number.' ;
+            type uint8 {
+              range 0..255 ;
+
+            }
+
+          }
+
+          leaf subslot {
+            description 'The subslot number.' ;
+            type uint8 {
+              range 0..3 ;
+
+            }
+
+          }
+
+          leaf portno {
+            description 'The port number.' ;
+            type ncd:bitmap {
+              length 0..200 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf porttype {
+            type string {
+              length 1..31 ;
+
+            }
+
+            description 'The Interface type.' ;
+            ncd:revise-date 2024-04-30 ;
+          }
+
+        }
+
+        ncd:revise-date 2022-04-19 ;
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    container license {
+      description 'license operation' ;
+      container license-install {
+        description 'Install license file.' ;
+        leaf filename {
+          description 'The file name.' ;
+          type string {
+            length 1..79 ;
+
+          }
+
+        }
+
+      }
+
+      container license-uninstall {
+        description 'Uninstall license file.' ;
+        leaf filename {
+          description 'The file name.' ;
+          type string {
+            length 0..79 ;
+
+          }
+
+        }
+
+        leaf all {
+          description 'delete all license file.' ;
+          type enumeration {
+            enum all {
+              value 1 ;
+            }
+
+          }
+
+          ncd:revise-date 2022-02-10 ;
+        }
+
+      }
+
+      container license-update {
+        description 'Update license file.' ;
+        leaf update {
+          description 'Update license file.' ;
+          type enumeration {
+            enum update {
+              value 1 ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container authorize-old-version {
+        leaf authorize-state {
+          type enumeration {
+            enum authorize {
+              value 1 ;
+            }
+
+            enum unauthorize {
+              value 0 ;
+            }
+
+          }
+
+          description 'Authorize old license file.' ;
+        }
+
+        description 'Authorize old license file.' ;
+      }
+
+      ncd:revise-date 2022-04-19 ;
+    }
+
+    container cloud {
+      description 'Cloud.' ;
+      presence "Mandatory leaves are included." ;
+      container verify-certificate {
+        presence "Mandatory leaves are included." ;
+        leaf certificate-absolute-path {
+          description 'The absolute path of the certificate in the device.' ;
+          type string {
+            length 0..159 ;
+
+          }
+
+          mandatory true ;
+        }
+
+      }
+
+      container allocate {
+        presence "Mandatory leaves are included." ;
+        list performance {
+          key name ;
+          leaf name {
+            description 'The performance name of license.' ;
+            type ncd:string-all {
+              length 1..63 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf number {
+            description 'The number of performance.' ;
+            type uint32 ;
+
+            mandatory true ;
+          }
+
+          leaf sign {
+            description 'Signature information.' ;
+            type binary {
+              length 1..512 ;
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        list function {
+          key name ;
+          leaf name {
+            description 'The function name of license.' ;
+            type ncd:string-all {
+              length 1..63 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf status {
+            description 'The status of function.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+
+              enum disable {
+                value 0 ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf sign {
+            description 'Signature information.' ;
+            type binary {
+              length 1..512 ;
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+      container commit-resource {
+        presence "Mandatory leaves are included." ;
+        leaf commit {
+          description 'Commit cloud license resource.' ;
+          type enumeration {
+            enum commit {
+              value 1 ;
+            }
+
+          }
+
+          mandatory true ;
+        }
+
+      }
+
+      ncd:revise-date 2022-10-30 ;
+    }
+
+    ncd:revise-date 2023-10-10 ;
+  }
+
+  container state {
+    config false ;
+    container license {
+      description 'Show license information.' ;
+      container files {
+        list file {
+          description 'The license file information.' ;
+          key file-name ;
+          leaf file-name {
+            description 'license file name.' ;
+            type string {
+              length 1..79 ;
+
+            }
+
+          }
+
+          leaf serial-number {
+            description 'the serial number of license file.' ;
+            type string {
+              length 1..2000 ;
+
+            }
+
+          }
+
+          leaf type {
+            description 'the type of license file.' ;
+            type string {
+              length 1..12 ;
+
+            }
+
+          }
+
+          leaf status {
+            description 'the status of license file.' ;
+            type ncd:string-with-blank ;
+
+          }
+
+          leaf publish-date {
+            description 'the publish date of license file.' ;
+            type string {
+              length 1..12 ;
+
+            }
+
+          }
+
+          leaf invalid-date {
+            description 'the invalid date of license file.' ;
+            type string {
+              length 1..12 ;
+
+            }
+
+          }
+
+          container performances {
+            description 'The performance item of license file.' ;
+            list performance {
+              description 'The performance item of license file.' ;
+              key name ;
+              leaf name {
+                description 'the performance name of license file.' ;
+                type string {
+                  length 1..63 ;
+
+                }
+
+              }
+
+              leaf authority {
+                description 'the performance authority number of license file.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container functions {
+            description 'The function item of license file.' ;
+            list function {
+              description 'The function item of license file.' ;
+              key name ;
+              leaf name {
+                description 'the function name of license file.' ;
+                type string {
+                  length 1..63 ;
+
+                }
+
+              }
+
+              leaf status {
+                description 'the function status of license file.' ;
+                type ncd:string-all {
+                  length 1..64 ;
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2022-10-30 ;
+          }
+
+          container devids {
+            description 'The devids of license file.' ;
+            list devid {
+              description 'The devids of license file.' ;
+              key system-devid ;
+              leaf system-devid {
+                description 'the system-devids of license file.' ;
+                type string {
+                  length 1..28 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2022-04-19 ;
+      }
+
+      container port-enables {
+        description 'Show port enable license information.' ;
+        container port-states {
+          list port-state {
+            key if-name ;
+            leaf if-name {
+              description 'The interface name.' ;
+              type string {
+                length 1..31 ;
+
+              }
+
+            }
+
+            leaf trial {
+              description 'The port license is trial license or not.' ;
+              type enumeration {
+                enum yes {
+                  value 0 ;
+                }
+
+                enum no {
+                  value 1 ;
+                }
+
+              }
+
+            }
+
+            leaf demo {
+              description 'The port license is demo license or not.' ;
+              type enumeration {
+                enum yes {
+                  value 0 ;
+                }
+
+                enum no {
+                  value 1 ;
+                }
+
+              }
+
+            }
+
+            leaf permit-status {
+              description 'The permit status of port license.' ;
+              type enumeration {
+                enum no-permit {
+                  value 0 ;
+                }
+
+                enum matched {
+                  value 1 ;
+                }
+
+                enum overAllocation-matched {
+                  value 2 ;
+                }
+
+                enum unmatched {
+                  value 3 ;
+                }
+
+                enum overAllocation-unmatched {
+                  value 4 ;
+                }
+
+              }
+
+            }
+
+            leaf status {
+              description 'The status of license port.' ;
+              type enumeration {
+                enum activated {
+                  value 0 ;
+                }
+
+                enum inactivated {
+                  value 1 ;
+                }
+
+              }
+
+            }
+
+            leaf is-in-grace-period {
+              type enumeration {
+                enum yes {
+                  value 1 ;
+                }
+
+                enum no {
+                  value 0 ;
+                }
+
+              }
+
+              description 'The port license is grace mode or not.' ;
+              ncd:revise-date 2024-04-22 ;
+            }
+
+            leaf remain-grace-period-time {
+              type uint32 ;
+
+              description 'The remaining time of the grace period in minutes.' ;
+              units s ;
+              ncd:revise-date 2024-04-22 ;
+            }
+
+          }
+
+        }
+
+        container resource-permanents {
+          list resource-permanent {
+            description 'The license resources info.' ;
+            key 'item-name demo-file' ;
+            leaf item-name {
+              description 'The license item name.' ;
+              type string {
+                length 1..63 ;
+
+              }
+
+            }
+
+            leaf demo-file {
+              description 'The license demo file name.' ;
+              type string {
+                length 1..80 ;
+
+              }
+
+            }
+
+            leaf total {
+              description 'The total number of license resources.' ;
+              type uint32 ;
+
+            }
+
+            leaf available {
+              description 'The available number of license resources.' ;
+              type uint32 ;
+
+            }
+
+            leaf matched {
+              description 'The matched number of license resources.' ;
+              type uint32 ;
+
+            }
+
+            leaf unmatched {
+              description 'The unmatched number of license resources.' ;
+              type uint32 ;
+
+            }
+
+            leaf over-allocation {
+              description 'The over-allocation number of license resources.' ;
+              type uint32 ;
+
+            }
+
+            ncd:select item-name ;
+            ncd:select "item-name demo-file" ;
+          }
+
+        }
+
+        container resource-permanent-briefs {
+          list resouce-permanent-brief {
+            description 'The license resources info in a position.' ;
+            key 'item-name location demo-file' ;
+            leaf item-name {
+              description 'The license item name.' ;
+              type string {
+                length 1..63 ;
+
+              }
+
+            }
+
+            leaf location {
+              description 'The license port location.' ;
+              type string {
+                length 1..31 ;
+
+              }
+
+            }
+
+            leaf demo-file {
+              description 'The license demo file name.' ;
+              type string {
+                length 1..79 ;
+
+              }
+
+            }
+
+            leaf permit-status {
+              description 'The license port permit status.' ;
+              type enumeration {
+                enum matched {
+                  value 0 ;
+                  description 'The port license status is matched.' ;
+                }
+
+                enum unmatched {
+                  value 1 ;
+                  description 'The port license status is unmatched.' ;
+                }
+
+                enum over-allocation {
+                  value 2 ;
+                  description 'The port license status is over-allocation.' ;
+                }
+
+              }
+
+            }
+
+            leaf physical-status {
+              description 'The license port physical status.' ;
+              type enumeration {
+                enum online {
+                  value 0 ;
+                  description 'The port is online.' ;
+                }
+
+                enum offline {
+                  value 1 ;
+                  description 'The port is offline.' ;
+                }
+
+              }
+
+            }
+
+            leaf invalid-date {
+              description 'The invalid date of license demo file.' ;
+              type string {
+                length 1..12 ;
+
+              }
+
+            }
+
+            leaf ifname {
+              type string {
+                length 1..31 ;
+
+              }
+
+              description 'The interface name of license port.' ;
+              ncd:revise-date 2024-04-30 ;
+            }
+
+            ncd:select item-name ;
+            ncd:select location ;
+            ncd:select "item-name location" ;
+            ncd:select "item-name location demo-file" ;
+          }
+
+        }
+
+        container port-type-summarys {
+          list port-type-summary {
+            description 'The license resources of port type info.' ;
+            key port-type ;
+            leaf port-type {
+              description 'The port type of license port.' ;
+              type string {
+                length 1..16 ;
+
+              }
+
+            }
+
+            leaf total {
+              description 'The total number of license port in one port type.' ;
+              type uint32 ;
+
+            }
+
+            leaf trial {
+              description 'The trial port number of license in one port type.' ;
+              type uint32 ;
+
+            }
+
+            leaf demo {
+              description 'The demo port number of license in one port type.' ;
+              type uint32 ;
+
+            }
+
+            leaf no-permit {
+              description 'The no-permit port number of license in one port type.' ;
+              type uint32 ;
+
+            }
+
+            leaf matched {
+              description 'The matched port number of license in one port type.' ;
+              type uint32 ;
+
+            }
+
+            leaf unmatched {
+              description 'The unmatched port number of license in one port type.' ;
+              type uint32 ;
+
+            }
+
+            leaf over-allocation-matched {
+              description 'The matched over-allocation port number of license in one port type.' ;
+              type uint32 ;
+
+            }
+
+            leaf over-allocation-unmatched {
+              description 'The unmatched over-allocation port number of license in one port type.' ;
+              type uint32 ;
+
+            }
+
+            leaf grace-period {
+              type uint32 ;
+
+              description 'The grace port number of license in one port type.' ;
+              ncd:revise-date 2024-04-22 ;
+            }
+
+          }
+
+        }
+
+        container cards {
+          description 'The license control information of cards.' ;
+          list card {
+            description 'The license control information of cards.' ;
+            key location ;
+            leaf location {
+              description 'The location of license-control card.' ;
+              type string {
+                length 0..11 ;
+
+              }
+
+            }
+
+            leaf board-name {
+              description 'The board-name of license-control card.' ;
+              type string {
+                length 0..31 ;
+
+              }
+
+            }
+
+            leaf license-control {
+              description 'The license control flag of cards.' ;
+              type string {
+                length 0..4 ;
+
+              }
+
+            }
+
+            container card-items {
+              description 'The license control item of card.' ;
+              list card-item {
+                description 'The license control item of card.' ;
+                key item-name ;
+                leaf item-name {
+                  description 'the license item.' ;
+                  type string {
+                    length 1..63 ;
+
+                  }
+
+                }
+
+                leaf description {
+                  description 'the description of item.' ;
+                  type ncd:string-all ;
+
+                }
+
+              }
+
+              ncd:revise-date 2022-10-30 ;
+            }
+
+            ncd:revise-date 2022-04-19 ;
+          }
+
+        }
+
+        container devids {
+          description 'The device id information.' ;
+          list devid {
+            description 'The device id information.' ;
+            key shelf ;
+            leaf shelf {
+              description 'The shelf number of the device.' ;
+              type uint8 {
+                range 0..127 {
+                  description 'shelf range' ;
+                }
+
+              }
+
+            }
+
+            leaf system-devid {
+              description 'The device system id.' ;
+              type ncd:string-all {
+                length 0..28 ;
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2022-04-07 ;
+        }
+
+        container performances {
+          description 'The performances of license file.' ;
+          list performance {
+            description 'The performances of license file.' ;
+            key name ;
+            leaf name {
+              description 'The performance name.' ;
+              type ncd:string-all {
+                length 1..63 ;
+
+              }
+
+              ncd:revise-date 2022-10-30 ;
+            }
+
+            leaf current {
+              description 'The performance authority number.' ;
+              type ncd:string-all {
+                length 1..20 ;
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2022-04-19 ;
+        }
+
+      }
+
+      container functions {
+        description 'The functions of license file.' ;
+        list function {
+          description 'The functions of license file.' ;
+          key function-name ;
+          leaf function-name {
+            description 'The function name.' ;
+            type ncd:string-all {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf status {
+            description 'The function status.' ;
+            type ncd:string-all {
+              length 1..63 ;
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2022-08-31 ;
+      }
+
+      container mtnportlcs {
+        description 'The performances of license file of mtn port.' ;
+        list mtnportlcs {
+          description 'The performances of license file.' ;
+          key performance-name ;
+          leaf performance-name {
+            description 'The performance name of license file.' ;
+            type ncd:string-all {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf current {
+            description 'The performance current number of license file.' ;
+            type ncd:string-all {
+              length 1..20 ;
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2022-10-30 ;
+      }
+
+      container performances {
+        description 'The performances of license file.' ;
+        list performance {
+          description 'The performances of license file.' ;
+          key performance-name ;
+          leaf performance-name {
+            description 'The performance name.' ;
+            type ncd:string-all {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf number {
+            description 'The performance  number.' ;
+            type ncd:string-all {
+              length 1..20 ;
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2022-10-30 ;
+      }
+
+      container items {
+        description 'License items supported by the device.' ;
+        list item {
+          key name ;
+          leaf name {
+            description 'License item name.' ;
+            type ncd:string-all {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf type {
+            description 'License item type.' ;
+            type enumeration {
+              enum function {
+                value 0 ;
+              }
+
+              enum performance {
+                value 1 ;
+              }
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2022-10-30 ;
+      }
+
+      container license-services-status {
+        description 'Contains information about services using licenses and their grace period status.' ;
+        list service-status {
+          description 'List of services status.' ;
+          key service-name ;
+          leaf service-name {
+            type string {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf instance-num {
+            description 'Number of business instances in grace period.' ;
+            type uint32 ;
+
+          }
+
+          leaf is-in-grace-period {
+            description 'Indicates whether the service is in a grace period.' ;
+            type enumeration {
+              enum yes {
+                value 1 ;
+              }
+
+              enum no {
+                value 0 ;
+              }
+
+            }
+
+          }
+
+          leaf remain-grace-period-time {
+            description 'The remaining time of the grace period in minutes.' ;
+            units s ;
+            type uint32 ;
+
+          }
+
+        }
+
+        ncd:revise-date 2024-04-22 ;
+      }
+
+    }
+
+    container msg-auth {
+      description 'Message authentication.' ;
+      leaf msg-auth-code {
+        description 'Message authentication code.' ;
+        type uint32 ;
+
+      }
+
+      ncd:revise-date 2022-10-30 ;
+    }
+
+    container cloud {
+      description 'Show license information.' ;
+      container resource {
+        description 'Cloud license resource.' ;
+        list performance {
+          description 'The performance item of cloud license.' ;
+          key name ;
+          leaf name {
+            description 'Performance item name.' ;
+            type ncd:string-all {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf number {
+            description 'The number performance item.' ;
+            type uint32 ;
+
+          }
+
+        }
+
+        list function {
+          description 'The functions of cloud license.' ;
+          key name ;
+          leaf name {
+            description 'Function item name.' ;
+            type ncd:string-all {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf status {
+            description 'Function item status.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+
+              enum disable {
+                value 0 ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2022-10-30 ;
+    }
+
+    ncd:revise-date 2022-02-10 ;
+  }
+
+}

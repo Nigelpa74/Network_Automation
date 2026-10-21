@@ -1,0 +1,156 @@
+module zxr10-protect-group-list {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/protect-group-list" ;
+  prefix pglist ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+
+     Nanjing Institute of ZTE Corporation
+
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the protect group list.' ;
+  revision 2023-04-27 {
+    description '1.Modify the range of the leaf /configuration/protect-group-list/group-list/master-tunnel-group-id.
+2.Modify the range of the leaf /configuration/protect-group-list/group-list/slave-tunnel-groups/slave-tunnel-group/slave-tunnel-group-id.' ;
+  }
+
+  revision 2013-12-12 {
+    description '1.Add import clause.
+
+2.Change the type of master-pw-group-name leaf node from string to "ncd:ifname".
+
+3.Change the type of slave-pw-group-name leaf node from string to "ncd:ifname".' ;
+  }
+
+  revision 2013-11-04 {
+    description '1.Remove the import clause.
+
+2.Add pw-group-list feature and tunnel-group-list feature.
+
+3.Add container slave-tunnel-groups and slave-pw-groups.
+
+4.Add if-feature clause on case clause.' ;
+  }
+
+  revision 2013-07-03 {
+    description 'Initial version.' ;
+  }
+
+  feature pw-group-list {
+    description 'PW group list.' ;
+  }
+
+  feature tunnel-group-list {
+    description 'Tunnel group list.' ;
+  }
+
+  container configuration {
+    description 'Configuration model information of protect group list.' ;
+    container protect-group-list {
+      description 'The configuration information of protect group list, depend zxr10-tunnel-group and zxr10-l2vpn.' ;
+      list group-list {
+        description 'Configure protect group list.ID of tunnel protect group list is between [1,x], ID of PW protect group list is between [y+1,z].The value of x,y and z depends on the performance parameters, the default value of x is 4096, the default value of y is 4096, the default value of z is 8192.' ;
+        key "group-list-id" ;
+        unique "group-list-id" ;
+        max-elements 8192 ;
+        leaf group-list-id {
+          description 'Configure ID of protect group list.' ;
+          type uint32 {
+            range 1..8192 {
+              description 'ID of protect group list.' ;
+            }
+
+          }
+
+        }
+
+        choice type {
+          description 'You can configure tunnel protect group list or PW protect group list.' ;
+          mandatory true ;
+          case tunnel-group {
+            if-feature tunnel-group-list ;
+
+            description 'Configure tunnel protect group list.The maximum number of tunnel protect group list instance depends on the performance parameter, the default value is 4096.The maximum member number each tunnel protect group list depends on the performance parameter, the default value is 32, one master tunnel group and 31 slave tunnel groups.The maximum member number of all tunnel protect group list depends on the performance parameter, the default value is 8192.' ;
+            leaf master-tunnel-group-id {
+              description 'Configure master tunnel group of tunnel protect group list.Each tunnel protect group list can only configure one master tunnel group.' ;
+              type uint32 {
+                range 1..65535 {
+                  description 'Tunnel group ID.' ;
+                }
+
+              }
+
+              mandatory true ;
+              ncd:revise-date 2023-04-27 ;
+            }
+
+            container slave-tunnel-groups {
+              description 'Configure slave tunnel groups of tunnel protect group list.The maximum member number each tunnel protect group list depends on the performance parameter, the default value is 32, one master tunnel group and 31 slave tunnel groups.Because each tunnel protect group list can only configure one master tunnel group,so the slave tunnel group number depends on the performance parameter too.' ;
+              presence "Configure slave tunnel groups" ;
+              list slave-tunnel-group {
+                description 'Configure slave tunnel group of tunnel protect group list.' ;
+                key "slave-tunnel-group-id" ;
+                max-elements 31 ;
+                leaf slave-tunnel-group-id {
+                  description 'Configure slave tunnel group ID.' ;
+                  type uint32 {
+                    range 1..65535 {
+                      description 'Tunnel group ID.' ;
+                    }
+
+                  }
+
+                  ncd:revise-date 2023-04-27 ;
+                }
+
+              }
+
+            }
+
+          }
+
+          case pw-group {
+            if-feature pw-group-list ;
+
+            description 'Configure PW protect group list.The maximum number of PW protect group list instance depends on the performance parameter, the default value is 4096.The maximum member number each PW protect group list depends on the performance parameter, the default value is 32, one master PW group and 31 slave PW groups.The maximum member number of all PW protect group list depends on the performance parameter, the default value is 8192.' ;
+            leaf master-pw-group-name {
+              description 'Configure master PW group of PW protect group list.Each PW protect group list can only configure one master PW group.' ;
+              type ncd:ifname ;
+
+              mandatory true ;
+            }
+
+            container slave-pw-groups {
+              description 'Configure slave PW groups of PW protect group list.The maximum member number each PW protect group list depends on the performance parameter, the default value is 32, one master PW group and 31 slave PW groups.Because each PW protect group list can only configure one master PW group,so the slave PW group number depends on the performance parameter too.' ;
+              presence "Configure slave PW groups" ;
+              list slave-pw-group {
+                description 'Configure slave PW group of PW protect group list.' ;
+                key "slave-pw-group-name" ;
+                max-elements 31 ;
+                leaf slave-pw-group-name {
+                  description 'Configure slave PW group name.' ;
+                  type ncd:ifname ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

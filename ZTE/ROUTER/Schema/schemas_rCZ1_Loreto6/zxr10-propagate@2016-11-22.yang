@@ -1,0 +1,252 @@
+module zxr10-propagate {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/propagate'
+            ;
+  prefix propagate ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe OAM Propagate.'
+              ;
+  revision 2016-11-22 {
+    description 'Modify max vlaue of configuration/sections/section/section-id '
+              + 'from 4000 to percode 67305544'
+                ;
+  }
+  revision 2015-02-12 {
+    description 'Modify the range of section ID from 1-65535 to 1-4000'
+                ;
+  }
+  revision 2014-02-17 {
+    description '1.Import zxr10-netconf-defs'+"\n"
+              + '2.Add Performance Code for Tunnel ID'+"\n"
+              + '3.Support interface filter for PW name'
+                ;
+  }
+  revision 2013-08-22 {
+    description 'Initial version.'
+                ;
+  }
+  typedef phb-name {
+    type enumeration {
+      enum be {
+        value 1 ;
+        description 'Best effort'
+                    ;
+      }
+      enum af11 {
+        value 2 ;
+        description 'Assured forwarding 11'
+                    ;
+      }
+      enum af12 {
+        value 3 ;
+        description 'Assured forwarding 12'
+                    ;
+      }
+      enum af21 {
+        value 4 ;
+        description 'Assured forwarding 21'
+                    ;
+      }
+      enum af22 {
+        value 5 ;
+        description 'Assured forwarding 22'
+                    ;
+      }
+      enum af31 {
+        value 6 ;
+        description 'Assured forwarding 31'
+                    ;
+      }
+      enum af32 {
+        value 7 ;
+        description 'Assured forwarding 32'
+                    ;
+      }
+      enum af41 {
+        value 8 ;
+        description 'Assured forwarding 41'
+                    ;
+      }
+      enum af42 {
+        value 9 ;
+        description 'Assured forwarding 42'
+                    ;
+      }
+      enum cs6 {
+        value 10 ;
+        description 'Class selector 6'
+                    ;
+      }
+      enum cs7 {
+        value 11 ;
+        description 'Class selector 7'
+                    ;
+      }
+      enum ef {
+        value 12 ;
+        description 'Expedited forwarding'
+                    ;
+      }
+    }
+    default cs7 ;
+    description 'PHB name'
+                ;
+  }
+  container configuration {
+    description 'Configuration of OAM Propagate'
+                ;
+    container sections {
+      description 'Section Configuration'
+                  ;
+      list section {
+        description 'Section Configuration'
+                    ;
+        key section-id ;
+        leaf section-id {
+          description 'Section ID'
+                      ;
+          type uint32 {
+            range 1..65535 {
+              description 'Section ID'
+                          ;
+            }
+          }
+        }
+        leaf propagate {
+          description 'Propagate is enabled or disabled on this section'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Propagate is disabled'
+                          ;
+            }
+            enum enable {
+              value 1 ;
+              description 'Propagate is enabled'
+                          ;
+            }
+          }
+          default enable ;
+        }
+        leaf phb {
+          description 'PHB name'
+                      ;
+          type phb-name ;
+          default cs7 ;
+        }
+        container section-tunnel-relations {
+          description 'The tunnels that specified to be propagated'
+                      ;
+          list tunnel-list {
+            description 'The tunnels that specified to be propagated'
+                        ;
+            key 'tunnel-id lsp-id'
+                ;
+            leaf tunnel-id {
+              description 'Tunnel ID, the range is defined by performance code'
+                          ;
+              type uint32 {
+                range 1..4294967295 {
+                  description 'Tunnel ID'
+                              ;
+                }
+              }
+            }
+            leaf lsp-id {
+              description 'LSP ID'
+                          ;
+              type uint16 {
+                range 1..65535 {
+                  description 'LSP ID'
+                              ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    container tunnels {
+      description 'Tunnel Configuration'
+                  ;
+      list tunnel {
+        description 'Tunnel Configuration'
+                    ;
+        key 'tunnel-id lsp-id'
+            ;
+        leaf tunnel-id {
+          description 'Tunnel ID, the range is defined by performance code'
+                      ;
+          type uint32 {
+            range 1..4294836225 {
+              description 'Tunnel ID'
+                          ;
+            }
+          }
+        }
+        leaf lsp-id {
+          description 'LSP ID'
+                      ;
+          type uint16 {
+            range 1..65535 {
+              description 'LSP ID'
+                          ;
+            }
+          }
+        }
+        leaf propagate {
+          description 'Propagate is enabled or disabled'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Propagate is disabled'
+                          ;
+            }
+            enum enable {
+              value 1 ;
+              description 'Propagate is enabled'
+                          ;
+            }
+          }
+          default enable ;
+        }
+        leaf phb {
+          description 'PHB name'
+                      ;
+          type phb-name ;
+          default cs7 ;
+        }
+        container tunnel-pw-relations {
+          description 'The PWs specified to be propagated'
+                      ;
+          list pw-list {
+            description 'The PWs specified to be propagated'
+                        ;
+            key pw-name ;
+            leaf pw-name {
+              description 'PW name'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'PW name'
+                              ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

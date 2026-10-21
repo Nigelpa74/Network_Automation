@@ -1,0 +1,195 @@
+module zxr10-pppoe-agent {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/pppoe-agent" ;
+  prefix pppoe-agent ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe PPPoE Agent.' ;
+  revision 2024-05-15 {
+    description 'The initial version.' ;
+  }
+
+  container configuration {
+    description 'Describe the configuration of PPPoE Agent.' ;
+    container pppoe-agent {
+      description 'Configuration data of PPPoE Agent.' ;
+      container global {
+        description 'Global configuration.' ;
+        leaf vendor-id {
+          description 'Vendor ID.' ;
+          type uint32 {
+            range 0..4294967295 ;
+
+          }
+
+          default 3561 ;
+        }
+
+      }
+
+      container interfaces {
+        description 'Interface configuration.' ;
+        list interface {
+          description 'Interface configuration.' ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf enable {
+            description 'Enable or disable PPPoE agent function.' ;
+            type boolean ;
+
+            default false ;
+          }
+
+          container encapsulation {
+            description 'Encapsulation content of vendor TAG information.' ;
+            leaf circuit-id {
+              description 'Encapsulate circuit ID in vendor TAG information.' ;
+              type empty ;
+
+            }
+
+            leaf remote-id {
+              description 'Encapsulate remote ID in vendor TAG information.' ;
+              type empty ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container vendor-specific-tags {
+        description 'The vendor specific tag configuration.' ;
+        list vendor-specific-tag {
+          description 'The vendor specific tag configuration.' ;
+          key 'ifname vlan internal-vlan' ;
+          leaf ifname {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf vlan {
+            description 'VLAN ID.' ;
+            type uint16 {
+              range 0..4094 ;
+
+            }
+
+          }
+
+          leaf internal-vlan {
+            description 'Internal VLAN ID.' ;
+            type uint16 {
+              range 0..4094 ;
+
+            }
+
+          }
+
+          container cid-format {
+            description 'The circuit ID format.' ;
+            choice format {
+              description 'Format type.' ;
+              case common {
+                description 'The common format.' ;
+                leaf common {
+                  description 'The common format.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              case extend {
+                description 'The extend format.' ;
+                leaf extend {
+                  description 'The extend format.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              case user-defined {
+                description 'The user-defined format.' ;
+                leaf user-defined-text {
+                  description 'The user defined text.' ;
+                  type ncd:string-with-blank {
+                    length 1..127 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container rid-format {
+            description 'The remote ID format.' ;
+            choice format {
+              description 'Format type.' ;
+              case common {
+                description 'The common format.' ;
+                leaf common {
+                  description 'The common format.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              case extend {
+                description 'The extend format.' ;
+                leaf extend {
+                  description 'The extend format.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              case user-defined {
+                description 'The user-defined format.' ;
+                leaf user-defined-text {
+                  description 'The user defined text.' ;
+                  type ncd:string-with-blank {
+                    length 1..127 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

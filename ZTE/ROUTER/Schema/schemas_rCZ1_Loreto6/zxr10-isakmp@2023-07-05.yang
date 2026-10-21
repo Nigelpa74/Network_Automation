@@ -1,0 +1,3189 @@
+module zxr10-isakmp {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/isakmp" ;
+  prefix isakmp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  revision 2023-07-05 {
+    description 'Add send-certification-authority leaf' ;
+  }
+  
+  revision 2023-05-24 {
+    description 'Add “suffix” in sync-fixedkey of keyid-isakmp-key list
+Add “suffix” in sync-fixedkey of keyid-isakmp-vrf-key list
+Add keyid-isakmp-key-suffixs container
+Add keyid-isakmp-vrf-key-suffixs container
+Add identity-user-suffixs container
+Add “suffix” in sync-fixedkey of identity-keyid list
+Add “suffix” in sync-fixedkey of identity-keyid container' ;
+  }
+
+  revision 2023-03-23 {
+    description 'ADD NETCONF SHOW ISAKMP SA.' ;
+  }
+
+  revision 2023-01-20 {
+    description 'Add clear-isakmp-sa for rpc.' ;
+  }
+
+  revision 2022-12-29 {
+    description 'Add pki-common-name of self-identity and user-gorup identity' ;
+  }
+
+  revision 2022-11-24 {
+    description 'Add ikev2 authentication sig-hash' ;
+  }
+
+  revision 2022-01-11 {
+    description 'Support ikev2 cookie challenge' ;
+  }
+
+  revision 2021-07-28 {
+    description 'The maximum number of users in the user group is replaced by performance parameters.' ;
+  }
+
+  revision 2021-04-06 {
+    description 'Support DPD global configuration.' ;
+  }
+
+  revision 2021-02-25 {
+    description 'add dh-group 20
+add dh-group 21' ;
+  }
+
+  revision 2021-01-29 {
+    description 'Userfqdn supports suffix matching.' ;
+  }
+
+  revision 2021-01-05 {
+    description 'add dh-group 14
+add dh-group 19' ;
+  }
+
+  revision 2020-07-07 {
+    description '1)Modified /configuration/isakmp/isakmp-key/ipv4-isakmp-keys/ipv4-isakmp-key/key/key/clear-key/clear-key
+2)Modified /configuration/isakmp/isakmp-key/ipv4-isakmp-keys/ipv4-isakmp-key/key/key/encrypted-key/encrypted-key
+3)Modified /configuration/isakmp/isakmp-key/ipv4-isakmp-local-keys/ipv4-isakmp-local-key/key/key/clear-key/clear-key
+4)Modified /configuration/isakmp/isakmp-key/ipv4-isakmp-local-keys/ipv4-isakmp-local-key/key/key/encrypted-key/encrypted-key
+5)Modified /configuration/isakmp/isakmp-key/ipv4-isakmp-vrf-keys/ipv4-isakmp-vrf-key/key/key/clear-key/clear-key
+6)Modified /configuration/isakmp/isakmp-key/ipv4-isakmp-vrf-keys/ipv4-isakmp-vrf-key/key/key/encrypted-key/encrypted-key
+7)Modified /configuration/isakmp/isakmp-key/ipv4-isakmp-vrf-local-keys/ipv4-isakmp-vrf-local-key/key/key/clear-key/clear-key
+8)Modified /configuration/isakmp/isakmp-key/ipv4-isakmp-vrf-local-keys/ipv4-isakmp-vrf-local-key/key/key/encrypted-key/encrypted-key
+9)Modified /configuration/isakmp/isakmp-key/ipv6-isakmp-keys/ipv6-isakmp-key/key/key/clear-key/clear-key
+10)Modified /configuration/isakmp/isakmp-key/ipv6-isakmp-keys/ipv6-isakmp-key/key/key/encrypted-key/encrypted-key
+11)Modified /configuration/isakmp/isakmp-key/ipv6-isakmp-local-keys/ipv6-isakmp-local-key/key/key/clear-key/clear-key
+12)Modified /configuration/isakmp/isakmp-key/ipv6-isakmp-local-keys/ipv6-isakmp-local-key/key/key/encrypted-key/encrypted-key
+13)Modified /configuration/isakmp/isakmp-key/ipv6-isakmp-vrf-keys/ipv6-isakmp-vrf-key/key/key/clear-key/clear-key
+14)Modified /configuration/isakmp/isakmp-key/ipv6-isakmp-vrf-keys/ipv6-isakmp-vrf-key/key/key/encrypted-key/encrypted-key
+15)Modified /configuration/isakmp/isakmp-key/ipv6-isakmp-vrf-local-keys/ipv6-isakmp-vrf-local-key/key/key/clear-key/clear-key
+16)Modified /configuration/isakmp/isakmp-key/ipv6-isakmp-vrf-local-keys/ipv6-isakmp-vrf-local-key/key/key/encrypted-key/encrypted-key
+17)Modified /configuration/isakmp/isakmp-key/fqdn-isakmp-keys/fqdn-isakmp-key/key/key/clear-key/clear-key
+18)Modified /configuration/isakmp/isakmp-key/fqdn-isakmp-keys/fqdn-isakmp-key/key/key/encrypted-key/encrypted-key
+19)Modified /configuration/isakmp/isakmp-key/fqdn-isakmp-vrf-keys/fqdn-isakmp-key/key/key/clear-key/clear-key
+20)Modified /configuration/isakmp/isakmp-key/fqdn-isakmp-vrf-keys/fqdn-isakmp-key/key/key/encrypted-key/encrypted-key
+21)Modified /configuration/isakmp/user-groups/user-group/user-names/user-name/user-password/clear-password/password
+22)Modified /configuration/isakmp/user-groups/user-group/user-names/user-name/user-password/encrypted-password/encrypted-password
+23)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/ipv4-isakmp-keys/ipv4-isakmp-key/key/key/clear-key/clear-key
+24)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/ipv4-isakmp-keys/ipv4-isakmp-key/key/key/encrypted-key/encrypted-key
+25)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/ipv4-isakmp-vrf-keys/ipv4-isakmp-vrf-key/key/key/clear-key/clear-key
+26)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/ipv4-isakmp-vrf-keys/ipv4-isakmp-vrf-key/key/key/encrypted-key/encrypted-key
+27)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/ipv6-isakmp-keys/ipv6-isakmp-key/key/key/clear-key/clear-key
+28)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/ipv6-isakmp-keys/ipv6-isakmp-key/key/key/encrypted-key/encrypted-key
+29)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/ipv6-isakmp-vrf-keys/ipv6-isakmp-vrf-key/key/key/clear-key/clear-key
+30)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/ipv6-isakmp-vrf-keys/ipv6-isakmp-vrf-key/key/key/encrypted-key/encrypted-key
+31)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/fqdn-isakmp-keys/fqdn-isakmp-key/key/key/clear-key/clear-key
+32)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/fqdn-isakmp-keys/fqdn-isakmp-key/key/key/encrypted-key/encrypted-key
+33)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/fqdn-isakmp-vrf-keys/fqdn-isakmp-key/key/key/clear-key/clear-key
+34)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/fqdn-isakmp-vrf-keys/fqdn-isakmp-key/key/key/encrypted-key/encrypted-key
+35)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/user-fqdn-isakmp-keys/user-fqdn-isakmp-key/key/key/clear-key/clear-key
+36)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/user-fqdn-isakmp-keys/user-fqdn-isakmp-key/key/key/encrypted-key/encrypted-key
+37)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/user-fqdn-isakmp-vrf-keys/user-fqdn-isakmp-key/key/key/clear-key/clear-key
+38)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/user-fqdn-isakmp-vrf-keys/user-fqdn-isakmp-key/key/key/encrypted-key/encrypted-key
+39)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/keyid-isakmp-keys/keyid-isakmp-key/key/key/clear-key/clear-key
+40)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/keyid-isakmp-keys/keyid-isakmp-key/key/key/encrypted-key/encrypted-key
+41)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/keyid-isakmp-vrf-keys/keyid-isakmp-vrf-key/key/key/clear-key/clear-key
+42)Modified /configuration/isakmp/isakmp-key-sets/isakmp-key-set/keyid-isakmp-vrf-keys/keyid-isakmp-vrf-key/key/key/encrypted-key/encrypted-key
+43)Modified /configuration/isakmp/isakmp-profiles/isakmp-profile/default-key/default-key/clear-key/clear-key
+44)Modified /configuration/isakmp/isakmp-profiles/isakmp-profile/default-key/default-key/encrypted-key/encrypted-key' ;
+  }
+
+  revision 2018-01-15 {
+    description 'Remove feature ipv6-isakmp-local-keys for container:/configuration/isakmp/isakmp-key/ipv6-isakmp-local-keys;
+Remove feature ipv6-isakmp-local-keys for container:/configuration/isakmp/isakmp-key/ipv6-isakmp-vrf-local-keys;' ;
+  }
+
+  revision 2017-06-20 {
+    description 'Add sha256,sha384,sha512 for Container:/configuration/isakmp/isakmp-policys/isakmp-policy/prf.
+Add sha256,sha384,sha512 for HASH.' ;
+  }
+
+  revision 2017-01-13 {
+    description 'Isakmp support MCG-5000' ;
+  }
+
+  revision 2017-01-12 {
+    description 'Supprt match identity pki-common-name
+add Container:/configuration/isakmp/isakmp-profiles/isakmp-profile/match-identity/pki-common-name-match-identitys,
+add YangList:/configuration/isakmp/isakmp-profiles/isakmp-profile/match-identity/pki-common-name-match-identity,
+add Leaf:/configuration/isakmp/isakmp-profiles/isakmp-profile/match-identity/pki-common-name.' ;
+  }
+
+  revision 2017-01-09 {
+    description '1)Modified zxr10-isakmp/configuration/isakmp/global-configuration/isakmp-enable leaf. Add default value disable(0).
+2)Modified zxr10-isakmp/configuration/isakmp/isakmp-policys/isakmp-policy/authentication leaf. Add default value pre-share(0).
+3)Modified zxr10-isakmp/configuration/isakmp/isakmp-policys/isakmp-policy/group leaf. Add default value group1(0).
+4)Modified zxr10-isakmp/configuration/isakmp/isakmp-policys/isakmp-policy/hash leaf. Add default value sha1(1).
+5)Modified zxr10-isakmp/configuration/isakmp/isakmp-policys/isakmp-policy/encryption leaf. Add default value 3des(4).
+6)Modified zxr10-isakmp/configuration/isakmp/isakmp-policys/isakmp-policy/lifetime leaf. Add default value 86400.
+7)Modified zxr10-isakmp/configuration/isakmp/isakmp-policys/isakmp-policy/prf leaf. Changed type from derivedType HASH to baseType enumeration, and add enum md5(0) and sha1(1), and add default value sha1(1).
+8)Modified zxr10-isakmp/configuration/isakmp/user-groups/user-group/user-names/user-name/user-password choice. Changed mandatory value from false to true.
+9)Modified zxr10-isakmp/configuration/isakmp/isakmp-profiles/isakmp-profile/ikev2-authentication leaf. Change type from derivedType AUTHMODE to baseType enumeration, and add enum pre-share(0) and rsa-sig(1), and add default value pre-share(0).' ;
+  }
+
+  revision 2016-07-12 {
+    description 'Initial version' ;
+  }
+
+  feature ipv6-isakmp-local-keys {
+    description 'The feature of IPv6 ISAKMP local keys' ;
+  }
+
+  typedef AUTHMODE {
+    description 'Authentication mode enumeration' ;
+    type enumeration {
+      enum pre-share {
+        value 0 ;
+        description 'Pre-Shared key' ;
+      }
+
+      enum rsa-sig {
+        value 1 ;
+        description 'RSA signature' ;
+      }
+
+      enum digi-envelope {
+        value 2 ;
+        description 'Digital envelope' ;
+      }
+
+    }
+
+  }
+
+  typedef ENCRYPTION {
+    description 'ISAKMP encryption algorithm' ;
+    type enumeration {
+      enum aes-128 {
+        value 0 ;
+        description 'AES - Advanced Encryption Standard(128 bit keys)' ;
+      }
+
+      enum aes-192 {
+        value 1 ;
+        description 'AES - Advanced Encryption Standard(192 bit keys)' ;
+      }
+
+      enum aes-256 {
+        value 2 ;
+        description 'AES - Advanced Encryption Standard(256 bit keys)' ;
+      }
+
+      enum des {
+        value 3 ;
+        description 'DES - Data Encryption Standard (56 bit keys)' ;
+      }
+
+      enum 3des {
+        value 4 ;
+        description 'Three key triple DES' ;
+      }
+
+      enum sm4 {
+        value 5 ;
+        description 'SM4 cryptographic algorithm(128 bit keys)' ;
+      }
+
+      enum sm1 {
+        value 6 ;
+        description 'SM1 - cryptographic algorithm(128 bit keys)' ;
+      }
+
+    }
+
+  }
+
+  typedef DHGROUP {
+    description 'Diffie-Hellman group' ;
+    type enumeration {
+      enum group1 {
+        value 0 ;
+        description 'Diffie-Hellman group 1' ;
+      }
+
+      enum group2 {
+        value 1 ;
+        description 'Diffie-Hellman group 2' ;
+      }
+
+      enum group5 {
+        value 2 ;
+        description 'Diffie-Hellman group 5' ;
+      }
+
+      enum group14 {
+        value 3 ;
+        description 'Diffie-Hellman group 14' ;
+      }
+
+      enum group19 {
+        value 6 ;
+        description 'ECP group 19' ;
+      }
+
+      enum group20 {
+        value 7 ;
+        description 'ECP group 20' ;
+      }
+
+      enum group21 {
+        value 8 ;
+        description 'ECP group 21' ;
+      }
+
+    }
+
+  }
+
+  typedef HASH {
+    description 'Hash-algorithm' ;
+    type enumeration {
+      enum md5 {
+        value 0 ;
+        description 'Message Digest 5' ;
+      }
+
+      enum sha1 {
+        value 1 ;
+        description 'Secure Hash Standard' ;
+      }
+
+      enum sm3 {
+        value 2 ;
+        description 'SM3 algorithm' ;
+      }
+
+      enum sha256 {
+        value 3 ;
+        description 'Secure Hash Standard 256' ;
+      }
+
+      enum sha384 {
+        value 4 ;
+        description 'Secure Hash Standard 384' ;
+      }
+
+      enum sha512 {
+        value 5 ;
+        description 'Secure Hash Standard 512' ;
+      }
+
+    }
+
+  }
+
+  typedef EAPTYPE {
+    description 'EAP type' ;
+    type enumeration {
+      enum md5 {
+        value 4 ;
+        description 'EAP-MD5' ;
+      }
+
+      enum mschapv2 {
+        value 26 ;
+        description 'EAP-MSCHAPV2' ;
+      }
+
+      enum none {
+        value 0 ;
+      }
+
+    }
+
+  }
+
+  typedef ENABLE-FLAG {
+    type enumeration {
+      enum enable {
+        value 1 ;
+      }
+
+      enum disable {
+        value 0 ;
+      }
+
+    }
+
+  }
+
+  typedef EXCHANGEMODE {
+    description 'Exchange mode' ;
+    type enumeration {
+      enum main {
+        value 2 ;
+        description 'Main exchange-mode' ;
+      }
+
+      enum aggressive {
+        value 4 ;
+        description 'Aggressive exchange-mode' ;
+      }
+
+    }
+
+  }
+
+  typedef IKEVERSION {
+    description 'IKE version' ;
+    type enumeration {
+      enum ikev1 {
+        value 1 ;
+        description 'IKE version 1.0' ;
+      }
+
+      enum ikev2 {
+        value 2 ;
+        description 'IKE version 2.0' ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'Configuration' ;
+    container isakmp {
+      description 'ISAKMP configuration' ;
+      container global-configuration {
+        description 'ISAKMP global configuration' ;
+        leaf isakmp-enable {
+          description 'Set IKE enable flag' ;
+          type ENABLE-FLAG ;
+
+          default disable ;
+        }
+
+        leaf ikev2-cookie-challenge-enable {
+          description 'Set IKEv2 cookie challenge enable flag' ;
+          type ENABLE-FLAG ;
+
+          default disable ;
+          ncd:revise-date 2022-01-11 ;
+        }
+
+      }
+
+      container isakmp-policys {
+        description 'Set ISAKMP policy' ;
+        list isakmp-policy {
+          description 'Set ISAKMP policy' ;
+          key priority ;
+          leaf priority {
+            description 'Set ISAKMP policy priority' ;
+            type uint16 {
+              range 1..10000 ;
+
+            }
+
+          }
+
+          leaf authentication {
+            description 'Set authentication method for protection suite' ;
+            type AUTHMODE ;
+
+            default pre-share ;
+          }
+
+          leaf group {
+            description 'Set the Diffie-Hellman group' ;
+            type DHGROUP ;
+
+            default group1 ;
+          }
+
+          leaf hash {
+            description 'Set hash algorithm for protection suite' ;
+            type HASH ;
+
+            default sha1 ;
+          }
+
+          leaf encryption {
+            description 'Set encryption algorithm for protection suite' ;
+            type ENCRYPTION ;
+
+            default 3des ;
+          }
+
+          leaf lifetime {
+            description 'Set lifetime for ISAKMP security association' ;
+            type uint32 {
+              range 60..86400 ;
+
+            }
+
+            default 86400 ;
+          }
+
+          leaf prf {
+            description 'Set PRF algorithm for protection suite' ;
+            type enumeration {
+              enum md5 {
+                value 0 ;
+                description 'Message Digest 5' ;
+              }
+
+              enum sha1 {
+                value 1 ;
+                description 'Secure Hash Standard' ;
+              }
+
+              enum sha256 {
+                value 3 ;
+                description 'Secure Hash Standard 256' ;
+              }
+
+              enum sha384 {
+                value 4 ;
+                description 'Secure Hash Standard 384' ;
+              }
+
+              enum sha512 {
+                value 5 ;
+                description 'Secure Hash Standard 512' ;
+              }
+
+            }
+
+            default sha1 ;
+          }
+
+        }
+
+      }
+
+      container isakmp-key {
+        description 'Set ISAKMP pre-share keys' ;
+        container ipv4-isakmp-keys {
+          description 'Set IPv4 pre-share keys' ;
+          list ipv4-isakmp-key {
+            description 'Set IPv4 pre-share key' ;
+            key 'ipv4-address ipv4-netmask' ;
+            leaf ipv4-address {
+              description 'Set IPv4 address' ;
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            leaf ipv4-netmask {
+              description 'Set IPv4 mask' ;
+              type ncd:ipv4-mask ;
+
+            }
+
+            container key {
+              description 'Set pre-share keys' ;
+              presence key ;
+              choice key {
+                description 'Set pre-share keys' ;
+                case clear-key {
+                  description 'Set clear key' ;
+                  leaf clear-key {
+                    description 'Set clear key' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted-key {
+                  description 'Set encrypted key' ;
+                  leaf encrypted-key {
+                    description 'Set encrypted key' ;
+                    type string {
+                      length 1..236 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container ipv4-isakmp-local-keys {
+          description 'Set IPv4 pre-share keys with local address' ;
+          list ipv4-isakmp-local-key {
+            description 'Set IPv4 pre-share key with local address' ;
+            key 'ipv4-address ipv4-netmask ipv4-local-address' ;
+            leaf ipv4-address {
+              description 'Set IPv4 address' ;
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            leaf ipv4-netmask {
+              description 'Set IPv4 mask' ;
+              type ncd:ipv4-mask ;
+
+            }
+
+            leaf ipv4-local-address {
+              description 'Set IPv4 local address' ;
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            container key {
+              description 'Set pre-share keys' ;
+              presence key ;
+              choice key {
+                description 'Set pre-share keys' ;
+                case clear-key {
+                  description 'Set clear key' ;
+                  leaf clear-key {
+                    description 'Set clear key' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted-key {
+                  description 'Set encrypted key' ;
+                  leaf encrypted-key {
+                    description 'Set encrypted key' ;
+                    type string {
+                      length 1..236 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container ipv4-isakmp-vrf-keys {
+          description 'Set IPv4 pre-share keys with VRF' ;
+          list ipv4-isakmp-vrf-key {
+            description 'Set IPv4 pre-share keys with VRF' ;
+            key 'ipv4-address ipv4-netmask ipv4-vrfname' ;
+            leaf ipv4-address {
+              description 'Set IPv4 address' ;
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            leaf ipv4-netmask {
+              description 'Set IPv4 mask' ;
+              type ncd:ipv4-mask ;
+
+            }
+
+            leaf ipv4-vrfname {
+              description 'Set VRF name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            container key {
+              description 'Set pre-share keys' ;
+              presence key ;
+              choice key {
+                description 'Set pre-share keys' ;
+                case clear-key {
+                  description 'Set clear key' ;
+                  leaf clear-key {
+                    description 'Set clear key' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted-key {
+                  description 'Set encrypted key' ;
+                  leaf encrypted-key {
+                    description 'Set encrypted key' ;
+                    type string {
+                      length 1..236 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container ipv4-isakmp-vrf-local-keys {
+          description 'Set IPv4 pre-share keys with VRF and local address' ;
+          list ipv4-isakmp-vrf-local-key {
+            description 'Set IPv4 pre-share key with VRF and local address' ;
+            key 'ipv4-address ipv4-netmask ipv4-local-address ipv4-vrfname' ;
+            leaf ipv4-address {
+              description 'Set IPv4 address' ;
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            leaf ipv4-netmask {
+              description 'Set IPv4 mask' ;
+              type ncd:ipv4-mask ;
+
+            }
+
+            leaf ipv4-local-address {
+              description 'Set IPv4 local address' ;
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            leaf ipv4-vrfname {
+              description 'Set VRF name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            container key {
+              description 'Set pre-share keys' ;
+              presence key ;
+              choice key {
+                description 'Set pre-share key' ;
+                case clear-key {
+                  description 'Set clear key' ;
+                  leaf clear-key {
+                    description 'Set clear key' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted-key {
+                  description 'Set encrypted key' ;
+                  leaf encrypted-key {
+                    description 'Set encrypted key' ;
+                    type string {
+                      length 1..236 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container ipv6-isakmp-keys {
+          description 'Set IPv6 pre-share keys' ;
+          list ipv6-isakmp-key {
+            description 'Set IPv6 pre-share key' ;
+            key 'ipv6-address ipv6-netmask' ;
+            leaf ipv6-address {
+              description 'Set IPv6 address' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ipv6-netmask {
+              description 'Set IPv6 mask' ;
+              type ncd:ipv6-mask-length {
+                range 1..128 ;
+
+              }
+
+            }
+
+            container key {
+              description 'Set pre-share keys' ;
+              presence key ;
+              choice key {
+                description 'Set pre-share key' ;
+                case clear-key {
+                  description 'set clear key' ;
+                  leaf clear-key {
+                    description 'set clear key' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted-key {
+                  description 'Set encrypted key' ;
+                  leaf encrypted-key {
+                    description 'Set encrypted key' ;
+                    type string {
+                      length 1..236 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container ipv6-isakmp-local-keys {
+          description 'Set IPv6 pre-share keys with local address' ;
+          list ipv6-isakmp-local-key {
+            description 'Set IPv6 pre-share key with local address' ;
+            key 'ipv6-address ipv6-netmask ipv6-local-address' ;
+            leaf ipv6-address {
+              description 'Set IPv6 address' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ipv6-netmask {
+              description 'Set IPv6 mask' ;
+              type ncd:ipv6-mask-length {
+                range 1..128 ;
+
+              }
+
+            }
+
+            leaf ipv6-local-address {
+              description 'Set IPv6 local address' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            container key {
+              description 'Set pre-share keys' ;
+              presence key ;
+              choice key {
+                description 'Set pre-share key' ;
+                case clear-key {
+                  description 'Set clear key' ;
+                  leaf clear-key {
+                    description 'Set clear key' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted-key {
+                  description 'Set encrypted key' ;
+                  leaf encrypted-key {
+                    description 'Set encrypted key' ;
+                    type string {
+                      length 1..236 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container ipv6-isakmp-vrf-keys {
+          description 'Set IPv6 pre-share keys with VRF' ;
+          list ipv6-isakmp-vrf-key {
+            description 'Set IPv6 pre-share keys with VRF' ;
+            key 'ipv6-address ipv6-netmask ipv6-vrfname' ;
+            leaf ipv6-address {
+              description 'Set IPv6 address' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ipv6-netmask {
+              description 'Set IPv6 netmask' ;
+              type ncd:ipv6-mask-length ;
+
+            }
+
+            leaf ipv6-vrfname {
+              description 'Set VRF name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            container key {
+              description 'Set pre-share keys' ;
+              presence key ;
+              choice key {
+                description 'Set pre-share key' ;
+                case clear-key {
+                  description 'Set clear key' ;
+                  leaf clear-key {
+                    description 'Set clear key' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted-key {
+                  description 'Set encrypted key' ;
+                  leaf encrypted-key {
+                    description 'Set encrypted key' ;
+                    type string {
+                      length 1..236 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container ipv6-isakmp-vrf-local-keys {
+          description 'Set IPv6 pre-share keys with VRF and local address' ;
+          list ipv6-isakmp-vrf-local-key {
+            description 'Set IPv6 pre-share key with VRF and local address' ;
+            key 'ipv6-address ipv6-netmask ipv6-local-address ipv6-vrfname' ;
+            leaf ipv6-address {
+              description 'Set IPv6 address' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ipv6-netmask {
+              description 'Set IPv6 mask' ;
+              type ncd:ipv6-mask-length ;
+
+            }
+
+            leaf ipv6-local-address {
+              description 'Set IPv6 local address' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ipv6-vrfname {
+              description 'Set VRF name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            container key {
+              description 'Set pre-share keys' ;
+              presence key ;
+              choice key {
+                description 'Set pre-share key' ;
+                case clear-key {
+                  description 'Set clear key' ;
+                  leaf clear-key {
+                    description 'Set clear key' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted-key {
+                  description 'Set encrypted key' ;
+                  leaf encrypted-key {
+                    description 'Set encrypted key' ;
+                    type string {
+                      length 1..236 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container fqdn-isakmp-keys {
+          description 'Set FQDN pre-share keys' ;
+          list fqdn-isakmp-key {
+            description 'Set FQDN pre-share key' ;
+            key fqdn ;
+            leaf fqdn {
+              description 'Set FQDN name' ;
+              type string {
+                length 1..64 ;
+
+              }
+
+            }
+
+            container key {
+              description 'Set pre-share keys' ;
+              presence key ;
+              choice key {
+                description 'Set pre-share key' ;
+                case clear-key {
+                  description 'Set clear key' ;
+                  leaf clear-key {
+                    description 'Set clear key' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted-key {
+                  description 'Set encrypted key' ;
+                  leaf encrypted-key {
+                    description 'Set encrypted key' ;
+                    type string {
+                      length 1..236 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container fqdn-isakmp-vrf-keys {
+          description 'Set FQDN pre-share keys with VRF' ;
+          list fqdn-isakmp-key {
+            description 'Set FQDN pre-share key with VRF' ;
+            key 'fqdn fqdn-vrf' ;
+            leaf fqdn {
+              description 'Set FQDN name' ;
+              type string {
+                length 1..64 ;
+
+              }
+
+            }
+
+            leaf fqdn-vrf {
+              description 'Set VRF name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            container key {
+              description 'Set pre-share keys' ;
+              presence key ;
+              choice key {
+                description 'Set pre-share key' ;
+                case clear-key {
+                  description 'Set clear key' ;
+                  leaf clear-key {
+                    description 'Set clear key' ;
+                    type string {
+                      length 1..128 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted-key {
+                  description 'Set encrypted key' ;
+                  leaf encrypted-key {
+                    description 'Set encrypted key' ;
+                    type string {
+                      length 1..236 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container user-groups {
+        description 'Set ISAKMP user-group' ;
+        list user-group {
+          description 'Set ISAKMP user-group' ;
+          key groupName ;
+          leaf groupName {
+            description 'ISAKMP user-group name' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf xauth {
+            description 'Set XAUTH enable or disable' ;
+            type ENABLE-FLAG ;
+
+            default disable ;
+          }
+
+          leaf max-users {
+            description 'Set max user number' ;
+            type uint32 {
+              range 1..20000 {
+                description 'The maximum number of users in the user group is supported to 20000.' ;
+              }
+
+            }
+
+            default 256 ;
+          }
+
+          leaf authentication-template {
+            description 'Set authentication template' ;
+            type uint32 {
+              range 1..2128 ;
+
+            }
+
+          }
+
+          leaf authorization-template {
+            description 'Set authorization template' ;
+            type uint32 {
+              range 1..2128 ;
+
+            }
+
+          }
+
+          leaf accounting-template {
+            description 'Set accounting template' ;
+            type uint32 {
+              range 1..2128 ;
+
+            }
+
+          }
+
+          leaf accounting-update {
+            description 'Set accounting update time' ;
+            type uint32 {
+              range 60..604800 ;
+
+            }
+
+            default 600 ;
+          }
+
+          leaf eap-type {
+            description 'Set EAP type' ;
+            type EAPTYPE ;
+
+            default none ;
+          }
+
+          leaf eap-query-identity {
+            description 'Set EAP query identity enable or disable' ;
+            type ENABLE-FLAG ;
+
+            default disable ;
+          }
+
+          container ipsec-pools {
+            description 'Set IPsec pool' ;
+            list ipsec-pool {
+              description 'Set IPsec pool' ;
+              key pool-name ;
+              leaf pool-name {
+                description 'Set IPsec pool name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container user-names {
+            description 'Set user-name and password' ;
+            list user-name {
+              description 'Set user-name and password' ;
+              key user-name ;
+              leaf user-name {
+                description 'Set user-name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              choice user-password {
+                description 'Set user-password' ;
+                mandatory true ;
+                case clear-password {
+                  description 'Set clear password' ;
+                  leaf password {
+                    description 'Set clear password' ;
+                    type string {
+                      length 1..32 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted-password {
+                  description 'Set encrypted password' ;
+                  leaf encrypted-password {
+                    description 'Set encrypted password' ;
+                    type string {
+                      length 1..108 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container identity-users {
+            description 'Set remote access user FQDN ID' ;
+            list identity-user {
+              description 'Set remote access user FQDN ID' ;
+              key 'user fqdn' ;
+              leaf user {
+                description 'Set user name' ;
+                type string {
+                  length 1..20 ;
+
+                }
+
+              }
+
+              leaf fqdn {
+                description 'set FQDN name' ;
+                type string {
+                  length 1..20 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container identity-ipv4s {
+            description 'Set remote access IPv4 ID' ;
+            list identity-ipv4 {
+              description 'Set remote access IPv4 ID' ;
+              key ipv4 ;
+              leaf ipv4 {
+                description 'Set IPv4 address' ;
+                type ncd:ipv4-address ;
+
+              }
+
+            }
+
+          }
+
+          container identity-keyids {
+            description 'Set remote access key ID' ;
+            list identity-keyid {
+              description 'Set remote access key ID' ;
+              key keyid ;
+              leaf keyid {
+                description 'Set key ID string' ;
+                type string {
+                  length 1..40 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container identity-fqdns {
+            description 'Set remote access FQDN ID' ;
+            list identity-fqdn {
+              description 'Set remote access FQDN ID' ;
+              key fqdn ;
+              leaf fqdn {
+                description 'Set FQDN name' ;
+                type string {
+                  length 1..64 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container identity-user-suffixs {
+            description 'Set remote access user FQDN ID' ;
+            list identity-user-suffix {
+              description 'Set remote access user FQDN' ;
+              key fqdn ;
+              leaf fqdn {
+                description 'set FQDN name' ;
+                type string {
+                  length 1..20 ;
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2021-01-29 ;
+          }
+
+          container identity-pki-common-name {
+            description 'Remote access ASN1-DN ID' ;
+            list identity-pki-common-name {
+              description 'Remote access ASN1-DN ID' ;
+              key pki-common-name ;
+              leaf pki-common-name {
+                description 'ASN.1 X.500 distinguished name' ;
+                type string {
+                  length 1..64 ;
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2022-12-29 ;
+          }
+
+          container identity-keyid-suffixs {
+            description 'Set remote access key ID' ;
+            list identity-keyid-suffix {
+              description 'Set remote access key ID' ;
+              key keyid ;
+              leaf keyid {
+                description 'Set key ID string' ;
+                type string ;
+
+              }
+
+            }
+
+            ncd:revise-date 2023-05-24 ;
+          }
+
+        }
+
+      }
+
+      container isakmp-key-sets {
+        description 'Set ISAKMP key-sets' ;
+        list isakmp-key-set {
+          description 'Set ISAKMP key-set' ;
+          key key-set-name ;
+          leaf key-set-name {
+            description 'Set key-set name' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf description {
+            description 'Set key-set description' ;
+            type string {
+              length 1..64 ;
+
+            }
+
+          }
+
+          container ipv4-isakmp-keys {
+            description 'Set IPv4 pre-share keys' ;
+            list ipv4-isakmp-key {
+              description 'Set IPv4 pre-share key' ;
+              key 'ipv4-address ipv4-netmask' ;
+              leaf ipv4-address {
+                description 'Set IPv4 address' ;
+                type ncd:ipv4-address-none-zero ;
+
+              }
+
+              leaf ipv4-netmask {
+                description 'Set IPv4 mask' ;
+                type ncd:ipv4-mask ;
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container ipv4-isakmp-vrf-keys {
+            description 'Set IPv4 pre-share keys with VRF' ;
+            list ipv4-isakmp-vrf-key {
+              description 'Set IPv4 pre-share key with VRF' ;
+              key 'ipv4-address ipv4-netmask ipv4-vrfname' ;
+              leaf ipv4-address {
+                description 'Set IPv4 address' ;
+                type ncd:ipv4-address-none-zero ;
+
+              }
+
+              leaf ipv4-netmask {
+                description 'Set IPv4 mask' ;
+                type ncd:ipv4-mask ;
+
+              }
+
+              leaf ipv4-vrfname {
+                description 'Set VRF name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container ipv6-isakmp-keys {
+            description 'Set IPv6 pre-share keys' ;
+            list ipv6-isakmp-key {
+              description 'Set IPv6 pre-share key' ;
+              key 'ipv6-address ipv6-netmask' ;
+              leaf ipv6-address {
+                description 'Set IPv6 address' ;
+                type ncd:ipv6-address ;
+
+              }
+
+              leaf ipv6-netmask {
+                description 'Set IPv6 mask' ;
+                type ncd:ipv6-mask-length ;
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear keys' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container ipv6-isakmp-vrf-keys {
+            description 'Set IPv6 pre-share keys with VRF' ;
+            list ipv6-isakmp-vrf-key {
+              description 'Set IPv6 pre-share key with VRF' ;
+              key 'ipv6-address ipv6-netmask ipv6-vrfname' ;
+              leaf ipv6-address {
+                description 'Set IPv6 address' ;
+                type ncd:ipv6-address ;
+
+              }
+
+              leaf ipv6-netmask {
+                description 'Set IPv6 mask' ;
+                type ncd:ipv6-mask-length ;
+
+              }
+
+              leaf ipv6-vrfname {
+                description 'Set VRF name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container fqdn-isakmp-keys {
+            description 'Set FQDN pre-share keys' ;
+            list fqdn-isakmp-key {
+              description 'Set FQDN pre-share key' ;
+              key fqdn ;
+              leaf fqdn {
+                description 'Set FQDN name' ;
+                type string {
+                  length 1..64 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container fqdn-isakmp-vrf-keys {
+            description 'Set FQDN pre-share keys with VRF' ;
+            list fqdn-isakmp-key {
+              description 'Set FQDN pre-share key with VRF' ;
+              key 'fqdn fqdn-vrf' ;
+              leaf fqdn {
+                description 'Set FQDN name' ;
+                type string {
+                  length 1..64 ;
+
+                }
+
+              }
+
+              leaf fqdn-vrf {
+                description 'Set VRF name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container user-fqdn-isakmp-keys {
+            description 'Set user FQDN pre-share keys' ;
+            list user-fqdn-isakmp-key {
+              description 'Set user FQDN pre-share key' ;
+              key user-fqdn ;
+              leaf user-fqdn {
+                description 'Set user FQDN name' ;
+                type string {
+                  length 1..40 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container user-fqdn-isakmp-vrf-keys {
+            description 'Set user FQDN pre-share keys with VRF' ;
+            list user-fqdn-isakmp-key {
+              description 'Set user FQDN pre-share keys with VRF' ;
+              key 'user-fqdn user-fqdn-vrf' ;
+              leaf user-fqdn {
+                description 'Set user FQDN name' ;
+                type string {
+                  length 1..40 ;
+
+                }
+
+              }
+
+              leaf user-fqdn-vrf {
+                description 'Set user FQDN vrf' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container keyid-isakmp-keys {
+            description 'Set key-ID pre-share keys' ;
+            list keyid-isakmp-key {
+              description 'Set key-ID pre-share key' ;
+              key keyid ;
+              leaf keyid {
+                description 'Set key-ID string' ;
+                type string {
+                  length 1..40 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container keyid-isakmp-vrf-keys {
+            description 'Set key-ID pre-share keys with VRF' ;
+            list keyid-isakmp-vrf-key {
+              description 'Set key-ID pre-share keys with VRF' ;
+              key 'keyid keyid-vrf' ;
+              leaf keyid {
+                description 'Set key-ID string' ;
+                type string {
+                  length 1..40 ;
+
+                }
+
+              }
+
+              leaf keyid-vrf {
+                description 'Set VRF name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share keys' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container user-fqdn-isakmp-key-suffixs {
+            description 'Set user FQDN pre-share keys' ;
+            list user-fqdn-isakmp-key-suffix {
+              description 'Set user FQDN pre-share key' ;
+              key user-fqdn ;
+              leaf user-fqdn {
+                description 'Set user FQDN name' ;
+                type string {
+                  length 1..40 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2021-01-29 ;
+          }
+
+          container user-fqdn-isakmp-vrf-key-suffixs {
+            description 'Set user FQDN pre-share keys with VRF' ;
+            list user-fqdn-isakmp-key-suffix {
+              description 'Set user FQDN pre-share keys with VRF' ;
+              key 'user-fqdn user-fqdn-vrf' ;
+              leaf user-fqdn {
+                description 'Set user FQDN name' ;
+                type string {
+                  length 1..40 ;
+
+                }
+
+              }
+
+              leaf user-fqdn-vrf {
+                description 'Set user FQDN vrf' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2021-01-29 ;
+          }
+
+          container keyid-isakmp-key-suffixs {
+            description 'Set key-ID pre-share keys' ;
+            list keyid-isakmp-key-suffix {
+              description 'Set key-ID pre-share key' ;
+              key keyid ;
+              leaf keyid {
+                description 'Set key-ID string' ;
+                type string {
+                  length 1..40 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share key' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2023-05-24 ;
+          }
+
+          container keyid-isakmp-vrf-key-suffixs {
+            description 'Set key-ID pre-share keys with VRF' ;
+            list keyid-isakmp-vrf-key-suffix {
+              description 'Set key-ID pre-share keys with VRF' ;
+              key 'keyid keyid-vrf' ;
+              leaf keyid {
+                description 'Set key-ID string' ;
+                type string {
+                  length 1..40 ;
+
+                }
+
+              }
+
+              leaf keyid-vrf {
+                description 'Set VRF name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              container key {
+                description 'Set pre-share keys' ;
+                presence key ;
+                choice key {
+                  description 'Set pre-share keys' ;
+                  case clear-key {
+                    description 'Set clear key' ;
+                    leaf clear-key {
+                      description 'Set clear key' ;
+                      type string {
+                        length 1..128 ;
+
+                      }
+
+                    }
+
+                  }
+
+                  case encrypted-key {
+                    description 'Set encrypted key' ;
+                    leaf encrypted-key {
+                      description 'Set encrypted key' ;
+                      type string {
+                        length 1..236 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2023-05-24 ;
+          }
+
+        }
+
+      }
+
+      container isakmp-profiles {
+        description 'Set ISAKMP profiles' ;
+        list isakmp-profile {
+          description 'Set ISAKMP profile' ;
+          key profile ;
+          leaf profile {
+            description 'Set ISAKMP profile tag' ;
+            type string {
+              length 1..18 ;
+
+            }
+
+          }
+
+          leaf description {
+            description 'Set description of profile' ;
+            type string {
+              length 1..64 ;
+
+            }
+
+          }
+
+          leaf exchange-mode {
+            description 'Set the exchange-mode for the profile' ;
+            type EXCHANGEMODE ;
+
+            default main ;
+          }
+
+          leaf ikev2-authentication {
+            description 'Set IKEv2 authentication method for protection suite' ;
+            type enumeration {
+              enum pre-share {
+                value 0 ;
+                description 'Pre-Shared key' ;
+              }
+
+              enum rsa-sig {
+                value 1 ;
+                description 'RSA signature' ;
+              }
+
+            }
+
+            default pre-share ;
+          }
+
+          leaf initiator {
+            description 'Set initiator IKE version' ;
+            type IKEVERSION ;
+
+            default ikev1 ;
+          }
+
+          container nat-transparency {
+            description 'Set ISAKMP NAT-Traversal' ;
+            presence nat-transparency ;
+            leaf keepalive {
+              description 'Set ISAKMP NAT-Traversal keepalive' ;
+              type uint32 {
+                range 5..3600 ;
+
+              }
+
+              default 20 ;
+            }
+
+            leaf udp-encapsulation {
+              description 'Set ISAKMP NAT-Traversal UDP encapsulation' ;
+              type uint8 {
+                range 0..1 ;
+
+              }
+
+              default 0 ;
+            }
+
+          }
+
+          container policys {
+            description 'Set policy for the profile' ;
+            list policy {
+              description 'Set policy for the profile' ;
+              key priority ;
+              leaf priority {
+                description 'Set priority of protection suite' ;
+                type uint16 {
+                  range 1..10000 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container key-sets {
+            description 'Set key-set for the profile' ;
+            list key-set {
+              description 'Set key-set for the profile' ;
+              key name ;
+              leaf name {
+                description 'Set key-set name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container keepalive {
+            description 'Set dead peer detection interval of peer' ;
+            presence keepalive ;
+            leaf dpd-interval {
+              description 'Set number of seconds that peer is allowed to idle' ;
+              type uint32 {
+                range 10..3600 ;
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf retry {
+              description 'Set number of seconds that keepalive response timeout' ;
+              type uint32 {
+                range 2..60 ;
+
+              }
+
+            }
+
+          }
+
+          container match-identity {
+            description 'Set match peer identity for the profile' ;
+            container ipv6-match-identitys {
+              description 'Set identity with IPv6 address' ;
+              list ipv6-match-identity {
+                description 'Set identity with IPv6 address' ;
+                key ipv6-address ;
+                leaf ipv6-address {
+                  description 'Set peer IPv6 address' ;
+                  type ncd:ipv6-address ;
+
+                }
+
+              }
+
+            }
+
+            container fqdn-match-identitys {
+              description 'Set identity with hostname or domain name' ;
+              list fqdn-match-identity {
+                description 'Set identity with hostname or domain name' ;
+                key fqdn ;
+                leaf fqdn {
+                  description 'Set hostname or domain name of peer' ;
+                  type string {
+                    length 1..64 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            container ipv4-match-identitys {
+              description 'Set identity with IPv4 address' ;
+              list ipv4-match-identity {
+                description 'Set identity with IPv4 address' ;
+                key ipv4-address ;
+                leaf ipv4-address {
+                  description 'Set peer IPv4 address' ;
+                  type ncd:ipv4-address-none-zero ;
+
+                }
+
+              }
+
+            }
+
+            container pki-common-name-match-identitys {
+              description 'Define identity with ASN1-DN' ;
+              list pki-common-name-match-identity {
+                description 'Define identity with ASN1-DN' ;
+                key pki-common-name ;
+                leaf pki-common-name {
+                  description 'ASN.1 X.500 distinguished name' ;
+                  type string {
+                    length 1..64 ;
+
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2017-01-12 ;
+            }
+
+          }
+
+          leaf match-any-identity {
+            description 'Set allowing all peer identities to pass' ;
+            type ENABLE-FLAG ;
+
+            default disable ;
+          }
+
+          container self-identity {
+            description 'Set self-identity type for the profile' ;
+            presence self-identity ;
+            choice self-identity {
+              description 'Set self-identity type for the profile' ;
+              default address ;
+              case fqdn {
+                description 'Use specified name as fqdn identity' ;
+                leaf name {
+                  description 'Set hostname or domain name' ;
+                  type string {
+                    length 1..64 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf fqdn {
+                  description 'Use specified name as fqdn identity' ;
+                  type enumeration {
+                    enum fqdn {
+                      value 3 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              case address {
+                description 'Use the IP address of the interface' ;
+                leaf address {
+                  description 'Use the IP address of the interface' ;
+                  type enumeration {
+                    enum address {
+                      value 1 ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+              case hostname {
+                description 'Use the hostname of the router as fqdn identity' ;
+                leaf hostname {
+                  description 'Use the hostname of the router as fqdn identity' ;
+                  type enumeration {
+                    enum hostname {
+                      value 2 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              case pki-commom-name {
+                description 'Use the ASN.1 X.500 distinguished name' ;
+                leaf pki-common-name {
+                  description 'Use the ASN.1 X.500 distinguished name' ;
+                  type enumeration {
+                    enum pki-common-name {
+                      value 9 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                ncd:revise-date 2022-12-29 ;
+              }
+
+            }
+
+          }
+
+          container default-key {
+            description 'Set default pre-share key' ;
+            presence default-key ;
+            choice default-key {
+              description 'Set default pre-share key' ;
+              case clear-key {
+                description 'Set plaintext key' ;
+                leaf clear-key {
+                  description 'Set plaintext key' ;
+                  type string {
+                    length 1..128 ;
+
+                  }
+
+                }
+
+              }
+
+              case encrypted-key {
+                description 'Set encrypted key' ;
+                leaf encrypted-key {
+                  description 'Set encrypted key' ;
+                  type string {
+                    length 1..236 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container ikev2-authentication-sig-hash {
+            description 'Set IKEv2 authentication method and signature hash algorithm' ;
+            list sig-hash {
+              description 'Set hash algorithm for signature' ;
+              key hash ;
+              leaf hash {
+                description 'Set hash algorithm for signature' ;
+                type enumeration {
+                  enum sha256 {
+                    value 2 ;
+                    description 'Secure Hash Standard 256' ;
+                  }
+
+                  enum sha384 {
+                    value 3 ;
+                    description 'Secure Hash Standard 384' ;
+                  }
+
+                  enum sha512 {
+                    value 4 ;
+                    description 'Secure Hash Standard 512' ;
+                  }
+
+                }
+
+              }
+
+            }
+	    
+	    ncd:revise-date 2022-11-24 ;
+          }
+
+          leaf send-certification-authority {
+            type ENABLE-FLAG ;
+
+            default disable ;
+            description 'Send certification authority in certificate request payload' ;
+            ncd:revise-date 2023-07-05 ;
+          }
+
+        }
+
+      }
+
+      container isakmp-pools {
+        description 'Set ISAKMP pools' ;
+        list isakmp-pool {
+          description 'Set ISAKMP pool' ;
+          key ipsec-pool-name ;
+          leaf ipsec-pool-name {
+            description 'Set pool name' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf ip-pool {
+            description 'Set ip pool' ;
+            type string ;
+
+          }
+
+          container dns-ip {
+            description 'Set DNS server IP' ;
+            presence dns-ip ;
+            leaf dns-server-ip {
+              description 'Set first DNS server IP address' ;
+              type ncd:ipv4-address ;
+
+              mandatory true ;
+            }
+
+            leaf dns-2nd-ip {
+              description 'Set second DNS server IP' ;
+              type ncd:ipv4-address ;
+
+            }
+
+          }
+
+          container wins-ip {
+            description 'Set WINDOWS server IP' ;
+            presence wins-ip ;
+            leaf wins-server-ip {
+              description 'Set first WINDOWS server IP' ;
+              type ncd:ipv4-address ;
+
+              mandatory true ;
+            }
+
+            leaf wins-2nd-ip {
+              description 'Set wins second ip' ;
+              type ncd:ipv4-address ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container global-keepalive {
+        description 'Set dead peer detection interval of peer.' ;
+        presence keepalive ;
+        leaf dpd-interval {
+          description 'Set number of seconds that peer is allowed to idle' ;
+          type uint16 {
+            range 10..3600 ;
+
+          }
+
+          mandatory true ;
+        }
+
+        leaf retry {
+          description 'Set number of seconds that keepalive response timeout' ;
+          type uint8 {
+            range 2..60 ;
+
+          }
+
+          mandatory true ;
+        }
+
+        ncd:revise-date 2021-04-06 ;
+      }
+
+      container peer-keepalive {
+        description 'Configure global DPD lifetime and retransmission cycle according to the peer address.' ;
+        container ipv4-isakmp-dpds {
+          list ipv4-isakmp-dpd {
+            key 'ipv4-address ipv4-netmask' ;
+            leaf ipv4-address {
+              description 'Set IPv4 address' ;
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            leaf ipv4-netmask {
+              description 'Set IPv4 mask' ;
+              type ncd:ipv4-mask ;
+
+            }
+
+            container keep-alive {
+              leaf dpd-interval {
+                description 'Set number of seconds that peer is allowed to idle' ;
+                type uint16 {
+                  range 10..3600 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf retry {
+                description 'Set number of seconds that keepalive response timeout' ;
+                type uint8 {
+                  range 2..60 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+        container ipv4-isakmp-vrf-dpds {
+          list ipv4-isakmp-vrf-dpd {
+            key 'ipv4-address ipv4-netmask ipv4-vrfname' ;
+            leaf ipv4-address {
+              description 'Set IPv4 address' ;
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            leaf ipv4-netmask {
+              description 'Set IPv4 mask' ;
+              type ncd:ipv4-mask ;
+
+            }
+
+            leaf ipv4-vrfname {
+              description 'Set VRF name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            container keep-alive {
+              leaf dpd-interval {
+                description 'Set number of seconds that peer is allowed to idle' ;
+                type uint16 {
+                  range 10..3600 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf retry {
+                description 'Set number of seconds that keepalive response timeout' ;
+                type uint8 {
+                  range 2..60 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+        container ipv6-isakmp-dpds {
+          list ipv6-isakmp-dpd {
+            key 'ipv6-address ipv6-netmask' ;
+            leaf ipv6-address {
+              description 'Set IPv6 address' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ipv6-netmask {
+              description 'Set IPv6 mask' ;
+              type ncd:ipv6-mask-length ;
+
+            }
+
+            container keep-alive {
+              leaf dpd-interval {
+                description 'Set number of seconds that peer is allowed to idle' ;
+                type uint16 {
+                  range 10..3600 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf retry {
+                description 'Set number of seconds that keepalive response timeout' ;
+                type uint8 {
+                  range 2..60 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+        container ipv6-isakmp-vrf-dpds {
+          list ipv6-isakmp-vrf-dpd {
+            key 'ipv6-address ipv6-netmask ipv6-vrfname' ;
+            leaf ipv6-address {
+              description 'Set IPv6 address' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ipv6-netmask {
+              description 'Set IPv6 mask' ;
+              type ncd:ipv6-mask-length ;
+
+            }
+
+            leaf ipv6-vrfname {
+              description 'Set VRF name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            container keep-alive {
+              leaf dpd-interval {
+                description 'Set number of seconds that peer is allowed to idle' ;
+                type uint16 {
+                  range 10..3600 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf retry {
+                description 'Set number of seconds that keepalive response timeout' ;
+                type uint8 {
+                  range 2..60 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+        container fqdn-isakmp-dpds {
+          list fqdn-isakmp-dpd {
+            key fqdn ;
+            leaf fqdn {
+              description 'Set FQDN name' ;
+              type string {
+                length 1..64 ;
+
+              }
+
+            }
+
+            container keep-alive {
+              leaf dpd-interval {
+                description 'Set number of seconds that peer is allowed to idle' ;
+                type uint16 {
+                  range 10..3600 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf retry {
+                description 'Set number of seconds that keepalive response timeout' ;
+                type uint8 {
+                  range 2..60 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+        container fqdn-isakmp-vrf-dpds {
+          list fqdn-isakmp-vrf-dpd {
+            key 'fqdn fqdn-vrf' ;
+            leaf fqdn {
+              description 'Set FQDN name' ;
+              type string {
+                length 1..64 ;
+
+              }
+
+            }
+
+            leaf fqdn-vrf {
+              description 'Set VRF name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            container keep-alive {
+              leaf dpd-interval {
+                description 'Set number of seconds that peer is allowed to idle' ;
+                type uint16 {
+                  range 10..3600 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf retry {
+                description 'Set number of seconds that keepalive response timeout' ;
+                type uint8 {
+                  range 2..60 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2021-04-06 ;
+      }
+
+    }
+
+  }
+
+  rpc clear-isakmp-sa {
+    description 'Clear ISAKMP SA.' ;
+    input {
+      container clear-para {
+        config false ;
+        description 'Clear parameter of ISAKMP SA.' ;
+        leaf force {
+          description 'Clear ISAKMP SAs in force mode.' ;
+          type empty ;
+
+        }
+
+        container peer-para {
+          description 'Specify the peer information to clear ISAKMP SA.' ;
+          presence "Specify the peer information" ;
+          leaf vrf-name {
+            description 'VRF name.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          choice peer-ip-type {
+            description 'Peer address type.' ;
+            mandatory true ;
+            case peer-ipv4 {
+              description 'Peer IPV4 address.' ;
+              leaf peer-ipv4-addr {
+                description 'Peer IPV4 address.' ;
+                type ncd:ipv4-address-none-zero ;
+
+              }
+
+            }
+
+            case peer-ipv6 {
+              description 'Peer IPV6 address.' ;
+              leaf peer-ipv6-addr {
+                description 'Peer IPV6 address.' ;
+                type ncd:ipv6-address ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2023-01-20 ;
+  }
+
+  container state {
+    config false ;
+    container isakmp {
+      description 'ISAKMP state' ;
+      container isakmp-sa {
+        description 'SHOW ISAKMP SA' ;
+        list isakmp-sa {
+          description 'SHOW ISAKMP SA' ;
+          key 'cki ckr' ;
+          leaf cki {
+            description 'Initiator cookie,note that the length is only 16 bytes.' ;
+            type string {
+              length 16 ;
+
+            }
+
+          }
+
+          leaf ckr {
+            description 'Responder cookie,note that the length is only 16 bytes.' ;
+            type string {
+              length 16 ;
+
+            }
+
+          }
+
+          leaf local-address {
+            description 'Local addres' ;
+            type string {
+              length 1..45 ;
+
+            }
+
+          }
+
+          leaf peer-address {
+            description 'Peer address' ;
+            type string {
+              length 1..45 ;
+
+            }
+
+          }
+
+          leaf local-port {
+            description 'Local ident port' ;
+            type uint32 ;
+
+          }
+
+          leaf peer-port {
+            description 'Peer ident port' ;
+            type uint32 ;
+
+          }
+
+          leaf remote-id {
+            description 'Remote identity' ;
+            type string {
+              length 1..67 ;
+
+            }
+
+          }
+
+          leaf id-type {
+            description 'Identity type' ;
+            type string {
+              length 1..19 ;
+
+            }
+
+          }
+
+          leaf ike-version {
+            description 'Ike sa version' ;
+            type string {
+              length 1..5 ;
+
+            }
+
+          }
+
+          leaf dpd {
+            description 'Identifies Dead Peer Detection function' ;
+            type string {
+              length 0..9 ;
+
+            }
+
+          }
+
+          leaf nat-tra {
+            description 'Identifies NAT Traversal' ;
+            type string {
+              length 0..9 ;
+
+            }
+
+          }
+
+          leaf vrf-name {
+            description 'VRF name' ;
+            type string {
+              length 0..35 ;
+
+            }
+
+          }
+
+          leaf status {
+            description 'Isakmp sa status' ;
+            type string {
+              length 1..19 ;
+
+            }
+
+          }
+
+          ncd:select "cki ckr" ;
+          ncd:select "peer-address vrf-name" ;
+          ncd:select peer-address ;
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2023-03-23 ;
+  }
+
+}

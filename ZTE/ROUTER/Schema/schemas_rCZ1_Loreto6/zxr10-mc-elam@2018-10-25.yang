@@ -1,0 +1,361 @@
+module zxr10-mc-elam {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/mc-elam'
+            ;
+  prefix mc-elam ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2014-06-24 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the Multi-Chassis Ethernet Link A'
+            + 'ggregation Manager.'
+              ;
+  revision 2018-10-25 {
+    description 'Change the range of leaf node configuration/mc-elam/mc-elam-in'
+              + 'stances/mc-elam/bind/smartgroup-id from 1-64 to 1-1024.'
+                ;
+  }
+  revision 2018-08-28 {
+    description 'Add MC-ELAM service switch leaf node.'
+                ;
+  }
+  revision 2016-01-20 {
+    description 'The initial version.'
+                ;
+  }
+  feature service-switch {
+    description 'Add MC-ELAM service switch.'
+                ;
+  }
+  container configuration {
+    description 'Describe the configuration of Multi-Chassis Ethernet Link Aggr'
+              + 'egation Manager.'
+                ;
+    container mc-elam {
+      description 'Describe the parameters of MC-ELAM to be configured.'
+                  ;
+      leaf service-switch {
+        if-feature service-switch ;
+        description 'MC-ELAM service switch, its default value depends on the p'
+                  + 'erformance parameters.'
+                    ;
+        type enumeration {
+          enum disable {
+            value 0 ;
+            description 'Disable MC-ELAM service.'
+                        ;
+          }
+          enum enable {
+            value 1 ;
+            description 'Enable MC-ELAM service.'
+                        ;
+          }
+        }
+        ncd:revise-date 2018-08-28 ;
+      }
+      container mc-elam-instances {
+        description 'Describe the parameters of MC-ELAM instances to be configu'
+                  + 'red.'
+                    ;
+        list mc-elam {
+          description 'Describe the parameters of MC-ELAM instance to be config'
+                    + 'ured.'
+                      ;
+          key mc-elam-id ;
+          leaf mc-elam-id {
+            description 'The MC-ELAM instance ID.'
+                        ;
+            type uint8 {
+              range 1..64 ;
+            }
+          }
+          leaf advertise-interval {
+            description 'The advertise interval of MC-ELAM instance.'
+                        ;
+            type uint8 {
+              range 5..100 ;
+            }
+            units 100ms ;
+            default 10 ;
+          }
+          leaf system-priority {
+            description 'The system priority of MC-ELAM instance.'
+                        ;
+            type uint16 {
+              range 1..65535 ;
+            }
+            default 32768 ;
+          }
+          leaf source-ip {
+            description 'The source IP address of MC-ELAM instance.'
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+          leaf destination-ip {
+            description 'The destination IP address of MC-ELAM instance.'
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+          leaf system-mac {
+            description 'The system MAC of MC-ELAM instance.'
+                        ;
+            type ncd:mac-address-none-zero ;
+          }
+          leaf detect-multiplier {
+            description 'The detect multiplier of MC-ELAM instance.'
+                        ;
+            type uint8 {
+              range 3..180 ;
+            }
+            default 5 ;
+          }
+          container restore {
+            description 'The restore mode of smartgroup.'
+                        ;
+            choice restore-choice {
+              description 'The restore mode of smartgroup.'
+                          ;
+              default immediately-case ;
+              case revertive-case {
+                description 'The restore mode of smartgroup is revertive.'
+                            ;
+                leaf restore-time {
+                  description 'The revertive time of smartgroup.'
+                              ;
+                  type uint32 {
+                    range 1..120 ;
+                  }
+                  units second ;
+                }
+              }
+              case immediately-case {
+                description 'The restore mode of smartgroup is immediately.'
+                            ;
+                leaf immediately {
+                  description 'The restore mode of smartgroup is immediately.'
+                              ;
+                  type empty ;
+                }
+              }
+              case non-revertive-case {
+                description 'The restore mode of smartgroup is non-revertive.'
+                            ;
+                leaf non-revertive {
+                  description 'The restore mode of smartgroup is non-revertive.'
+                              ;
+                  type empty ;
+                }
+              }
+            }
+          }
+          container track {
+            description 'Describe the parameters of MC-ELAM track to be configu'
+                      + 'red.'
+                        ;
+            presence 'track-type should be mandatory'
+                     ;
+            list track-instances {
+              description 'Describe the parameters of MC-ELAM track instances t'
+                        + 'o be configured.'
+                          ;
+              key track-name ;
+              leaf track-name {
+                description 'The track name of MC-ELAM.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              leaf track-type {
+                description 'The track type of MC-ELAM.'
+                            ;
+                type enumeration {
+                  enum link-type {
+                    value 1 ;
+                  }
+                  enum peer-type {
+                    value 2 ;
+                  }
+                  enum pw-type {
+                    value 3 ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+          }
+          container bind {
+            description 'Describe the parameters of the bound smartgroup to be '
+                      + 'configured.'
+                        ;
+            presence 'smartgroup-id should be mandatory'
+                     ;
+            leaf smartgroup-id {
+              description 'The group id bound to MC-ELAM instance, its maximum '
+                        + 'value depends on the performance parameters.'
+                          ;
+              type uint32 {
+                range 1..1024 {
+                  description 'The maximum value depends on the performance par'
+                            + 'ameters.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+            leaf bind-mode {
+              description 'The bind mode of smartgroup. Smartgroup has three bi'
+                        + 'nd modes, auto and master and slave.'
+                          ;
+              type enumeration {
+                enum auto {
+                  value 1 ;
+                }
+                enum master {
+                  value 2 ;
+                }
+                enum slave {
+                  value 3 ;
+                }
+              }
+              default auto ;
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'Describe the state of Multi-Chassis Ethernet Link Aggregation '
+              + 'Manager.'
+                ;
+    list mc-elam {
+      description 'Describe the state of MC-ELAM.'
+                  ;
+      key mc-elam-id ;
+      leaf mc-elam-id {
+        description 'The MC-ELAM instance ID.'
+                    ;
+        type uint8 {
+          range 1..64 ;
+        }
+      }
+      leaf virtual-priority {
+        description 'The virtual system priority of MC-ELAM instance.'
+                    ;
+        type uint16 {
+          range 0..65535 ;
+        }
+      }
+      leaf virtual-sys-mac {
+        description 'The virtual system MAC of MC-ELAM instance.'
+                    ;
+        type ncd:mac-address ;
+      }
+      leaf sm-state {
+        description 'The state of MC-ELAM state-machine.'
+                    ;
+        type string {
+          length 1..24 ;
+        }
+      }
+      leaf actor-mc-elam-role {
+        description 'The MC-ELAM role of actor MC-ELAM instance.'
+                    ;
+        type string {
+          length 1..8 ;
+        }
+      }
+      leaf actor-lacp-role {
+        description 'The LACP role of actor smartgroup.'
+                    ;
+        type string {
+          length 1..8 ;
+        }
+      }
+      leaf actor-sg-admin-state {
+        description 'The admin state of actor smartgroup.'
+                    ;
+        type string {
+          length 1..8 ;
+        }
+      }
+      leaf actor-sg-protocol-state {
+        description 'The protocol state of actor smartgroup.'
+                    ;
+        type string {
+          length 1..8 ;
+        }
+      }
+      leaf actor-advertise-interval {
+        description 'The advertise interval of actor MC-ELAM instance.'
+                    ;
+        type uint8 {
+          range 5..100 ;
+        }
+        units 100ms ;
+      }
+      leaf actor-detect-multiplier {
+        description 'The detect multiplier of actor MC-ELAM instance.'
+                    ;
+        type uint8 {
+          range 3..180 ;
+        }
+      }
+      leaf actor-pw-fault {
+        description 'Whether the actor PW associated to track is UP.'
+                    ;
+        type uint8 ;
+      }
+      leaf partner-mc-elam-role {
+        description 'The MC-ELAM role of partner MC-ELAM instance.'
+                    ;
+        type string {
+          length 1..8 ;
+        }
+      }
+      leaf partner-lacp-role {
+        description 'The LACP role of partner smartgroup.'
+                    ;
+        type string {
+          length 1..8 ;
+        }
+      }
+      leaf partner-sg-protocol-state {
+        description 'The protocol state of partner smartgroup.'
+                    ;
+        type string {
+          length 1..8 ;
+        }
+      }
+      leaf partner-advertise-interval {
+        description 'The advertise interval of partner MC-ELAM instance.'
+                    ;
+        type uint8 {
+          range 0..255 ;
+        }
+        units 100ms ;
+      }
+      leaf partner-detect-multiplier {
+        description 'The detect multiplier of partner MC-ELAM instance.'
+                    ;
+        type uint8 {
+          range 0..255 ;
+        }
+      }
+      leaf partner-pw-fault {
+        description 'Whether the partner PW associated to track is UP.'
+                    ;
+        type uint8 ;
+      }
+    }
+  }
+}

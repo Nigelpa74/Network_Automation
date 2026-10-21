@@ -1,0 +1,178 @@
+module zxr10-ipv6-source-guard {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/ipv6-source-guard" ;
+  prefix ipv6sg ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe IPV6 source guard.' ;
+  revision 2023-11-14 {
+    description 'Initial version.' ;
+  }
+
+  feature user-bind {
+    description 'Configure user-bind.' ;
+    ncd:revise-date 2023-11-14 ;
+  }
+
+  typedef mode-type {
+    type enumeration {
+      enum mac-base {
+        value 1 ;
+        description 'Filter base on MAC.' ;
+      }
+
+      enum ip-base {
+        value 2 ;
+        description 'Filter base on IP.' ;
+      }
+
+      enum mac-ip-base {
+        value 3 ;
+        description 'Filter base on MAC and IP.' ;
+      }
+
+    }
+
+    description 'Mode type:1.mac-base,2.ip-base,3.mac-ip-base.' ;
+  }
+
+  container configuration {
+    container ipv6-source-guard {
+      description 'IPV6 source guard configuration.' ;
+      container interfaces {
+        description 'Select an interface to configure.' ;
+        list interface {
+          leaf if-name {
+            type ncd:ifname ;
+
+            description 'Interface name.' ;
+          }
+
+          key if-name ;
+          description 'Select an interface to configure filter mode.' ;
+          leaf mode {
+            type mode-type ;
+
+            mandatory true ;
+            description 'IPV6 source guard mode, it can be configured as mac-base, ip-base or mac-ip-base.' ;
+          }
+
+          choice vlan {
+            case vlan-id {
+              leaf vlan-id {
+                type uint32 {
+                  range 1..4094 ;
+
+                }
+
+                description 'VLAN ID.' ;
+              }
+
+              description 'VLAN ID.' ;
+            }
+
+            case vlan-default {
+              leaf vlan-default {
+                type empty ;
+
+                description 'VLAN default.' ;
+              }
+
+              description 'VLAN default.' ;
+            }
+
+            description 'Prescribe a limit to filter scope of the interface, VLAN-based and mode-based features are merged in the ingress direction and applied on the interface.' ;
+          }
+
+        }
+
+      }
+
+      container user-bindings {
+        list user-binding {
+          leaf if-name {
+            type ncd:ifname ;
+
+            description 'Configure interface name.' ;
+          }
+
+          leaf ipv6-address {
+            type ncd:ipv6-address-none-zero ;
+
+            description 'Configure ipv6 address.' ;
+          }
+
+          leaf mac-address {
+            type ncd:mac-address-none-zero ;
+
+            description 'Configure mac address.' ;
+          }
+
+          key 'if-name mac-address ipv6-address' ;
+          description 'Configure a static user by if-name and ipv6-address and mac-address.' ;
+        }
+
+        description 'Configure static users by if-name and ipv6-address and mac-address.' ;
+        if-feature user-bind ;
+
+      }
+
+      container user-bindings-ip {
+        list user-binding-ip {
+          leaf if-name {
+            type ncd:ifname ;
+
+            description 'Configure interface name.' ;
+          }
+
+          leaf ipv6-address {
+            type ncd:ipv6-address-none-zero ;
+
+            description 'Configure ipv6 address.' ;
+          }
+
+          key 'if-name ipv6-address' ;
+          description 'Configure a static user by if-name and ipv6-address.' ;
+        }
+
+        description 'Configure static users by if-name and ipv6-address.' ;
+        if-feature user-bind ;
+
+      }
+
+      container user-bindings-mac {
+        list user-binding-mac {
+          leaf if-name {
+            type ncd:ifname ;
+
+            description 'Configure interface name.' ;
+          }
+
+          leaf mac-address {
+            type ncd:mac-address-none-zero ;
+
+            description 'Configure mac address.' ;
+          }
+
+          key 'if-name mac-address' ;
+          description 'Configure a static user by if-name and mac-address.' ;
+        }
+
+        description 'Configure static users by if-name and mac-address.' ;
+        if-feature user-bind ;
+
+      }
+
+    }
+
+    description 'Configuration model.' ;
+  }
+
+}

@@ -1,0 +1,518 @@
+module zxr10-pm-clock {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-clock'
+            ;
+  prefix pm-clock ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2019-04-08 {
+    description 'Add clockmode in clock-bits-type list'
+                ;
+  }
+  revision 2019-01-17 {
+    description 'shelf range 0-255.slot range 0-255.'
+                ;
+  }
+  revision 2014-07-09 ;
+  feature gps-portmode ;
+  container configuration {
+    container clock {
+      container gpss {
+        list gps {
+          description 'Configure baud rate of GPS receiver.'
+                      ;
+          max-elements 1000 ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name of GPS.'
+                        ;
+            type string ;
+          }
+          leaf baudrate {
+            description 'The baud rate of GPS receiver.'
+                        ;
+            type enumeration {
+              enum 4800 {
+                value 0 ;
+                description 'The baud rate of GPS is 4800 bits/s.'
+                            ;
+              }
+              enum 9600 {
+                value 1 ;
+                description 'The baud rate of GPS is 9600 bits/s.'
+                            ;
+              }
+              enum 19200 {
+                value 2 ;
+                description 'The baud rate of GPS is 19200 bits/s.'
+                            ;
+              }
+              enum 38400 {
+                value 3 ;
+                description 'The baud rate of GPS is 38400 bits/s.'
+                            ;
+              }
+            }
+            units bits/s ;
+            default 9600 ;
+          }
+          leaf protocol {
+            description 'GPS protocol.'
+                        ;
+            type enumeration {
+              enum nmea {
+                value 1 ;
+                description 'The protocol type of GPS is NMEA.'
+                            ;
+              }
+              enum ubx {
+                value 2 ;
+                description 'The protocol type of GPS is UBX.'
+                            ;
+              }
+              enum cmtod {
+                value 3 ;
+                description 'The protocol type of GPS is CMTOD.'
+                            ;
+              }
+            }
+            default nmea ;
+          }
+          leaf polarity {
+            description 'The PP1S polarity of GPS input.'
+                        ;
+            type enumeration {
+              enum negative {
+                value 0 ;
+                description 'The PP1S polarity of GPS input is negative.'
+                            ;
+              }
+              enum positive {
+                value 1 ;
+                description 'The PP1S polarity of GPS input is positive.'
+                            ;
+              }
+            }
+            default negative ;
+          }
+          leaf cable-compensation {
+            description 'PPNS compensation(the unit is ns).'
+                        ;
+            type int32 {
+              range -10000..10000 {
+                description 'PPNS compensation(the unit is ns).'
+                            ;
+              }
+            }
+            units nanosecond ;
+            default 0 ;
+          }
+          container output {
+            leaf type {
+              description 'GPS signal output from system.'
+                          ;
+              type enumeration {
+                enum scu {
+                  value 1 ;
+                  description 'The local source of SCU.'
+                              ;
+                }
+                enum gps-port {
+                  value 2 ;
+                  description 'The external source of gps-in port.'
+                              ;
+                }
+              }
+              default scu ;
+            }
+            leaf ifname {
+              description 'The input interface name of GPS .'
+                          ;
+              type string ;
+              default ''
+                      ;
+            }
+          }
+          leaf port-mode {
+            if-feature gps-portmode ;
+            description 'GPS port mode.'
+                        ;
+            type enumeration {
+              enum in {
+                value 1 ;
+                description 'GPS mode is in.'
+                            ;
+              }
+              enum out {
+                value 2 ;
+                description 'GPS mode is out.'
+                            ;
+              }
+            }
+            default in ;
+          }
+        }
+      }
+      container bits {
+        list clock-bits-mode {
+          description 'Configure input clock mode for BITS.'
+                      ;
+          max-elements 1000 ;
+          key shelf ;
+          leaf shelf {
+            description 'Number of shelf.'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'Shelf range.'
+                            ;
+              }
+            }
+          }
+          leaf clk1 {
+            description 'Transmit-mode of clk1.'
+                        ;
+            type enumeration {
+              enum in {
+                value 1 ;
+                description 'Clock mode is in.'
+                            ;
+              }
+              enum out {
+                value 2 ;
+                description 'Clock mode is out.'
+                            ;
+              }
+            }
+            default in ;
+          }
+          leaf clk2 {
+            description 'Transmit-mode of clk2.'
+                        ;
+            type enumeration {
+              enum in {
+                value 1 ;
+                description 'Clock mode is in.'
+                            ;
+              }
+              enum out {
+                value 2 ;
+                description 'Clock mode is out.'
+                            ;
+              }
+            }
+            default out ;
+          }
+        }
+        list clock-bits-type {
+          description 'Configure input clock type for BITS.'
+                      ;
+          max-elements 1000 ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name of external clock.'
+                        ;
+            type string ;
+          }
+          leaf clocktype {
+            description 'Clock type.'
+                        ;
+            type enumeration {
+              enum 2Mbps {
+                value 1 ;
+                description 'Clock type is 2Mbps.'
+                            ;
+              }
+              enum 2Mhz {
+                value 2 ;
+                description 'Clock type is 2Mhz.'
+                            ;
+              }
+            }
+            default 2Mbps ;
+          }
+          leaf clockmode {
+            description 'Transmit-mode of clock.'
+                        ;
+            type enumeration {
+              enum in {
+                value 1 ;
+                description 'Clock mode is in.'
+                            ;
+              }
+              enum out {
+                value 2 ;
+                description 'Clock mode is out.'
+                            ;
+              }
+            }
+            default in ;
+            ncd:revise-date 2019-04-08 ;
+          }
+        }
+      }
+      container tdms {
+        container e1s {
+          list map {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type string ;
+            }
+            leaf au-type {
+              description 'Map au type'
+                          ;
+              type enumeration {
+                enum au4 {
+                  value 0 ;
+                  description 'map au4'
+                              ;
+                }
+              }
+            }
+            list au4 {
+              key au4-number ;
+              leaf au4-number {
+                description 'Au4 number'
+                            ;
+                type uint8 {
+                  range 1 ;
+                }
+              }
+              list tug3 {
+                key tug3-number ;
+                leaf tug3-number {
+                  description 'Tug3 number'
+                              ;
+                  type uint8 {
+                    range 1..3 ;
+                  }
+                }
+                list tug2 {
+                  key tug2-number ;
+                  leaf tug2-number {
+                    description 'Tug2 number'
+                                ;
+                    type uint8 {
+                      range 1..7 ;
+                    }
+                  }
+                  list e1 {
+                    key e1-number ;
+                    leaf e1-number {
+                      description 'E1 number'
+                                  ;
+                      type uint8 {
+                        range 1..3 ;
+                      }
+                    }
+                    container e1-clock-send {
+                      leaf e1-clk {
+                        description 'This command configures a clock source.'
+                                    ;
+                        type enumeration {
+                          enum internal {
+                            value 1 ;
+                            description 'Select clock from local.'
+                                        ;
+                          }
+                          enum line {
+                            value 2 ;
+                            description 'Select clock from line.'
+                                        ;
+                          }
+                          enum acr {
+                            value 3 ;
+                            description 'The adaptive way to restore the clock.'
+                                        ;
+                          }
+                          enum dcr {
+                            value 4 ;
+                            description 'The differential clock.'
+                                        ;
+                          }
+                        }
+                        default internal ;
+                      }
+                      leaf e1-domain {
+                        description 'Domain value.'
+                                    ;
+                        type uint16 {
+                          range 1..504 {
+                            description 'Range: 1-504.'
+                                        ;
+                          }
+                        }
+                      }
+                    }
+                    leaf e1-clock-prior {
+                      description 'Configure priority of members.'
+                                  ;
+                      type uint8 {
+                        range 1..63 {
+                          description 'Range: 1-63.'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        container ce1s {
+          list ce1 {
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type string ;
+            }
+            leaf ce1-clock-recv {
+              description 'This command configures a clock source.'
+                          ;
+              type enumeration {
+                enum internal {
+                  value 1 ;
+                  description 'Select clock from local.'
+                              ;
+                }
+                enum line {
+                  value 2 ;
+                  description 'Select clock from line.'
+                              ;
+                }
+              }
+              default line ;
+            }
+            container ce1-clock-send {
+              leaf ce1-clk {
+                description 'Configure clock mode for E1 controller.'
+                            ;
+                type enumeration {
+                  enum internal {
+                    value 1 ;
+                    description 'Select clock from local.'
+                                ;
+                  }
+                  enum line {
+                    value 2 ;
+                    description 'Select clock from line.'
+                                ;
+                  }
+                  enum acr {
+                    value 3 ;
+                    description 'The adaptive way to restore the clock.'
+                                ;
+                  }
+                  enum dcr {
+                    value 4 ;
+                    description 'The differential clock.'
+                                ;
+                  }
+                }
+                default internal ;
+              }
+              leaf ce1-domain {
+                description 'Domain value.'
+                            ;
+                type uint16 {
+                  range 1..24 {
+                    description 'Range: 1-24.'
+                                ;
+                  }
+                }
+              }
+            }
+            leaf ce1-clock-prior {
+              description 'Configure priority of members.'
+                          ;
+              type uint8 {
+                range 1..63 {
+                  description Range:1-63. ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    container clock {
+      container clk-domains {
+        list clk-domain {
+          key name ;
+          leaf name {
+            description 'PIU name.'
+                        ;
+            type string ;
+          }
+          list attributes {
+            key 'domain ms-status channel-name'
+                ;
+            leaf domain {
+              description 'Domain number.'
+                          ;
+              type uint16 {
+                range 1..504 {
+                  description 'Range: 1-504.'
+                              ;
+                }
+              }
+            }
+            leaf ms-status {
+              description 'Master or slave.'
+                          ;
+              type enumeration {
+                enum master {
+                  value 1 ;
+                  description 'The status is master.'
+                              ;
+                }
+                enum slave {
+                  value 2 ;
+                  description 'The status is slave.'
+                              ;
+                }
+              }
+            }
+            leaf channel-name {
+              description 'Channel name.'
+                          ;
+              type string ;
+            }
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    container clock {
+      container gps-time {
+        description 'Set global GPS time.'
+                    ;
+        leaf time {
+          description Time ;
+          type ncd:time ;
+        }
+        leaf date {
+          description Date ;
+          type ncd:date ;
+        }
+      }
+    }
+  }
+}

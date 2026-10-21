@@ -1,0 +1,636 @@
+module zxr10-macsec {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/macsec" ;
+  prefix macsec ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe MACsec.' ;
+  revision 2025-03-10 {
+    description 'Cipher Suite support SM4.' ;
+  }
+
+  revision 2021-05-18 ;
+
+  typedef switch-type {
+    type enumeration {
+      enum enable {
+        value 1 ;
+        description 'Enable status.' ;
+      }
+
+      enum disable {
+        value 0 ;
+        description 'Disable status.' ;
+      }
+
+    }
+
+    description 'Type of switch status.' ;
+  }
+
+  typedef validate-frames-mode {
+    type enumeration {
+      enum check {
+        value 2 ;
+        description 'Check mode.' ;
+      }
+
+      enum disabled {
+        value 1 ;
+        description 'Disabled mode.' ;
+      }
+
+      enum strict {
+        value 3 ;
+        description 'Strict mode.' ;
+      }
+
+    }
+
+    description 'Validate frames mode.' ;
+  }
+
+  typedef confidentiality-offset {
+    type enumeration {
+      enum 0 {
+        value 1 ;
+        description 'Offset is 0 byte.' ;
+      }
+
+      enum 30 {
+        value 2 ;
+        description 'Offset is 30 bytes.' ;
+      }
+
+      enum 50 {
+        value 3 ;
+        description 'Offset is 50 bytes.' ;
+      }
+
+    }
+
+    description 'confidentiality offset.' ;
+  }
+
+  typedef cipher-suite {
+    type enumeration {
+      enum gcm-aes-128 {
+        value 1 ;
+      }
+
+      enum gcm-aes-xpn-128 {
+        value 2 ;
+      }
+
+      enum gcm-aes-256 {
+        value 3 ;
+      }
+
+      enum gcm-aes-xpn-256 {
+        value 4 ;
+      }
+
+
+    }
+
+    description 'Cipher suite.' ;
+  }
+
+  typedef cp-run-mode {
+    type enumeration {
+      enum keep-old-key {
+        value 1 ;
+        description 'Keep old-key in CP state machine.' ;
+      }
+
+      enum keep-latest-key {
+        value 2 ;
+        description 'Keep latest-key in CP state machine' ;
+      }
+
+    }
+
+    description 'CP state machine running mode.' ;
+  }
+
+  feature clear-vlan-tag {
+    ncd:revise-date 2025-03-10 ;
+  }
+
+  feature static-sak-key {
+    ncd:revise-date 2025-03-10 ;
+  }
+
+  feature privacy-cipher-suite-id {
+    ncd:revise-date 2025-03-10 ;
+  }
+
+  container configuration {
+    description 'Configuration model.' ;
+    container macsec {
+      description 'Configure MACsec parameters.' ;
+      container interfaces {
+        description 'MACsec interfaces configure.' ;
+        container macsecs {
+          list macsec {
+            description 'The interface configure of MACsec.' ;
+            key interface ;
+            leaf interface {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf replay-protect {
+              description 'Configure replay-protect status.' ;
+              type switch-type ;
+
+              default enable ;
+            }
+
+            leaf replay-protect-window-size {
+              description 'Configure replay-protect window size.' ;
+              type uint32 {
+                range 0..4294967295 ;
+
+              }
+
+              default 0 ;
+            }
+
+            leaf validate-frames-mode {
+              description 'Configure validate-frames mode.' ;
+              type validate-frames-mode ;
+
+              default strict ;
+            }
+
+            leaf confidentiality-offset {
+              description 'Configure confidentiality offset.' ;
+              type confidentiality-offset ;
+
+              default 0 ;
+            }
+
+            leaf cipher-suite {
+              description 'Configure cipher suite.' ;
+              type cipher-suite ;
+
+              default gcm-aes-128 ;
+            }
+
+            leaf clear-vlan-tag {
+              description 'Configure VLAN TAG clear.' ;
+              type switch-type ;
+
+              default disable ;
+              if-feature clear-vlan-tag {
+                ncd:revise-date 2025-03-10 ;
+              }
+
+            }
+
+            leaf privacy-cipher-suite-id {
+              type string {
+                length 16 ;
+
+              }
+
+              description 'Configure privacy cipher suite ID.' ;
+              if-feature privacy-cipher-suite-id ;
+
+              ncd:revise-date 2025-03-10 ;
+            }
+
+          }
+
+        }
+
+        container mkas {
+          list mka {
+            description 'The interface configure of MKA.' ;
+            key interface ;
+            leaf interface {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf mka-enable {
+              description 'Configure MKA enable.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf macsec-desire {
+              description 'Configure MAC security function.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf priority {
+              description 'Configure key server priority.' ;
+              type uint32 {
+                range 0..255 ;
+
+              }
+
+              default 16 ;
+            }
+
+            leaf life-time {
+              description 'Configure peer life time.' ;
+              type uint32 {
+                range 6..60 ;
+
+              }
+
+              units second ;
+              default 6 ;
+            }
+
+            leaf sak-life-time {
+              description 'Configure SAK life time.' ;
+              type uint32 {
+                range 10..65535 ;
+
+              }
+
+              units second ;
+              default 3600 ;
+            }
+
+            leaf sak-life-time-enable {
+              description 'Configure SAK life time function.' ;
+              type switch-type ;
+
+              default enable ;
+            }
+
+            leaf cp-run-mode {
+              description 'Configure CP state machine running mode.' ;
+              type cp-run-mode ;
+
+              default keep-old-key ;
+            }
+
+            container static-sak-key {
+              choice static-sak {
+                description 'Configure static SAK key.' ;
+                case clear {
+                  description 'Clear SAK key, the string should be hexadecimal and the string length should be greater than two and an even number.' ;
+                  leaf clear-sak {
+                    description 'Clear SAK key, the string should be hexadecimal.' ;
+                    type string {
+                      length 32 ;
+
+                    }
+
+                  }
+
+                }
+
+                case encrypted {
+                  description 'Encrypted SAK key.' ;
+                  leaf encrypted-sak {
+                    description 'Encrypted SAK key.' ;
+                    type string {
+                      length 108 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              if-feature static-sak-key {
+                ncd:revise-date 2025-03-10 ;
+              }
+
+            }
+
+          }
+
+        }
+
+        container psks {
+          list psk {
+            description 'Configure pre-share key.' ;
+            key 'interface ckn' ;
+            leaf interface {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf ckn {
+              description 'Configure CKN.' ;
+              type string {
+                length 2..64 ;
+
+              }
+
+            }
+
+            container cak-key {
+              choice cak {
+                description 'Configure CAK.' ;
+                mandatory true ;
+                case clear {
+                  description 'Clear CAK.' ;
+                  leaf clear-cak {
+                    description 'Clear CAK,the string should be hexadecimal and the string length should be greater than two and an even number.' ;
+                    type string {
+                      length 2..64 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case encrypted {
+                  leaf encrypted-cak {
+                    description 'Encrypted CAK.' ;
+                    type string {
+                      length "128 | 148" ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    description 'State model.' ;
+    config false ;
+    container macsec {
+      description 'MACsec state parameters.' ;
+      container mka-sessions {
+        list mka-session {
+          description 'MKA session information.' ;
+          key 'interface vp-peer-address' ;
+          leaf interface {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf vp-peer-address {
+            description 'The source MAC Address of the EAPOL-Start.' ;
+            type string ;
+
+          }
+
+          leaf key-server {
+            description 'State of key server.' ;
+            type string ;
+
+          }
+
+          leaf priority {
+            description 'Priority.' ;
+            type uint32 ;
+
+          }
+
+          leaf capability {
+            description 'State of cipher suite capability.' ;
+            type uint8 ;
+
+          }
+
+          leaf ckn {
+            description 'CKN name.' ;
+            type string ;
+
+          }
+
+          leaf mi {
+            description 'Member identifier.' ;
+            type string ;
+
+          }
+
+          leaf mn {
+            description 'Message number.' ;
+            type uint32 ;
+
+          }
+
+          leaf tx-sci {
+            description 'Transmit SCI.' ;
+            type string ;
+
+          }
+
+          leaf live-peers-num {
+            description 'Live peers num.' ;
+            type uint32 ;
+
+          }
+
+          leaf potential-peers-num {
+            description 'Potential peers num.' ;
+            type uint32 ;
+
+          }
+
+          leaf principal-actor {
+            description 'Principal actor.' ;
+            type string ;
+
+          }
+
+          leaf status {
+            description 'MKA session status.' ;
+            type string ;
+
+          }
+
+          leaf mka-status {
+            description 'MKA session status.' ;
+            type ncd:string-with-blank ;
+
+          }
+
+          leaf confidentiality-offset {
+            description 'Confidentiality offset.' ;
+            type ncd:string-with-blank ;
+
+          }
+
+          leaf lastest-sak-status {
+            description 'Latest SAK status.' ;
+            type ncd:string-with-blank ;
+
+          }
+
+          leaf latest-sak-an {
+            description 'Latest SAK AN.' ;
+            type string ;
+
+          }
+
+          leaf latest-sak-ki {
+            description 'Latest SAK KI.' ;
+            type ncd:string-with-blank ;
+
+          }
+
+          leaf old-sak-status {
+            description 'Old SAK status.' ;
+            type ncd:string-with-blank ;
+
+          }
+
+          leaf old-sak-an {
+            description 'Old SAK AN.' ;
+            type string ;
+
+          }
+
+          leaf old-sak-ki {
+            description 'Old SAK KI.' ;
+            type ncd:string-with-blank ;
+
+          }
+
+          container peer-list {
+            list live-peer-list {
+              key rx-sci ;
+              leaf rx-sci {
+                description 'Live peer rx SCI.' ;
+                type string ;
+
+              }
+
+              leaf mi {
+                description "Live peer's MI." ;
+                type string ;
+
+              }
+
+              leaf mn {
+                description "Live peer's MN." ;
+                type uint32 ;
+
+              }
+
+              leaf priority {
+                description "Live peer's key server priority." ;
+                type string ;
+
+              }
+
+              leaf capability {
+                description "Live peer's cipher suite capability." ;
+                type string ;
+
+              }
+
+            }
+
+            list potential-peer-list {
+              key rx-sci ;
+              leaf rx-sci {
+                description "Potential peer's SCI." ;
+                type string ;
+
+              }
+
+              leaf mi {
+                description "Potential peer's MI." ;
+                type string ;
+
+              }
+
+              leaf mn {
+                description "Potential peer's MN." ;
+                type uint32 ;
+
+              }
+
+              leaf priority {
+                description "Potential peer's key server priority." ;
+                type string ;
+
+              }
+
+              leaf capability {
+                description "Potential peer's cipher suite capability." ;
+                type string ;
+
+              }
+
+            }
+
+          }
+
+          ncd:select interface ;
+        }
+
+      }
+
+    }
+
+  }
+
+  notification mka-status-change {
+    description 'Report notification when mka status changed.' ;
+    container notification {
+      description 'Container name which make notification more understandable.' ;
+      list content {
+        description 'notification content.' ;
+        key 'vp-peer-address if-name' ;
+        leaf if-name {
+          description 'Interface name.' ;
+          type ncd:string-all ;
+
+        }
+
+        leaf vp-peer-address {
+          description 'The source MAC Address of the EAPOL-Start.' ;
+          type ncd:string-all ;
+
+        }
+
+        leaf mka-status {
+          description 'Mka status.' ;
+          type string ;
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

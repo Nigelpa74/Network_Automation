@@ -1,0 +1,820 @@
+module zxr10-rpm-bier {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/rpm-bier" ;
+  prefix rpm-bier ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  revision 2024-06-26 {
+    description 'Add status “obsolete” to the leafs of container “rpm-bier:configuration/rpm-bier:bier/rpm-bier:bier-global/rpm-bier:sub-domains”.' ;
+  }
+
+  revision 2024-01-13 {
+    description 'Modify definition of encapsulation-type.' ;
+  }
+
+  revision 2022-04-24 {
+    description 'Modify igp-type of local-sub-domain to protocol-types.' ;
+  }
+
+  revision 2022-03-30 {
+    description 'Add new node to support BIER PHP.' ;
+  }
+
+  revision 2021-10-09 {
+    description '1. Add range of leaf "max-si".
+2. Add range of leaf "mpra-prefix-length" with 8 to 120.' ;
+  }
+
+  revision 2021-02-08 {
+    description 'Add nodes for G-BIER.' ;
+  }
+
+  revision 2020-08-05 {
+    description 'Add container "static-bifts" in path "rpm-bier:configuration/rpm-bier:bier/rpm-bier:bier-global/rpm-bier:local-sub-domains/rpm-bier:local-sub-domain".' ;
+  }
+
+  revision 2020-06-18 {
+    description 'Modify sub-domain and BSL configurations.' ;
+  }
+
+  revision 2016-12-13 {
+    description 'The initial version' ;
+  }
+
+  feature g-bier ;
+
+  typedef igp-type {
+    status obsolete ;
+
+    type enumeration {
+      enum UNUSED {
+        value 0 ;
+        description 'Unused' ;
+      }
+
+      enum ISIS {
+        value 1 ;
+        description 'ISIS protocol' ;
+      }
+
+      enum OSPF {
+        value 2 ;
+        description 'OSPF protocol' ;
+      }
+
+    }
+
+    default UNUSED ;
+    description 'The IGP type for BIER associated with' ;
+  }
+
+  typedef bsl {
+    type enumeration {
+      enum UNUSED {
+        value 0 ;
+        description 'Unused' ;
+      }
+
+      enum 64-BIT {
+        value 1 ;
+        description 'bitstringlength is 64' ;
+      }
+
+      enum 128-BIT {
+        value 2 ;
+        description 'bitstringlength is 128' ;
+      }
+
+      enum 256-BIT {
+        value 3 ;
+        description 'bitstringlength is 256' ;
+      }
+
+      enum 512-BIT {
+        value 4 ;
+        description 'bitstringlength is 512' ;
+      }
+
+      enum 1024-BIT {
+        value 5 ;
+        description 'bitstringlength is 1024' ;
+      }
+
+      enum 2048-BIT {
+        value 6 ;
+        description 'bitstringlength is 2048' ;
+      }
+
+      enum 4096-BIT {
+        value 7 ;
+        description 'bitstringlength is 4096' ;
+      }
+
+    }
+
+    default UNUSED ;
+    description 'The bitstringlength type for imposition mode' ;
+  }
+
+  typedef encapsulation-type {
+    type enumeration {
+      enum UNUSED {
+        value 0 ;
+        description 'Unused' ;
+      }
+
+      enum MPLS {
+        value 1 ;
+        description 'MPLS encapsulation for bier.' ;
+      }
+
+      enum NON-MPLS {
+        value 2 ;
+        description 'NON-MPLS encapsulation for bier.' ;
+      }
+
+      enum GBIER {
+        value 3 ;
+        description 'GBIER encapsulation for bier.' ;
+      }
+
+    }
+
+    default UNUSED ;
+    description 'The type of BIER encapsulation' ;
+  }
+
+  typedef address-family {
+    type enumeration {
+      enum ipv4 {
+        value 1 ;
+      }
+
+      enum ipv6 {
+        value 2 ;
+      }
+
+    }
+
+  }
+
+  typedef static-bsl {
+    type enumeration {
+      enum UNUSED {
+        value 0 ;
+        description 'Unused' ;
+      }
+
+      enum 256-bit {
+        value 3 ;
+        description 'bitstringlength is 256' ;
+      }
+
+      enum 512-bit {
+        value 4 ;
+        description 'bitstringlength is 512' ;
+      }
+
+    }
+
+  }
+
+  typedef protocol-type {
+    type enumeration {
+      enum UNUSED {
+        value 0 ;
+      }
+
+      enum ISIS {
+        value 1 ;
+      }
+
+      enum OSPF {
+        value 2 ;
+      }
+
+      enum BGP {
+        value 3 ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'The configuration node for BIER' ;
+    container bier {
+      description 'The configuration node for BIER' ;
+      container bier-global {
+        description 'The global configuration node for BIER' ;
+        presence bier ;
+        leaf encapsulation-type {
+          status obsolete {
+            ncd:revise-date 2020-06-18 ;
+          }
+
+          description 'Encapsulation type' ;
+          type encapsulation-type ;
+
+        }
+
+        leaf bitstringlength {
+          status obsolete {
+            ncd:revise-date 2020-06-18 ;
+          }
+
+          description 'Bitstringlength value' ;
+          type bsl ;
+
+        }
+
+        leaf bfr-id {
+          status obsolete {
+            ncd:revise-date 2020-06-18 ;
+          }
+
+          description 'BFR ID value' ;
+          type uint16 {
+            range 0..65535 ;
+
+          }
+
+          default 0 ;
+        }
+
+        leaf ipv4-bfr-prefix {
+          status obsolete {
+            ncd:revise-date 2020-06-18 ;
+          }
+
+          description 'IPv4 BFR-prefix value' ;
+          type ncd:ipv4-address ;
+
+        }
+
+        container sub-domains {
+          status obsolete {
+            ncd:revise-date 2020-06-18 ;
+          }
+
+          description 'The sub-domain configuration node for BIER' ;
+          list sub-domain {
+            description 'The sub-domain configuration node for BIER' ;
+            status obsolete {
+              ncd:revise-date 2024-06-26 ;
+            }
+
+            key sub-domain-id ;
+            leaf sub-domain-id {
+              description 'Sub-domain ID value' ;
+              type uint16 {
+                range 0..255 ;
+
+              }
+
+              status obsolete {
+                ncd:revise-date 2024-06-26 ;
+              }
+
+            }
+
+            leaf igp-type {
+              description 'IGP type' ;
+              type igp-type ;
+
+              status obsolete {
+                ncd:revise-date 2024-06-26 ;
+              }
+
+            }
+
+            leaf mt-id {
+              description 'Top ID value' ;
+              type uint32 {
+                range 0 ;
+
+              }
+
+              default 0 ;
+              status obsolete {
+                ncd:revise-date 2024-06-26 ;
+              }
+
+            }
+
+            leaf bfr-id {
+              description 'BFR ID value' ;
+              type uint16 {
+                range 0..65535 ;
+
+              }
+
+              default 0 ;
+              status obsolete {
+                ncd:revise-date 2024-06-26 ;
+              }
+
+            }
+
+            leaf bitstringlength {
+              description 'Bitstringlength value' ;
+              type bsl ;
+
+              status obsolete {
+                ncd:revise-date 2024-06-26 ;
+              }
+
+            }
+
+            container address-family {
+              description 'Address family' ;
+              list ipv4 {
+                description 'Address family of IPv4' ;
+                key bitstringlength ;
+                leaf bitstringlength {
+                  description 'Bitstringlength value' ;
+                  type bsl ;
+
+                  status obsolete {
+                    ncd:revise-date 2024-06-26 ;
+                  }
+
+                }
+
+                leaf bier-mpls-label-base {
+                  description 'The start label value' ;
+                  type uint32 {
+                    range 0..4294967295 ;
+
+                  }
+
+                  default 0 ;
+                  status obsolete {
+                    ncd:revise-date 2024-06-26 ;
+                  }
+
+                }
+
+                leaf bier-mpls-label-range-size {
+                  description 'Label range' ;
+                  type uint16 {
+                    range 16..256 ;
+
+                  }
+
+                  default 16 ;
+                  status obsolete ;
+
+                }
+
+                status obsolete {
+                  ncd:revise-date 2024-06-26 ;
+                }
+
+              }
+
+              status obsolete {
+                ncd:revise-date 2024-06-26 ;
+              }
+
+            }
+
+          }
+
+        }
+
+        container local-sub-domains {
+          description 'The local sub-domain configuration node for BIER.' ;
+          list local-sub-domain {
+            description 'The sub-domain configuration information for BIER.' ;
+            key 'sd-id address-family' ;
+            leaf sd-id {
+              description 'Sub-domain ID.' ;
+              type uint8 ;
+
+            }
+
+            leaf address-family {
+              description 'The address-family of sub-domain.(IPv4:1;IPv6:2)' ;
+              type address-family ;
+
+            }
+
+            leaf igp-type {
+              status obsolete {
+                ncd:revise-date 2022-04-24 ;
+              }
+
+              description 'IGP type.' ;
+              type igp-type ;
+
+            }
+
+            leaf bfr-id {
+              description 'BFR ID.' ;
+              type uint16 {
+                range 0..65535 ;
+
+              }
+
+              default 0 ;
+            }
+
+            container bfr-prefix {
+              description 'BFR prefix of the sub-domain.' ;
+              choice bfr-prefix {
+                description 'BFR prefix of the sub-domain.' ;
+                case ipv4-bfr-prefix {
+                  description 'IPv4 BFR prefix.' ;
+                  leaf ipv4-bfr-prefix {
+                    description 'IPv4 address.' ;
+                    type ncd:ipv4-address-none-zero ;
+
+                  }
+
+                }
+
+                case ipv6-bfr-prefix {
+                  description 'IPv6 BFR prefix.' ;
+                  leaf ipv6-bfr-prefix {
+                    description 'IPv6 address.' ;
+                    type ncd:ipv6-address-none-zero ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            container bsl {
+              description 'BSL information.' ;
+              choice bsl {
+                description 'BSL information.' ;
+                case bsl-256 {
+                  description 'BSL 256.' ;
+                  container bsl-256-info {
+                    description 'BSL information.' ;
+                    leaf encapsulation-type {
+                      description 'Encapsulation type.' ;
+                      type encapsulation-type ;
+
+                      mandatory true ;
+                    }
+
+                    leaf bift-coding {
+                      description 'BIFT encoding. When encapsulation-type == NON-MPLS.' ;
+                      type enumeration {
+                        enum FALSE {
+                          value 0 ;
+                        }
+
+                        enum TRUE {
+                          value 1 ;
+                        }
+
+                      }
+
+                    }
+
+                    leaf max-si {
+                      description 'Max SID.' ;
+                      type uint16 {
+                        range 0..255 ;
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+                case bsl-512 {
+                  description 'BSL 512.' ;
+                  container bsl-512-info {
+                    description 'BSL information.' ;
+                    leaf encapsulation-type {
+                      description 'Encapsulation type.' ;
+                      type encapsulation-type ;
+
+                      mandatory true ;
+                    }
+
+                    leaf bift-coding {
+                      description 'BIFT encoding. When encapsulation-type == NON-MPLS.' ;
+                      type enumeration {
+                        enum FALSE {
+                          value 0 ;
+                        }
+
+                        enum TRUE {
+                          value 1 ;
+                        }
+
+                      }
+
+                    }
+
+                    leaf max-si {
+                      description 'Max SID.' ;
+                      type uint16 {
+                        range 0..127 ;
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            container bsl-gbier {
+              if-feature g-bier ;
+
+              description 'BSL information for G-BIER.' ;
+              choice bsl {
+                description 'BSL information.' ;
+                case bsl-256 {
+                  description 'BSL 256.' ;
+                  container bsl-256-info {
+                    description 'BSL information.' ;
+                    leaf coding-type {
+                      description 'Coding type.(Only support BIFT now.)' ;
+                      type enumeration {
+                        enum BIFT {
+                          value 1 ;
+                          description 'BIFT encoding.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                    leaf max-si {
+                      description 'Max SI.' ;
+                      type uint16 {
+                        range 0..255 ;
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+                case bsl-512 {
+                  description 'BSL 512.' ;
+                  container bsl-512-info {
+                    description 'BSL information.' ;
+                    leaf coding-type {
+                      description 'Coding type.(Only support BIFT now.)' ;
+                      type enumeration {
+                        enum BIFT {
+                          value 1 ;
+                          description 'BIFT encoding.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                    leaf max-si {
+                      description 'Max SID.' ;
+                      type uint16 {
+                        range 0..127 ;
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2021-02-08 ;
+            }
+
+            container static-bifts {
+              description 'Static BIFTs.' ;
+              list static-bift {
+                description 'Static BIFT.' ;
+                key 'min-bfrid max-bfrid' ;
+                leaf min-bfrid {
+                  description 'Min BFR ID.' ;
+                  type uint32 {
+                    range 1..65535 ;
+
+                  }
+
+                }
+
+                leaf max-bfrid {
+                  description 'Max BFR ID.' ;
+                  type uint32 {
+                    range 1..65535 ;
+
+                  }
+
+                }
+
+                container nexthop {
+                  description 'Nexthop.' ;
+                  choice nexthop {
+                    description 'Nexthop.' ;
+                    case ipv4-nexthop {
+                      description 'IPv4 nexthop.' ;
+                      leaf ipv4-nexthop {
+                        description 'IPv4 nexthop.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                      }
+
+                    }
+
+                    case ipv6-nexthop {
+                      description 'IPv6 nexthop.' ;
+                      leaf ipv6-nexthop {
+                        description 'IPv6 nexthop' ;
+                        type ncd:ipv6-address-none-zero ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+                leaf out-if {
+                  description 'Out interface.' ;
+                  type ncd:ifname ;
+
+                }
+
+                container dirc-nexthop {
+                  description 'Direct nexthop.' ;
+                  choice dirc-nexthop {
+                    description 'Direct nexthop.' ;
+                    case dirc-ipv4-nexthop {
+                      description 'Direct IPv4 nexthop.' ;
+                      leaf dirc-ipv4-nexthop {
+                        description 'Direct IPv4 nexthop.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                      }
+
+                    }
+
+                    case dirc-ipv6-nexthop {
+                      description 'Direct IPv6 nexthop.' ;
+                      leaf dirc-ipv6-nexthop {
+                        description 'Direct IPv6 nexthop.' ;
+                        type ncd:ipv6-address-none-zero ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+                leaf bsl {
+                  description 'BSL information.' ;
+                  type static-bsl ;
+
+                }
+
+                leaf encapsulation {
+                  description 'Encapsulation type.' ;
+                  type encapsulation-type ;
+
+                }
+
+                leaf bift-encoding {
+                  description 'BIFT encoding. When encapsulation-type == NON-MPLS.' ;
+                  type uint8 ;
+
+                }
+
+                leaf bift-value {
+                  description 'BIFT value.' ;
+                  type uint32 ;
+
+                }
+
+              }
+
+              ncd:revise-date 2020-08-05 ;
+            }
+
+            container mpra-indexs {
+              if-feature g-bier ;
+
+              description 'MPRA index infomation.' ;
+              list mpra-index {
+                description 'MPRA index.' ;
+                key prefix-index ;
+                leaf prefix-index {
+                  description 'Index address.' ;
+                  type ncd:ipv6-address ;
+
+                }
+
+              }
+
+              ncd:revise-date 2021-02-08 ;
+            }
+
+            leaf php {
+              description 'Set PHP.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default disable ;
+              ncd:revise-date 2022-03-30 ;
+            }
+
+            container protocol-types {
+              description 'List of the underlay protocol to be supported.' ;
+              list protocol-type {
+                description 'Protocol type.' ;
+                key protocol ;
+                leaf protocol {
+                  description 'The underlay protocol type.' ;
+                  type protocol-type ;
+
+                }
+
+              }
+
+              ncd:revise-date 2022-04-24 ;
+            }
+
+          }
+
+          ncd:revise-date 2020-06-18 ;
+        }
+
+        container global-mpra {
+          if-feature g-bier ;
+
+          description 'Global MPRA.' ;
+          presence mpra ;
+          leaf mpra-addr {
+            description 'The address of MPRA.' ;
+            type ncd:ipv6-address ;
+
+            mandatory true ;
+          }
+
+          leaf mpra-prefix-length {
+            description 'The mask length of MPRA.Its range is 8 to 120.' ;
+            type uint8 {
+              range 8..120 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          ncd:revise-date 2021-02-08 ;
+        }
+
+      }
+
+    }
+
+  }
+
+}

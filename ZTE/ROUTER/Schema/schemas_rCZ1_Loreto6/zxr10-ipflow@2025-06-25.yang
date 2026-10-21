@@ -1,0 +1,2080 @@
+module zxr10-ipflow {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/ipflow" ;
+  prefix ipflow ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe IPFLOW' ;
+  revision 2025-06-25 {
+    description '1.Add these features:ipflow-srv6-srh-fields and ipflow-inner-header-fields.
+2.Add container:/ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:srh-fields.
+3.Add container:/ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:inner-header-fields.
+4.Add ipflow-srv6-srh-fields feature for the container of /ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:srh-fields.
+5.Add ipflow-inner-header-fields feature for the container of /ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:inner-header-fields.' ;
+  }
+
+  revision 2025-06-17 {
+    description '1.Add feature:ipflow-message-max-size.
+2.Add leaf:/ipflow:configuration/ipflow:ipflow/ipflow:exporters/ipflow:exporter/ipflow:message-max-size.
+3.Add ipflow-message-max-size feature for the node of /ipflow:configuration/ipflow:ipflow/ipflow:exporters/ipflow:exporter/ipflow:message-max-size.' ;
+  }
+
+  revision 2024-06-14 {
+    description '1.These features are included for OTN.9700, OTN.8700, OTN.7000 products:interface-mpls-sample, interface-acl-sample, ipv4-bgp-flowspec-sample, flow-distributions.
+2.These features are included for �߶˷���HighEndPacket.MCG-5000 products:interface-acl-sample.
+3.These features are included for MSR.ASR, MSR.ZSRV2, MSE.M6000, MSE.xGW, OTN.M721, V6000.vRouter, V6000.vBRAS-C, V6000.CDB, ZENIC.VDC, ROSNG-V.COMMON, ROSNG-V.VEG products:ipv4-bgp-flowspec-sample.' ;
+  }
+
+  revision 2024-06-03 {
+    description 'These features are included for PC.SWITCH product:ipflow-vxlan-inner-header-analysis.' ;
+  }
+
+  revision 2023-12-14 {
+    description '1.Add these features: ipflow-srv6-inner-header-analysis and ipflow-vxlan-inner-header-analysis.
+2.Add ipflow-srv6-inner-header-analysis feature for the node of /ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:srv6-policy-inner-header.
+3.Add ipflow-srv6-inner-header-analysis feature for the node of /ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:ipv6-inner-header.
+4.Add ipflow-vxlan-inner-header-analysis feature for the node of /ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:vxlan-inner-header.' ;
+  }
+
+  revision 2023-09-11 {
+    description 'These features are included for SWITCH.5960M products:interface-acl-sample.' ;
+  }
+
+  revision 2023-07-28 {
+    description '1.Add leaf mode:/ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:vxlan-inner-header.' ;
+  }
+
+  revision 2023-04-21 {
+    description 'modify the value range of nodes below from 0-604800 to 10-604800:
+/ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:cache-active-timeout
+/ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:cache-inactive-timeout
+modify the value range of nodes below from 0-4294967295 to 1-4294967295:
+/ipflow:configuration/ipflow:ipflow/ipflow:samplers/ipflow:sampler/ipflow:mode/ipflow:deterministic/ipflow:deterministic/ipflow:sample-rate' ;
+  }
+
+  revision 2023-03-27 {
+    description '1.Add leaf mode:/ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:srv6-policy-inner-header.
+2.Add leaf mode:/ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:ipv6-inner-header.' ;
+  }
+
+  revision 2023-03-07 {
+    description '1.Add case mode:/ipflow:configuration/ipflow:ipflow/ipflow:exporters/ipflow:exporter/ipflow:destination/ipflow:vrf-mode/ipflow:vrf-mng.
+2.Add leaf mode:/ipflow:configuration/ipflow:ipflow/ipflow:exporters/ipflow:exporter/ipflow:destination/ipflow:vrf-mode/ipflow:vrf-mng/ipflow:mng.' ;
+  }
+
+  revision 2022-06-21 {
+    description 'Add enumeration value:ethernetTotalLength and ethernetType for /ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:common-fields/ipflow:common-field/ipflow:field-type.' ;
+  }
+
+  revision 2021-12-11 {
+    description 'Add enumeration value:ipv6ExtensionHeaders for
+/ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:common-fields/ipflow:common-field/ipflow:field-type.' ;
+  }
+
+  revision 2021-09-30 {
+    description 'Add leaf mode:/ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:first-flow-send' ;
+  }
+
+  revision 2021-04-17 {
+    description 'Add enumeration value:dot1qVlanId and dot1qCustomerVlanId for
+/ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:common-fields/ipflow:common-field/ipflow:field-type.' ;
+  }
+
+  revision 2021-01-04 {
+    description 'Add enumeration value:ipDiffServCodePoint for
+/ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:common-fields/ipflow:common-field/ipflow:field-type.' ;
+  }
+
+  revision 2020-12-21 {
+    description 'add these features: ipv4-bgp-flowspec-sample and ipv6-bgp-flowspec-sample
+add /ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:ipv4-flowspec-monitors
+add /ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:ipv6-flowspec-monitors
+add ipv4-bgp-flowspec-sample feature for the node of /ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:ipv4-flowspec-monitors
+add ipv6-bgp-flowspec-sample feature for the node of /ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:ipv6-flowspec-monitors' ;
+  }
+
+  revision 2020-06-04 {
+    description 'These feartures are included for PTN products:interface-mpls-sample,flow-distributions and interface-acl-sample.' ;
+  }
+
+  revision 2020-03-05 {
+    description "Add choice node mode:/ipflow:configuration/ipflow:ipflow/ipflo'w:exporters/ipflow:exporter/ipflow:destination/ipflow:vrf-mode
+    Add case mode:/ipflow:configuration/ipflow:ipflow/ipflo'w:exporters/ipflow:exporter/ipflow:destination/ipflow:vrf-mode/ipflow:vrf-common
+    Add case mode:/ipflow:configuration/ipflow:ipflow/ipflo'w:exporters/ipflow:exporter/ipflow:destination/ipflow:vrf-mode/ipflow:vrf-dcn
+    Add leaf mode:/ipflow:configuration/ipflow:ipflow/ipflo'w:exporters/ipflow:exporter/ipflow:destination/ipflow:vrf-mode/ipflow:vrf-dcn/ipflow:dcn" ;
+  }
+
+  revision 2019-05-14 {
+    description '1. Add choice node mode:
+/ipflow:configuration/ipflow:ipflow/ipflow:samplers/ipflow:sampler/ipflow:mode.
+2. Obsolete leaf node sampler-rate and sampler-mode:
+/ipflow:configuration/ipflow:ipflow/ipflow:samplers/ipflow:sampler/ipflow:sample-rate;
+/ipflow:configuration/ipflow:ipflow/ipflow:samplers/ipflow:sampler/ipflow:sample-mode.
+3. Add enumeration value:
+/ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:common-fields/ipflow:common-field/ipflow:field-type.' ;
+  }
+
+  revision 2015-06-05 {
+    description 'remove unsupported value 48(flowSamplerId) and 210(paddingOctets) and 234(ingressVRFID) and 235(egressVRFID)of /ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:common-fields/ipflow:common-field/ipflow:field-type
+add these features: interface-mpls-sample and interface-acl-sampl and flow-distributions
+add interface-mpls-sample feature for the node of /ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-monitors/ipflow:mpls-flow-monitors
+add interface-acl-sample feature for the node of /ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-acl-monitors
+add flow-distributions feature for the node of /ipflow:configuration/ipflow:ipflow/ipflow:flow-distributions' ;
+  }
+
+  revision 2015-01-15 {
+    description 'remove unsupported value 32(icmpTypeCodeIPv4) and 33(igmpType) of /ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:common-fields/ipflow:common-field/ipflow:field-type
+change length of /ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-acl-monitors/ipflow:ip-flow-monitors/ipflow:custom-samplers/ipflow:custom-sampler/ipflow:sampler-name to 1..32' ;
+  }
+
+  revision 2014-09-11 {
+    description 'add /ipflow:state' ;
+  }
+
+  revision 2014-08-14 {
+    description 'modify the length of these nodes from 35 to 32:
+/ipflow:configuration/ipflow:ipflow/ipflow:records/ipflow:record/ipflow:record-name
+/ipflow:configuration/ipflow:ipflow/ipflow:samplers/ipflow:sampler/ipflow:sampler-name
+/ipflow:configuration/ipflow:ipflow/ipflow:exporters/ipflow:exporter/ipflow:exporter-name
+/ipflow:configuration/ipflow:ipflow/ipflow:exporters/ipflow:exporter/ipflow:destination/ipflow:vrf
+/ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:monitor-name
+/ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:record/ipflow:record-name
+/ipflow:configuration/ipflow:ipflow/ipflow:monitors/ipflow:monitor/ipflow:exporters/ipflow:exporter/ipflow:exporter-name
+/ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-monitors/ipflow:ip-flow-monitors/ipflow:custom-samplers/ipflow:custom-sampler/ipflow:monitor-name
+/ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-monitors/ipflow:ip-flow-monitors/ipflow:custom-samplers/ipflow:custom-sampler/ipflow:sampler-name
+/ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-monitors/ipflow:ip-flow-monitors/ipflow:default-samplers/ipflow:default-sampler/ipflow:monitor-name
+/ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-monitors/ipflow:mpls-flow-monitors/ipflow:default-samplers/ipflow:default-sampler/ipflow:monitor-name
+/ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-monitors/ipflow:mpls-flow-monitors/ipflow:custom-samplers/ipflow:custom-sampler/ipflow:monitor-name
+/ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-monitors/ipflow:mpls-flow-monitors/ipflow:custom-samplers/ipflow:custom-sampler/ipflow:sampler-name
+/ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-acl-monitors/ipflow:ip-flow-monitors/ipflow:default-samplers/ipflow:default-sampler/ipflow:monitor-name
+/ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-acl-monitors/ipflow:ip-flow-monitors/ipflow:custom-samplers/ipflow:custom-sampler/ipflow:monitor-name
+/ipflow:configuration/ipflow:ipflow/ipflow:methods/ipflow:interface-acl-monitors/ipflow:ip-flow-monitors/ipflow:custom-samplers/ipflow:custom-sampler/ipflow:sampler-name' ;
+  }
+
+  revision 2014-02-28 {
+    description 'Initial version' ;
+  }
+
+  feature interface-mpls-sample {
+    description 'Sample mpls packets on one interface' ;
+  }
+
+  feature interface-acl-sample {
+    description 'User ACL to filter packets sampled on one interface' ;
+  }
+
+  feature flow-distributions {
+    description 'Set the policy of distributing flows' ;
+  }
+
+  feature ipv4-bgp-flowspec-sample {
+    description 'Sample ipv4 bgp flowspec flows.' ;
+  }
+
+  feature ipv6-bgp-flowspec-sample {
+    description 'Sample ipv6 bgp flowspec flows.' ;
+  }
+
+  feature ipflow-srv6-inner-header-analysis {
+    description 'Analyze inner header of SRv6 packets.' ;
+    ncd:revise-date 2023-12-14 ;
+  }
+
+  feature ipflow-vxlan-inner-header-analysis {
+    description 'Analyze inner header of VXLAN packets.' ;
+    ncd:revise-date 2023-12-14 ;
+  }
+
+  feature ipflow-message-max-size {
+    description 'Configure the maximum payload size of transport layer in NetFlow packet.' ;
+    ncd:revise-date 2025-06-17 ;
+  }
+
+  feature ipflow-srv6-srh-fields {
+    description 'Configure the SRH field in record.' ;
+    ncd:revise-date 2025-06-25 ;
+  }
+
+  feature ipflow-inner-header-fields {
+    description 'Configure the inner header field in record.' ;
+    ncd:revise-date 2025-06-25 ;
+  }
+
+  container configuration {
+    description 'IPFLOW module configuration model' ;
+    container ipflow {
+      description 'IPFLOW module configuration root node' ;
+      container records {
+        description 'IPFLOW record information' ;
+        list record {
+          description 'IPFLOW record information' ;
+          key record-name ;
+          leaf record-name {
+            description 'IPFLOW record name' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          container counter-fields {
+            description 'IPFLOW counter field' ;
+            list counter-field {
+              description 'IPFLOW counter field' ;
+              key field-type ;
+              leaf field-type {
+                description 'IPFLOW field type' ;
+                type enumeration {
+                  enum octetDeltaCount {
+                    value 1 ;
+                  }
+
+                  enum packetDeltaCount {
+                    value 2 ;
+                  }
+
+                }
+
+              }
+
+              leaf field-size {
+                description 'IPFLOW field size' ;
+                type enumeration {
+                  enum default {
+                    value 0 ;
+                  }
+
+                  enum long {
+                    value 8 ;
+                  }
+
+                }
+
+                default default ;
+              }
+
+            }
+
+          }
+
+          container time-fields {
+            description 'IPFLOW time field' ;
+            list time-field {
+              description 'IPFLOW time field' ;
+              key field-type ;
+              leaf field-type {
+                description 'IPFLOW field type' ;
+                type enumeration {
+                  enum flowEndSysUpTime {
+                    value 21 ;
+                  }
+
+                  enum flowStartSysUpTime {
+                    value 22 ;
+                  }
+
+                  enum flowStartMilliseconds {
+                    value 152 ;
+                  }
+
+                  enum flowEndMilliseconds {
+                    value 153 ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container ipv4-prefix-fields {
+            description 'IPFLOW IPv4 address prefix field' ;
+            list ipv4-prefix-field {
+              description 'IPFLOW IPv4 address prefix field' ;
+              key 'field-type field-attr' ;
+              leaf field-type {
+                description 'IPFLOW field type' ;
+                type enumeration {
+                  enum sourceIPv4Prefix {
+                    value 44 ;
+                  }
+
+                  enum destinationIPv4Prefix {
+                    value 45 ;
+                  }
+
+                }
+
+              }
+
+              leaf field-attr {
+                description 'IPFLOW is key field' ;
+                type enumeration {
+                  enum match {
+                    value 1 ;
+                  }
+
+                  enum collect {
+                    value 2 ;
+                  }
+
+                }
+
+              }
+
+              leaf field-info {
+                description 'IPFLOW field information' ;
+                type uint8 {
+                  range 1..32 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          container ipv6-prefix-fields {
+            description 'IPFLOW IPv6 address prefix field' ;
+            list ipv6-prefix-field {
+              description 'IPFLOW IPv6 address prefix field' ;
+              key 'field-type field-attr' ;
+              leaf field-type {
+                description 'IPFLOW field type' ;
+                type enumeration {
+                  enum destinationIPv6Prefix {
+                    value 169 ;
+                  }
+
+                  enum sourceIPv6Prefix {
+                    value 170 ;
+                  }
+
+                }
+
+              }
+
+              leaf field-attr {
+                description 'IPFLOW is key field' ;
+                type enumeration {
+                  enum match {
+                    value 1 ;
+                  }
+
+                  enum collect {
+                    value 2 ;
+                  }
+
+                }
+
+              }
+
+              leaf field-info {
+                description 'IPFLOW field information' ;
+                type uint8 {
+                  range 1..128 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          container common-fields {
+            description 'IPFLOW common field' ;
+            list common-field {
+              description 'IPFLOW common field' ;
+              key 'field-type field-attr' ;
+              leaf field-type {
+                description 'IPFLOW field type' ;
+                type enumeration {
+                  enum protocolIdentifier {
+                    value 4 ;
+                  }
+
+                  enum ipClassOfService {
+                    value 5 ;
+                  }
+
+                  enum tcpControlBits {
+                    value 6 ;
+                  }
+
+                  enum sourceTransportPort {
+                    value 7 ;
+                  }
+
+                  enum sourceIPv4Address {
+                    value 8 ;
+                  }
+
+                  enum sourceIPv4PrefixLength {
+                    value 9 ;
+                  }
+
+                  enum ingressInterface {
+                    value 10 ;
+                  }
+
+                  enum destinationTransportPort {
+                    value 11 ;
+                  }
+
+                  enum destinationIPv4Address {
+                    value 12 ;
+                  }
+
+                  enum destinationIPv4PrefixLength {
+                    value 13 ;
+                  }
+
+                  enum egressInterface {
+                    value 14 ;
+                  }
+
+                  enum ipNextHopIPv4Address {
+                    value 15 ;
+                  }
+
+                  enum bgpSourceAsNumber {
+                    value 16 ;
+                  }
+
+                  enum bgpDestinationAsNumber {
+                    value 17 ;
+                  }
+
+                  enum bgpNextHopIPv4Address {
+                    value 18 ;
+                  }
+
+                  enum sourceIPv6Address {
+                    value 27 ;
+                  }
+
+                  enum destinationIPv6Address {
+                    value 28 ;
+                  }
+
+                  enum sourceIPv6PrefixLength {
+                    value 29 ;
+                  }
+
+                  enum destinationIPv6PrefixLength {
+                    value 30 ;
+                  }
+
+                  enum flowLabelIPv6 {
+                    value 31 ;
+                  }
+
+                  enum samplingInverval {
+                    value 34 ;
+                  }
+
+                  enum sourceMacAddress {
+                    value 56 ;
+                  }
+
+                  enum destinationMacAddress {
+                    value 57 ;
+                  }
+
+                  enum ipVersion {
+                    value 60 ;
+                  }
+
+                  enum flowDirection {
+                    value 61 ;
+                  }
+
+                  enum ipNextHopIPv6Address {
+                    value 62 ;
+                  }
+
+                  enum bgpNextHopIPv6Address {
+                    value 63 ;
+                  }
+
+                  enum mplsTopLabelStackSection {
+                    value 70 ;
+                  }
+
+                  enum mplsLabelStackSection2 {
+                    value 71 ;
+                  }
+
+                  enum mplsLableStackSection3 {
+                    value 72 ;
+                  }
+
+                  enum mplsLableStackSection4 {
+                    value 73 ;
+                  }
+
+                  enum mplsLableStackSection5 {
+                    value 74 ;
+                  }
+
+                  enum bgpNextAdjacentAsNumber {
+                    value 128 ;
+                  }
+
+                  enum bgpPrevAdjacentAsNumber {
+                    value 129 ;
+                  }
+
+                  enum icmpTypeIPv4 {
+                    value 176 ;
+                  }
+
+                  enum icmpCodeIPv4 {
+                    value 177 ;
+                  }
+
+                  enum icmpTypeIPv6 {
+                    value 178 ;
+                  }
+
+                  enum icmpCodeIPv6 {
+                    value 179 ;
+                  }
+
+                  enum ipDiffServCodePoint {
+                    value 195 ;
+                  }
+
+                  enum samplingAlgorithm {
+                    value 304 ;
+                  }
+
+                  enum samplingTimeInterval {
+                    value 307 ;
+                  }
+
+                  enum samplingTimeSpace {
+                    value 308 ;
+                  }
+
+                  enum samplingRandomSize {
+                    value 309 ;
+                  }
+
+                  enum samplingRandomPopulation {
+                    value 310 ;
+                  }
+
+                  enum dot1qVlanId {
+                    value 243 ;
+                  }
+
+                  enum dot1qCustomerVlanId {
+                    value 245 ;
+                  }
+
+                  enum ipv6ExtensionHeaders {
+                    value 64 ;
+                  }
+
+                  enum ethernetTotalLength {
+                    value 242 ;
+                  }
+
+                  enum ethernetType {
+                    value 256 ;
+                  }
+
+                }
+
+              }
+
+              leaf field-attr {
+                description 'IPFLOW is key field' ;
+                type enumeration {
+                  enum match {
+                    value 1 ;
+                  }
+
+                  enum collect {
+                    value 2 ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container srh-fields {
+            list srh-field {
+              leaf field-type {
+                type enumeration {
+                  enum srhFlags {
+                    value 492 ;
+                  }
+
+                  enum srhTag {
+                    value 493 ;
+                  }
+
+                  enum srhActiveSegment {
+                    value 495 ;
+                  }
+
+                  enum srhSegmentList {
+                    value 497 ;
+                  }
+
+                  enum srhSegmentLeft {
+                    value 498 ;
+                  }
+
+                }
+
+                description 'IPFLOW field type' ;
+              }
+
+              description 'IPFLOW srh field' ;
+              key field-type ;
+            }
+
+            description 'IPFLOW srh field' ;
+            if-feature ipflow-srv6-srh-fields ;
+
+            ncd:revise-date 2025-06-25 ;
+          }
+
+          container inner-header-fields {
+            list inner-header-field {
+              leaf field-type {
+                type enumeration {
+                  enum innerSourceIPv4Address {
+                    value 8 ;
+                  }
+
+                  enum innerDestinationIPv4Address {
+                    value 12 ;
+                  }
+
+                  enum innerSourceTransportPort {
+                    value 7 ;
+                  }
+
+                  enum innerDestinationTransportPort {
+                    value 11 ;
+                  }
+
+                  enum innerProtocolIdentifier {
+                    value 4 ;
+                  }
+
+                  enum innerSourceIPv6Address {
+                    value 27 ;
+                  }
+
+                  enum innerDestinationIPv6Address {
+                    value 28 ;
+                  }
+
+                  enum innerDot1qVlanId {
+                    value 243 ;
+                  }
+
+                  enum innerDot1qCustomerVlanId {
+                    value 245 ;
+                  }
+
+                }
+
+                description 'IPFLOW field type' ;
+              }
+
+              leaf field-attr {
+                type enumeration {
+                  enum match {
+                    value 1 ;
+                  }
+
+                  enum collect {
+                    value 2 ;
+                  }
+
+                }
+
+                description 'IPFLOW is key field' ;
+              }
+
+              description 'IPFLOW inner header field' ;
+              key 'field-type field-attr' ;
+            }
+
+            description 'IPFLOW inner header field' ;
+            if-feature ipflow-inner-header-fields ;
+
+            ncd:revise-date 2025-06-25 ;
+          }
+
+        }
+
+      }
+
+      container samplers {
+        description 'IPFLOW flow sampler information' ;
+        list sampler {
+          description 'IPFLOW flow sampler information' ;
+          key sampler-name ;
+          leaf sampler-name {
+            description 'IPFLOW sampler name' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf sample-rate {
+            status obsolete {
+              ncd:revise-date 2019-05-14 ;
+            }
+
+            description 'IPFLOW sampling rate' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 1000 ;
+          }
+
+          leaf sample-mode {
+            status obsolete {
+              ncd:revise-date 2019-05-14 ;
+            }
+
+            description 'IPFLOW sampling mode' ;
+            type enumeration {
+              enum deterministic {
+                value 1 ;
+              }
+
+            }
+
+            default deterministic ;
+          }
+
+          choice mode {
+            description 'Specify the type of sampling and the sampling interval.' ;
+            default deterministic ;
+            case deterministic {
+              description 'Enable deterministic mode sampling.' ;
+              container deterministic {
+                description 'Enable deterministic mode sampling.' ;
+                leaf sample-rate {
+                  description 'IPFLOW sampling rate.' ;
+                  type uint32 {
+                    range 1..4294967295 ;
+
+                  }
+
+                  default 1000 ;
+                }
+
+              }
+
+            }
+
+            case time-deterministic {
+              description 'Enable time-deterministic mode sampling.' ;
+              container time-deterministic {
+                description 'Enable time-deterministic mode sampling.' ;
+                presence "time deterministic" ;
+                leaf time-space {
+                  description 'Sampling time space.' ;
+                  type uint32 {
+                    range 1..30000000 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case random {
+              description 'Enable random mode sampling.' ;
+              container random {
+                description 'Enable random mode sampling.' ;
+                presence random ;
+                leaf random-size {
+                  description 'Random sampling size.' ;
+                  type uint32 {
+                    range 1..65535 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf random-population {
+                  description 'Random sampling population.' ;
+                  type uint32 {
+                    range 1..65535 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2019-05-14 ;
+          }
+
+        }
+
+      }
+
+      container exporters {
+        description 'IPFLOW flow exporter' ;
+        list exporter {
+          description 'IPFLOW flow exporter' ;
+          key exporter-name ;
+          leaf exporter-name {
+            description 'IPFLOW exporter name' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf export-protocol {
+            description 'IPFLOW exporter format' ;
+            type enumeration {
+              enum netflow-v5 {
+                value 5 ;
+              }
+
+              enum netflow-v8 {
+                value 8 ;
+              }
+
+              enum netflow-v9 {
+                value 9 ;
+              }
+
+              enum ipfix {
+                value 10 ;
+              }
+
+            }
+
+            default netflow-v9 ;
+          }
+
+          leaf transport-protocol {
+            description 'IPFLOW transport protocol' ;
+            type enumeration {
+              enum udp {
+                value 1 ;
+              }
+
+            }
+
+            default udp ;
+          }
+
+          leaf port-num {
+            description 'IPFLOW transport port number' ;
+            type uint16 {
+              range 1..65535 ;
+
+            }
+
+            default 2055 ;
+          }
+
+          leaf template-resend-timeout {
+            description 'IPFLOW template resend timeout' ;
+            type uint32 {
+              range 1..86400 ;
+
+            }
+
+            units second ;
+            default 600 ;
+          }
+
+          leaf template-resend-pkt-num {
+            description 'IPFLOW template refresh rate' ;
+            type uint32 {
+              range 1..600 ;
+
+            }
+
+            default 20 ;
+          }
+
+          leaf dscp {
+            description 'IPFLOW exporter DSCP value' ;
+            type uint8 {
+              range 0..63 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf message-max-size {
+            type uint16 {
+              range 1452..9000 ;
+
+            }
+
+            description 'To configure the maximum payload size of transport layer in NetFlow packet.' ;
+            if-feature ipflow-message-max-size ;
+
+            ncd:revise-date 2025-06-17 ;
+          }
+
+          container destination {
+            description 'IPFLOW destination information' ;
+            choice ip-type {
+              description 'IPFLOW destination address type' ;
+              case ipv4 {
+                description 'IPFLOW IPv4 type' ;
+                leaf ipv4-addr {
+                  description 'IPFLOW IPv4 address' ;
+                  type ncd:ipv4-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              case ipv6 {
+                description 'IPFLOW IPv6 type' ;
+                leaf ipv6-addr {
+                  description 'IPFLOW IPv6 address' ;
+                  type ncd:ipv6-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            choice vrf-mode {
+              description 'Specify the type and name of vrf.' ;
+              case vrf-common {
+                description 'Specify vrf name which is not reserved.' ;
+                leaf vrf {
+                  description 'IPFLOW vrf name' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                }
+
+              }
+
+              case vrf-dcn {
+                description 'Specify dcn vrf.' ;
+                leaf dcn {
+                  description 'Specify dcn vrf.' ;
+                  type empty ;
+
+                }
+
+                ncd:revise-date 2020-03-05 ;
+              }
+
+              case vrf-mng {
+                leaf mng {
+                  type empty ;
+
+                  description 'Specify mng vrf.' ;
+                }
+
+                ncd:revise-date 2023-03-07 ;
+              }
+
+            }
+
+          }
+
+          container source {
+            description 'IPFLOW source information' ;
+            choice source-type {
+              description 'IPFLOW source type' ;
+              case address-type {
+                description 'IPFLOW source address' ;
+                container address {
+                  description 'IPFLOW source address' ;
+                  choice ip-type {
+                    description 'IPFLOW source address type' ;
+                    case ipv4 {
+                      description 'IPFLOW IPv4 type' ;
+                      leaf ipv4-addr {
+                        description 'IPFLOW IPv4 address' ;
+                        type ncd:ipv4-address ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case ipv6 {
+                      description 'IPFLOW IPv6 type' ;
+                      leaf ipv6-addr {
+                        description 'IPFLOW IPv6 address' ;
+                        type ncd:ipv6-address ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              case interface-type {
+                description 'IPFLOW source interface' ;
+                container interface {
+                  description 'IPFLOW source interface' ;
+                  leaf interface-name {
+                    description 'IPFLOW source interface name' ;
+                    type ncd:ifname ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container monitors {
+        description 'IPFLOW monitor information' ;
+        list monitor {
+          description 'IPFLOW monitor information' ;
+          key monitor-name ;
+          leaf monitor-name {
+            description 'IPFLOW monitor name' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf cache-entry-num {
+            description 'The maximum number of cache entries' ;
+            type uint32 {
+              range 16..4294967295 ;
+
+            }
+
+            default 4096 ;
+          }
+
+          leaf cache-active-timeout {
+            description 'IPFLOW active flow timeout' ;
+            type uint32 {
+              range 10..604800 ;
+
+            }
+
+            units second ;
+            default 1800 ;
+          }
+
+          leaf cache-inactive-timeout {
+            description 'IPFLOW inactive flow timeout' ;
+            type uint32 {
+              range 10..604800 ;
+
+            }
+
+            units second ;
+            default 600 ;
+          }
+
+          leaf first-flow-send {
+            description 'Send flow immediately when the flow is new.' ;
+            type empty ;
+
+            ncd:revise-date 2021-09-30 ;
+          }
+
+          leaf srv6-policy-inner-header {
+            description 'Inner header of srv6-policy packet.' ;
+            type empty ;
+
+            if-feature ipflow-srv6-inner-header-analysis {
+              ncd:revise-date 2023-12-14 ;
+            }
+
+            ncd:revise-date 2023-03-27 ;
+          }
+
+          leaf ipv6-inner-header {
+            description 'Inner header of common IPv6 packet.' ;
+            type empty ;
+
+            if-feature ipflow-srv6-inner-header-analysis {
+              ncd:revise-date 2023-12-14 ;
+            }
+
+            ncd:revise-date 2023-03-27 ;
+          }
+
+          leaf vxlan-inner-header {
+            description 'Inner header of vxlan packet.' ;
+            type empty ;
+
+            if-feature ipflow-vxlan-inner-header-analysis {
+              ncd:revise-date 2023-12-14 ;
+            }
+
+            ncd:revise-date 2023-07-28 ;
+          }
+
+          container record {
+            description 'IPFLOW record information' ;
+            choice record-in-monitor {
+              description 'IPFLOW template type' ;
+              case custom {
+                description 'IPFLOW user-defined template' ;
+                leaf record-name {
+                  description 'IPFLOW record name' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              case pre-define {
+                description 'IPFLOW predefined record' ;
+                leaf pre-define-type {
+                  description 'IPFLOW predefined template type' ;
+                  type enumeration {
+                    enum netflow-original {
+                      value 1 ;
+                    }
+
+                    enum netflow-protocol-port {
+                      value 2 ;
+                    }
+
+                    enum netflow-ipv4-original-input {
+                      value 3 ;
+                    }
+
+                    enum netflow-ipv4-original-output {
+                      value 4 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container exporters {
+            list exporter {
+              description 'IPFLOW flow exporter' ;
+              key exporter-name ;
+              leaf exporter-name {
+                description 'IPFLOW exporter name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container methods {
+        description 'IPFLOW monitor method' ;
+        container interface-monitors {
+          description 'IPFLOW interface monitor method' ;
+          container ip-flow-monitors {
+            description 'IPFLOW interface monitor method' ;
+            container default-samplers {
+              description 'IPFLOW default sampler' ;
+              list default-sampler {
+                description 'IPFLOW default sampler' ;
+                key 'if-name ip-type sample-dir sample-pkt-type monitor-name' ;
+                leaf if-name {
+                  description 'IPFLOW interface name' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf ip-type {
+                  description 'IPFLOW flow type' ;
+                  type enumeration {
+                    enum ipv4 {
+                      value 4 ;
+                    }
+
+                    enum ipv6 {
+                      value 6 ;
+                    }
+
+                  }
+
+                }
+
+                leaf sample-dir {
+                  description 'IPFLOW sampling direction' ;
+                  type enumeration {
+                    enum input {
+                      value 0 ;
+                    }
+
+                    enum output {
+                      value 1 ;
+                    }
+
+                  }
+
+                }
+
+                leaf sample-pkt-type {
+                  description 'IPFLOW interface monitor type' ;
+                  type enumeration {
+                    enum multicast {
+                      value 0 ;
+                    }
+
+                    enum unicast {
+                      value 1 ;
+                    }
+
+                    enum all {
+                      value 2 ;
+                    }
+
+                  }
+
+                }
+
+                leaf monitor-name {
+                  description 'IPFLOW monitor name' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            container custom-samplers {
+              description 'IPFLOW custom sampler' ;
+              list custom-sampler {
+                description 'IPFLOW custom sampler' ;
+                key 'if-name ip-type sample-dir sample-pkt-type monitor-name sampler-name' ;
+                leaf if-name {
+                  description 'IPFLOW interface name' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf ip-type {
+                  description 'IPFLOW flow type' ;
+                  type enumeration {
+                    enum ipv4 {
+                      value 4 ;
+                    }
+
+                    enum ipv6 {
+                      value 6 ;
+                    }
+
+                  }
+
+                }
+
+                leaf sample-dir {
+                  description 'IPFLOW sampling direction' ;
+                  type enumeration {
+                    enum input {
+                      value 0 ;
+                    }
+
+                    enum output {
+                      value 1 ;
+                    }
+
+                  }
+
+                }
+
+                leaf sample-pkt-type {
+                  description 'IPFLOW interface monitor type' ;
+                  type enumeration {
+                    enum multicast {
+                      value 0 ;
+                    }
+
+                    enum unicast {
+                      value 1 ;
+                    }
+
+                    enum all {
+                      value 2 ;
+                    }
+
+                  }
+
+                }
+
+                leaf monitor-name {
+                  description 'IPFLOW monitor name' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                }
+
+                leaf sampler-name {
+                  description 'IPFLOW sampler name' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container mpls-flow-monitors {
+            if-feature interface-mpls-sample ;
+
+            description 'IPFLOW mpls flow interface monitor method' ;
+            container default-samplers {
+              description 'IPFLOW default sampler' ;
+              list default-sampler {
+                description 'IPFLOW default sampler' ;
+                key 'if-name sample-dir monitor-name' ;
+                leaf if-name {
+                  description 'IPFLOW interface name' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf sample-dir {
+                  description 'IPFLOW sampling direction' ;
+                  type enumeration {
+                    enum input {
+                      value 0 ;
+                    }
+
+                    enum output {
+                      value 1 ;
+                    }
+
+                  }
+
+                }
+
+                leaf monitor-name {
+                  description 'IPFLOW monitor name' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            container custom-samplers {
+              description 'IPFLOW custom sampler' ;
+              list custom-sampler {
+                description 'IPFLOW custom sampler' ;
+                key 'if-name sample-dir monitor-name sampler-name' ;
+                leaf if-name {
+                  description 'IPFLOW interface name' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf sample-dir {
+                  description 'IPFLOW sampling direction' ;
+                  type enumeration {
+                    enum input {
+                      value 0 ;
+                    }
+
+                    enum output {
+                      value 1 ;
+                    }
+
+                  }
+
+                }
+
+                leaf monitor-name {
+                  description 'IPFLOW monitor name' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                }
+
+                leaf sampler-name {
+                  description 'IPFLOW sampler name' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container interface-acl-monitors {
+          if-feature interface-acl-sample ;
+
+          description 'IPFLOW interface ACL monitor method' ;
+          container ip-flow-monitors {
+            description 'IPFLOW ip flow monitor method' ;
+            container default-samplers {
+              description 'IPFLOW default sampler' ;
+              list default-sampler {
+                description 'IPFLOW default sampler' ;
+                key 'if-name ip-type sample-dir acl-name monitor-name' ;
+                leaf if-name {
+                  description 'IPFLOW interface name' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf ip-type {
+                  description 'IPFLOW flow type' ;
+                  type enumeration {
+                    enum ipv4 {
+                      value 4 ;
+                    }
+
+                    enum ipv6 {
+                      value 6 ;
+                    }
+
+                  }
+
+                }
+
+                leaf sample-dir {
+                  description 'IPFLOW sampling direction' ;
+                  type enumeration {
+                    enum input {
+                      value 0 ;
+                    }
+
+                    enum output {
+                      value 1 ;
+                    }
+
+                  }
+
+                }
+
+                leaf acl-name {
+                  description 'IPFLOW ACL name' ;
+                  type string {
+                    length 1..31 ;
+
+                  }
+
+                }
+
+                leaf monitor-name {
+                  description 'IPFLOW monitor name' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            container custom-samplers {
+              description 'IPFLOW custom sampler' ;
+              list custom-sampler {
+                description 'IPFLOW custom sampler' ;
+                key 'if-name ip-type sample-dir acl-name monitor-name sampler-name' ;
+                leaf if-name {
+                  description 'IPFLOW interface name' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf ip-type {
+                  description 'IPFLOW flow type' ;
+                  type enumeration {
+                    enum ipv4 {
+                      value 4 ;
+                    }
+
+                    enum ipv6 {
+                      value 6 ;
+                    }
+
+                  }
+
+                }
+
+                leaf sample-dir {
+                  description 'IPFLOW sampling direction' ;
+                  type enumeration {
+                    enum input {
+                      value 0 ;
+                    }
+
+                    enum output {
+                      value 1 ;
+                    }
+
+                  }
+
+                }
+
+                leaf acl-name {
+                  description 'IPFLOW ACL name' ;
+                  type string {
+                    length 1..31 ;
+
+                  }
+
+                }
+
+                leaf monitor-name {
+                  description 'IPFLOW monitor name' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                }
+
+                leaf sampler-name {
+                  description 'IPFLOW sampler name' ;
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container ipv4-flowspec-monitors {
+          if-feature ipv4-bgp-flowspec-sample ;
+
+          description 'IPFLOW ipv4 bgp flowspec monitor method' ;
+          container global-monitor {
+            description 'IPFLOW global IPV4 flow monitor method' ;
+            presence prevent ;
+            leaf monitor-name {
+              description 'IPFLOW monitor name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf sampler-name {
+              description 'IPFLOW sampler name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+          container vrf-monitors {
+            description 'IPFLOW vrf IPV4 flow monitor method' ;
+            list vrf-monitor {
+              description 'IPFLOW vrf monitor' ;
+              key vrf-name ;
+              leaf vrf-name {
+                description 'IPFLOW VRF name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf monitor-name {
+                description 'IPFLOW monitor name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf sampler-name {
+                description 'IPFLOW sampler name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2020-12-21 ;
+        }
+
+        container ipv6-flowspec-monitors {
+          if-feature ipv6-bgp-flowspec-sample ;
+
+          description 'IPFLOW ipv6 bgp flowspec monitor method' ;
+          container global-monitor {
+            description 'IPFLOW global IPV6 flow monitor method' ;
+            presence prevent ;
+            leaf monitor-name {
+              description 'IPFLOW monitor name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf sampler-name {
+              description 'IPFLOW sampler name' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+          container vrf-monitors {
+            description 'IPFLOW vrf IPV6 flow monitor method' ;
+            list vrf-monitor {
+              description 'IPFLOW vrf monitor' ;
+              key vrf-name ;
+              leaf vrf-name {
+                description 'IPFLOW VRF name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf monitor-name {
+                description 'IPFLOW monitor name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf sampler-name {
+                description 'IPFLOW sampler name' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2020-12-21 ;
+        }
+
+      }
+
+      container flow-distributions {
+        if-feature flow-distributions ;
+
+        description 'IPFLOW flow distribution' ;
+        list flow-distribution {
+          description 'IPFLOW flow distribution' ;
+          key board-name ;
+          leaf board-name {
+            description 'IPFLOW board name' ;
+            type ncd:board ;
+
+          }
+
+          leaf dst-processor-type {
+            description 'IPFLOW processer type' ;
+            type enumeration {
+              enum self {
+                value 1 ;
+              }
+
+              enum spu {
+                value 2 ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'To get state of IPFLOW module' ;
+    container ipflow {
+      container monitor-statistics {
+        description 'The statistics of flow monitors' ;
+        list monitor-statistic {
+          description 'The statistic of flow monitor' ;
+          key 'monitor-name cpu-name' ;
+          leaf monitor-name {
+            description 'IPFLOW monitor name' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf cpu-name {
+            description 'The name of the cpu where the IPFLOW is running' ;
+            type ncd:cpu ;
+
+          }
+
+          leaf max-cache-entry-num {
+            description 'The maximum cache entries number' ;
+            type uint32 ;
+
+          }
+
+          leaf alloced-cache-entry-num {
+            description 'The number of cache entries which have been allocated already' ;
+            type uint32 ;
+
+          }
+
+          leaf active-cache-entry-num {
+            description 'The number of flows in the cache' ;
+            type uint32 ;
+
+          }
+
+          leaf active-aged-flows {
+            description 'The number of active aged flows since the flow monitor was created' ;
+            type uint64 ;
+
+          }
+
+          leaf inactive-aged-flows {
+            description 'The number of inactive aged flows since the flow monitor was created' ;
+            type uint64 ;
+
+          }
+
+          leaf emergency-aged-flows {
+            description 'The number of emergency aged flows since the flow monitor was created' ;
+            type uint64 ;
+
+          }
+
+          leaf counter-wrap-aged-flows {
+            description 'The number of aged flows because of counter wrapped since the flow monitor was created' ;
+            type uint64 ;
+
+          }
+
+          leaf force-aged-flows {
+            description 'The number of flows which are forced to aged since the flow monitor was created' ;
+            type uint64 ;
+
+          }
+
+        }
+
+      }
+
+      container exporter-statistics {
+        description 'The statistics of flow exporters' ;
+        list exporter-statistic {
+          description 'The statistic of flow exporter' ;
+          key 'exporter-name cpu-name' ;
+          leaf exporter-name {
+            description 'IPFLOW exporter name' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf cpu-name {
+            description 'The name of the cpu where the IPFLOW is running' ;
+            type ncd:cpu ;
+
+          }
+
+          leaf transmitted-messages {
+            description 'The number of transmitted ipflow messages' ;
+            type uint64 ;
+
+          }
+
+          leaf transmitted-octets {
+            description 'The number of octets of transmitted ipflow messages' ;
+            type uint64 ;
+
+          }
+
+          leaf discarded-messages {
+            description 'The number of discarded ipflow messages' ;
+            type uint64 ;
+
+          }
+
+          leaf discarded-octets {
+            description 'The number of octets of discarded ipflow messages' ;
+            type uint64 ;
+
+          }
+
+          leaf transmitted-data-records {
+            description 'The number of transmitted data records' ;
+            type uint64 ;
+
+          }
+
+          leaf transmitted-templates {
+            description 'The number of transmitted templates' ;
+            type uint64 ;
+
+          }
+
+          leaf transmitted-octets-rate-in-5-min {
+            description 'The transmitted octets rate in 5 miniute' ;
+            type uint32 ;
+
+            units Bps ;
+          }
+
+          leaf transmitted-messages-rate-in-5-min {
+            description 'The transmitted message rate in 5 minute' ;
+            type uint32 ;
+
+            units pps ;
+          }
+
+          leaf transmitted-octes-rate-in-1-hour {
+            description 'The transmitted octets rate in 1 hour' ;
+            type uint32 ;
+
+            units Bps ;
+          }
+
+          leaf transmitted-messages-rate-in-1-hour {
+            description 'The transmitted message rate in 1 hour' ;
+            type uint32 ;
+
+            units pps ;
+          }
+
+        }
+
+      }
+
+      container cpu-statistics {
+        description 'The statistics of all CPUs' ;
+        list cpu-statistic {
+          description 'The statistic of CPU' ;
+          key cpu-name ;
+          leaf cpu-name {
+            description 'The name of the cpu where the IPFLOW is running' ;
+            type ncd:cpu ;
+
+          }
+
+          leaf ipv4-ingress-pkts {
+            description 'The number of sampled IPv4 ingress packets on the cpu' ;
+            type uint64 ;
+
+          }
+
+          leaf ipv4-egress-pkts {
+            description 'The number of sampled IPv4 egress packets on the cpu' ;
+            type uint64 ;
+
+          }
+
+          leaf ipv6-ingress-pkts {
+            description 'The number of sampled IPv6 ingress packets on the cpu' ;
+            type uint64 ;
+
+          }
+
+          leaf ipv6-egress-pkts {
+            description 'The number of sampled IPv6 egress packets on the cpu' ;
+            type uint64 ;
+
+          }
+
+          leaf mpls-ingress-pkts {
+            description 'The number of sampled MPLS ingress packets on the cpu' ;
+            type uint64 ;
+
+          }
+
+          leaf mpls-egress-pkts {
+            description 'The number of sampled MPLS egress packets on the cpu' ;
+            type uint64 ;
+
+          }
+
+          leaf other-ingress-pkts {
+            description 'The number of sampled ingress packets except IPv4 IPv6 and MPLS on the cpu' ;
+            type uint64 ;
+
+          }
+
+          leaf other-egress-pkts {
+            description 'The number of sampled egress packets except IPv4 IPv6 and MPLS on the cpu' ;
+            type uint64 ;
+
+          }
+
+          leaf parse-error-pkts {
+            description 'The number of sampled packets which are dropped due to error parsing on the cpu' ;
+            type uint64 ;
+
+          }
+
+          leaf other-error-pkts {
+            description 'The number of sampled packets which are dropped due to other reasons on the cpu' ;
+            type uint64 ;
+
+          }
+
+          leaf max-cache-entries {
+            description 'The maximum cache entries that can be used by the cpu' ;
+            type uint32 ;
+
+          }
+
+          leaf total-cache-entries {
+            description 'The total cache entries that are in use by the cpu' ;
+            type uint32 ;
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

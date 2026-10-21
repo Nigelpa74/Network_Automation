@@ -1,0 +1,171 @@
+module zxr10-rd-list {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/rd-list'
+            ;
+  prefix rd-list ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe route distinguisher list.'
+              ;
+  revision 2021-12-01 {
+    description '1.Add the containers:/configuration/rd-list/policy-default-act'
+              + 'ion and /configuration/rd-list/trigger-delay.'
+                ;
+  }
+  revision 2015-10-12 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'Route distinguisher list configuration.'
+                ;
+    container rd-list {
+      description 'Route distinguisher list module.'
+                  ;
+      container standards {
+        description 'Standard route distinguisher list.'
+                    ;
+        list standard {
+          description 'Standard route distinguisher list.'
+                      ;
+          max-elements 4000 ;
+          key 'list-no action value'
+              ;
+          leaf list-no {
+            description 'Route distinguisher list number,the range of value is '
+                      + 'from 1 to 99.'
+                        ;
+            type uint16 {
+              range 1..99 {
+                description 'The range of value is from 1 to 99.'
+                            ;
+              }
+            }
+          }
+          leaf action {
+            description 'Deny:Specify route distinguisher list to reject.'+"\n"
+                      + 'Permit:Specify route distinguisher list to accept.'
+                        ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Specify rd list to reject.'
+                            ;
+              }
+              enum permit {
+                value 1 ;
+                description 'Specify rd list to accept.'
+                            ;
+              }
+            }
+          }
+          leaf value {
+            description '<0-65535>:<0-4294967295>       Route distinguisher val'
+                      + 'ue.'+"\n"
+                      + '<1-65535>.<0-65535>:<0-65535>  Route distinguisher val'
+                      + 'ue.'+"\n"
+                      + 'A.B.C.D:<0-65535>              Route distinguisher val'
+                      + 'ue.'
+                        ;
+            type union {
+              type ncd:asn-nn ;
+              type ncd:asnd-nn ;
+              type ncd:ipadd-nn ;
+            }
+          }
+        }
+      }
+      container expandeds {
+        description 'Expanded route distinguisher list.'
+                    ;
+        list expanded {
+          description 'Expanded route distinguisher list.'
+                      ;
+          max-elements 4000 ;
+          key 'list-no action value'
+              ;
+          leaf list-no {
+            description 'Route distinguisher list number,the range of value is '
+                      + 'from 100 to 500.'
+                        ;
+            type uint16 {
+              range 100..500 {
+                description 'The range of value is from 100 to 500.'
+                            ;
+              }
+            }
+          }
+          leaf action {
+            description 'Deny:Specify route distinguisher list to reject.'+"\n"
+                      + 'Permit:Specify route distinguisher list to accept.'
+                        ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Specify rd list to reject.'
+                            ;
+              }
+              enum permit {
+                value 1 ;
+                description 'Specify rd list to accept.'
+                            ;
+              }
+            }
+          }
+          leaf value {
+            description 'An route distinguisher list as a regular-expression.'
+                        ;
+            type ncd:string-with-blank {
+              length 1..63 {
+                description 'The length of this value is from 1 to 63.'
+                            ;
+              }
+            }
+          }
+        }
+      }
+      container trigger-delay {
+        description 'The delay time value (second) of trigger delay.'
+                    ;
+        presence trigger-delay ;
+        leaf delay-time {
+          description 'The delay time value (second) of trigger delay.'
+                      ;
+          type uint32 {
+            range 0..30 ;
+          }
+          mandatory true ;
+        }
+        ncd:revise-date 2021-12-01 ;
+      }
+      container policy-default-action {
+        description 'Configure default action.'
+                    ;
+        presence policy-default-action ;
+        leaf default-action {
+          description 'Permit:Specify packets to permit;'+"\n"
+                    + 'Deny:Specify packets to reject.'
+                      ;
+          type enumeration {
+            enum permit {
+              value 1 ;
+            }
+            enum deny {
+              value 2 ;
+            }
+          }
+          mandatory true ;
+        }
+        ncd:revise-date 2021-12-01 ;
+      }
+    }
+  }
+}

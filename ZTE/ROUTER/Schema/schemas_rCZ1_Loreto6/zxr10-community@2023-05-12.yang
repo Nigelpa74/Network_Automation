@@ -1,0 +1,850 @@
+module zxr10-community {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/community" ;
+  prefix comm ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe community.' ;
+  revision 2023-05-12 {
+    description '1.Modify the range of the leaf:/configuration/large-community/large-community-lists/large-community-list/value.' ;
+  }
+
+  revision 2022-09-13 {
+    description '1.Modify the range of the leaf:/configuration/community/basics/basic/list-name.
+2.Modify the range of the leaf:/configuration/community/basic-descriptions/basic-description/list-name.
+3.Modify the range of the leaf:/configuration/community/advanceds/advanced/list-name.
+4.Modify the range of the leaf:/configuration/community/advanced-descriptions/advanced-description/list-name.
+5.Modify the range of the leaf:/configuration/large-community/large-community-lists/large-community-list/list-name.' ;
+  }
+
+  revision 2021-12-01 {
+    description '1.Add the containers:/configuration/community/policy-default-action and /configuration/large-community/policy-default-action.' ;
+  }
+
+  revision 2021-09-07 {
+    description '1.Add the choice:/configuration/community/standards/standard/whole-match-choice.
+2.Add the leaf:/configuration/community/standards/standard/whole-match-strict.
+3.Add the choice:/configuration/community/basics/basic/whole-match-choice.
+4.Add the leaf:/configuration/community/basics/basic/whole-match-strict.' ;
+  }
+
+  revision 2020-09-23 {
+    description '1.Add the leaf:/configuration/community/standards/standard/whole-match.
+2.Add the leaf:/configuration/community/expandeds/expanded/sort-match.
+3.Add the leaf:/configuration/community/basics/basic/whole-match.
+4.Add the leaf:/configuration/community/advanceds/advanced/sort-match.' ;
+  }
+
+  revision 2020-06-24 {
+    description '1.Add the container:/configuration/community/standard-descriptions.
+2.Add the container:/configuration/community/expanded-descriptions.
+3.Add the container:/configuration/community/basic-descriptions.
+4.Add the container:/configuration/community/advanced-descriptions.' ;
+  }
+
+  revision 2020-03-25 {
+    description '1.Add the container:/configuration/community/trigger-delay.
+2.Add the container:/configuration/large-community.' ;
+  }
+
+  revision 2017-11-20 {
+    description '1.Add the containers:/configuration/community/basics;/configuration/community/advanceds.' ;
+  }
+
+  revision 2015-04-20 {
+    description '1.Add the pattern:/configuration/community/standards/standard/number-choice/number-case/asns/asn/value.' ;
+  }
+
+  revision 2014-12-01 {
+    description 'Initial version' ;
+  }
+
+  container configuration {
+    description "Community moudle's configuration" ;
+    container community {
+      description 'Add a community list entry' ;
+      container standards {
+        description 'Community list number(standard)' ;
+        presence standard ;
+        list standard {
+          description 'Community list number(standard)' ;
+          max-elements 1 ;
+          key "list-no action-type seq-no" ;
+          leaf list-no {
+            description 'Community list number(standard)' ;
+            type uint16 {
+              range 1..99 {
+                description 'The range of value is from 1 to 99.' ;
+              }
+
+            }
+
+          }
+
+          leaf action-type {
+            description 'Deny:Specify community to deny;
+Permit:Specify community to accept.' ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Specify community to reject.' ;
+              }
+
+              enum permit {
+                value 1 ;
+                description 'Specify community to accept.' ;
+              }
+
+            }
+
+          }
+
+          leaf seq-no {
+            description "Set community's sequence number" ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The range of this value is from 1 to 4294967295.' ;
+              }
+
+            }
+
+          }
+
+          choice whole-match-choice {
+            description 'The whole community number should be matched.' ;
+            case whole-match-case {
+              description 'The whole community number should be matched.' ;
+              leaf whole-match {
+                description 'The whole community number should be matched.' ;
+                type empty ;
+
+              }
+
+            }
+
+            case whole-match-strict-case {
+              description 'The whole community number should be matched strictly.' ;
+              leaf whole-match-strict {
+                description 'The whole community number should be matched strictly.' ;
+                type empty ;
+
+              }
+
+              ncd:revise-date 2021-09-07 ;
+            }
+
+            ncd:revise-date 2020-09-23 ;
+          }
+
+          choice number-choice {
+            description 'Set community number in different format(asn-nn,uint,enums etc).' ;
+            mandatory true ;
+            case any-case {
+              description 'Set community number with special value.' ;
+              leaf any {
+                description 'Any community number' ;
+                type empty ;
+
+              }
+
+            }
+
+            case number-case {
+              description 'Set community number in different format(asn-nn,uint,enums).' ;
+              container asns {
+                description 'Set community number in asn-nn format' ;
+                list asn {
+                  description 'Community number in aa:nn format(max quantity 10)' ;
+                  key "value" ;
+                  leaf value {
+                    description 'Community number in aa:nn format(max quantity 10)' ;
+                    type ncd:asn-nn {
+                      pattern "((([0-9]{1,4})|([0-5]([0-9]{1,4}))|(6[0-4]([0-9]{1,3}))|(65[0-4]([0-9]{1,2}))|(655[0-2]([0-9]{1,1}))|(6553([0-5]{1,1}))):(([0-9]{1,4})|([0-5]([0-9]{1,4}))|(6[0-4]([0-9]{1,3}))|(65[0-4]([0-9]{1,2}))|(655[0-2]([0-9]{1,1}))|(6553([0-5]{1,1}))))" ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container uints {
+                description 'Set community number in uint format' ;
+                list uint {
+                  description 'Community number(max quantity 10)' ;
+                  key "value" ;
+                  leaf value {
+                    description 'Community number(max quantity 10)' ;
+                    type uint32 {
+                      range 1..4294967295 {
+                        description 'The range of value is from 1 to 4294967295.' ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container enums {
+                description 'Set community number in enum format' ;
+                container intern {
+                  description 'Internet(Well known community )' ;
+                  presence internet ;
+                  leaf internet {
+                    description 'Internet(Well known community )' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                container no-exp {
+                  description "Don't export to next AS" ;
+                  presence no-export ;
+                  leaf no-export {
+                    description "Don't export to next AS" ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                container no-adv {
+                  description "Don't advertise to any peer" ;
+                  presence no-advertise ;
+                  leaf no-advertise {
+                    description "Don't advertise to any peer" ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                container no-exp-sub {
+                  description "Don't send outside local AS" ;
+                  presence no-export-subconfed ;
+                  leaf no-export-subconfed {
+                    description "Don't send outside local AS" ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container standard-descriptions {
+        description 'The description of standard community list (1-79).' ;
+        list standard-description {
+          description 'The description of standard community list (1-79).' ;
+          key "list-no" ;
+          leaf list-no {
+            description 'Community list number(standard).' ;
+            type uint16 {
+              range 1..99 {
+                description 'The range of value is from 1 to 99.' ;
+              }
+
+            }
+
+          }
+
+          leaf description {
+            description 'The description of community list (1-79).' ;
+            type ncd:string-with-blank {
+              length 1..79 {
+                description 'The length of description of community-list is from 1 to 79.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2020-06-24 ;
+      }
+
+      container expandeds {
+        description 'Community list number(expanded)' ;
+        presence expanded ;
+        list expanded {
+          description 'Community list number(expanded)' ;
+          max-elements 1 ;
+          key "list-no action-type seq-no" ;
+          leaf list-no {
+            description 'Community list number(expanded)' ;
+            type uint16 {
+              range 100..499 {
+                description 'The range of value is  from 100 to 499.' ;
+              }
+
+            }
+
+          }
+
+          leaf action-type {
+            description 'Deny:Specify community to deny;
+Permit:Specify community to accept.' ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Specify community to reject.' ;
+              }
+
+              enum permit {
+                value 1 ;
+                description 'Specify community to accept.' ;
+              }
+
+            }
+
+          }
+
+          leaf seq-no {
+            description "Set community's sequence number" ;
+            type uint32 {
+              range 1..4294967295 ;
+
+            }
+
+          }
+
+          leaf sort-match {
+            description 'match the united regex string in order.' ;
+            type empty ;
+
+            ncd:revise-date 2020-09-23 ;
+          }
+
+          container regex {
+            description 'An ordered list as a regular-expression(max be 63 characters)' ;
+            leaf value {
+              description 'An ordered list as a regular-expression (max be 63 characters)' ;
+              type ncd:string-with-blank {
+                length 1..63 {
+                  description 'The length of this value is from 1 to 63.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container expanded-descriptions {
+        description 'The description of expanded community list (1-79).' ;
+        list expanded-description {
+          description 'The description of expanded community list (1-79).' ;
+          key "list-no" ;
+          leaf list-no {
+            description 'Community list number(expanded).' ;
+            type uint16 {
+              range 100..499 {
+                description 'The range of value is  from 100 to 499.' ;
+              }
+
+            }
+
+          }
+
+          leaf description {
+            description 'The description of community list (1-79).' ;
+            type ncd:string-with-blank {
+              length 1..79 {
+                description 'The length of description of community-list is from 1 to 79.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2020-06-24 ;
+      }
+
+      container basics {
+        list basic {
+          description 'Community list name(basic)' ;
+          max-elements 1 ;
+          key "list-name action-type seq-no" ;
+          leaf list-name {
+            description 'Community list name(basic)' ;
+            type string {
+              length 1..169 ;
+
+            }
+
+          }
+
+          leaf action-type {
+            description 'Deny:Specify community to deny;
+Permit:Specify community to accept.' ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Specify community to reject.' ;
+              }
+
+              enum permit {
+                value 1 ;
+                description 'Specify community to accept.' ;
+              }
+
+            }
+
+          }
+
+          leaf seq-no {
+            description "Set community's sequence number" ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The range of this value is from 1 to 4294967295.' ;
+              }
+
+            }
+
+          }
+
+          choice whole-match-choice {
+            description 'The whole community number should be matched.' ;
+            case whole-match-case {
+              description 'The whole community number should be matched.' ;
+              leaf whole-match {
+                description 'The whole community number should be matched.' ;
+                type empty ;
+
+              }
+
+            }
+
+            case whole-match-strict-case {
+              description 'The whole community number should be matched strictly.' ;
+              leaf whole-match-strict {
+                description 'The whole community number should be matched strictly.' ;
+                type empty ;
+
+              }
+
+              ncd:revise-date 2021-09-07 ;
+            }
+
+            ncd:revise-date 2020-09-23 ;
+          }
+
+          choice number-choice {
+            description 'Set community number in different format(asn-nn,uint,enums etc).' ;
+            mandatory true ;
+            case any-case {
+              description 'Set community number with special value.' ;
+              leaf any {
+                description 'Any community number' ;
+                type empty ;
+
+              }
+
+            }
+
+            case number-case {
+              description 'Set community number in different format(asn-nn,uint,enums).' ;
+              container asns {
+                description 'Set community number in asn-nn format' ;
+                list asn {
+                  description 'Community number in aa:nn format(max quantity 10)' ;
+                  key "value" ;
+                  leaf value {
+                    description 'Community number in aa:nn format(max quantity 10)' ;
+                    type ncd:asn-nn {
+                      pattern "((([0-9]{1,4})|([0-5]([0-9]{1,4}))|(6[0-4]([0-9]{1,3}))|(65[0-4]([0-9]{1,2}))|(655[0-2]([0-9]{1,1}))|(6553([0-5]{1,1}))):(([0-9]{1,4})|([0-5]([0-9]{1,4}))|(6[0-4]([0-9]{1,3}))|(65[0-4]([0-9]{1,2}))|(655[0-2]([0-9]{1,1}))|(6553([0-5]{1,1}))))" ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container uints {
+                description 'Set community number in uint format' ;
+                list uint {
+                  description 'Community number(max quantity 10)' ;
+                  key "value" ;
+                  leaf value {
+                    description 'Community number(max quantity 10)' ;
+                    type uint32 {
+                      range 1..4294967295 {
+                        description 'The range of value is from 1 to 4294967295.' ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container enums {
+                description 'Set community number in enum format' ;
+                container intern {
+                  description 'Internet(Well known community )' ;
+                  presence internet ;
+                  leaf internet {
+                    description 'Internet(Well known community )' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                container no-exp {
+                  description "Don't export to next AS" ;
+                  presence no-export ;
+                  leaf no-export {
+                    description "Don't export to next AS" ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                container no-adv {
+                  description "Don't advertise to any peer" ;
+                  presence no-advertise ;
+                  leaf no-advertise {
+                    description "Don't advertise to any peer" ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                container no-exp-sub {
+                  description "Don't send outside local AS" ;
+                  presence no-export-subconfed ;
+                  leaf no-export-subconfed {
+                    description "Don't send outside local AS" ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2017-11-20 ;
+      }
+
+      container basic-descriptions {
+        description 'The description of basic community list (1-79).' ;
+        list basic-description {
+          description 'The description of basic community list (1-79).' ;
+          key "list-name" ;
+          leaf list-name {
+            description 'Community list name(basic)' ;
+            type string {
+              length 1..169 ;
+
+            }
+
+          }
+
+          leaf description {
+            description 'The description of community list (1-79).' ;
+            type ncd:string-with-blank {
+              length 1..79 {
+                description 'The length of description of community-list is from 1 to 79.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2020-06-24 ;
+      }
+
+      container advanceds {
+        list advanced {
+          description 'Community list name(advanced)' ;
+          max-elements 1 ;
+          key "list-name action-type seq-no" ;
+          leaf list-name {
+            description 'Community list name(advanced)' ;
+            type string {
+              length 1..169 ;
+
+            }
+
+          }
+
+          leaf action-type {
+            description 'Deny:Specify community to deny;
+Permit:Specify community to accept.' ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Specify community to reject.' ;
+              }
+
+              enum permit {
+                value 1 ;
+                description 'Specify community to accept.' ;
+              }
+
+            }
+
+          }
+
+          leaf seq-no {
+            description "Set community's sequence number" ;
+            type uint32 {
+              range 1..4294967295 ;
+
+            }
+
+          }
+
+          leaf sort-match {
+            description 'match the united regex string in order.' ;
+            type empty ;
+
+            ncd:revise-date 2020-09-23 ;
+          }
+
+          container regex {
+            description 'An ordered list as a regular-expression(max be 63 characters)' ;
+            leaf value {
+              description 'An ordered list as a regular-expression (max be 63 characters)' ;
+              type ncd:string-with-blank {
+                length 1..63 {
+                  description 'The length of this value is from 1 to 63.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2017-11-20 ;
+      }
+
+      container advanced-descriptions {
+        description 'The description of advanced community list (1-79).' ;
+        list advanced-description {
+          description 'The description of advanced community list (1-79).' ;
+          key "list-name" ;
+          leaf list-name {
+            description 'Community list name(advanced)' ;
+            type string {
+              length 1..169 ;
+
+            }
+
+          }
+
+          leaf description {
+            description 'The description of community list (1-79).' ;
+            type ncd:string-with-blank {
+              length 1..79 {
+                description 'The length of description of community-list is from 1 to 79.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2020-06-24 ;
+      }
+
+      container trigger-delay {
+        description 'The delay time value (second) of trigger delay.' ;
+        presence trigger-delay ;
+        leaf delay-time {
+          description 'The delay time value (second) of trigger delay.' ;
+          type uint32 {
+            range 0..30 ;
+
+          }
+
+          mandatory true ;
+        }
+
+        ncd:revise-date 2020-03-25 ;
+      }
+
+      container policy-default-action {
+        description 'Configure default action.' ;
+        presence policy-default-action ;
+        leaf default-action {
+          description 'Permit:Specify packets to permit;
+Deny:Specify packets to reject.' ;
+          type enumeration {
+            enum permit {
+              value 1 ;
+            }
+
+            enum deny {
+              value 2 ;
+            }
+
+          }
+
+          mandatory true ;
+        }
+
+        ncd:revise-date 2021-12-01 ;
+      }
+
+    }
+
+    container large-community {
+      description 'Add a large community list entry.' ;
+      container large-community-lists {
+        description 'Large community list.' ;
+        list large-community-list {
+          description 'Large community list.' ;
+          key "list-name action-type seq-no value" ;
+          leaf list-name {
+            description 'Large community list name.' ;
+            type string {
+              length 1..169 ;
+
+            }
+
+          }
+
+          leaf action-type {
+            description 'Deny:Specify community to deny.
+Permit:Specify community to accept.' ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+              }
+
+              enum permit {
+                value 1 ;
+              }
+
+            }
+
+          }
+
+          leaf seq-no {
+            description "Set large community's sequence number." ;
+            type uint32 {
+              range 1..4294967295 ;
+
+            }
+
+          }
+
+          leaf value {
+            description 'Large community number in n:n:n(<0-4294967295>:<0-4294967295>:<0-4294967295>) format.' ;
+            type string {
+              length 5..32 ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container trigger-delay {
+        description 'The delay time value (second) of trigger delay.' ;
+        presence trigger-delay ;
+        leaf delay-time {
+          description 'The delay time value (second) of trigger delay.' ;
+          type uint32 {
+            range 0..30 ;
+
+          }
+
+          mandatory true ;
+        }
+
+      }
+
+      container policy-default-action {
+        description 'Configure default action.' ;
+        presence policy-default-action ;
+        leaf default-action {
+          description 'Permit:Specify packets to permit;
+Deny:Specify packets to reject.' ;
+          type enumeration {
+            enum permit {
+              value 1 ;
+            }
+
+            enum deny {
+              value 2 ;
+            }
+
+          }
+
+          mandatory true ;
+        }
+
+        ncd:revise-date 2021-12-01 ;
+      }
+
+      ncd:revise-date 2020-03-25 ;
+    }
+
+  }
+
+}

@@ -1,0 +1,842 @@
+module zxr10-bras-am {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/bras/amv4'
+            ;
+  prefix bras-amv4 ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'Configuration for BRAS amv4 module'
+              ;
+  revision 2020-11-24 {
+    description 'Add domain dynamic reserve ip'
+                ;
+  }
+  revision 2020-08-04 {
+    description '1.Change the position of lock node;'+"\n"
+              + '2.Spell port-range disnable error,change to disable;'
+                ;
+  }
+  revision 2020-06-08 {
+    description 'Modify ippoolv4 poolname length(1-64).'
+                ;
+  }
+  revision 2018-12-20 {
+    description 'Add the node domain.'
+                ;
+  }
+  revision 2018-08-23 {
+    description 'Add the node global-configuration.'
+                ;
+  }
+  revision 2017-01-22 {
+    description 'Obsolete the node dhcp-r-to-s-instance and ip-dhcp.'
+                ;
+  }
+  revision 2016-04-08 {
+    description 'The initial version'
+                ;
+  }
+  container configuration {
+    description 'Configuration for amv4'
+                ;
+    container bras-amv4 {
+      description 'Configuration for amv4'
+                  ;
+      container amv4-pools {
+        description 'Configuration for amv4 ippool.'
+                    ;
+        list amv4-pool {
+          description 'The ip-pool configuration for amv4'
+                      ;
+          key pool-name ;
+          leaf pool-name {
+            description 'The pool-name of amv4'
+                        ;
+            type string {
+              length 1..64 {
+                description 'Pool name'
+                            ;
+              }
+            }
+          }
+          leaf pool-id {
+            description 'The pool-id of amv4'
+                        ;
+            type int32 {
+              range 1..4096 {
+                description 'Pool ID'
+                            ;
+              }
+            }
+          }
+          leaf force-delete-flag {
+            description 'Force deleting flag of amv4 ip-pool'
+                        ;
+            type uint32 {
+              range 0..1 {
+                description 'Force delete flag.(delete:1,default:0)'
+                            ;
+              }
+            }
+          }
+          leaf vbui-name {
+            description 'The vbui interface name'
+                        ;
+            type ncd:ifname ;
+            mandatory true ;
+          }
+          list access-domain {
+            description 'The configuration of access-domain'
+                        ;
+            key domain-name ;
+            leaf domain-name {
+              description 'The access-domain name'
+                          ;
+              type string {
+                length 1..31 {
+                  description 'The access-domain name.'
+                              ;
+                }
+              }
+            }
+            leaf lock {
+              description 'Lock member'
+                          ;
+              type uint32 {
+                range 0..1 {
+                  description 'Configure the lock attribute of the access-domai'
+                            + 'n.(lock:1,default:0)'
+                              ;
+                }
+              }
+            }
+          }
+          leaf allocate-mode {
+            description 'Configure allocate mode of pool'
+                        ;
+            type enumeration {
+              enum forward {
+                value 0 ;
+                description 'Allocate IP from begin IP to end IP'
+                            ;
+                reference 'The default value.'
+                          ;
+              }
+              enum backward {
+                value 1 ;
+                description 'Allocate IP from end IP to begin IP'
+                            ;
+              }
+              enum loop {
+                value 2 ;
+                description 'Allocate IP on a round-robin basis'
+                            ;
+              }
+            }
+            default forward ;
+          }
+          leaf conflict-time {
+            description 'IP address conflict time(default 30min)'
+                        ;
+            type uint32 {
+              range 1..18000 {
+                description 'Timeout period(minutes, default: 30)'
+                            ;
+              }
+            }
+            default 30 ;
+          }
+          leaf description {
+            description 'Configure description of pool'
+                        ;
+            type string {
+              length 1..31 {
+                description 'Description of pool.'
+                            ;
+              }
+            }
+          }
+          leaf dhcp-r-to-s-instance {
+            status obsolete {
+              ncd:revise-date 2020-06-08 ;
+            }
+            description 'Configure dhcp relay to server instance of pool.'
+                        ;
+            type uint32 {
+              range 1..256 {
+                description 'Relay to Server Instance'
+                            ;
+              }
+            }
+          }
+          leaf ip-attribute {
+            description 'Configure IP attribute of pool'
+                        ;
+            type enumeration {
+              enum private {
+                value 0 ;
+                description 'Configure IP attribute of pool as public(default)'
+                            ;
+              }
+              enum public {
+                value 1 ;
+                description 'Configure IP attribute of pool as public(default)'
+                            ;
+              }
+            }
+            default public ;
+          }
+          leaf pool-type {
+            description 'Configure type of pool'
+                        ;
+            type enumeration {
+              enum all {
+                value 0 ;
+                description 'All types(default)'
+                            ;
+              }
+              enum ppp {
+                value 1 ;
+                description 'PPP type'
+                            ;
+              }
+              enum dhcp {
+                value 2 ;
+                description 'DHCP pool type'
+                            ;
+              }
+            }
+            default all ;
+          }
+          leaf portrange-poolname {
+            description 'Configure portrange poolname of pool'
+                        ;
+            type string {
+              length 1..31 {
+                description 'Portrange poolname.'
+                            ;
+              }
+            }
+          }
+          leaf priority {
+            description 'Configure priority of pool'
+                        ;
+            type uint32 {
+              range 0..255 {
+                description Priority(default:7) ;
+              }
+            }
+            default 7 ;
+          }
+          choice port-range {
+            description 'Configure port range.'
+                        ;
+            case enable {
+              description 'Enable port range.'
+                          ;
+              leaf portrange-size {
+                description 'Configure the port range size.'
+                            ;
+                type uint32 {
+                  range 1024..65536 ;
+                }
+              }
+            }
+            case disable {
+              description 'Disable port range.'
+                          ;
+              leaf disable {
+                description 'Disable port range.'
+                            ;
+                type empty ;
+              }
+              ncd:revise-date 2020-08-04 ;
+            }
+          }
+          container port-allowed-range {
+            description 'Configure port-allowed-range.'
+                        ;
+            presence port-allowed-range ;
+            leaf start-port {
+              description 'Configure port-allowed-range start port.'
+                          ;
+              type uint32 {
+                range 1..65535 {
+                  description 'The end port (must be a multiple of size minus 1)'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+            leaf end-port {
+              description 'Configure port-allowed-range end port.'
+                          ;
+              type uint32 {
+                range 1..65535 {
+                  description 'The start port (must be 1 or a multiple of size)'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          container amv4-members {
+            description 'Amv4 member'
+                        ;
+            list amv4-member {
+              description 'The member of amv4'
+                          ;
+              key member-id ;
+              leaf member-id {
+                description 'The member id'
+                            ;
+                type uint16 {
+                  range 1..256 {
+                    description 'Member ID.'
+                                ;
+                  }
+                }
+              }
+              container start-ip {
+                description 'Configure IP range of member'
+                            ;
+                presence strat-ip ;
+                leaf begin-ip {
+                  description 'start IP of IP range'
+                              ;
+                  type ncd:ipv4-address ;
+                  mandatory true ;
+                }
+                leaf end-ip {
+                  description 'End IP of IP range'
+                              ;
+                  type ncd:ipv4-address ;
+                  mandatory true ;
+                }
+                ncd:revise-date 2020-08-04 ;
+              }
+              container reserve-ip {
+                description 'Configure reserve IP'
+                            ;
+                presence reserve-ip ;
+                list single-ip {
+                  description single-ip ;
+                  key ip ;
+                  leaf ip {
+                    description 'IPV4 address'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                }
+                list ip-section {
+                  description ip-section ;
+                  key 'begin-ip end-ip'
+                      ;
+                  leaf begin-ip {
+                    description 'start IP of IP range'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                  leaf end-ip {
+                    description 'End IP of IP range'
+                                ;
+                    type ncd:ipv4-address {
+                      pattern '((25[0-4])|(2[0-4][0-9])|(1[0-9]{2})|([1-9][0-9]'
+                            + ')|([1-9]))(\.((25[0-5])|(2[0-4][0-9])|(1[0-9]{2}'
+                            + ')|([1-9][0-9])|([0-9]))){3}'
+                              ;
+                    }
+                  }
+                }
+                ncd:revise-date 2020-08-04 ;
+              }
+              container static-ip {
+                description 'Configure static IP'
+                            ;
+                list single-ip {
+                  description single-ip ;
+                  key ip ;
+                  leaf ip {
+                    description 'IPV4 address'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                }
+                list ip-section {
+                  key 'begin-ip end-ip'
+                      ;
+                  leaf begin-ip {
+                    description 'start IP of IP range'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                  leaf end-ip {
+                    description 'End IP of IP range'
+                                ;
+                    type ncd:ipv4-address {
+                      pattern '((25[0-4])|(2[0-4][0-9])|(1[0-9]{2})|([1-9][0-9]'
+                            + ')|([1-9]))(\.((25[0-5])|(2[0-4][0-9])|(1[0-9]{2}'
+                            + ')|([1-9][0-9])|([0-9]))){3}'
+                              ;
+                    }
+                  }
+                }
+                ncd:revise-date 2020-08-04 ;
+              }
+              container lock {
+                description 'Lock member'
+                            ;
+                leaf lock {
+                  description 'Lock member'
+                              ;
+                  type enumeration {
+                    enum lock {
+                      value 1 ;
+                      description 'Lock member.'
+                                  ;
+                    }
+                    enum unlock {
+                      value 0 ;
+                      description 'Unlock member.'
+                                  ;
+                    }
+                  }
+                  default unlock ;
+                }
+              }
+            }
+          }
+          container pool-alarm {
+            description 'Configure alarm threshold of pool'
+                        ;
+            choice alarm-type {
+              description 'Configure alarm threshold of pool'
+                          ;
+              case used-percent {
+                description 'Configure alarm threshold of pool'
+                            ;
+                container used-percent {
+                  description 'Configure alarm threshold of pool'
+                              ;
+                  presence percent ;
+                  leaf upper-limit {
+                    description 'Configure upper-limit'
+                                ;
+                    type uint8 {
+                      range 2..100 {
+                        description 'Upper limit.'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                  leaf lower-limit {
+                    description 'Configure lower-limit'
+                                ;
+                    type uint8 {
+                      range 1..99 {
+                        description 'Lower limit(smaller than upper-limit).'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+              case remaining-ip {
+                description 'Configure alarm threshold of remaining-ip-number'
+                            ;
+                container remaining-ip {
+                  description 'Configure alarm threshold of remaining-ip-number'
+                              ;
+                  presence remaining ;
+                  leaf remaining-ip-number {
+                    description Remaining-ip-number ;
+                    type uint32 {
+                      range 1..4294967295 {
+                        description Remaining-ip-number. ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                  leaf backlash-number {
+                    description backlash-number ;
+                    type uint32 {
+                      range 1..4294967295 {
+                        description Backlash-number. ;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          container pppoe-dns {
+            description 'Configure PPPOE DNS server of pool.'
+                        ;
+            presence pppoe-dns ;
+            container ip-addr {
+              description 'DNS server address.'
+                          ;
+              presence dns ;
+              leaf dns-addr {
+                description 'DNS server address.'
+                            ;
+                type ncd:ipv4-address ;
+                mandatory true ;
+              }
+            }
+            container ip-addr-second {
+              description 'Configure the IP as second DNS server.'
+                          ;
+              presence dns-second ;
+              leaf dns-addr-secd {
+                description 'Configure the IP as second DNS server.'
+                            ;
+                type ncd:ipv4-address ;
+                mandatory true ;
+              }
+            }
+          }
+          container ipoe-dns {
+            description 'Configure IPOE DNS server of pool.'
+                        ;
+            presence ipoe-dns ;
+            container ip-addr {
+              description 'DNS server address.'
+                          ;
+              presence ip-addr ;
+              leaf dns-addr {
+                description 'DNS server address.'
+                            ;
+                type ncd:ipv4-address ;
+                mandatory true ;
+              }
+            }
+            container ip-addr-second {
+              description 'Configure the IP as second DNS server.'
+                          ;
+              presence ip-addr-second ;
+              leaf dns-addr-secd {
+                description 'Configure the IP as second DNS server.'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          list ip-dhcp {
+            status obsolete {
+              ncd:revise-date 2020-06-08 ;
+            }
+            description 'Config dhcp instance of pool.'
+                        ;
+            key server-or-relay ;
+            leaf server-or-relay {
+              description 'Dhcp server instance or dhcp relay instance.'
+                          ;
+              type enumeration {
+                enum server {
+                  value 0 ;
+                  description 'Dhcp server'
+                              ;
+                }
+                enum relay {
+                  value 1 ;
+                  description 'Dhcp relay'
+                              ;
+                }
+              }
+            }
+            leaf instance-no {
+              description 'Dhcp Instance.'
+                          ;
+              type uint32 {
+                range 1..256 {
+                  description 'Dhcp Instance'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          leaf dhcp-r-to-s-inst {
+            description 'Configure dhcp relay to server instance of pool.'
+                        ;
+            type string {
+              length 1..16 {
+                description 'The dhcp relay to server instance name.'
+                            ;
+              }
+            }
+          }
+          list ip-dhcp-inst {
+            description 'Config dhcp instance of pool.'
+                        ;
+            key server-or-relay ;
+            leaf server-or-relay {
+              description 'Dhcp server instance or dhcp relay instance.'
+                          ;
+              type enumeration {
+                enum server {
+                  value 0 ;
+                  description 'Dhcp server'
+                              ;
+                }
+                enum relay {
+                  value 1 ;
+                  description 'Dhcp relay'
+                              ;
+                }
+              }
+            }
+            leaf instance-name {
+              description 'Dhcp instance name.'
+                          ;
+              type string {
+                length 1..16 {
+                  description 'DHCP instance name.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+      }
+      container amv4-global-dnss {
+        description 'The global dns of amv4'
+                    ;
+        presence global-dns ;
+        container global-dns {
+          description 'Configure DNS server address.'
+                      ;
+          presence dns-addr ;
+          leaf dns-addr {
+            description 'Configure DNS server address'
+                        ;
+            type ncd:ipv4-address ;
+            mandatory true ;
+          }
+        }
+        container global-dns-second {
+          description 'Configure the IP as second DNS server.'
+                      ;
+          presence dns-second ;
+          leaf primary-or-second {
+            description 'Configure the IP as second DNS server'
+                        ;
+            type ncd:ipv4-address ;
+            mandatory true ;
+          }
+        }
+      }
+      list domain-alarm {
+        description 'Configure alarm threshold'
+                    ;
+        key domain-name ;
+        leaf domain-name {
+          description 'The domain name of amv4 alarm'
+                      ;
+          type string {
+            length 1..31 {
+              description 'The access-domain name.'
+                          ;
+            }
+          }
+        }
+        container domain-alarm {
+          description 'Configure alarm threshold of pool'
+                      ;
+          choice alarm-type {
+            description 'Alarm threshold type'
+                        ;
+            case used-percent {
+              description 'Alarm threshold type percent'
+                          ;
+              container used-percent {
+                description 'Configure alarm threshold'
+                            ;
+                presence percent ;
+                leaf upper-limit {
+                  description 'Upper limit(default:70%)'
+                              ;
+                  type uint8 {
+                    range 2..100 {
+                      description 'Upper limit(default:70%).'
+                                  ;
+                    }
+                  }
+                  default 70 ;
+                }
+                leaf lower-limit {
+                  description 'Lower limit(default:60%)'
+                              ;
+                  type uint8 {
+                    range 1..99 {
+                      description 'Lower limit(default:60%).'
+                                  ;
+                    }
+                  }
+                  default 60 ;
+                }
+              }
+            }
+            case remaining-ip {
+              description 'Alarm threshold type remaining-ip-number'
+                          ;
+              container remaining-ip {
+                description 'Configure alarm threshold'
+                            ;
+                presence remaining ;
+                leaf remaining-ip-number {
+                  description Remaining-ip-number ;
+                  type uint32 {
+                    range 1..4294967295 {
+                      description Remaining-ip-number. ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf backlash-number {
+                  description Backlash-number ;
+                  type uint32 {
+                    range 1..4294967295 {
+                      description Backlash-number ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      container global-configuration {
+        description 'amv4 global configuration.'
+                    ;
+        leaf relay-instance-policy {
+          description 'Configure relay instance policy.'
+                      ;
+          type enumeration {
+            enum round-robin {
+              value 0 ;
+              description 'Configure round-robin policy.'
+                          ;
+              reference 'The default value.'
+                        ;
+            }
+            enum weight {
+              value 1 ;
+              description 'Configure number of addresses weight policy.'
+                          ;
+            }
+            enum priority-round-robin {
+              value 2 ;
+              description 'Configure priority-round-robin policy.'
+                          ;
+            }
+          }
+          default round-robin ;
+        }
+      }
+      list domain {
+        description 'Configure domain for amv4.'
+                    ;
+        key domain-name ;
+        leaf domain-name {
+          description 'Configure the domain name.'
+                      ;
+          type string {
+            length 1..31 {
+              description 'The access-domain name.'
+                          ;
+            }
+          }
+        }
+        leaf pool-alloc-mode {
+          description 'Configure ippool alloc policy.'
+                      ;
+          type enumeration {
+            enum first {
+              value 0 ;
+              description 'Configure the first ippool alloc policy.'
+                          ;
+              reference 'The default value.'
+                        ;
+            }
+            enum round-robin {
+              value 1 ;
+              description 'Configure round-robin ippool alloc policy.'
+                          ;
+            }
+            enum priority-round-robin {
+              value 2 ;
+              description 'Configure priority-round-robin ippool alloc policy.'
+                          ;
+            }
+          }
+          default first ;
+        }
+      }
+      list domain-rsvip {
+        description 'Config domain reserve ip mode.'
+                    ;
+        key domain-name ;
+        leaf domain-name {
+          description 'Configure the domain name.'
+                      ;
+          type string {
+            length 1..31 {
+              description 'The access-domain name.'
+                          ;
+            }
+          }
+        }
+        container dyn-reserve-ip {
+          description 'Domain dynamic reserve ip.'
+                      ;
+          choice dyn-rsvip-type {
+            description 'Domain dynamic reserve ip type.'
+                        ;
+            case user-online {
+              description 'User-online type.'
+                          ;
+              leaf user-online {
+                description 'User online type'
+                            ;
+                type enumeration {
+                  enum user-online {
+                    value 0 ;
+                    description 'User online type'
+                                ;
+                  }
+                }
+              }
+            }
+            case time {
+              description 'Time length of omain dynamic reserve ip.'
+                          ;
+              leaf time {
+                description 'Time type'
+                            ;
+                type uint32 {
+                  range 1..525600 {
+                    description Time ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        ncd:revise-date 2020-11-24 ;
+      }
+    }
+  }
+}

@@ -1,0 +1,298 @@
+module zxr10-tcp-proxy {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/tcp-proxy'
+            ;
+  prefix tcp-proxy ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'NETCONF of tcp-proxy module'
+              ;
+  revision 2017-11-13 {
+    description 'Obsolete container node:/configuration/tcp-proxy/global-config'
+              + ';'+"\n"
+              + 'Add contaniner node:/configuration/tcp-proxy/tcp-proxy-instanc'
+              + 'es.'
+                ;
+  }
+  revision 2017-06-23 {
+    description 'Add range of leaf node:/configuration/tcp-proxy/global-config/'
+              + 'receive-window, from 32768 to 4194304.'+"\n"
+              + 'Add range of leaf node:/configuration/tcp-proxy/global-config/'
+              + 'mss, from 512 to 8192.'
+                ;
+  }
+  revision 2017-03-20 {
+    description 'Initial Version'
+                ;
+  }
+  container configuration {
+    description 'Config node.'
+                ;
+    container tcp-proxy {
+      description 'TCP proxy module configuration entry.'
+                  ;
+      container global-config {
+        status obsolete {
+          ncd:revise-date 2017-11-13 ;
+        }
+        description 'Global TCP proxy configuration nodes.'
+                    ;
+        leaf receive-window {
+          description 'Receive window size to set,in <32768-4194304> bytes.'
+                      ;
+          type uint32 {
+            range 32768..4194304 ;
+          }
+        }
+        leaf mss {
+          description 'Maximum segment size to set,in <512-8192> bytes.'
+                      ;
+          type uint16 {
+            range 512..8192 ;
+          }
+        }
+        leaf congestion-control {
+          description 'Congestion control algorithm to set.For example,"bic,cub'
+                    + 'ic", etc.'
+                      ;
+          type enumeration {
+            enum cubic {
+              value 0 ;
+            }
+            enum bic {
+              value 1 ;
+            }
+            enum reno {
+              value 2 ;
+            }
+            enum scalable {
+              value 7 ;
+            }
+            enum westwood {
+              value 10 ;
+            }
+          }
+          default cubic ;
+        }
+        container proxy-lists {
+          description 'Config TCP proxy list.'
+                      ;
+          container public-proxy {
+            description 'Public proxy'
+                        ;
+            list proxy-list {
+              description 'Config TCP proxy list.'
+                          ;
+              key 'port address'
+                  ;
+              leaf port {
+                description 'Port number, support single port number value or r'
+                          + 'ange(max num:4;spacing mark:,) in <1-65535>. For e'
+                          + 'xample,"1,300-400,1000,2000-4000",etc.'
+                            ;
+                type ncd:range ;
+                mandatory true ;
+              }
+              leaf address {
+                description 'SET TCP proxy address.'
+                            ;
+                type ncd:ipv4-address ;
+                mandatory true ;
+              }
+              leaf cpu {
+                description 'SET TCP proxy CPU infomation'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                mandatory true ;
+              }
+            }
+          }
+          container private-proxy {
+            description 'Private proxy'
+                        ;
+            list proxy-list {
+              description 'Config TCP proxy list.'
+                          ;
+              key 'port address vrf-name'
+                  ;
+              leaf port {
+                description 'Port number, support single port number value or r'
+                          + 'ange(max num:4;spacing mark:,) in <1-65535>. For e'
+                          + 'xample,"1,300-400,1000,2000-4000",etc.'
+                            ;
+                type ncd:range ;
+                mandatory true ;
+              }
+              leaf address {
+                description 'SET TCP proxy address.'
+                            ;
+                type ncd:ipv4-address ;
+                mandatory true ;
+              }
+              leaf vrf-name {
+                description 'SET TCP proxy Vrf name'
+                            ;
+                type string {
+                  length 1..35 ;
+                }
+                mandatory true ;
+              }
+              leaf cpu {
+                description 'SET TCP proxy CPU infomation.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                mandatory true ;
+              }
+            }
+          }
+        }
+      }
+      container tcp-proxy-instances {
+        description 'TCP-PROXY instance configuration.'
+                    ;
+        list tcp-proxy-instance {
+          description 'TCP-PROXY instance.'
+                      ;
+          key instance-name ;
+          leaf instance-name {
+            description 'Instance name.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+          leaf window-size {
+            description 'TCP-PROXY windown size.'
+                        ;
+            type uint32 {
+              range 32768..4194304 ;
+            }
+            default 524288 ;
+          }
+          leaf mss {
+            description 'TCP-PROXY mss.'
+                        ;
+            type uint16 {
+              range 512..8192 ;
+            }
+            default 1460 ;
+          }
+          leaf congestion-control {
+            description 'TCP-PROXY congestion-control.'
+                        ;
+            type enumeration {
+              enum cubic {
+                value 0 ;
+                description 'Cubic algorithm.'
+                            ;
+              }
+              enum bic {
+                value 1 ;
+                description 'Bic algorithm.'
+                            ;
+              }
+              enum reno {
+                value 2 ;
+                description 'Reno algorithm.'
+                            ;
+              }
+              enum scalable {
+                value 7 ;
+                description 'Scalable algorithm.'
+                            ;
+              }
+              enum westwood {
+                value 10 ;
+                description 'Westwood algorithm.'
+                            ;
+              }
+            }
+            default cubic ;
+          }
+          leaf synwait-time {
+            description 'TCP-PROXY synwait time.'
+                        ;
+            type uint8 {
+              range 5..60 ;
+            }
+            units second ;
+            default 10 ;
+          }
+          leaf keepalive-time {
+            description 'TCP-PROXY keepalive time.'
+                        ;
+            type uint16 {
+              range 10..7200 ;
+            }
+            units second ;
+            default 300 ;
+          }
+          leaf ipv4-acl-name {
+            description 'TCP-PROXY ipv4 acl name.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf session-limit {
+            description 'TCP-PROXY session limit.'
+                        ;
+            type uint16 {
+              range 1..1000 ;
+            }
+            default 255 ;
+          }
+          leaf session-log {
+            description 'TCP-PROXY session log function.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable session log function.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'Enable session log function.'
+                            ;
+              }
+            }
+            default disable ;
+          }
+          leaf bind-cpu-mode {
+            description 'TCP-PROXY bind-cpu mode.'
+                        ;
+            type enumeration {
+              enum first {
+                value 0 ;
+                description 'First mode.'
+                            ;
+              }
+              enum round-robin {
+                value 1 ;
+                description 'Round-robin mode.'
+                            ;
+              }
+            }
+            default first ;
+          }
+        }
+        ncd:revise-date 2017-11-13 ;
+      }
+    }
+  }
+}

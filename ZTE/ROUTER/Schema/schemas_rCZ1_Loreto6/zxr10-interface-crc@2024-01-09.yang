@@ -1,0 +1,87 @@
+module zxr10-interface-crc {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/interface-crc" ;
+  prefix interface-crc ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the configuration of alarm trigger down.' ;
+  revision 2024-01-09 {
+    description 'Add new leaf /configuration/if-crc/alarm-trigger-down/period' ;
+  }
+
+  revision 2023-03-15 {
+    description 'The initial version' ;
+  }
+
+  container configuration {
+    description 'Describe the configuration of the interface crc.' ;
+    container if-crc {
+      description 'The parameters of interface crc to be configured.' ;
+      list alarm-trigger-down {
+        description 'The list of alarm-trigger-down for configuring parameters.' ;
+        key 'interface-name error-type' ;
+        leaf interface-name {
+          description 'Interface name.' ;
+          type ncd:ifname ;
+
+        }
+
+        leaf error-type {
+          description 'The error-type of the interface crc.' ;
+          type enumeration {
+            enum fcserrors {
+              value 1 ;
+              description 'The error-type of crc is fcserrors.' ;
+            }
+
+          }
+
+        }
+
+        leaf mode {
+          description 'The mode of the interface crc.' ;
+          type enumeration {
+            enum invalid {
+              value 0 ;
+              description 'The mode of crc is invalid.' ;
+            }
+
+            enum forced {
+              value 1 ;
+              description 'The mode of crc is forced.' ;
+            }
+
+            enum conditional {
+              value 2 ;
+              description 'The mode of crc is conditional.' ;
+            }
+
+          }
+
+          mandatory true ;
+        }
+
+        leaf period {
+          type uint32 {
+            range 30..86400 ;
+
+          }
+
+          description 'Up time.' ;
+          units seconds ;
+          ncd:revise-date 2024-01-09 ;
+        }
+
+      }
+
+    }
+
+  }
+
+}

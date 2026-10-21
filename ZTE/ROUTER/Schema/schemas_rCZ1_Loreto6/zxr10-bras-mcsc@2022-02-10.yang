@@ -1,0 +1,281 @@
+module zxr10-bras-mcsc {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/bras/bras-mcsc'
+            ;
+  prefix bras-mcsc ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2022-02-10 {
+    description 'add location of multicast source'
+                ;
+  }
+  revision 2017-08-25 {
+    description 'add multicat query policy command'
+                ;
+  }
+  revision 2016-03-30 ;
+  container configuration {
+    description 'configure mcsc information'
+                ;
+    container mcsc {
+      description 'mcsc information'
+                  ;
+      container mcsc-global {
+        description 'mcsc global information'
+                    ;
+        leaf keepalive-timer {
+          description 'the switch of sending keepalive packet'
+                      ;
+          type enumeration {
+            enum start {
+              value 1 ;
+              description 'open switch'
+                          ;
+            }
+            enum stop {
+              value 2 ;
+              description 'close switch'
+                          ;
+            }
+            enum always {
+              value 3 ;
+            }
+          }
+          default start ;
+        }
+        leaf query-interval {
+          description 'multicast query interval'
+                      ;
+          type uint16 {
+            range 1..65535 ;
+          }
+          default 125 ;
+        }
+        leaf query-policy {
+          description 'multicast query policy'
+                      ;
+          type enumeration {
+            enum group-specific {
+              value 1 ;
+              description 'open switch'
+                          ;
+            }
+            enum general {
+              value 2 ;
+              description 'close switch'
+                          ;
+            }
+          }
+          default group-specific ;
+        }
+      }
+      container igmp-service-profile {
+        description 'configuration of igmp service profile'
+                    ;
+        list igmp-service-profile {
+          description 'configuration of igmp service profile'
+                      ;
+          key service-profile-num ;
+          leaf service-profile-num {
+            description 'service profile number'
+                        ;
+            type uint8 {
+              range 1..100 ;
+            }
+          }
+          leaf access-group {
+            description 'acl name'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf description {
+            description 'description of service profile'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf max-groups {
+            description 'max groups of the service profile'
+                        ;
+            type uint8 {
+              range 1..128 ;
+            }
+            default 10 ;
+          }
+          leaf max-prw-groups {
+            description 'max preview groups of the service profile'
+                        ;
+            type uint8 {
+              range 1..128 ;
+            }
+            default 10 ;
+          }
+          list prw-group {
+            description 'configure preview group'
+                        ;
+            key 'ipv4-address ipv4-address-mask'
+                ;
+            leaf ipv4-address {
+              description 'ipv4 address of the preview group'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf ipv4-address-mask {
+              description 'ipv4 mask of the preview group'
+                          ;
+              type ncd:ipv4-mask ;
+            }
+            leaf max-prw-count {
+              description 'max preview times'
+                          ;
+              type uint32 {
+                range 1..1800 ;
+              }
+              default 10 ;
+            }
+            leaf prw-resume-interval {
+              description 'preview interval'
+                          ;
+              type uint32 {
+                range 1..86400 ;
+              }
+              default 60 ;
+            }
+          }
+          list static-group {
+            description 'configure static group'
+                        ;
+            key ipv4-address ;
+            leaf ipv4-address {
+              description 'ipv4 address of the static group'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+          container multicast-source-location {
+            description 'Multicast source location'
+                        ;
+            leaf source-location {
+              description 'Multicast source location'
+                          ;
+              type enumeration {
+                enum global {
+                  value 1 ;
+                  description 'Public network'
+                              ;
+                }
+                enum local {
+                  value 0 ;
+                  description 'Private network'
+                              ;
+                }
+              }
+            }
+            ncd:revise-date 2022-02-10 ;
+          }
+        }
+      }
+      container mld-service-profile {
+        description 'configuration of mld service profile'
+                    ;
+        list mld-service-profile {
+          description 'configuration of mld service profile'
+                      ;
+          key service-profile-num ;
+          leaf service-profile-num {
+            description 'service profile number'
+                        ;
+            type uint8 {
+              range 1..100 ;
+            }
+          }
+          leaf access-group {
+            description 'acl name'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf description {
+            description 'description of service profile'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf max-groups {
+            description 'max groups of the service profile'
+                        ;
+            type uint8 {
+              range 1..128 ;
+            }
+            default 10 ;
+          }
+          leaf max-prw-groups {
+            description 'max preview groups of the service profile'
+                        ;
+            type uint8 {
+              range 1..128 ;
+            }
+            default 10 ;
+          }
+          list prw-group {
+            description 'configure preview group'
+                        ;
+            key 'ipv6-address ipv6-prefixlen'
+                ;
+            leaf ipv6-address {
+              description 'ipv6 address of the preview group'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf ipv6-prefixlen {
+              description 'ipv6 prefix length'
+                          ;
+              type uint8 {
+                range 1..128 ;
+              }
+            }
+            leaf max-prw-count {
+              description 'max preview times'
+                          ;
+              type uint32 {
+                range 1..1800 ;
+              }
+              default 10 ;
+            }
+            leaf prw-resume-interval {
+              description 'preview interval'
+                          ;
+              type uint32 {
+                range 1..86400 ;
+              }
+              default 60 ;
+            }
+          }
+          list static-group {
+            description 'configure static group'
+                        ;
+            key ipv6-address ;
+            leaf ipv6-address {
+              description 'ipv6 address of the static group'
+                          ;
+              type ncd:ipv6-address ;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,775 @@
+module zxr10-ipsec {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ipsec'
+            ;
+  prefix ipsec ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2015-11-09 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2016-07-13 ;
+  typedef trans-ah {
+    type enumeration {
+      enum ah-md5-hmac {
+        value 2 ;
+      }
+      enum ah-sha-hmac {
+        value 3 ;
+      }
+      enum ah-sm3-hmac {
+        value 20 ;
+      }
+    }
+  }
+  typedef trans-esp-hmac {
+    type enumeration {
+      enum esp-md5-hmac {
+        value 1 ;
+      }
+      enum esp-sha-hmac {
+        value 2 ;
+      }
+      enum esp-sm3-hmac {
+        value 20 ;
+      }
+    }
+  }
+  typedef trans-esp-cipher {
+    type enumeration {
+      enum esp-des {
+        value 2 ;
+      }
+      enum esp-3des {
+        value 3 ;
+      }
+      enum esp-null {
+        value 11 ;
+      }
+      enum esp-aes-128 {
+        value 12 ;
+      }
+      enum esp-aes-192 {
+        value 1012 ;
+      }
+      enum esp-aes-256 {
+        value 2012 ;
+      }
+      enum esp-sm4 {
+        value 127 ;
+      }
+      enum esp-sm1 {
+        value 128 ;
+      }
+    }
+  }
+  typedef pfs-group {
+    type enumeration {
+      enum group1 {
+        value 1 ;
+      }
+      enum group2 {
+        value 2 ;
+      }
+      enum group5 {
+        value 5 ;
+      }
+    }
+  }
+  typedef pfs-level {
+    type enumeration {
+      enum none {
+        value 0 ;
+      }
+      enum key-identity {
+        value 1 ;
+      }
+    }
+  }
+  typedef trans-mode {
+    type enumeration {
+      enum tunnel {
+        value 1 ;
+      }
+      enum transport {
+        value 2 ;
+      }
+    }
+  }
+  typedef acl-type {
+    type enumeration {
+      enum v4 {
+        value 1 ;
+      }
+      enum v6 {
+        value 2 ;
+      }
+    }
+  }
+  typedef enable-flag {
+    type enumeration {
+      enum enable {
+        value 1 ;
+      }
+      enum disable {
+        value 0 ;
+      }
+    }
+  }
+  typedef commit-type {
+    type enumeration {
+      enum quick-mode {
+        value 0 ;
+      }
+      enum informational {
+        value 1 ;
+      }
+    }
+  }
+  typedef df-inner-operation {
+    type enumeration {
+      enum aware {
+        value 1 ;
+      }
+      enum ignore {
+        value 2 ;
+      }
+    }
+  }
+  typedef df-outer-operation {
+    type enumeration {
+      enum set {
+        value 1 ;
+      }
+      enum clear {
+        value 2 ;
+      }
+      enum copy {
+        value 3 ;
+      }
+    }
+  }
+  container configuration {
+    description Configuration ;
+    container ipsec {
+      description 'IPsec configuration'
+                  ;
+      container transform-sets {
+        description 'IPsec transform-sets'
+                    ;
+        list transform-set {
+          description 'IPsec transform-set'
+                      ;
+          key trans-name ;
+          leaf trans-name {
+            description 'IPsec transform-set name'
+                        ;
+            type string ;
+          }
+          container transforms {
+            description 'IPsec transform algorithms'
+                        ;
+            leaf trans-ah {
+              description 'IPsec transform AH authentication algorithms'
+                          ;
+              type trans-ah ;
+            }
+            leaf trans-esp-hmac {
+              description 'IPsec transform ESP authentication algorithms'
+                          ;
+              type trans-esp-hmac ;
+            }
+            leaf trans-esp-cipher {
+              description 'IPsec transform ESP cipher algorithms'
+                          ;
+              type trans-esp-cipher ;
+            }
+          }
+          container trans_mode {
+            description 'IPsec transform encapsulation mode'
+                        ;
+            leaf mode {
+              description 'IPsec transform encapsulation mode'
+                          ;
+              type trans-mode ;
+              default tunnel ;
+            }
+          }
+        }
+      }
+      container dynamic-profiles {
+        description 'IPsec dynamic profiles'
+                    ;
+        list dynamic-profile {
+          description 'IPsec dynamic profile'
+                      ;
+          key profile-name ;
+          leaf profile-name {
+            description 'IPsec dynamic profile name'
+                        ;
+            type string {
+              length 1..18 ;
+            }
+          }
+          container profile-attributes {
+            description 'IPsec dynamic profile attributes'
+                        ;
+            leaf anti-replay {
+              description 'Set anti-replay checking'
+                          ;
+              type enable-flag ;
+              default enable ;
+            }
+            leaf max-seq {
+              description 'Set replay maximum sequence'
+                          ;
+              type uint32 {
+                range 1000..4294967295 ;
+              }
+              default 4294967295 ;
+            }
+            leaf window-size {
+              description 'Set replay window size'
+                          ;
+              type uint16 {
+                range 32..2048 ;
+              }
+              default 2048 ;
+            }
+            leaf pfs-group {
+              description 'Set PFS group'
+                          ;
+              type pfs-group ;
+            }
+            leaf pfs-level {
+              description 'Set PFS level'
+                          ;
+              type pfs-level ;
+            }
+            leaf life-kbytes {
+              description 'Set security association duration in kilobytes'
+                          ;
+              type uint32 {
+                range 2560..4294900000 ;
+              }
+              default 1843200000 ;
+            }
+            leaf life-seconds {
+              description 'Set security association duration in seconds'
+                          ;
+              type uint32 {
+                range 120..86400 ;
+              }
+              default 28800 ;
+            }
+            leaf commit-type {
+              description 'Set commit type'
+                          ;
+              type commit-type ;
+              default quick-mode ;
+            }
+            container match-acl {
+              description 'Set access-list name of packets to encrypt'
+                          ;
+              presence 'match acl'
+                       ;
+              leaf acl-name {
+                description 'Set access-list name'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                mandatory true ;
+              }
+              leaf acl-type {
+                description 'Set IPv4/IPv6 access-list type'
+                            ;
+                type acl-type ;
+                mandatory true ;
+              }
+            }
+            container transform-sets {
+              description 'Set transform-sets'
+                          ;
+              list transform-set {
+                description 'Set transform-set'
+                            ;
+                key transform-name ;
+                leaf transform-name {
+                  description 'Set transform-set name'
+                              ;
+                  type string {
+                    length 1..18 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      container static-profiles {
+        description 'IPsec static profiles'
+                    ;
+        list static-profile {
+          description 'IPsec static profile'
+                      ;
+          key profile-name ;
+          leaf profile-name {
+            description 'IPsec static profile name'
+                        ;
+            type string {
+              length 1..18 ;
+            }
+          }
+          container profile-attributes {
+            description 'IPsec static profile attributes'
+                        ;
+            leaf responder-only {
+              description 'Do not initiate negotiation from this device'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+                enum disable {
+                  value 0 ;
+                }
+              }
+            }
+            leaf anti-replay {
+              description 'Set anti-replay checking'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+                enum disable {
+                  value 0 ;
+                }
+              }
+              default enable ;
+            }
+            leaf max-seq {
+              description 'Set replay maximum sequence'
+                          ;
+              type uint32 {
+                range 1000..4294967295 ;
+              }
+              default 4294967295 ;
+            }
+            leaf window-size {
+              description 'Set replay window size'
+                          ;
+              type uint16 {
+                range 32..2048 ;
+              }
+              default 2048 ;
+            }
+            leaf pfs-group {
+              description 'Set PFS group'
+                          ;
+              type pfs-group ;
+            }
+            leaf pfs-level {
+              description 'Set PFS level'
+                          ;
+              type pfs-level ;
+              default none ;
+            }
+            leaf life-kbytes {
+              description 'Set security association duration in kilobytes'
+                          ;
+              type uint32 {
+                range 2560..4294900000 ;
+              }
+              default 1843200000 ;
+            }
+            leaf commit-type {
+              description 'Set commit type'
+                          ;
+              type enumeration {
+                enum quick-mode {
+                  value 0 ;
+                }
+                enum informational {
+                  value 1 ;
+                }
+              }
+              default quick-mode ;
+            }
+            leaf life-seconds {
+              description 'Set security association duration in seconds'
+                          ;
+              type uint32 {
+                range 120..86400 ;
+              }
+              default 28800 ;
+            }
+            container match-acl {
+              description 'Set access-list name of packets to encrypt'
+                          ;
+              presence 'configure match ACL'
+                       ;
+              leaf acl-name {
+                description 'Set access-list name'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                mandatory true ;
+              }
+              leaf acl-type {
+                description 'Set IPv4/IPv6 access-list'
+                            ;
+                type acl-type ;
+                mandatory true ;
+              }
+            }
+            container transform-1 {
+              description 'Set transform-set'
+                          ;
+              presence 'configure transform 1'
+                       ;
+              leaf trans-1 {
+                description 'Set transform-set name'
+                            ;
+                type string ;
+                mandatory true ;
+              }
+              container transform-2 {
+                description 'Set transform-set'
+                            ;
+                presence 'configure transform 2'
+                         ;
+                leaf trans-2 {
+                  description 'Set transform-set name'
+                              ;
+                  type string ;
+                  mandatory true ;
+                }
+                container transform-3 {
+                  description 'Set transform-set'
+                              ;
+                  presence 'configure transform 3'
+                           ;
+                  leaf trans-3 {
+                    description 'Set transform-set name'
+                                ;
+                    type string ;
+                    mandatory true ;
+                  }
+                  container transform-4 {
+                    description 'Set transform-set'
+                                ;
+                    presence 'configure transform 4'
+                             ;
+                    leaf trans-4 {
+                      description 'Set transform-set name'
+                                  ;
+                      type string ;
+                      mandatory true ;
+                    }
+                    container transform-5 {
+                      description 'Set transform-set'
+                                  ;
+                      presence 'configure transform 5'
+                               ;
+                      leaf trans-5 {
+                        description 'Set transform-set name'
+                                    ;
+                        type string ;
+                        mandatory true ;
+                      }
+                      container transform-6 {
+                        description 'Set transform-set'
+                                    ;
+                        presence 'configure transform 6'
+                                 ;
+                        leaf trans-6 {
+                          description 'Set transform-set name'
+                                      ;
+                          type string ;
+                          mandatory true ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      container ipsec-tunnels {
+        description 'IPsec tunnels'
+                    ;
+        list ipsec-tunnel {
+          description 'IPsec tunnel'
+                      ;
+          key tunnel_name ;
+          leaf tunnel_name {
+            description 'IPsec tunnel name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf auth-pki-profile {
+            description 'Set authentication PKI profile'
+                        ;
+            type string ;
+          }
+          leaf crypto-pki-profile {
+            description 'Set encryption PKI profile'
+                        ;
+            type string ;
+          }
+          leaf df-inner {
+            description 'Set the method to deal with inner IP header DF bit'
+                        ;
+            type df-inner-operation ;
+          }
+          leaf df-outer {
+            description 'Set the method to deal with outer IP header DF bit'
+                        ;
+            type df-outer-operation ;
+          }
+          leaf ipsec-profile {
+            description 'Set IPsec profile name'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf isakmp-profile {
+            description 'Set ISAKMP profile name'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf load-share-weight {
+            description 'Set load-share weight'
+                        ;
+            type uint32 {
+              range 1..100 ;
+            }
+          }
+          container location {
+            description 'Set manual load-share location'
+                        ;
+            presence location ;
+            choice cpu-type {
+              description 'Set load-share CPU type'
+                          ;
+              case mpu {
+                description 'Set MPU address'
+                            ;
+                leaf mpu {
+                  description 'Set MPU address'
+                              ;
+                  type empty ;
+                }
+              }
+              case spu {
+                description 'Set SPU address'
+                            ;
+                leaf spu {
+                  description 'Set SPU address'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+                leaf main-address {
+                  description 'Set main SPU address'
+                              ;
+                  type ncd:ifname ;
+                  mandatory true ;
+                }
+                leaf slave-address {
+                  description 'Set slave SPU address'
+                              ;
+                  type ncd:ifname ;
+                }
+              }
+            }
+          }
+          container peer-identity {
+            description 'Set identity of peer'
+                        ;
+            presence 'peer identity'
+                     ;
+            choice identity-type {
+              description 'Set identity type'
+                          ;
+              case ipv4 {
+                description 'Set IPv4 identity'
+                            ;
+                leaf ipv4-address {
+                  description 'Set Peer IPv4 address'
+                              ;
+                  type ncd:ipv4-address-none-zero ;
+                  mandatory true ;
+                }
+              }
+              case ipv6 {
+                description 'Set IPv6 identity'
+                            ;
+                leaf ipv6-address {
+                  description 'Set Peer IPv4 address'
+                              ;
+                  type ncd:ipv6-address ;
+                  mandatory true ;
+                }
+              }
+              case fqdn {
+                description 'Set FQDN identity'
+                            ;
+                leaf hostname {
+                  description 'Set hostname or domain name of peer'
+                              ;
+                  type string {
+                    length 1..64 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+          }
+          leaf pre-fragmentation {
+            description 'Set IPsec pre-fragmentation attribute'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 0 ;
+              }
+            }
+          }
+          leaf reverse-route {
+            description 'Set reverse-route injection'
+                        ;
+            type enable-flag ;
+          }
+          container tunnel-remote {
+            description 'Set tunnel remote address'
+                        ;
+            choice remote-type {
+              description 'Set remote address type'
+                          ;
+              case ipv4 {
+                description 'Set IPv4 remote address'
+                            ;
+                leaf ipv4-address {
+                  description 'Set IPv4 remote address'
+                              ;
+                  type ncd:ipv4-address-none-zero ;
+                }
+              }
+              case ipv6 {
+                description 'Set IPv6 remote address'
+                            ;
+                leaf ipv6-address {
+                  description 'Set IPv6 remote address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+              }
+            }
+          }
+          container tunnel-local {
+            description 'Set tunnel local address'
+                        ;
+            presence 'tunnel local address'
+                     ;
+            choice local-type {
+              description 'Set local address type'
+                          ;
+              case ipv4 {
+                description 'Set IPv4 local address'
+                            ;
+                leaf ipv4-address {
+                  description 'Set IPv4 local address'
+                              ;
+                  type ncd:ipv4-address-none-zero ;
+                }
+              }
+              case ipv6 {
+                description 'Set IPv6 local address'
+                            ;
+                leaf ipv6-address {
+                  description 'Set IPv6 local address'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+              }
+              case interface {
+                description 'Set local inteface'
+                            ;
+                leaf if-name {
+                  description 'Set local inteface name'
+                              ;
+                  type ncd:ifname ;
+                }
+              }
+            }
+          }
+          leaf tunnel-mode {
+            description 'Set tunnel mode'
+                        ;
+            type enumeration {
+              enum ipv4 {
+                value 1 ;
+              }
+              enum ipv6 {
+                value 2 ;
+              }
+            }
+            default ipv4 ;
+          }
+          leaf tunnel-vrf {
+            description 'set tunnel VRF'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf type {
+            description 'Set tunnel type'
+                        ;
+            type enumeration {
+              enum static {
+                value 1 ;
+              }
+              enum dynamic {
+                value 2 ;
+              }
+              enum manual {
+                value 3 ;
+              }
+            }
+          }
+          container user-groups {
+            description 'Set remote access user group'
+                        ;
+            list user-group {
+              description 'Set remote access user group'
+                          ;
+              key group-name ;
+              leaf group-name {
+                description 'Set user group name'
+                            ;
+                type string ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

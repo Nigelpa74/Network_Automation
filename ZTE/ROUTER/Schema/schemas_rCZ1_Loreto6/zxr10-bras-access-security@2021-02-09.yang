@@ -1,0 +1,93 @@
+module zxr10-bras-access-security {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/bras/access-security'
+            ;
+  prefix access-security ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'This module describes the netconf model about access security.'
+              ;
+  revision 2021-02-09 {
+    description 'add interface mac threshold'
+                ;
+  }
+  revision 2019-03-09 {
+    description 'dynamic cps add high-cpu-level and multipler'
+                ;
+  }
+  container configuration {
+    description 'Global configuration model.'
+                ;
+    container subscriber-manage {
+      description 'Enter bras configuration mode'
+                  ;
+      container access-security {
+        description 'Enter access-security configuration mode'
+                    ;
+        container dynamic-cps {
+          description 'Set mac control.'
+                      ;
+          presence dynamic-cps ;
+          leaf high-cpu-level {
+            description 'Set high-cpu-level'
+                        ;
+            type uint8 {
+              range 85..95 ;
+            }
+            default 90 ;
+          }
+          leaf multipler {
+            description 'Set multipler.'
+                        ;
+            type uint8 {
+              range 1..3 ;
+            }
+            default 1 ;
+          }
+        }
+        container mac-control-thresholds {
+          container interface-thresholds {
+            list interface-threshold {
+              key 'interface externalvlan internalvlan'
+                  ;
+              leaf interface {
+                description 'set interface'
+                            ;
+                type ncd:ifname {
+                  length 1..31 ;
+                }
+              }
+              leaf externalvlan {
+                description 'set external vlan range'
+                            ;
+                type ncd:single-range ;
+              }
+              leaf internalvlan {
+                description 'set internal vlan range'
+                            ;
+                type ncd:single-range ;
+              }
+              leaf threshold {
+                description 'set threshold'
+                            ;
+                type uint32 {
+                  range 1..1000 ;
+                }
+                mandatory true ;
+              }
+            }
+          }
+          ncd:revise-date 2021-02-09 ;
+        }
+      }
+    }
+  }
+}

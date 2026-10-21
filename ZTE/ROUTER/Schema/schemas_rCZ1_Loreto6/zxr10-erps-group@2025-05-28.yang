@@ -1,0 +1,441 @@
+module zxr10-erps-group {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/erps-group" ;
+  prefix erps-group ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2014-06-24 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the ERPS(Ethernet Ring Protection Switching) group.' ;
+  revision 2025-05-28 {
+    description '1.Obsolete the mac-flush-retry-interval leaf node which in configuration/erps/l2vpn-groups.' ;
+  }
+
+  revision 2025-03-15 {
+    description '1.Add the mac-flush-retry-interval leaf node which in configuration/erps/l2vpn-groups.' ;
+  }
+  
+  revision 2023-10-23 {
+    description '1.PTN.6100,PTN.61-SSP,PTN.61V5_1,OTN.8700,OTN.9700 support ERPS function.' ;
+  }
+
+  revision 2020-06-15 {
+    description '1.Add the inter-connect attribute of type which in configuration/erps/l2vpn-groups/l2vpn-group-instance/protect-instance.' ;
+  }
+
+  revision 2016-07-04 {
+    description '1.Delete the mandatory attribute of type which in configuration/erps/l2vpn-groups/l2vpn-group-instance/east-port/port-type.' ;
+  }
+
+  revision 2016-03-15 {
+    description "1.Add the port-role's default value which in configuration/erps/l2vpn-groups/l2vpn-group-instance/west-port.
+    2.Delete the port-role's mandatory attribute which in configuration/erps/l2vpn-groups/l2vpn-group-instance/west-port." ;
+  }
+
+  revision 2016-03-02 {
+    description '1.Modify comments of some nodes.' ;
+  }
+
+  revision 2015-12-07 {
+    description '1.Create the ERPS(Ethernet Ring Protection Switching)L2VPN group netconf model.' ;
+  }
+
+  typedef erps-group-port-role {
+    type enumeration {
+      enum rpl-normal {
+        value 0 ;
+        description 'RPL normal port.' ;
+      }
+
+      enum rpl-owner {
+        value 1 ;
+        description 'RPL owner port.' ;
+      }
+
+      enum rpl-neighbour {
+        value 2 ;
+        description 'RPL neighbour port.' ;
+      }
+
+    }
+
+    description 'Port role of ERPS L2VPN group.' ;
+  }
+
+  container configuration {
+    description 'Configuration model information of ERPS group.' ;
+    container erps {
+      description 'The configuration information of ERPS group.' ;
+      container l2vpn-groups {
+        description 'Configure ERPS L2VPN groups.' ;
+        list l2vpn-group-instance {
+          description 'ERPS L2VPN group instance.' ;
+          key group-id ;
+          leaf group-id {
+            description 'Group ID of ERPS L2VPN group.' ;
+            type uint32 {
+              range 1..255 {
+                description 'The range of ERPS L2VPN group ID.' ;
+              }
+
+            }
+
+          }
+
+          leaf associate-pw-state {
+            description 'Whether associate PW port state.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Not associate PW port state in ERPS L2VPN group.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Associate PW port state in ERPS L2VPN group.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          leaf mac-flush-retry-interval {
+            status obsolete {
+              ncd:revise-date 2025-05-28 ;
+            }
+            description 'MAC flushing retry interval for the ERPS L2VPN group.' ;
+            type uint16 {
+              range 1..50 {
+                description 'The retry delay time(step:100ms).' ;
+              }
+
+            }
+
+            units ms ;
+            ncd:revise-date 2025-03-15 ;
+          }
+
+          container control-instance {
+            description 'Control instance of ERPS L2VPN group.' ;
+            presence "control instance" ;
+            leaf instance-name {
+              description 'Control instance name of ERPS L2VPN group.' ;
+              type string {
+                length 1..32 {
+                  description 'The length of control instance name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container east-port {
+            description 'East port of ERPS L2VPN group.' ;
+            presence east-port ;
+            container port-type {
+              description 'East port type.' ;
+              choice type {
+                description 'East port type.' ;
+                case ac {
+                  description 'East port type is AC.' ;
+                  leaf interface-name {
+                    description 'East port name.' ;
+                    type ncd:ifname {
+                      length 1..31 {
+                        description 'The length of east port name.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case pw {
+                  description 'East port type is PW.' ;
+                  leaf pw-name {
+                    description 'East port name.' ;
+                    type ncd:ifname {
+                      length 1..31 {
+                        description 'The length of east port name.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            leaf port-role {
+              description 'Configure east port role of ERPS L2VPN group.' ;
+              type erps-group-port-role ;
+
+              default rpl-normal ;
+            }
+
+          }
+
+          container west-port {
+            description 'West port of ERPS L2VPN group.' ;
+            presence west-port ;
+            container port-type {
+              description 'West port type.' ;
+              choice type {
+                description 'West port type.' ;
+                case ac {
+                  description 'West port type is AC.' ;
+                  leaf interface-name {
+                    description 'West port name.' ;
+                    type ncd:ifname {
+                      length 1..31 {
+                        description 'The length of west port name.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case pw {
+                  description 'West port type is PW.' ;
+                  leaf pw-name {
+                    description 'West port name.' ;
+                    type ncd:ifname {
+                      length 1..31 {
+                        description 'The length of west port name.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            leaf port-role {
+              description 'Configure west port role of ERPS L2VPN group.' ;
+              type erps-group-port-role ;
+
+              default rpl-normal ;
+            }
+
+          }
+
+          container protect-strategy {
+            description 'Protection strategy of ERPS L2VPN group.' ;
+            presence protection-strategy ;
+            leaf switch-strategy {
+              description 'Protection strategy type.' ;
+              type enumeration {
+                enum aps {
+                  value 1 ;
+                  description 'Protection strategy type is aps.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-instances {
+            description 'Protection instances of ERPS L2VPN group.' ;
+            presence protection-instance ;
+            list protect-instance {
+              description 'Protection instance of ERPS L2VPN group.' ;
+              key instance-name ;
+              leaf instance-name {
+                description 'Protection instance name of ERPS L2VPN group.' ;
+                type string {
+                  length 1..32 {
+                    description 'The length of protection instance name.' ;
+                  }
+
+                }
+
+              }
+
+              leaf inst-type {
+                description 'Protection instance type of ERPS L2VPN group.' ;
+                type enumeration {
+                  enum vpls {
+                    value 1 ;
+                    description 'Protection instance type is VPLS.' ;
+                  }
+
+                  enum vpws {
+                    value 2 ;
+                    description 'Protection instance type is VPWS.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf inter-connect {
+                description 'Protection instance of ERPS L2VPN group witch is in the subring.' ;
+                type enumeration {
+                  enum not-inter-connect {
+                    value 0 ;
+                  }
+
+                  enum inter-connect {
+                    value 1 ;
+                  }
+
+                }
+
+                default not-inter-connect ;
+                ncd:revise-date 2020-06-15 ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State model information of ERPS group.' ;
+    container erps {
+      description 'The state information of ERPS group.' ;
+      list l2vpn-group {
+        description 'Query ERPS L2VPN group status information.' ;
+        key group-id ;
+        leaf group-id {
+          description 'Group ID of ERPS L2VPN group.' ;
+          type uint32 {
+            range 1..255 {
+              description 'Group ID of ERPS L2VPN group.' ;
+            }
+
+          }
+
+        }
+
+        leaf east-port-state {
+          description 'State of east port.' ;
+          type enumeration {
+            enum unknown {
+              value 0 ;
+              description 'East port state is unknown.' ;
+            }
+
+            enum down {
+              value 1 ;
+              description 'East port state is down.' ;
+            }
+
+            enum up {
+              value 2 ;
+              description 'East port state is up.' ;
+            }
+
+          }
+
+        }
+
+        leaf east-port-forwarding-state {
+          description 'Forwarding state of east port.' ;
+          type enumeration {
+            enum unknown {
+              value 0 ;
+              description 'Port state is unknown.' ;
+            }
+
+            enum forwarding {
+              value 1 ;
+              description 'Port state is forwarding.' ;
+            }
+
+            enum blocking {
+              value 2 ;
+              description 'Port state is blocking.' ;
+            }
+
+          }
+
+        }
+
+        leaf west-port-state {
+          description 'State of west port.' ;
+          type enumeration {
+            enum unknown {
+              value 0 ;
+              description 'West port state is unknown.' ;
+            }
+
+            enum down {
+              value 1 ;
+              description 'West port state is down.' ;
+            }
+
+            enum up {
+              value 2 ;
+              description 'West port state is up.' ;
+            }
+
+          }
+
+        }
+
+        leaf west-port-forwarding-state {
+          description 'Forwarding state of west port.' ;
+          type enumeration {
+            enum unknown {
+              value 0 ;
+              description 'Port state if unknown.' ;
+            }
+
+            enum forwarding {
+              value 1 ;
+              description 'Port state is forwarding.' ;
+            }
+
+            enum blocking {
+              value 2 ;
+              description 'Port state is blocking.' ;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

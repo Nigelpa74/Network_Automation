@@ -1,0 +1,203 @@
+module zxr10-network-slice {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/network-slice" ;
+  prefix network-slice ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf model for network slice.' ;
+  revision 2024-05-25 {
+    description '1.Modify the type from string to ncd:string-with-blank /configuration/network-slice/slice-instances/slice-instance/description' ;
+  }
+
+  revision 2024-04-28 {
+    description '1.Modify the range of leaf /configuration/network-slice/slice-instances/slice-instance/slice-id' ;
+  }
+
+  revision 2024-03-25 {
+    description '1.Add the leaf /configuration/network-slice/traffic-statistics
+2.Add the /configuration/network-slice/slice-instances/slice-instance/interfaces/interface/traffic-statistics/traffic-statistic
+3.Add the leaf /configuration/network-slice/rate-statistics-period' ;
+  }
+
+  revision 2023-11-23 {
+    description '1.Modify the feature name from network-slice-feature to network_slice_feature' ;
+  }
+
+  revision 2023-01-30 {
+    description '1.Add the leaf /configuration/network-slice/slice-encapsulation' ;
+  }
+
+  revision 2022-06-27 {
+    description 'Initial version.' ;
+  }
+
+  feature network_slice_feature {
+    ncd:revise-date 2023-11-23 ;
+  }
+
+  feature slice-encap-feature {
+    ncd:revise-date 2023-01-30 ;
+  }
+
+  container configuration {
+    description 'Network-Slice configuration.' ;
+    container network-slice {
+      if-feature network_slice_feature {
+        ncd:revise-date 2023-11-23 ;
+      }
+
+      description 'Network-Slice configure information container.' ;
+      leaf traffic-statistics {
+        type enumeration {
+          enum enabled {
+            value 1 ;
+          }
+
+          enum disabled {
+            value 2 ;
+          }
+
+        }
+
+        description 'Network slice global traffic statistics switch.' ;
+        default disabled ;
+        ncd:revise-date 2024-03-25 ;
+      }
+
+      leaf rate-statistics-period {
+        type uint32 {
+          range 10..300 ;
+
+        }
+
+        description 'The network-slice rate count period.
+Rate period which is a multiple of 10 (seconds).' ;
+        units seconds ;
+        default 30 ;
+        ncd:revise-date 2024-03-25 ;
+      }
+
+      container slice-instances {
+        description 'Network-Slice id container,Contains attributes under slice-id.' ;
+        list slice-instance {
+          description 'Network-Slice id list,Indicates that multiple slice-ids can be configured under the network-slice command' ;
+          max-elements 65535 ;
+          key slice-id ;
+          leaf slice-id {
+            description 'slice-id.' ;
+            type uint32 {
+              range 1..2147483647 ;
+
+            }
+
+            ncd:revise-date 2024-04-28 ;
+          }
+
+          leaf description {
+            description "slice-id's description." ;
+            type ncd:string-with-blank {
+              length 1..79 ;
+
+            }
+
+            ncd:revise-date 2024-05-25 ;
+          }
+
+          container interfaces {
+            description 'Network-slice Interface Container.' ;
+            list interface {
+              description 'Network-Slice Interface list,Indicates that multiple interfaces can be configured under the same slice-id.' ;
+              key if-name ;
+              leaf if-name {
+                description 'Interface name,Associate 3905 object, Need to support Vei port, gei port, sg port.' ;
+                type ncd:ifname ;
+
+              }
+
+              container bandwidths {
+                description 'Bandwidth container,Interface and bandwidth are stored in separate objects, so create a bandwidth container separately.' ;
+                presence bandwidths ;
+                leaf bandwidth {
+                  description 'Bandwidth,Only one can be configured on an interface.' ;
+                  type uint32 {
+                    range 1..1000000 ;
+
+                  }
+
+                  units Mbps ;
+                  mandatory true ;
+                }
+
+                leaf service-policy {
+                  description 'Service policy,required to configure the bandwidth first before configuring the service-policy.' ;
+                  type string {
+                    length 1..31 ;
+
+                  }
+
+                }
+
+              }
+
+              container traffic-statistics {
+                leaf traffic-statistic {
+                  type enumeration {
+                    enum enabled {
+                      value 1 ;
+                    }
+
+                    enum disabled {
+                      value 2 ;
+                    }
+
+                  }
+
+                  description 'Network slice traffic statistics switch.' ;
+                }
+
+                description 'Network slice traffic statistics switch.' ;
+                ncd:revise-date 2024-03-25 ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container slice-encapsulation {
+        if-feature slice-encap-feature {
+          ncd:revise-date 2023-01-30 ;
+        }
+
+        description 'slice-encapsulation configure information container.' ;
+        presence slice-encap-description ;
+        leaf slice-encap-type {
+          description 'Selecting the way of encapsulating slice ID' ;
+          type enumeration {
+            enum ipv6-source-prefix {
+              value 1 ;
+            }
+
+          }
+
+          mandatory true ;
+        }
+
+        ncd:revise-date 2023-01-30 ;
+      }
+
+    }
+
+  }
+
+}

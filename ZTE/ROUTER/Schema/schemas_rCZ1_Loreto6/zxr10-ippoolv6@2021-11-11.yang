@@ -1,0 +1,1122 @@
+module zxr10-ippoolv6 {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ippoolv6'
+            ;
+  prefix ippoolv6 ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe IPPOOLv6.'
+              ;
+  revision 2021-11-11 {
+    description 'Add new container clear-ipv6-pool-usage-peak under operation/i'
+              + 'ppoolv6/;'+"\n"
+              + 'Add new container usage-peak under state/ippoolv6/addr-pool/;
+'
+              + ''+"\n"
+              + 'Add new container usage-peak under state/ippoolv6/prefix-pool/'
+              + ';'+"\n"
+              + 'Modify leaf vrf-instance description under configuration/ippoo'
+              + 'lv6/addr-pools/addr-pool/addr-ranges-vrf/addr-range-vrf/;'+"\n"
+              + 'Modify leaf vrf-instance description under configuration/ippoo'
+              + 'lv6/addr-pools/addr-pool/exclude-ranges-vrf/exclude-range-vrf/'
+              + ';'+"\n"
+              + 'Modify leaf vrf-instance description under configuration/ippoo'
+              + 'lv6/prefix-pools/prefix-pool/prefix-delegations-vrf/prefix-del'
+              + 'egation-vrf/;'+"\n"
+              + 'Modify leaf vrf-instance description under configuration/ippoo'
+              + 'lv6/prefix-pools/prefix-pool/exclude-prefixes-vrf/exclude-pref'
+              + 'ix-vrf/;'+"\n"
+              + 'Modify leaf vrf-instance description under operation/ippoolv6/'
+              + 'clear-ipv6-addr-pool-conflict/address/;'
+                ;
+  }
+  revision 2021-04-12 {
+    description '1.Modify the leaf under the path:/configuration/ippoolv6/addr-'
+              + 'pools/addr-pool/assign-policy, add assign-policy round-robin;'+"\n"
+              + '2.Modify the leaf under the path:/configuration/ippoolv6/prefi'
+              + 'x-pools/prefix-pool/assign-policy, add assign-policy round-rob'
+              + 'in.'
+                ;
+  }
+  revision 2020-06-01 {
+    description 'Add leafs as follows:'+"\n"
+              + 'state\ippoolv6\addr-pool\info\detail\resource-utilization-rati'
+              + 'o;'+"\n"
+              + 'state\ippoolv6\prefix-pool\info\detail\resource-utilization-ra'
+              + 'tio;'+"\n"
+              + 'state\ippoolv6\addr-pool\exclude\detail\resource-utilization-r'
+              + 'atio;'+"\n"
+              + 'state\ippoolv6\prefix-pool\exclude\detail\resource-utilization'
+              + '-ratio.'
+                ;
+  }
+  revision 2020-05-16 {
+    description 'Change the length of the poolname to 64.'
+                ;
+  }
+  revision 2018-12-08 {
+    description 'Add leafs as follows:'+"\n"
+              + 'configuration\ippoolv6\addr-pools\addr-pool\assign-policy'+"\n"
+              + 'configuration\ippoolv6\prefix-pools\prefix-pool\assign-policy'
+                ;
+  }
+  revision 2015-08-11 {
+    description 'Modify the config from true to false under the state and opera'
+              + 'tion containers.'
+                ;
+  }
+  revision 2015-03-11 {
+    description '1.Modify the string length of this leaf under the path:/config'
+              + 'uration/ippoolv6/addr-pools/addr-pool/pool-name, change the le'
+              + 'ngth from 1..15 to 1..31;'+"\n"
+              + '2.Modify the string length of this leaf under the path:/config'
+              + 'uration/ippoolv6/prefix-pools/prefix-pool/pool-name, change th'
+              + 'e length from 1..15 to 1..31;'+"\n"
+              + '3.Modify the string length of this leaf under the path:/state/'
+              + 'ippoolv6/addr-pool/statistics/detail/pool-name, change the len'
+              + 'gth from 1..15 to 1..31;'+"\n"
+              + '4.Modify the string length of this leaf under the path:/state/'
+              + 'ippoolv6/addr-pool/info/detail/pool-name, change the length fr'
+              + 'om 1..15 to 1..31;'+"\n"
+              + '5.Modify the string length of this leaf under the path:/state/'
+              + 'ippoolv6/addr-pool/conflict-ipv6/detail/pool-name, change the '
+              + 'length from 1..15 to 1..31;'+"\n"
+              + '6.Modify the string length of this leaf under the path:/state/'
+              + 'ippoolv6/addr-pool/exclude/detail/pool-name, add the length 1.'
+              + '.31;'+"\n"
+              + '7.Modify the string length of this leaf under the path:/state/'
+              + 'ippoolv6/prefix-pool/statistics/detail/pool-name, change the l'
+              + 'ength from 1..15 to 1..31;'+"\n"
+              + '8.Modify the string length of this leaf under the path:/state/'
+              + 'ippoolv6/prefix-pool/info/detail/pool-name, add the length 1..'
+              + '31;'+"\n"
+              + '9.Modify the string length of this leaf under the path:/state/'
+              + 'ippoolv6/prefix-pool/exclude/detail/pool-name, add the length '
+              + '1..31;'+"\n"
+              + '10.Modify the string length of this leaf under the path:/opera'
+              + 'tion/ippoolv6/clear-ipv6-pool-conflict/type/pool/pool-name, ad'
+              + 'd the length 1..31.'
+                ;
+  }
+  revision 2015-02-28 {
+    description '1.Change attributeId of state/ippoolv6/prefix-pool/info/detail'
+              + '/vrf-instance from 3 to 4;'+"\n"
+              + '2.Delete the attribute type range of state/ippoolv6/prefix-poo'
+              + 'l/statistics/detail/delegation-num;'+"\n"
+              + '3.Set operation/ippoolv6/clear-ipv6-addr-pool-conflict/type/ad'
+              + 'dress/ipv6-address mandatory;'+"\n"
+              + '4.Set operation/ippoolv6/clear-ipv6-addr-pool-conflict/type/po'
+              + 'ol/pool-name mandatory.'
+                ;
+  }
+  revision 2014-03-13 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description Configuration. ;
+    container ippoolv6 {
+      description 'IPv6 config.'
+                  ;
+      container addr-pools {
+        description 'IPv6 address pools configuration.'
+                    ;
+        list addr-pool {
+          description 'IPv6 address pool configuration.'
+                      ;
+          key pool-name ;
+          leaf pool-name {
+            description 'IPv6 address pool name.'
+                        ;
+            type string {
+              length 1..64 {
+                description 'The length of address pool name.'
+                            ;
+              }
+            }
+          }
+          leaf conflict-time {
+            description 'Set IPv6 address conflict time(minute).'
+                        ;
+            type uint32 {
+              range 1..18000 {
+                description 'IPv6 address conflict time(minute).'
+                            ;
+              }
+            }
+            units minute ;
+            default 30 ;
+          }
+          leaf assign-policy {
+            description 'Set IPv6 address assign policy.'
+                        ;
+            type enumeration {
+              enum forward {
+                value 0 ;
+                description 'Set IPv6 address assign policy forward.'
+                            ;
+              }
+              enum backward {
+                value 1 ;
+                description 'Set IPv6 address assign policy backward.'
+                            ;
+              }
+              enum random {
+                value 2 ;
+                description 'Set IPv6 address assign policy random.'
+                            ;
+              }
+              enum round-robin {
+                value 3 ;
+                description 'Set IPv6 address assign policy round-robin.'
+                            ;
+              }
+            }
+            default forward ;
+            ncd:revise-date 2018-12-08 ;
+          }
+          leaf lock {
+            description 'Lock IPv6 address pool.'
+                        ;
+            type uint32 {
+              range 0..1 {
+                description 'Value of lock.'
+                            ;
+              }
+            }
+            default 0 ;
+          }
+          leaf threshold {
+            description 'Configure IPv6 address pool alarm threshold.'
+                        ;
+            type uint32 {
+              range 50..100 {
+                description 'Value range of threshold.'
+                            ;
+              }
+            }
+            default 100 ;
+          }
+          container addr-ranges {
+            description 'Config IPv6 address ranges.'
+                        ;
+            list addr-range {
+              description 'Config IPv6 address range.'
+                          ;
+              key 'start-ipv6-addr end-ipv6-addr'
+                  ;
+              leaf start-ipv6-addr {
+                description 'Start IPv6 address of the range.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf end-ipv6-addr {
+                description 'Ending IPv6 address of range.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+            }
+          }
+          container addr-ranges-vrf {
+            description 'Config IPv6 address ranges with VRF.'
+                        ;
+            list addr-range-vrf {
+              description 'Config IPv6 address range with VRF.'
+                          ;
+              key 'vrf-instance start-ipv6-addr end-ipv6-addr'
+                  ;
+              leaf vrf-instance {
+                description 'VPN Routing/Forwarding instance name.'
+                            ;
+                type string {
+                  length 1..32 {
+                    description 'The length of VRF instance.'
+                                ;
+                  }
+                }
+              }
+              leaf start-ipv6-addr {
+                description 'Start IPv6 address of the range.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf end-ipv6-addr {
+                description 'Ending IPv6 address of range.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+            }
+          }
+          container exclude-ranges {
+            description 'Config IPv6 address exclude ranges.'
+                        ;
+            list exclude-range {
+              description 'Config IPv6 address exclude range.'
+                          ;
+              key 'start-ipv6-addr end-ipv6-addr'
+                  ;
+              leaf start-ipv6-addr {
+                description 'Start IPv6 address of exclude range.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf end-ipv6-addr {
+                description 'Ending IPv6 address of exclude range.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+            }
+          }
+          container exclude-ranges-vrf {
+            description 'Config IPv6 address exclude ranges with VRF.'
+                        ;
+            list exclude-range-vrf {
+              description 'Config IPv6 address exclude range with VRF.'
+                          ;
+              key 'vrf-instance start-ipv6-addr end-ipv6-addr'
+                  ;
+              leaf vrf-instance {
+                description 'IP VPN Routing/Forwarding instance name.'
+                            ;
+                type string {
+                  length 1..32 {
+                    description 'The length of VRF instance.'
+                                ;
+                  }
+                }
+              }
+              leaf start-ipv6-addr {
+                description 'Start IPv6 address of exclude range.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf end-ipv6-addr {
+                description 'Ending IPv6 address of exclude range.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+            }
+          }
+        }
+      }
+      container prefix-pools {
+        description 'IPv6 prefix pools configuration.'
+                    ;
+        list prefix-pool {
+          description 'IPv6 prefix pool configuration.'
+                      ;
+          key pool-name ;
+          leaf pool-name {
+            description 'IPv6 prefix pool name.'
+                        ;
+            type string {
+              length 1..64 {
+                description 'The length of prefix pool name.'
+                            ;
+              }
+            }
+          }
+          leaf assign-policy {
+            description 'Set IPv6 prefix assign policy.'
+                        ;
+            type enumeration {
+              enum forward {
+                value 0 ;
+                description 'Set IPv6 prefix assign policy forward.'
+                            ;
+              }
+              enum backward {
+                value 1 ;
+                description 'Set IPv6 prefix assign policy backward.'
+                            ;
+              }
+              enum random {
+                value 2 ;
+                description 'Set IPv6 prefix assign policy random.'
+                            ;
+              }
+              enum round-robin {
+                value 3 ;
+                description 'Set IPv6 prefix assign policy round-robin.'
+                            ;
+              }
+            }
+            default forward ;
+            ncd:revise-date 2018-12-08 ;
+          }
+          leaf lock {
+            description 'Lock IPv6 prefix pool.'
+                        ;
+            type uint32 {
+              range 0..1 {
+                description 'Value range of lock.'
+                            ;
+              }
+            }
+            default 0 ;
+          }
+          leaf threshold {
+            description 'Configure IPv6 prefix pool alarm threshold.'
+                        ;
+            type uint32 {
+              range 50..100 {
+                description 'Value range of threshold.'
+                            ;
+              }
+            }
+            default 100 ;
+          }
+          container prefix-delegations {
+            description 'Configure IPv6 prefix-delegations.'
+                        ;
+            list prefix-delegation {
+              description 'Configure IPv6 prefix-delegation.'
+                          ;
+              key 'prefix-length ipv6-prefix-delegation mask-length'
+                  ;
+              leaf prefix-length {
+                description 'Prefix length to assign from pool.'
+                            ;
+                type uint32 {
+                  range 1..128 {
+                    description 'The length of prefix.'
+                                ;
+                  }
+                }
+              }
+              leaf ipv6-prefix-delegation {
+                description 'IPv6 prefix-delegation.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf mask-length {
+                description 'Mask length of the PD.'
+                            ;
+                type uint8 {
+                  range 1..128 {
+                    description 'The length of mask.'
+                                ;
+                  }
+                }
+              }
+            }
+          }
+          container prefix-delegations-vrf {
+            description 'Configure IPv6 prefix-delegations with VRF.'
+                        ;
+            list prefix-delegation-vrf {
+              description 'Configure IPv6 prefix-delegation with VRF.'
+                          ;
+              key 'vrf-instance prefix-length ipv6-prefix-delegation mask-length'
+                  ;
+              leaf vrf-instance {
+                description 'IP VPN Routing/Forwarding instance name.'
+                            ;
+                type string {
+                  length 1..32 {
+                    description 'The length of VRF instance.'
+                                ;
+                  }
+                }
+              }
+              leaf prefix-length {
+                description 'Prefix length to assign from pool.'
+                            ;
+                type uint32 {
+                  range 1..128 {
+                    description 'The length of prefix.'
+                                ;
+                  }
+                }
+              }
+              leaf ipv6-prefix-delegation {
+                description 'IPv6 prefix-delegation.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf mask-length {
+                description 'Mask length of the PD.'
+                            ;
+                type uint8 {
+                  range 1..128 {
+                    description 'The length of mask.'
+                                ;
+                  }
+                }
+              }
+            }
+          }
+          container exclude-prefixes {
+            description 'Configure IPv6 exclude prefix-delegations.'
+                        ;
+            list exclude-prefix {
+              description 'Configure IPv6 exclude prefix-delegation.'
+                          ;
+              key 'prefix-length ipv6-prefix-delegation mask-length'
+                  ;
+              leaf prefix-length {
+                description 'Prefix length to assign from pool.'
+                            ;
+                type uint32 {
+                  range 1..128 {
+                    description 'The length of prefix.'
+                                ;
+                  }
+                }
+              }
+              leaf ipv6-prefix-delegation {
+                description 'IPv6 exclude prefix-delegation.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf mask-length {
+                description 'Mask length of the exclude PD.'
+                            ;
+                type uint8 {
+                  range 1..128 {
+                    description 'The length of mask.'
+                                ;
+                  }
+                }
+              }
+            }
+          }
+          container exclude-prefixes-vrf {
+            description 'Configure IPv6 exclude prefix-delegations with VRF.'
+                        ;
+            list exclude-prefix-vrf {
+              description 'Configure IPv6 exclude prefix-delegation with VRF.'
+                          ;
+              key 'vrf-instance prefix-length ipv6-prefix-delegation mask-length'
+                  ;
+              leaf vrf-instance {
+                description 'IP VPN Routing/Forwarding instance name.'
+                            ;
+                type string {
+                  length 1..32 {
+                    description 'The length of VRF instance.'
+                                ;
+                  }
+                }
+              }
+              leaf prefix-length {
+                description 'Prefix length to assign from pool.'
+                            ;
+                type uint32 {
+                  range 1..128 {
+                    description 'The length of prefix.'
+                                ;
+                  }
+                }
+              }
+              leaf ipv6-prefix-delegation {
+                description 'IPv6 exclude prefix-delegation with VRF.'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf mask-length {
+                description 'Mask length of the exclude PD.'
+                            ;
+                type uint8 {
+                  range 1..128 {
+                    description 'The length of mask.'
+                                ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description State. ;
+    container ippoolv6 {
+      description 'Ippoolv6 state.'
+                  ;
+      container addr-pool {
+        description 'IPv6 address pool state.'
+                    ;
+        container statistics {
+          description 'Show statistics of all IPv6 address pool.'
+                      ;
+          list detail {
+            description 'Show statistics of address pools.'
+                        ;
+            key pool-name ;
+            leaf pool-name {
+              description 'IPv6 address pool name.'
+                          ;
+              type string {
+                length 1..64 ;
+              }
+            }
+            leaf range-num {
+              description 'Range number of the IPv6 address pool.'
+                          ;
+              type uint32 ;
+            }
+            leaf exclude-range-num {
+              description 'Exclude number of the IPv6 address pool.'
+                          ;
+              type uint32 ;
+            }
+            leaf used-address-num {
+              description 'Number of used address of the IPv6 address pool.'
+                          ;
+              type string ;
+            }
+            leaf free-address-num {
+              description 'Number of free address of the IPv6 address pool.'
+                          ;
+              type string ;
+            }
+            leaf is-locked {
+              description 'Whether is the address pool locked.'
+                          ;
+              type string ;
+            }
+          }
+          leaf pool-total {
+            description 'The total number of IPv6 address pool.'
+                        ;
+            type uint32 ;
+          }
+        }
+        container info {
+          description 'Show configuration of IPv6 address pool.'
+                      ;
+          list detail {
+            description 'Details of the specific address pool.'
+                        ;
+            key 'pool-name start-ipv6-addr end-ipv6-addr vrf-instance'
+                ;
+            leaf pool-name {
+              description 'IPv6 address pool name.'
+                          ;
+              type string {
+                length 1..64 ;
+              }
+            }
+            leaf start-ipv6-addr {
+              description 'Start IPv6 address of the range.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf end-ipv6-addr {
+              description 'Ending IPv6 address of range.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf vrf-instance {
+              description 'VPN Routing/Forwarding instance name.'
+                          ;
+              type string ;
+            }
+            leaf is-locked {
+              description 'Whether is the address pool locked.'
+                          ;
+              type string ;
+            }
+            leaf used-num {
+              description 'Number of used address of the IPv6 address pool.'
+                          ;
+              type string ;
+            }
+            leaf free-num {
+              description 'Number of free address of the IPv6 address pool.'
+                          ;
+              type string ;
+            }
+            leaf range-count {
+              description 'Range number of address pool.'
+                          ;
+              type uint32 ;
+            }
+            leaf resource-utilization-ratio {
+              description 'the resource utilization of pool.'
+                          ;
+              type string ;
+              ncd:revise-date 2020-06-01 ;
+            }
+            ncd:select pool-name ;
+          }
+        }
+        container conflict-ipv6 {
+          description 'Show conflict ipv6 address info.'
+                      ;
+          list detail {
+            description 'Details of conflict address of IPv6 address pool.'
+                        ;
+            key 'pool-name conflict-ipv6 vrf-name'
+                ;
+            leaf pool-name {
+              description 'IPv6 address pool name.'
+                          ;
+              type string {
+                length 1..64 ;
+              }
+            }
+            leaf conflict-ipv6 {
+              description 'The conflict IPv6 address.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf vrf-name {
+              description 'VPN Routing/Forwarding instance name.'
+                          ;
+              type string ;
+            }
+            leaf conflict-time {
+              description 'The conflict time of the address pool(minute).'
+                          ;
+              type uint32 ;
+              units minute ;
+            }
+            leaf time-stamp {
+              description 'Remain time of the conflict address(minutes).'
+                          ;
+              type uint32 ;
+              units minute ;
+            }
+            leaf total {
+              description 'The total count of conflict ipv6 address for special'
+                        + ' ipv6 address pool.'
+                          ;
+              type uint32 ;
+            }
+          }
+        }
+        container exclude {
+          description 'Show exclude information of IPv6 address pool.'
+                      ;
+          list detail {
+            description 'Details of exclude information of the specific address '
+                      + 'pool.'
+                        ;
+            key 'pool-name start-ipv6-addr end-ipv6-addr vrf-instance'
+                ;
+            leaf pool-name {
+              description 'Name of the IPv6 address pool.'
+                          ;
+              type string {
+                length 1..64 ;
+              }
+            }
+            leaf start-ipv6-addr {
+              description 'Start IPv6 address of the range.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf end-ipv6-addr {
+              description 'Ending IPv6 address of range.'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf vrf-instance {
+              description 'VPN Routing/Forwarding instance name.'
+                          ;
+              type string ;
+            }
+            leaf used-num {
+              description 'Number of used address of the IPv6 address pool.'
+                          ;
+              type string ;
+            }
+            leaf free-num {
+              description 'Number of free address of the IPv6 address pool.'
+                          ;
+              type string ;
+            }
+            leaf resource-utilization-ratio {
+              description 'the resource utilization of pool.'
+                          ;
+              type string ;
+              ncd:revise-date 2020-06-01 ;
+            }
+            ncd:select pool-name ;
+          }
+        }
+        container usage-peak {
+          description 'Show the usage peak of IPv6 address pool.'
+                      ;
+          list detail {
+            description 'Show the usage peak of IPv6 address pool.'
+                        ;
+            key pool-name ;
+            leaf pool-name {
+              description 'The name of IPv6 address pool.'
+                          ;
+              type string {
+                length 1..64 ;
+              }
+            }
+            leaf day-usage-peak {
+              description 'The usage peak of IPv6 address pool in the last day.'
+                          ;
+              type string {
+                length 1..7 ;
+              }
+            }
+            leaf day-usage-peak-time {
+              description 'The occurrence time of the usage peak of IPv6 addres'
+                        + 's pool in the last day.'
+                          ;
+              type string {
+                length 1..19 ;
+              }
+            }
+            leaf week-usage-peak {
+              description 'The usage peak of IPv6 address pool in the last week.'
+                          ;
+              type string {
+                length 1..7 ;
+              }
+            }
+            leaf week-usage-peak-time {
+              description 'The occurrence time of the usage peak of IPv6 addres'
+                        + 's pool in the last week.'
+                          ;
+              type string {
+                length 1..19 ;
+              }
+            }
+            leaf month-usage-peak {
+              description 'The usage peak of IPv6 address pool in the last mont'
+                        + 'h.'
+                          ;
+              type string {
+                length 1..7 ;
+              }
+            }
+            leaf month-usage-peak-time {
+              description 'The occurrence time of the usage peak of IPv6 addres'
+                        + 's pool in the last month.'
+                          ;
+              type string {
+                length 1..19 ;
+              }
+            }
+          }
+          ncd:revise-date 2021-11-11 ;
+        }
+      }
+      container prefix-pool {
+        description 'IPv6 prefix pool state.'
+                    ;
+        container statistics {
+          description 'Show statistics of all IPv6 prefix pool.'
+                      ;
+          list detail {
+            description 'Show statistics of prefix pools.'
+                        ;
+            key pool-name ;
+            leaf pool-name {
+              description 'Name of the IPv6 prefix pool.'
+                          ;
+              type string {
+                length 1..64 ;
+              }
+            }
+            leaf delegation-num {
+              description 'Prefix delegation number of the IPv6 prefix pool.'
+                          ;
+              type uint32 ;
+            }
+            leaf exclude-delegation-num {
+              description 'Exclude prefix number of the IPv6 prefix pool.'
+                          ;
+              type uint32 ;
+            }
+            leaf used-prefix-num {
+              description 'Number of used prefix of the IPv6 prefix pool.'
+                          ;
+              type string ;
+            }
+            leaf free-prefix-num {
+              description 'Number of free prefix of the IPv6 prefix pool.'
+                          ;
+              type string ;
+            }
+            leaf is-locked {
+              description 'Whether is the prefix pool locked.'
+                          ;
+              type string ;
+            }
+          }
+          leaf pool-total {
+            description 'The total number of IPv6 prefix pool.'
+                        ;
+            type uint32 ;
+          }
+        }
+        container info {
+          description 'Show configuration of IPv6 prefix pool.'
+                      ;
+          list detail {
+            description 'Details of the specific prefix pool.'
+                        ;
+            key 'pool-name prefix-delegation vrf-instance'
+                ;
+            leaf pool-name {
+              description 'Name of the IPv6 prefix pool.'
+                          ;
+              type string {
+                length 1..64 ;
+              }
+            }
+            leaf prefix-delegation {
+              description 'The prefix delegation.'
+                          ;
+              type ncd:string-with-blank ;
+            }
+            leaf vrf-instance {
+              description 'VPN Routing/Forwarding instance name.'
+                          ;
+              type string ;
+            }
+            leaf is-locked {
+              description 'Whether is the prefix pool locked.'
+                          ;
+              type string ;
+            }
+            leaf used-num {
+              description 'Number of used prefix of the IPv6 prefix pool.'
+                          ;
+              type string ;
+            }
+            leaf free-num {
+              description 'Number of free prefix of the IPv6 prefix pool.'
+                          ;
+              type string ;
+            }
+            leaf range-count {
+              description 'Range number of prefix pool.'
+                          ;
+              type uint32 ;
+            }
+            leaf resource-utilization-ratio {
+              description 'the resource utilization of pool.'
+                          ;
+              type string ;
+              ncd:revise-date 2020-06-01 ;
+            }
+            ncd:select pool-name ;
+          }
+        }
+        container exclude {
+          description 'Show exclude information of IPv6 prefix pool.'
+                      ;
+          list detail {
+            description 'Details of exclude information of the specific prefix p'
+                      + 'ool.'
+                        ;
+            key 'pool-name exclude-prefix'
+                ;
+            leaf pool-name {
+              description 'Name of the IPv6 prefix pool.'
+                          ;
+              type string {
+                length 1..64 ;
+              }
+            }
+            leaf exclude-prefix {
+              description 'The exclude prefix delegation.'
+                          ;
+              type ncd:string-with-blank ;
+            }
+            leaf vrf-instance {
+              description 'VPN Routing/Forwarding instance name.'
+                          ;
+              type string ;
+            }
+            leaf used-num {
+              description 'Number of used exclude prefix of the IPv6 prefix poo'
+                        + 'l.'
+                          ;
+              type string ;
+            }
+            leaf free-num {
+              description 'Number of free exclude prefix of the IPv6 prefix poo'
+                        + 'l.'
+                          ;
+              type string ;
+            }
+            leaf resource-utilization-ratio {
+              description 'the resource utilization of pool.'
+                          ;
+              type string ;
+              ncd:revise-date 2020-06-01 ;
+            }
+          }
+        }
+        container usage-peak {
+          description 'Show the usage peak of IPv6 prefix pool.'
+                      ;
+          list detail {
+            description 'Show the usage peak of IPv6 prefix pool.'
+                        ;
+            key pool-name ;
+            leaf pool-name {
+              description 'The name of IPv6 prefix pool.'
+                          ;
+              type string {
+                length 1..64 ;
+              }
+            }
+            leaf day-usage-peak {
+              description 'The usage peak of IPv6 prefix pool in the last day.'
+                          ;
+              type string {
+                length 1..7 ;
+              }
+            }
+            leaf day-usage-peak-time {
+              description 'The occurrence time of the usage peak of IPv6 prefix'
+                        + ' pool in the last day.'
+                          ;
+              type string {
+                length 1..19 ;
+              }
+            }
+            leaf week-usage-peak {
+              description 'The usage peak of IPv6 prefix pool in the last week.'
+                          ;
+              type string {
+                length 1..7 ;
+              }
+            }
+            leaf week-usage-peak-time {
+              description 'The occurrence time of the usage peak of IPv6 prefix'
+                        + ' pool in the last week.'
+                          ;
+              type string {
+                length 1..19 ;
+              }
+            }
+            leaf month-usage-peak {
+              description 'The usage peak of IPv6 prefix pool in the last month.'
+                          ;
+              type string {
+                length 1..7 ;
+              }
+            }
+            leaf month-usage-peak-time {
+              description 'The occurrence time of the usage peak of IPv6 prefix'
+                        + ' pool in the last month.'
+                          ;
+              type string {
+                length 1..19 ;
+              }
+            }
+          }
+          ncd:revise-date 2021-11-11 ;
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description Operation. ;
+    container ippoolv6 {
+      description 'Operations of ippoolv6.'
+                  ;
+      container clear-ipv6-addr-pool-conflict {
+        description 'Clear conflict address of IPv6 address pool.'
+                    ;
+        choice type {
+          description 'The way to clear conflict address.'
+                      ;
+          case address {
+            description 'Clear specific conflict address.'
+                        ;
+            leaf ipv6-address {
+              description 'The specific conflict address.'
+                          ;
+              type ncd:ipv6-address ;
+              mandatory true ;
+            }
+            leaf vrf-instance {
+              description 'The VRF instance of the address.'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'The length of VRF instance.'
+                              ;
+                }
+              }
+            }
+          }
+          case all {
+            description 'Clear all conflict address.'
+                        ;
+            leaf all {
+              description 'Clear all conflict address.'
+                          ;
+              type enumeration {
+                enum all {
+                  value 1 ;
+                  description 'Clear all conflict address'
+                              ;
+                }
+              }
+            }
+          }
+          case pool {
+            description 'Clear conflict address of a specific address pool.'
+                        ;
+            leaf pool-name {
+              description "Clear a specific pool's conflict address by its name."
+                          ;
+              type string {
+                length 1..64 ;
+              }
+              mandatory true ;
+            }
+          }
+        }
+      }
+      container clear-ipv6-pool-usage-peak {
+        description 'Clear the usage peak of IPv6 pool.'
+                    ;
+        choice type {
+          description 'The way to clear the usage peak of IPv6 pool.'
+                      ;
+          case all {
+            description 'Clear the usage peak of all IPv6 pools.'
+                        ;
+            leaf all {
+              description 'Clear the usage peak of all IPv6 pools.'
+                          ;
+              type empty ;
+            }
+          }
+          case pool {
+            description 'Clear the usage peak of a specific IPv6 pool.'
+                        ;
+            leaf pool-name {
+              description 'Clear the usage peak of a specific IPv6 pool.'
+                          ;
+              type string {
+                length 1..64 ;
+              }
+              mandatory true ;
+            }
+          }
+        }
+        ncd:revise-date 2021-11-11 ;
+      }
+    }
+  }
+}

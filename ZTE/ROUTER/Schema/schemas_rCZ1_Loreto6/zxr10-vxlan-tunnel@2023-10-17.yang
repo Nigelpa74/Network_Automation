@@ -1,0 +1,325 @@
+module zxr10-vxlan-tunnel {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/vxlan-tunnel" ;
+  prefix vxlan-tunnel ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe vxlan-tunnel.This netconf module contains managed object definitions of vxlan-tunnel.' ;
+  revision 2023-10-17 {
+    description 'Add leaf node:configuration/vxlan-tunnel/vxlan-tunnels/vxlan-tunnel-item/mode,
+feature node:tunnel-mode.' ;
+  }
+
+  revision 2021-10-15 {
+    description 'Add leaf node:configuration/vxlan-tunnel/vxlan-tunnels/vxlan-tunnel-item/anycast,
+feature node:anycast.' ;
+  }
+
+  revision 2019-12-12 {
+    description 'Add vxlan-group feature and container node:/configuration/vxlan-tunnel/vxlan-tunnels/vxlan-tunnel-item/join-vxlan-group, /configuration/vxlan-tunnel/global.' ;
+  }
+
+  revision 2018-03-15 {
+    description 'Add the source-interface feature node.
+Add the feature for the interface case node.' ;
+  }
+
+  revision 2017-12-20 {
+    description 'Add leaf node:/vxlan-tunnel:configuration/vxlan-tunnel:vxlan-tunnel/vxlan-tunnel:vxlan-tunnels/vxlan-tunnel:vxlan-tunnel-item/vxlan-tunnel:vrfs/vxlan-tunnel:vrf' ;
+  }
+
+  revision 2017-07-27 {
+    description 'Add leaf node:/configuration/vxlan-tunnel/vxlan-tunnels/vxlan-tunnel-item/mode.
+Add choice node:/configuration/vxlan-tunnel/vxlan-tunnels/vxlan-tunnel-item/source/ipv6, /configuration/vxlan-tunnel/vxlan-tunnels/vxlan-tunnel-item/destination/ipv6' ;
+  }
+
+  revision 2017-02-27 {
+    description 'Add vxlan-tunnel dscp node:
+/vxlan-tunnel:configuration/vxlan-tunnel:vxlan-tunnels/vxlan-tunnel:vxlan-tunnel-item/vxlan-tunnel:dscp' ;
+  }
+
+  revision 2016-05-17 {
+    description 'Add vxlan-tunnel source interface node:
+/vxlan-tunnel:configuration/vxlan-tunnel:vxlan-tunnels/vxlan-tunnel:vxlan-tunnel-item/vxlan-tunnel:src-interfaces/vxlan-tunnel:src-interfacename' ;
+  }
+
+  revision 2016-05-16 {
+    description 'Add node of encapsulation.Modify the node description of vxlan-tunnels.Add feature for the node of encapsulation.' ;
+  }
+
+  revision 2016-03-04 {
+    description 'Modify node of ip-src-addr and ip-dst-addr, change type of operation to DELETE2RESET.' ;
+  }
+
+  revision 2016-02-14 {
+    description 'Initial version.' ;
+  }
+
+  feature encapsulation ;
+
+  feature src-interface {
+    description 'Support the source interface configuration.' ;
+  }
+
+  feature vxlan-group {
+    description 'Vxlan group configuration feature.' ;
+  }
+
+  feature anycast {
+    ncd:revise-date 2021-10-15 ;
+  }
+
+  feature tunnel-mode {
+    description 'tunnel mode configuration feature.' ;
+    ncd:revise-date 2023-10-17 ;
+  }
+
+  container configuration {
+    description 'Configuration node.' ;
+    container vxlan-tunnel {
+      description 'This node is entry for vxlan tunnel configuration.' ;
+      container vxlan-tunnels {
+        description 'This node is entry for vxlan tunnel configuration .' ;
+        list vxlan-tunnel-item {
+          description 'Config vxlan tunnel option.' ;
+          key ifname ;
+          leaf ifname {
+            description 'Config vxlan interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf mode {
+            description 'Config vxlan tunnel mode.' ;
+            type enumeration {
+              enum ipv4 {
+                value 1 ;
+                description 'Vxlan tunnel mode is IPv4.' ;
+              }
+
+              enum ipv6 {
+                value 2 ;
+                description 'Vxlan tunnel mode is IPv6.' ;
+              }
+
+            }
+
+            if-feature tunnel-mode {
+              ncd:revise-date 2023-10-17 ;
+            }
+
+            ncd:revise-date 2017-07-27 ;
+          }
+
+          choice source {
+            description 'Config vxlan tunnel source address.' ;
+            case ipv4 {
+              description 'The source address type of vxlan tunnel is IPv4.' ;
+              container ip-src-addr {
+                description 'The IPv4 source address of vxlan tunnel.' ;
+                leaf source-address {
+                  description 'The IPv4 source address of vxlan tunnel.' ;
+                  type ncd:ipv4-address ;
+
+                }
+
+              }
+
+            }
+
+            case ipv6 {
+              description 'The source address type of vxlan tunnel is IPv6.' ;
+              container ipv6-src-addr {
+                description 'The IPv6 source address of vxlan tunnel.' ;
+                leaf ipv6-source-address {
+                  description 'The IPv6 source address of vxlan tunnel.' ;
+                  type ncd:ipv6-address ;
+
+                }
+
+              }
+
+              ncd:revise-date 2017-07-27 ;
+            }
+
+            case interface {
+              if-feature src-interface ;
+
+              description 'Config interface name as tunnel source' ;
+              container src-interfaces {
+                description 'VXLAN tunnel source interface' ;
+                presence "tunnel src interface" ;
+                leaf src-interfacename {
+                  description 'VXLAN tunnel source interface name' ;
+                  type ncd:ifname ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              ncd:revise-date 2016-05-17 ;
+            }
+
+          }
+
+          choice destination {
+            description 'Config vxlan tunnel destination address.' ;
+            case ipv4 {
+              description 'The destination address type of vxlan tunnel is IPv4.' ;
+              container ip-dst-addr {
+                description 'The IPv4 destination address of vxlan tunnel.' ;
+                leaf destination-address {
+                  description 'The IPv4 destination address of vxlan tunnel.' ;
+                  type ncd:ipv4-address ;
+
+                }
+
+              }
+
+            }
+
+            case ipv6 {
+              description 'The destination address type of vxlan tunnel is IPv6.' ;
+              container ipv6-dst-addr {
+                description 'The IPv6 destination address of vxlan tunnel.' ;
+                leaf ipv6-destination-address {
+                  description 'The IPv6 destination address of vxlan tunnel.' ;
+                  type ncd:ipv6-address ;
+
+                }
+
+              }
+
+              ncd:revise-date 2017-07-27 ;
+            }
+
+          }
+
+          leaf encapsulation {
+            if-feature encapsulation ;
+
+            description 'VXLAN tunnel mode.' ;
+            type enumeration {
+              enum raw {
+                value 1 ;
+                description 'Discard inner-VLAN.' ;
+              }
+
+              enum tagged {
+                value 2 ;
+                description 'No discard inner-VLAN.' ;
+              }
+
+            }
+
+            default raw ;
+          }
+
+          leaf dscp {
+            description 'Config vxlan tunnel dscp.' ;
+            type uint8 {
+              range 0..63 {
+                description '0-63:valid value' ;
+              }
+
+            }
+
+            ncd:revise-date 2017-02-27 ;
+          }
+
+          leaf anycast {
+            if-feature anycast ;
+
+            description 'Tunnel anycast function.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable anycast function.' ;
+              }
+
+              enum disable {
+                value 0 ;
+                description 'Disable anycast function.' ;
+              }
+
+            }
+
+            default disable ;
+            ncd:revise-date 2021-10-15 ;
+          }
+
+          container vrfs {
+            description 'Config VXLAN tunnel VRF' ;
+            presence "tunnel vrf" ;
+            leaf vrf {
+              description 'VXLAN tunnel vrf name' ;
+              type string ;
+
+              mandatory true ;
+            }
+
+            ncd:revise-date 2017-12-20 ;
+          }
+
+          container join-vxlan-group {
+            if-feature vxlan-group ;
+
+            description 'Bind tunnel to vxlan-group.' ;
+            presence vxlan-group ;
+            leaf group-id {
+              description 'Vxlan group ID.' ;
+              type uint32 {
+                range 1..1024 {
+                  description "It's toplimit depends on ability of the device." ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+            ncd:revise-date 2019-12-12 ;
+          }
+
+        }
+
+      }
+
+      container global {
+        if-feature vxlan-group ;
+
+        description 'Global configuration.' ;
+        container vxlan-group {
+          description 'Vxlan group configuration.' ;
+          leaf update-delay {
+            description 'Vxlan group update-delay time.' ;
+            type uint16 {
+              range 0..1200 {
+                description 'Update-delay time(unit:seconds).' ;
+              }
+
+            }
+
+            units second ;
+            default 0 ;
+          }
+
+        }
+
+        ncd:revise-date 2019-12-12 ;
+      }
+
+    }
+
+  }
+
+}

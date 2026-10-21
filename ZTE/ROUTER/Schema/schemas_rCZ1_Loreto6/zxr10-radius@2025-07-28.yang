@@ -1,0 +1,4291 @@
+module zxr10-radius {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/radius" ;
+  prefix radius ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'This module describes the netconf model about RADIUS.' ;
+  revision 2025-07-28 {
+    description '1.add leaf configuration/radius/auth-groups/auth-group/defined-attribute-name
+2.add leaf configuration/radius/acct-groups/acct-group/defined-attribute-name
+3.add container configuration/radius/defined-attribute-sets/defined-attribute-set
+4.add leaf configuration/radius/defined-attribute-sets/defined-attribute-set/set-name
+5.add container configuration/radius/defined-attribute-sets/defined-attribute-set/defined-attribute
+6.add leaf configuration/radius/defined-attribute-sets/defined-attribute-set/defined-attributes/defined-attribute/vendor-id
+7.add leaf configuration/radius/defined-attribute-sets/defined-attribute-set/defined-attributes/defined-attribute/attribute-id
+8.add choice configuration/radius/defined-attribute-sets/defined-attribute-set/defined-attributes/defined-attribute/attribute' ;
+  }
+
+  revision 2024-07-25 {
+    description '1.add configuration/radius/auth-groups/auth-group/msg-authenticator-check' ;
+  }
+
+  revision 2023-05-24 {
+    description '1.add configuration/radius/global/radius-detect' ;
+  }
+
+  revision 2023-02-02 {
+    description 'Modify acct group include attr ZTE-Output-Octets-64(199) from 0 to 199' ;
+  }
+
+  revision 2022-10-25 {
+    description '1.Add authentication group include attr:Chargeable-User-Identity(89).
+2.Add authentication or accouting group calling-station-format access-line-info.' ;
+  }
+
+  revision 2022-08-15 {
+    description 'Add acct group include attr:ZTE_User_Mac(104),ZTE-Input-Packets-64(196),ZTE-Output-Packets-64(197),ZTE-Input-Octets-64(198),ZTE-Output-Octets-64(199).' ;
+  }
+
+  revision 2022-04-06 {
+    description '1.add configuration/radius/acct-groups/acct-group/accounting-on' ;
+  }
+
+  revision 2022-03-16 {
+    description '1 add container /configure/radius/client-groups/client-group/forbid/' ;
+  }
+
+  revision 2022-03-01 {
+    description '1.expand cnfiguration/radius/auth-groups/auth-group/nas-identifier 1-31 to 1-64
+2.expand cnfiguration/radius/acct-groups/acct-group/nas-identifier 1-31 to 1-64' ;
+  }
+
+  revision 2022-02-16 {
+    description '1 add container /configure/radius/auth-groups/include/special-vendor-attribute
+2 add container /configure/radius/acct-groups/include/special-vendor-attribute
+3 add /configure/radius/acct-groups/include/special enum ZTE-Host-Address ZTE_OFFLINE_REASON_CODE_MSG
+4 add /configure/radius/auth-groups/include/special enum ZTE-Host-Address ZTE-Access-Domain 
+5 modify description /configure/radius/auth-groups/include/special and /configure/radius/acct-groups/include/special change more specific' ;
+  }
+
+  revision 2021-04-10 {
+    description 'acct-groups:
+1.Add new container: \configuration\radius\acct-groups\acct-group\include; 
+2.Add new list: \configuration\radius\auth-groups\auth-group\include\standard-attribute; 
+3.Add new list: \configuration\radius\auth-groups\auth-group\include\speical-attribute; 
+4.Add new key leaf node: \configuration\radius\auth-groups\auth-group\include\standard-attribute\standard;
+5.Add new key leaf node: \configuration\radius\auth-groups\auth-group\include\standard-attribute\attribute-name;
+6.Add new key leaf node: \configuration\radius\auth-groups\auth-group\include\speical-attribute\speical;
+7.Add new key leaf node: \configuration\radius\auth-groups\auth-group\include\special-attribute\attribute-name;
+
+Auth-groups:
+1.Add new container: \configuration\radius\acct-groups\acct-group\include; 
+2.Add new list: \configuration\radius\acct-groups\acct-group\include\standard-attribute; 
+3.Add new list: \configuration\radius\acct-groups\acct-group\include\speical-attribute; 
+4.Add new key leaf node: \configuration\radius\acct-groups\acct-group\include\standard-attribute\standard;
+5.Add new key leaf node: \configuration\radius\acct-groups\acct-group\include\standard-attribute\attribute-name;
+6.Add new key leaf node: \configuration\radius\acct-groups\acct-group\include\speical-attribute\speical;
+7.Add new key leaf node: \configuration\radius\acct-groups\acct-group\include\special-attribute\attribute-name;' ;
+  }
+
+  revision 2021-04-07 {
+    description 'modify configuration auth group max-retries from 1-255 change to 0-255' ;
+  }
+
+  revision 2021-03-27 {
+    description 'modify configuration auth/acct group server-number from 1-16 change to 1-64
+modify state auth/acct group server-number from 1-16 change to 1-64' ;
+  }
+
+  revision 2020-08-10 {
+    description '1.absolset 
+1)/radius:configuration/radius:radius/radius:auth-groups/radius:auth-group/radius:servers/radius:server/radius:key/radius:clear-longkey/radius:long-showclear
+2)/radius:configuration/radius:radius/radius:auth-groups/radius:auth-group/radius:servers/radius:server/radius:key/radius:clear-key/radius:showclear
+3)/radius:configuration/radius:radius/radius:auth-groups/radius:auth-group/radius:server6s/radius:server6/radius:key/radius:clear-longkey/radius:long-showclear
+4)/radius:configuration/radius:radius/radius:auth-groups/radius:auth-group/radius:server6s/radius:server6/radius:key/radius:clear-key/radius:showclear
+5)/radius:configuration/radius:radius/radius:acct-groups/radius:acct-group/radius:servers/radius:server/radius:key/radius:clear-longkey/radius:long-showclear
+6)/radius:configuration/radius:radius/radius:acct-groups/radius:acct-group/radius:servers/radius:server/radius:key/radius:clear-key/radius:showclear
+7)/radius:configuration/radius:radius/radius:acct-groups/radius:acct-group/radius:server6s/radius:server6/radius:key/radius:clear-longkey/radius:long-showclear
+8)/radius:configuration/radius:radius/radius:acct-groups/radius:acct-group/radius:server6s/radius:server6/radius:key/radius:clear-key/radius:showclear
+9)/radius:configuration/radius:radius/radius:client-groups/radius:client-group/radius:clients/radius:client-with-vrfs/radius:client-with-vrf/radius:key/radius:clear-key/radius:showclear
+10)/radius:configuration/radius:radius/radius:client-groups/radius:client-group/radius:clients/radius:client-without-vrfs/radius:client-without-vrf/radius:key/radius:clear-key/radius:showclear
+11)/radius:configuration/radius:radius/radius:client-groups/radius:client-group/radius:default-key/radius:key/radius:clear-key/radius:showclear
+2)type change
+key    char->MIM_DATA_PLAINTEXT
+encrpt char->MIM_DATA_CIPHERTEXT
+3)length
+encrpt key       64 ->64-84
+encrpt longkey   181->64-236' ;
+  }
+
+  revision 2019-01-18 {
+    description '1)Add the type of source under this path:/configuration/radius/auth-groups/auth-group/source
+2)Add the type of source under this path:/configuration/radius/acct-groups/acct-group/source' ;
+  }
+
+  revision 2018-07-11 {
+    description '1)Add the type of nas-port-id-format-append under this path:/configuration/radius/auth-groups/auth-group/nas-port-id-format-append
+2)Add the type of nas-port-id-format-append under this path:/configuration/radius/acct-groups/acct-group/nas-port-id-format-append' ;
+  }
+
+  revision 2018-03-14 {
+    description '1)Add the type of class9 under this path:/configuration/radius/auth-groups/auth-group/nas-port-id-format/nas-port-id-format/npif-class/npif-class
+2)Add the type of class9 under this path:/configuration/radius/acct-groups/acct-group/nas-port-id-format/nas-port-id-format/npif-class/npif-class' ;
+  }
+
+  revision 2017-12-22 {
+    description 'Add label VBras-c' ;
+  }
+
+  revision 2017-11-21 {
+    description '1)change location-and-option82 to local-and-agent-circuit-id under configuration/radius/auth-groups/auth-group/nas-port-id-format/nas-port-id-format/npif-class/npif-class
+2)change location-and-option82 to local-and-agent-circuit-id under configuration/radius/acct-groups/acct-group/nas-port-id-format/nas-port-id-format/npif-class/npif-class' ;
+  }
+
+  revision 2017-09-18 {
+    description '1)Add the type of location-and-option82 under this path:/configuration/radius/auth-groups/auth-group/nas-port-id-format/nas-port-id-format/npif-class/npif-class.
+2)Add the type of location-and-option82 under this path:/configuration/radius/acct-groups/acct-group/nas-port-id-format/nas-port-id-format/npif-class/npif-class.
+3)Add the key leaf slot  under this path: state/radius/server-state/auth-server-states/auth-server-state/slot
+4)Add the key leaf slot  under this path: state/radius/server-state/acct-server-states/acct-server-state/slot' ;
+  }
+
+  revision 2017-01-05 {
+    description '1)Add the type of rollover-on-reject under this path:/configuration/radius/auth-groups/auth-group/algorithm.' ;
+  }
+
+  revision 2016-12-19 {
+    description '1)Add the type of china-tel-keep-remote-info under this path:/configuration/radius/auth-groups/auth-group/nas-port-id-format.
+2)Add the type of china-tel-keep-remote-info under this path:/configuration/radius/acct-groups/acct-group/nas-port-id-format.' ;
+  }
+
+  revision 2016-06-15 {
+    description '1)Add the leaf node domain-delimiter under this path:/configuration/radius/auth-groups/auth-group/user-name-format.
+2)Add the leaf node domain-delimiter under this path:/configuration/radius/acct-groups/acct-group/user-name-format.' ;
+  }
+
+  revision 2016-03-11 {
+    description '1) Change the node /radius:configuration/radius:radius/radius:global/radius:client-group-default/radius:default-client-group-name to mandatory.
+2) Add presence client-group-default to node /radius:configuration/radius:radius/radius:global/radius:client-group-default.' ;
+  }
+
+  revision 2015-08-20 {
+    description '1)Add the case name clear-longkey,encrypt-longkey under this path:/configuration/radius/auth-groups/auth-group/servers/key;
+2)Add the case name clear-longkey,encrypt-longkey under this path:/configuration/radius/auth-groups/auth-group/server6s/key;
+3)Add the case name clear-longkey,encrypt-longkey under this path:/configuration/radius/acct-groups/acct-group/servers/key;
+4)Add the case name clear-longkey,encrypt-longkey under this path:/configuration/radius/acct-groups/acct-group/server6s/key.' ;
+  }
+
+  revision 2015-07-30 {
+    description '1.changed the config label of state container from true into false.' ;
+  }
+
+  revision 2015-03-30 {
+    description "1)Modify the leaf name from group_name to group-name,under this path:/configuration/radius/auth-groups/auth-group.
+    2)Modify the leaf name from ip_if to if-if,under these path:/configuration/radius/auth-groups/auth-group/nas,/configuration/radius/auth-groups/auth-group/nas6,/configuration/radius/acct-groups/acct-group/nas,/configuration/radius/acct-groups/acct-group/nas6.
+    3)Modify the choice node calling-station-format,under the path:/configuration/radius/auth-groups/auth-group/calling-station-format,delete these case node csif-class1,csif-class2,csif-class3,csif-class4,csif-class5,add a new case node csif-class and leaf node csif-class.
+    4)Modify the choice node nas-port-id-format under this path:/configuration/radius/auth-groups/auth-group/nas-port-id-format,delete the case node npif-china-tel,npif-china-unicom,npif-class1,npif-class2,npif-class3,npif-class4,npif-class5,npif-class6,npif-class7,npif-class8,npif-keep-agent-circuit-id.Add a new case node npif-class and leaf node npif-class.
+    5)Modify the choice node calling-station-format,under the path:/configuration/radius/acct-groups/acct-group/calling-station-format,delete these case node csif-class1,csif-class2,csif-class3,csif-class4,csif-class5,add a new case node csif-class and leaf node csif-class.
+    6)Modify the choice node nas-port-id-format under this path:/configuration/radius/acct-groups/acct-group/nas-port-id-format,delete the case node npif-china-tel,npif-china-unicom,npif-class1,npif-class2,npif-class3,npif-class4,npif-class5,npif-class6,npif-class7,npif-class8,npif-keep-agent-circuit-id.Add a new case node npif-class and leaf node npif-class.
+    7)Add new container named ip-vrf-config under this path:/configuration/radius/auth-groups/auth-group,and move the choice node ip-vrf under this new container.
+    8)Add new container named ip-vrf-config under this path:/configuration/radius/acct-groups/acct-group,and move the choice node ip-vrf under this new container.
+    9)Modify the mandary of these leafs, under this path:/configuration/radius/auth-groups/auth-group/ip-vrf-config/ip-vrf/mng/mng,and /configuration/radius/auth-groups/auth-group/ip-vrf-config/ip-vrf/vrf-name/vrf-name,and /configuration/radius/acct-groups/acct-group/ip-vrf-config/ip-vrf/mng/mng,and /configuration/radius/acct-groups/acct-group/ip-vrf-config/ip-vrf/vrf-name/vrf-name, change the mandary from false to true.
+    10)Add default value 'slave' to the leaf node master,under this path:/configuration/radius/auth-groups/auth-group/servers/server/master,add default value '1812' to the leaf node port,under this path:/configuration/radius/auth-groups/auth-group/servers/server/port.
+    11)Add default value 'slave' to the leaf node master,under this path:/configuration/radius/auth-groups/auth-group/server6s/server6/master,add default value '1812' to the leaf node port,under this path:/configuration/radius/auth-groups/auth-group/server6s/server6/port.
+    12)Add default value 'slave' to the leaf node master,under this path:/configuration/radius/acct-groups/acct-group/servers/server/master,add default value '1813' to the leaf node port,under this path:/configuration/radius/acct-groups/acct-group/servers/server/port.
+    13)Add default value 'slave' to the leaf node master,under this path:/configuration/radius/acct-groups/acct-group/server6s/server6/master,add default value '1813' to the leaf node port,under this path:/configuration/radius/acct-groups/acct-group/server6s/server6/port.
+    14)Remove the leaf node named 'key' under this path:/configuration/radius/auth-groups/auth-group/servers/server,add a new choice node named 'key' under the same path, add two case nodes named 'clear-key' and 'encrypt-key' under this new choice node, move 'encrypt-key' leaf node under the case node 'encrypt-key',add two new leaf nodes named 'clear-key' and 'showclear' under the case node 'clear-key',change the mandary of leaf node 'clear-key' and 'encrypt-key' from false to true.
+    15)Remove the leaf node named 'key' under this path:/configuration/radius/auth-groups/auth-group/server6s/server6,add a new choice node named 'key' under the same path, add two case nodes named 'clear-key' and 'encrypt-key' under this new choice node, move 'encrypt-key' leaf node under the case node 'encrypt-key',add two new leaf nodes named 'clear-key' and 'showclear' under the case node 'clear-key',change the mandary of leaf node 'clear-key' and 'encrypt-key' from false to true.
+    16)Remove the leaf node named 'key' under this path:/configuration/radius/acct-groups/acct-group/servers/server,add a new choice node named 'key' under the same path, add two case nodes named 'clear-key' and 'encrypt-key' under this new choice node, move 'encrypt-key' leaf node under the case node 'encrypt-key',add two new leaf nodes named 'clear-key' and 'showclear' under the case node 'clear-key',change the mandary of leaf node 'clear-key' and 'encrypt-key' from false to true.
+    17)Remove the leaf node named 'key' under this path:/configuration/radius/acct-groups/acct-group/server6s/server6,add a new choice node named 'key' under the same path, add two case nodes named 'clear-key' and 'encrypt-key' under this new choice node, move 'encrypt-key' leaf node under the case node 'encrypt-key',add two new leaf nodes named 'clear-key' and 'showclear' under the case node 'clear-key',change the mandary of leaf node 'clear-key' and 'encrypt-key' from false to true.
+    18)Remove the leaf node named 'key' under this path:/configuration/radius/client-groups/client-group/clients/client-with-vrfs/client-with-vrf,add a new choice node named 'key' under the same path, add two case nodes named 'clear-key' and 'encrypt-key' under this new choice node, move 'encrypt-key' leaf node under the case node 'encrypt-key',add two new leaf nodes named 'clear-key' and 'showclear' under the case node 'clear-key',change the mandary of leaf node 'clear-key' and 'encrypt-key' from false to true.
+    19)Remove the leaf node named 'key' under this path:/configuration/radius/client-groups/client-group/clients/client-without-vrfs/client-without-vrf,add a new choice node named 'key' under the same path, add two case nodes named 'clear-key' and 'encrypt-key' under this new choice node, move 'encrypt-key' leaf node under the case node 'encrypt-key',add two new leaf nodes named 'clear-key' and 'showclear' under the case node 'clear-key',change the mandary of leaf node 'clear-key' and 'encrypt-key' from false to true.
+    20)Remove the leaf nodes named 'default-key' and 'default-encrypt-key' under this path:/configuration/radius/client-groups/client-group/,add a new container named 'default-key', and add a new choice node named 'key' under the same path, add two case nodes named 'clear-key' and 'encrypt-key' under this new choice node, add two new leaf nodes named 'clear-key' and 'showclear' under the case node 'clear-key',add a leaf node named 'encrypt-key' under the case node 'encrypt-key',change the mandary of leaf node 'clear-key' and 'encrypt-key' from false to true.
+    21)Add new container named cs-operation-type-config under this path:/configuration/radius/auth-groups/auth-group/convert-sends/convert-send/,and move the choice node cs-operation-type under this new container. Modify the mandary of these leaf nodes:cs-multiplied-by-coefficient and cs-divided-by-coefficient,change mandary from false to true.
+    22)Add new container named cr-operation-type-config under this path:/configuration/radius/auth-groups/auth-group/convert-receives/convert-receive/,and move the choice node cr-operation-type under this new container. Modify the mandary of these leaf nodes:cr-multiplied-by-coefficient and cr-divided-by-coefficient,change mandary from false to true.
+    23)Add new container named cs-operation-type-config under this path:/configuration/radius/acct-groups/acct-group/convert-sends/convert-send/,and move the choice node cs-operation-type under this new container. Modify the mandary of these leaf nodes:cs-multiplied-by-coefficient and cs-divided-by-coefficient,change mandary from false to true.
+    24)Add new container named cr-operation-type-config under this path:/configuration/radius/acct-groups/acct-group/convert-receives/convert-receive/,and move the choice node cr-operation-type under this new container. Modify the mandary of these leaf nodes:cr-multiplied-by-coefficient and cr-divided-by-coefficient,change mandary from false to true.
+    25)Modify the leaf node named 'master',change the name to 'master-or-slave',under the path:/configuration/radius/auth-groups/servers/server,the same operation as well as on the leaf node 'master' under container 'server6',under container 'acct-groups' has the same changes." ;
+  }
+
+  revision 2015-02-28 {
+    description "1. Modefied the zxr10-radius/configuration/radius/auth-groups/auth-group/ models.
+    (1) rename the leaf node user-name-format as domain-format.
+    (2) create a container node user-name-format,and move the domain-format leaf node into the user-name-format container node.
+    (3) add two leaf node ,the max-length and the pattern, into the user-name-format container node.
+    2. Modefied the zxr10-radius/configuration/radius/acct-groups/acct-group/ models.
+    (1) rename the leaf node user-name-format as domain-format.
+    (2) create a container node user-name-format,and move the domain-format leaf node into the user-name-format container node.
+    (3) add two leaf node ,the max-length and the pattern, into the user-name-format container node.
+
+    3. Modefied the zxr10-radius/configuration/radius/auth-groups/auth-group/nas models.
+    (1) add the choice node ip_if,and create two case branch ip and if.
+    (2) add the leaf node source-interface,and put it into the case of if.
+    (3) move the raw ip-address leaf node into the ip case.
+    4. Modefied the zxr10-radius/configuration/radius/auth-groups/auth-group/nas6 models.
+    (1) add the choice node ip_if,and create two case branch ip and if.
+    (2) add the leaf node source-interface,and put it into the case of if.
+    (3) move the raw ipv6-address leaf node into the ip case.
+    5. Modefied the zxr10-radius/configuration/radius/acct-groups/acct-group/nas models.
+    (1) add the choice node ip_if,and create two case branch ip and if.
+    (2) add the leaf node source-interface,and put it into the case of if.
+    (3) move the raw ip-address leaf node into the ip case.
+    6. Modefied the zxr10-radius/configuration/radius/acct-groups/acct-group/nas6 models.
+    (1) add the choice node ip_if,and create two case branch ip and if.
+    (2) add the leaf node source-interface,and put it into the case of if.
+    (3) move the raw ipv6-address leaf node into the ip case.
+
+    7. Modefied the  zxr10-radius/configuration/radius/auth-groups/auth-group/nas-port-id-format node of models.
+    (1)add a container type node nas-port-id-format under the node of zxr10-radius/configuration/radius/auth-groups/auth-group/.
+    (2)put the raw choice node  nas-port-id-format  into the container type node nas-port-id-format .
+    (3)delete all the cases of the case node npif-user-defined,and move it's four leaf nodes into the new case node npif-user-defined.
+    8. Modefied the  zxr10-radius/configuration/radius/acct-groups/acct-group/nas-port-id-format node of models.
+    (1)add a container type node nas-port-id-format under the node of zxr10-radius/configuration/radius/acct-groups/acct-group/.
+    (2)put the raw choice node  nas-port-id-format  into the container type node nas-port-id-format .
+    (3)delete all the cases of the case node npif-user-defined,and move it's four leaf nodes into the new case node npif-user-defined.
+    9. Modefied the  zxr10-radius/configuration/radius/client-groups/client-group/source-addr node of models.
+    (1) seleted delete2reset of the operation-change in the source-addr container node.
+    10. Modefied the zxr10-radius/configuration/radius/auth-groups/auth-group/ models.
+    (1) changed the vrf-name  leaf nod rang from 1 to 35 into rang from 1 to 32.
+    11. Modefied the zxr10-radius/configuration/radius/acct-groups/acct-group/ models.
+    (1) changed the vrf-name  leaf nod rang from 1 to 35 into rang from 1 to 32.
+    12. Modefied the zxr10-radius/configuration/radius/client-groups/client-group/ models.
+    (1) changed the vrf-name  leaf nod rang from 1 to 35 into rang from 1 to 32.
+
+    13. Modefied the zxr10-radius/configuration/radius/client-groups/client-group/ models.
+    (1) add a leaf node named standby." ;
+  }
+
+  revision 2014-08-06 {
+    description '1.Add new leaf node: \configuration\radius\client-groups\client-group\default-encrypt-key; 
+2.Add new leaf node: \configuration\radius\client-groups\client-group\clients\client-with-vrfs\client-with-vrf\encrypt-key; 
+3.Add new leaf node: \configuration\radius\client-groups\client-group\clients\client-without-vrfs\client-without-vrf\encrypt-key;
+4.Remove default value of leaf node: \configuration\radius\auth-groups\auth-group\set-dscp-outer; 
+5.Remove default value of leaf node: \configuration\radius\acct-groups\acct-group\set-dscp-outer.' ;
+  }
+
+  revision 2014-01-14 {
+    description 'Initial version.' ;
+  }
+
+  feature authgrp-include-attribute {
+    description 'Project label of auth-group attribute include-func' ;
+  }
+
+  feature acctgrp-include-attribute {
+    description 'Project label of acct-group attribute include-func' ;
+  }
+
+  feature defined-attribute-sets {
+    description 'Project label of defined-attribute-sets' ;
+    ncd:revise-date 2025-07-28 ;
+  }
+
+  container configuration {
+    description 'RADIUS configuration.' ;
+    container radius {
+      description 'RADIUS info.' ;
+      container defined-attribute-sets {
+        description 'RADIUS define attribute sets.' ;
+        list defined-attribute-set {
+          description 'RADIUS define attribute set info.' ;
+          key set-name ;
+          leaf set-name {
+            type string {
+              length 1..31 ;
+
+            }
+
+            description 'RADIUS set name.' ;
+          }
+
+          container defined-attributes {
+            description 'RADIUS defined attributes' ;
+            list defined-attribute {
+              description 'RADIUS defined attribute' ;
+              key 'vendor-id attribute-id' ;
+              leaf vendor-id {
+                type uint16 ;
+
+                description 'Vendor ID' ;
+              }
+
+              leaf attribute-id {
+                description 'Attribute ID' ;
+                type uint8 ;
+
+              }
+
+              choice attribute {
+                case integer {
+                  description 'Integer' ;
+                  leaf integer-type {
+                    description 'Integer type' ;
+                    type enumeration {
+                      enum integer {
+                        value 1 ;
+                        description 'integer type' ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf integer-value {
+                    description 'Integer value' ;
+                    reference "Integer value" ;
+                    type uint32 ;
+
+                  }
+
+                }
+
+                case integer16 {
+                  leaf integer16-type {
+                    description 'Integer16 type' ;
+                    type enumeration {
+                      enum integer16 {
+                        description 'integer16 type' ;
+                        value 9 ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf integer16-value {
+                    type uint16 ;
+
+                    description 'Integer16 value' ;
+                  }
+
+                }
+
+                case string {
+                  leaf string-type {
+                    description 'String type' ;
+                    type enumeration {
+                      enum string {
+                        value 2 ;
+                        description 'string type' ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf string-value {
+                    type ncd:string-with-blank {
+                      length 1..253 ;
+
+                    }
+
+                    description 'String value' ;
+                  }
+
+                }
+
+                case ipv4 {
+                  leaf ipv4-type {
+                    description 'IPv4 type' ;
+                    type enumeration {
+                      enum ipv4 {
+                        value 3 ;
+                        description 'IPv4 type' ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf ipv4-value {
+                    type ncd:ipv4-address-none-zero ;
+
+                    description 'IPv4 value' ;
+                  }
+
+                }
+
+                case ipv6 {
+                  leaf ipv6-type {
+                    type enumeration {
+                      enum ipv6 {
+                        value 5 ;
+                        description 'IPv6 type' ;
+                      }
+
+                    }
+
+                    description 'IPv6 type' ;
+                  }
+
+                  leaf ipv6-value {
+                    type ncd:ipv6-address-none-zero ;
+
+                    description 'IPv6 value' ;
+                  }
+
+                }
+
+                case ipv6-prefix {
+                  leaf ipv6-prefix-type {
+                    type enumeration {
+                      enum ipv6-prefix {
+                        value 6 ;
+                        description 'IPv6 prefix type' ;
+                      }
+
+                    }
+
+                    description 'IPv6 prefix type' ;
+                  }
+
+                  leaf ipv6-prefix-value {
+                    type ncd:ipv6-address-none-zero ;
+
+                    description 'IPv6 prefix value' ;
+                  }
+
+                  leaf ipv6-prefix-len {
+                    type uint8 ;
+
+                  }
+
+                }
+
+                case octets {
+                  leaf octets-type {
+                    type enumeration {
+                      enum octets {
+                        value 4 ;
+                        description 'octets type' ;
+                      }
+
+                    }
+
+                    description 'Octets type' ;
+                  }
+
+                  leaf octets-value {
+                    type string {
+                      length 1..254 ;
+
+                    }
+
+                    description 'octets value' ;
+                  }
+
+                }
+
+                description 'attribute' ;
+              }
+
+            }
+
+          }
+
+          if-feature defined-attribute-sets ;
+
+        }
+
+        ncd:revise-date 2025-07-28 ;
+      }
+
+      container auth-groups {
+        description 'RADIUS authentication group info.' ;
+        list auth-group {
+          description 'RADIUS auth group.' ;
+          key group-name ;
+          leaf group-name {
+            description 'RADIUS auth group name.' ;
+            type string {
+              length 1..31 {
+                description 'RADIUS auth group name.' ;
+              }
+
+            }
+
+          }
+
+          leaf algorithm {
+            description 'RADIUS auth group algorithm.' ;
+            type enumeration {
+              enum first {
+                value 0 ;
+                description 'First.' ;
+              }
+
+              enum round-robin {
+                value 1 ;
+                description 'Round-robin.' ;
+              }
+
+              enum rollover-on-reject {
+                value 2 ;
+                description 'Rollover-on-reject.' ;
+              }
+
+            }
+
+            default first ;
+          }
+
+          leaf deadtime {
+            description 'RADIUS auth group deadtime.' ;
+            type uint32 {
+              range 0..3600 {
+                description 'RADIUS auth group deadtime.' ;
+              }
+
+            }
+
+            units minute ;
+            default 5 ;
+          }
+
+          leaf max-retries {
+            description 'RADIUS auth group max-retries.' ;
+            type uint8 {
+              range 0..255 {
+                description 'RADIUS auth group max-retries.' ;
+              }
+
+            }
+
+            default 3 ;
+          }
+
+          leaf timeout {
+            description 'RADIUS auth group timeout.' ;
+            type uint8 {
+              range 1..255 {
+                description 'RADIUS auth group timeout.' ;
+              }
+
+            }
+
+            units second ;
+            default 3 ;
+          }
+
+          leaf vendor {
+            description 'RADIUS auth group vendor.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+          leaf set-dscp-outer {
+            description 'RADIUS auth group set-dscp-outer.' ;
+            type uint8 {
+              range 0..63 {
+                description 'RADIUS auth group set_dscp_outer.' ;
+              }
+
+            }
+
+          }
+
+          leaf class-as-car {
+            description 'RADIUS auth group class-as-car.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          leaf dsl-vendor {
+            description 'RADIUS auth group dsl-vendor.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          leaf msg-authenticator-check {
+            type enumeration {
+              enum disable {
+                value 2 ;
+                description 'disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'enable.' ;
+              }
+
+            }
+
+            description 'Configure message-authenticator check.' ;
+            default disable ;
+            ncd:revise-date 2024-07-25 ;
+          }
+
+          leaf send-rate-limit {
+            description 'RADIUS auth group send-rate-limit.' ;
+            type uint32 {
+              range 1..4000 {
+                description 'RADIUS auth group send-rate-limit.' ;
+              }
+
+            }
+
+            default 600 ;
+          }
+
+          leaf alias {
+            description 'RADIUS auth group alias.' ;
+            type string {
+              length 1..31 {
+                description 'RADIUS auth group alias.' ;
+              }
+
+            }
+
+          }
+
+          leaf nas-identifier {
+            description 'RADIUS auth group nas-identifier.' ;
+            type string {
+              length 1..64 {
+                description 'RADIUS auth group nas_identifier.' ;
+              }
+
+            }
+
+          }
+
+          leaf nas-port-format {
+            description 'RADIUS auth group nas-port-format.' ;
+            type string {
+              length 1..31 {
+                description 'RADIUS auth group nas_port_format.' ;
+              }
+
+            }
+
+          }
+
+          container called-station-format {
+            description 'RADIUS auth group called-station-format.' ;
+            presence called_station_format ;
+            leaf ssid {
+              description 'RADIUS auth group called-station-format ssid.' ;
+              type empty ;
+
+            }
+
+          }
+
+          container filter-id {
+            description 'Filter-id.' ;
+            presence filter-id ;
+            leaf direction {
+              description 'RADIUS auth group filter_id_direction.' ;
+              type enumeration {
+                enum out {
+                  value 0 ;
+                  description 'out.' ;
+                }
+
+                enum in {
+                  value 1 ;
+                  description 'in.' ;
+                }
+
+                enum both {
+                  value 2 ;
+                  description 'both.' ;
+                }
+
+              }
+
+              default out ;
+            }
+
+          }
+
+          container ip-vrf-config {
+            choice ip-vrf {
+              description 'RADIUS auth group ip vrf.' ;
+              case mng {
+                description 'Ip vrf mng.' ;
+                leaf mng {
+                  description 'Ip vrf mng.' ;
+                  type empty ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              case vrf-name {
+                description 'Ip vrf name.' ;
+                leaf vrf-name {
+                  description 'Ip vrf name.' ;
+                  type string {
+                    length 1..32 {
+                      description 'Ip vrf name.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container nas {
+            description 'RADIUS auth group nas-ip-address.' ;
+            presence "config nas-ip-address" ;
+            choice ip-if {
+              mandatory true ;
+              case ip {
+                leaf nas-ip-address {
+                  description 'RADIUS auth nas-ip-address.' ;
+                  type ncd:ipv4-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              case if {
+                leaf source-interface {
+                  description 'RADIUS auth use source-interface as nas-ip-address.' ;
+                  type ncd:ifname ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container nas6 {
+            description 'RADIUS auth nas-ipv6-address.' ;
+            presence "config nas-ipv6-address" ;
+            choice ip-if {
+              mandatory true ;
+              case ip {
+                leaf nas-ipv6-address {
+                  description 'RADIUS auth nas-ipv6-address.' ;
+                  type ncd:ipv6-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              case if {
+                leaf source-interface {
+                  description 'RADIUS auth nas-ipv6-address used source-interface.' ;
+                  type ncd:ifname ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container source-ip {
+            description 'RADIUS auth group source-ip-address' ;
+            presence "config source-ip-address" ;
+            choice source-ip {
+              mandatory true ;
+              case source-ipv4 {
+                leaf source-ipv4-address {
+                  description 'RADIUS auth source-ipv4-address' ;
+                  type ncd:ipv4-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              case source-ipv6 {
+                leaf source-ipv6-address {
+                  description 'RADIUS auth source-ipv6-address' ;
+                  type ncd:ipv6-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2019-01-18 ;
+          }
+
+          container servers {
+            description 'RADIUS auth server.' ;
+            list server {
+              description 'RADIUS auth server.' ;
+              max-elements 16 ;
+              key server-number ;
+              leaf server-number {
+                description 'RADIUS auth group server number.' ;
+                type uint8 {
+                  range 1..64 {
+                    description 'RADIUS auth server number.' ;
+                  }
+
+                }
+
+              }
+
+              leaf server-ip-address {
+                description 'RADIUS auth server ip address.' ;
+                type ncd:ipv4-address ;
+
+                mandatory true ;
+              }
+
+              leaf master-or-slave {
+                description 'RADIUS auth server master attribute.' ;
+                type enumeration {
+                  enum slave {
+                    value 0 ;
+                    description 'RADIUS group slave server.' ;
+                  }
+
+                  enum master {
+                    value 1 ;
+                    description 'RADIUS group master server.' ;
+                  }
+
+                }
+
+                default slave ;
+              }
+
+              leaf port {
+                description 'RADIUS auth group server port.' ;
+                type uint16 {
+                  range 1025..65535 {
+                    description 'RADIUS server port.' ;
+                  }
+
+                }
+
+                default 1812 ;
+              }
+
+              choice key {
+                description 'RADIUS server key(shared secret).' ;
+                case clear-longkey {
+                  description 'Clear longkey.' ;
+                  leaf clear-longkey {
+                    description 'Clear longkey.' ;
+                    type string {
+                      length 1..128 {
+                        description 'RADIUS server key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf long-showclear {
+                    status obsolete {
+                      ncd:revise-date 2020-08-10 ;
+                    }
+
+                    description 'The option for showing the longkey in cleartext.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+                case encrypt-longkey {
+                  description 'Encrypted longkey.' ;
+                  leaf encrypt-longkey {
+                    description 'Encrypted longkey.' ;
+                    type string {
+                      length 64..236 {
+                        description 'RADIUS server encrypt-key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case clear-key {
+                  description 'Clear key.' ;
+                  leaf clear-key {
+                    description 'Clear key.' ;
+                    type string {
+                      length 1..31 {
+                        description 'RADIUS server key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf showclear {
+                    status obsolete {
+                      ncd:revise-date 2020-08-10 ;
+                    }
+
+                    description 'The option for showing the key in cleartext.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+                case encrypt-key {
+                  description 'Encrypted key.' ;
+                  leaf encrypt-key {
+                    description 'Encrypted key.' ;
+                    type string {
+                      length 64..84 {
+                        description 'RADIUS server encrypt-key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container server6s {
+            description 'RADIUS auth group server6.' ;
+            list server6 {
+              description 'RADIUS auth group server6.' ;
+              max-elements 16 ;
+              key server-number ;
+              leaf server-number {
+                description 'RADIUS auth group server number.' ;
+                type uint8 {
+                  range 1..64 {
+                    description 'Server-number.' ;
+                  }
+
+                }
+
+              }
+
+              leaf server-ipv6-address {
+                description 'RADIUS auth group server-ipv6-address.' ;
+                type ncd:ipv6-address ;
+
+                mandatory true ;
+              }
+
+              leaf master-or-slave {
+                description 'RADIUS auth server6 master attribute.' ;
+                type enumeration {
+                  enum slave {
+                    value 0 ;
+                    description 'RADIUS auth group slave server6.' ;
+                  }
+
+                  enum master {
+                    value 1 ;
+                    description 'RADIUS auth group master server6.' ;
+                  }
+
+                }
+
+                default slave ;
+              }
+
+              leaf port {
+                description 'RADIUS auth group server6 port.' ;
+                type uint16 {
+                  range 1025..65535 {
+                    description 'RADIUS auth group server6 port.' ;
+                  }
+
+                }
+
+                default 1812 ;
+              }
+
+              choice key {
+                description 'RADIUS server key(shared secret).' ;
+                case clear-longkey {
+                  description 'Clear longkey.' ;
+                  leaf clear-longkey {
+                    description 'Clear longkey.' ;
+                    type string {
+                      length 1..128 {
+                        description 'RADIUS server key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf long-showclear {
+                    status obsolete {
+                      ncd:revise-date 2020-08-10 ;
+                    }
+
+                    description 'The option for showing the longkey in cleartext.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+                case encrypt-longkey {
+                  description 'Encrypted longkey.' ;
+                  leaf encrypt-longkey {
+                    description 'Encrypted longkey.' ;
+                    type string {
+                      length 64..236 {
+                        description 'RADIUS server encrypt-key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case clear-key {
+                  description 'Clear key.' ;
+                  leaf clear-key {
+                    description 'Clear key.' ;
+                    type string {
+                      length 1..31 {
+                        description 'RADIUS server key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf showclear {
+                    status obsolete {
+                      ncd:revise-date 2020-08-10 ;
+                    }
+
+                    description 'The option for showing the key in clear text.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+                case encrypt-key {
+                  description 'Encrypted key.' ;
+                  leaf encrypt-key {
+                    description 'Encrypted key.' ;
+                    type string {
+                      length 64..84 {
+                        description 'RADIUS server encrypt-key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          choice calling-station-format {
+            description 'RADIUS auth group calling-station-format.' ;
+            default csif-class ;
+            case csif-class {
+              description 'class1        Format:slot port vpi vci vlan mac
+  class2        Format:slot port vpi vci vlanid,e.g.01080000000
+  class3        Format:mac,00:03:0e:53:43:56
+  class4        Format:m6000-1#0/1/0/8#5:6
+  class5        Format:m6/eth 1/0/8:5.6 d1/0/0/2/0/10:8.35.' ;
+              leaf csif-class {
+                description 'calling station id format type.' ;
+                type enumeration {
+                  enum class1 {
+                    value 1 ;
+                    description 'Class1,Format:slot port vpi vci vlan mac.' ;
+                  }
+
+                  enum class2 {
+                    value 2 ;
+                    description 'class2        Format:slot port vpi vci vlanid,e.g.01080000000.' ;
+                  }
+
+                  enum class3 {
+                    value 3 ;
+                    description 'class3        Format:mac,00:03:0e:53:43:56.' ;
+                  }
+
+                  enum class4 {
+                    value 5 ;
+                    description 'class4        Format:m6000-1#0/1/0/8#5:6.' ;
+                  }
+
+                  enum class5 {
+                    value 6 ;
+                    description 'class5        Format:m6/eth 1/0/8:5.6 d1/0/0/2/0/10:8.35.' ;
+                  }
+
+                  enum access-line-info {
+                    value 7 ;
+                    description 'access-line-info     Format:Option82 attribute' ;
+                  }
+
+                }
+
+                default class3 ;
+              }
+
+            }
+
+            case csif-user-defined {
+              description 'User-defined.' ;
+              leaf csif-user-defined {
+                description 'User-defined.' ;
+                type ncd:string-all {
+                  length 1..179 {
+                    description 'user-defined.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container nas-port-id-format {
+            description 'RADIUS auth group nas port id format attribute.' ;
+            reference "RADIUS auth group nas port id format attribute" ;
+            choice nas-port-id-format {
+              description 'RADIUS auth group nas port id format attribute.' ;
+              default npif-class ;
+              case npif-class {
+                description 'RADIUS auth group nas port id format attribute.' ;
+                leaf npif-class {
+                  description 'china-tel                   Format:eth 1/0/8:5.6 d1/0/0/2/0/10:8.35
+china-tel-keep-remote-info     Format:china-tel-keep-remote-info
+china-unicom                   Format:eth 1/0/8:5.6 d1/0/0/2/0/10/o1 6/0/8:..etc
+class1                         Format:slot port vpi vci vlan,e.g.01080000000005
+class2                         Format:slot=1;subslot=0;port=8;vlanid=6;vlanid2=5
+class3                         Format:like class1,invalid vlan is 0xffff
+class4                         Format:like class2,but vlanid is contrary
+class5                         Format:dslam100 atm 0/2/0/10:8.35
+class6                         Format:1/8 vlan-id 5:6
+class7                         Format:1/8 vlan-id 5:6 pppoe 60
+class8                         Format:M6000 eth 0/1/0/8:100.200
+class9                         Format:hostname:interfacename:svlan-cvlan
+keep-agent-circuit-id          Format:keep agent-circuit-id string
+local-and-agent-circuit-id     Format:local-and-agent-circuit-id' ;
+                  type enumeration {
+                    enum china-tel {
+                      value 1 ;
+                      description 'china-tel              Format:eth 1/0/8:5.6 d1/0/0/2/0/10:8.35.' ;
+                    }
+
+                    enum china-unicom {
+                      value 2 ;
+                      description 'china-unicom           Format:eth 1/0/8:5.6 d1/0/0/2/0/10/o1 6/0/8:..etc.' ;
+                    }
+
+                    enum class1 {
+                      value 3 ;
+                      description 'class1                 Format:slot port vpi vci vlan,e.g.01080000000005.' ;
+                    }
+
+                    enum class2 {
+                      value 4 ;
+                      description 'class2                 Format:slot=1;subslot=0;port=8;vlanid=6;vlanid2=5.' ;
+                    }
+
+                    enum class3 {
+                      value 5 ;
+                      description 'class3                 Format:like class1,invalid vlan is 0xffff.' ;
+                    }
+
+                    enum class4 {
+                      value 6 ;
+                      description 'class4                 Format:like class2,but vlanid is contrary.' ;
+                    }
+
+                    enum class5 {
+                      value 8 ;
+                      description 'class5                 Format:dslam100 atm 0/2/0/10:8.35.' ;
+                    }
+
+                    enum class6 {
+                      value 9 ;
+                      description 'class6                 Format:1/8 vlan-id 5:6.' ;
+                    }
+
+                    enum class7 {
+                      value 10 ;
+                      description 'class7                 Format:1/8 vlan-id 5:6 pppoe 60.' ;
+                    }
+
+                    enum class8 {
+                      value 12 ;
+                      description 'class8                 Format:M6000 eth 0/1/0/8:100.200.' ;
+                    }
+
+                    enum keep-agent-circuit-id {
+                      value 11 ;
+                      description 'keep-agent-circuit-id  Format:keep agent-circuit-id string.' ;
+                    }
+
+                    enum china-tel-keep-remote-info {
+                      value 13 ;
+                      description 'china-tel-keep-remote-info  Format:china-tel-keep-remote-info.' ;
+                    }
+
+                    enum local-and-agent-circuit-id {
+                      value 14 ;
+                      description 'local-and-agent-circuit-id       Format:local-and-agent-circuit-id' ;
+                    }
+
+                    enum class9 {
+                      value 15 ;
+                      description 'class9                      Format:hostname:interfacename:svlan-cvlan' ;
+                    }
+
+                  }
+
+                  default china-tel ;
+                }
+
+              }
+
+              case npif-user-defined {
+                description 'User-defined.' ;
+                leaf npif-string-0 {
+                  description 'User-defined string-0.' ;
+                  type ncd:string-all {
+                    length 1..179 {
+                      description 'user-defined string.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf npif-string-1 {
+                  description 'User-defined string-1.' ;
+                  type ncd:string-all {
+                    length 1..179 {
+                      description 'user-defined string.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf npif-string-2 {
+                  description 'User-defined string-2.' ;
+                  type ncd:string-all {
+                    length 1..179 {
+                      description 'user-defined string.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf npif-string-3 {
+                  description 'User-defined string-3.' ;
+                  type ncd:string-all {
+                    length 1..179 {
+                      description 'user-defined string.' ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container nas-port-id-format-append {
+            description 'RADIUS auth group nas port id format append attribute.' ;
+            reference "RADIUS auth group nas port id format append attribute." ;
+            leaf up-identifier {
+              description 'Up-identifier.' ;
+              reference "Up-identifier." ;
+              type uint8 {
+                range 0..1 {
+                  description '0:not set,
+1:set.' ;
+                }
+
+              }
+
+            }
+
+            leaf vni {
+              description 'Vni.' ;
+              reference "Vni." ;
+              type uint8 {
+                range 0..1 {
+                  description '0:not set,
+1:set.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container convert-sends {
+            description 'RADIUS auth group attribute convert send.' ;
+            list convert-send {
+              description 'RADIUS auth group attribute convert send.' ;
+              max-elements 128 ;
+              key 'cs-src-vendor-id cs-src-type' ;
+              leaf cs-src-vendor-id {
+                description 'Source vendor is standard.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Source vendor.' ;
+                  }
+
+                }
+
+              }
+
+              leaf cs-src-type {
+                description 'Source type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Source type.' ;
+                  }
+
+                }
+
+              }
+
+              leaf cs-dest-vendor-id {
+                description 'Dest vendor id.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Dest vendor id.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf cs-dest-type {
+                description 'Dest type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Dest type.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              container cs-operation-type-config {
+                choice cs-operation-type {
+                  description 'Operation type.' ;
+                  case cs-multiplied-by {
+                    description 'Multiplied-by.' ;
+                    leaf cs-multiplied-by-coefficient {
+                      description 'Multiplied-by coefficient.' ;
+                      type uint32 {
+                        range 1..4294967295 {
+                          description 'Multiplied-by coefficient.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                  case cs-divided-by {
+                    description 'Divided-by.' ;
+                    leaf cs-divided-by-coefficient {
+                      description 'Divided-by coefficient.' ;
+                      type uint32 {
+                        range 1..4294967295 {
+                          description 'Divided-by coefficient.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container cs-send-flag {
+                description 'Send.' ;
+                leaf cs-send {
+                  description 'Send.' ;
+                  type empty ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              container cs-access-request-flag {
+                description 'Access-request.' ;
+                leaf cs-access-request {
+                  description 'Access-request.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              container cs-coa-response-flag {
+                description 'Coa-response.' ;
+                leaf cs-coa-response {
+                  description 'Coa-response.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              container cs-disconnect-response-flag {
+                description 'Disconnect-response.' ;
+                leaf cs-disconnect-response {
+                  description 'Disconnect-response.' ;
+                  type empty ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container convert-receives {
+            description 'RADIUS auth group attribute convert receive.' ;
+            list convert-receive {
+              description 'RADIUS auth group attribute convert receive.' ;
+              max-elements 128 ;
+              key 'cr-src-vendor-id cr-src-type' ;
+              leaf cr-src-vendor-id {
+                description 'Source vendor id.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Source vendor id.' ;
+                  }
+
+                }
+
+              }
+
+              leaf cr-src-type {
+                description 'Source type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Source type.' ;
+                  }
+
+                }
+
+              }
+
+              leaf cr-dest-vendor-id {
+                description 'Dest vendor id.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Dest vednor id.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf cr-dest-type {
+                description 'Dest type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Dest type.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              container cr-operation-type-config {
+                choice cr-operation-type {
+                  description 'Operation type.' ;
+                  case cr-multiplied-by {
+                    description 'Multiplied.' ;
+                    leaf cr-multiplied-by-coefficient {
+                      description 'Multiplied-by coefficient.' ;
+                      type uint32 {
+                        range 1..4294967295 {
+                          description 'Coefficient.' ;
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  case cr-divided-by {
+                    description 'Divided.' ;
+                    leaf cr-divided-by-coefficient {
+                      description 'Divided-by coefficient.' ;
+                      type uint32 {
+                        range 1..4294967295 {
+                          description 'Coefficient.' ;
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container cr-receive-flag {
+                description 'Reveive.' ;
+                leaf cr-receive {
+                  description 'Receive.' ;
+                  type empty ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              container cr-access-response-flag {
+                description 'Access-response.' ;
+                leaf cr-access-response {
+                  description 'Access-response.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              container cr-coa-request-flag {
+                description 'Coa-request.' ;
+                leaf cr-coa-request {
+                  description 'Coa-request.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              container cr-disconnect-request-flag {
+                description 'Disconnect-request.' ;
+                leaf cr-disconnect-request {
+                  description 'Disconnect-request.' ;
+                  type empty ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container include {
+            if-feature authgrp-include-attribute ;
+
+            list special-attribute {
+              description 'Include ZTE special attribute name' ;
+              key 'special attribute-name' ;
+              leaf special {
+                description 'zte attribute type' ;
+                type enumeration {
+                  enum special {
+                    value 2 ;
+                  }
+
+                }
+
+              }
+
+              leaf attribute-name {
+                description 'zte attribute name' ;
+                type enumeration {
+                  enum invalid-parameter {
+                    value 256 ;
+                  }
+
+                  enum ZTE-Host-Address {
+                    value 3 ;
+                    description 'This Attribute indicates mac address for the user' ;
+                  }
+
+                  enum ZTE-Access-Domain {
+                    value 151 ;
+                    description 'This attribute indicates domain attribute distributed by radius server for the user.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            list standard-attribute {
+              description 'Include standard attribute name' ;
+              key 'standard attribute-name' ;
+              leaf standard {
+                description 'attribute type' ;
+                type enumeration {
+                  enum standard {
+                    value 1 ;
+                  }
+
+                }
+
+              }
+
+              leaf attribute-name {
+                description 'attribute name' ;
+                type enumeration {
+                  enum invalid-parameter {
+                    value 256 ;
+                  }
+
+                  enum Chargeable-User-Identity {
+                    value 89 ;
+                    description "This Attribute contains a text string which identifies the user's real unique identity for Billing." ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            container special-vendor-attribute {
+              description 'Include Other company special attribute name' ;
+              list redback-company {
+                description 'RedBack company' ;
+                key 'company-name attribute-name' ;
+                leaf company-name {
+                  description 'RedBack company' ;
+                  type enumeration {
+                    enum RedBack {
+                      value 3 ;
+                      description 'RedBack Company' ;
+                    }
+
+                  }
+
+                }
+
+                leaf attribute-name {
+                  description 'RedBack company special attribute name' ;
+                  type enumeration {
+                    enum BB_CallerID {
+                      value 97 ;
+                      description 'This attribute indicates Service Caller ID for the user.' ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2022-02-16 ;
+            }
+
+            ncd:revise-date 2021-04-10 ;
+          }
+
+          container forbid-sends {
+            description 'RADIUS auth group attribute forbid send.' ;
+            list forbid-send {
+              description 'RADIUS auth group attribute forbid send.' ;
+              max-elements 128 ;
+              key 'fs-src-vendor-id fs-src-type' ;
+              leaf fs-src-vendor-id {
+                description 'Source vendor id.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Source vendor id.' ;
+                  }
+
+                }
+
+              }
+
+              leaf fs-src-type {
+                description 'Source type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Source type.' ;
+                  }
+
+                }
+
+              }
+
+              container fs-send-flag {
+                description 'Send.' ;
+                leaf fs-send {
+                  description 'Send.' ;
+                  type empty ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              container fs-access-request-flag {
+                description 'Access-request.' ;
+                leaf fs-access-request {
+                  description 'Access-request.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              container fs-coa-response-flag {
+                description 'Coa-response.' ;
+                leaf fs-coa-response {
+                  description 'Coa-response.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              container fs-disconnect-response-flag {
+                description 'Disconnect-response.' ;
+                leaf fs-disconnect-response {
+                  description 'Disconnect-response.' ;
+                  type empty ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container forbid-receives {
+            description 'RADIUS auth group attribute forbid receive.' ;
+            list forbid-receive {
+              description 'RADIUS auth group attribute forbid receive.' ;
+              max-elements 128 ;
+              key 'fr-src-vendor-id fr-src-type' ;
+              leaf fr-src-vendor-id {
+                description 'Source vendor id.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Source vendor id.' ;
+                  }
+
+                }
+
+              }
+
+              leaf fr-src-type {
+                description 'Source type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Source type.' ;
+                  }
+
+                }
+
+              }
+
+              container fr-receive-flag {
+                description 'Receive.' ;
+                leaf fr-receive {
+                  description 'Receive.' ;
+                  type empty ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              container fr-access-response-flag {
+                description 'Access-response.' ;
+                leaf fr-access-response {
+                  description 'Access-response.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              container fr-coa-request-flag {
+                description 'Coa-request.' ;
+                leaf fr-coa-request {
+                  description 'Coa-request.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              container fr-disconnect-request-flag {
+                description 'Disconnect-request.' ;
+                leaf fr-disconnect-request {
+                  description 'Disconnect-request.' ;
+                  type empty ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container user-name-format {
+            description 'RADIUS auth group user-name-format.' ;
+            leaf domain-format {
+              description 'The format of RADIUS attribute User-Name.' ;
+              type enumeration {
+                enum strip-domain {
+                  value 0 ;
+                  description 'Strip-domain.' ;
+                }
+
+                enum include-domain {
+                  value 1 ;
+                  description 'Include-domain.' ;
+                }
+
+                enum only-domain {
+                  value 2 ;
+                  description 'Only-domain.' ;
+                }
+
+                enum original {
+                  value 3 ;
+                  description 'Original.' ;
+                }
+
+              }
+
+              default strip-domain ;
+            }
+
+            leaf max-length {
+              description 'The max valid length of RADIUS attribute User-Name.' ;
+              type uint8 {
+                range 1..253 ;
+
+              }
+
+            }
+
+            leaf pattern {
+              description 'The valid pattern of RADIUS attribute User-Name.' ;
+              type enumeration {
+                enum class1 {
+                  value 1 ;
+                  description "Pattern class1, only letters(a...z, A...Z), numbers(0...9), '_', '-', and '@' can be included." ;
+                }
+
+              }
+
+            }
+
+            leaf domain-delimiter {
+              description 'The domain delimiter of RADIUS attribute User-Name.' ;
+              type string {
+                length 1 ;
+
+              }
+
+            }
+
+          }
+
+          leaf defined-attribute-name {
+            type string {
+              length 1..31 ;
+
+            }
+
+            description 'Configure defined attribute set.' ;
+            if-feature defined-attribute-sets ;
+
+            ncd:revise-date 2025-07-28 ;
+          }
+
+        }
+
+      }
+
+      container acct-groups {
+        description 'RADIUS accounting group info.' ;
+        list acct-group {
+          description 'RADIUS accounting group.' ;
+          key group-name ;
+          leaf group-name {
+            description 'RADIUS acct group name.' ;
+            type string {
+              length 1..31 {
+                description 'Group name.' ;
+              }
+
+            }
+
+          }
+
+          leaf algorithm {
+            description 'Algorithm.' ;
+            type enumeration {
+              enum first {
+                value 0 ;
+                description 'First.' ;
+              }
+
+              enum round-robin {
+                value 1 ;
+                description 'Round-robin.' ;
+              }
+
+            }
+
+            default first ;
+          }
+
+          leaf alias {
+            description 'Alias.' ;
+            type string {
+              length 1..31 {
+                description 'Alias.' ;
+              }
+
+            }
+
+          }
+
+          container convert-sends {
+            description 'Convert send.' ;
+            list convert-send {
+              description 'Convert send.' ;
+              max-elements 128 ;
+              key 'cs-src-vendor-id cs-src-type' ;
+              leaf cs-src-vendor-id {
+                description 'Source vendor id.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Source vendor id.' ;
+                  }
+
+                }
+
+              }
+
+              leaf cs-src-type {
+                description 'Source type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Source type.' ;
+                  }
+
+                }
+
+              }
+
+              leaf cs-dest-vendor-id {
+                description 'Dest vendor id.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Dest vendor id.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf cs-dest-type {
+                description 'Dest type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Dest type.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              container cs-operation-type-config {
+                choice cs-operation-type {
+                  description 'Operation type.' ;
+                  case cs-multiplied-by {
+                    description 'Multiplied.' ;
+                    leaf cs-multiplied-by-coefficient {
+                      description 'Coefficient.' ;
+                      type uint32 {
+                        range 1..4294967295 {
+                          description 'Coefficient.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                  case cs-divided-by {
+                    description 'Divided by.' ;
+                    leaf cs-divided-by-coefficient {
+                      description 'Coefficient.' ;
+                      type uint32 {
+                        range 1..4294967295 {
+                          description 'Coefficient.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container convert-receives {
+            description 'Convert receive.' ;
+            list convert-receive {
+              description 'Convert receive.' ;
+              max-elements 128 ;
+              key 'cr-src-vendor-id cr-src-type' ;
+              leaf cr-src-vendor-id {
+                description 'Source vendor id.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Source vendor id.' ;
+                  }
+
+                }
+
+              }
+
+              leaf cr-src-type {
+                description 'Source type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Source type.' ;
+                  }
+
+                }
+
+              }
+
+              leaf cr-dest-vendor-id {
+                description 'Dest vendor id.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Dest vendor id.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf cr-dest-type {
+                description 'Dest type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Dest type.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              container cr-operation-type-config {
+                choice cr-operation-type {
+                  description 'Operation type.' ;
+                  case cr-multiplied-by {
+                    description 'Multiplied-by.' ;
+                    leaf cr-multiplied-by-coefficient {
+                      description 'Coefficient.' ;
+                      type uint32 {
+                        range 1..4294967295 {
+                          description 'Coefficient.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                  case cr-divided-by {
+                    description 'Divided-by.' ;
+                    leaf cr-divided-by-coefficient {
+                      description 'Coefficient.' ;
+                      type uint32 {
+                        range 1..4294967295 {
+                          description 'Coefficient.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container forbid-sends {
+            description 'Forbid send.' ;
+            list forbid-send {
+              description 'Forbid send.' ;
+              max-elements 128 ;
+              key 'fs-src-vendor-id fs-src-type' ;
+              leaf fs-src-vendor-id {
+                description 'Source vendor id.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Source vendor id.' ;
+                  }
+
+                }
+
+              }
+
+              leaf fs-src-type {
+                description 'Source type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Source type.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container include {
+            if-feature acctgrp-include-attribute ;
+
+            list standard-attribute {
+              description 'Include standard attribute name' ;
+              key 'standard attribute-name' ;
+              leaf standard {
+                description 'attribute type' ;
+                type enumeration {
+                  enum standard {
+                    value 1 ;
+                  }
+
+                }
+
+              }
+
+              leaf attribute-name {
+                description 'attribute name' ;
+                type enumeration {
+                  enum Filter-Id {
+                    value 11 ;
+                    description 'This Attribute indicates the name of the filter list for this' ;
+                  }
+
+                  enum Session-Timeout {
+                    value 27 ;
+                    description 'This Attribute sets the maximum number of seconds of service to be provided to the user before termination of the session or prompt.' ;
+                  }
+
+                  enum Idle-Timeout {
+                    value 28 ;
+                    description 'This Attribute sets the maximum number of consecutive seconds of idle connection allowed to the user before termination of the session or pro mpt.' ;
+                  }
+
+                  enum Acct-Session-Time {
+                    value 46 ;
+                    description 'This attribute indicates how many seconds the user has received service for, and can only be present in Accounting-Request records where the Acct-Status-Type is set to Stop.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            list special-attribute {
+              description 'Include ZTE speical attribute name' ;
+              key 'special attribute-name' ;
+              leaf special {
+                description 'zte attribute type' ;
+                type enumeration {
+                  enum special {
+                    value 2 ;
+                  }
+
+                }
+
+              }
+
+              leaf attribute-name {
+                description 'zte attribute name' ;
+                type enumeration {
+                  enum ZTE-PPPOE-URL {
+                    value 27 ;
+                    description 'This attribute indicates IPv6 upstream ACL name for the user.' ;
+                  }
+
+                  enum ZTE-IPv4-VRF-Name {
+                    value 140 ;
+                    description 'This attribute indicates IPv4 VRF name for the user.' ;
+                  }
+
+                  enum ZTE-IPv6-VRF-Name {
+                    value 141 ;
+                    description 'This attribute indicates IPv6 VRF name for the user.' ;
+                  }
+
+                  enum ZTE-IPv6-Redirect-URL {
+                    value 142 ;
+                    description 'This attribute indicates IPv6 redirect URL for the user.' ;
+                  }
+
+                  enum ZTE-IPv6-Ad-URL {
+                    value 143 ;
+                    description 'This attribute indicates IPv6 advertise URL for the user.' ;
+                  }
+
+                  enum ZTE_FILTERIN {
+                    value 195 ;
+                    description 'This attribute indicates upstream ACL name for the user. The corresponding downstream ACL is 11 .' ;
+                  }
+
+                  enum ZTE_FILTERIN_V6 {
+                    value 238 ;
+                    description 'This attribute indicates IPv6 upstream ACL name for the user.' ;
+                  }
+
+                  enum ZTE_FILTEROUT_V6 {
+                    value 239 ;
+                    description 'This attribute indicates IPv6 downstream ACL name for the user.' ;
+                  }
+
+                  enum ZTE_Redirect_URL {
+                    value 255 ;
+                    description 'This attribute indicates redirect URL for the user.' ;
+                  }
+
+                  enum ZTE-Host-Address {
+                    value 3 ;
+                    description 'This Attribute indicates mac address for the user.' ;
+                  }
+
+                  enum ZTE_OFFLINE_REASON_CODE_MSG {
+                    value 193 ;
+                    description 'This attribute indicates accounting termination sub-items.' ;
+                  }
+
+                  enum ZTE_User_Mac {
+                    value 104 ;
+                    description 'This attribute indicates MAC address of the user.' ;
+                  }
+
+                  enum ZTE-Input-Packets-64 {
+                    value 196 ;
+                    description 'This attribute indicates how many octets(0-2^64) have been received from the port over the course of this service being provided.' ;
+                  }
+
+                  enum ZTE-Output-Packets-64 {
+                    value 197 ;
+                    description 'This attribute indicates how many octets(0-2^64) have been received from the port over the course of this service being provided.' ;
+                  }
+
+                  enum ZTE-Input-Octets-64 {
+                    value 198 ;
+                    description 'This attribute indicates how many packets(0-2^64) have been received from the port over the course of this service being provided to a Framed User.' ;
+                  }
+
+                  enum ZTE-Output-Octets-64 {
+                    value 199 ;
+                    description 'This attribute indicates how many packets(0-2^64) have been sent to the port in the course of delivering this service to a Framed User.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            container special-vendor-attribute {
+              description 'Include Other company special attribute name' ;
+              list redback-company {
+                description 'RedBack company' ;
+                key 'company-name attribute-name' ;
+                leaf company-name {
+                  description 'RedBack company' ;
+                  type enumeration {
+                    enum RedBack {
+                      value 3 ;
+                      description 'RedBack Company' ;
+                    }
+
+                  }
+
+                }
+
+                leaf attribute-name {
+                  description 'RedBack company special attribute name' ;
+                  type enumeration {
+                    enum BB_CallerID {
+                      value 97 ;
+                      description 'This attribute indicates Service Caller ID for the user.' ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2022-02-16 ;
+            }
+
+            ncd:revise-date 2021-04-10 ;
+          }
+
+          container forbid-receives {
+            description 'Forbid receive.' ;
+            list forbid-receive {
+              description 'Forbid receive.' ;
+              max-elements 128 ;
+              key 'fr-src-vendor-id fr-src-type' ;
+              leaf fr-src-vendor-id {
+                description 'Source vendor id.' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'Source vendor id.' ;
+                  }
+
+                }
+
+              }
+
+              leaf fr-src-type {
+                description 'Source type.' ;
+                type uint8 {
+                  range 1..255 {
+                    description 'Source type.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          choice calling-station-format {
+            description 'RADIUS acct group calling-station-format.' ;
+            default csif-class ;
+            case csif-class {
+              description 'Class1,Format:slot port vpi vci vlan mac.' ;
+              leaf csif-class {
+                description 'calling station id format type.' ;
+                type enumeration {
+                  enum class1 {
+                    value 1 ;
+                    description 'Class1,Format:slot port vpi vci vlan mac.' ;
+                  }
+
+                  enum class2 {
+                    value 2 ;
+                    description 'Class2,Format:slot port vpi vci vlanid,e.g.01080000000.' ;
+                  }
+
+                  enum class3 {
+                    value 3 ;
+                    description 'Class3,Format:mac,00:03:0e:53:43:56.' ;
+                  }
+
+                  enum class4 {
+                    value 5 ;
+                    description 'Class4,Format:m6000-1#0/1/0/8#5:6.' ;
+                  }
+
+                  enum class5 {
+                    value 6 ;
+                    description 'Class5,Format:m6/eth 1/0/8:5.6 d1/0/0/2/0/10:8.35.' ;
+                  }
+
+                  enum access-line-info {
+                    value 7 ;
+                    description 'access-line-info     Format:Option82 attribute' ;
+                  }
+
+                }
+
+                default class3 ;
+              }
+
+            }
+
+            case csif-user-defined {
+              description 'User-defined.' ;
+              leaf csif-user-defined {
+                description 'User-defined.' ;
+                type ncd:string-all {
+                  length 1..179 {
+                    description 'user-defined.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          leaf deadtime {
+            description 'Deadtime.' ;
+            type uint32 {
+              range 0..3600 {
+                description 'Deadtime.' ;
+              }
+
+            }
+
+            units minute ;
+            default 5 ;
+          }
+
+          leaf dsl-vendor {
+            description 'Dsl-vendor.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          leaf flow-unit {
+            description 'Flow-unit.' ;
+            type enumeration {
+              enum byte {
+                value 0 ;
+                description 'Byte.' ;
+              }
+
+              enum kbyte {
+                value 1 ;
+                description 'Kbyte.' ;
+              }
+
+              enum mbyte {
+                value 2 ;
+                description 'Mbyte.' ;
+              }
+
+              enum gbyte {
+                value 3 ;
+                description 'Gbyte.' ;
+              }
+
+            }
+
+            default byte ;
+          }
+
+          leaf accounting-on {
+            description 'Configuration sending accounting-on packet' ;
+            type enumeration {
+              enum disable {
+                value 1 ;
+                description 'Disable sending accounting-on packet' ;
+              }
+
+              enum enable {
+                value 0 ;
+                description 'Enable sending  accounting-on packet' ;
+              }
+
+            }
+
+            default enable ;
+            ncd:revise-date 2022-04-06 ;
+          }
+
+          container ip-vrf-config {
+            choice ip-vrf {
+              description 'RADIUS acct group ip vrf.' ;
+              case mng {
+                description 'Ip vrf mng.' ;
+                leaf mng {
+                  description 'Ip vrf mng.' ;
+                  type empty ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              case vrf-name {
+                description 'Ip vrf name.' ;
+                leaf vrf-name {
+                  description 'Ip vrf name.' ;
+                  type string {
+                    length 1..32 {
+                      description 'Ip vrf name.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+          leaf life-time {
+            description 'Configure life time of accounting request in local buffer.' ;
+            type uint16 {
+              range 2..1024 {
+                description 'Life time.' ;
+              }
+
+            }
+
+            default 2 ;
+          }
+
+          leaf local-buffer {
+            description 'Local-buffer.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          leaf max-retries {
+            description 'Configure maximum number of retry.' ;
+            type uint8 {
+              range 1..255 {
+                description 'Max-retries.' ;
+              }
+
+            }
+
+            default 3 ;
+          }
+
+          leaf nas-identifier {
+            description 'Nas-identifier.' ;
+            type string {
+              length 1..64 {
+                description 'Nas-identifier.' ;
+              }
+
+            }
+
+          }
+
+          container nas {
+            description 'RADIUS acct group nas-ip-address.' ;
+            presence "config nas-ip-address" ;
+            choice ip-if {
+              mandatory true ;
+              case ip {
+                leaf nas-ip-address {
+                  description 'RADIUS acct group nas-ip-address.' ;
+                  type ncd:ipv4-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              case if {
+                leaf source-interface {
+                  type ncd:ifname ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container nas6 {
+            description 'RADIUS acct nas-ipv6-address.' ;
+            presence "config nas-ipv6-address" ;
+            choice ip-if {
+              mandatory true ;
+              case ip {
+                leaf nas-ipv6-address {
+                  description 'RADIUS acct nas-ipv6-address.' ;
+                  type ncd:ipv6-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              case if {
+                leaf source-interface {
+                  type ncd:ifname ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+          leaf nas-port-format {
+            description 'RADIUS acct group nas-port-format.' ;
+            type string {
+              length 1..31 {
+                description 'Nas-port-format.' ;
+              }
+
+            }
+
+          }
+
+          container nas-port-id-format {
+            description 'RADIUS acct group nas port id format attribute.' ;
+            choice nas-port-id-format {
+              description 'RADIUS acct group nas port id format attribute.' ;
+              default npif-class ;
+              case npif-class {
+                description 'NAS port id format.' ;
+                leaf npif-class {
+                  description 'china-tel                   Format:eth 1/0/8:5.6 d1/0/0/2/0/10:8.35
+china-tel-keep-remote-info     Format:china-tel-keep-remote-info
+china-unicom                   Format:eth 1/0/8:5.6 d1/0/0/2/0/10/o1 6/0/8:..etc
+class1                         Format:slot port vpi vci vlan,e.g.01080000000005
+class2                         Format:slot=1;subslot=0;port=8;vlanid=6;vlanid2=5
+class3                         Format:like class1,invalid vlan is 0xffff
+class4                         Format:like class2,but vlanid is contrary
+class5                         Format:dslam100 atm 0/2/0/10:8.35
+class6                         Format:1/8 vlan-id 5:6
+class7                         Format:1/8 vlan-id 5:6 pppoe 60
+class8                         Format:M6000 eth 0/1/0/8:100.200
+class9                         Format:hostname:interfacename:svlan-cvlan
+keep-agent-circuit-id          Format:keep agent-circuit-id string
+local-and-agent-circuit-id     Format:local-and-agent-circuit-id' ;
+                  type enumeration {
+                    enum china-tel {
+                      value 1 ;
+                      description 'China-tel,Format:eth 1/0/8:5.6 d1/0/0/2/0/10:8.35.' ;
+                    }
+
+                    enum china-unicom {
+                      value 2 ;
+                      description 'China-unicom,Format:eth 1/0/8:5.6 d1/0/0/2/0/10/o1 6/0/8:..etc.' ;
+                    }
+
+                    enum class1 {
+                      value 3 ;
+                      description 'Class1,Format:slot port vpi vci vlan,e.g.01080000000005.' ;
+                    }
+
+                    enum class2 {
+                      value 4 ;
+                      description 'Class2,Format:slot=1;subslot=0;port=8;vlanid=6;vlanid2=5.' ;
+                    }
+
+                    enum class3 {
+                      value 5 ;
+                      description 'Class3,Format:like class1,invalid vlan is 0xffff.' ;
+                    }
+
+                    enum class4 {
+                      value 6 ;
+                      description 'Class4,Format:like class2,but vlanid is contrary.' ;
+                    }
+
+                    enum class5 {
+                      value 8 ;
+                      description 'Class5,Format:dslam100 atm 0/2/0/10:8.35.' ;
+                    }
+
+                    enum class6 {
+                      value 9 ;
+                      description 'Class6,Format:1/8 vlan-id 5:6.' ;
+                    }
+
+                    enum class7 {
+                      value 10 ;
+                      description 'Class7,Format:1/8 vlan-id 5:6 pppoe 60.' ;
+                    }
+
+                    enum class8 {
+                      value 12 ;
+                      description 'Class8,Format:M6000 eth 0/1/0/8:100.200.' ;
+                    }
+
+                    enum keep-agent-circuit-id {
+                      value 11 ;
+                      description 'Keep-agent-circuit-id,Format:keep agent-circuit-id string.' ;
+                    }
+
+                    enum china-tel-keep-remote-info {
+                      value 13 ;
+                      description 'china-tel-keep-remote-info,Format:china-tel-keep-remote-info.' ;
+                    }
+
+                    enum local-and-agent-circuit-id {
+                      value 14 ;
+                      description 'local-and-agent-circuit-id      Format:local-and-agent-circuit-id' ;
+                    }
+
+                    enum class9 {
+                      value 15 ;
+                      description 'class9                      Format:hostname:interfacename:svlan-cvlan' ;
+                    }
+
+                  }
+
+                  default china-tel ;
+                }
+
+              }
+
+              case npif-user-defined {
+                description 'User-defined.' ;
+                leaf npif-string-0 {
+                  description 'User-defined string-0.' ;
+                  type ncd:string-all {
+                    length 1..179 {
+                      description 'User-defined string.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf npif-string-1 {
+                  description 'User-defined string-1.' ;
+                  type ncd:string-all {
+                    length 1..179 {
+                      description 'User-defined string.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf npif-string-2 {
+                  description 'User-defined string-2.' ;
+                  type ncd:string-all {
+                    length 1..179 {
+                      description 'User-defined string.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf npif-string-3 {
+                  description 'User-defined string-3.' ;
+                  type ncd:string-all {
+                    length 1..179 {
+                      description 'User-defined string.' ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container nas-port-id-format-append {
+            description 'RADIUS acct group nas port id format append attribute.' ;
+            reference "RADIUS acct group nas port id format append attribute." ;
+            leaf up-identifier {
+              description 'Up-identifier.' ;
+              reference "Up-identifier." ;
+              type uint8 {
+                range 0..1 {
+                  description '0:not set,
+1:set.' ;
+                }
+
+              }
+
+            }
+
+            leaf vni {
+              description 'Vni.' ;
+              reference "Vni." ;
+              type uint8 {
+                range 0..1 {
+                  description '0:not set,
+1:set.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+          leaf send-rate-limit {
+            description 'Send-rate-limit.' ;
+            type uint32 {
+              range 1..4000 {
+                description 'Send-rate-limit.' ;
+              }
+
+            }
+
+            default 600 ;
+          }
+
+          container source-ip {
+            description 'RADIUS acct group source-ip-address' ;
+            presence "config source-ip-address" ;
+            choice source-ip {
+              mandatory true ;
+              case source-ipv4 {
+                leaf source-ipv4-address {
+                  description 'RADIUS acct source-ipv4-address' ;
+                  type ncd:ipv4-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              case source-ipv6 {
+                leaf source-ipv6-address {
+                  description 'RADIUS acct source-ipv6-address' ;
+                  type ncd:ipv6-address ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2019-01-18 ;
+          }
+
+          container servers {
+            description 'RADIUS acct server.' ;
+            list server {
+              description 'RADIUS acct server.' ;
+              max-elements 16 ;
+              key server-number ;
+              leaf server-number {
+                description 'RADIUS acct group server number.' ;
+                type uint8 {
+                  range 1..64 {
+                    description 'Server number.' ;
+                  }
+
+                }
+
+              }
+
+              leaf server-ip-address {
+                description 'RADIUS acct server ip address.' ;
+                type ncd:ipv4-address ;
+
+                mandatory true ;
+              }
+
+              leaf master-or-slave {
+                description 'RADIUS acct server master attribute.' ;
+                type enumeration {
+                  enum slave {
+                    value 0 ;
+                    description 'Slave.' ;
+                  }
+
+                  enum master {
+                    value 1 ;
+                    description 'Master.' ;
+                  }
+
+                }
+
+                default slave ;
+              }
+
+              leaf port {
+                description 'RADIUS acct group server port.' ;
+                type uint16 {
+                  range 1025..65535 {
+                    description 'Server port.' ;
+                  }
+
+                }
+
+                default 1813 ;
+              }
+
+              choice key {
+                description 'RADIUS server key(shared secret).' ;
+                case clear-longkey {
+                  description 'Clear longkey.' ;
+                  leaf clear-longkey {
+                    description 'Clear longkey.' ;
+                    type string {
+                      length 1..128 {
+                        description 'RADIUS server key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf long-showclear {
+                    status obsolete {
+                      ncd:revise-date 2020-08-10 ;
+                    }
+
+                    description 'The option for showing the longkey in cleartext.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+                case encrypt-longkey {
+                  description 'Encrypted longkey.' ;
+                  leaf encrypt-longkey {
+                    description 'Encrypted longkey.' ;
+                    type string {
+                      length 64..236 {
+                        description 'RADIUS server encrypt-key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case clear-key {
+                  description 'Clear key.' ;
+                  leaf clear-key {
+                    description 'Clear key.' ;
+                    type string {
+                      length 1..31 {
+                        description 'RADIUS server key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf showclear {
+                    status obsolete {
+                      ncd:revise-date 2020-08-10 ;
+                    }
+
+                    description 'The option for showing the key in cleartext.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+                case encrypt-key {
+                  description 'Encrypted key.' ;
+                  leaf encrypt-key {
+                    description 'Encrypted key.' ;
+                    type string {
+                      length 64..84 {
+                        description 'RADIUS server encrypt-key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container server6s {
+            description 'RADIUS acct server6.' ;
+            list server6 {
+              description 'RADIUS acct server6.' ;
+              max-elements 16 ;
+              key server-number ;
+              leaf server-number {
+                description 'RADIUS acct group server number.' ;
+                type uint8 {
+                  range 1..64 {
+                    description 'Server number.' ;
+                  }
+
+                }
+
+              }
+
+              leaf server-ipv6-address {
+                description 'RADIUS acct group server-ipv6-address.' ;
+                type ncd:ipv6-address ;
+
+                mandatory true ;
+              }
+
+              leaf master-or-slave {
+                description 'RADIUS acct server master attribute.' ;
+                type enumeration {
+                  enum slave {
+                    value 0 ;
+                    description 'Slave.' ;
+                  }
+
+                  enum master {
+                    value 1 ;
+                    description 'Master.' ;
+                  }
+
+                }
+
+                default slave ;
+              }
+
+              leaf port {
+                description 'RADIUS acct group server port.' ;
+                type uint16 {
+                  range 1025..65535 {
+                    description 'Server port.' ;
+                  }
+
+                }
+
+                default 1813 ;
+              }
+
+              choice key {
+                description 'RADIUS server key(shared secret).' ;
+                case clear-longkey {
+                  description 'Clear longkey.' ;
+                  leaf clear-longkey {
+                    description 'Clear longkey.' ;
+                    type string {
+                      length 1..128 {
+                        description 'RADIUS server key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf long-showclear {
+                    status obsolete {
+                      ncd:revise-date 2020-08-10 ;
+                    }
+
+                    description 'The option for showing the longkey in cleartext.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+                case encrypt-longkey {
+                  description 'Encrypted longkey.' ;
+                  leaf encrypt-longkey {
+                    description 'Encrypted longkey.' ;
+                    type string {
+                      length 64..236 {
+                        description 'RADIUS server encrypt-key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case clear-key {
+                  description 'Clear key.' ;
+                  leaf clear-key {
+                    description 'Clear key.' ;
+                    type string {
+                      length 1..31 {
+                        description 'RADIUS server key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf showclear {
+                    status obsolete {
+                      ncd:revise-date 2020-08-10 ;
+                    }
+
+                    description 'The option for showing the key in cleartext.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+                case encrypt-key {
+                  description 'Encrypted key.' ;
+                  leaf encrypt-key {
+                    description 'Encrypted key.' ;
+                    type string {
+                      length 64..84 {
+                        description 'RADIUS server encrypt-key.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          leaf set-dscp-outer {
+            description 'DSCP value.' ;
+            type uint8 {
+              range 0..63 {
+                description 'DSCP value.' ;
+              }
+
+            }
+
+          }
+
+          leaf timeout {
+            description 'Timeout.' ;
+            type uint8 {
+              range 1..255 {
+                description 'Timeout.' ;
+              }
+
+            }
+
+            units second ;
+            default 3 ;
+          }
+
+          leaf vendor {
+            description 'Sending vendor attribute.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+          container user-name-format {
+            description 'User-Name format.' ;
+            leaf domain-format {
+              description 'The format of RADIUS attribute User-Name.' ;
+              type enumeration {
+                enum strip-domain {
+                  value 0 ;
+                  description 'Strip-domain.' ;
+                }
+
+                enum include-domain {
+                  value 1 ;
+                  description 'Include-domain.' ;
+                }
+
+                enum only-domain {
+                  value 2 ;
+                  description 'Only-domain.' ;
+                }
+
+                enum original {
+                  value 3 ;
+                  description 'Original.' ;
+                }
+
+              }
+
+              default strip-domain ;
+            }
+
+            leaf max-length {
+              description 'The max valid length of RADIUS attribute User-Name.' ;
+              type uint8 {
+                range 1..253 ;
+
+              }
+
+            }
+
+            leaf pattern {
+              description 'The valid pattern of RADIUS attribute User-Name.' ;
+              type enumeration {
+                enum class1 {
+                  value 1 ;
+                  description "Pattern class1, only letters(a...z, A...Z), numbers(0...9), '_', '-', and '@' can be included." ;
+                }
+
+              }
+
+            }
+
+            leaf domain-delimiter {
+              description 'The domain delimiter of RADIUS attribute User-Name.' ;
+              type string {
+                length 1 ;
+
+              }
+
+            }
+
+          }
+
+          leaf defined-attribute-name {
+            type string {
+              length 1..31 ;
+
+            }
+
+            description 'Configure defined attribute set name.' ;
+            if-feature defined-attribute-sets ;
+
+            ncd:revise-date 2025-07-28 ;
+          }
+
+        }
+
+      }
+
+      container client-groups {
+        description 'RADIUS client group info.' ;
+        list client-group {
+          description 'RADIUS client group object.' ;
+          max-elements 4000 ;
+          key client-group-name ;
+          leaf client-group-name {
+            description 'RADIUS client group name.' ;
+            type string {
+              length 1..31 {
+                description 'RADIUS client group name.' ;
+              }
+
+            }
+
+          }
+
+          leaf attribute-replace-nas-identifier {
+            description 'Attribute replace nas-identifier.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+          leaf attribute-replace-nas-ip-address {
+            description 'Attribute replace nas-ip-address.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+          leaf authentication-server-group {
+            description 'Authentication server group name.' ;
+            type string {
+              length 1..31 {
+                description 'Authentication server group name.' ;
+              }
+
+            }
+
+          }
+
+          container clients {
+            description 'RADIUS client info.' ;
+            container client-with-vrfs {
+              description 'Client with vrf info.' ;
+              list client-with-vrf {
+                description 'Client with vrf info.' ;
+                max-elements 64 ;
+                key 'ipv4-address vrf-name' ;
+                leaf ipv4-address {
+                  description 'Ipv4-address.' ;
+                  type ncd:ipv4-address ;
+
+                }
+
+                leaf vrf-name {
+                  description 'Vrf name.' ;
+                  type string {
+                    length 1..32 {
+                      description 'Vrf name.' ;
+                    }
+
+                  }
+
+                }
+
+                choice key {
+                  description 'RADIUS client key(shared secret).' ;
+                  case clear-key {
+                    description 'Clear key.' ;
+                    leaf clear-key {
+                      description 'Clear key.' ;
+                      type string {
+                        length 1..31 {
+                          description 'Key.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                    leaf showclear {
+                      status obsolete {
+                        ncd:revise-date 2020-08-10 ;
+                      }
+
+                      description 'The option for showing the key in cleartext.' ;
+                      type empty ;
+
+                    }
+
+                  }
+
+                  case encrypt-key {
+                    description 'Encrypted key.' ;
+                    leaf encrypt-key {
+                      description 'Encrypted key.' ;
+                      type string {
+                        length 64..84 ;
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            container client-without-vrfs {
+              description 'Client without vrf info.' ;
+              list client-without-vrf {
+                description 'Client without vrf info.' ;
+                max-elements 64 ;
+                key ipv4-address ;
+                leaf ipv4-address {
+                  description 'Ipv4-address.' ;
+                  type ncd:ipv4-address ;
+
+                }
+
+                choice key {
+                  description 'RADIUS client key(shared secret).' ;
+                  case clear-key {
+                    description 'Clear key.' ;
+                    leaf clear-key {
+                      description 'Clear key.' ;
+                      type string {
+                        length 1..31 {
+                          description 'Key.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                    leaf showclear {
+                      status obsolete {
+                        ncd:revise-date 2020-08-10 ;
+                      }
+
+                      description 'The option for showing the key in cleartext.' ;
+                      type empty ;
+
+                    }
+
+                  }
+
+                  case encrypt-key {
+                    description 'Encrypted key.' ;
+                    leaf encrypt-key {
+                      description 'Encrypted key.' ;
+                      type string {
+                        length 64..84 ;
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          leaf dm-coa-max-retries {
+            description 'Dm-coa max-retries.' ;
+            type uint8 {
+              range 1..10 {
+                description 'Dm-coa max-retries.' ;
+              }
+
+            }
+
+            default 3 ;
+          }
+
+          leaf dm-coa-timeout {
+            description 'Dm-coa timeout.' ;
+            type uint8 {
+              range 1..60 {
+                description 'Dm-coa timeout.' ;
+              }
+
+            }
+
+            default 3 ;
+          }
+
+          container source-addr {
+            description 'Source address.' ;
+            leaf source-ip {
+              description 'Source ipv4 address.' ;
+              type ncd:ipv4-address ;
+
+            }
+
+          }
+
+          leaf standby {
+            description 'Enable or disable the standby function of this client group.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable the standby function of this client group.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable the standby function of this client group.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          container default-key {
+            description 'RADIUS client default key(shared secret).' ;
+            choice key {
+              description 'RADIUS client default key(shared secret).' ;
+              case clear-key {
+                description 'Clear key.' ;
+                leaf clear-key {
+                  description 'Clear key.' ;
+                  type string {
+                    length 1..31 {
+                      description 'Clear key.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf showclear {
+                  status obsolete {
+                    ncd:revise-date 2020-08-10 ;
+                  }
+
+                  description 'The option for showing the key in cleartext.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              case encrypt-key {
+                description 'Encrypted key.' ;
+                leaf encrypt-key {
+                  description 'Encrypted key.' ;
+                  type string {
+                    length 64..84 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container forbid-attribute {
+            description 'Forbid RADIUS attribute' ;
+            list forbid-attribute-dm {
+              description 'Forbid RADIUS attribute in DM packet' ;
+              key 'vendor attribute-number type' ;
+              leaf vendor {
+                description 'vendor id' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'vendor id' ;
+                  }
+
+                }
+
+              }
+
+              leaf attribute-number {
+                description 'attribute number' ;
+                type uint8 {
+                  range 1..255 ;
+
+                }
+
+              }
+
+              leaf type {
+                description 'packet type' ;
+                type enumeration {
+                  enum request {
+                    value 1 ;
+                    description 'DM Request' ;
+                  }
+
+                  enum response {
+                    value 3 ;
+                    description 'DM Response' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            list forbid-attribute-coa {
+              description 'Forbid RADIUS attribute in COA packet' ;
+              key 'vendor attribute-number type' ;
+              leaf vendor {
+                description 'vendor id' ;
+                type uint32 {
+                  range 0..65535 {
+                    description 'vendor id' ;
+                  }
+
+                }
+
+              }
+
+              leaf attribute-number {
+                description 'attribute number' ;
+                type uint8 {
+                  range 1..255 ;
+
+                }
+
+              }
+
+              leaf type {
+                description 'packet type' ;
+                type enumeration {
+                  enum request {
+                    value 2 ;
+                    description 'coa request' ;
+                  }
+
+                  enum response {
+                    value 4 ;
+                    description 'coa response' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2022-03-16 ;
+          }
+
+        }
+
+      }
+
+      container global {
+        description 'RADIUS global info.' ;
+        leaf specific-vendor-id {
+          description 'RADIUS specific Vendor-Id.' ;
+          type uint16 {
+            range 1..65535 {
+              description 'Specific Vendor-Id.' ;
+            }
+
+          }
+
+          default 3902 ;
+        }
+
+        leaf dev-backup {
+          description 'RADIUS dev-backup.' ;
+          type enumeration {
+            enum master {
+              value 0 ;
+              description 'Master.' ;
+            }
+
+            enum slave {
+              value 1 ;
+              description 'Slave.' ;
+            }
+
+          }
+
+          default master ;
+        }
+
+        container accounting-listening-ports {
+          description 'RADIUS proxy accounting listening port.' ;
+          list accounting-listening-port {
+            description 'RADIUS proxy accounting listening port.' ;
+            max-elements 4 ;
+            key port ;
+            leaf port {
+              description 'Port.' ;
+              type uint16 {
+                range 1025..65535 {
+                  description 'Port.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container authentication-listening-ports {
+          description 'RADIUS authentication listening port.' ;
+          list authentication-listening-port {
+            description 'RADIUS authentication listening port.' ;
+            max-elements 4 ;
+            key port ;
+            leaf port {
+              description 'Port.' ;
+              type uint16 {
+                range 1025..65535 {
+                  description 'Port.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        leaf server-port-check {
+          description 'RADIUS server port check.' ;
+          type enumeration {
+            enum off {
+              value 0 ;
+              description 'Off.' ;
+            }
+
+            enum on {
+              value 1 ;
+              description 'On.' ;
+            }
+
+          }
+
+          default on ;
+        }
+
+        container client-group-default {
+          description 'RADIUS default client group.' ;
+          presence client-group-default ;
+          leaf default-client-group-name {
+            description 'RADIUS default client group.' ;
+            type string {
+              length 1..31 {
+                description 'Default client group.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        leaf radius-detect {
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Enable to send radius detect packet' ;
+            }
+
+            enum disable {
+              value 0 ;
+              description 'Disable to send radius detect packet' ;
+            }
+
+          }
+
+          default enable ;
+          description 'Radius automatic send packet to detect server state' ;
+          ncd:revise-date 2023-05-24 ;
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'RADIUS state info.' ;
+    container radius {
+      description 'RADIUS state info.' ;
+      container server-state {
+        description 'Server state info.' ;
+        container auth-server-states {
+          description 'RADIUS auth group server state info.' ;
+          list auth-server-state {
+            description 'RADIUS auth group server state info.' ;
+            key 'slot group-name' ;
+            leaf slot {
+              description 'Slot number.' ;
+              type uint32 ;
+
+            }
+
+            leaf group-name {
+              description 'Group name.' ;
+              type string {
+                length 1..31 {
+                  description 'Group name.' ;
+                }
+
+              }
+
+            }
+
+            container auth-servers {
+              description 'RADIUS auth server info.' ;
+              list auth-server {
+                description 'RADIUS auth server info.' ;
+                key server-number ;
+                leaf server-number {
+                  description 'Server number.' ;
+                  type uint8 {
+                    range 1..64 {
+                      description 'Server number.' ;
+                    }
+
+                  }
+
+                }
+
+                choice ip-address {
+                  description 'Ip adress.' ;
+                  case ipv4-address {
+                    description 'Ipv4 address.' ;
+                    leaf ipv4-address {
+                      description 'Ipv4 address.' ;
+                      type ncd:ipv4-address ;
+
+                    }
+
+                  }
+
+                  case ipv6-address {
+                    description 'Ipv6 address.' ;
+                    leaf ipv6-address {
+                      description 'Ipv6 adress.' ;
+                      type ncd:ipv6-address ;
+
+                    }
+
+                  }
+
+                }
+
+                leaf port {
+                  description 'Port.' ;
+                  type uint16 {
+                    range 1025..65535 {
+                      description 'Port.' ;
+                    }
+
+                  }
+
+                  default 1812 ;
+                }
+
+                leaf state {
+                  description 'State:active or dead.' ;
+                  type enumeration {
+                    enum active {
+                      value 0 ;
+                      description 'Active.' ;
+                    }
+
+                    enum dead {
+                      value 1 ;
+                      description 'Dead.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf deadtime {
+                  description 'Deadtime.' ;
+                  type string {
+                    length 1..31 {
+                      description 'Deadtime.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf deadclock {
+                  description 'Dead clock.' ;
+                  type ncd:string-all {
+                    length 1..31 {
+                      description 'Deadclock.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf master {
+                  description 'Master.' ;
+                  type empty ;
+
+                }
+
+                leaf current {
+                  description 'Current.' ;
+                  type empty ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container acct-server-states {
+          description 'RADIUS acct group server state.' ;
+          list acct-server-state {
+            description 'RADIUS acct group server state.' ;
+            key 'slot group-name' ;
+            leaf slot {
+              description 'Slot number.' ;
+              type uint32 ;
+
+            }
+
+            leaf group-name {
+              description 'Group name.' ;
+              type string {
+                length 1..31 {
+                  description 'Group name.' ;
+                }
+
+              }
+
+            }
+
+            container acct-servers {
+              description 'Acct server info.' ;
+              list acct-server {
+                description 'Acct server info.' ;
+                key server-number ;
+                leaf server-number {
+                  description 'Server number.' ;
+                  type uint8 {
+                    range 1..64 {
+                      description 'Server number.' ;
+                    }
+
+                  }
+
+                }
+
+                choice ip-address {
+                  description 'Ip address.' ;
+                  case ipv4-address {
+                    description 'Ipv4 address.' ;
+                    leaf ipv4-address {
+                      description 'Ipv4 address.' ;
+                      type ncd:ipv4-address ;
+
+                    }
+
+                  }
+
+                  case ipv6-address {
+                    description 'Ipv6 address.' ;
+                    leaf ipv6-address {
+                      description 'Ipv6 address.' ;
+                      type ncd:ipv6-address ;
+
+                    }
+
+                  }
+
+                }
+
+                leaf port {
+                  description 'Port.' ;
+                  type uint16 {
+                    range 1025..65535 {
+                      description 'Port.' ;
+                    }
+
+                  }
+
+                  default 1813 ;
+                }
+
+                leaf state {
+                  description 'State:active or dead.' ;
+                  type enumeration {
+                    enum active {
+                      value 0 ;
+                      description 'Active.' ;
+                    }
+
+                    enum dead {
+                      value 1 ;
+                      description 'Dead.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf deadtime {
+                  description 'Deadtime.' ;
+                  type string {
+                    length 1..31 {
+                      description 'Deadtime.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf deadclock {
+                  description 'Deadclock.' ;
+                  type ncd:string-all {
+                    length 1..31 {
+                      description 'Deadclock.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf master {
+                  description 'Master.' ;
+                  type empty ;
+
+                }
+
+                leaf current {
+                  description 'Current.' ;
+                  type empty ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container port-state {
+        description 'RADIUS proxy listening port state.' ;
+        container auth-port-states {
+          description 'Auth listening port state.' ;
+          list auth-port-state {
+            description 'Auth listening port state.' ;
+            max-elements 4 ;
+            key port ;
+            leaf port {
+              description 'Port.' ;
+              type uint16 {
+                range 1025..65535 {
+                  description 'Port.' ;
+                }
+
+              }
+
+            }
+
+            leaf state {
+              description 'Auth listening port state.' ;
+              type string {
+                length 1..31 {
+                  description 'State.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container acct-port-states {
+          description 'Acct listening port state.' ;
+          list acct-port-state {
+            description 'Acct listening port state.' ;
+            max-elements 4 ;
+            key port ;
+            leaf port {
+              description 'Port.' ;
+              type uint16 {
+                range 1025..65535 {
+                  description 'Port.' ;
+                }
+
+              }
+
+            }
+
+            leaf state {
+              description 'Acct listening port state.' ;
+              type string {
+                length 1..31 {
+                  description 'State.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

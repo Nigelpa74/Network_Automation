@@ -1,0 +1,298 @@
+module zxr10-pbr {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/pbr" ;
+  prefix pbr ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf model to describe policy-based routing (PBR). PBR is a technique used to make routing decisions based on policies set by the network administrator.Through the application of PBR on a router, the router according to the route-map decided through the router packet handling.' ;
+  revision 2025-06-09 {
+    description 'Remove the ROSNG-V.VEG product label.' ;
+  }
+
+  revision 2022-01-28 {
+    description '1. Add state and operation of PBR. 
+2. Add a leaf:/configuration/pbr/statistics-v4/statistic-v4/interface-name;
+Add a leaf:/configuration/pbr/statistics-v6/statistic-v6/interface-name.' ;
+  }
+
+  revision 2020-06-04 {
+    description 'Modify the range of routemap-name.' ;
+  }
+
+  revision 2017-07-25 {
+    description 'Add V6000 project label.' ;
+  }
+
+  revision 2013-09-13 {
+    description 'Initial version.' ;
+  }
+
+  container configuration {
+    description 'Configuration model info.' ;
+    container pbr {
+      description 'PBR module' ;
+      container pbrs-v4 {
+        description 'V4 PBR' ;
+        list pbr-v4 {
+          description 'Configure of v4 PBR, support for Ethernet physical interface, POS interface and the SG interface.' ;
+          key interface-name ;
+          leaf interface-name {
+            description 'Interface name' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf routemap-name {
+            description 'Routemap name' ;
+            type string {
+              length 1..200 {
+                description 'The length of routemap name is from 1 to 200.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+      container pbrs-v6 {
+        description 'V6 PBR' ;
+        list pbr-v6 {
+          description 'Configure of v6 PBR, support for Ethernet physical interface, POS interface and the SG interface.' ;
+          key interface-name ;
+          leaf interface-name {
+            description 'Interface name' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf routemap-name {
+            description 'Routemap name' ;
+            type string {
+              length 1..200 {
+                description 'The length of routemap name is from 1 to 200.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+      container statistics-v4 {
+        description 'V4 PBR packet statistics.' ;
+        list statistic-v4 {
+          description 'Configure v4 PBR packet statistics information.' ;
+          key interface-name ;
+          leaf interface-name {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+        }
+
+        ncd:revise-date 2022-01-28 ;
+      }
+
+      container statistics-v6 {
+        description 'V6 PBR packet statistics.' ;
+        list statistic-v6 {
+          description 'Configure v6 PBR packet statistics information.' ;
+          key interface-name ;
+          leaf interface-name {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+        }
+
+        ncd:revise-date 2022-01-28 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'PBR module show information.' ;
+    container pbr {
+      description 'PBR module show information.' ;
+      container statistics-v4 {
+        description 'Show v4 PBR packet statistics.' ;
+        list statistic-v4 {
+          description 'Show v4 PBR packet statistics information.' ;
+          key interface-name ;
+          leaf interface-name {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf routemap-name {
+            description 'Routemap name' ;
+            type string {
+              length 1..200 {
+                description 'The length of routemap name is from 1 to 200.' ;
+              }
+
+            }
+
+          }
+
+          leaf seq-no {
+            description "Routing Policy's sequence." ;
+            type uint16 {
+              range 0..65535 {
+                description 'The range of routemap-sequence is from 0 to 65535.' ;
+              }
+
+            }
+
+          }
+
+          leaf in-bytes {
+            description 'Byte count of received pbr packet.' ;
+            type string {
+              length 0..23 ;
+
+            }
+
+          }
+
+          leaf in-packets {
+            description 'Received pbr packet count.' ;
+            type string {
+              length 0..23 ;
+
+            }
+
+          }
+
+          ncd:select interface-name ;
+        }
+
+      }
+
+      container statistics-v6 {
+        description 'Show v6 PBR packet statistics.' ;
+        list statistic-v6 {
+          description 'Show v6 PBR packet statistics information.' ;
+          key interface-name ;
+          leaf interface-name {
+            description 'Interface name' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf routemap-name {
+            description 'Routemap name' ;
+            type string {
+              length 1..200 {
+                description 'The length of routemap name is from 1 to 200.' ;
+              }
+
+            }
+
+          }
+
+          leaf seq-no {
+            description "Routing Policy's sequence." ;
+            type uint16 {
+              range 0..65535 {
+                description 'The range of routemap-sequence is from 0 to 65535.' ;
+              }
+
+            }
+
+          }
+
+          leaf in-bytes {
+            description 'Byte count of received pbr packet.' ;
+            type string {
+              length 0..23 ;
+
+            }
+
+          }
+
+          leaf in-packets {
+            description 'Received pbe packet count.' ;
+            type string {
+              length 0..23 ;
+
+            }
+
+          }
+
+          ncd:select interface-name ;
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2022-01-28 ;
+  }
+
+  container operation {
+    config false ;
+    description 'PBR module operation info.' ;
+    container pbr {
+      description 'PBR module operation info.' ;
+      container clear {
+        description 'Clear PBR information.' ;
+        container statistics-v4 {
+          description 'Clear v4 PBR packet statistics.' ;
+          list statistic-v4 {
+            description 'Clear v4 PBR packet statistics information.' ;
+            key interface-name ;
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+          }
+
+        }
+
+        container statistics-v6 {
+          description 'Clear v6 PBR packet statistics.' ;
+          list statistic-v6 {
+            description 'Clear v6 PBR packet statistics information.' ;
+            key interface-name ;
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2022-01-28 ;
+  }
+
+}

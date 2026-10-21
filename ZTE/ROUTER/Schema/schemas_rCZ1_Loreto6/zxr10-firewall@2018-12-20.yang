@@ -1,0 +1,1886 @@
+module zxr10-firewall {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/firewall'
+            ;
+  prefix firewall ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2017-08-15 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2018-12-20 {
+    description 'Add /state/firewall/tcp-intercept-statistics-lists'
+                ;
+  }
+  revision 2018-09-06 {
+    description 'Modify the type of '+"\n"
+              + '/firewall:state/firewall:firewall/firewall:ip-session-summary-'
+              + 'lists/firewall:ip-session-summary/firewall:total-session;'+"\n"
+              + 'Modify the description of '+"\n"
+              + '/firewall:configuration/firewall:firewall/firewall:zone-lists/'
+              + 'firewall:zone/firewall:ip-defend/firewall:ping-death;'+"\n"
+              + '/firewall:state/firewall:firewall/firewall:ip-defend-zone-list'
+              + 's/firewall:ip-defend-zone/firewall:ping-death.'
+                ;
+  }
+  revision 2018-08-01 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model'
+                ;
+    container firewall {
+      description 'Configure firewall parameters'
+                  ;
+      container session-timeout {
+        description 'Configure session timeout parameters'
+                    ;
+        leaf tcp {
+          description 'TCP session timeout'
+                      ;
+          type int16 {
+            range 1..7200 ;
+          }
+          units s ;
+          default 600 ;
+        }
+        leaf udp {
+          description 'UDP session timeout'
+                      ;
+          type int16 {
+            range 1..7200 ;
+          }
+          units s ;
+          default 40 ;
+        }
+        leaf icmp {
+          description 'ICMP session timeout'
+                      ;
+          type int16 {
+            range 1..7200 ;
+          }
+          units s ;
+          default 20 ;
+        }
+        leaf ftp {
+          description 'FTP session timeout'
+                      ;
+          type int16 {
+            range 1..7200 ;
+          }
+          units s ;
+          default 120 ;
+        }
+        leaf sip {
+          description 'SIP session timeout'
+                      ;
+          type int16 {
+            range 1..7200 ;
+          }
+          units s ;
+          default 1800 ;
+        }
+        leaf http {
+          description 'HTTP session timeout'
+                      ;
+          type int16 {
+            range 1..7200 ;
+          }
+          units s ;
+          default 120 ;
+        }
+      }
+      container ip-tcp-intercept {
+        description 'Configure IP TCP intercept parameters'
+                    ;
+        leaf finrst-timeout {
+          description 'IP TCP intercept timeout of FIN and RST'
+                      ;
+          type uint16 {
+            range 1..10 ;
+          }
+          units s ;
+          default 5 ;
+        }
+        leaf watch-timeout {
+          description 'IP TCP intercept watch timeout'
+                      ;
+          type uint16 {
+            range 1..60 ;
+          }
+          units s ;
+          default 30 ;
+        }
+        leaf drop-mode {
+          description 'IP TCP intercept drop mode'
+                      ;
+          type enumeration {
+            enum oldest {
+              value 0 ;
+            }
+            enum random {
+              value 1 ;
+            }
+          }
+          default oldest ;
+        }
+        leaf mode {
+          description 'IP TCP intercept mode'
+                      ;
+          type enumeration {
+            enum intercept {
+              value 0 ;
+            }
+            enum watch {
+              value 1 ;
+            }
+          }
+          default intercept ;
+        }
+        container max-incomplete {
+          description 'IP TCP intercept max-incomplete threshold'
+                      ;
+          leaf high {
+            description 'Max-incomplete high threshold'
+                        ;
+            type uint32 {
+              range 1..500000 ;
+            }
+            default 1100 ;
+          }
+          leaf low {
+            description 'Max-incomplete low threshold'
+                        ;
+            type uint32 {
+              range 1..500000 ;
+            }
+            default 900 ;
+          }
+        }
+        container one-minute {
+          description 'IP TCP intercept one-minute threshold'
+                      ;
+          leaf high {
+            description 'One-minute high threshold'
+                        ;
+            type uint32 {
+              range 1..500000 ;
+            }
+            default 1100 ;
+          }
+          leaf low {
+            description 'One-minute low threshold'
+                        ;
+            type uint32 {
+              range 1..500000 ;
+            }
+            default 900 ;
+          }
+        }
+      }
+      container port-timeout-lists {
+        description 'TCP/UDP port session timeout list'
+                    ;
+        list port-timeout-list {
+          description 'TCP/UDP port session timeout'
+                      ;
+          key 'protocol-type port'
+              ;
+          leaf protocol-type {
+            description 'Protocol type'
+                        ;
+            type enumeration {
+              enum tcp {
+                value 1 ;
+              }
+              enum udp {
+                value 2 ;
+              }
+            }
+          }
+          leaf port {
+            description 'Port number'
+                        ;
+            type uint16 {
+              range 0..65535 ;
+            }
+          }
+          leaf timeout {
+            description Timeout ;
+            type int16 {
+              range 1..7200 ;
+            }
+            units s ;
+            mandatory true ;
+          }
+        }
+      }
+      container black-lists {
+        description 'Configure blacklist list'
+                    ;
+        container black-ip-lists {
+          description 'Blacklist that key is IP'
+                      ;
+          list black-ip-list {
+            description 'Blacklist that key is IP'
+                        ;
+            key ip ;
+            leaf ip {
+              description 'Blacklist IP address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf time-range {
+              description 'Timerange name'
+                          ;
+              type string {
+                length 0..31 ;
+              }
+              default ''
+                      ;
+            }
+          }
+        }
+        container black-ip-vrf-lists {
+          description 'Blacklist that key are IP and VRF'
+                      ;
+          list black-ip-vrf-list {
+            description 'Blacklist that key are IP and VRF'
+                        ;
+            key 'vrf ip'
+                ;
+            leaf vrf {
+              description 'VPN routing/forwarding instance name'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf ip {
+              description 'Blacklist IP address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf time-range {
+              description 'Timerange name'
+                          ;
+              type string {
+                length 0..31 ;
+              }
+              default ''
+                      ;
+            }
+          }
+        }
+      }
+      container white-lists {
+        description 'Configure whitelist list'
+                    ;
+        container white-ip-lists {
+          description 'Whitelist that key is IP'
+                      ;
+          list white-ip-list {
+            description 'Whitelist that key is IP'
+                        ;
+            key ip ;
+            leaf ip {
+              description 'Whitelist IP address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf time-range {
+              description 'Timerange name'
+                          ;
+              type string {
+                length 0..31 ;
+              }
+              default ''
+                      ;
+            }
+          }
+        }
+        container white-ip-vrf-lists {
+          description 'Whitelist that key are IP and VRF'
+                      ;
+          list white-ip-vrf-list {
+            description 'Whitelist that key are IP and VRF'
+                        ;
+            key 'vrf ip'
+                ;
+            leaf vrf {
+              description 'VPN routing/forwarding instance name'
+                          ;
+              type string {
+                length 1..32 ;
+              }
+            }
+            leaf ip {
+              description 'Whitelist IP address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf time-range {
+              description 'Timerange name'
+                          ;
+              type string {
+                length 0..31 ;
+              }
+              default ''
+                      ;
+            }
+          }
+        }
+      }
+      container zone-lists {
+        description 'Configure zone security list'
+                    ;
+        list zone {
+          description 'Zone security'
+                      ;
+          key name ;
+          leaf name {
+            description 'Zone name'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf priority {
+            description 'Priority of zone security'
+                        ;
+            type uint8 {
+              range 1..254 ;
+            }
+            mandatory true ;
+          }
+          leaf blacklist {
+            description 'Blacklist enable'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+              }
+              enum enable {
+                value 1 ;
+              }
+            }
+            default disable ;
+          }
+          leaf whitelist {
+            description 'Whitelist enable'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+              }
+              enum enable {
+                value 1 ;
+              }
+            }
+            default disable ;
+          }
+          leaf ip-virtual-reassembly {
+            description 'IP virtual-reassembly'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+              }
+              enum enable {
+                value 1 ;
+              }
+            }
+            default disable ;
+          }
+          container ip-defend {
+            description 'IP defend'
+                        ;
+            leaf land-attack {
+              description 'Land attack'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf smurf {
+              description Smurf ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf winnuke {
+              description Winnuke ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf ping-death {
+              description 'PING of death'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf icmp-unreachable {
+              description 'ICMP unreachable'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf icmp-redirect {
+              description 'ICMP redirect'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf icmp-fragment {
+              description 'ICMP fragment'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf ip-fragment {
+              description 'IP fragment'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf teardrop {
+              description TearDrop ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf fraggle {
+              description Fraggle ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf tracert {
+              description Tracert ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf malform-ip-option {
+              description 'Malform IP option'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf tcp-syn-fragment {
+              description 'TCP SYN fragment'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf unknown-protocol {
+              description 'Unknown protocol'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf ip-option-attack {
+              description 'IP option attack'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf tcp-no-flag {
+              description 'TCP no flag'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf tcp-syn-fin {
+              description 'TCP SYN FIN'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf fin-no-ack {
+              description 'FIN no ACK'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf large-ping {
+              description 'Large PING'
+                          ;
+              type uint16 {
+                range 0..65507 ;
+              }
+              default 0 ;
+            }
+            leaf syn-flood {
+              description 'SYN flood'
+                          ;
+              type uint32 {
+                range '0 | 10..10000000'
+                      ;
+              }
+            }
+            leaf icmp-flood {
+              description 'ICMP flood'
+                          ;
+              type uint32 {
+                range '0 | 10..10000000'
+                      ;
+              }
+            }
+            leaf udp-flood {
+              description 'UDP flood'
+                          ;
+              type uint32 {
+                range '0 | 10..10000000'
+                      ;
+              }
+            }
+          }
+          container session-limit {
+            description 'Session limit'
+                        ;
+            leaf source-ip-based {
+              description 'The limited session number based source IP'
+                          ;
+              type uint32 {
+                range 0..500000 ;
+              }
+            }
+            leaf destination-ip-based {
+              description 'The limited session number based destination IP'
+                          ;
+              type uint32 {
+                range 0..500000 ;
+              }
+            }
+          }
+        }
+      }
+      container zone-pair-lists {
+        description 'Configure zone pair security list'
+                    ;
+        list zone-pair {
+          description 'Zone pair security'
+                      ;
+          key name ;
+          leaf name {
+            description 'Zone pair name'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          choice source {
+            description 'Source zone'
+                        ;
+            case source-type {
+              description 'Source zone type'
+                          ;
+              leaf source-type {
+                description 'Source zone type'
+                            ;
+                type enumeration {
+                  enum inside {
+                    value 0 ;
+                  }
+                  enum outside {
+                    value 1 ;
+                  }
+                }
+              }
+            }
+            case source-name {
+              description 'Source zone name'
+                          ;
+              leaf source-name {
+                description 'Source zone name'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+          }
+          choice destination {
+            description 'Destination zone'
+                        ;
+            case destination-type {
+              description 'Destination zone type'
+                          ;
+              leaf destination-type {
+                description 'Destination zone type'
+                            ;
+                type enumeration {
+                  enum inside {
+                    value 0 ;
+                  }
+                  enum outside {
+                    value 1 ;
+                  }
+                }
+              }
+            }
+            case destination-name {
+              description 'Destination zone name'
+                          ;
+              leaf destination-name {
+                description 'Destination zone name'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+          }
+          leaf tcp-intercept-acl {
+            description 'IP TCP intercept ACL for zone pair security'
+                        ;
+            type string {
+              length 0..31 ;
+            }
+            default ''
+                    ;
+          }
+          leaf ipv4-access-group {
+            description 'ACL for zone pair security'
+                        ;
+            type string {
+              length 0..31 ;
+            }
+            default ''
+                    ;
+          }
+          container stateful-inspect {
+            description 'Stateful inspect'
+                        ;
+            container stock-trading-block {
+              description 'Stock trading block of stateful inspect'
+                          ;
+              presence stock-trading-block ;
+              leaf stock-trading-block {
+                description 'Stock trading block of stateful inspect'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+              leaf time-range {
+                description 'Timerange name'
+                            ;
+                type string {
+                  length 0..31 ;
+                }
+                default ''
+                        ;
+              }
+            }
+            container instant-msg {
+              description 'Instant message of stateful inspect'
+                          ;
+              container qq-block {
+                description 'QQ block of stateful inspect'
+                            ;
+                presence qq-block ;
+                leaf qq-block {
+                  description 'QQ block of stateful inspect'
+                              ;
+                  type empty ;
+                  mandatory true ;
+                }
+                leaf time-range {
+                  description 'Timerange name'
+                              ;
+                  type string {
+                    length 0..31 ;
+                  }
+                  default ''
+                          ;
+                }
+              }
+              leaf svr-block {
+                description 'Server block of stateful inspect'
+                            ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+                  enum enable {
+                    value 1 ;
+                  }
+                }
+                default disable ;
+              }
+            }
+            container http {
+              description 'HTTP of stateful inspect'
+                          ;
+              leaf activex-block {
+                description 'ActiveX block of stateful inspect'
+                            ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+                  enum enable {
+                    value 1 ;
+                  }
+                }
+                default disable ;
+              }
+              leaf javaapplet-block {
+                description 'JavaApplet block of stateful inspect'
+                            ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+                  enum enable {
+                    value 1 ;
+                  }
+                }
+                default disable ;
+              }
+              leaf url-filter {
+                description 'URL filter of stateful inspect'
+                            ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+                  enum enable {
+                    value 1 ;
+                  }
+                }
+                default disable ;
+              }
+            }
+            leaf ftp {
+              description 'FTP of stateful inspect'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf sip {
+              description 'SIP of stateful inspect'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+            leaf udp-data-filter {
+              description 'UDP data filter of stateful inspect'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+              default disable ;
+            }
+          }
+        }
+      }
+      container im-server-lists {
+        description 'Configure instant-msg list'
+                    ;
+        presence im-server ;
+        container im-server-ip-lists {
+          description 'Instant-msg list that key is IP'
+                      ;
+          list im-server-ip-list {
+            description 'Instant-msg list that key is IP'
+                        ;
+            key ip ;
+            leaf ip {
+              description 'IP address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf name {
+              description 'Service name'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+              mandatory true ;
+            }
+            leaf time-range {
+              description 'Timerange name'
+                          ;
+              type string {
+                length 0..31 ;
+              }
+              default ''
+                      ;
+            }
+          }
+        }
+        container im-server-port-lists {
+          description 'Instant-msg list that key are protocol,port and IP'
+                      ;
+          list im-server-port-list {
+            description 'Instant-msg list that key are protocol,port and IP'
+                        ;
+            key 'protocol-type port ip'
+                ;
+            leaf protocol-type {
+              description 'Protocol type'
+                          ;
+              type enumeration {
+                enum tcp {
+                  value 6 ;
+                }
+                enum udp {
+                  value 17 ;
+                }
+              }
+            }
+            leaf port {
+              description 'Protocol port number'
+                          ;
+              type uint16 {
+                range 1..65535 ;
+              }
+            }
+            leaf ip {
+              description 'IP address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf name {
+              description 'Service name'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+              mandatory true ;
+            }
+            leaf time-range {
+              description 'Timerange name'
+                          ;
+              type string {
+                length 0..31 ;
+              }
+              default ''
+                      ;
+            }
+          }
+        }
+      }
+      container http-rule-lists {
+        description 'Configure HTTP filter list'
+                    ;
+        list http-rule-list {
+          description 'HTTP filter list'
+                      ;
+          key rule-id ;
+          leaf rule-id {
+            description 'Rule ID'
+                        ;
+            type uint16 {
+              range 1..1000 ;
+            }
+          }
+          leaf type {
+            description 'Rule type'
+                        ;
+            type enumeration {
+              enum permit {
+                value 1 ;
+              }
+              enum deny {
+                value 2 ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf time-range {
+            description 'Timerange name'
+                        ;
+            type string {
+              length 0..31 ;
+            }
+            default ''
+                    ;
+          }
+          choice http-rule {
+            description 'Rule mode'
+                        ;
+            case host-uri {
+              description 'Host and URI filter'
+                          ;
+              leaf host {
+                description 'Host name'
+                            ;
+                type string {
+                  length 0..63 ;
+                }
+                default ''
+                        ;
+              }
+              leaf uri {
+                description 'URI string'
+                            ;
+                type ncd:url {
+                  length 0..127 ;
+                }
+              }
+            }
+            case mime {
+              description 'MIME filter'
+                          ;
+              leaf mime {
+                description 'MIME string'
+                            ;
+                type string {
+                  length 1..63 ;
+                }
+              }
+            }
+            case any {
+              description 'Any filter'
+                          ;
+              leaf any {
+                description 'Any filter'
+                            ;
+                type empty ;
+              }
+            }
+          }
+        }
+      }
+      container zone-extend-lists {
+        description 'Configure zone security-extend list'
+                    ;
+        list zone-extend {
+          description 'Zone security-extend'
+                      ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf zone-type {
+            description 'Extend type'
+                        ;
+            type enumeration {
+              enum inside {
+                value 0 ;
+              }
+              enum outside {
+                value 1 ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+      }
+      container udp-filter-lists {
+        description 'Configure UDP data filter list'
+                    ;
+        list udp-filter-list {
+          description 'UDP data filter list'
+                      ;
+          key 'offset mode match-string'
+              ;
+          leaf offset {
+            description Offset ;
+            type uint16 {
+              range 0..1472 ;
+            }
+          }
+          leaf mode {
+            description 'Match mode'
+                        ;
+            type enumeration {
+              enum match {
+                value 0 ;
+              }
+              enum include {
+                value 1 ;
+              }
+            }
+          }
+          leaf match-string {
+            description 'Match string'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf time-range {
+            description 'Timerange name'
+                        ;
+            type string {
+              length 0..31 ;
+            }
+            default ''
+                    ;
+          }
+        }
+      }
+      container zone-member-lists {
+        description 'Configure zone security member list'
+                    ;
+        presence zone-member ;
+        list zone-member {
+          description 'Zone security member list'
+                      ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf zone-name {
+            description 'Zone security name'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+        }
+      }
+      container zone-extend-member-lists {
+        description 'Configure zone security extend member list'
+                    ;
+        list zone-extend-member {
+          description 'Zone security extend member list'
+                      ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf zone-type {
+            description 'Zone security extend type'
+                        ;
+            type enumeration {
+              enum inside {
+                value 0 ;
+              }
+              enum outside {
+                value 1 ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model'
+                ;
+    container firewall {
+      description 'The state of firewall'
+                  ;
+      container black-lists {
+        description 'The information of blacklist'
+                    ;
+        container black-ip-vrf-lists {
+          description 'Blacklist that key are IP and VRF'
+                      ;
+          list black-ip-vrf-list {
+            description 'Blacklist that key are IP and VRF'
+                        ;
+            key 'ip vrf'
+                ;
+            leaf ip {
+              description 'Blacklist IP address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf vrf {
+              description 'VPN routing/forwarding instance name'
+                          ;
+              type string {
+                length 1..35 ;
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+            leaf time-range {
+              description 'Timerange name'
+                          ;
+              type string {
+                length 0..31 ;
+              }
+            }
+          }
+        }
+        container black-ip-lists {
+          description 'Blacklist that key is IP'
+                      ;
+          list black-ip-list {
+            description 'Blacklist that key is IP'
+                        ;
+            key ip ;
+            leaf ip {
+              description 'Blacklist IP address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+            leaf time-range {
+              description 'Timerange name'
+                          ;
+              type string ;
+            }
+          }
+        }
+      }
+      container white-lists {
+        description 'The information of whitelist'
+                    ;
+        container white-ip-vrf-lists {
+          description 'Whitelist that key are IP and VRF'
+                      ;
+          list white-ip-vrf-list {
+            description 'Whitelist that key are IP and VRF'
+                        ;
+            key 'ip vrf'
+                ;
+            leaf ip {
+              description 'Whitelist IP address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf vrf {
+              description 'VPN routing/forwarding instance name'
+                          ;
+              type string {
+                length 1..35 ;
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+            leaf time-range {
+              description 'Timerange name'
+                          ;
+              type string ;
+            }
+          }
+        }
+        container white-ip-lists {
+          description 'Whitelist that key is IP'
+                      ;
+          list white-ip-list {
+            description 'Whitelist that key is IP'
+                        ;
+            key ip ;
+            leaf ip {
+              description 'Whitelist IP address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+            leaf time-range {
+              description 'Timerange name'
+                          ;
+              type string ;
+            }
+          }
+        }
+      }
+      container ip-defend-zone-lists {
+        description 'The information of IP defend status'
+                    ;
+        list ip-defend-zone {
+          description 'The information of IP defend status'
+                      ;
+          key zone-name ;
+          leaf zone-name {
+            description 'Zone name'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          container land-attack {
+            description 'The information of land attack'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container smurf {
+            description 'The information of smurf'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container winnuke {
+            description 'The information of winnuke'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container syn-flood {
+            description 'The information of SYN flood'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container udp-flood {
+            description 'The information of UDP flood'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container icmp-flood {
+            description 'The information of ICMP flood'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container ping-death {
+            description 'The information of PING of death'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container icmp-unreachable {
+            description 'The information of ICMP unreachable'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container icmp-fragment {
+            description 'The information of ICMP fragment'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container teardrop {
+            description 'The information of TearDrop'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container tracert {
+            description 'The information of Tracert'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container tcp-syn-fragment {
+            description 'The information of TCP SYN fragment'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container ip-option-attack {
+            description 'The information of IP option attack'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container tcp-syn-fin {
+            description 'The information of TCP SYN FIN'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container large-ping {
+            description 'The information of Large PING'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container icmp-redirect {
+            description 'The information of ICMP redirect'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container ip-fragment {
+            description 'The information of IP fragment'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container fraggle {
+            description 'The information of Fraggle'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container malform-ip-option {
+            description 'The information of Malform IP option'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container unknown-protocol {
+            description 'The information of unknown protocol'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container tcp-no-flag {
+            description 'The information of TCP no flag'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+          container fin-no-ack {
+            description 'The information of FIN no ACK'
+                        ;
+            leaf state {
+              description 'The state'
+                          ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+                enum on {
+                  value 1 ;
+                }
+              }
+            }
+            leaf hit-count {
+              description 'Hit count'
+                          ;
+              type uint64 ;
+            }
+          }
+        }
+      }
+      container ip-session-summary-lists {
+        description 'The summary information of IP session'
+                    ;
+        list ip-session-summary {
+          description 'The summary information of IP session'
+                      ;
+          key cpu ;
+          leaf cpu {
+            description 'CPU name'
+                        ;
+            type ncd:cpu ;
+          }
+          leaf total-session {
+            description 'Total session number'
+                        ;
+            type uint64 ;
+          }
+          leaf used-session {
+            description 'Used session number'
+                        ;
+            type uint64 ;
+          }
+        }
+      }
+      container tcp-intercept-statistics-lists {
+        description 'The TCP intercept statistics'
+                    ;
+        list tcp-intercept-statistics {
+          description 'The TCP intercept statistics'
+                      ;
+          key cpu ;
+          leaf cpu {
+            description 'CPU name'
+                        ;
+            type ncd:cpu ;
+          }
+          leaf incomplete {
+            description 'Incomplete count'
+                        ;
+            type uint32 ;
+          }
+          leaf established {
+            description 'Established count'
+                        ;
+            type uint32 ;
+          }
+          leaf total {
+            description 'Total count(incomplete + established)'
+                        ;
+            type uint32 ;
+          }
+          leaf request-per-minute {
+            description 'Request count per minute'
+                        ;
+            type uint32 ;
+          }
+        }
+        ncd:revise-date 2018-12-20 ;
+      }
+    }
+  }
+}

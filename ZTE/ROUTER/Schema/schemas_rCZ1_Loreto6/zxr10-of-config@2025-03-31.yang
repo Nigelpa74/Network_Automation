@@ -1,0 +1,1233 @@
+module zxr10-of-config {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/of-config" ;
+  prefix of-config ;
+  yang-version 1 ;
+  import ietf-inet-types {
+    prefix inet ;
+  }
+
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ONF Config Management Group" ;
+  contact "tbd" ;
+  description 'The netconf module to describe the OpenFlow.' ;
+  revision 2025-03-31 {
+    description 'Del the project FN.C89E for all.' ;
+  }
+
+  revision 2024-11-26 {
+    description 'Modified the Chinese and English descriptions as a whole.' ;
+  }
+
+  revision 2024-09-24 {
+    description 'Correct the spelling mistakes in the descriptions.' ;
+  }
+
+  revision 2021-08-09 {
+    description 'The global port list node and all its child nodes do not take effect.' ;
+  }
+
+  revision 2021-03-22 {
+    description 'The default diag-mode of the logical switch is changed from sdn to traditional.' ;
+  }
+
+  revision 2019-12-23 {
+    description 'Add container tcp-mss with leaf size.' ;
+  }
+
+  revision 2018-11-16 {
+    description 'The OpenFlow function enables, if enables, the OpenFlow service is provided, and if not, the OpenFlow service is closed.' ;
+  }
+
+  revision 2018-09-13 {
+    description 'Add IPv6 controller configuration.' ;
+  }
+
+  revision 2018-09-10 {
+    description 'Add case v6-endpoints and leaf local-endpoint-ipv6-adress, leaf remote-endpoint-ipv6-adress.' ;
+  }
+
+  revision 2018-06-22 {
+    description 'Add container probe-interval with leaf time and leaf count and container local-probe-interval with leaf time and leaf count.' ;
+  }
+
+  revision 2018-04-26 {
+    description 'Add container ofls-attributes,container vlan,leaf id,leaf vlan-id.' ;
+  }
+
+  revision 2017-10-23 {
+    description 'Add container max-backoff,leaf time and probel-interval,leaf time.' ;
+  }
+
+  revision 2017-10-20 {
+    description 'Add diag mode sdn or tradional of  logical switch intance.' ;
+  }
+
+  revision 2017-08-31 {
+    description 'Add filter condition, get logical switches info by dpid.' ;
+  }
+
+  revision 2017-08-02 {
+    description 'Add leaf-list node and leaf port and leaf number.' ;
+  }
+
+  revision 2017-02-10 {
+    description 'Add State for get port no.' ;
+  }
+
+  revision 2016-11-28 {
+    description 'Add VRF to the controller.' ;
+  }
+
+  revision 2015-02-13 {
+    description 'Modify the range of the payload.' ;
+  }
+
+  revision 2015-01-15 {
+    description 'Add port to ofls instance.' ;
+  }
+
+  revision 2014-10-17 {
+    description 'Add queue/bfd/vxlan configuration' ;
+  }
+
+  revision 2011-12-07 {
+    description 'First Version' ;
+    reference "tbd" ;
+  }
+
+  typedef OFConfigId {
+    type inet:uri ;
+
+    description 'Generic type of an identifier in OF-CONFIG.' ;
+  }
+
+  typedef OFConfigurationPointProtocolType {
+    type enumeration {
+      enum ssh {
+        value 0 ;
+      }
+
+      enum soap {
+        value 1 ;
+      }
+
+      enum tls {
+        value 2 ;
+      }
+
+      enum beep {
+        value 3 ;
+      }
+
+    }
+
+    description 'Possible protocols to connect ot an OF Configuration Point.' ;
+  }
+
+  typedef OFOpenFlowVersionType {
+    type enumeration {
+      enum not-applicable {
+        value 0 ;
+      }
+
+      enum 1.0 {
+        value 1 ;
+      }
+
+      enum 1.0.1 {
+        value 2 ;
+      }
+
+      enum 1.1 {
+        value 3 ;
+      }
+
+      enum 1.2 {
+        value 4 ;
+      }
+
+      enum 1.3 {
+        value 5 ;
+      }
+
+      enum 1.3.1 {
+        value 6 ;
+      }
+
+    }
+
+    description 'This enumeration contains the all OpenFlow versions released so far.' ;
+  }
+
+  typedef datapath-id-type {
+    type string {
+      pattern "[0-9a-fA-F]{2}(:[0-9a-fA-F]{2}){7}" ;
+
+    }
+
+    description 'The datapath-id type represents an OpenFlow datapath identifier.' ;
+  }
+
+  typedef OFTenthOfAPercentType {
+    type uint16 {
+      range 0..1000 ;
+
+    }
+
+    description 'This type defines a value in tenth of a percent.' ;
+  }
+
+  typedef OFUpDownStateType {
+    type enumeration {
+      enum up {
+        value 0 ;
+      }
+
+      enum down {
+        value 1 ;
+      }
+
+    }
+
+    description 'Type to specify state information for a port or a connection.' ;
+  }
+
+  typedef OFPortRateType {
+    type enumeration {
+      enum 10Mb-HD {
+        value 0 ;
+      }
+
+      enum 10Mb-FD {
+        value 1 ;
+      }
+
+      enum 100Mb-HD {
+        value 2 ;
+      }
+
+      enum 100Mb-FD {
+        value 3 ;
+      }
+
+      enum 1Gb-HD {
+        value 4 ;
+      }
+
+      enum 1Gb-FD {
+        value 5 ;
+      }
+
+      enum 10Gb {
+        value 6 ;
+      }
+
+      enum 40Gb {
+        value 7 ;
+      }
+
+      enum 100Gb {
+        value 8 ;
+      }
+
+      enum 1Tb {
+        value 9 ;
+      }
+
+      enum other {
+        value 10 ;
+      }
+
+    }
+
+    description 'Type to specify the rate of a port including the
+duplex transmission feature. Possible rates are 10Mb, 100Mb,
+1Gb, 10Gb, 40Gb, 100Gb, 1Tb or other. Rates of 10Mb, 100Mb
+and 1 Gb can support half or full duplex transmission.' ;
+  }
+
+  typedef OFActionType {
+    type enumeration {
+      enum output {
+        value 0 ;
+      }
+
+      enum copy-ttl-out {
+        value 1 ;
+      }
+
+      enum copy-ttl-in {
+        value 2 ;
+      }
+
+      enum set-mpls-ttl {
+        value 3 ;
+      }
+
+      enum dec-mpls-ttl {
+        value 4 ;
+      }
+
+      enum push-vlan {
+        value 5 ;
+      }
+
+      enum pop-vlan {
+        value 6 ;
+      }
+
+      enum push-mpls {
+        value 7 ;
+      }
+
+      enum pop-mpls {
+        value 8 ;
+      }
+
+      enum set-queue {
+        value 9 ;
+      }
+
+      enum group {
+        value 10 ;
+      }
+
+      enum set-nw-ttl {
+        value 11 ;
+      }
+
+      enum dec-nw-ttl {
+        value 12 ;
+      }
+
+      enum set-field {
+        value 13 ;
+      }
+
+    }
+
+    description 'The types of actions defined in OpenFlow Switch
+Specification versions 1.2, 1.3, and 1.3.1.' ;
+  }
+
+  typedef OFInstructionType {
+    type enumeration {
+      enum apply-actions {
+        value 0 ;
+      }
+
+      enum clear-actions {
+        value 1 ;
+      }
+
+      enum write-actions {
+        value 2 ;
+      }
+
+      enum write-metadata {
+        value 3 ;
+      }
+
+      enum goto-table {
+        value 4 ;
+      }
+
+    }
+
+    description 'The types of instructions defined in OpenFlow
+Switch Specification versions 1.2, 1.3, and 1.3.1.' ;
+  }
+
+  typedef OFMatchFieldType {
+    type enumeration {
+      enum input-port {
+        value 0 ;
+      }
+
+      enum physical-input-port {
+        value 1 ;
+      }
+
+      enum metadata {
+        value 2 ;
+      }
+
+      enum ethernet-dest {
+        value 3 ;
+      }
+
+      enum ethernet-src {
+        value 4 ;
+      }
+
+      enum ethernet-frame-type {
+        value 5 ;
+      }
+
+      enum vlan-id {
+        value 6 ;
+      }
+
+      enum vlan-priority {
+        value 7 ;
+      }
+
+      enum ip-dscp {
+        value 8 ;
+      }
+
+      enum ip-ecn {
+        value 9 ;
+      }
+
+      enum ip-protocol {
+        value 10 ;
+      }
+
+      enum ipv4-src {
+        value 11 ;
+      }
+
+      enum ipv4-dest {
+        value 12 ;
+      }
+
+      enum tcp-src {
+        value 13 ;
+      }
+
+      enum tcp-dest {
+        value 14 ;
+      }
+
+      enum udp-src {
+        value 15 ;
+      }
+
+      enum udp-dest {
+        value 16 ;
+      }
+
+      enum sctp-src {
+        value 17 ;
+      }
+
+      enum sctp-dest {
+        value 18 ;
+      }
+
+      enum icmpv4-type {
+        value 19 ;
+      }
+
+      enum icmpv4-code {
+        value 20 ;
+      }
+
+      enum arp-op {
+        value 21 ;
+      }
+
+      enum arp-src-ip-address {
+        value 22 ;
+      }
+
+      enum arp-target-ip-address {
+        value 23 ;
+      }
+
+      enum arp-src-hardware-address {
+        value 24 ;
+      }
+
+      enum arp-target-hardware-address {
+        value 25 ;
+      }
+
+      enum ipv6-src {
+        value 26 ;
+      }
+
+      enum ipv6-dest {
+        value 27 ;
+      }
+
+      enum ipv6-flow-label {
+        value 28 ;
+      }
+
+      enum icmpv6-type {
+        value 29 ;
+      }
+
+      enum icmpv6-code {
+        value 30 ;
+      }
+
+      enum ipv6-nd-target {
+        value 31 ;
+      }
+
+      enum ipv6-nd-source-link-layer {
+        value 32 ;
+      }
+
+      enum ipv6-nd-target-link-layer {
+        value 33 ;
+      }
+
+      enum mpls-label {
+        value 34 ;
+      }
+
+      enum mpls-tc {
+        value 35 ;
+      }
+
+    }
+
+    description 'The types of match field defined in OpenFlow
+Switch Specification versions 1.2, 1.3, and 1.3.1.' ;
+  }
+
+  typedef hex-binary {
+    type binary ;
+
+    description 'Hex binary encoded string.' ;
+    reference "http://www.w3.org/TR/2004/REC-xmlschema-2-
+    20041028/datatypes.html#hexBinary" ;
+  }
+
+  container configuration {
+    description 'The configuration model of OpenFlow.
+' ;
+    container capable-switch {
+      description 'The OpenFlow Capable Switch serves as the root
+element for an OpenFlow configuration. It contains logical
+switches and resources that can be assigned to logical
+switches. ' ;
+      presence capable-switch-0-default ;
+      leaf id {
+        description 'A unique but locally arbitrary identifier that uniquely identifies a Capable Switch within the context of potential OpenFlow Configuration Points. ' ;
+        type inet:uri {
+          length 1..63 ;
+
+        }
+
+        mandatory true ;
+      }
+
+      leaf enabled {
+        description 'The OpenFlow function enables, if enables, the OpenFlow service is provided, and if not, the OpenFlow service is closed.The default values are read from the performance parameters.' ;
+        type boolean ;
+
+        ncd:revise-date 2018-11-16 ;
+      }
+
+      container probe-interval {
+        description 'The global probe interval time and probe count of all OpenFlow Logical Switches.' ;
+        presence probe-interval ;
+        leaf time {
+          description 'The global probe interval time (s) of all OpenFlow Logical Switches, range from 1s to 90s.
+' ;
+          type uint8 {
+            range 1..90 ;
+
+          }
+
+          mandatory true ;
+        }
+
+        leaf count {
+          description 'The global probe count of all OpenFlow Logical Switches, 
+range from 1 to 10.
+' ;
+          type uint8 {
+            range 1..10 ;
+
+          }
+
+          default 3 ;
+        }
+
+        ncd:revise-date 2018-06-22 ;
+      }
+
+      container logical-switches {
+        description 'This element contains a list of all OpenFlow
+Logical Switches available at the OpenFlow Capable
+Switch.' ;
+        list switch {
+          description 'The list of all OpenFlow Logical Switches on the OpenFlow Capable Switch.
+' ;
+          key id ;
+          leaf id {
+            description 'A unique but locally arbitrary identifier that
+identifies a logical switch within the context of an
+OpenFlow Capable Switch.' ;
+            type OFConfigId {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf datapath-id {
+            description 'The datapath identifier of the logical switch.' ;
+            type datapath-id-type {
+              length 23 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf diag-mode {
+            description 'The forwarding mode of packets, default is traditional forwarding mode.
+' ;
+            type enumeration {
+              enum sdn {
+                value 0 ;
+              }
+
+              enum traditional {
+                value 1 ;
+              }
+
+            }
+
+            default traditional ;
+            ncd:revise-date 2017-10-20 ;
+          }
+
+          leaf enabled {
+            description "This element indicates the administrative state
+            of the OpenFlow Logical Switch. A value of 'false' means
+            the OpenFlow Logical Switch must not communicate with any
+            OpenFlow Controllers." ;
+            type boolean ;
+
+            default true ;
+          }
+
+          leaf check-controller-certificate {
+            description "Whether the logical switch authenticates the controller's certificate when establishing a TLS connection with the controller.
+" ;
+            type boolean ;
+
+            default false ;
+          }
+
+          leaf lost-connection-behavior {
+            description 'This element indicates the the behavior of the
+OpenFlow Logical Switch in case it loses contact with all
+OpenFlow Controllers. ' ;
+            type enumeration {
+              enum failSecureMode {
+                value 0 ;
+              }
+
+              enum failStandaloneMode {
+                value 1 ;
+              }
+
+            }
+
+            default failSecureMode ;
+            ncd:revise-date 2014-10-17 ;
+          }
+
+          container controllers {
+            description 'The list of controllers for this Logical switch.' ;
+            list controller {
+              description 'Controller information that establishes a connection with the logical switch,supporting IPv4 addresses.' ;
+              key id ;
+              leaf id {
+                description 'A unique but locally arbitrary identifier that
+uniquely identifies an OpenFlow Controller within the
+context of an OpenFlow Capable Switch.
+' ;
+                type OFConfigId {
+                  length 1..63 ;
+
+                }
+
+              }
+
+              leaf role {
+                description 'The role of the OpenFlow Controller.' ;
+                type enumeration {
+                  enum master {
+                    value 0 ;
+                  }
+
+                  enum slave {
+                    value 1 ;
+                  }
+
+                  enum equal {
+                    value 2 ;
+                  }
+
+                }
+
+                default equal ;
+              }
+
+              leaf ip-address {
+                description 'The IPv4 address of the OpenFlow Controller. ' ;
+                type inet:ipv4-address ;
+
+                mandatory true ;
+              }
+
+              leaf port {
+                description 'The TCP port number at the OpenFlow Controller.
+This port number is used by the OpenFlow Logical Switch
+when connecting to the OpenFlow Controller using TCP or
+TLS. 
+' ;
+                type inet:port-number ;
+
+                default 6653 ;
+              }
+
+              leaf local-ip-address {
+                description 'The local IPv4 address of the OpenFlow Logical
+Switch when connecting to this OpenFlow Controller. It is
+the source IPv4 address of packets sent to this OpenFlow
+Controller.
+' ;
+                type inet:ipv4-address ;
+
+              }
+
+              leaf local-port {
+                description 'The local TCP port number of the OpenFlow
+Logical Switch when connecting to this OpenFlow Controller.
+It is the source TCP port number of packets sent to this
+OpenFlow Controller.' ;
+                type inet:port-number ;
+
+              }
+
+              leaf protocol {
+                description 'The default protocol that the OpenFlow Logical
+Switch uses to connect to this OpenFlow Controller.' ;
+                type enumeration {
+                  enum tcp {
+                    value 0 ;
+                  }
+
+                  enum tls {
+                    value 1 ;
+                  }
+
+                }
+
+                default tls ;
+              }
+
+              leaf vrf-name {
+                description 'The VRF name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+                ncd:revise-date 2016-11-28 ;
+              }
+
+              leaf mng-flag {
+                description 'VRF management interface flag.' ;
+                type boolean ;
+
+                default false ;
+                ncd:revise-date 2016-11-28 ;
+              }
+
+            }
+
+            list controller-v6 {
+              description 'The list of OpenFlow Controllers that are assigned to the OpenFlow Logical Switch,supporting IPv6 addresses.' ;
+              key id ;
+              leaf id {
+                description 'A unique but locally arbitrary identifier that
+uniquely identifies an OpenFlow Controller within the
+context of an OpenFlow Capable Switch.' ;
+                type OFConfigId {
+                  length 1..63 ;
+
+                }
+
+              }
+
+              leaf role {
+                description 'The role of the OpenFlow Controller.' ;
+                type enumeration {
+                  enum master {
+                    value 0 ;
+                  }
+
+                  enum slave {
+                    value 1 ;
+                  }
+
+                  enum equal {
+                    value 2 ;
+                  }
+
+                }
+
+                default equal ;
+              }
+
+              leaf ipv6-address {
+                description 'The IPv6 address of the OpenFlow Controller. ' ;
+                type inet:ipv6-address ;
+
+                mandatory true ;
+              }
+
+              leaf port {
+                description 'The TCP port number at the OpenFlow Controller.
+This port number is used by the OpenFlow Logical Switch
+when connecting to the OpenFlow Controller using TCP or
+TLS. ' ;
+                type inet:port-number ;
+
+                default 6653 ;
+              }
+
+              leaf local-ipv6-address {
+                description 'The local IPv6 address of the OpenFlow Logical
+Switch when connecting to this OpenFlow Controller. It is
+the source IPv6 address of packets sent to this OpenFlow
+Controller.' ;
+                type inet:ipv6-address ;
+
+              }
+
+              leaf local-port {
+                description 'The local TCP port number of the OpenFlow
+Logical Switch when connecting to this OpenFlow Controller.
+It is the source TCP port number of packets sent to this
+OpenFlow Controller.' ;
+                type inet:port-number ;
+
+              }
+
+              leaf protocol {
+                description 'The default protocol that the OpenFlow Logical
+Switch uses to connect to this OpenFlow Controller.' ;
+                type enumeration {
+                  enum tcp {
+                    value 0 ;
+                  }
+
+                  enum tls {
+                    value 1 ;
+                  }
+
+                }
+
+                default tls ;
+              }
+
+              leaf vrf-name {
+                description 'The VRF name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf mng-flag {
+                description 'VRF management interface flag.' ;
+                type boolean ;
+
+                default false ;
+              }
+
+              ncd:revise-date 2018-09-13 ;
+            }
+
+          }
+
+          container bfd-sessions {
+            description 'BFD instance information list.' ;
+            list bfd-session {
+              description 'BFD instance information.' ;
+              key ld ;
+              leaf ld {
+                description 'Local discriminator for BFD.' ;
+                type uint32 {
+                  range 1..4294967295 {
+                    description 'Local discriminator for BFD.' ;
+                  }
+
+                }
+
+              }
+
+              leaf rd {
+                description 'Remote discriminator for BFD.' ;
+                type uint32 {
+                  range 1..4294967295 {
+                    description 'Remote discriminator for BFD.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf xmt-time {
+                description 'BFD control packets TX interval.' ;
+                type uint32 ;
+
+                units ms ;
+                mandatory true ;
+              }
+
+              leaf detect-time {
+                description 'Detect time of BFD session.' ;
+                type uint32 ;
+
+                units ms ;
+                mandatory true ;
+              }
+
+              leaf port-no {
+                description 'Output interface index for BFD session.' ;
+                type uint32 ;
+
+                mandatory true ;
+              }
+
+              leaf payload-length {
+                description 'Packet length of BFD session.' ;
+                type uint32 ;
+
+                mandatory true ;
+              }
+
+              leaf payload {
+                description 'The packet content of BFD session.' ;
+                type binary {
+                  length 1..255 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+            ncd:revise-date 2014-10-17 ;
+          }
+
+          container resources {
+            description 'The list of identifiers of all resources of the
+OpenFlow Capable Switch that the OpenFlow Logical Switch
+has exclusive or non-exclusive access to. ' ;
+            list port {
+              description 'The list of a port of the OpenFlow Capable Switch that the OpenFlow Logical Switch has exclusive access to.' ;
+              key id ;
+              leaf id {
+                description 'A resource identifier of a port of the OpenFlow Capable Switch that the OpenFlow Logical Switch has exclusive access to.
+Elements in this list MUST be unique. This means each port element can only be referenced once.' ;
+                type leafref {
+                  path "/configuration/capable-switch/resources/port/resource-id" ;
+                }
+
+              }
+
+              leaf number {
+                description 'The port number assigned by logical switch optionally when the logical switch bind the port.The range is from 1 to 65535.' ;
+                type uint32 {
+                  range 1..65535 ;
+
+                }
+
+                ncd:revise-date 2017-08-02 ;
+              }
+
+            }
+
+            ncd:revise-date 2015-01-15 ;
+          }
+
+          container ofls-attributes {
+            list ofls-attribute {
+              description 'Properties of the interface bound to the logical switch instance.' ;
+              key id ;
+              leaf id {
+                type leafref {
+                  path "/configuration/capable-switch/resources/port/resource-id" ;
+                }
+
+                description 'Identifier of the interface bound to the logical switch.' ;
+              }
+
+              container vlans {
+                leaf vlan-bitmap {
+                  type ncd:bitmap {
+                    length 1..4094 ;
+
+                  }
+
+                  description 'VLAN range information (bitmap format).' ;
+                }
+
+                description 'VLAN properties of the interface bound to the logical switch instance.' ;
+              }
+
+            }
+
+            description 'List of properties of interfaces bound to the logical switch instance.' ;
+            ncd:revise-date 2018-04-26 ;
+          }
+
+          container max-backoff {
+            leaf time {
+              type uint8 {
+                range 1..90 ;
+
+              }
+
+              description 'Maximum request interval.' ;
+            }
+
+            description 'Maximum request interval configuration for the logical switch instance.' ;
+            ncd:revise-date 2017-10-23 ;
+          }
+
+          container probe-interval {
+            description 'The local probe interval time and probe count of one OpenFlow Logical Switches.' ;
+            presence local-probe-interval ;
+            leaf time {
+              description 'The local probe interval time (s) of one OpenFlow Logical Switches, range from 1s to 90s.' ;
+              type uint8 {
+                range 1..90 ;
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf count {
+              description 'The local probe count of one OpenFlow Logical Switches, range from 1 to 10.' ;
+              type uint8 {
+                range 1..10 ;
+
+              }
+
+            }
+
+            ncd:revise-date 2018-06-22 ;
+          }
+
+          container tcp-mss {
+            description 'TCP initial maximum segment size.' ;
+            presence ofls-tcp-mss ;
+            leaf size {
+              description 'The MSS size, range from 68 to 10000.' ;
+              type uint32 {
+                range 68..10000 ;
+
+              }
+
+              mandatory true ;
+            }
+
+            ncd:revise-date 2019-12-23 ;
+          }
+
+          ncd:select id ;
+          ncd:select datapath-id ;
+        }
+
+      }
+
+      container resources {
+        description 'The list of identifiers of all resources of the
+OpenFlow Capable Switch that the OpenFlow Logical Switch
+has exclusive or non-exclusive access to. ' ;
+        list port {
+          description 'The list contains all port resources of the
+OpenFlow Capable Switch.' ;
+          key resource-id ;
+          leaf resource-id {
+            description 'A unique but locally arbitrary identifier that
+uniquely identifies an OpenFlow Port within the context
+of an OpenFlow Logical Switch.' ;
+            type ncd:ifname {
+              length 1..31 ;
+
+            }
+
+          }
+
+          choice tunnel-type {
+            description 'Tunnels are modeled as logical ports.' ;
+            case vxlan-tunnel {
+              description 'Properties of a VxLAN tunnel.' ;
+              container vxlan-tunnel {
+                description 'Properties of a VxLAN tunnel.' ;
+                presence vxlan-tunnel ;
+                choice endpoints {
+                  description 'VxLAN tunnel endpoints.' ;
+                  mandatory true ;
+                  case v4-endpoints {
+                    description 'The IPv4 address of the tunnel endpoint.' ;
+                    leaf local-endpoint-ipv4-adress {
+                      description 'The IPv4 address of the local tunnel
+endpoint.' ;
+                      type inet:ipv4-address ;
+
+                    }
+
+                    leaf remote-endpoint-ipv4-adress {
+                      description 'The IPv4 address of the remote tunnel
+endpoint.' ;
+                      type inet:ipv4-address ;
+
+                    }
+
+                  }
+
+                  case v6-endpoints {
+                    description 'The IPv6 address of the tunnel endpoint.' ;
+                    leaf local-endpoint-ipv6-adress {
+                      description 'The IPv6 address of the local tunnel
+endpoint.' ;
+                      type inet:ipv6-address ;
+
+                    }
+
+                    leaf remote-endpoint-ipv6-adress {
+                      description 'The IPv6 address of the remote tunnel
+endpoint.' ;
+                      type inet:ipv6-address ;
+
+                    }
+
+                    ncd:revise-date 2018-09-10 ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        list queue {
+          description 'The list contains all queue resources of the
+OpenFlow Capable Switch.' ;
+          key resource-id ;
+          leaf resource-id {
+            description 'A unique but locally arbitrary identifier that
+uniquely identifies an OpenFlow Queue within the context
+of an OpenFlow Logical Switch. ' ;
+            type inet:uri {
+              length 1..31 ;
+
+            }
+
+          }
+
+          leaf port {
+            description 'Reference to port resources in the Capable Switch.This element associates an OpenFlow Queue with an OpenFlow Port.' ;
+            type leafref {
+              path "/configuration/capable-switch/resources/port/resource-id" ;
+            }
+
+          }
+
+          container properties {
+            description 'The queue properties currently configured.' ;
+            leaf min-rate {
+              description 'The minimal rate that is reserved for this
+queue in 1/10 of a percent of the actual rate.If not configured, the value is 65535, indicating that the minimum rate limit is not in effect.' ;
+              type OFTenthOfAPercentType ;
+
+            }
+
+            leaf max-rate {
+              description 'The maximum rate that is reserved for this
+queue in 1/10 of a percent of the actual rate.If not configured, the value is 65535, indicating that the maximum rate limit is not in effect.' ;
+              type OFTenthOfAPercentType ;
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2014-10-17 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'The state model of OpenFlow.' ;
+    container capable-switch {
+      description 'The OpenFlow Capable Switch serves as the root
+element for an OpenFlow configuration. It contains logical
+switches and resources that can be assigned to logical
+switches. It may have relations to OpenFlow Configuration
+Points.' ;
+      container resources {
+        description 'The list of identifiers of all resources of the
+OpenFlow Capable Switch that the OpenFlow Logical Switch
+has exclusive or non-exclusive access to. ' ;
+        list port {
+          description 'The list contains all port resources of the
+OpenFlow Capable Switch.' ;
+          key resource-id ;
+          leaf resource-id {
+            description 'A unique but locally arbitrary identifier that
+uniquely identifies an OpenFlow Port within the context
+of an OpenFlow Logical Switch. ' ;
+            type ncd:ifname {
+              length 1..31 ;
+
+            }
+
+          }
+
+          leaf number {
+            description 'This number identifies the OpenFlow Port to OpenFlow Controllers. ' ;
+            type uint32 ;
+
+          }
+
+          leaf name {
+            description 'This port name assists OpenFlow Controllers in identifying OpenFlow Ports. ' ;
+            type string ;
+
+          }
+
+          ncd:select resource-id ;
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2017-02-10 ;
+  }
+
+}

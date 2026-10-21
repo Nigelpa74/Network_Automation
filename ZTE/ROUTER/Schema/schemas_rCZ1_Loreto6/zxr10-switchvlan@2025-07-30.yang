@@ -1,0 +1,2071 @@
+module zxr10-switchvlan {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/switchvlan" ;
+  prefix switchvlan ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe switchvlan.' ;
+  revision 2025-07-30 {
+    description '1.Add new ipv4 and ipv6 leafs on /switchvlan:state/switchvlan:switchvlan/switchvlan:l2-vlan-statistics/switchvlan:l2-statistics.' ;
+  }
+
+  revision 2024-12-20 {
+    description "1.Featuer xconnet-isolated support 'PC-SWITCH'  project." ;
+  }
+
+  revision 2024-09-30 {
+    description "1.Featuer trunk-native-untag-flag support '5960M' and '5960X' project." ;
+  }
+
+  revision 2024-08-27 {
+    description '1.Add a new leaf trunk-native-untag-flag on zxr10-switchvlan\configuration\switchvlan\if-attr\if-attr.' ;
+  }
+
+  revision 2024-06-19 {
+    description '1.Add a new leaf description on zxr10-switchvlan\configuration\switchvlan\vlan-broadcast-table\vlan-brdcst-tbl.' ;
+  }
+
+  revision 2024-06-14 {
+    description "1.Featuer ingress-vlan-bitmap support 'PTN.6700' project.
+    2.Featuer pvlan-port support 'PC.MSE' project." ;
+  }
+
+  revision 2024-06-11 {
+    description '1.The feature xconnet-isolated add C89E project label.
+2.Add the feature vport-isolated to container /switchvlan:configuration/switchvlan:switchvlan/switchvlan:vport-isolated-table' ;
+  }
+
+  revision 2023-10-08 {
+    description '1.Add a new containner track-multi-chassis on zxr10-switchvlan\configuration\switchvlan\track-multi-chassis.' ;
+  }
+
+  revision 2023-09-05 {
+    description '1.The feature trunk-allow-all-exclude-vlan add 99X and 59X-ES project label.
+2. The feature if-trunk-allow-all-vlan add 99X and 59X-ES project label.' ;
+  }
+
+  revision 2023-07-06 {
+    description '1. Add a new containner if-trunk-allow-all-vlan on zxr10-switchvlan\configuration\switchvlan\trunk-allow-all-exclude-vlan.
+2. Add a new containner trunk-allow-all-exclude-vlan on zxr10-switchvlan\configuration\switchvlan\if-trunk-allow-all-vlan.' ;
+  }
+
+  revision 2021-07-22 {
+    description 'Add a new containner ingress-priority on zxr10-switchvlan\configuration\switchvlan\vlan-translation\trans-tbl.' ;
+  }
+
+  revision 2020-05-18 {
+    description '1.1.Add an new container if-vlan-description on zxr10-switchvlan\configuration\switchvlan.' ;
+  }
+
+  revision 2019-03-04 {
+    description '1.remove the pvid of vlan-mode for/switchvlan:configuration/switchvlan:switchvlan/switchvlan:if-tag/switchvlan:if-tag/switchvlan:vlan-mode' ;
+  }
+
+  revision 2017-11-03 {
+    description '1.Change the attribute of leaf vlan-id on /switchvlan:configuration/switchvlan:switchvlan/switchvlan:if-pvid/switchvlan:if-pvid.' ;
+  }
+
+  revision 2016-07-11 {
+    description '1.Change the max value of leaf session-id on /switchvlan:configuration/switchvlan:switchvlan/switchvlan:vlan-translation/switchvlan:trans-tbl/switchvlan.
+2.Change the max value of leaf session-id on /switchvlan:state/switchvlan:switchvlan/switchvlan:vlan-trans-statistics/switchvlan:vlan-trans-statistics/switchvlan.
+3.Change the max value of leaf session-id on /switchvlan:operation/switchvlan:switchvlan/switchvlan:clear/switchvlan:trans-statistics/switchvlan.' ;
+  }
+
+  revision 2015-03-27 {
+    description '1.Change the length of leaf-vlan-bitmap on zxr10-switchvlan\configuration\switchvlan\pvlan\pvlan-tbl from 1-4094 to 0-4094;' ;
+  }
+
+  revision 2014-12-23 {
+    description '1.Add an new container on zxr10-switchvlan\configuration\switchvlan\vlan-translation\trans-tbl\ingress-inner-vlan-id;
+2.Add an new container on zxr10-switchvlan\configuration\switchvlan\vlan-translation\trans-tbl\ingress-exter-vlan-id;
+3.Add two features,the one name is ingress-vlan-bitmap ,The container zxr10-switchvlan\configuration\switchvlan\vlan-translation\trans-tbl\ingress-inner-vlan and zxr10-switchvlan\configuration\switchvlan\vlan-translation\trans-tbl\ingress-exter-vlan used ingress-vlan-bitmap feature for switch project used.
+the other name is ingress-vlan-id ,The container zxr10-switchvlan\configuration\switchvlan\vlan-translation\trans-tbl\ingress-inner-vlan-id and zxr10-switchvlan\configuration\switchvlan\vlan-translation\trans-tbl\ingress-exter-vlan-id used ingress-vlan-id feature only for 15k project used.' ;
+  }
+
+  revision 2014-10-11 {
+    description '1.Add an new container on zxr10-switchvlan\configuration\switchvlan\xconnect-table\xconnect-tbl;
+2.Add an new container on zxr10-switchvlan\configuration\switchvlan\vport-isolated-table\vport-isolated-tbl;
+3.Add one features,the name is xconnect-isolated,The container zxr10-switchvlan\configuration\switchvlan\xconnet-table and zxr10-switchvlan\configuration\switchvlan\vport-isolated-table used xconnect-isolated feature only for 15k project used.' ;
+  }
+
+  revision 2014-08-11 {
+    description '1.Add an new leaf-vlan-bitmap on zxr10-switchvlan\configuration\switchvlan\pvlan\pvlan-tbl for 15k;2.Add two features,one name is pvlan-tbl-vlan-bitmap,the other is pvlan-port;3.The leaf zxr10-switchvlan\configuration\switchvlan\pvlan\pvlan-tbl\vlan-bitmap used feature pvlan-tbl-vlan-bitmap,only 15k project use is feature;4.3.The container zxr10-switchvlan\configuration\switchvlan\pvlan\pvlan-promis-port and pvlan-community-port used pvlan-port feature, only 15k project does not use is feature.' ;
+  }
+
+  revision 2014-05-16 {
+    description '1. Modify the description of ether-type from Eethernet type to Ethernet type.' ;
+  }
+
+  revision 2014-04-08 {
+    description '1. The vlan-translation table is refactored.
+2. Add regular expression to vlan-name.' ;
+  }
+
+  revision 2014-03-17 {
+    description '1. Delete leaf if-mode of if-pvid and if-tag lists.
+2. Add default value to default-vlan-flag,vlan-name,l2-switch-flag,tpid and statistic-flag.
+3. Change attributeID of inBytes from 5 to 6.
+4. Modify the note of ingress-same,untag and trunk.
+5. The default value of l2-switch-flag is determined by performance parameter.' ;
+  }
+
+  revision 2014-02-26 {
+    description '1. Add parameter untag to leaf egress-in-type.' ;
+  }
+
+  revision 2014-02-18 {
+    description '1. Change trans-port and tran-type to mandatory;
+2. Add egress-out-priority and egress-in-priority default value;
+3. Chage the mandatory attribution  egress-in-type from true to false;
+4. Add presence to trans-statistics and vlan-statistics' ;
+  }
+
+  revision 2014-01-20 {
+    description '1. Change session-id of pvlan-table, pvlan-isolate-port, pvlan-promis-port and pvlan-community-port from uint16 to uint32.
+2.The max value of session-id of pvlan-table, pvlan-isolate-port, pvlan-promis-port and pvlan-community-port is determined by performance parameter.
+3. Change mandatory of vlan-bimap to false.
+4. Change reset-value to 0' ;
+  }
+
+  revision 2013-10-01 {
+    description 'Initial version.' ;
+  }
+
+  feature pvlan-tbl-vlan-bitmap {
+    description 'VLAN bitmap information of PVLAN table.' ;
+  }
+
+  feature pvlan-port {
+    description 'Port bind for PVLAN table.' ;
+  }
+
+  feature xconnet-isolated {
+    description 'The information of xconnect and isolated table.' ;
+  }
+
+  feature ingress-vlan-bitmap {
+    description 'The information of ingress-vlan for switch.' ;
+  }
+
+  feature ingress-vlan-id {
+    description 'The information of ingress vlan for 15k.' ;
+  }
+
+  feature trunk-allow-all-exclude-vlan {
+    description 'Forbid some VLANs bind the trunk-allow-all interface.' ;
+    ncd:revise-date 2023-07-06 ;
+  }
+
+  feature if-trunk-allow-all-vlan {
+    description 'Allow all VLAN bind the interface or not.' ;
+    ncd:revise-date 2023-07-06 ;
+  }
+
+  feature vlanif-track-multi-chassis {
+    description 'Track the multi-chassis status to the vlanif interface' ;
+    ncd:revise-date 2023-10-08 ;
+  }
+
+  feature vport-isolated {
+    description 'The information of vport-isolated table.' ;
+    ncd:revise-date 2024-06-11 ;
+  }
+
+  feature vlan-description {
+    description 'The description information of the VLAN.' ;
+    ncd:revise-date 2024-06-19 ;
+  }
+
+  feature trunk-native-untag-flag {
+    description 'The interface forwards packets with untag or tag when trunk vlan and native vlan are same.' ;
+    ncd:revise-date 2024-08-27 ;
+  }
+
+  feature l2-vlan-statistics-v4v6 {
+    description 'IPV4 or IPV6 VLAN statistics information.' ;
+    ncd:revise-date 2025-07-30 ;
+  }
+
+  container configuration {
+    description 'Configuration model information.' ;
+    container switchvlan {
+      description 'Configure SwitchVLAN parameters.' ;
+      container default-vlan {
+        description 'Information of default VLAN flag.' ;
+        leaf default-vlan-flag {
+          description 'Information of default VLAN flag.' ;
+          type enumeration {
+            enum disable {
+              value 1 ;
+              description 'Disable.' ;
+            }
+
+            enum enable {
+              value 2 ;
+              description 'Enable.' ;
+            }
+
+          }
+
+          default enable ;
+        }
+
+      }
+
+      container vlan-broadcast-table {
+        description 'The information of VLAN broadcast table.' ;
+        list vlan-brdcst-tbl {
+          description 'The information of VLAN broadcast table.' ;
+          key vlan-id ;
+          leaf vlan-id {
+            description 'The VLAN ID of VLAN broadcast.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+          }
+
+          leaf vlan-name {
+            description "The VLAN name of VLAN broadcast table, it must starts with a letter('a'-'z' or 'A'-'Z'), comma can not be included. The max limit number of character is 31." ;
+            type string {
+              pattern "[a-zA-Z][^,]*" {
+                description "The string must start with a letter('a'-'z' or 'A'-'Z'), comma can not be included." ;
+              }
+
+              length 1..31 {
+                description 'The length of VLAN name,it must between 1 to 31 BYTE.' ;
+              }
+
+            }
+
+          }
+
+          leaf l2-switch-flag {
+            description 'L2 switch flag of this switch VLAN broadcast,the default value is defined by performance parameter.' ;
+            type enumeration {
+              enum disable {
+                value 1 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 2 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+          leaf description {
+            type ncd:string-with-blank {
+              length 1..250 ;
+
+            }
+
+            description 'A textual description of the VLAN in SWITCHVLAN.' ;
+            if-feature vlan-description ;
+
+            ncd:revise-date 2024-06-19 ;
+          }
+
+        }
+
+      }
+
+      container if-vlan-descriptions {
+        description 'The port in switchvlan configurate description info.' ;
+        list vlan-description {
+          description 'The port in switchvlan configurate description info.' ;
+          key if-name ;
+          leaf if-name {
+            description 'The interface will configurate description.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf description {
+            description 'A textual description of the interface in SWITCHVLAN.' ;
+            type ncd:string-with-blank {
+              length 1..104 {
+                description 'Max be 104 characters.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2020-05-18 ;
+      }
+
+      container if-attr {
+        description 'The SwitchVLAN attributes of a interface.' ;
+        list if-attr {
+          description 'The SwitchVLAN attributes of a interface.' ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf mode {
+            description 'The mode of this interface: access,trunk or hybrid.' ;
+            type enumeration {
+              enum access {
+                value 1 ;
+                description 'Access mode.' ;
+              }
+
+              enum trunk {
+                value 2 ;
+                description 'Trunk mode.' ;
+              }
+
+              enum hybrid {
+                value 3 ;
+                description 'Hybrid mode.' ;
+              }
+
+            }
+
+            default access ;
+          }
+
+          leaf ex-tpid {
+            description 'The outer QinQ TPID information of this interface.' ;
+            type enumeration {
+              enum tpid8100 {
+                value 1 ;
+                description 'Tpid8100.' ;
+              }
+
+              enum tpid88a8 {
+                value 2 ;
+                description 'Tpid88a8.' ;
+              }
+
+              enum tpid9100 {
+                value 3 ;
+                description 'Tpid9100.' ;
+              }
+
+              enum tpid9200 {
+                value 4 ;
+                description 'Tpid9200.' ;
+              }
+
+              enum tpid9300 {
+                value 5 ;
+                description 'Tpid9300.' ;
+              }
+
+            }
+
+            default tpid8100 ;
+          }
+
+          leaf qinq-flag {
+            description 'The QinQ flag of this interface: normal, customer or uplink.' ;
+            type enumeration {
+              enum normal {
+                value 1 ;
+                description 'Normal.' ;
+              }
+
+              enum customer {
+                value 2 ;
+                description 'Customer.' ;
+              }
+
+              enum uplink {
+                value 3 ;
+                description 'Uplink.' ;
+              }
+
+            }
+
+            default normal ;
+          }
+
+          leaf ingress-fliter {
+            description 'Ingress filter switch information of this interface.' ;
+            type enumeration {
+              enum disable {
+                value 1 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 2 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+          leaf frame-type {
+            description 'The type of frame which is allowed by this interface.' ;
+            type enumeration {
+              enum all-type {
+                value 1 ;
+                description 'All type of frame.' ;
+              }
+
+              enum tag-type {
+                value 2 ;
+                description 'Tag type of frame.' ;
+              }
+
+            }
+
+            default all-type ;
+          }
+
+          leaf subnet-flag {
+            description 'The subnet VLAN flag of this interface.' ;
+            type enumeration {
+              enum disable {
+                value 1 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 2 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+          leaf protocol-flag {
+            description 'The protocol VLAN flag of this interface.' ;
+            type enumeration {
+              enum disable {
+                value 1 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 2 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+          leaf tag-native {
+            description 'The tag trunk native flag of this interface.' ;
+            type enumeration {
+              enum disable {
+                value 1 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 2 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          leaf trunk-native-untag-flag {
+            type enumeration {
+              enum disable {
+                value 1 ;
+                description 'The interface forwards packets with tag when trunk vlan and native vlan are same' ;
+              }
+
+              enum enable {
+                value 2 ;
+                description 'The interface forwards packets with untag when trunk vlan and native vlan are same' ;
+              }
+
+            }
+
+            description 'The interface forwards packets with untag or tag when trunk vlan and native vlan are same.' ;
+            default disable ;
+            if-feature trunk-native-untag-flag ;
+
+            ncd:revise-date 2024-08-27 ;
+          }
+
+        }
+
+      }
+
+      container if-pvid {
+        description 'The port VLAN ID of interface.' ;
+        list if-pvid {
+          description 'The port VLAN ID of interface.' ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf vlan-id {
+            description 'VLAN ID information, the default value is defined by performance parameter.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+      container if-tag {
+        description 'The tag or untag VLAN information of this interface.' ;
+        list if-tag {
+          description 'The tag or untag VLAN information of this interface.' ;
+          key 'if-name vlan-mode' ;
+          leaf if-name {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf vlan-mode {
+            description 'The VLAN mode information:tag or untag.' ;
+            type enumeration {
+              enum tag {
+                value 1 ;
+                description 'Tag mode.' ;
+              }
+
+              enum untag {
+                value 2 ;
+                description 'Untag mode.' ;
+              }
+
+            }
+
+          }
+
+          leaf vlan-info {
+            description 'The VLAN information with bitmap format.' ;
+            type ncd:bitmap ;
+
+          }
+
+        }
+
+      }
+
+      container subnet-table {
+        description 'The information of subnet VLAN table.' ;
+        list subnet-table {
+          description 'The information of subnet VLAN table.' ;
+          key session-id ;
+          leaf session-id {
+            description 'Session ID.' ;
+            type uint16 {
+              range 1..256 {
+                description 'The value of session,it must between 1 to 256.' ;
+              }
+
+            }
+
+          }
+
+          leaf ip-address {
+            description 'The IPv4 address of this subnet VLAN.' ;
+            type ncd:ipv4-address ;
+
+            mandatory true ;
+          }
+
+          leaf ip-mask {
+            description 'The IPv4 mask of this subnet VLAN.' ;
+            type ncd:ipv4-mask ;
+
+            mandatory true ;
+          }
+
+          leaf vlan-id {
+            description 'The VLAN ID of subnet VLAN.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+      container protocol-tbl {
+        description 'The information of protocol VLAN table.' ;
+        list protocol-table {
+          description 'The information of protocol VLAN table.' ;
+          key session-id ;
+          leaf session-id {
+            description 'Session ID.' ;
+            type uint16 {
+              range 1..16 {
+                description 'The value of session,it must between 1 to 16.' ;
+              }
+
+            }
+
+          }
+
+          leaf frame-type {
+            description 'Frame type:ethernet2,snap or llc.' ;
+            type enumeration {
+              enum ethernet2 {
+                value 1 ;
+                description 'Set protocol type ethernet2' ;
+              }
+
+              enum snap {
+                value 2 ;
+                description 'Set protocol type snap' ;
+              }
+
+              enum llc {
+                value 3 ;
+                description 'Set protocol type llc' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf ether-type {
+            description 'Ethernet type.' ;
+            type uint32 {
+              range 0..65535 {
+                description 'The value of ethernet type,it must between 0 to 65535.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf vlan-id {
+            description 'VLAN ID.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+      container mac-base-vlan {
+        description 'The MAC-based-VLAN configuration.' ;
+        container mac-vlan-session {
+          description 'The session tables of MAC-based-VLAN.' ;
+          list mac-vlan-session {
+            description 'The session tables of MAC-based-VLAN.' ;
+            key session-id ;
+            leaf session-id {
+              description 'Session ID.' ;
+              type uint16 {
+                range 1..64 {
+                  description 'The value of session,it must between 1 to 64.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container mac-vlan-bind {
+          description 'The port bind table of MAC-base-VLAN.' ;
+          list mac-vlan-bind {
+            description 'The port bind table of MAC-base-VLAN.' ;
+            key 'session-id port-name' ;
+            leaf session-id {
+              description 'Session ID.' ;
+              type uint16 {
+                range 1..64 {
+                  description 'The value of session,it must between 1 to 64.' ;
+                }
+
+              }
+
+            }
+
+            leaf port-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+          }
+
+        }
+
+        container mac-vlan-rule {
+          description 'The rule tables of MAC-based-VLAN.' ;
+          list mac-vlan-rule {
+            description 'The rule tables of MAC base VLAN.' ;
+            key 'session-id rule-id' ;
+            leaf session-id {
+              description 'Session ID.' ;
+              type uint16 {
+                range 1..64 {
+                  description 'The value of session,it must between 1 to 64.' ;
+                }
+
+              }
+
+            }
+
+            leaf rule-id {
+              description 'Rule ID.' ;
+              type uint16 {
+                range 1..1024 {
+                  description 'The value of rule,it must between 1 to 1024.' ;
+                }
+
+              }
+
+            }
+
+            leaf mac-addr {
+              description 'MAC address.' ;
+              type ncd:mac-address ;
+
+            }
+
+            leaf mac-mask {
+              description 'MAC mask.' ;
+              type ncd:mac-address ;
+
+            }
+
+            leaf vlan-id {
+              description 'VLAN ID.' ;
+              type uint16 {
+                range 1..4094 {
+                  description 'The value of VLAN,it must between 1 to 4094.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container g-internal-tpid {
+        description 'Global internal TPID.' ;
+        leaf tpid {
+          description 'TPID information.' ;
+          type enumeration {
+            enum tpid8100 {
+              value 1 ;
+              description 'Tpid 0x8100.' ;
+            }
+
+            enum tpid88a8 {
+              value 2 ;
+              description 'Tpid 0x88a8.' ;
+            }
+
+            enum tpid9100 {
+              value 3 ;
+              description 'Tpid 0x9100.' ;
+            }
+
+            enum tpid9200 {
+              value 4 ;
+              description 'Tpid 0x9200.' ;
+            }
+
+            enum tpid9300 {
+              value 5 ;
+              description 'Tpid 0x9300.' ;
+            }
+
+          }
+
+          default tpid8100 ;
+        }
+
+      }
+
+      container pvlan {
+        description 'The Private VLAN configuration.' ;
+        container pvlan-tbl {
+          description 'The Private VLAN table.' ;
+          list pvlan-table {
+            description 'The Private VLAN table.' ;
+            key session-id ;
+            leaf session-id {
+              description 'Session ID.' ;
+              type uint32 {
+                range 1..256 {
+                  description 'The min session ID is 1, the max session ID is determined by performance parameter.' ;
+                }
+
+              }
+
+            }
+
+            leaf vlan-bitmap {
+              if-feature pvlan-tbl-vlan-bitmap ;
+
+              description 'VLAN information (bitmap format).' ;
+              type ncd:bitmap {
+                length 0..4094 {
+                  description 'The valid input range is from 0 to 4094.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container pvlan-isolate-port {
+          description 'Isolate port information of PVLAN.' ;
+          list pvlan-isolate-port {
+            description 'Isolate port information of PVLAN.' ;
+            key 'session-id port-name' ;
+            leaf session-id {
+              description 'Session ID' ;
+              type uint32 {
+                range 1..256 {
+                  description 'The min session ID is 1, the max session ID is determined by performance parameter.' ;
+                }
+
+              }
+
+            }
+
+            leaf port-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+          }
+
+        }
+
+        container pvlan-promis-port {
+          if-feature pvlan-port ;
+
+          description 'Promis port information of PVLAN.' ;
+          list pvlan-promis-port {
+            description 'Promis port information of PVLAN.' ;
+            key 'session-id port-name' ;
+            leaf session-id {
+              description 'Session ID.' ;
+              type uint32 {
+                range 1..256 {
+                  description 'The min session ID is 1, the max session ID is determined by performance parameter.' ;
+                }
+
+              }
+
+            }
+
+            leaf port-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+          }
+
+        }
+
+        container pvlan-community-port {
+          if-feature pvlan-port ;
+
+          description 'Community port information of PVLAN.' ;
+          list pvlan-community-port {
+            description 'Community port information of PVLAN.' ;
+            key 'session-id port-name' ;
+            leaf session-id {
+              description 'Session ID.' ;
+              type uint32 {
+                range 1..256 {
+                  description 'The min session ID is 1, the max session ID is determined by performance parameter.' ;
+                }
+
+              }
+
+            }
+
+            leaf port-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container vlan-translation {
+        description 'The VLAN translation information.' ;
+        list trans-tbl {
+          description 'The VLAN translation table.' ;
+          key session-id ;
+          leaf session-id {
+            description 'Session ID.' ;
+            type uint16 {
+              range 1..8192 {
+                description "The value of session,it's toplimit depends on ability of the device." ;
+              }
+
+            }
+
+          }
+
+          leaf trans-type {
+            description 'The translation type.' ;
+            type enumeration {
+              enum ingress {
+                value 1 ;
+                description 'Ingress VLAN translation.' ;
+              }
+
+              enum egress {
+                value 2 ;
+                description 'Egress VLAN translation.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf trans-port {
+            description 'VLAN translation port name.' ;
+            type ncd:ifname ;
+
+            mandatory true ;
+          }
+
+          container ingress-inner-vlan {
+            if-feature ingress-vlan-bitmap ;
+
+            description 'The inner VLAN information before translated.' ;
+            leaf vlan-bitmap {
+              description 'Inner VLAN information (bitmap format).' ;
+              type ncd:bitmap {
+                length 1..4094 {
+                  description 'The valid input range is from 1 to 4094.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container ingress-exter-vlan {
+            if-feature ingress-vlan-bitmap ;
+
+            description 'The external VLAN information before translated.' ;
+            leaf vlan-bitmap {
+              description 'External VLAN information (bitmap format).' ;
+              type ncd:bitmap {
+                length 1..4094 {
+                  description 'The valid input range is from 1 to 4094.' ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container egress-in-vlan {
+            description 'The inner VLAN information after translated.' ;
+            choice egress-inner-vlan {
+              description 'The inner VLAN information after translated.' ;
+              case vlan-id {
+                description 'Egress internal VLAN ID Information.' ;
+                leaf vlan-id {
+                  description 'Egress internal VLAN ID Information.' ;
+                  type uint16 {
+                    range 1..4094 {
+                      description 'The value of VLAN, it must between 1 to 4094.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              case type {
+                description 'The external type information after translated.' ;
+                leaf type {
+                  description 'Egress internal VLAN type.' ;
+                  type enumeration {
+                    enum ingress-same {
+                      value 1 ;
+                      description 'The same as ingress VLAN.' ;
+                    }
+
+                    enum untag {
+                      value 2 ;
+                      description 'Untag.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container egress-ex-vlan {
+            description 'The external VLAN information after translated.' ;
+            choice egress-exter-vlan {
+              description 'The external VLAN information after translated.' ;
+              case vlan-id {
+                description 'Egress external VLAN Information.' ;
+                leaf vlan-id {
+                  description 'Egress external VLAN Information.' ;
+                  type uint16 {
+                    range 1..4094 {
+                      description 'The value of VLAN,it must between 1 to 4094.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              case type {
+                description 'The external VLAN type after translated.' ;
+                leaf type {
+                  description 'The external VLAN type after translated.' ;
+                  type enumeration {
+                    enum ingress-same {
+                      value 1 ;
+                      description 'The same as ingress VLAN.' ;
+                    }
+
+                    enum untag {
+                      value 2 ;
+                      description 'Untag.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container egress-priority {
+            description 'Egress priority.' ;
+            leaf egress-in-priority {
+              description 'Egress internal priority.' ;
+              type enumeration {
+                enum 0 {
+                  value 0 ;
+                  description 'Set priority to 0.' ;
+                }
+
+                enum 1 {
+                  value 1 ;
+                  description 'Set priority to 1.' ;
+                }
+
+                enum 2 {
+                  value 2 ;
+                  description 'Set priority to 2.' ;
+                }
+
+                enum 3 {
+                  value 3 ;
+                  description 'Set priority to 3.' ;
+                }
+
+                enum 4 {
+                  value 4 ;
+                  description 'Set priority to 4.' ;
+                }
+
+                enum 5 {
+                  value 5 ;
+                  description 'Set priority to 5.' ;
+                }
+
+                enum 6 {
+                  value 6 ;
+                  description 'Set priority to 6.' ;
+                }
+
+                enum 7 {
+                  value 7 ;
+                  description 'Set priority to 7.' ;
+                }
+
+                enum non {
+                  value 254 ;
+                  description 'Set priority to default.' ;
+                }
+
+                enum map {
+                  value 255 ;
+                  description 'Set priority to map.' ;
+                }
+
+              }
+
+              default non ;
+            }
+
+            leaf egress-out-priority {
+              description 'Egress external priority.' ;
+              type enumeration {
+                enum 0 {
+                  value 0 ;
+                  description 'Set priority to 0.' ;
+                }
+
+                enum 1 {
+                  value 1 ;
+                  description 'Set priority to 1.' ;
+                }
+
+                enum 2 {
+                  value 2 ;
+                  description 'Set priority to 2.' ;
+                }
+
+                enum 3 {
+                  value 3 ;
+                  description 'Set priority to 3.' ;
+                }
+
+                enum 4 {
+                  value 4 ;
+                  description 'Set priority to 4.' ;
+                }
+
+                enum 5 {
+                  value 5 ;
+                  description 'Set priority to 5.' ;
+                }
+
+                enum 6 {
+                  value 6 ;
+                  description 'Set priority to 6.' ;
+                }
+
+                enum 7 {
+                  value 7 ;
+                  description 'Set priority to 7.' ;
+                }
+
+                enum non {
+                  value 254 ;
+                  description 'Set priority to default.' ;
+                }
+
+                enum map {
+                  value 255 ;
+                  description 'Set priority to map.' ;
+                }
+
+              }
+
+              default non ;
+            }
+
+          }
+
+          container ingress-inner-vlan-id {
+            if-feature ingress-vlan-id ;
+
+            description 'The inner VLAN information before translated.' ;
+            presence ingress-inner-vlan-id ;
+            leaf vlan-id {
+              description 'Inner VLAN information (WORD16 format).' ;
+              type uint16 {
+                range 1..4094 {
+                  description 'The valid input range is from 1 to 4094.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container ingress-exter-vlan-id {
+            if-feature ingress-vlan-id ;
+
+            description 'The exter VLAN information before translated.' ;
+            presence ingress-exter-vlan-id ;
+            leaf vlan-id {
+              description 'Exter VLAN information (WORD16 format).' ;
+              type uint16 {
+                range 1..4094 {
+                  description 'The valid input range is from 1 to 4094.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container ingress-priority {
+            description 'Ingress priority.' ;
+            leaf ingress-in-priority {
+              description 'Ingress internal priority.' ;
+              type enumeration {
+                enum 0 {
+                  value 0 ;
+                  description 'Set priority to 0.' ;
+                }
+
+                enum 1 {
+                  value 1 ;
+                  description 'Set priority to 1.' ;
+                }
+
+                enum 2 {
+                  value 2 ;
+                  description 'Set priority to 2.' ;
+                }
+
+                enum 3 {
+                  value 3 ;
+                  description 'Set priority to 3.' ;
+                }
+
+                enum 4 {
+                  value 4 ;
+                  description 'Set priority to 4.' ;
+                }
+
+                enum 5 {
+                  value 5 ;
+                  description 'Set priority to 5.' ;
+                }
+
+                enum 6 {
+                  value 6 ;
+                  description 'Set priority to 6.' ;
+                }
+
+                enum 7 {
+                  value 7 ;
+                  description 'Set priority to 7.' ;
+                }
+
+              }
+
+              default 0 ;
+            }
+
+            ncd:revise-date 2021-07-22 ;
+          }
+
+        }
+
+      }
+
+      container l2-vlan-statistics {
+        description 'VLAN statistics.' ;
+        list l2-vlan-statistics {
+          description 'VLAN statistics.' ;
+          key vlan-id ;
+          leaf vlan-id {
+            description 'VLAN ID.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+          }
+
+          leaf statistic-flag {
+            description 'The flag of VLAN statistic.' ;
+            type enumeration {
+              enum disable {
+                value 1 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 2 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+        }
+
+      }
+
+      container trans-statistics {
+        description 'VLAN translation statistics.' ;
+        list trans-statistics {
+          description 'VLAN translation statistics.' ;
+          key session-id ;
+          leaf session-id {
+            description 'Session ID.' ;
+            type uint16 {
+              range 1..8192 {
+                description "The value of session,it's toplimit depends on ability of the device." ;
+              }
+
+            }
+
+          }
+
+          leaf statistic-flag {
+            description 'The flag of VLAN translation statistics.' ;
+            type enumeration {
+              enum disable {
+                value 1 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 2 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+        }
+
+      }
+
+      container xconnect-table {
+        if-feature xconnet-isolated ;
+
+        description 'The information of xconnect table.' ;
+        list xconnect-tbl {
+          description 'The information of xconnect table.' ;
+          key vlan-id ;
+          leaf vlan-id {
+            description 'The VLAN ID of SwitchVLAN xconnect table.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+          }
+
+          leaf xconnect-flag {
+            description 'The flag of xconnect table,the default value is disable.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+        }
+
+      }
+
+      container vport-isolated-table {
+        if-feature xconnet-isolated ;
+
+        description 'The information of vport isolated table.' ;
+        list vport-isolated-tbl {
+          description 'The information of vport isolated table.' ;
+          key vlan-id ;
+          leaf vlan-id {
+            description 'The VLAN ID of vport isolated table.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+          }
+
+          leaf isolated-flag {
+            description 'The isolated flag of vport isolated table,the default value is disable.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+        }
+
+        if-feature vport-isolated {
+          ncd:revise-date 2024-06-11 ;
+        }
+
+      }
+
+      container trunk-allow-all-exclude-vlan {
+        if-feature trunk-allow-all-exclude-vlan ;
+
+        description 'Forbid some VLANs bind the trunk-allow-all interface.' ;
+        leaf vlan-list {
+          description 'List VLAN or a single VLAN ID.' ;
+          type ncd:bitmap {
+            length 1..4094 {
+              description 'The valid input range is from 1 to 4094.' ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2023-07-06 ;
+      }
+
+      container if-trunk-allow-all-vlan {
+        description 'Allow all VLAN bind the interface or not.' ;
+        list if-trunk-allow-all-vlan {
+          if-feature if-trunk-allow-all-vlan {
+            ncd:revise-date 2023-07-06 ;
+          }
+
+          description 'Allow all VLAN bind the interface or not.' ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf trunk-allow-all-vlan-flag {
+            description 'The flag of allowing all VLAN bind the interface.' ;
+            type enumeration {
+              enum disable {
+                value 2 ;
+              }
+
+              enum enable {
+                value 1 ;
+              }
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2023-07-06 ;
+      }
+
+      container vlanif-track-multi-chassis {
+        leaf vlanif-track-multi-chassis-flag {
+          type enumeration {
+            enum enable {
+              value 2 ;
+              description 'Enable.' ;
+            }
+
+            enum disable {
+              description 'Disable.' ;
+              value 1 ;
+            }
+
+          }
+
+          default disable ;
+          description 'Track the multi-chassis status to the vlanif interface' ;
+          if-feature vlanif-track-multi-chassis {
+            ncd:revise-date 2023-10-08 ;
+          }
+
+        }
+
+        ncd:revise-date 2023-10-08 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State model information.' ;
+    container switchvlan {
+      description 'SwitchVLAN state information.' ;
+      container l2-vlan-statistics {
+        description 'VLAN statistics information.' ;
+        list l2-statistics {
+          description 'VLAN statistics information.' ;
+          key vlan-id ;
+          leaf vlan-id {
+            description 'VLAN ID.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+          }
+
+          leaf inByteRate {
+            description 'Input byte flow rates per 120 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf inPktRate {
+            description 'Input packet flow rates per 120 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf outByteRate {
+            description 'Output byte flow rates per 120 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf outPktRate {
+            description 'Output packet flow rates per 120 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf inBytes {
+            description 'Input flow number of bytes per 10 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf inPkts {
+            description 'Input flow number of packets per 10 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf outBytes {
+            description 'Output flow number of packets per 10 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf outPkts {
+            description 'Output flow number of packets per 10 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf inV4ByteRate {
+            description 'Input ipv4 byte flow rates per 120 seconds.' ;
+            type uint64 ;
+
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf inV4PktRate {
+            type uint64 ;
+
+            description 'Input ipv4 packet flow rates per 120 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf outV4ByteRate {
+            description 'Output ipv4 byte flow rates per 120 seconds.' ;
+            type uint64 ;
+
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf outV4PktRate {
+            type uint64 ;
+
+            description 'Output ipv4 packet flow rates per 120 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf inV4Bytes {
+            type uint64 ;
+
+            description 'Input ipv4 flow number of bytes per 10 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf inV4Pkts {
+            type uint64 ;
+
+            description 'Input ipv4 flow number of packets per 10 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf outV4Bytes {
+            type uint64 ;
+
+            description 'Output ipv4 flow number of packets per 10 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf outV4Pkts {
+            type uint64 ;
+
+            description 'Output ipv4 flow number of packets per 10 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf inV6ByteRate {
+            type uint64 ;
+
+            description 'Input ipv6 byte flow rates per 120 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf inV6PktRate {
+            type uint64 ;
+
+            description 'Input ipv6 packet flow rates per 120 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf outV6ByteRate {
+            type uint64 ;
+
+            description 'Output ipv6 byte flow rates per 120 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf outV6PktRate {
+            type uint64 ;
+
+            description 'Output ipv6 packet flow rates per 120 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf inV6Bytes {
+            type uint64 ;
+
+            description 'Input ipv6 flow number of bytes per 10 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf inV6Pkts {
+            type uint64 ;
+
+            description 'Input ipv6 flow number of packets per 10 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf outV6Bytes {
+            type uint64 ;
+
+            description 'Output ipv6 flow number of packets per 10 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          leaf outV6Pkts {
+            type uint64 ;
+
+            description 'Output ipv6 flow number of packets per 10 seconds.' ;
+            if-feature l2-vlan-statistics-v4v6 ;
+
+            ncd:revise-date 2025-07-30 ;
+          }
+
+          ncd:select vlan-id ;
+        }
+
+      }
+
+      container vlan-trans-statistics {
+        description 'VLAN translation statistics.' ;
+        list vlan-trans-statistics {
+          description 'VLAN translation statistics.' ;
+          key session-id ;
+          leaf session-id {
+            description 'Session ID.' ;
+            type uint16 {
+              range 1..8192 {
+                description "The value of session,it's toplimit depends on ability of the device." ;
+              }
+
+            }
+
+          }
+
+          leaf inByteRate {
+            description 'Input byte flow rates per 120 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf inPktRate {
+            description 'Input packet flow rates per 120 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf outByteRate {
+            description 'Output byte flow rates per 120 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf outPktRate {
+            description 'Output packet flow rates per 120 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf inBytes {
+            description 'Input flow number of bytes per 10 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf inPkts {
+            description 'Input flow number of packets per 10 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf outBytes {
+            description 'Output flow number of packets per 10 seconds.' ;
+            type uint64 ;
+
+          }
+
+          leaf outPkts {
+            description 'Output flow number of packets per 10 seconds.' ;
+            type uint64 ;
+
+          }
+
+          ncd:select session-id ;
+        }
+
+      }
+
+      container l2-vlan-port-table {
+        description 'VLAN and port bound table.' ;
+        list pvid-table {
+          description 'PVID port bound table.' ;
+          key 'vlan-id port-mode' ;
+          leaf vlan-id {
+            description 'VLAN ID.' ;
+            type uint16 ;
+
+          }
+
+          leaf port-mode {
+            description 'The port type to show.' ;
+            type enumeration {
+              enum access {
+                value 1 ;
+                description 'Show access port only.' ;
+              }
+
+              enum trunk {
+                value 2 ;
+                description 'Show trunk port only.' ;
+              }
+
+              enum hybrid {
+                value 3 ;
+                description 'Show hybrid port only.' ;
+              }
+
+              enum all {
+                value 4 ;
+                description 'Show all port.' ;
+              }
+
+            }
+
+          }
+
+          leaf port-name {
+            description 'Interface name.' ;
+            type string {
+              length 1..31 {
+                description 'The length of interface name,it must between 1 to 31 BYTE.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+        list tag-table {
+          description 'Tag VLAN port bound table.' ;
+          key 'vlan-id port-mode' ;
+          leaf vlan-id {
+            description 'VLAN ID.' ;
+            type uint16 ;
+
+          }
+
+          leaf port-mode {
+            description 'The port type to show.' ;
+            type enumeration {
+              enum access {
+                value 1 ;
+                description 'Show access port only.' ;
+              }
+
+              enum trunk {
+                value 2 ;
+                description 'Show trunk port only.' ;
+              }
+
+              enum hybrid {
+                value 3 ;
+                description 'Show hybrid port only.' ;
+              }
+
+              enum all {
+                value 4 ;
+                description 'Show all port.' ;
+              }
+
+            }
+
+          }
+
+          leaf port-name {
+            description 'Interface name.' ;
+            type string {
+              length 1..31 {
+                description 'The length of interface name,it must between 1 to 31 BYTE.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+        list untag-table {
+          description 'Untag VLAN port bound table.' ;
+          key 'vlan-id port-mode' ;
+          leaf vlan-id {
+            description 'VLAN ID.' ;
+            type uint16 ;
+
+          }
+
+          leaf port-mode {
+            description 'The port type to show.' ;
+            type enumeration {
+              enum access {
+                value 1 ;
+                description 'Show access port only.' ;
+              }
+
+              enum trunk {
+                value 2 ;
+                description 'Show trunk port only.' ;
+              }
+
+              enum hybrid {
+                value 3 ;
+                description 'Show hybrid port only.' ;
+              }
+
+              enum all {
+                value 4 ;
+                description 'Show all port.' ;
+              }
+
+            }
+
+          }
+
+          leaf port-name {
+            description 'Interface name.' ;
+            type string {
+              length 1..31 {
+                description 'interface name' ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'Operation model information.' ;
+    container switchvlan {
+      description 'SwitchVLAN operation information.' ;
+      container clear {
+        description 'Clear statistics information.' ;
+        container vlan-statistics {
+          description 'Clear VLAN statistics information.' ;
+          presence vlan-statistics ;
+          leaf vlan-id {
+            description 'VLAN ID information.' ;
+            type uint16 {
+              range 1..4094 {
+                description 'The value of VLAN,it must between 1 to 4094.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        container trans-statistics {
+          description 'Clear VLAN translation statistics information.' ;
+          presence trans-statistics ;
+          leaf session-id {
+            description 'VLAN translation session ID.' ;
+            type uint16 {
+              range 1..8192 {
+                description "The value of session,it's toplimit depends on ability of the device." ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

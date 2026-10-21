@@ -1,0 +1,228 @@
+module zxr10-ipv6-tunnel {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ipv6-tunnel' ;
+  prefix v6tunnel ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation' ;
+  contact "ZTE Corporation  
+\n"
+        + "   Nanjing Institute of ZTE Corporation 
+\n"
+        + "   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe ipv6-tunnel.This netconf module c'
+            + 'ontains managed object definitions of v6_tunnel.'
+              ;
+  revision 2015-04-16 {
+    description "Set madatory for nodes:
+\n"
+              + '/v6tunnel:configuration/v6tunnel:ipv6-tunnel/v6tunnel:v6-tunne'
+              + "ls/v6tunnel:v6-tunnel/v6tunnel:vrfs/v6tunnel:vrf
+\n"
+              + '/v6tunnel:configuration/v6tunnel:ipv6-tunnel/v6tunnel:v6-tunne'
+              + "ls/v6tunnel:v6-tunnel/v6tunnel:dhcp_ifs/v6tunnel:dhcp_if
+\n"
+              + "Set presence for nodes:
+\n"
+              + '/v6tunnel:configuration/v6tunnel:ipv6-tunnel/v6tunnel:v6-tunne'
+              + "ls/v6tunnel:v6-tunnel/v6tunnel:vrfs
+\n"
+              + '/v6tunnel:configuration/v6tunnel:ipv6-tunnel/v6tunnel:v6-tunne'
+              + 'ls/v6tunnel:v6-tunnel/v6tunnel:dhcp_ifs'
+                ;
+  }
+  revision 2014-09-03 {
+    description 'Add tunnel dscp node for list v6-tunnel.The full path of this '
+              + "node is /configuration/ipv6-tunnel/v6-tunnels/v6-tunnel.
+\n"
+              + 'Modify range from 1-127 to 1-128 for node dns_domain.The full '
+              + 'path of this node is /configuration/ipv6-tunnel/v6-tunnels/v6-'
+              + 'tunnel/destination/domain/dns/dns_domain.'
+                ;
+  }
+  revision 2014-02-17 {
+    description "Modify the reset value for each node.
+\n"
+              + 'Modify the node type of mode.'
+                ;
+  }
+  revision 2014-01-20 {
+    description 'Initial version.' ;
+  }
+  container configuration {
+    description 'Configuration node.' ;
+    container ipv6-tunnel {
+      description 'This node is the entry for IPv6 tunnel configuration.' ;
+      container v6-tunnels {
+        description 'This node is entry for IPv6 tunnel configuration .the node'
+                  + 's contains in v6-tunnel are tunnel option.Config these nod'
+                  + 'es to buid a v6_tunnel.'
+                    ;
+        list v6-tunnel {
+          description 'This node is entry for v6_tunnel configuration .' ;
+          key v6_ifname ;
+          leaf v6_ifname {
+            description 'IPv6 tunnel interface name' ;
+            type ncd:ifname ;
+          }
+          leaf mode {
+            description 'IPv6 tuunnel mode.' ;
+            type enumeration {
+              enum 4in6 {
+                value 3 ;
+                description 'IP over IPv6 encapsulation' ;
+              }
+              enum 6in4 {
+                value 4 ;
+                description 'IPv6 over IP encapsulation' ;
+              }
+              enum 6to4 {
+                value 5 ;
+                description 'IPv6 automatic tunnelling using 6to4' ;
+              }
+              enum isatap {
+                value 7 ;
+                description 'IPv6 automatic tunnelling using ISATAP' ;
+              }
+              enum ds-lite-static {
+                value 9 ;
+                description 'Static dual stack lite tunnel' ;
+              }
+              enum ds-lite-dynamic {
+                value 10 ;
+                description 'Dynamic dual stack lite tunnel' ;
+              }
+              enum 6rd {
+                value 11 ;
+                description 'IPv6 automatic tunnelling using 6RD' ;
+              }
+              enum ds-lite-b4 {
+                value 12 ;
+                description 'Dual stack lite B4 tunnel' ;
+              }
+            }
+          }
+          choice source {
+            description 'IPv6 tunnel source address' ;
+            case ipv4 {
+              description 'IPv6 tunnel source IPv4 address type' ;
+              container ip_src_addr {
+                description 'IPv6 tunnel source IPv4 address' ;
+                leaf ip_source {
+                  description 'IPv6 tunnel source IPv4 address value' ;
+                  type ncd:ipv4-address ;
+                }
+              }
+            }
+            case ipv6 {
+              description 'IPv6 tunnel source IPv6 address type' ;
+              container ipv6_src_addr {
+                description 'IPv6 tunnel source IPv6 address' ;
+                leaf ipv6_source {
+                  description 'IPv6 tunnel source IPv6 address value' ;
+                  type ncd:ipv6-address ;
+                }
+              }
+            }
+          }
+          choice destination {
+            description 'IPv6 tunnel destination address' ;
+            case ipv4 {
+              description 'IPv6 tunnel destination ipv4 address type' ;
+              container ip_dest_addr {
+                description 'IPv6 tunnel destination IPv4 address' ;
+                leaf ip_destination {
+                  description 'IPv6 tunnel destination IPv4 address value' ;
+                  type ncd:ipv4-address ;
+                }
+              }
+            }
+            case ipv6 {
+              description 'IPv6 tunnel destination IPv6 address type' ;
+              container ipv6_dest_addr {
+                description 'IPv6 tunnel destination IPv6 address' ;
+                leaf ipv6_destination {
+                  description 'IPv6 tunnel IPv6 destination value' ;
+                  type ncd:ipv6-address ;
+                }
+              }
+            }
+            case domain {
+              description 'Config IPv6 tunnel destination domain name' ;
+              container dns {
+                description 'Config domain name as IPv6 tunnel destination addr'
+                          + 'ess'
+                            ;
+                leaf dns_domain {
+                  description 'DNS domain name' ;
+                  type string {
+                    length 1..128 ;
+                  }
+                }
+              }
+            }
+            case dhcp-interface {
+              description 'Config DS-LITE-B4 tunnel destination interface' ;
+              container dhcp_ifs {
+                description 'Config DS-LITE-B4 tunnel destination interface' ;
+                presence 'tunnelv6 dhcp interface' ;
+                leaf dhcp_if {
+                  description 'IPv6 tunnel destination DHCP interface name' ;
+                  type ncd:ifname ;
+                  mandatory true ;
+                }
+              }
+            }
+          }
+          container vrfs {
+            description 'Config IPv6 tunnel VRF' ;
+            presence 'tunnvlv6 vrf' ;
+            leaf vrf {
+              description 'VRF name' ;
+              type string {
+                length 1..32 ;
+              }
+              mandatory true ;
+            }
+          }
+          container tun_6rds {
+            description 'Config 6RD prefix/prefix-length' ;
+            presence 'tunnel 6rd prefix' ;
+            leaf tun_6rdpre {
+              description '6RD prefix value' ;
+              type ncd:ipv6-address ;
+              mandatory true ;
+            }
+            leaf tun_6rdprelen {
+              description '6RD prefix-length value' ;
+              type uint8 {
+                range 0..128 ;
+              }
+              mandatory true ;
+            }
+          }
+          leaf tun6rdipv4prelen {
+            description '6RD ipv4 mask len' ;
+            type uint8 {
+              range 0..32 {
+                description '0-32: valid value' ;
+              }
+            }
+          }
+          leaf dscp {
+            description 'Config IPv6 tunnel dscp' ;
+            type uint8 {
+              range 0..63 {
+                description '0-63:valid value' ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

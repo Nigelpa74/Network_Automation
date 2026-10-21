@@ -1,0 +1,124 @@
+module zxr10-bridge-domain {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/bridge-domain'
+            ;
+  prefix bridge-domain ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2020-04-09 {
+    description 'Initial version.'
+                ;
+  }
+  container state {
+    description 'Information of bridge-domain state.'
+                ;
+    config false ;
+    container bridge-domain {
+      description 'Information of bridge-domain state.'
+                  ;
+      container broadcast-tables {
+        description 'Information of bridge-domain broadcast tables.'
+                    ;
+        list broadcast-table {
+          description 'Information of bridge-domain broadcast table.'
+                      ;
+          key 'vpls-instance-name vlan-id'
+              ;
+          ncd:select vpls-instance-name ;
+          leaf vpls-instance-name {
+            description 'VPLS instance name.'
+                        ;
+            type string {
+              length 1..32 {
+                description 'The length of VPLS instance name.'
+                            ;
+              }
+            }
+          }
+          leaf vlan-id {
+            description 'VLAN ID.'
+                        ;
+            type uint16 {
+              range 0..4094 {
+                description 'VLAN ID must be in this range.'
+                            ;
+              }
+            }
+          }
+          leaf vpn-id {
+            description 'VPN ID.'
+                        ;
+            type uint32 ;
+          }
+          container broadcast-members {
+            description 'Information of bridge-domain broadcast members.'
+                        ;
+            list dynamic-vxlan-tunnel {
+              description 'Information of bridge-domain broadcast member of dyn'
+                        + 'amic vxlan tunnel.'
+                          ;
+              key 'vni dynamic-tunnel-id'
+                  ;
+              ncd:select 'vni dynamic-tunnel-id'
+                         ;
+              leaf vni {
+                description 'VXLAN Network Identifier.'
+                            ;
+                type uint32 {
+                  range 1..16777215 {
+                    description 'The value of VXLAN,it must be between 1 to 167'
+                              + '77215.'
+                                ;
+                  }
+                }
+              }
+              leaf dynamic-tunnel-id {
+                description 'Dynamic tunnel ID.'
+                            ;
+                type uint32 ;
+              }
+            }
+            list static-vxlan-tunnel {
+              description 'Information of bridge-domain broadcast member of sta'
+                        + 'tic vxlan tunnel.'
+                          ;
+              key 'vni static-tunnel-name'
+                  ;
+              ncd:select 'vni static-tunnel-name'
+                         ;
+              leaf vni {
+                description 'VXLAN Network Identifier.'
+                            ;
+                type uint32 {
+                  range 1..16777215 {
+                    description 'The value of VXLAN,it must be between 1 to 167'
+                              + '77215.'
+                                ;
+                  }
+                }
+              }
+              leaf static-tunnel-name {
+                description 'Static tunnel name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'The length of static tunnel name.'
+                                ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

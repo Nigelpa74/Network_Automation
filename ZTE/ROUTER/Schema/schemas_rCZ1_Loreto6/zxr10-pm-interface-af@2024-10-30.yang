@@ -1,0 +1,241 @@
+module zxr10-pm-interface-af {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-interface-af'
+            ;
+  prefix pm-interface-af ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2024-10-30 {
+    description 'Add sat holdtime.' ;
+  }
+  revision 2023-03-23 {
+    description 'add loopback.'
+                ;
+  }
+  revision 2021-10-21 {
+    description 'add if_feature and the performance parameter of link-delay up/'
+              + 'down.'
+                ;
+  }
+  revision 2021-07-06 {
+    description 'add holdtime,link-delay down/up.'
+                ;
+  }
+  revision 2020-12-01 {
+    description af-config ;
+  }
+  feature satellite-port-function {
+    ncd:revise-date 2021-10-21 ;
+  }
+  container configuration {
+    container pm-if {
+      container eths {
+        list eth {
+          if-feature satellite-port-function {
+            ncd:revise-date 2021-10-21 ;
+          }
+          description 'Ethernet interface mode.'
+                      ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description Ifname ;
+              }
+            }
+          }
+          leaf negotiation {
+            description 'Configures the port negotiation mode.'
+                        ;
+            type enumeration {
+              enum negotiation-force {
+                value 1 ;
+                description 'Force negotiation mode.'
+                            ;
+              }
+              enum negotiation-auto {
+                value 2 ;
+                description 'Auto negotiation mode.'
+                            ;
+              }
+            }
+            default negotiation-auto ;
+          }
+          leaf speed {
+            description 'Configures the rate of a port.'
+                        ;
+            type enumeration {
+              enum speed-10M {
+                value 1 ;
+                description 'Port speed is 10M.'
+                            ;
+              }
+              enum speed-100M {
+                value 2 ;
+                description 'Port speed is 100M.'
+                            ;
+              }
+              enum speed-1G {
+                value 3 ;
+                description 'Port speed is 1G.'
+                            ;
+              }
+              enum speed-10G {
+                value 4 ;
+                description 'Port speed is 10G.'
+                            ;
+              }
+              enum speed-25G {
+                value 10 ;
+                description 'Port speed is 25G.'
+                            ;
+              }
+              enum speed-40G {
+                value 5 ;
+                description 'Port speed is 40G.'
+                            ;
+              }
+              enum speed-50G {
+                value 11 ;
+                description 'Port speed is 50G.'
+                            ;
+              }
+              enum speed-100G {
+                value 6 ;
+                description 'Port speed is 100G.'
+                            ;
+              }
+              enum speed-200G {
+                value 12 ;
+                description 'Port speed is 200G.'
+                            ;
+              }
+              enum speed-400G {
+                value 13 ;
+                description 'Port speed is 400G.'
+                            ;
+              }
+              enum speed-auto {
+                value 15 ;
+                description 'Port speed is configured to auto, the real speed d'
+                          + 'epend on optical module.'
+                            ;
+              }
+            }
+            default speed-1G ;
+          }
+          leaf pemode {
+            description 'Configures the copper-fiber attribute of a port.'
+                        ;
+            type enumeration {
+              enum media-copper {
+                value 1 ;
+                description 'The PEMode of the port is electric.'
+                            ;
+              }
+              enum media-fiber {
+                value 2 ;
+                description 'The PEMode of the port is optical.'
+                            ;
+              }
+            }
+            default media-fiber ;
+          }
+          leaf loopback {
+            description 'Configures the loopback method of a port.'
+                        ;
+            type enumeration {
+              enum cancel {
+                value 0 ;
+                description 'Cancel loopback mode.'
+                            ;
+              }
+              enum outer {
+                value 1 ;
+                description 'Line loopback mode.'
+                            ;
+              }
+              enum inner {
+                value 2 ;
+                description 'Inner loopback mode.'
+                            ;
+              }
+              enum external {
+                value 3 ;
+                description 'External loopback mode.'
+                            ;
+              }
+            }
+            default cancel ;
+            ncd:revise-date 2023-03-23 ;
+          }
+          leaf holdtime {
+            type uint16 {
+              range 0..1200 {
+                description 'Range: 0-1200.' ;
+              }
+
+            }
+
+            description 'Configures the port hold-time in satellite.' ;
+            units second ;
+            default 200 ;
+            ncd:revise-date 2024-10-30 ;
+          }
+
+
+
+        }
+      }
+      container link-delays {
+        list link-delay {
+          if-feature satellite-port-function {
+            ncd:revise-date 2021-10-21 ;
+          }
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf link-delay-down {
+            description 'Delay the processing of hardware link down notificatio'
+                      + 'ns.'
+                        ;
+            type uint32 {
+              range 0..600000 {
+                description 'The time to delay link down notifications(ms).'
+                            ;
+              }
+            }
+            units millisecond ;
+            default 0 ;
+          }
+          leaf link-delay-up {
+            description 'Delay the processing of hardware link up notifications.'
+                        ;
+            type uint32 {
+              range 0..600000 {
+                description 'The time to delay link up notifications(ms).'
+                            ;
+              }
+            }
+            units millisecond ;
+            default 0 ;
+          }
+        }
+        ncd:revise-date 2021-07-06 ;
+      }
+    }
+  }
+}

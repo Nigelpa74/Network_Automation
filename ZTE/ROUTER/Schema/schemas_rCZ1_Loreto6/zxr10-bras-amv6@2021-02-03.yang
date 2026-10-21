@@ -1,0 +1,882 @@
+module zxr10-bras-amv6 {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/bras/amv6'
+            ;
+  prefix bras-amv6 ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'Configuration for BRAS amv6 module'
+              ;
+  revision 2021-02-03 {
+    description 'Add domain dynamic reserve address config.'
+                ;
+  }
+  revision 2020-08-04 {
+    description 'Modify static-ip reserver-ip single and dhcp instance.'
+                ;
+  }
+  revision 2020-06-08 {
+    description 'Modify ippoolv6 poolname length(1-64).'
+                ;
+  }
+  revision 2019-12-09 {
+    description 'Add addr-range and prefix-delegation.'
+                ;
+  }
+  revision 2019-01-02 {
+    description 'Add domain priority-round-robin'
+                ;
+  }
+  revision 2018-12-01 {
+    description 'add poolv6-alloc-mode of domain'
+                ;
+  }
+  revision 2016-03-29 {
+    description init ;
+  }
+  container configuration {
+    description 'configuration am-v6 information'
+                ;
+    container amv6 {
+      description 'am-v6 information'
+                  ;
+      container ipv6pool {
+        description 'ipv6 pool information'
+                    ;
+        list ipv6-pool {
+          description 'ipv6 pool information'
+                      ;
+          key pool-name ;
+          leaf pool-name {
+            description 'ipv6 pool name'
+                        ;
+            type string {
+              length 1..64 {
+                description 'The pool name of amv6'
+                            ;
+              }
+            }
+          }
+          leaf vbui-name {
+            description 'the vbui interface name'
+                        ;
+            type ncd:ifname ;
+            mandatory true ;
+          }
+          leaf pool_type {
+            description 'the type of pool'
+                        ;
+            type enumeration {
+              enum normal {
+                value 0 ;
+                description 'The pool type for normal ip allocation'
+                            ;
+              }
+              enum slaac {
+                value 1 ;
+                description 'The pool type for slaac ip allocation'
+                            ;
+              }
+              enum prefix {
+                value 2 ;
+                description 'The pool type for prefix ip allocation'
+                            ;
+              }
+            }
+            default normal ;
+          }
+          leaf portrange_poolname {
+            description "nat pool's name"
+                        ;
+            type string {
+              length 1..31 {
+                description 'the portrange pool name'
+                            ;
+              }
+            }
+          }
+          leaf priority {
+            description 'priority of pool'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'the priority of amv6 pool'
+                            ;
+              }
+            }
+            default 7 ;
+          }
+          list access-domain {
+            description 'Configure access-domain of pool'
+                        ;
+            key domain-name ;
+            leaf domain-name {
+              description 'name of domain'
+                          ;
+              type string {
+                length 1..31 {
+                  description 'the access domain name'
+                              ;
+                }
+              }
+            }
+          }
+          choice ipv6-alarm-threshold {
+            description 'Configure IPv6 alarm threshold'
+                        ;
+            case remaining-ip {
+              description 'absolute value of alarm'
+                          ;
+              container remaining-ip {
+                description 'Configuration remaining-ip and offset size'
+                            ;
+                presence remaining ;
+                leaf ipv6_alarm_unused {
+                  description 'Remaining ip number of pool'
+                              ;
+                  type uint32 {
+                    range 1..4294967295 ;
+                  }
+                  mandatory true ;
+                }
+                leaf ipv6_alarm_offset {
+                  description 'Backlash number of alarm'
+                              ;
+                  type uint32 {
+                    range 1..4294967295 ;
+                  }
+                }
+              }
+            }
+            case upper-lower-limit {
+              description "alarm's limit"
+                          ;
+              container upper-lower-limit {
+                description 'Configuration upper and lower limit'
+                            ;
+                presence upper-lower ;
+                leaf ipv6_alarm_high {
+                  description 'Upper limit of alarm'
+                              ;
+                  type uint8 {
+                    range 2..100 ;
+                  }
+                  mandatory true ;
+                }
+                leaf ipv6_alarm_low {
+                  description 'Lower limit of alarm'
+                              ;
+                  type uint8 {
+                    range 1..99 ;
+                  }
+                  mandatory true ;
+                }
+              }
+            }
+          }
+          container ipv6-addr-with-ifid {
+            description 'am ipv6 configurate address with interface-id'
+                        ;
+            presence ipv6-addr-with-ifid ;
+            leaf config-prefix {
+              description 'ipv6 prefix address'
+                          ;
+              type ncd:ipv6-address ;
+              mandatory true ;
+            }
+            leaf config-prefix-len {
+              description 'ipv6 prefix address length'
+                          ;
+              type uint32 {
+                range 0..128 ;
+              }
+              mandatory true ;
+            }
+          }
+          container dhcp-instance {
+            description 'ipv6 dhcp instance configuration'
+                        ;
+            presence dhcp-instance ;
+            leaf instance-mode {
+              description 'ipv6 dhcp instance mode(server or relay)'
+                          ;
+              type enumeration {
+                enum server {
+                  value 1 ;
+                  description 'Ip dhcp server instance mode.'
+                              ;
+                }
+                enum relay {
+                  value 2 ;
+                  description 'Ip dhcp relay instance mode.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+            leaf instance-value {
+              description 'ipv6 dhcp instance value'
+                          ;
+              type uint32 {
+                range 1..256 {
+                  description 'the instance value'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          container pd-proxy {
+            description 'Configure pd-proxy information'
+                        ;
+            presence pd-proxy ;
+            leaf prefix-len {
+              description 'Config prefix length'
+                          ;
+              type uint32 {
+                range 0..128 {
+                  description 'the prefix len'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+            leaf interface-name {
+              description 'Config unnumbered interface'
+                          ;
+              type string {
+                length 0..31 {
+                  description 'interface name'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          container reserve-ip {
+            description 'Configure reserve address'
+                        ;
+            list reserve-range {
+              description 'Configure reserve address range'
+                          ;
+              key 'start-ip end-ip'
+                  ;
+              leaf start-ip {
+                description 'Begin address of range'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf end-ip {
+                description 'End address of range'
+                            ;
+                type ncd:ipv6-address {
+                  pattern '^[^::$]'
+                          ;
+                }
+              }
+            }
+            list reserve-single {
+              description 'Configure single reserve address'
+                          ;
+              key start-ip ;
+              leaf start-ip {
+                description 'Configure single reserve address'
+                            ;
+                type ncd:ipv6-address ;
+              }
+            }
+          }
+          container reserve-prefix {
+            description 'Configure reserve prefix'
+                        ;
+            list reserve-range {
+              description 'Configure reserve prefix range'
+                          ;
+              key 'start-prefix start-prefix-mask end-prefix end-prefix-mask'
+                  ;
+              leaf start-prefix {
+                description 'Begin prefix of range'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf start-prefix-mask {
+                description 'Begin prefix mask length of range'
+                            ;
+                type uint32 {
+                  range 1..128 {
+                    description 'the start prefix mask length'
+                                ;
+                  }
+                }
+              }
+              leaf end-prefix {
+                description 'End prefix of range'
+                            ;
+                type ncd:ipv6-address {
+                  pattern '^[^::$]'
+                          ;
+                }
+              }
+              leaf end-prefix-mask {
+                description 'End prefix mask length of range'
+                            ;
+                type uint32 {
+                  range 1..128 {
+                    description 'the end prefix mask length'
+                                ;
+                  }
+                }
+              }
+            }
+            list reserve-single {
+              description 'Configure single reserve prefix'
+                          ;
+              key 'start-prefix start-prefix-mask'
+                  ;
+              leaf start-prefix {
+                description 'Configure single reserve prefix'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf start-prefix-mask {
+                description 'Configure single reserve prefix mask length'
+                            ;
+                type uint32 {
+                  range 1..128 {
+                    description 'start prefix mask length'
+                                ;
+                  }
+                }
+              }
+            }
+          }
+          container static-ip {
+            description 'Configure static address'
+                        ;
+            list static-range {
+              description 'Configure static address range'
+                          ;
+              key 'start-ip end-ip'
+                  ;
+              leaf start-ip {
+                description 'Begin static address of range'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf end-ip {
+                description 'End static address of range'
+                            ;
+                type ncd:ipv6-address {
+                  pattern '^[^::$]'
+                          ;
+                }
+              }
+            }
+            list static-single {
+              description 'Configure single static address'
+                          ;
+              key start-ip ;
+              leaf start-ip {
+                description 'Configure single static address'
+                            ;
+                type ncd:ipv6-address ;
+              }
+            }
+          }
+          container static-prefix {
+            description 'Configure static prefix'
+                        ;
+            list static-range {
+              description 'Configure static prefix range'
+                          ;
+              key 'start-prefix start-prefix-mask end-prefix end-prefix-mask'
+                  ;
+              leaf start-prefix {
+                description 'Begin static prefix of range'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf start-prefix-mask {
+                description 'Begin static prefix mask length of range'
+                            ;
+                type uint32 {
+                  range 1..128 {
+                    description 'the start prefix mask length'
+                                ;
+                  }
+                }
+              }
+              leaf end-prefix {
+                description 'End static prefix of range'
+                            ;
+                type ncd:ipv6-address {
+                  pattern '^[^::$]'
+                          ;
+                }
+              }
+              leaf end-prefix-mask {
+                description 'End static prefix mask length of range'
+                            ;
+                type uint32 {
+                  range 1..128 {
+                    description 'the end prefix mask length'
+                                ;
+                  }
+                }
+              }
+            }
+            list static-single {
+              description 'Configure single static prefix'
+                          ;
+              key 'start-prefix start-prefix-mask'
+                  ;
+              leaf start-prefix {
+                description 'Configure single static prefix'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf start-prefix-mask {
+                description 'Configure single static prefix mask length'
+                            ;
+                type uint32 {
+                  range 1..128 {
+                    description 'the prefix mask length'
+                                ;
+                  }
+                }
+              }
+            }
+          }
+          container lifetime {
+            description 'Configure slaac address lifetime'
+                        ;
+            leaf valid-lifetime {
+              description 'Valid lifetime'
+                          ;
+              type uint32 {
+                range 0..4294967294 {
+                  description 'the valid lifetime value'
+                              ;
+                }
+              }
+            }
+            leaf preferred-lifetime {
+              description 'Preferred lifetime'
+                          ;
+              type uint32 {
+                range 0..4294967294 {
+                  description 'the preferred lifetime value'
+                              ;
+                }
+              }
+            }
+            leaf valid-lifetime-infinite {
+              description 'Infinite valid lifetime'
+                          ;
+              type enumeration {
+                enum valid-lifetime-infinite {
+                  value 255 ;
+                  description 'the infinite valid lifetime'
+                              ;
+                }
+              }
+            }
+            leaf preferred-lifetime-infinite {
+              description 'Infinite preferred lifetime'
+                          ;
+              type enumeration {
+                enum preferred-lifetime-infinite {
+                  value 255 ;
+                  description 'the infinite preferred lifetime'
+                              ;
+                }
+              }
+            }
+          }
+          container dns-addr {
+            description 'Config DNS server address of AMV6'
+                        ;
+            presence dns-addr ;
+            container ip-addr {
+              description 'Config the primary DNS address of AMV6'
+                          ;
+              presence ip-addr ;
+              leaf dns-addr {
+                description 'ipv6 dns server address'
+                            ;
+                type ncd:ipv6-address ;
+                mandatory true ;
+              }
+            }
+            container ip-addr-second {
+              description 'Config the second DNS address of AMV6'
+                          ;
+              presence ip-addr-second ;
+              leaf dns-addr-second {
+                description 'ipv6 dns server address'
+                            ;
+                type ncd:ipv6-address ;
+                mandatory true ;
+              }
+            }
+          }
+          list addr-range {
+            description 'Configure normal address range'
+                        ;
+            key 'start-ip end-ip'
+                ;
+            leaf start-ip {
+              description 'Begin address of range'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf end-ip {
+              description 'End address of range'
+                          ;
+              type ncd:ipv6-address {
+                pattern '^[^::$]'
+                        ;
+              }
+            }
+          }
+          list prefix-delegation {
+            description 'Configure reserve prefix range'
+                        ;
+            key 'start-prefix start-prefix-mask prefix-len'
+                ;
+            leaf start-prefix {
+              description 'Begin prefix of range'
+                          ;
+              type ncd:ipv6-address ;
+            }
+            leaf start-prefix-mask {
+              description 'Begin prefix mask length of range'
+                          ;
+              type uint32 {
+                range 1..128 {
+                  description 'the start prefix mask length'
+                              ;
+                }
+              }
+            }
+            leaf prefix-len {
+              description 'End prefix mask length of range'
+                          ;
+              type uint32 {
+                range 1..128 {
+                  description 'the end prefix mask length'
+                              ;
+                }
+              }
+            }
+          }
+        }
+      }
+      container domain {
+        description 'ipv6 pool information under DOMAIN configuration'
+                    ;
+        list amv6-domain {
+          description 'ipv6 pool information under DOMAIN configuration'
+                      ;
+          key domain-name ;
+          leaf domain-name {
+            description "domain's name"
+                        ;
+            type string {
+              length 1..31 {
+                description 'the domain name'
+                            ;
+              }
+            }
+          }
+          choice ipv6-alarm-threshold {
+            description 'Configure IPv6 alarm threshold'
+                        ;
+            case remaining-ip {
+              description 'absolute value of alarm'
+                          ;
+              container remaining-ip {
+                description 'Configuration remaining-ip and offset'
+                            ;
+                presence remaining ;
+                leaf ipv6_alarm_unused {
+                  description 'Remaining ip number of pool'
+                              ;
+                  type uint32 {
+                    range 1..4294967295 {
+                      description 'the remaining ip number of amv6 alarm'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf ipv6_alarm_offset {
+                  description 'Backlash number of alarm'
+                              ;
+                  type uint32 {
+                    range 1..4294967295 {
+                      description 'the offset ip number of amv6 alarm'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+            case upper-lower-limit {
+              description "alarm's limit"
+                          ;
+              container upper-lower-limit {
+                description 'Configuration upper and lower limit'
+                            ;
+                presence upper-lower ;
+                leaf ipv6_alarm_high {
+                  description 'Upper limit of alarm'
+                              ;
+                  type uint8 {
+                    range 2..100 {
+                      description 'the upper threshold of amv6 alarm'
+                                  ;
+                    }
+                  }
+                  default 70 ;
+                }
+                leaf ipv6_alarm_low {
+                  description 'Lower limit of alarm'
+                              ;
+                  type uint8 {
+                    range 1..99 {
+                      description 'the lower threshold of amv6 alarm'
+                                  ;
+                    }
+                  }
+                  default 60 ;
+                }
+              }
+            }
+          }
+        }
+        container domain-alloc-mode {
+          description 'amv6 of domain alloc mode'
+                      ;
+          presence domain-alloc-mode ;
+          list domain-ipv6 {
+            description 'amv6 of domain alloc mode'
+                        ;
+            key domain-name ;
+            leaf domain-name {
+              description 'domain name'
+                          ;
+              type string {
+                length 1..31 {
+                  description 'domain name'
+                              ;
+                }
+              }
+            }
+            leaf alloc-type {
+              description 'Configure domain round robin.'
+                          ;
+              type enumeration {
+                enum first {
+                  value 0 ;
+                  description 'Domain alloc type first default.'
+                              ;
+                }
+                enum round-robin {
+                  value 1 ;
+                  description 'Domain alloc type round-robin.'
+                              ;
+                }
+                enum priority-round-robin {
+                  value 2 ;
+                  description 'Domain alloc type priority-round-robin.'
+                              ;
+                }
+              }
+              default first ;
+            }
+          }
+        }
+        container dom-rsvip {
+          description 'Domain dynamic reserve address.'
+                      ;
+          presence dom-rsvip ;
+          container address {
+            description 'Ipv6 address dynamic reserve config.'
+                        ;
+            presence address ;
+            list dom-rsv-address-list {
+              description 'Domain dynamic reserve address config.'
+                          ;
+              key domain-name ;
+              leaf domain-name {
+                description 'domain name'
+                            ;
+                type string {
+                  length 1..31 {
+                    description 'domain name'
+                                ;
+                  }
+                }
+              }
+              leaf rsv-type {
+                description 'Domain dynamic address by mac or duid.'
+                            ;
+                type enumeration {
+                  enum mac {
+                    value 1 ;
+                    description 'Alloc by mac.'
+                                ;
+                  }
+                  enum duid {
+                    value 0 ;
+                    description 'Alloc by duid.'
+                                ;
+                  }
+                }
+              }
+              container time-type {
+                description 'Domain dynamic reserve address online time length.'
+                            ;
+                presence time-type ;
+                choice dyn-rsv-type {
+                  description 'Domain dynamic reserve address.'
+                              ;
+                  default user-online ;
+                  case user-online {
+                    description 'User-online mode.'
+                                ;
+                    leaf user-online {
+                      description 'User-online mode.'
+                                  ;
+                      type enumeration {
+                        enum user-online {
+                          value 0 ;
+                          description 'User-online mode.'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                  case time {
+                    description 'Time mode.'
+                                ;
+                    leaf time {
+                      description 'Time mode.'
+                                  ;
+                      type uint32 {
+                        range 1..525600 {
+                          description Time. ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          container prefix {
+            description 'Ipv6 prefix dynamic reserve config.'
+                        ;
+            presence prefix ;
+            list dom-rsv-prefix-list {
+              description 'Domain dynamic reserve address config.'
+                          ;
+              key 'domain-name nd-mac'
+                  ;
+              leaf domain-name {
+                description 'domain name'
+                            ;
+                type string {
+                  length 1..31 {
+                    description 'domain name'
+                                ;
+                  }
+                }
+              }
+              leaf nd-mac {
+                description 'Ipv6 prefix address type, nd or pd.'
+                            ;
+                type enumeration {
+                  enum nd {
+                    value 1 ;
+                    description 'Nd mac reserve mode.'
+                                ;
+                  }
+                  enum pd {
+                    value 0 ;
+                    description 'Pd reserve mode.'
+                                ;
+                  }
+                }
+              }
+              leaf rsv-type {
+                description 'Domain dynamic address by mac or duid.'
+                            ;
+                type enumeration {
+                  enum mac {
+                    value 1 ;
+                    description 'Alloc by mac.'
+                                ;
+                  }
+                  enum duid {
+                    value 0 ;
+                    description 'Alloc by duid.'
+                                ;
+                  }
+                }
+              }
+              container time-type {
+                description 'Time type.'
+                            ;
+                presence time-type ;
+                choice dyn-rsv-type {
+                  description 'Domain dynamic reserve address.'
+                              ;
+                  default user-online ;
+                  case user-online {
+                    description 'User-online mode.'
+                                ;
+                    leaf user-online {
+                      description 'User-online mode.'
+                                  ;
+                      type enumeration {
+                        enum user-online {
+                          value 0 ;
+                          description 'User-online mode.'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                  case time {
+                    description 'Time mode.'
+                                ;
+                    leaf time {
+                      description 'Time mode.'
+                                  ;
+                      type uint32 {
+                        range 1..525600 {
+                          description Time. ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          ncd:revise-date 2021-02-03 ;
+        }
+      }
+    }
+  }
+}

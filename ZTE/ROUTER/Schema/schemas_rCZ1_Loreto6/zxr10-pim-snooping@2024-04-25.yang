@@ -1,0 +1,641 @@
+module zxr10-pim-snooping {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/pim-snooping" ;
+  prefix pims ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe PIM snooping.' ;
+  revision 2024-04-25 {
+    description 'Modify the minimum value of the length range of leaf /state/pim-snooping/neighbor/vpls-name to zero.' ;
+  }
+
+  revision 2022-12-05 {
+    description 'Add feature:evpn-vpls' ;
+  }
+
+  revision 2017-11-02 {
+    description 'Add feature:vpls,vlan,global' ;
+  }
+
+  revision 2016-11-08 {
+    description "Add node path:/state/pim-snooping/neighbor's query term:vlan-id+neighbor-ip,vpls-name+neighbor-ip" ;
+  }
+
+  revision 2015-09-15 {
+    description 'Modify leaf node type, node path:/operation/pim-snooping/clear/groups/type/all/all-groups.' ;
+  }
+
+  revision 2015-03-02 {
+    description 'Add clear operation and global summary show.' ;
+  }
+
+  revision 2015-02-12 {
+    description 'Change proper noun, such as vpls,vlan,id etc, from lowercase into capital.' ;
+  }
+
+  revision 2014-03-21 {
+    description 'Initial version.' ;
+  }
+
+  feature vpls {
+    description 'PIM snooping over VPLS.' ;
+  }
+
+  feature global {
+    description 'PIM snooping over global.' ;
+  }
+
+  feature vlan {
+    description 'PIM snooping over VLAN.' ;
+  }
+
+  feature evpn-vpls {
+    description 'PIM snooping over EVPN VPLS.' ;
+    ncd:revise-date 2022-12-05 ;
+  }
+
+  typedef switch-type {
+    type enumeration {
+      enum disable {
+        value 0 ;
+        description 'Disable this switch.' ;
+      }
+
+      enum enable {
+        value 1 ;
+        description 'Enable this switch.' ;
+      }
+
+    }
+
+    description 'Type of switch status.' ;
+  }
+
+  container configuration {
+    description 'Configuration model.' ;
+    container pim-snooping {
+      description 'Configure PIM snooping parameters.' ;
+      container global {
+        if-feature global ;
+
+        description 'PIM snooping global configure.' ;
+        leaf global-enable {
+          description 'Enable/disable PIM snooping in this device.Its default value is disable.' ;
+          type switch-type ;
+
+        }
+
+      }
+
+      container vplses {
+        if-feature vpls ;
+
+        description "PIM snooping VPLS configure.Can't config PIM snooping in VPLS if the VPLS instance not exist.If PIM snooping configuration exist in VPLS,the VPLS instance can't be deleted." ;
+        list vpls {
+          description 'The config of instance VPLS.' ;
+          key name ;
+          leaf name {
+            description 'Submode instance Name of VPLS.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf snooping-switch {
+            description 'Enable/disable PIM snooping in this instance.' ;
+            type switch-type ;
+
+            default disable ;
+          }
+
+        }
+
+      }
+
+      container vlans {
+        if-feature vlan ;
+
+        description "PIM snooping VLAN configure.Can't config PIM snooping in VLAN if the VLAN instance not exist.If PIM snooping configuration exist in VLAN,the VLAN instance can't be deleted." ;
+        list vlan {
+          description 'The config of instance VLAN.' ;
+          key vlan-id ;
+          leaf vlan-id {
+            description 'Submode instance ID of VLAN.' ;
+            type uint16 {
+              range 1..4094 ;
+
+            }
+
+          }
+
+          leaf snooping-switch {
+            description 'Enable/disable PIM snooping in this instance.' ;
+            type switch-type ;
+
+            default disable ;
+          }
+
+        }
+
+      }
+
+      container evpn-vplses {
+        if-feature evpn-vpls ;
+
+        description "PIM snooping EVPN VPLS configure.Can't config PIM snooping in EVPN VPLS if the EVPN VPLS instance not exist.If PIM snooping configuration exist in EVPN VPLS,the EVPN VPLS instance can't be deleted." ;
+        list evpn-vpls {
+          description 'The config of instance EVPN VPLS.' ;
+          key name ;
+          leaf name {
+            description 'Submode instance Name of EVPN VPLS.' ;
+            type string ;
+
+          }
+
+          leaf snooping-switch {
+            description 'Enable/disable PIM snooping in this instance.' ;
+            type switch-type ;
+
+            default disable ;
+          }
+
+        }
+
+        ncd:revise-date 2022-12-05 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State model.' ;
+    container pim-snooping {
+      description 'PIM snooping state parameters.' ;
+      container vpls {
+        if-feature vpls ;
+
+        description 'PIM snooping VPLS information.' ;
+        list member {
+          description 'The information of member in instance VPLS.' ;
+          key 'vpls-name group-ip source-ip interface-name' ;
+          leaf vpls-name {
+            description 'Submode instance Name of VPLS.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf group-ip {
+            description 'Group IP address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IP address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf instance-id {
+            description 'Submode instance ID of VPLS.' ;
+            type uint32 {
+              range 0..8000 ;
+
+            }
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type uint32 {
+              range 0..65535 ;
+
+            }
+
+            units second ;
+          }
+
+          ncd:select vpls-name ;
+          ncd:select "vpls-name group-ip source-ip" ;
+          ncd:select "vpls-name group-ip source-ip interface-name" ;
+        }
+
+      }
+
+      container vlan {
+        if-feature vlan ;
+
+        description 'PIM snooping VLAN information.' ;
+        list member {
+          description 'The information of member in instance VLAN.' ;
+          key 'vlan-id group-ip source-ip interface-name' ;
+          leaf vlan-id {
+            description 'Submode instance ID of VLAN.' ;
+            type uint32 {
+              range 0..4094 ;
+
+            }
+
+          }
+
+          leaf group-ip {
+            description 'Group IP address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IP address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type uint32 {
+              range 0..65535 ;
+
+            }
+
+            units second ;
+          }
+
+          ncd:select vlan-id ;
+          ncd:select "vlan-id group-ip source-ip" ;
+          ncd:select "vlan-id group-ip source-ip interface-name" ;
+        }
+
+      }
+
+      list neighbor {
+        description 'The information of neighbor.' ;
+        key 'vlan-id vpls-name neighbor-ip' ;
+        leaf vlan-id {
+          description 'Submode instance ID of VLAN.' ;
+          type uint32 {
+            range 0..4094 ;
+
+          }
+
+        }
+
+        leaf vpls-name {
+          description 'Submode instance Name of VPLS.' ;
+          type string {
+            length 0..32 ;
+
+          }
+
+        }
+
+        leaf neighbor-ip {
+          description 'The IP address of neighbor.' ;
+          type ncd:ipv4-address ;
+
+        }
+
+        leaf vpn-id {
+          description 'Submode instance ID of VPLS.' ;
+          type uint32 {
+            range 0..8000 ;
+
+          }
+
+        }
+
+        leaf interface-name {
+          description 'Interface name of this neighbor.' ;
+          type ncd:ifname ;
+
+        }
+
+        leaf remain-time {
+          description 'Remain time of this neighbor.' ;
+          type uint32 {
+            range 0..65535 ;
+
+          }
+
+          units second ;
+        }
+
+        leaf external-vlan-id {
+          description 'External VLAN ID of this neighbor.' ;
+          type uint32 ;
+
+          ncd:revise-date 2022-12-05 ;
+        }
+
+        leaf internal-vlan-id {
+          description 'Internal VLAN ID of this neighbor.' ;
+          type uint32 ;
+
+          ncd:revise-date 2022-12-05 ;
+        }
+
+        ncd:select "vpls-name neighbor-ip" ;
+        ncd:select "vlan-id neighbor-ip" ;
+      }
+
+      container summary {
+        description 'Show summary info of groups, members and neighbors.' ;
+        container group {
+          description 'Show summary info of groups.' ;
+          container global {
+            description 'Show global summary info of groups.' ;
+            leaf total {
+              description 'Total groups number.' ;
+              type uint32 ;
+
+            }
+
+            leaf source-specific {
+              description 'Source-specific groups number.' ;
+              type uint32 ;
+
+            }
+
+            leaf anycast-specific {
+              description 'Anycast-specific groups number.' ;
+              type uint32 ;
+
+            }
+
+          }
+
+        }
+
+        container member {
+          description 'Show summary info of members.' ;
+          container global {
+            description 'Show global summary info of members.' ;
+            leaf total {
+              description 'Total members number.' ;
+              type uint32 ;
+
+            }
+
+          }
+
+        }
+
+        container neighbor {
+          description 'Show summary info of neighbors.' ;
+          container global {
+            description 'Show global summary info of neighbors.' ;
+            leaf total {
+              type uint32 ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container evpn-vpls {
+        if-feature evpn-vpls ;
+
+        description 'PIM snooping EVPN VPLS information.' ;
+        list member {
+          description 'The information of member in instance EVPN VPLS.' ;
+          key 'evpn-vpls-name group-ip source-ip interface-name external-vlan-id internal-vlan-id' ;
+          leaf evpn-vpls-name {
+            description 'Submode instance Name of EVPN VPLS.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf group-ip {
+            description 'Group IP address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IP address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf external-vlan-id {
+            description 'External VLAN ID of this neighbor.' ;
+            type uint32 ;
+
+          }
+
+          leaf internal-vlan-id {
+            description 'Internal VLAN ID of this neighbor.' ;
+            type uint32 ;
+
+          }
+
+          leaf instance-id {
+            description 'Submode instance ID of EVPN VPLS.' ;
+            type uint32 {
+              range 0..8000 ;
+
+            }
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type uint32 {
+              range 0..65535 ;
+
+            }
+
+            units second ;
+          }
+
+          ncd:select evpn-vpls-name ;
+          ncd:select "evpn-vpls-name group-ip source-ip" ;
+          ncd:select "evpn-vpls-name group-ip source-ip interface-name external-vlan-id internal-vlan-id" ;
+        }
+
+        ncd:revise-date 2022-12-05 ;
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'Command of PIM snooping clear.' ;
+    container pim-snooping {
+      description 'Clear PIM snooping groups.' ;
+      container clear {
+        description 'Clear PIM snooping groups.' ;
+        container group {
+          description 'Clear the specific group of the specific instance.' ;
+          presence group ;
+          leaf group-ip {
+            description 'Multicast group IP address.' ;
+            type ncd:ipv4-address ;
+
+            mandatory true ;
+          }
+
+          leaf source-ip {
+            description 'Source IP address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          choice instance {
+            description 'Instance.' ;
+            mandatory true ;
+            case vlan {
+              if-feature vlan ;
+
+              description 'Clear all groups of the specific VLAN instance.' ;
+              leaf vlan-id {
+                description 'VLAN ID.' ;
+                type uint16 {
+                  range 1..4094 ;
+
+                }
+
+              }
+
+            }
+
+            case vpls {
+              if-feature vpls ;
+
+              description 'Clear all groups of the specific VPLS instance.' ;
+              leaf vpls-name {
+                description 'VPLS name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+            case evpn-vpls {
+              if-feature evpn-vpls ;
+
+              description 'Clear all groups of the specific EVPN VPLS instance.' ;
+              leaf evpn-vpls-name {
+                description 'EVPN VPLS name.' ;
+                type string ;
+
+              }
+
+              ncd:revise-date 2022-12-05 ;
+            }
+
+          }
+
+        }
+
+        container groups {
+          description 'Clear all groups of the specific instance.' ;
+          choice type {
+            description 'Clear all groups of the specific instance.' ;
+            case vlan {
+              if-feature vlan ;
+
+              description 'Clear all groups of the specific VLAN instance.' ;
+              leaf vlan-id {
+                description 'VLAN ID.' ;
+                type uint16 {
+                  range 1..4094 ;
+
+                }
+
+              }
+
+            }
+
+            case vpls {
+              if-feature vpls ;
+
+              description 'Clear all groups of the specific VPLS instance.' ;
+              leaf vpls-name {
+                description 'VPLS name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+            case all {
+              description 'Clear all groups.' ;
+              leaf all-groups {
+                description 'All groups.' ;
+                type empty ;
+
+              }
+
+            }
+
+            case evpn-vpls {
+              if-feature evpn-vpls ;
+
+              description 'Clear all groups of the specific EVPN VPLS instance.' ;
+              leaf evpn-vpls-name {
+                description 'EVPN VPLS name.' ;
+                type string ;
+
+              }
+
+              ncd:revise-date 2022-12-05 ;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

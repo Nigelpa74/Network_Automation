@@ -1,0 +1,126 @@
+module zxr10-service-trace {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/service-trace'
+            ;
+  prefix serice-trace ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe service trace.'
+              ;
+  revision 2023-04-27 {
+    description 'Initial version.'
+                ;
+  }
+  rpc user-access-trace-add {
+    description 'Set the user access trace parameter.'
+                ;
+    input {
+      container instance-add {
+        description 'Add the user access trace instance.'
+                    ;
+        config false ;
+        leaf instance-id {
+          description 'The instance id.'
+                      ;
+          type uint8 {
+            range 1..16 {
+              description 'Instance id.[1,16].'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+        leaf user-mac {
+          description 'User mac-address.'
+                      ;
+          type ncd:mac-address ;
+        }
+        leaf user-name {
+          description 'User name.'
+                      ;
+          type string {
+            length 1..127 {
+              description 'The length of user name.'
+                          ;
+            }
+          }
+        }
+        leaf detail {
+          description 'Output user detail information or not.'
+                      ;
+          type enumeration {
+            enum off {
+              value 0 ;
+              description "Don't output user detail information."
+                          ;
+            }
+            enum on {
+              value 1 ;
+              description 'Output user detail information.'
+                          ;
+            }
+          }
+        }
+        leaf trace-timer {
+          description 'Time for closing service trace.'
+                      ;
+          type uint32 {
+            range 30..600 {
+              description 'The time for closing service trace.[30,600].'
+                          ;
+            }
+          }
+          default 300 ;
+        }
+        leaf report-nms {
+          description 'Report service trace information to network management s'
+                    + 'ystem or not.'
+                      ;
+          type enumeration {
+            enum off {
+              value 0 ;
+              description "Don't report service trace information to network ma"
+                        + "nagement system."
+                          ;
+            }
+            enum on {
+              value 1 ;
+              description 'Report service trace information to network manageme'
+                        + 'nt system.'
+                          ;
+            }
+          }
+        }
+      }
+    }
+  }
+  rpc user-access-trace-del {
+    description 'Del the user access trace parameter.'
+                ;
+    input {
+      container instance-del {
+        description 'Del the user access trace instance.'
+                    ;
+        config false ;
+        leaf instance-id {
+          description 'The instance id.'
+                      ;
+          type uint8 {
+            range 1..16 {
+              description 'Instance id.[1,16].'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+      }
+    }
+  }
+}

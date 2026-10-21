@@ -1,0 +1,245 @@
+module zxr10-bras-urc {
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/bras/urc" ;
+  prefix bras-urc ;
+  yang-version 1 ;
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'This module describes the netconf model about URC.' ;
+  revision 2022-07-14 {
+    description 'Add DP session on distributed virtual UP' ;
+  }
+
+  revision 2020-12-08 {
+    description 'Add the node configuration for user template session.' ;
+  }
+
+  revision 2016-03-09 {
+    description 'Add the node configuration submange for urc.' ;
+  }
+
+  container configuration {
+    description 'Global configuration model.' ;
+    container urc {
+      description 'URC configuration model.' ;
+      container pppoe-user-number-slots {
+        description 'Service processor access maximum ppp user number configuration model.' ;
+        presence pppoe-user-number-slots ;
+        list pppoe-user-number {
+          description 'Service processor access maximum ppp user number configuration list.' ;
+          max-elements 18 ;
+          key slot-no ;
+          leaf slot-no {
+            description 'slot number' ;
+            type uint8 {
+              range 0..17 {
+                description 'Slot number' ;
+              }
+
+            }
+
+          }
+
+          leaf max-session {
+            description 'access-max-session per slot' ;
+            type uint32 {
+              range 1..64000 {
+                description 'max permit session per slot' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+      container pppoe-alarm-thresholds {
+        description 'The whole equipment and service processor access ppp user number alarm threshold configuration model.' ;
+        presence pppoe-alarm-threshold ;
+        list pppoe-alarm-threshold {
+          description 'The whole equipment and service processor access ppp user number alarm threshold configuration list.' ;
+          max-elements 2 ;
+          key alarm-type ;
+          leaf alarm-type {
+            description 'Alarm type,include the whole equipment and service processor.' ;
+            type enumeration {
+              enum system {
+                value 1 ;
+                description 'System alarm.' ;
+              }
+
+              enum slot {
+                value 2 ;
+                description 'Slot alarm.' ;
+              }
+
+            }
+
+          }
+
+          leaf upper-limit-threshold {
+            description 'Upper limit alarm threshold' ;
+            type uint8 {
+              range 1..100 {
+                description 'upper limit alarm threshold.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf lower-limit-threshold {
+            description 'Lower limit alarm threshold.' ;
+            type uint8 {
+              range 1..100 {
+                description 'lower limit alarm threshold.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+      container user-template-session {
+        description 'User temporary session information configuration model.' ;
+        leaf user-session-timeout {
+          description 'User temporary session timeout interval.' ;
+          type uint16 {
+            range 60..500 {
+              description 'User session timeout interval(unit:s,def:300)' ;
+            }
+
+          }
+
+          default 300 ;
+        }
+
+        leaf user-waiting-online-timeout {
+          description 'User temporary session waiting online timeout interval.' ;
+          type uint16 {
+            range 60..1800 {
+              description 'User waiting online timeout interval(unit:s)' ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container user-domains {
+        description 'BRAS subscriber manage domain configuration model.' ;
+        list user-admin-domain {
+          description 'BRAS subscriber manage domain configuration list.' ;
+          max-elements 4000 ;
+          key domain-name ;
+          leaf account-max-session {
+            description 'Maximum number of users allowed to access the same account.' ;
+            type uint32 {
+              range 1..32000 {
+                description 'Account share max session.' ;
+              }
+
+            }
+
+          }
+
+          leaf domain-name {
+            description 'Domain name.' ;
+            type string {
+              length 1..31 {
+                description 'Domain name (1-31 characters).' ;
+              }
+
+            }
+
+          }
+
+          container domain-alarm-threshold {
+            description 'Domain alarm threshold configuration.' ;
+            presence domain-alarm-threshold ;
+            leaf domain-upper-alarm-threshold {
+              description 'Domain upper limit alarm threshold configuration.' ;
+              type uint8 {
+                range 1..100 {
+                  description 'Domain access upper limit alarm threshold.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf domain-lower-alarm-threshold {
+              description 'Domain lower limit alarm threshold configuration.' ;
+              type uint8 {
+                range 1..100 {
+                  description 'Domain access lower limit alarm threshold.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State' ;
+    container vUP-DP-session {
+      description 'Distributed virtual UP DP session' ;
+      list DP-session {
+        description 'DP session' ;
+        key slotNum ;
+        leaf slotNum {
+          description 'slotNum' ;
+          type uint8 {
+            range 0..253 ;
+
+          }
+
+        }
+
+        leaf current-session {
+          description 'current session' ;
+          type uint32 ;
+
+        }
+
+        leaf max-session {
+          description 'max session' ;
+          type uint32 ;
+
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2022-07-14 ;
+  }
+
+}

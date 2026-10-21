@@ -1,0 +1,538 @@
+module zxr10-bras-sfc {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/bras/sfc'
+            ;
+  prefix bras-sfc ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'This module describes the netconf model about Sfc.'
+              ;
+  revision 2022-05-19 {
+    description 'leaf "rule-name""nsh-name""service-class-policy-name" add leng'
+              + 'th range'
+                ;
+  }
+  revision 2021-12-27 {
+    description 'Change content to ip address.'
+                ;
+  }
+  revision 2019-07-23 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'Global configuration model.'
+                ;
+    container service-classfier {
+      description 'Service-classfier configuration model.'
+                  ;
+      container nsh {
+        description 'The configuration information of nsh-encaption.'
+                    ;
+        list nsh-encaption {
+          description 'nsh encaption configuration list'
+                      ;
+          key nsh-encaption-name ;
+          leaf nsh-encaption-name {
+            description 'Setting nsh-encaption name'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf nsh-type {
+            description 'Set nsh encaption type'
+                        ;
+            type enumeration {
+              enum eth {
+                value 0 ;
+                description 'ethernet encaption type'
+                            ;
+              }
+              enum vxlan {
+                value 1 ;
+                description 'vlxan-tunnel encaption type'
+                            ;
+              }
+              enum gre {
+                value 2 ;
+                description 'gre-tunnel encaption type'
+                            ;
+              }
+            }
+          }
+          leaf service-path-id {
+            description 'service path id'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'Effective range from 1 to 16777215.'
+                            ;
+              }
+            }
+          }
+          leaf service-index {
+            description 'service index'
+                        ;
+            type uint8 {
+              range 1..255 {
+                description 'Effective range from 1 to 255.'
+                            ;
+              }
+            }
+          }
+          choice content1-enc {
+            description 'nsh content1'
+                        ;
+            case A.B.C.D {
+              description 'nsh content1-ipv4'
+                          ;
+              leaf content1-ipv4 {
+                description 'nsh content1'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+            case content1-word32 {
+              description 'nsh content1-word32'
+                          ;
+              leaf content1 {
+                description 'nsh content1'
+                            ;
+                type uint32 {
+                  range 1..4294967295 {
+                    description 'Effective range from 1 to 4294967295.'
+                                ;
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2021-12-27 ;
+          }
+          leaf content2 {
+            description 'nsh content2'
+                        ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'Effective range from 1 to 4294967295.'
+                            ;
+              }
+            }
+          }
+          leaf content3 {
+            description 'nsh content3'
+                        ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'Effective range from 1 to 4294967295.'
+                            ;
+              }
+            }
+          }
+          leaf content4 {
+            description 'nsh content4'
+                        ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'Effective range from 1 to 4294967295.'
+                            ;
+              }
+            }
+          }
+          container vxlan {
+            description 'Setting the vxlan-tunnel encaption.'
+                        ;
+            choice vxlan-enc {
+              description 'The choice of vxlan-tunnel encaption.'
+                          ;
+              case vxlan_tunnel {
+                description 'Specify specific vxlan-tunnel encapsulation inform'
+                          + 'ation.'
+                            ;
+                container vxlan-tunnel {
+                  description 'vxlan-tunnel encapsulation information.'
+                              ;
+                  presence vxlan-nsh-encaption ;
+                  leaf vxlan-name {
+                    description 'vxlan tunnel interface name'
+                                ;
+                    type ncd:ifname {
+                      length 13..17 {
+                        description 'Setting the vxlan tunnel for <vxlan_tunnel'
+                                  + '1,vxlan_tunnel65535>'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                  leaf vni {
+                    description 'vxlan network identifier'
+                                ;
+                    type uint32 {
+                      range 1..4294967295 {
+                        description 'Effective range from 1 to 4294967295.'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+              case vxlan-user {
+                description 'Encapsulating information using NSH on the user si'
+                          + 'de'
+                            ;
+                leaf user-dynamic {
+                  description 'configure vxlan-encaption using user-dynamic vxl'
+                            + 'an-encaption.'
+                              ;
+                  type enumeration {
+                    enum user-dynamic {
+                      value 1 ;
+                      description 'vxlan-encaption used user-encaption dynamic.'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          container gre {
+            description 'Setting the gre-tunnel encaption.'
+                        ;
+            leaf gre-name {
+              description 'gre tunnel interface name'
+                          ;
+              type ncd:ifname {
+                length 11..15 {
+                  description 'Setting the gre tunnel for <gre_tunnel1,gre_tunn'
+                            + 'el4000>'
+                              ;
+                }
+              }
+            }
+          }
+        }
+      }
+      container sc-rule {
+        description 'The configuration information of Service-classifer rule.'
+                    ;
+        list service-class-rule {
+          description 'Service-classfier rule configuration list.'
+                      ;
+          key rule-name ;
+          leaf rule-name {
+            description 'Setting SC rule name.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          container match-destination-ip {
+            description 'SC rules match specific IP network.'
+                        ;
+            presence match-destination-ip ;
+            leaf destination-ip {
+              description 'Matching IP address,0.0.0.0 is invalid.'
+                          ;
+              type ncd:ipv4-address-none-zero ;
+              mandatory true ;
+            }
+            leaf destination-mask {
+              description 'Address mask.'
+                          ;
+              type ncd:ipv4-mask {
+                pattern '(254|252|248|240|224|192|128|0)\.0\.0\.0$|^(255\.(254|'
+                      + '252|248|240|224|192|128|0)\.0\.0)$|^(255\.255\.(254|25'
+                      + '2|248|240|224|192|128|0)\.0)$|^(255\.255\.255\.(255|25'
+                      + '4|252|248|240|224|192|128|0))'
+                        {
+                  description 'Effective Address Mask'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+          leaf match-destination-port {
+            description 'The SC rule match the special port.'
+                        ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'Effective range from 1 to 4294967295.'
+                            ;
+              }
+            }
+          }
+          container match-dscp {
+            description 'The SC rule match a special section of dscp value.'
+                        ;
+            presence match-dscp ;
+            leaf dscp-type {
+              description 'Choice dscp-type,Only IPv4 is currently supported.'
+                          ;
+              type enumeration {
+                enum ipv4 {
+                  value 0 ;
+                  description 'The type of dscp,Only IPv4 is currently supporte'
+                            + 'd. The valid value is zero.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+            leaf dscp {
+              description 'Configurable DSCP segment values.'
+                          ;
+              type ncd:single-range {
+                pattern '((((([0-9])|([1-5][0-9])|(6[0-3]))-(([0-9])|([1-5][0-9'
+                      + '])|(6[0-3])))|((([0-9])|([1-5][0-9])|(6[0-3])))){1,1})'
+                        {
+                  description 'Configurable DSCP segment values,eg:0,1.....63,0'
+                            + '-0,0-1....0-63.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+      }
+      container sc-policy {
+        description 'The configuration information of Service-classifer policy.'
+                    ;
+        list service-class-policy {
+          description 'Service-classfier policy configuration list.'
+                      ;
+          key sc-policy-name ;
+          leaf sc-policy-name {
+            description 'Setting SC policy name.'
+                        ;
+            type string ;
+          }
+          container default-action {
+            description 'Configuring the default action of SC policy.'
+                        ;
+            presence default-action ;
+            leaf default-action {
+              description 'The default action flag of SC policy.'
+                          ;
+              type enumeration {
+                enum default-action {
+                  value 1 ;
+                  description 'The default action flag of SC policy. The valid '
+                            + 'value is one.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+            choice action {
+              description 'The choice of SC policy default action.Include nsh,v'
+                        + 'xlan,gre.'
+                          ;
+              mandatory true ;
+              case nsh {
+                description 'nsh encaption'
+                            ;
+                leaf nsh-name {
+                  description 'nsh-encaption name'
+                              ;
+                  type string {
+                    length 1..31 ;
+                  }
+                }
+              }
+              case gre {
+                description 'gre encaption'
+                            ;
+                leaf gre-interface {
+                  description 'Gre tunnel interface name'
+                              ;
+                  type ncd:ifname {
+                    length 11..15 {
+                      description 'Setting the gre tunnel name for <gre_tunnel1'
+                                + ',gre_tunnel4000>'
+                                  ;
+                    }
+                  }
+                }
+              }
+              case vxlan {
+                description 'vxlan encaption'
+                            ;
+                container vxlan-tunnel {
+                  description 'vxlan encaption information'
+                              ;
+                  presence vxlan-tunnel ;
+                  leaf vxlan-name {
+                    description 'vxlan tunnel interface name'
+                                ;
+                    type ncd:ifname {
+                      length 13..17 {
+                        description 'Setting the vxlan tunnel for <vxlan_tunnel'
+                                  + '1,vxlan_tunnel65535>'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                  leaf vni {
+                    description 'vxlan network identifier'
+                                ;
+                    type uint32 {
+                      range 1..1048575 {
+                        description 'Effective range from 1 to 1048575.'
+                                    ;
+                      }
+                    }
+                    mandatory true ;
+                  }
+                }
+              }
+            }
+          }
+          leaf sc-nat {
+            description 'Configuring NAT attributes of SC policy'
+                        ;
+            type enumeration {
+              enum remote {
+                value 0 ;
+                description 'remote nat'
+                            ;
+              }
+              enum local {
+                value 1 ;
+                description 'local nat'
+                            ;
+              }
+            }
+          }
+          container service-class-rule {
+            description 'Service-classifer action rule.'
+                        ;
+            presence service-class-rule ;
+            list service-class-rules {
+              description 'Service-classifer action rule configuration list.'
+                          ;
+              key rule-name ;
+              leaf rule-name {
+                description 'Rule name of service-classifer action.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+              }
+              choice sc-action {
+                description 'The choice of SC policy action.Include nsh,vxlan,g'
+                          + 're.'
+                            ;
+                mandatory true ;
+                case nsh {
+                  description 'nsh encaption'
+                              ;
+                  leaf nsh-name {
+                    description 'nsh-encaption name'
+                                ;
+                    type string {
+                      length 1..31 ;
+                    }
+                  }
+                }
+                case gre {
+                  description 'gre encaption'
+                              ;
+                  leaf gre-interface {
+                    description 'Gre tunnel interface name'
+                                ;
+                    type ncd:ifname {
+                      length 11..15 {
+                        description 'Setting the gre tunnel name for <gre_tunne'
+                                  + 'l1,gre_tunnel4000>'
+                                    ;
+                      }
+                    }
+                  }
+                }
+                case vxlan {
+                  description 'vxlan encaption'
+                              ;
+                  container vxlan-tunnel {
+                    description 'vxlan encaption information'
+                                ;
+                    presence vxlan-tunnel ;
+                    leaf vxlan-name {
+                      description 'vxlan tunnel interface name'
+                                  ;
+                      type ncd:ifname {
+                        length 13..17 {
+                          description 'Setting the vxlan tunnel for <vxlan_tunn'
+                                    + 'el1,vxlan_tunnel65535>'
+                                      ;
+                        }
+                      }
+                      mandatory true ;
+                    }
+                    leaf vni {
+                      description 'vxlan network identifier'
+                                  ;
+                      type uint32 {
+                        range 1..16777215 {
+                          description 'Effective range from 1 to 1048575.'
+                                      ;
+                        }
+                      }
+                      mandatory true ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      container interface {
+        description 'The configuration information of interface for Service-cla'
+                  + 'ssifer policy.'
+                    ;
+        list interface-policy {
+          description 'Service-classfier interface configuration list.'
+                      ;
+          key interface-name ;
+          leaf interface-name {
+            description 'Configuring the interfaces that need to bind SC policy.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf l2-encapsulation {
+            description 'Setting Interface Layer 2 encapsulation.'
+                        ;
+            type enumeration {
+              enum l2-encapsulation {
+                value 1 ;
+                description 'Setting Interface Layer 2 encapsulation.The valid '
+                          + 'value is one.'
+                            ;
+              }
+            }
+          }
+          leaf service-class-policy-name {
+            description 'Interfaces binding SC policy.'
+                        ;
+            type string {
+              length 0..31 ;
+            }
+          }
+        }
+      }
+    }
+  }
+}

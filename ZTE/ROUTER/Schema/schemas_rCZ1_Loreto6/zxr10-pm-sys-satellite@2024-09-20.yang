@@ -1,0 +1,1010 @@
+module zxr10-pm-sys-satellite {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-sys-satellite'
+            ;
+  prefix pm-sys-satellite ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2024-09-20 {
+    description 'add list synchronization-detail.' 
+	            ;
+  }
+  
+  revision 2024-08-21 {
+    description 'add hardware node.' ;
+  }
+
+  revision 2024-08-19 {
+    description 'Add sat container synchronizations.' 
+	            ;
+  }
+
+  revision 2023-07-25 {
+    description 'Add leaf in container systems.' 
+              + 'Add leaf cpuname and status in container racks.'
+	            ;
+  }
+  revision 2023-06-02 {
+    description 'Add select item in container racks.' 
+	            ;
+  }
+  revision 2023-04-25 {
+    description 'Add container configuration,sys to set hostname of satellite device.'
+                ;
+  }
+  revision 2023-04-12 {
+    description 'add show mem-threshold sat andhow cpu-threshold sat.'
+                ;
+  }
+  revision 2023-03-14 {
+    description 'add sat container racks and leaf shelftype, manufacture in she'
+              + 'lf list.'
+                ;
+  }
+  revision 2022-08-25 {
+    description 'Leaf peid max value change to 1-250 and add perfcode.'
+                ;
+  }
+  revision 2021-01-25 {
+    description 'Initialize version.'
+                ;
+  }
+  container state {
+    config false ;
+    container sys {
+      container systems {
+        list system {
+          key peid ;
+          leaf peid {
+            description 'Satellite ID.'
+                        ;
+            type uint32 {
+              range 1..250 {
+                description 'peid range.'
+                            ;
+              }
+            }
+          }
+          leaf system-version {
+            type ncd:string-all ;
+          }
+          leaf boot-time {
+            type uint64 ;
+          }
+          leaf copyright {
+            description copyRight ;
+            type ncd:string-all ;
+          }
+          leaf compile-time {
+            type ncd:string-all ;
+          }
+          leaf uptime {
+            description 'unit: seconds.'
+                        ;
+            type uint32 ;
+            ncd:revise-date 2023-07-25 ;
+          }
+        }
+      }
+      container shelfs {
+        list shelf {
+          key peid ;
+          leaf peid {
+            description 'Satellite ID.'
+                        ;
+            type uint32 {
+              range 1..250 {
+                description 'peid range.'
+                            ;
+              }
+            }
+          }
+          leaf shelfno {
+            description 'Shelf number'
+                        ;
+            type uint8 {
+              range 0..254 {
+                description 'shelf range.'
+                            ;
+              }
+            }
+          }
+          leaf shelfsn {
+            description 'Shelf series number'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf shelftype {
+            description 'Shelf type.'
+                        ;
+            type ncd:string-all ;
+            ncd:revise-date 2023-03-14 ;
+          }
+          leaf manufacture {
+            description 'Shelf manufacture date.'
+                        ;
+            type ncd:string-all ;
+            ncd:revise-date 2023-03-14 ;
+          }
+        }
+      }
+      container racks {
+        list rack {
+          key 'peid shelf slot subslot' ;
+          leaf peid {
+            description 'Satellite ID.' ;
+            type uint32 {
+              range 1..250 {
+                description 'peid range.' ;
+              }
+
+            }
+
+          }
+
+          leaf shelf {
+            description 'Shelf number' ;
+            type uint8 {
+              range 0..254 {
+                description 'shelf range.' ;
+              }
+
+            }
+
+          }
+
+          leaf slot {
+            description 'Slot number' ;
+            type uint8 {
+              range 0..254 {
+                description 'slot range.' ;
+              }
+
+            }
+
+          }
+
+          leaf subslot {
+            description 'Slot number' ;
+            type uint8 {
+              range 0..255 {
+                description 'slot range.' ;
+              }
+
+            }
+
+          }
+
+          leaf boardtype {
+            description 'Board function id.' ;
+            type uint32 {
+              range 0..4294967294 ;
+
+            }
+
+          }
+
+          leaf boardname {
+            description 'Board silk name.' ;
+            type ncd:string-all ;
+
+          }
+          leaf cpuname {
+            description 'Cpu name.'
+                        ;
+            type ncd:string-all ;
+            ncd:revise-date 2023-07-25 ;
+          }
+          leaf status {
+            description 'Board status.'
+                        ;
+            type enumeration {
+              enum unknown {
+                value 0 ;
+                description unknown. ;
+              }
+              enum online {
+                value 1 ;
+                description online. ;
+              }
+              enum offline {
+                value 2 ;
+                description offline. ;
+              }
+            }
+            ncd:revise-date 2023-07-25 ;
+          }
+          leaf character {
+            type string {
+              length 1..28 ;
+
+            }
+
+          }
+
+          leaf portnum {
+            type uint8 ;
+
+          }
+
+          leaf pcb {
+            type ncd:string-with-blank {
+              length 1..80 ;
+
+            }
+
+          }
+
+          leaf fpga {
+            type ncd:string-all ;
+
+          }
+
+          leaf epld {
+            type ncd:string-all ;
+
+          }
+
+          leaf sn {
+            type ncd:string-all ;
+
+          }
+
+          leaf manufacture {
+            type ncd:string-all ;
+
+            description 'The Manufacture Date of the card' ;
+          }
+
+          leaf assemblysn {
+            type ncd:string-all ;
+
+          }
+
+          leaf harddisk {
+            type uint32 ;
+
+          }
+
+          leaf installstate {
+            type enumeration {
+              enum down {
+                value 0 ;
+                description 'The board is down.' ;
+              }
+
+              enum up {
+                value 1 ;
+                description 'The board is up.' ;
+              }
+
+            }
+
+            description 'The install state of real board' ;
+          }
+
+          leaf software-version {
+            type ncd:string-with-blank {
+              length 1..80 ;
+
+            }
+
+            description 'software version' ;
+          }
+
+          leaf mc-version {
+            type ncd:string-with-blank {
+              length 1..80 ;
+
+            }
+
+            description 'Mc version' ;
+          }
+
+          leaf baud {
+            type uint32 ;
+
+            description 'System baud' ;
+          }
+
+          leaf type {
+
+            type enumeration {
+              enum MPU {
+                value 1 ;
+                description 'The board is MPU.' ;
+              }
+
+              enum PFU {
+                value 3 ;
+                description 'The board is PFU.' ;
+              }
+
+              enum SFU {
+                value 4 ;
+                description 'The board is SFU.' ;
+              }
+
+            }
+
+            description 'Board logic type' ;
+          }
+
+          leaf item {
+            type ncd:string-all ;
+
+            description 'Board sales code.' ;
+          }
+
+          leaf description {
+            type ncd:string-all ;
+
+            description 'Board description.' ;
+          }
+
+          leaf vendor {
+            type ncd:string-all ;
+
+            description 'Vendor.' ;
+          }
+
+          leaf run-time {
+            type ncd:string-all {
+              length 1..40 ;
+
+            }
+
+            description 'Run time' ;
+          }
+
+          ncd:select peid ;
+          ncd:select "peid shelf" ;
+          ncd:select "peid shelf slot" ;
+          ncd:select "peid shelf slot subslot" ;
+        }
+
+        ncd:revise-date 2023-03-14 ;
+      }
+      container processor-usages {
+        list processor-usage {
+          key peid ;
+          leaf peid {
+            description 'Satellite ID.'
+                        ;
+            type uint32 {
+              range 1..250 {
+                description 'peid range.'
+                            ;
+              }
+            }
+          }
+          leaf shelf {
+            description 'Shelf number'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'shelf range.'
+                            ;
+              }
+            }
+          }
+          leaf slot {
+            description 'Slot number'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'slot range.'
+                            ;
+              }
+            }
+          }
+          leaf cpu {
+            description 'CPU number'
+                        ;
+            type uint8 ;
+          }
+          leaf cpu-usage-5s {
+            description 'CPU usage ratio measured in 5 seconds'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf cpu-usage-1m {
+            description 'CPU usage ratio measured in 1 minute'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf cpu-usage-5m {
+            description 'CPU usage ratio measured in 5 minute'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf cpu-peak {
+            description 'CPU peak usage ratio measured in 1 minute'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf mem-usage {
+            description 'Memory usage ratio'
+                        ;
+            type ncd:string-all ;
+          }
+          leaf mem-physical {
+            description 'Physical memory'
+                        ;
+            type uint32 ;
+          }
+          leaf mem-free {
+            description 'Free memory'
+                        ;
+            type uint32 ;
+          }
+        }
+      }
+      container mem-thresholds {
+        list mem-threshold {
+          key 'level peid'
+              ;
+          leaf peid {
+            description 'Satellite ID.'
+                        ;
+            type uint32 {
+              range 1..250 {
+                description 'peid range'
+                            ;
+              }
+            }
+          }
+          leaf level {
+            description 'The alarm level of the MEM usage rate'
+                        ;
+            type enumeration {
+              enum low {
+                value 0 ;
+                description 'The low level of alarm update'
+                            ;
+              }
+              enum middle {
+                value 1 ;
+                description 'The middle level of alarm update'
+                            ;
+              }
+              enum high {
+                value 2 ;
+                description 'The high level of alarm update'
+                            ;
+              }
+            }
+          }
+          leaf mem-usage {
+            description 'The threshold of the MEM usage rate'
+                        ;
+            type uint8 {
+              range 0..100 ;
+            }
+          }
+        }
+        ncd:revise-date 2023-04-12 ;
+      }
+      container cpu-thresholds {
+        list cpu-threshold {
+          key 'level peid'
+              ;
+          leaf peid {
+            description 'Satellite ID.'
+                        ;
+            type uint32 {
+              range 1..250 {
+                description 'peid range'
+                            ;
+              }
+            }
+          }
+          leaf level {
+            description 'The alarm level of the CPU usage rate'
+                        ;
+            type enumeration {
+              enum low {
+                value 0 ;
+                description 'The low level of alarm update'
+                            ;
+              }
+              enum middle {
+                value 1 ;
+                description 'The middle level of alarm update'
+                            ;
+              }
+              enum high {
+                value 2 ;
+                description 'The high level of alarm update'
+                            ;
+              }
+            }
+          }
+          leaf cpu-usage {
+            description 'The threshold of the CPU usage rate'
+                        ;
+            type uint8 {
+              range 0..100 ;
+            }
+          }
+        }
+        ncd:revise-date 2023-04-12 ;
+      }
+      container ports {
+        list port {
+          key peid ;
+          leaf peid {
+            description 'Satellite ID.'
+                        ;
+            type uint32 {
+              range 1..250 {
+                description 'Peid range.'
+                            ;
+              }
+            }
+          }
+          leaf shelf {
+            description 'Shelf number.'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'shelf range.'
+                            ;
+              }
+            }
+          }
+          leaf slot {
+            description 'Slot number.'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'slot range.'
+                            ;
+              }
+            }
+          }
+          leaf subslot {
+            description 'Subslot number.'
+                        ;
+            type uint8 ;
+          }
+          leaf portno {
+            description 'Port number.'
+                        ;
+            type uint32 ;
+          }
+          leaf porttype {
+            description 'Port type.'
+                        ;
+            type uint16 ;
+          }
+          leaf portname {
+            description 'Port name.'
+                        ;
+            type string ;
+          }
+          leaf portphystatus {
+            description 'Port physical status.'
+                        ;
+            type enumeration {
+              enum up {
+                value 0 ;
+                description up. ;
+              }
+              enum down {
+                value 1 ;
+                description down. ;
+              }
+              enum offline {
+                value 32 ;
+                description offline. ;
+              }
+            }
+          }
+          leaf portpemode {
+            description 'Port electric optical property.'
+                        ;
+            type enumeration {
+              enum media-copper {
+                value 1 ;
+                description 'The PEMode of the port is electric.'
+                            ;
+              }
+              enum media-fiber {
+                value 2 ;
+                description 'The PEMode of the port is optical.'
+                            ;
+              }
+            }
+          }
+          leaf portspeed {
+            description 'Port speed.'
+                        ;
+            type enumeration {
+              enum speed-10M {
+                value 1 ;
+                description 'Port speed is 10M.'
+                            ;
+              }
+              enum speed-100M {
+                value 2 ;
+                description 'Port speed is 100M.'
+                            ;
+              }
+              enum speed-1G {
+                value 3 ;
+                description 'Port speed is 1G.'
+                            ;
+              }
+              enum speed-10G {
+                value 4 ;
+                description 'Port speed is 10G.'
+                            ;
+              }
+              enum speed-25G {
+                value 10 ;
+                description 'Port speed is 25G.'
+                            ;
+              }
+              enum speed-40G {
+                value 5 ;
+                description 'Port speed is 40G.'
+                            ;
+              }
+              enum speed-50G {
+                value 11 ;
+                description 'Port speed is 50G.'
+                            ;
+              }
+              enum speed-100G {
+                value 6 ;
+                description 'Port speed is 100G.'
+                            ;
+              }
+              enum speed-200G {
+                value 12 ;
+                description 'Port speed is 200G.'
+                            ;
+              }
+              enum speed-400G {
+                value 13 ;
+                description 'Port speed is 400G.'
+                            ;
+              }
+              enum speed-auto {
+                value 15 ;
+                description 'Port speed is configured to auto, the real speed d'
+                          + 'epend on optical module.'
+                            ;
+              }
+            }
+          }
+          leaf portnegotiation {
+            description 'Port negotiation mode.'
+                        ;
+            type enumeration {
+              enum negotiation-force {
+                value 1 ;
+                description 'Force negotiation mode.'
+                            ;
+              }
+              enum negotiation-auto {
+                value 2 ;
+                description 'Auto negotiation mode.'
+                            ;
+              }
+            }
+            default negotiation-auto ;
+          }
+          leaf portduplex {
+            description 'Port duplex mode.'
+                        ;
+            type enumeration {
+              enum duplex-full {
+                value 1 ;
+                description 'Full duplex mode.'
+                            ;
+              }
+              enum duplex-half {
+                value 2 ;
+                description 'Half duplex mode.'
+                            ;
+              }
+            }
+          }
+          ncd:select peid ;
+        }
+      }
+      container cpus {
+        list cpu {
+          leaf peid {
+            type uint32 {
+              range 1..250 {
+                description 'peid range.' ;
+              }
+
+            }
+
+            description 'Satellite ID.' ;
+          }
+
+          leaf shelf {
+            type uint8 {
+              range 0..255 {
+                description 'shelf range' ;
+              }
+
+            }
+
+            description 'Shelf number.' ;
+          }
+
+          leaf slot {
+            type uint8 {
+              range 0..255 {
+                description 'slot range.' ;
+              }
+
+            }
+
+            description 'Slot number.' ;
+          }
+
+          leaf cpu {
+            type uint8 {
+              range 0..15 ;
+
+            }
+
+          }
+
+          leaf cputype {
+            type uint8 ;
+
+            description 'CPU type' ;
+          }
+
+          leaf cpuname {
+            type string ;
+
+            description 'CPU name' ;
+          }
+
+          leaf memory {
+            type uint32 ;
+
+          }
+
+          leaf flash {
+            type uint32 ;
+
+          }
+
+          leaf nvram {
+            type uint32 ;
+
+          }
+
+          leaf processor {
+            type ncd:string-with-blank ;
+
+          }
+
+          leaf bootver {
+            type ncd:string-with-blank {
+              length 1..20 ;
+
+            }
+
+          }
+
+          leaf cpucorenum {
+            type uint8 ;
+
+          }
+
+          leaf cpucardver {
+            type ncd:string-with-blank {
+              length 1..20 ;
+
+            }
+
+            description 'CPU card version' ;
+          }
+
+          leaf bigflashsize {
+            type uint64 ;
+
+          }
+
+          key 'peid shelf slot cpu' ;
+          ncd:select peid ;
+          ncd:select "peid shelf" ;
+          ncd:select "peid shelf slot" ;
+          ncd:select "peid shelf slot cpu" ;
+        }
+        ncd:revise-date 2024-08-21 ;
+
+
+      }
+
+
+      container synchronizations {
+        list synchronization {
+          leaf peid {
+            type uint32 {
+              range 1..250 {
+                description 'peid range.' ;
+              }
+            }
+            description 'Satellite ID.' ;
+          }
+
+          leaf location {
+            type ncd:string-all ;
+            description 'Location of logic entity.' ;
+          }
+
+          leaf le-type {
+            type ncd:string-all ;
+            description 'Type of logic entity.' ;
+          }
+
+          leaf ms-status {
+            type ncd:string-all ;
+            description 'Master slave status of logic entity.' ;
+          }
+
+          leaf sync-status {
+            type ncd:string-all ;
+            description 'Synchronized status of logic entity.' ;
+          }
+
+          key 'peid location' ;
+          description 'Overall status of satellite LE synchronization.' ;
+          ncd:revise-date 2024-08-19 ;
+        }
+		
+        list synchronization-detail {
+		  leaf peid {
+            type uint32 {
+              range 1..250 {
+                description 'peid range.' ;
+              }
+            }
+            description 'Satellite ID.' ;
+          }
+
+          leaf module {
+            description 'The name of module.' ;
+            type ncd:string-all ;
+          }
+
+          leaf le-type {
+            description 'The name of logic entity.' ;
+            type ncd:string-all ;
+          }
+
+          leaf sync-type {
+            description 'The type of synchronization.' ;
+            type ncd:string-all ;
+          }
+
+          leaf sync-status {
+            description 'The state of synchronization.' ;
+            type ncd:string-all ;
+          }
+		  
+          description 'Detail status of satellite LE synchronization.' ;
+          key 'peid module le-type' ;
+          ncd:revise-date 2024-09-20 ;
+        }
+      }
+    }
+  }
+    container configuration {
+    container af-nodes {
+      description 'Port af-node.'
+                  ;
+      list af-node {
+        description 'Port af-node.'
+                    ;
+        key name ;
+        leaf name {
+          description 'Satellite ID.'
+                      ;
+          type ncd:af-name {
+            length 1..32 ;
+          }
+        }
+        container sys {
+          leaf hostname {
+            description 'System network name.'
+                        ;
+            type ncd:string-all-with-chinese {
+              length 1..64 ;
+            }
+            default ZXR10 ;
+          }
+        }
+        container mem-thresholds {
+          list mem-threshold {
+            key level ;
+            leaf level {
+              description 'The alarm level of the memory usage rate'
+                          ;
+              type enumeration {
+                enum low {
+                  value 0 ;
+                  description 'The low level of alarm update'
+                              ;
+                }
+                enum middle {
+                  value 1 ;
+                  description 'The middle level of alarm update'
+                              ;
+                }
+                enum high {
+                  value 2 ;
+                  description 'The high level of alarm update'
+                              ;
+                }
+              }
+            }
+            leaf mem-usage {
+              description 'The threshold of the memory usage rate'
+                          ;
+              type uint8 {
+                range 1..100 ;
+              }
+              default 60 ;
+            }
+          }
+        }
+        container cpu-thresholds {
+          list cpu-threshold {
+            key level ;
+            leaf level {
+              description 'The alarm level of the CPU usage rate'
+                          ;
+              type enumeration {
+                enum low {
+                  value 0 ;
+                  description 'The low level of alarm update'
+                              ;
+                }
+                enum middle {
+                  value 1 ;
+                  description 'The middle level of alarm update'
+                              ;
+                }
+                enum high {
+                  value 2 ;
+                  description 'The high level of alarm update'
+                              ;
+                }
+              }
+            }
+            leaf cpu-usage {
+              description 'The threshold of the CPU usage rate'
+                          ;
+              type uint8 {
+                range 50..100 ;
+              }
+              default 95 ;
+            }
+          }
+        }
+      }
+    }
+    ncd:revise-date 2023-04-25 ;
+  }
+}

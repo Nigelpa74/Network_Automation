@@ -1,0 +1,409 @@
+module zxr10-aspath {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/aspath'
+            ;
+  prefix aspath ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe aspath.'
+              ;
+  revision 2022-12-27 {
+    description '1.Add the containers:/configuration/as-path/vni-lists.'+"\n"
+              + '2.Add the containers:/configuration/as-path/eti-lists.'+"\n"
+              + '3.Add the containers:/configuration/as-path/esi-lists.'
+                ;
+  }
+  revision 2021-12-01 {
+    description '1.Add the containers:/configuration/as-path/policy-default-act'
+              + 'ion and /configuration/as-path/trigger-delay.'
+                ;
+  }
+  revision 2021-06-02 {
+    description '1.Add the containers:/configuration/as-path/mac-lists.'
+                ;
+  }
+  revision 2021-01-21 {
+    description '1.Modify the range of leaf:/configuration/as-path/aspath-acls/'
+              + 'aspath-acl/aspath-acl-number.'
+                ;
+  }
+  revision 2019-05-31 {
+    description '1.Add the containers:/configuration/as-path/color-lists and /c'
+              + 'onfiguration/as-path/aspath-list-standards.'
+                ;
+  }
+  revision 2018-02-09 {
+    description '1.Add the containers:/configuration/as-path/aspath-name-acls.'
+                ;
+  }
+  revision 2013-11-26 {
+    description 'Initial version'
+                ;
+  }
+  container configuration {
+    description 'Configuration model.'
+                ;
+    container as-path {
+      description "ASPATH's list module."
+                  ;
+      container aspath-acls {
+        description "Set ASPATH's list module."
+                    ;
+        list aspath-acl {
+          description "Set ASPATH's list module."
+                      ;
+          key 'aspath-acl-number deny-permit regular-expression'
+              ;
+          leaf aspath-acl-number {
+            description "Set ASPATH's access list number."
+                        ;
+            type uint16 {
+              range 1..256 {
+                description 'The ange of ASPATH access list name is from 1 to 2'
+                          + '56.'
+                            ;
+              }
+            }
+          }
+          leaf deny-permit {
+            description 'Deny:Specify packets to reject;'+"\n"
+                      + 'Permit:Specify packets to permit.'
+                        ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Deny:Specify packets to reject.'
+                            ;
+              }
+              enum permit {
+                value 1 ;
+                description 'Permit:Specify packets to permit.'
+                            ;
+              }
+            }
+          }
+          leaf regular-expression {
+            description 'A regular-expression to match the BGP AS paths.'
+                        ;
+            type ncd:string-with-blank {
+              length 1..100 {
+                description 'Regular-expression length is between 1 and 100(1~1'
+                          + '00).'
+                            ;
+              }
+            }
+          }
+        }
+      }
+      container aspath-name-acls {
+        description "Set ASPATH's list module."
+                    ;
+        list aspath-name-acl {
+          description "Set ASPATH's list module."
+                      ;
+          key 'aspath-acl-name deny-permit regular-expression'
+              ;
+          leaf aspath-acl-name {
+            description "Set ASPATH's access list name."
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf deny-permit {
+            description 'Deny:Specify packets to reject;'+"\n"
+                      + 'Permit:Specify packets to permit.'
+                        ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Deny:Specify packets to reject.'
+                            ;
+              }
+              enum permit {
+                value 1 ;
+                description 'Permit:Specify packets to permit.'
+                            ;
+              }
+            }
+          }
+          leaf regular-expression {
+            description 'A regular-expression to match the BGP AS paths.'
+                        ;
+            type ncd:string-with-blank {
+              length 1..100 {
+                description 'Regular-expression length is between 1 and 100(1~1'
+                          + '00).'
+                            ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2018-02-09 ;
+      }
+      container color-lists {
+        description "Set color's list module."
+                    ;
+        list color-list {
+          description "Set color's list module."
+                      ;
+          key 'color-name color-value'
+              ;
+          leaf color-name {
+            description 'Set color list name.'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf color-value {
+            description 'Set color value.'
+                        ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The range of color value is from 1 to 4294967295.'
+                            ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2019-05-31 ;
+      }
+      container aspath-list-standards {
+        description 'AS path access list(standard).'
+                    ;
+        list aspath-list-standard {
+          description 'AS path access list(standard).'
+                      ;
+          key 'aspath-name aspath-seq'
+              ;
+          leaf aspath-name {
+            description 'AS path access list name(standard).'
+                        ;
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf aspath-seq {
+            description 'AS path access list sequence number(standard).'
+                        ;
+            type uint16 {
+              range 0..65535 ;
+            }
+          }
+          leaf aspath-value {
+            description 'AS number.'
+                        ;
+            type union {
+              type uint16 {
+                range 1..65535 {
+                  description 'The range of value is from 1 to 65535.'
+                              ;
+                }
+              }
+              type ncd:asn-dot ;
+            }
+            mandatory true ;
+          }
+          leaf aspath-count {
+            description 'AS count.'
+                        ;
+            type uint8 {
+              range 1..255 ;
+            }
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2019-05-31 ;
+      }
+      container mac-lists {
+        description "Set mac's list module."
+                    ;
+        list mac-list {
+          description "Set mac's list module."
+                      ;
+          key 'mac-name mac-seq'
+              ;
+          leaf mac-name {
+            description 'Set mac list name.'
+                        ;
+            type string {
+              length 1..169 ;
+            }
+          }
+          leaf mac-seq {
+            description 'Set mac list sequence.'
+                        ;
+            type uint32 {
+              range 1..4294967294 {
+                description 'The range of mac sequence is from 1 to 4294967294.'
+                            ;
+              }
+            }
+          }
+          container mac-choice {
+            description 'Configure mac information.'
+                        ;
+            choice mac-choice {
+              description 'Configure mac information.'
+                          ;
+              case mac-address {
+                description 'Configure mac address.'
+                            ;
+                leaf mac-address {
+                  description 'Configure mac address.'
+                              ;
+                  type ncd:mac-address ;
+                  mandatory true ;
+                }
+              }
+              case mac-addr-with-mask {
+                description 'Configure mac address with mask.'
+                            ;
+                leaf mac-addr {
+                  description 'Configure mac address.'
+                              ;
+                  type ncd:mac-address ;
+                  mandatory true ;
+                }
+                leaf mac-mask {
+                  description 'Configure mac mask.'
+                              ;
+                  type ncd:mac-address ;
+                  mandatory true ;
+                }
+              }
+            }
+          }
+        }
+        ncd:revise-date 2021-06-02 ;
+      }
+      container trigger-delay {
+        description 'The delay time value (second) of trigger delay.'
+                    ;
+        presence trigger-delay ;
+        leaf delay-time {
+          description 'The delay time value (second) of trigger delay.'
+                      ;
+          type uint32 {
+            range 0..30 ;
+          }
+          mandatory true ;
+        }
+        ncd:revise-date 2021-12-01 ;
+      }
+      container policy-default-action {
+        description 'Configure default action.'
+                    ;
+        presence policy-default-action ;
+        leaf default-action {
+          description 'Permit:Specify packets to permit;'+"\n"
+                    + 'Deny:Specify packets to reject.'
+                      ;
+          type enumeration {
+            enum permit {
+              value 1 ;
+            }
+            enum deny {
+              value 2 ;
+            }
+          }
+          mandatory true ;
+        }
+        ncd:revise-date 2021-12-01 ;
+      }
+      container vni-lists {
+        description 'Set VNI list module.'
+                    ;
+        list vni-list {
+          description 'Set VNI list module.'
+                      ;
+          key 'vni-name vni-value'
+              ;
+          leaf vni-name {
+            description 'Set VNI list name.'
+                        ;
+            type string {
+              length 1..169 ;
+            }
+          }
+          leaf vni-value {
+            description 'Set VNI value.'
+                        ;
+            type uint32 {
+              range 1..16777215 {
+                description 'The range of vni value is from 1 to 16777215.'
+                            ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2022-12-27 ;
+      }
+      container eti-lists {
+        description 'Set ETI list module.'
+                    ;
+        list eti-list {
+          description 'Set ETI list module.'
+                      ;
+          key 'eti-name eti-value'
+              ;
+          leaf eti-name {
+            description 'Set ETI list name.'
+                        ;
+            type string {
+              length 1..169 ;
+            }
+          }
+          leaf eti-value {
+            description 'Set ETI value.'
+                        ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The range of eti value is from 0 to 4294967295.'
+                            ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2022-12-27 ;
+      }
+      container esi-lists {
+        description 'Set ESI list module.'
+                    ;
+        list esi-list {
+          description 'Set ESI list module.'
+                      ;
+          key 'esi-name esi-value'
+              ;
+          leaf esi-name {
+            description 'Set ESI list name.'
+                        ;
+            type string {
+              length 1..169 ;
+            }
+          }
+          leaf esi-value {
+            description 'Set ESI value.'
+                        ;
+            type string {
+              length 1..29 {
+                description 'The length of ESI.'
+                            ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2022-12-27 ;
+      }
+    }
+  }
+}

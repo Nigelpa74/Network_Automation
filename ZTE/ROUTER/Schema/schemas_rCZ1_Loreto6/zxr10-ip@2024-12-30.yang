@@ -1,0 +1,1508 @@
+module zxr10-ip {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/ip" ;
+  prefix ip ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe IP.This netconf module contains managed object definitions of IP.' ;
+  revision 2024-12-30 {
+    description 'Delete label of clear-dont-fragmentbit-feature.' ;
+  }
+
+  revision 2024-10-12 {
+    description 'Add list node:configuration/ip/icmp-config/icmp-options/specify-src-interfaces.
+Delete leaf node:configuration/ip/icmp-config/icmp-options/specify-src-interfaces/if-name.' ;
+  }
+
+  revision 2024-06-25 {
+    description 'Modify default value from none to perf-code for leaf:/configuration/ip/ip-option/ecmp-local-priority.' ;
+  }
+
+  revision 2024-03-28 {
+    description 'Add leaf node:configuration/ip/ip-option/ecmp-local-priority.' ;
+  }
+
+  revision 2023-12-06 {
+    description 'Add leaf node:configuration/ip/icmp-config/icmp-options/specify-src-interfaces/if-name.
+Delete list node:configuration/ip/icmp-config/icmp-options/specify-src-interfaces.' ;
+  }
+
+  revision 2023-12-05 {
+    description 'Add default for /configuration/ip/control-protocol/proto-dscps/proto-dscp/protocol.' ;
+  }
+
+  revision 2023-08-08 ;
+
+  revision 2022-11-16 {
+    description 'Add node:/configuration/ip/ip-option/routemap-name.' ;
+  }
+
+  revision 2021-10-27 {
+    description 'Add container node:configuration/ip/ip-if-options.
+Add list node:configuration/ip/ip-if-options/ip-if-option.
+Add leaf node:configuration/ip/ip-if-options/ip-if-option/if-name.
+Add leaf node:configuration/ip/ip-if-options/ip-if-option/ip-source-route.' ;
+  }
+
+  revision 2021-07-23 {
+    description 'Add container node:configuration/ip/maximum-packet-sizes.' ;
+  }
+
+  revision 2021-05-06 {
+    description 'Add SIBP for /configuration/ip/control-protocol/proto-dscps/proto-dscp/protocol.' ;
+  }
+
+  revision 2021-03-24 {
+    description 'Add if-feature for /configuration/ip/ip-fragment/fragment-bit.' ;
+  }
+
+  revision 2021-03-06 {
+    description 'Delete feature:/global-unreach.
+Delete if_Feature:/configuration/ip/icmp-config/icmp-options/ip-global-unreach.
+Delete if_Feature:/configuration/ip/icmp-config/icmp-options/ipv6-global-unreach.' ;
+  }
+
+  revision 2020-11-24 {
+    description 'Add leaf node:/configuration/ip/icmp-config/icmp-options/ip-global-unreach,/configuration/ip/icmp-config/icmp-options/ipv6-global-unreach' ;
+  }
+
+  revision 2020-07-23 {
+    description 'Add node:/configuration/ip/ip-option/load-sharing-mode.' ;
+  }
+
+  revision 2018-11-12 {
+    description 'Add HTTP for /configuration/ip/control-protocol/proto-dscps/proto-dscp/protocol.' ;
+  }
+
+  revision 2017-07-25 {
+    description 'Add node for /configuration/ip/ip-fragment/clear-dont-fragment-bit,/configuration/ip/ip-fragment/clear-dont-frag-bit' ;
+  }
+
+  revision 2017-05-27 {
+    description 'Add if-feature for /configuration/ip/ip-option/ttl' ;
+  }
+
+  revision 2017-02-15 {
+    description 'Add HAGP for /configuration/ip/control-protocol/proto-dscps/proto-dscp/protocol.' ;
+  }
+
+  revision 2017-01-04 {
+    description 'Add if-feature for /configuration/ip/ip-option/fragment,reassemble-time,max-rsm-session,min-fragment-size,min-fragment-offset' ;
+  }
+
+  revision 2016-12-07 {
+    description 'Add openflow protocol for /configuration/ip/control-protocol/proto-dscps/proto-dscp/protocol.' ;
+  }
+
+  revision 2016-11-01 {
+    description 'Add select for /state/ip/icmp-pmtu and /state/socket-connect/sockets' ;
+  }
+
+  revision 2014-08-13 {
+    description 'Add pcep and sib protocol for dscp config and change the protocol value.' ;
+  }
+
+  revision 2014-06-10 {
+    description 'Add configuration of the rate limitation of ICMP destination unreachable messages.' ;
+  }
+
+  revision 2014-05-20 {
+    description 'Adding socket model.' ;
+  }
+
+  revision 2014-04-28 {
+    description 'Modify the node type of specify-src-interface.Add configuration range of  p8021 for proto-dscp-8021ps container.Change data type of pmtu_time from string to uint16.Modify the attribute of ip-addr in nni-gateway.' ;
+  }
+
+  revision 2014-04-15 {
+    description 'Add configuration range of max-rsm-session and p8021' ;
+  }
+
+  revision 2014-02-11 {
+    description 'Initial revision.' ;
+  }
+
+  feature nni-gateway-feature {
+    description 'Nni-gateway node is vlaid.' ;
+  }
+
+  feature fragment-reasm-feature ;
+
+  feature ttl-feature {
+    description 'Ttl node uses this feature.' ;
+  }
+
+  feature clear-dont-fragbit-feature ;
+
+  feature clear-dont-fragmentbit-feature ;
+
+  feature load-sharing-feature {
+    description 'load-sharing-mode node use this feature.' ;
+  }
+
+  feature maximum-packet-size {
+    description 'ip maximum-packet-size use this feature.' ;
+  }
+
+  container configuration {
+    description 'Config node.' ;
+    container ip {
+      description 'IP module configuration entry.' ;
+      container ip-option {
+        description 'Global IP configuration nodes.' ;
+        leaf fragment {
+          if-feature fragment-reasm-feature ;
+
+          description 'Enable/disable fragment function.' ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Disable fragment function.' ;
+            }
+
+            enum enable {
+              value 1 ;
+              description 'Enable fragment function.' ;
+            }
+
+          }
+
+          default disable ;
+        }
+
+        leaf icmp-fast-reply {
+          description 'Turn On or Off ICMP-Fast-Reply Feature.' ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Turn off ICMP-Fast-Reply feature.' ;
+            }
+
+            enum enable {
+              value 1 ;
+              description 'Turn on ICMP-Fast-Reply feature.' ;
+            }
+
+          }
+
+          default enable ;
+        }
+
+        leaf source-route {
+          description 'Enable/disable processing packets with source routing header options.' ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Disable processing packets with source routing header options.' ;
+            }
+
+            enum enable {
+              value 1 ;
+              description 'Enable processing packets with source routing header options.' ;
+            }
+
+          }
+
+          default enable ;
+        }
+
+        leaf reassemble-time {
+          if-feature fragment-reasm-feature ;
+
+          description 'Reassembly waiting time to set.' ;
+          type uint16 {
+            range 1..30 ;
+
+          }
+
+          units seconds ;
+          default 10 ;
+        }
+
+        leaf max-rsm-session {
+          if-feature fragment-reasm-feature ;
+
+          description 'Maximum reassemble session to set.' ;
+          type uint16 {
+            range 1..6144 ;
+
+          }
+
+        }
+
+        leaf pmtu-aging-timer {
+          description 'Set PMTU aging timer.' ;
+          type uint16 {
+            range 10..65535 ;
+
+          }
+
+          units seconds ;
+          default 10 ;
+        }
+
+        leaf min-fragment-size {
+          if-feature fragment-reasm-feature ;
+
+          description 'Minimum fragment size to set.' ;
+          type uint16 {
+            range 1..65535 ;
+
+          }
+
+          units bytes ;
+          default 28 ;
+        }
+
+        leaf min-fragment-offset {
+          if-feature fragment-reasm-feature ;
+
+          description 'Minimum fragment offset to set.' ;
+          type uint16 {
+            range 0..65535 ;
+
+          }
+
+          units bytes ;
+          default 0 ;
+        }
+
+        leaf ttl {
+          if-feature ttl-feature ;
+
+          description 'Config IP TTL value.' ;
+          type uint8 {
+            range 32..255 {
+              description '32-255:valid value' ;
+            }
+
+          }
+
+          default 255 ;
+        }
+
+        leaf load-sharing {
+          if-feature load-sharing-feature ;
+
+          description 'Turn on the load sharing and set mode.Its default value which is turning on per-stream mode or disable and generally disable, depends on product specification.' ;
+          type enumeration {
+            enum per-stream {
+              value 1 ;
+              description 'Turn on the load sharing,mode is per-stream.' ;
+            }
+
+            enum disable {
+              value 0 ;
+              description 'Turn off the load sharing.' ;
+            }
+
+          }
+
+        }
+
+        leaf routemap-name {
+          type string {
+            length 1..200 {
+              description 'Route-map name' ;
+            }
+
+          }
+
+          ncd:revise-date 2022-11-16 ;
+        }
+
+        leaf ecmp-local-priority {
+          type enumeration {
+            enum local {
+              value 1 ;
+              description 'Enable ip ecmp local priority function.' ;
+            }
+
+            enum none {
+              value 0 ;
+              description 'Disable ip ecmp local priority function.' ;
+            }
+
+          }
+
+          description 'IP ecmp local arp/nd priority function.' ;
+          default none ;
+          ncd:revise-date 2024-03-28 ;
+        }
+
+      }
+
+      container ip-if-options {
+        description 'Set IP options for a specified interface.' ;
+        list ip-if-option {
+          description 'Set IP options for a specified interface.' ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf ip-source-route {
+            description 'Config function of processing packets with source routing header options under a specified interface.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable processing packets with source routing header options under a specified interface.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable processing packets with source routing header options under a specified interface.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+        }
+
+        ncd:revise-date 2021-10-27 ;
+      }
+
+      container control-protocol {
+        description "Configure global protocol's parameters." ;
+        container proto-dscps {
+          list proto-dscp {
+            description 'Set DSCP for specify protocal.' ;
+            key protocol ;
+            leaf protocol {
+              description 'Specify protocol' ;
+              type enumeration {
+                enum bgp {
+                  value 2 ;
+                  description 'BGP protocol' ;
+                }
+
+                enum ospf {
+                  value 15 ;
+                  description 'OSPF protocol' ;
+                }
+
+                enum rip {
+                  value 20 ;
+                  description 'RIP or RIPng protocol' ;
+                }
+
+                enum ldp {
+                  value 8 ;
+                  description 'LDP protocol' ;
+                }
+
+                enum rsvp {
+                  value 21 ;
+                  description 'RSVP protocol' ;
+                }
+
+                enum snmp {
+                  value 23 ;
+                  description 'SNMP protocol' ;
+                }
+
+                enum ftp {
+                  value 5 ;
+                  description 'FTP protocol' ;
+                }
+
+                enum nd {
+                  value 12 ;
+                  description 'ND protocol' ;
+                }
+
+                enum ntp {
+                  value 14 ;
+                  description 'NTP protocol' ;
+                }
+
+                enum igmp {
+                  value 6 ;
+                  description 'IGMP protocol' ;
+                }
+
+                enum dhcp {
+                  value 3 ;
+                  description 'DHCP protocol' ;
+                }
+
+                enum radius {
+                  value 19 ;
+                  description 'RADIUS protocol' ;
+                }
+
+                enum "tacacs+" {
+                  value 26 ;
+                  description 'TACACS+ protocol' ;
+                }
+
+                enum ssh {
+                  value 24 ;
+                  description 'SSH protocol' ;
+                }
+
+                enum telnet {
+                  value 27 ;
+                  description 'TELNET protocol' ;
+                }
+
+                enum tftp {
+                  value 28 ;
+                  description 'TFTP protocol' ;
+                }
+
+                enum syslog {
+                  value 25 ;
+                  description 'SYSLOG protocol' ;
+                }
+
+                enum ping {
+                  value 18 ;
+                  description 'PING protocol' ;
+                }
+
+                enum trace {
+                  value 29 ;
+                  description 'TRACE protocol' ;
+                }
+
+                enum dns {
+                  value 4 ;
+                  description 'DNS protocol' ;
+                }
+
+                enum netflow {
+                  value 13 ;
+                  description 'NetFlow protocol' ;
+                }
+
+                enum mld {
+                  value 9 ;
+                  description 'MLD protocol' ;
+                }
+
+                enum msdp {
+                  value 11 ;
+                  description 'MSDP protocol' ;
+                }
+
+                enum vrrp {
+                  value 30 ;
+                  description 'VRRP protocol' ;
+                }
+
+                enum pim {
+                  value 17 ;
+                  description 'PIM protocol' ;
+                }
+
+                enum pcep {
+                  value 16 ;
+                  description 'PCEP protocol' ;
+                }
+
+                enum sib {
+                  value 22 ;
+                  description 'SIB protocol' ;
+                }
+
+                enum openflow {
+                  value 31 ;
+                  description 'OpenFlow protocol' ;
+                }
+
+                enum hagp {
+                  value 32 ;
+                  description 'Hybrid Access Gateway Protocol' ;
+                }
+
+                enum http {
+                  value 33 ;
+                  description 'Http' ;
+                }
+
+                enum sibp {
+                  value 34 ;
+                  description 'SIBP protocol' ;
+                }
+
+                enum default {
+                  value 35 ;
+                  description 'Default priority' ;
+                }
+
+              }
+
+            }
+
+            leaf exp {
+              description 'EXP value' ;
+              type uint8 {
+                range 0..7 ;
+
+              }
+
+            }
+
+            leaf p8021 {
+              description 'Config 802.1p value for specify protocol.' ;
+              type uint8 {
+                range 0..7 ;
+
+              }
+
+            }
+
+            choice dscp-ipp {
+              description 'Config dscp or IPP' ;
+              case dscp-select {
+                description 'Config dscp.' ;
+                leaf dscp {
+                  description 'DSCP value' ;
+                  type uint8 {
+                    range 0..63 ;
+
+                  }
+
+                }
+
+              }
+
+              case ipp-select {
+                description 'Config IPP.' ;
+                leaf precedence {
+                  description 'Config IPP value for specify protocol.' ;
+                  type uint8 {
+                    range 0..7 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container proto-dscp-8021ps {
+          list proto-dscp-8021p {
+            description 'Config 8021p value for specify protocol.' ;
+            key protocol ;
+            leaf protocol {
+              description 'Specify protocol' ;
+              type enumeration {
+                enum isis {
+                  value 7 ;
+                  description 'ISIS protocol' ;
+                }
+
+                enum mpls-oam {
+                  value 10 ;
+                  description 'MPLS OAM protocol' ;
+                }
+
+                enum arp {
+                  value 1 ;
+                  description 'ARP protocol' ;
+                }
+
+              }
+
+            }
+
+            leaf p8021 {
+              description 'Config 802.1p value for specify protocol.' ;
+              type uint8 {
+                range 0..7 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container ip-forwards {
+        description 'Interface internet protocol configuration commands.' ;
+        list ip-forward {
+          description 'Enable sending ICMP/ICMPv6 function for specify interface.' ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf ip-fwd-unreach {
+            description 'Enable sending ICMP unreachable messages.' ;
+            type empty ;
+
+          }
+
+          leaf ip6-fwd-unreach {
+            description 'Enable sending ICMPv6 unreachable messages.' ;
+            type empty ;
+
+          }
+
+        }
+
+      }
+
+      container nni-gateways {
+        description 'Set gateway for NNI Ping&Trace.' ;
+        list nni-gateway {
+          if-feature nni-gateway-feature ;
+
+          description 'Set gateway for NNI Ping&Trace for specify interface.' ;
+          key if-name ;
+          leaf if-name {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf ip-addr {
+            description 'Address of the gateway.' ;
+            type ncd:ipv4-address ;
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+      container icmp-config {
+        description 'Enter ICMP configure mode.' ;
+        container icmp-options {
+          description 'Set ICMP options .' ;
+          leaf timestamp-reply {
+            description 'Set Timestamp Reply function.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable sending ICMP Timestamp Reply messages.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable sending ICMP Timestamp Reply messages.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+          container specify-src-interfaces {
+            description 'Specify the IP source address by interface name in an ICMP message.' ;
+            list specify-src-interface {
+              description 'Specify the IP source address by interface name in an ICMP message.' ;
+              key if-name ;
+              max-elements 1 ;
+              min-elements 0 ;
+              leaf if-name {
+                type ncd:ifname ;
+
+                description 'Interface name.' ;
+              }
+
+              ncd:revise-date 2024-10-12 ;
+            }
+
+          }
+
+          leaf unreachable-rate-limit {
+            description 'Specifies the rate limitation of ICMP destination unreachable messages.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'rate limit ICMP messages generated.' ;
+              }
+
+            }
+
+            units milliseconds ;
+          }
+
+          leaf ip-global-unreach {
+            description 'Config ICMP global unreachable funciton.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable global unreachable function.' ;
+              }
+
+              enum disable {
+                value 0 ;
+                description 'Disable global unreachable function.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+          leaf ipv6-global-unreach {
+            description 'Config ICMPv6 global unreachable funciton.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable global unreachable function.' ;
+              }
+
+              enum disable {
+                value 0 ;
+                description 'Disable global unreachable function.' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+        }
+
+        container icmp-if-mode {
+          description 'Enter ICMP interface configure mode.' ;
+          container icmp-if-options {
+            description 'Set ICMP options for specify interface.' ;
+            list icmp-if-option {
+              description 'Set ICMP options for specify interface.' ;
+              key if-name ;
+              leaf if-name {
+                description 'Interface name.' ;
+                type ncd:ifname ;
+
+              }
+
+              leaf ip-redirect {
+                description 'Enable sending ICMP redirect messages.' ;
+                type empty ;
+
+              }
+
+              leaf ip-unreach {
+                description 'Enable/Disable sending ICMP unreachable funciton.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                    description 'Disable sending ICMP unreachable messages.' ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                    description 'Enable sending ICMP unreachable messages.' ;
+                  }
+
+                }
+
+                default enable ;
+              }
+
+              leaf ipv6-unreach {
+                description 'Enable/Disable sending ICMPv6 unreachable funciton.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                    description 'Disable sending ICMPv6 unreachable messages' ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                    description 'Enable sending ICMPv6 unreachable messages.' ;
+                  }
+
+                }
+
+                default enable ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container ip-fragment {
+        list clear-dont-fragment-bit {
+          if-feature clear-dont-fragbit-feature ;
+
+          description 'Clear dont fragment bit' ;
+          key cpu-info ;
+          leaf fragment {
+            description 'Enable/disable fragment function.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable fragment function.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable fragment function.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          leaf cpu-info {
+            description 'CPU info' ;
+            type ncd:cpu ;
+
+          }
+
+        }
+
+        list fragment-bit {
+          if-feature fragment-reasm-feature ;
+
+          key cpu-info ;
+          leaf cpu-info {
+            description 'CPU info' ;
+            type ncd:cpu ;
+
+          }
+
+          leaf fragment {
+            type enumeration {
+              enum disable {
+                value 0 ;
+              }
+
+              enum enable {
+                value 1 ;
+              }
+
+            }
+
+          }
+
+        }
+
+        list clear-dont-frag-bit {
+          if-feature clear-dont-fragmentbit-feature ;
+
+          description 'Clear dont frag bit' ;
+          key cpu-info ;
+          leaf cpu-info {
+            description 'CPU info' ;
+            type ncd:cpu ;
+
+          }
+
+          leaf fragment {
+            description 'Enable/disable fragment function.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+              }
+
+              enum enable {
+                value 1 ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container maximum-packet-sizes {
+        description 'Packet maximum size configuration commands.' ;
+        list maximum-packet-size {
+          if-feature maximum-packet-size ;
+
+          description 'Configure the maximum size of the packet.' ;
+          key protocol ;
+          leaf protocol {
+            description 'Protocol type.' ;
+            type enumeration {
+              enum syslog {
+                value 43 ;
+                description 'syslog protocol.' ;
+              }
+
+              enum snmp {
+                value 37 ;
+                description 'snmp protocol.' ;
+              }
+
+            }
+
+          }
+
+          leaf value {
+            description 'Maximum size of IP packets.the maximum value depends on product specification.Its value is between 68-9586 by default.' ;
+            type uint16 {
+              range 68..9586 {
+                description 'Toplimit depends on ability of the device.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2021-07-23 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State node.' ;
+    container ip {
+      description 'Show command entry node.' ;
+      container control-protocol-prioritys {
+        description 'Show control-protocol information.' ;
+        list control-protocol-priority {
+          description 'Priority information.' ;
+          key protocol ;
+          leaf protocol {
+            description 'Protocol name.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf dscp {
+            description 'DSCP vlaue.' ;
+            type uint8 ;
+
+          }
+
+          leaf precedence {
+            description 'IPP value.' ;
+            type uint8 ;
+
+          }
+
+          leaf exp {
+            description 'EXP value.' ;
+            type uint8 ;
+
+          }
+
+          leaf p8021 {
+            description '8021P value.' ;
+            type uint8 ;
+
+          }
+
+        }
+
+      }
+
+      container ip-traffic {
+        description 'IP protocol statistics information.' ;
+        container ip-statistics {
+          description 'IP protocol statistics information.' ;
+          leaf total-rcvd {
+            description 'IP received.' ;
+            type uint32 ;
+
+          }
+
+          leaf local-dest {
+            description 'Local detination.' ;
+            type uint32 ;
+
+          }
+
+          leaf format-error {
+            description 'Format errors.' ;
+            type uint32 ;
+
+          }
+
+          leaf checksum-error {
+            description 'Checksum errors.' ;
+            type uint32 ;
+
+          }
+
+          leaf unknown-proto {
+            description 'Unknown protocol.' ;
+            type uint32 ;
+
+          }
+
+          leaf bad-hop-count {
+            description 'Bad hop count.' ;
+            type uint32 ;
+
+          }
+
+          leaf reasm-timeout {
+            description 'Reasemled timeout.' ;
+            type uint32 ;
+
+          }
+
+          leaf reasm-ok {
+            description 'Reassembled ok.' ;
+            type uint32 ;
+
+          }
+
+          leaf reasm-failed {
+            description "Couldn't reassemble." ;
+            type uint32 ;
+
+          }
+
+          leaf frag-ok {
+            description 'Fragment OK.' ;
+            type uint32 ;
+
+          }
+
+          leaf frag-fail {
+            description 'Fragment failed.' ;
+            type uint32 ;
+
+          }
+
+          leaf bcast-rcvd {
+            description 'Brodcast received.' ;
+            type uint32 ;
+
+          }
+
+          leaf bcast-send {
+            description 'Brodcast sent.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-generated {
+            description 'Send requesting packet.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-forward {
+            description 'Forfard packet.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-failed {
+            description 'Send failed.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-no-route {
+            description 'No route.' ;
+            type uint32 ;
+
+          }
+
+        }
+
+        container icmp-statistics {
+          description 'ICMP protocol statistics information.' ;
+          leaf icmp-rcvd-total {
+            description 'ICMP received total.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-format-error {
+            description 'ICMP format error.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-redirect {
+            description 'ICMP redirect.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-unreachable {
+            description 'ICMP unreachable.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-echo {
+            description 'ICMP echo.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-echo-reply {
+            description 'ICMP echo reply.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-mask-request {
+            description 'ICMP mask request.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-mask-reply {
+            description 'ICMP mask reply.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-quench {
+            description 'ICMP quench.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-timestamp-req {
+            description 'ICMP timestamp request.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-timestamp-reply {
+            description 'ICMP timestamp reply.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-time-exceeded {
+            description 'ICMP time exceeded.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-para-problem {
+            description 'ICMP parameter problem.' ;
+            type uint32 ;
+
+          }
+
+          leaf icmp-send-total {
+            description 'ICMP send total.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-format-error {
+            description 'ICMP format error.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-redirect {
+            description 'ICMP redirect.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-unreachable {
+            description 'ICMP unreachable.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-echo {
+            description 'ICMP echo.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-echo-reply {
+            description 'ICMP echo reply.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-mask-request {
+            description 'ICMP mask request.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-mask-reply {
+            description 'ICMP mask reply.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-quench {
+            description 'ICMP quench.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-timestamp-req {
+            description 'ICMP timestamp request.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-timestamp-reply {
+            description 'ICMP timestamp reply.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-time-exceeded {
+            description 'ICMP time exceeded.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-para-problem {
+            description 'ICMP parameter problem.' ;
+            type uint32 ;
+
+          }
+
+        }
+
+        container udp-statistics {
+          description 'UDP protocol statistics information.' ;
+          leaf rcvd-total {
+            description 'UDP received total.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-checkerror {
+            description 'UDP received checksum error.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-no-port {
+            description 'UDP no port.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-total {
+            description 'UDP send total.' ;
+            type uint32 ;
+
+          }
+
+        }
+
+        container tcp-statistics {
+          description 'TCP protocol statistics information.' ;
+          leaf rcvd-total {
+            description 'TCPreceived total.' ;
+            type uint32 ;
+
+          }
+
+          leaf rcvd-checkerror {
+            description 'TCP received checksum error.' ;
+            type uint32 ;
+
+          }
+
+          leaf send-total {
+            description 'TCP send total.' ;
+            type uint32 ;
+
+          }
+
+        }
+
+      }
+
+      container icmp-pmtu {
+        description 'IPv4 PMTU information.' ;
+        list pmtu {
+          description 'PMTU information' ;
+          key 'src-ip dst-ip vpn' ;
+          leaf src-ip {
+            description 'The source IP of the PMUT item.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf dst-ip {
+            description 'The dst IP of the PMUT item.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf vpn {
+            description 'The vpn of the PMUT item.' ;
+            type string {
+              length 0..36 ;
+
+            }
+
+          }
+
+          leaf mtu {
+            description 'The mtu of the PMUT item.' ;
+            type uint16 ;
+
+          }
+
+          leaf time {
+            description 'The left time of the PMUT item.' ;
+            type uint16 ;
+
+            units minutes ;
+          }
+
+          ncd:select "src-ip dst-ip vpn" ;
+        }
+
+      }
+
+    }
+
+    container socket-connect {
+      description 'Show command entry node.' ;
+      container sockets {
+        description 'Sockets information.' ;
+        list socket {
+          description 'Sockets information.' ;
+          key 'instance index' ;
+          leaf instance {
+            description 'The instance num which the socket exists.' ;
+            type uint32 {
+              range 1..20 ;
+
+            }
+
+          }
+
+          leaf index {
+            description 'Socket index.' ;
+            type uint32 ;
+
+          }
+
+          leaf domain {
+            description 'The domain of socket.' ;
+            type enumeration {
+              enum IPv4 {
+                value 2 ;
+              }
+
+              enum IPv6 {
+                value 24 ;
+              }
+
+            }
+
+          }
+
+          leaf type {
+            description 'The type of socket.' ;
+            type enumeration {
+              enum TCP {
+                value 1 ;
+              }
+
+              enum UDP {
+                value 2 ;
+              }
+
+              enum RAW {
+                value 3 ;
+              }
+
+            }
+
+          }
+
+          leaf local-address {
+            description 'Local IP and local port of the socket.' ;
+            type string ;
+
+          }
+
+          leaf foreign-address {
+            description 'Foreign IP and local port of the socket.' ;
+            type string ;
+
+          }
+
+          leaf in-num {
+            description "The num of this socket's receiving packets." ;
+            type uint32 ;
+
+          }
+
+          leaf out-num {
+            description "The num of this socket's sending packets." ;
+            type uint32 ;
+
+          }
+
+          leaf state {
+            description 'The state of socket.' ;
+            type string {
+              length 0..15 ;
+
+            }
+
+          }
+
+          ncd:select "instance index" ;
+        }
+
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'Operation commonds.' ;
+    container ip {
+      description 'IPv4 operation commonds.' ;
+      container traffic {
+        description 'Statistics.' ;
+        leaf clear-traffic {
+          description 'Clear ip traffic.' ;
+          type empty ;
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

@@ -1,0 +1,546 @@
+module zxr10-ssl {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/ssl" ;
+  prefix ssl ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2019-07-16 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe SSL.' ;
+  revision 2024-05-20 {
+    description 'Support dhe-rsa-aes-128-gcm-sha256 cipher' ;
+  }
+
+  revision 2022-11-04 {
+    description 'Add gm feature for GM node.' ;
+  }
+
+  revision 2022-06-15 {
+    description '1. Add leaf node configuration/ssl/contexts/context/ciphersuite/ecdhe-rsa-aes-128-gcm-sha256.
+2. Add leaf node configuration/ssl/contexts/context/ciphersuite/ecdhe-rsa-aes-256-gcm-sha384.' ;
+  }
+
+  revision 2020-12-18 {
+    description '1. Modify status of leaf node configuration/ssl/contexts/context/ciphersuite/des3-ede-cbc-sha from current to obsolete.
+2. Modify status of leaf node configuration/ssl/contexts/context/ciphersuite/des-cbc-sha from current to obsolete.
+3. Modify status of leaf node configuration/ssl/contexts/context/ciphersuite/rc4-128-md5 from current to obsolete.
+4. Modify status of leaf node configuration/ssl/contexts/context/ciphersuite/rc4-128-sha from current to obsolete.
+5. Modify status of leaf node configuration/ssl/contexts/context/version/ssl2.0 from current to obsolete.
+6. Modify status of leaf node configuration/ssl/contexts/context/version/ssl3.0 from current to obsolete.' ;
+  }
+
+  revision 2020-07-22 {
+    description '1. Add leaf node configuration/ssl/contexts/context/ciphersuite/tls_aes_128_gcm_sha256.
+2. Add leaf node configuration/ssl/contexts/context/ciphersuite/tls_aes_256_gcm_sha384.
+3. Add leaf node configuration/ssl/contexts/context/version/tls1.3.' ;
+  }
+
+  revision 2020-02-17 {
+    description 'Initial version.' ;
+  }
+
+  feature gm {
+    ncd:revise-date 2022-11-04 ;
+  }
+
+  container configuration {
+    description 'Configuration model info.' ;
+    container ssl {
+      description 'SSL configuration.' ;
+      container contexts {
+        description 'Configure SSL context parameters.' ;
+        list context {
+          description 'Configure SSL context parameters.' ;
+          key context-name ;
+          leaf context-name {
+            description 'Context name for SSL context.' ;
+            type string {
+              length 1..31 {
+                description 'Context name for SSL context.' ;
+              }
+
+            }
+
+          }
+
+          leaf verify {
+            description 'Set SSL certificate verify.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable certificate verify.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable certificate verify.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          leaf pki-profile-name {
+            description 'Bind PKI profile name.' ;
+            type string {
+              length 1..63 {
+                description 'Bind PKI profile name.' ;
+              }
+
+            }
+
+          }
+
+          leaf retry-times {
+            description 'Set handshake packet retransmission times for DTLS.' ;
+            type uint16 {
+              range 1..10 {
+                description 'Set handshake packet retransmission times for DTLS.' ;
+              }
+
+            }
+
+            default 10 ;
+          }
+
+          leaf session-timeout {
+            description 'Set SSL session timeout.' ;
+            type uint32 {
+              range 60..86400 {
+                description 'Set SSL session timeout.' ;
+              }
+
+            }
+
+            default 3600 ;
+          }
+
+          leaf renegotiate {
+            description 'Set SSL ability to renegotiate.' ;
+            type enumeration {
+              enum enable {
+                value 0 ;
+                description 'Enable renegotiation' ;
+              }
+
+              enum disable {
+                value 1 ;
+                description 'Disable renegotiation' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+          container gm-pki-profile {
+            if-feature gm {
+              ncd:revise-date 2022-11-04 ;
+            }
+
+            description 'GM bind PKI profile.' ;
+            presence "GM bind PKI profile" ;
+            leaf sign-profile-name {
+              if-feature gm {
+                ncd:revise-date 2022-11-04 ;
+              }
+
+              description 'GM PKI signature profile name.' ;
+              type string {
+                length 1..63 {
+                  description 'GM PKI signature profile name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf encrypt-profile-name {
+              if-feature gm {
+                ncd:revise-date 2022-11-04 ;
+              }
+
+              description 'GM PKI encrypt profile name.' ;
+              type string {
+                length 1..63 {
+                  description 'GM PKI encrypt profile name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container ciphersuite {
+            description 'Set SSL ciphersuite.' ;
+            leaf des3-ede-cbc-sha {
+              status obsolete {
+                ncd:revise-date 2020-12-18 ;
+              }
+
+              description 'SSL_RSA_WITH_3DES_EDE_CBC_SHA' ;
+              type empty ;
+
+            }
+
+            leaf des-cbc-sha {
+              status obsolete {
+                ncd:revise-date 2020-12-18 ;
+              }
+
+              description 'SSL_RSA_WITH_DES_CBC_SHA' ;
+              type empty ;
+
+            }
+
+            leaf aes-128-cbc-sha {
+              description 'SSL_RSA_WITH_AES_128_CBC_SHA' ;
+              type empty ;
+
+            }
+
+            leaf aes-256-cbc-sha {
+              description 'SSL_RSA_WITH_AES_256_CBC_SHA' ;
+              type empty ;
+
+            }
+
+            leaf rc4-128-md5 {
+              status obsolete {
+                ncd:revise-date 2020-12-18 ;
+              }
+
+              description 'SSL_RSA_WITH_RC4_128_MD5' ;
+              type empty ;
+
+            }
+
+            leaf rc4-128-sha {
+              status obsolete {
+                ncd:revise-date 2020-12-18 ;
+              }
+
+              description 'SSL_RSA_WITH_RC4_128_SHA' ;
+              type empty ;
+
+            }
+
+            leaf aes-128-cbc-sha256 {
+              description 'SSL_RSA_WITH_AES_128_CBC_SHA256' ;
+              type empty ;
+
+            }
+
+            leaf aes-256-cbc-sha256 {
+              description 'SSL_RSA_WITH_AES_256_CBC_SHA256' ;
+              type empty ;
+
+            }
+
+            leaf ecc-sm4-sm3 {
+              if-feature gm {
+                ncd:revise-date 2022-11-04 ;
+              }
+
+              description 'SSL_ECC_WITH_SM4_SM3' ;
+              type empty ;
+
+            }
+
+            leaf ecdhe-sm4-sm3 {
+              if-feature gm {
+                ncd:revise-date 2022-11-04 ;
+              }
+
+              description 'SSL_ECDHE_WITH_SM4_SM3' ;
+              type empty ;
+
+            }
+
+            leaf aes-128-gcm-sha256 {
+              description 'SSL_RSA_WITH_AES_128_GCM_SHA256' ;
+              type empty ;
+
+            }
+
+            leaf aes-256-gcm-sha384 {
+              description 'SSL_RSA_WITH_AES_256_GCM_SHA384' ;
+              type empty ;
+
+            }
+
+            leaf ecdhe-dsa-aes-128-gcm-sha256 {
+              description 'SSL_ECDHE_DSA_WITH_AES_128_GCM_SHA256' ;
+              type empty ;
+
+            }
+
+            leaf ecdhe-dsa-aes-256-gcm-sha384 {
+              description 'SSL_ECDHE_DSA_WITH_AES_256_GCM_SHA384' ;
+              type empty ;
+
+            }
+
+            leaf tls_aes_128_gcm_sha256 {
+              description 'TLS_AES_128_GCM_SHA256(TLS1.3)' ;
+              type empty ;
+
+              ncd:revise-date 2020-07-22 ;
+            }
+
+            leaf tls_aes_256_gcm_sha384 {
+              description 'TLS_AES_256_GCM_SHA384(TLS1.3)' ;
+              type empty ;
+
+              ncd:revise-date 2020-07-22 ;
+            }
+
+            leaf ecdhe-rsa-aes-128-gcm-sha256 {
+              description 'SSL_ECDHE_RSA_WITH_AES_128_GCM_SHA256' ;
+              type empty ;
+
+              ncd:revise-date 2022-06-15 ;
+            }
+
+            leaf ecdhe-rsa-aes-256-gcm-sha384 {
+              description 'SSL_ECDHE_RSA_WITH_AES_256_GCM_SHA384' ;
+              type empty ;
+
+              ncd:revise-date 2022-06-15 ;
+            }
+
+            leaf dhe-rsa-aes-128-gcm-sha256 {
+              type empty ;
+
+              description 'SSL_DHE_RSA_WITH_AES_128_GCM_SHA256' ;
+              ncd:revise-date 2024-05-20 ;
+            }
+
+          }
+
+          container version {
+            description 'Set SSL version.' ;
+            leaf ssl2.0 {
+              status obsolete {
+                ncd:revise-date 2020-12-18 ;
+              }
+
+              description 'Version SSLv2.0' ;
+              type empty ;
+
+            }
+
+            leaf ssl3.0 {
+              status obsolete {
+                ncd:revise-date 2020-12-18 ;
+              }
+
+              description 'Version SSLv3.0' ;
+              type empty ;
+
+            }
+
+            leaf tls1.0 {
+              description 'Version TLSv1.0' ;
+              type empty ;
+
+            }
+
+            leaf tls1.1 {
+              description 'Version TLSv1.1' ;
+              type empty ;
+
+            }
+
+            leaf tls1.2 {
+              description 'Version TLSv1.2' ;
+              type empty ;
+
+            }
+
+            leaf gm1.1 {
+              if-feature gm {
+                ncd:revise-date 2022-11-04 ;
+              }
+
+              description 'Version GMv1.1' ;
+              type empty ;
+
+            }
+
+            leaf tls1.3 {
+              description 'Version TLSv1.3' ;
+              type empty ;
+
+              ncd:revise-date 2020-07-22 ;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State model info.' ;
+    container ssl {
+      description 'SSL state information.' ;
+      container context-infos {
+        description 'SSL context state information.' ;
+        list context-info {
+          description 'SSL context state information.' ;
+          key context-name ;
+          leaf context-name {
+            description 'Context name for SSL context.' ;
+            type string {
+              length 1..31 {
+                description 'Context name for SSL context.' ;
+              }
+
+            }
+
+          }
+
+          leaf pki-profile-name {
+            description 'Bind PKI profile name.' ;
+            type string {
+              length 0..63 {
+                description 'Bind PKI profile name.' ;
+              }
+
+            }
+
+          }
+
+          leaf verify {
+            description 'SSL certificate verify.' ;
+            type enumeration {
+              enum No {
+                value 0 ;
+                description 'Disable certificate verify.' ;
+              }
+
+              enum Yes {
+                value 1 ;
+                description 'Enable certificate verify.' ;
+              }
+
+            }
+
+          }
+
+          leaf retry-times {
+            description 'Handshake packet retransmission times for DTLS.' ;
+            type uint16 {
+              range 1..10 {
+                description 'Handshake packet retransmission times for DTLS.' ;
+              }
+
+            }
+
+          }
+
+          leaf session-timeout {
+            description 'SSL session timeout.' ;
+            type uint32 {
+              range 60..86400 {
+                description 'SSL session timeout.' ;
+              }
+
+            }
+
+          }
+
+          leaf renegotiate {
+            description 'SSL ability to renegotiate.' ;
+            type enumeration {
+              enum Enable {
+                value 0 ;
+                description 'Enable renegotiation' ;
+              }
+
+              enum Disable {
+                value 1 ;
+                description 'Disable renegotiation' ;
+              }
+
+            }
+
+          }
+
+          leaf gm-pki-sign-profile-name {
+            if-feature gm {
+              ncd:revise-date 2022-11-04 ;
+            }
+
+            description 'GM PKI signature profile name.' ;
+            type string {
+              length 0..63 {
+                description 'GM PKI signature profile name.' ;
+              }
+
+            }
+
+          }
+
+          leaf gm-pki-encrypt-profile-name {
+            if-feature gm {
+              ncd:revise-date 2022-11-04 ;
+            }
+
+            description 'GM PKI encrypt profile name.' ;
+            type string {
+              length 0..63 {
+                description 'GM PKI encrypt profile name.' ;
+              }
+
+            }
+
+          }
+
+          leaf ciphersuite-str {
+            description 'SSL ciphersuite string.' ;
+            type ncd:string-with-blank {
+              length 0..500 {
+                description 'SSL ciphersuite string.' ;
+              }
+
+            }
+
+          }
+
+          leaf version-str {
+            description 'SSL version string.' ;
+            type ncd:string-with-blank {
+              length 0..200 {
+                description 'SSL version string.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

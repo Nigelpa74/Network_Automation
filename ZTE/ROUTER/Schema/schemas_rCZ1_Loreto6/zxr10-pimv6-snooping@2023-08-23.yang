@@ -1,0 +1,636 @@
+module zxr10-pimv6-snooping {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/pimv6-snooping" ;
+  prefix pimv6s ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe PIMv6 snooping.' ;
+  revision 2023-08-23 {
+    description 'Add feature:vlan and vpls.' ;
+  }
+
+  revision 2022-12-05 {
+    description 'Add feature:evpn-vpls' ;
+  }
+
+  revision 2016-11-08 {
+    description "Add node path:/state/pimv6-snooping/neighbor's query term:vlan-id+neighbor-ip,vpls-name+neighbor-ip" ;
+  }
+
+  revision 2015-09-15 {
+    description 'Modify leaf node type, node path:/operation/pimv6-snooping/clear/groups/type/all/all-groups.' ;
+  }
+
+  revision 2015-05-27 {
+    description 'Modify the range of /state/pimv6-snooping/neighbor/vlan-id and /state/pimv6-snooping/neighbor/vpn-id.' ;
+  }
+
+  revision 2015-03-02 {
+    description 'Add clear operation and global summary show.' ;
+  }
+
+  revision 2015-02-12 {
+    description 'Change proper noun, such as vpls,vlan,id etc, from lowercase into capital.' ;
+  }
+
+  revision 2014-03-21 {
+    description 'Initial version.' ;
+  }
+
+  feature evpn-vpls {
+    description 'PIMv6 snooping over EVPN VPLS.' ;
+    ncd:revise-date 2022-12-05 ;
+  }
+
+  feature vlan {
+    description 'PIMv6 snooping over VLAN.' ;
+    ncd:revise-date 2023-08-23 ;
+  }
+
+  feature vpls {
+    description 'PIMv6 snooping over VPLS.' ;
+    ncd:revise-date 2023-08-23 ;
+  }
+
+  typedef switch-type {
+    type enumeration {
+      enum disable {
+        value 0 ;
+        description 'Disable this switch.' ;
+      }
+
+      enum enable {
+        value 1 ;
+        description 'Enable this switch.' ;
+      }
+
+    }
+
+    description 'Type of switch status.' ;
+  }
+
+  container configuration {
+    description 'Configuration model.' ;
+    container pimv6-snooping {
+      description 'Configure PIMv6 snooping parameters.' ;
+      container global {
+        description 'PIMv6 snooping global configure.' ;
+        leaf global-enable {
+          description 'Enable/disable PIMv6 snooping in this device.Its default value is disable.' ;
+          type switch-type ;
+
+        }
+
+      }
+
+      container vplses {
+        description "PIMv6 snooping VPLS configure.Can't config PIMv6 snooping in VPLS if the VPLS instance not exist.If PIMv6 snooping configuration exist in VPLS,the VPLS instance can't be deleted." ;
+        list vpls {
+          description 'The config of instance VPLS.' ;
+          key name ;
+          leaf name {
+            description 'Submode instance Name of VPLS.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf snooping-switch {
+            description 'Enable/disable PIMv6 snooping in this instance.' ;
+            type switch-type ;
+
+            default disable ;
+          }
+
+        }
+
+        if-feature vpls {
+          ncd:revise-date 2023-08-23 ;
+        }
+        
+      }
+
+      container vlans {
+        description "PIMv6 snooping VLAN configure.Can't config PIMv6 snooping in VLAN if the VLAN instance not exist.If PIMv6 snooping configuration exist in VLAN,the VLAN instance can't be deleted." ;
+        list vlan {
+          description 'The config of instance VLAN.' ;
+          key vlan-id ;
+          leaf vlan-id {
+            description 'Submode instance ID of VLAN.' ;
+            type uint16 {
+              range 1..4094 ;
+
+            }
+
+          }
+
+          leaf snooping-switch {
+            description 'Enable/disable PIMv6 snooping in this instance.' ;
+            type switch-type ;
+
+            default disable ;
+          }
+
+        }
+
+        if-feature vlan {
+          ncd:revise-date 2023-08-23 ;
+        }
+
+      }
+
+      container evpn-vplses {
+        if-feature evpn-vpls ;
+
+        description "PIMv6 snooping EVPN VPLS configure.Can't config PIMv6 snooping in EVPN VPLS if the EVPN VPLS instance not exist.If PIMv6 snooping configuration exist in EVPN VPLS,the EVPN VPLS instance can't be deleted." ;
+        list evpn-vpls {
+          description 'The config of instance EVPN VPLS.' ;
+          key name ;
+          leaf name {
+            description 'Submode instance Name of EVPN VPLS.' ;
+            type string ;
+
+          }
+
+          leaf snooping-switch {
+            description 'Enable/disable PIMv6 snooping in this instance.' ;
+            type switch-type ;
+
+            default disable ;
+          }
+
+        }
+
+        ncd:revise-date 2022-12-05 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State model.' ;
+    container pimv6-snooping {
+      description 'PIMv6 snooping state parameters.' ;
+      container vpls {
+        description 'PIMv6 snooping VPLS information.' ;
+        list member {
+          description 'The information of member in instance VPLS.' ;
+          key 'vpls-name group-ip source-ip interface-name' ;
+          leaf vpls-name {
+            description 'Submode instance Name of VPLS.' ;
+            type string ;
+
+          }
+
+          leaf group-ip {
+            description 'Group IP address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IP address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf instance-id {
+            description 'Submode instance ID of VPLS.' ;
+            type uint32 {
+              range 1..8000 ;
+
+            }
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type uint32 {
+              range 0..65535 ;
+
+            }
+
+          }
+
+          ncd:select vpls-name ;
+          ncd:select "vpls-name group-ip source-ip" ;
+          ncd:select "vpls-name group-ip source-ip interface-name" ;
+        }
+
+        if-feature vpls {
+          ncd:revise-date 2023-08-23 ;
+        }
+
+      }
+
+      container vlan {
+        description 'PIMv6 snooping VLAN information.' ;
+        list member {
+          description 'The information of member in instance VLAN.' ;
+          key 'vlan-id group-ip source-ip interface-name' ;
+          leaf vlan-id {
+            description 'Submode instance ID of VLAN.' ;
+            type uint32 {
+              range 1..4094 ;
+
+            }
+
+          }
+
+          leaf group-ip {
+            description 'Group IP address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IP address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type uint32 {
+              range 0..65535 ;
+
+            }
+
+          }
+
+          ncd:select vlan-id ;
+          ncd:select "vlan-id group-ip source-ip" ;
+          ncd:select "vlan-id group-ip source-ip interface-name" ;
+        }
+
+        if-feature vlan {
+          ncd:revise-date 2023-08-23 ;
+        }
+
+      }
+
+      list neighbor {
+        description 'PIMv6 snooping neighbor information.' ;
+        key 'vlan-id vpls-name neighbor-ip' ;
+        leaf vlan-id {
+          description 'Submode instance ID of VLAN.' ;
+          type uint32 {
+            range 0..4094 ;
+
+          }
+
+        }
+
+        leaf vpls-name {
+          description 'Submode instance Name of VPLS.' ;
+          type string ;
+
+        }
+
+        leaf neighbor-ip {
+          description 'The IP address of neighbor.' ;
+          type ncd:ipv6-address ;
+
+        }
+
+        leaf vpn-id {
+          description 'Submode instance ID of VPLS.' ;
+          type uint32 {
+            range 0..8000 ;
+
+          }
+
+        }
+
+        leaf interface-name {
+          description 'Interface name of this neighbor.' ;
+          type ncd:ifname ;
+
+        }
+
+        leaf remain-time {
+          description 'Remain time of this neighbor.' ;
+          type uint32 {
+            range 0..65535 ;
+
+          }
+
+        }
+
+        leaf external-vlan-id {
+          description 'External VLAN ID of this member.' ;
+          type uint32 ;
+
+          ncd:revise-date 2022-12-05 ;
+        }
+
+        leaf internal-vlan-id {
+          description 'Internal VLAN ID of this member.' ;
+          type uint32 ;
+
+          ncd:revise-date 2022-12-05 ;
+        }
+
+        ncd:select "vlan-id neighbor-ip" ;
+        ncd:select "vpls-name neighbor-ip" ;
+      }
+
+      container summary {
+        description 'Show summary info of groups, members and neighbors.' ;
+        container group {
+          description 'Show summary info of groups.' ;
+          container global {
+            description 'Show global summary info of groups.' ;
+            leaf total {
+              description 'Total groups number.' ;
+              type uint32 ;
+
+            }
+
+            leaf source-specific {
+              description 'Source-specific groups number.' ;
+              type uint32 ;
+
+            }
+
+            leaf anycast-specific {
+              description 'Anycast-specific groups number.' ;
+              type uint32 ;
+
+            }
+
+          }
+
+        }
+
+        container member {
+          description 'Show summary info of members.' ;
+          container global {
+            description 'Show global summary info of members.' ;
+            leaf total {
+              description 'Total members number.' ;
+              type uint32 ;
+
+            }
+
+          }
+
+        }
+
+        container neighbor {
+          description 'Show summary info of neighbors.' ;
+          container global {
+            description 'Show global summary info of neighbors.' ;
+            leaf total {
+              type uint32 ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container evpn-vpls {
+        if-feature evpn-vpls ;
+
+        description 'PIMv6 snooping EVPN VPLS information.' ;
+        list member {
+          description 'The information of member in instance EVPN VPLS.' ;
+          key 'evpn-vpls-name group-ip source-ip interface-name external-vlan-id internal-vlan-id' ;
+          leaf evpn-vpls-name {
+            description 'Submode instance Name of EVPN VPLS.' ;
+            type string ;
+
+          }
+
+          leaf group-ip {
+            description 'Group IP address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IP address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf external-vlan-id {
+            description 'External VLAN ID of this member.' ;
+            type uint32 ;
+
+          }
+
+          leaf internal-vlan-id {
+            description 'Internal VLAN ID of this member.' ;
+            type uint32 ;
+
+          }
+
+          leaf instance-id {
+            description 'Submode instance ID of VPLS.' ;
+            type uint32 {
+              range 1..8000 ;
+
+            }
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type uint32 {
+              range 0..65535 ;
+
+            }
+
+          }
+
+          ncd:select evpn-vpls-name ;
+          ncd:select "evpn-vpls-name group-ip source-ip" ;
+          ncd:select "evpn-vpls-name group-ip source-ip interface-name external-vlan-id internal-vlan-id" ;
+        }
+
+        ncd:revise-date 2022-12-05 ;
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'Command of PIMv6 snooping clear.' ;
+    container pimv6-snooping {
+      description 'Clear PIMv6 snooping groups.' ;
+      container clear {
+        description 'Clear PIMv6 snooping groups.' ;
+        container group {
+          description 'Clear the specific group of the specific instance.' ;
+          presence group ;
+          leaf group-ip {
+            description 'Multicast group IP address.' ;
+            type ncd:ipv6-address ;
+
+            mandatory true ;
+          }
+
+          leaf source-ip {
+            description 'Source IP address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          choice instance {
+            description 'Instance.' ;
+            mandatory true ;
+            case vlan {
+              description 'Clear all groups of the specific VLAN instance.' ;
+              leaf vlan-id {
+                description 'VLAN ID.' ;
+                type uint16 {
+                  range 1..4094 ;
+
+                }
+
+              }
+
+              if-feature vlan {
+                ncd:revise-date 2023-08-23 ;
+              }
+
+            }
+
+            case vpls {
+              description 'Clear all groups of the specific VPLS instance.' ;
+              leaf vpls-name {
+                description 'VPLS name.' ;
+                type string ;
+
+              }
+
+              if-feature vpls {
+                ncd:revise-date 2023-08-23 ;
+              }
+
+              ncd:revise-date 2022-12-05 ;
+            }
+
+            case evpn-vpls {
+              if-feature evpn-vpls ;
+
+              description 'Clear all groups of the specific EVPN VPLS instance.' ;
+              leaf evpn-vpls-name {
+                description 'EVPN VPLS name.' ;
+                type string ;
+
+              }
+
+              ncd:revise-date 2022-12-05 ;
+            }
+
+          }
+
+        }
+
+        container groups {
+          description 'Clear all groups of the specific instance.' ;
+          choice type {
+            description 'Clear all groups of the specific instance.' ;
+            case vlan {
+              description 'Clear all groups of the specific VLAN instance.' ;
+              leaf vlan-id {
+                description 'VLAN ID.' ;
+                type uint16 {
+                  range 1..4094 ;
+
+                }
+
+              }
+
+              if-feature vlan {
+                ncd:revise-date 2023-08-23 ;
+              }
+
+            }
+
+            case all {
+              description 'Clear all groups.' ;
+              leaf all-groups {
+                description 'All groups.' ;
+                type empty ;
+
+              }
+
+            }
+
+            case vpls {
+              description 'Clear all groups of the specific VPLS instance.' ;
+              leaf vpls-name {
+                description 'VPLS name.' ;
+                type string ;
+
+              }
+
+              if-feature vpls {
+                ncd:revise-date 2023-08-23 ;
+              }
+
+              ncd:revise-date 2022-12-05 ;
+            }
+
+            case evpn-vpls {
+              if-feature evpn-vpls ;
+
+              description 'Clear all groups of the specific EVPN VPLS instance.' ;
+              leaf evpn-vpls-name {
+                description 'EVPN VPLS name.' ;
+                type string ;
+
+              }
+
+              ncd:revise-date 2022-12-05 ;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

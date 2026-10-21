@@ -1,0 +1,93 @@
+module zxr10-cip {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/cip'
+            ;
+  prefix cip ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the Interface Relation.Like the b'
+            + 'inding relation between cip interface and channelizing cpos inte'
+            + 'rface.'
+              ;
+  revision 2021-04-10 {
+    description '1.Add the multi-binds container which in configuration/cip.'
+                ;
+  }
+  revision 2013-10-30 {
+    description 'The initial version'
+                ;
+  }
+  container configuration {
+    description 'Configure the binding relation between interfaces.'
+                ;
+    container cip {
+      description 'Describe the parameters of interface binding relation to be '
+                + 'configured.'
+                  ;
+      container bind {
+        description 'Describe the parameters of interface binding relation to b'
+                  + 'e configured.'
+                    ;
+        list bind-interfaces {
+          description 'The list of binding interfaces for configuring parameters.'
+                      ;
+          key src-interface ;
+          leaf src-interface {
+            description 'Source interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf dst-interface {
+            description 'Destination interface name.'
+                        ;
+            type ncd:ifname ;
+            mandatory true ;
+          }
+        }
+      }
+      container multi-binds {
+        description 'Describe the parameters of interface binding relation to b'
+                  + 'e configured.'
+                    ;
+        list multi-bind {
+          description 'Describe the parameters of interface binding relation to be configured.' ;
+          key 'cip-name channel-id'
+              ;
+          leaf cip-name {
+            description 'CIP interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'The length of CIP name.'
+                            ;
+              }
+            }
+          }
+          leaf channel-id {
+            description 'Channel ID.'
+                        ;
+            type uint8 {
+              range 1..4 ;
+            }
+          }
+          leaf interface-name {
+            description 'Bind E1 interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2021-04-10 ;
+      }
+    }
+  }
+}

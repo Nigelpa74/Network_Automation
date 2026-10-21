@@ -1,0 +1,654 @@
+module zxr10-bras-pppox {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/bras/bras-pppox'
+            ;
+  prefix pppox ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe PPPoX.'
+              ;
+  revision 2025-05-29 {
+    description 'Add keepalive-fast-offline.' ;
+  }
+  revision 2023-05-26 {
+    description 'ppp-fast-response add ppp-quick-redial-enable <mandatory>true<'
+              + '/mandatory>'
+                ;
+  }
+  revision 2022-06-05 {
+    description 'modify "pppoe-password-string""pppoe-username-string" type'
+                ;
+  }
+  revision 2022-05-19 {
+    description 'leaf ""pppoe-ac-name""pppoe-password-string""pppoe-username-st'
+              + 'ring""default-username-template""default-password-template" ad'
+              + 'd length range'
+                ;
+  }
+  revision 2022-01-25 {
+    description 'Add pppoe-cfg pap-first'
+                ;
+  }
+  revision 2021-12-09 {
+    description 'Add default username and password template'
+                ;
+  }
+  revision 2021-06-23 {
+    description 'revert 2020-08-20 modify ppp-fast-response enumeration type st'
+              + 'ring'
+                ;
+  }
+  revision 2021-03-24 {
+    description 'modify ppp-timeout-negtimeoutsec and ppp-timeout-authenticatio'
+              + 'n value range'
+                ;
+  }
+  revision 2020-08-20 {
+    description 'modify ppp-fast-response enumeration type string'
+                ;
+  }
+  revision 2020-06-10 {
+    description 'modify ppp-check-magic-num and pppoe-ac-cookie-check default v'
+              + 'alue'
+                ;
+  }
+  revision 2017-11-30 {
+    description 'Add pppoe location-type and agent-circuit-id'
+                ;
+  }
+  revision 2017-11-15 {
+    description 'Add pppoe template ppp mru-verify'
+                ;
+  }
+  revision 2017-11-01 {
+    description 'Add pppoe max-sessions number'
+                ;
+  }
+  revision 2017-10-30 {
+    description 'Modify pppoe-ac-name length'
+                ;
+  }
+  revision 2016-08-22 {
+    description 'Add keepalive-fast-reply'
+                ;
+  }
+  revision 2016-04-20 {
+    description 'First created'
+                ;
+  }
+  container configuration {
+    description 'Configuration model.'
+                ;
+    container bras-pppox {
+      description 'Configuration about PPPoX.'
+                  ;
+      container pppox-ipv6cp-cfg {
+        description 'Configuration about IPV6CP extension.'
+                    ;
+        leaf ipv6cp-extension {
+          description 'Ipv6cp extension flag'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+            }
+            enum disable {
+              value 0 ;
+            }
+          }
+          default disable ;
+        }
+        leaf ipv6cp-aftr {
+          description 'AFTR option type value'
+                      ;
+          type uint8 {
+            range 1..255 ;
+          }
+        }
+        leaf ipv6cp-ipv6-address {
+          description 'Ipv6 address option type value'
+                      ;
+          type uint8 {
+            range 1..255 ;
+          }
+        }
+        leaf ipv6cp-ipv6-prefix {
+          description 'Ipv6 prefix option type value'
+                      ;
+          type uint8 {
+            range 1..255 ;
+          }
+        }
+        container ipv6-dns {
+          description 'Ipv6 DNS option type value'
+                      ;
+          presence ipv6-dns ;
+          leaf ipv6cp-ipv6-dns-secondary {
+            description 'IPV6 primary DNS option type value'
+                        ;
+            type uint8 {
+              range 1..255 ;
+            }
+            mandatory true ;
+          }
+          leaf ipv6cp-ipv6-dns-primary {
+            description 'IPV6 secondary DNS option type value'
+                        ;
+            type uint8 {
+              range 1..255 ;
+            }
+            mandatory true ;
+          }
+        }
+        container ipv4-dns {
+          description 'Ipv4 DNS option type value'
+                      ;
+          presence ipv4-dns ;
+          leaf ipv6cp-ipv4-dns-primary {
+            description 'IPV4 primary DNS option type value'
+                        ;
+            type uint8 {
+              range 1..255 ;
+            }
+            mandatory true ;
+          }
+          leaf ipv6cp-ipv4-dns-secondary {
+            description 'IPV4 secondary DNS option type value'
+                        ;
+            type uint8 {
+              range 1..255 ;
+            }
+            mandatory true ;
+          }
+        }
+      }
+      container pppox-ipcp-cfg {
+        description 'Configuration about IPCP extension.'
+                    ;
+        leaf ipcp-flag {
+          description 'Ipcp extension flag'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+            }
+            enum disable {
+              value 0 ;
+            }
+          }
+          default disable ;
+        }
+        leaf option-type {
+          description 'Ipcp 6rd option type'
+                      ;
+          type uint8 {
+            range 1..255 ;
+          }
+        }
+        leaf br-address {
+          description '6RD BR IPv4 address'
+                      ;
+          type ncd:ipv4-address {
+            pattern '((1[0-9]{0,2}|2[0-9]{0,1}|2[0-4][0-9]|25[0-4]|[3-9][0-9]{0'
+                  + ',1})\.){3}(0|1[0-9]{0,2}|2[0-9]{0,1}|2[0-4][0-9]|25[0-4]|['
+                  + '3-9][0-9]{0,1})$|^0\.((1[0-9]{0,2}|2[0-9]{0,1}|2[0-4][0-9]'
+                  + '|25[0-5]|[3-9][0-9]{0,1})\.){2}(1[0-9]{0,2}|2[0-9]{0,1}|2['
+                  + '0-4][0-9]|25[0-5]|[3-9][0-9]{0,1})$|^((1[0-9]{0,2}|2[0-9]{'
+                  + '0,1}|2[0-4][0-9]|25[0-5]|[3-9][0-9]{0,1})\.)0\.((1[0-9]{0,'
+                  + '2}|2[0-9]{0,1}|2[0-4][0-9]|25[0-5]|[3-9][0-9]{0,1})\.)(1[0'
+                  + '-9]{0,2}|2[0-9]{0,1}|2[0-4][0-9]|25[0-5]|[3-9][0-9]{0,1})$'
+                  + '|^((1[0-9]{0,2}|2[0-9]{0,1}|2[0-4][0-9]|25[0-5]|[3-9][0-9]'
+                  + '{0,1})\.){2}0\.(1[0-9]{0,2}|2[0-9]{0,1}|2[0-4][0-9]|25[0-5'
+                  + ']|[3-9][0-9]{0,1})$|^((1[0-9]{0,2}|2[0-9]{0,1}|2[0-4][0-9]'
+                  + '|25[0-5]|[3-9][0-9]{0,1})\.){3}0$|255\.((0|1[0-9]{0,2}|2[0'
+                  + '-9]{0,1}|2[0-4][0-9]|25[0-4]|[3-9][0-9]{0,1})\.){2}(0|1[0-'
+                  + '9]{0,2}|2[0-9]{0,1}|2[0-4][0-9]|25[0-4]|[3-9][0-9]{0,1})$|'
+                  + '^((0|1[0-9]{0,2}|2[0-9]{0,1}|2[0-4][0-9]|25[0-4]|[3-9][0-9'
+                  + ']{0,1})\.)255\.((0|1[0-9]{0,2}|2[0-9]{0,1}|2[0-4][0-9]|25['
+                  + '0-4]|[3-9][0-9]{0,1})\.)(0|1[0-9]{0,2}|2[0-9]{0,1}|2[0-4]['
+                  + '0-9]|25[0-4]|[3-9][0-9]{0,1})$|^((0|1[0-9]{0,2}|2[0-9]{0,1'
+                  + '}|2[0-4][0-9]|25[0-4]|[3-9][0-9]{0,1})\.){2}255\.(0|1[0-9]'
+                  + '{0,2}|2[0-9]{0,1}|2[0-4][0-9]|25[0-4]|[3-9][0-9]{0,1})$|^('
+                  + '(0|1[0-9]{0,2}|2[0-9]{0,1}|2[0-4][0-9]|25[0-4]|[3-9][0-9]{'
+                  + '0,1})\.){3}255'
+                    ;
+          }
+        }
+        container ipv6-rapid-deployment {
+          description 'Ipv6 rapid deployment'
+                      ;
+          presence ipv6-rapid-deployment ;
+          leaf v4-mask-len {
+            description 'IPv4 address mask length'
+                        ;
+            type uint8 {
+              range 0..32 ;
+            }
+            mandatory true ;
+          }
+          leaf v6-pref {
+            description 'IPv6 prefix'
+                        ;
+            type ncd:ipv6-address ;
+            mandatory true ;
+          }
+          leaf v6-mask-len {
+            description 'IPv6 prefix length'
+                        ;
+            type uint8 {
+              range 1..128 ;
+            }
+            mandatory true ;
+          }
+        }
+      }
+      container pppoe-switch {
+        description 'Configuration about pppoe switch.'
+                    ;
+        leaf delay-time {
+          description 'Trigger user offline when VCC phys-interface down'
+                      ;
+          type uint16 {
+            range 1..300 ;
+          }
+        }
+        leaf keepalive-timer {
+          description 'Start or stop send keepalive packet'
+                      ;
+          type enumeration {
+            enum start {
+              value 1 ;
+            }
+            enum stop {
+              value 0 ;
+            }
+          }
+          default start ;
+        }
+        leaf ppp-max-payload {
+          description 'Enable or disable pppoe ppp-max-payload'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+            }
+            enum enable {
+              value 1 ;
+            }
+          }
+          default disable ;
+        }
+        leaf service {
+          description 'Open or close pppoe service'
+                      ;
+          type enumeration {
+            enum advertise {
+              value 1 ;
+            }
+            enum disable {
+              value 0 ;
+            }
+          }
+          default advertise ;
+        }
+        leaf ppp-mru-verify {
+          description 'set ppp lcp mru verify when mru over 1492'
+                      ;
+          type enumeration {
+            enum open {
+              value 1 ;
+            }
+            enum close {
+              value 0 ;
+            }
+          }
+          default close ;
+        }
+        leaf keepalive-fast-reply {
+          description 'Set keepalive fast reply flag.'
+                      ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Enable keepalive fast reply!'
+                          ;
+            }
+            enum disable {
+              value 0 ;
+              description 'Disable keepalive fast reply!'
+                          ;
+            }
+          }
+        }
+        container pppoe-max-sessions {
+          description 'Set pppoe-max-sessions number'
+                      ;
+          leaf max-sessions-number {
+            description 'Set max-sessions number'
+                        ;
+            type uint32 {
+              range 1..128000 ;
+            }
+          }
+          leaf access-mac-circuit {
+            description 'Set access base on mac and circuit'
+                        ;
+            type uint8 {
+              range 1 ;
+            }
+          }
+        }
+        leaf keepalive-fast-offline {
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Enable keepalive fast offline!' ;
+            }
+
+            enum disable {
+              value 0 ;
+              description 'Disable keepalive fast offline!' ;
+            }
+
+          }
+
+          description 'Set keepalive fast offline flag.' ;
+          ncd:revise-date 2025-05-29 ;
+        }
+      }
+      list pppoe-cfg {
+        description 'Configuration pppoe template'
+                    ;
+        key template ;
+        leaf template {
+          description 'PPPoX template number'
+                      ;
+          type uint32 {
+            range 1..1000 ;
+          }
+        }
+        leaf pppoe-agent-circuit-id-format {
+          description 'Configure agent-circuit-id format'
+                      ;
+          type enumeration {
+            enum china-tel {
+              value 0 ;
+              description 'China Telecom format'
+                          ;
+            }
+            enum tr101 {
+              value 1 ;
+              description 'Broadband Forum TR-101 format'
+                          ;
+            }
+            enum class1 {
+              value 2 ;
+              description 'Class1 format(e.g. ani-name atm 0/1/0/8:8.35)'
+                          ;
+            }
+            enum compatible {
+              value 3 ;
+              description 'Compatible format(include china-tel and class1)'
+                          ;
+            }
+            enum keep {
+              value 4 ;
+              description 'Keep format(for any format,do not analyse)'
+                          ;
+            }
+          }
+          default compatible ;
+        }
+        leaf ppp-check-magic-num {
+          description 'Check magic number or not'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+            }
+            enum enable {
+              value 1 ;
+            }
+          }
+          default disable ;
+        }
+        leaf ppp-mru {
+          description 'Set mru value'
+                      ;
+          type uint32 {
+            range 320..9000 ;
+          }
+          default 1492 ;
+        }
+        leaf pppoe-ac-name {
+          description 'Set ac-name'
+                      ;
+          type string {
+            length 0..64 ;
+          }
+        }
+        leaf pppoe-service-name-omit {
+          description 'Check service-name value'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+            }
+            enum enable {
+              value 1 ;
+            }
+          }
+          default disable ;
+        }
+        leaf pppoe-ac-cookie-check {
+          description 'Check options'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+            }
+            enum enable {
+              value 1 ;
+            }
+          }
+          default disable ;
+        }
+        leaf pppoe-password-string {
+          description 'Set authen fail password error string'
+                      ;
+          type ncd:string-with-blank {
+            length 0..63 ;
+          }
+        }
+        leaf pppoe-username-string {
+          description 'Set authen fail username error string'
+                      ;
+          type ncd:string-with-blank {
+            length 0..63 ;
+          }
+        }
+        choice ppp-quick-redial {
+          description 'Enable or disable quick-redial'
+                      ;
+          default quick-redial-disable ;
+          case quick-redial-disable {
+            description 'disable quick-redial'
+                        ;
+            leaf ppp-quick-redial-disable {
+              description 'disable quick-redial'
+                          ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+              }
+              default disable ;
+            }
+          }
+          case fast-response {
+            description 'set quick-redial or Response the access request immedi'
+                      + 'ately'
+                        ;
+            leaf ppp-fast-response {
+              description 'set Response the access request immediately'
+                          ;
+              type enumeration {
+                enum diable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+            }
+            leaf ppp-quick-redial-enable {
+              description 'Enable quick-redial'
+                          ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+        container ppp-keepalive {
+          description 'Set keepalive time and counter'
+                      ;
+          leaf ppp-keepalive-timer {
+            description 'Set keepalive time(unit:seconds)'
+                        ;
+            type uint32 {
+              range 10..14400 ;
+            }
+            default 60 ;
+          }
+          leaf ppp-keepalive-count {
+            description 'Set keepalive counter'
+                        ;
+            type uint16 {
+              range 1..10 ;
+            }
+            default 3 ;
+          }
+        }
+        container ppp-timeout {
+          description 'Set ppp negtimeoutsec and authentication timeout'
+                      ;
+          leaf ppp-timeout-negtimeoutsec {
+            description 'Set ppp negtimeoutsec timeout(unit:seconds)'
+                        ;
+            type uint8 {
+              range 1..30 ;
+            }
+            default 3 ;
+          }
+          leaf ppp-timeout-authentication {
+            description 'Set ppp authentication timeout(unit:seconds)'
+                        ;
+            type uint8 {
+              range 1..30 ;
+            }
+            default 3 ;
+          }
+        }
+        leaf mru-verify-switch {
+          description 'Enable or disable ppp mru-verify switch in pppox template'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+            }
+            enum enable {
+              value 1 ;
+            }
+          }
+          default disable ;
+        }
+        leaf ppp-authentication {
+          description 'Set ppp authentication'
+                      ;
+          type enumeration {
+            enum pap {
+              value 1 ;
+            }
+            enum chap {
+              value 2 ;
+            }
+            enum mschapv1 {
+              value 6 ;
+            }
+            enum mschapv2 {
+              value 7 ;
+            }
+            enum pap-chap {
+              value 21 ;
+            }
+          }
+          default pap-chap ;
+        }
+        leaf pppoe-check-location {
+          description 'Set pppoe location type'
+                      ;
+          type enumeration {
+            enum none {
+              value 0 ;
+              description 'Use BRAS information only'
+                          ;
+            }
+            enum vbas {
+              value 1 ;
+              description 'Use VBAS protocol'
+                          ;
+            }
+            enum pppoe-plus {
+              value 2 ;
+              description 'Use PPPoE+ protocol'
+                          ;
+            }
+          }
+          default none ;
+        }
+        leaf default-username-template {
+          description 'Configure default username template'
+                      ;
+          type string {
+            length 0..31 ;
+          }
+          ncd:revise-date 2021-12-09 ;
+        }
+        leaf default-password-template {
+          description 'Configure default password template'
+                      ;
+          type string {
+            length 0..31 ;
+          }
+          ncd:revise-date 2021-12-09 ;
+        }
+        leaf pap-first {
+          description 'Pap first when ppp-authentication value is pap-chap.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+            }
+            enum enable {
+              value 1 ;
+            }
+          }
+          default disable ;
+          ncd:revise-date 2022-01-25 ;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2004 @@
+module zxr10-ssh {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/ssh" ;
+  prefix ssh ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2019-07-16 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the SSH(Secure Shell).' ;
+  revision 2025-06-18 {
+    description '1) Add leaf node/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:authentication/ssh:user/ssh:pki-name
+2) Add choice-case on the outer layer of original leaf node /ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:authentication/ssh:user/ssh:key-auth-type/ssh:key-name/ssh:key-name' ;
+  }
+
+  revision 2024-12-09 {
+    description '1) Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:hmac
+Add list node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:hmac-algorithm
+Add leaf node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:hmac-algorithm/ssh:hmac-algorithm
+2) Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:host-key
+Add list node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:host-key/ssh:host-key-algorithm
+Add leaf node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:host-key/ssh:host-key-algorithm/ssh:host-key-algorithm
+3) Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:key-exchange
+Add list node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:key-exchange/ssh:key-exchange-algorithm
+Add leaf node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:key-exchange/ssh:key-exchange-algorithm/ssh:key-exchange-algorithm
+4) Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:hmac
+Add list node:/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:hmac-algorithm
+Add leaf node:/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:hmac-algorithm/ssh:hmac-algorithm
+5) Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:host-key
+Add list node:/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:host-key/ssh:host-key-algorithm
+Add leaf node:/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:host-key/ssh:host-key-algorithm/ssh:host-key-algorithm
+6) Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:key-exchange
+Add list node:/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:key-exchange/ssh:key-exchange-algorithm
+Add leaf node:/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:key-exchange/ssh:key-exchange-algorithm/ssh:key-exchange-algorithm
+7) Add container node:/ssh:state/ssh:ssh/ssh:host-key/ssh:sm2
+Add leaf node:/ssh:state/ssh:ssh/ssh:host-key/ssh:sm2/ssh:key-code
+8) Add case node:/ssh:operation/ssh:ssh/ssh:generate/ssh:host-key/ssh:sm2
+Add leaf node:/ssh:operation/ssh:ssh/ssh:generate/ssh:host-key/ssh:sm2/ssh:sm2' ;
+  }
+
+  revision 2024-11-26 {
+    description "The range of '/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:listen-port' is changed from 49152-65535 to 1025-65535." ;
+  }
+
+  revision 2024-09-06 {
+    description "The default value of node'/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:server-valid' is changed from disable to enable." ;
+  }
+
+  revision 2024-08-20 {
+    description '1) Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:strict-check
+2) Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:strict-check/ssh:packet
+3) Add leaf node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:strict-check/ssh:packet/ssh:status' ;
+  }
+
+  revision 2024-07-09 {
+    description 'Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:authentication/ssh:bogus-list
+Add leaf node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:authentication/ssh:bogus-list/ssh:status' ;
+  }
+
+  revision 2024-06-25 {
+    description '1.Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:encryptions
+2.Add list node:/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:encryptions/ssh:encryption-algorithm
+3.Add leaf node::/ssh:configuration/ssh:ssh/ssh:ssh-client/ssh:algorithm-mng/ssh:encryptions/ssh:encryption-algorithm/ssh:encryption-algorithm
+4.Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:encryptions
+5.Add list node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:encryptions/ssh:encryption-algorithm
+6.Add leaf node::/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:algorithm-mng/ssh:encryptions/ssh:encryption-algorithm/ssh:encryption-algorithm' ;
+  }
+
+  revision 2024-06-04 {
+    description '1.Add container node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:ip-block
+Add leaf node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:ip-block/ssh:failed-times
+Add leaf node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:ip-block/ssh:period
+Add leaf node:/ssh:configuration/ssh:ssh/ssh:ssh-server/ssh:ip-block/ssh:lock-time
+2.Add container node:/ssh:state/ssh:ssh/ssh:ssh-server/ssh:ipv4-block-info
+3.Add container node:/ssh:state/ssh:ssh/ssh:ssh-server/ssh:ipv6-block-info
+4.Add rpc node:/ssh:unlock-ssh-server-ipv4-block and /ssh:unlock-ssh-server-ipv4-block' ;
+  }
+
+  revision 2024-03-07 {
+    description "1.Add 'configuration/ssh/ssh-server/host-key/host-key-algorithm-disabled/host-key-algorithm' enumeration rsa value 27" ;
+  }
+
+  revision 2024-01-24 {
+    description '1.Add configuration/ssh/ssh-server/diffie-hellman/diffie-hellman-algorithm-disabled/diffie-hellman-algorithm enumeration group14-sha1 value 12.
+2.Add configuration/ssh/ssh-server/encryption/encryption-algorithm-disabled/encryption-algorithm enumeration 3des-ctr value 22.' ;
+  }
+
+  revision 2023-07-06 {
+    description "1.Add container '/configuration/ssh/ssh-server/secure-check/rsa'
+    2.Add leaf '/configuration/ssh/ssh-server/diffie-hellman/min-modulus'
+    3.Add container '/configuration/ssh/ssh-client/secure-check/rsa'
+    4.Add container '/configuration/ssh/ssh-client/diffie-hellman'
+    5.Modify '/state/ssh/host-key/rsa/key-modulus' max from 2048 to 3072
+    6.Modify '/operation/ssh/generate/key/host-key/rsa/key-modulus' max from 2048 to 3072" ;
+  }
+
+  revision 2023-06-15 {
+    description "1.Add container '/configuration/ssh/ssh-server/rekey/v2'
+    2.Add container '/configuration/ssh/ssh-client/rekey/v2'
+    3.Add container '/configuration/ssh/ssh-server/secure-check'
+    4.Add container '/configuration/ssh/ssh-client/secure-check'" ;
+  }
+
+  revision 2023-01-18 {
+    description "1.Add container '/configuration/ssh/ssh-server/users-service-type'
+    2.Add list '/configuration/ssh/ssh-server/users-service-type/user-service-type'
+    3.Add leaf '/configuration/ssh/ssh-server/users-service-type/user-service-type/username'
+    4.Add leaf '/configuration/ssh/ssh-server/users-service-type/user-service-type/sftp'
+    5.Add leaf '/configuration/ssh/ssh-server/users-service-type/user-service-type/stelnet'
+    6.Add leaf '/configuration/ssh/ssh-server/users-service-type/user-service-type/snetconf'" ;
+  }
+
+  revision 2023-01-16 {
+    description '1.Modified state/ssh/public-key/key-name type string length from 1..31 to 1..64
+2.Add state/ssh/public-key/key-type enumeration enum ECC value 3
+3.Modified state/ssh/public-key/key-module range from 512..8192 to 256..8192
+4.Modified state/ssh/public-key/key-code length from 1..2048 to 1..4096' ;
+  }
+
+  revision 2022-11-01 {
+    description 'Modified state/ssh/public-key/key-module max range from 2048 to 8192, mim datatype from char(length 12) to uint16(length 1).' ;
+  }
+
+  revision 2022-02-28 {
+    description "1.Add leaf-list '/configuration/ssh/ssh-server/recognize-packet/recognize-packet-type'
+    2.Add leaf key node '/configuration/ssh/ssh-server/recognize-packet/recognize-packet-type/type'" ;
+  }
+
+  revision 2021-12-16 {
+    description "1.Add leaf node '/configuration/ssh/ssh-client/first-time/status'
+    2.Add leaf node '/configuration/ssh/ssh-client/signature-authen/status'
+    3.Add list node '/state/ssh/ssh-client/peer-public-key/ipv4'
+    4.Add list node '/state/ssh/ssh-client/peer-public-key/ipv6'
+    5.Add rpc leaf node '/rpc/client-import-peer-public-key/ipv4-addr'
+    6.Add rpc leaf node '/rpc/client-import-peer-public-key/ipv6-addr'
+    7.Add rpc leaf node '/rpc/client-import-peer-public-key/key-file'
+    8.Add rpc leaf node '/rpc/client-clear-peer-public-key/ipv4-addr'
+    9.Add rpc leaf node '/rpc/client-clear-peer-public-key/ipv6-addr'
+    10.Add rpc leaf node '/rpc/client-clear-peer-public-key/key-type'" ;
+  }
+
+  revision 2021-03-04 {
+    description "1.Add container node '/configuration/ssh/ssh-server/algorithm-mng', add container node '/configuration/ssh/ssh-server/algorithm-mng/diffie-hellman-algorithms', add list node '/configuration/ssh/ssh-server/algorithm-mng/diffie-hellman-algorithms/diffie-hellman-algorithm', add leaf node '/configuration/ssh/ssh-server/algorithm-mng/diffie-hellman-algorithms/diffie-hellman-algorithm/diffie-hellman-algorithm'
+    2.Add container node '/configuration/ssh/ssh-client', add container node '/configuration/ssh/ssh-client/algorithm-mng', add container node '/configuration/ssh/ssh-client/algorithm-mng/diffie-hellman-algorithms', add list node '/configuration/ssh/ssh-client/algorithm-mng/diffie-hellman-algorithms/diffie-hellman-algorithm', add leaf node '/configuration/ssh/ssh-client/algorithm-mng/diffie-hellman-algorithms/diffie-hellman-algorithm/diffie-hellman-algorithm'" ;
+  }
+
+  revision 2020-08-27 {
+    description "1.Add container node '/configuration/ssh/ssh-server/hmac', add list node '/configuration/ssh/ssh-server/hmac/hmac-algorithm-disabled' add leaf node '/configuration/ssh/ssh-server/hmac/hmac-algorithm-disabled/hmac-algorithm'
+    2.Add container node '/configuration/ssh/ssh-server/encryption', add list node '/configuration/ssh/ssh-server/encryption/encryption-algorithm-disabled' add leaf node '/configuration/ssh/ssh-server/encryption/encryption-algorithm-disabled/encryption-algorithm'
+    3.Add container node '/configuration/ssh/ssh-server/diffie-hellman', add list node '/configuration/ssh/ssh-server/diffie-hellman/diffie-hellman-algorithm-disabled' add leaf node '/configuration/ssh/ssh-server/diffie-hellman/diffie-hellman-algorithm-disabled/diffie-hellman-algorithm'
+    4.Add container node '/configuration/ssh/ssh-server/host-key', add list node '/configuration/ssh/ssh-server/host-key/host-key-algorithm-disabled' add leaf node '/configuration/ssh/ssh-server/host-key/host-key-algorithm-disabled/host-key-algorithm'" ;
+  }
+
+  revision 2019-01-28 {
+    description "1.Add container node '/state/ssh/host-key/rsa', add leaf node '/state/ssh/host-key/rsa/key-modulus' and '/state/ssh/host-key/rsa/key-code'
+    2.Add list node '/state/ssh/host-key/ecc', add leaf node '/state/ssh/host-key/ecc/curve-name', '/state/ssh/host-key/ecc/key-modulus' and '/state/ssh/host-key/ecc/key-code'
+    3.Add choice node '/operation/ssh/generate/host-key', add case node '/operation/ssh/generate/host-key/rsa' and '/operation/ssh/generate/host-key/ecc', add leaf node '/operation/ssh/generate/host-key/rsa/rsa' and '/operation/ssh/generate/host-key/rsa/key-modulus' and '/operation/ssh/generate/host-key/ecc' and '/operation/ssh/generate/host-key/ecc/curve-name'
+    4.Add feature node 'weak-host-key-algorithm' and 'strong-host-key-algorithm'" ;
+  }
+
+  revision 2019-01-23 {
+    description 'Support keyboard-interactive authentication.' ;
+  }
+
+  revision 2014-05-06 {
+    description 'Modify the default value of dscp.' ;
+  }
+
+  revision 2014-01-24 {
+    description '1.Modified configuration/ssh/ssh-server/authentication/user/username node maximum length from 32 to 65.' ;
+  }
+
+  revision 2013-11-01 {
+    description '1.Modified state/ssh/publick-key/key-code node maximum length from 512 to 2048.
+2.Remove mandatory attribute of configuration/ssh/ssh-server/server-valid/enable/enable node.' ;
+  }
+
+  revision 2013-10-15 {
+    description '1.Add state for supporting get user authentication public-key information.
+2.Modified configuration/ssh/ssh-server/authentication/user/auth-type node and operation/ssh/generate/key/key-type node type from uint8 to enumeration.
+3.Add length range for string node.' ;
+  }
+
+  revision 2013-09-25 {
+    description 'Move the listen-port node to enable case.' ;
+  }
+
+  revision 2013-07-17 {
+    description 'Modified according to the specification, e.g. adding some descriptions and deleting capital letter of entity names.' ;
+  }
+
+  revision 2013-06-19 {
+    description 'Initial version' ;
+  }
+
+  feature strong-host-key-algorithm ;
+
+  feature weak-host-key-algorithm {
+    description 'Only RSA is supported, The modulus of the RSA key pair is 1024.' ;
+  }
+
+  container configuration {
+    description 'The configuration model of SSH.' ;
+    container ssh {
+      description 'Configure the SSH parameters.' ;
+      container ssh-server {
+        description 'Configure the SSH server parameters.' ;
+        choice server-valid {
+          description 'To configure the SSH server enable or disable.' ;
+          default enable ;
+          case disable {
+            description 'To configure the SSH server disable.' ;
+            leaf disable {
+              description 'Disable the SSH server. After disable the snetconf server, then the SSH server can be disabled.' ;
+              type empty ;
+
+            }
+
+          }
+
+          case enable {
+            description 'To configure the SSH server enable.' ;
+            leaf enable {
+              description 'Enable the SSH server. After enable the SSH server, then the snetconf server can be enabled.' ;
+              type empty ;
+
+            }
+
+            leaf listen-port {
+              description 'The listening port of the SSH server. It can be configured as 22 or any integer between 1025 and 65535. It cannot be changed while SSH server has been enabled.' ;
+              type uint16 {
+                range "22|1025..65535" ;
+
+              }
+
+              default 22 ;
+            }
+
+          }
+
+        }
+
+        container acl {
+          description 'The ACL name which is binded to the SSH server.' ;
+          leaf ipv4-acl {
+            description 'The IPv4 ACL name which is binded to the SSH server.' ;
+            type string {
+              length 1..31 {
+                description 'The ACL name length must be between 1 and 31 characters.' ;
+              }
+
+            }
+
+          }
+
+          leaf ipv6-acl {
+            description 'The IPv6 ACL name which is binded to the SSH server.' ;
+            type string {
+              length 1..31 {
+                description 'The ACL name length must be between 1 and 31 characters.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+        leaf dscp {
+          description 'The DSCP value is used in packets of the SSH server. It can be configured any integer between 0 and 63.' ;
+          type uint8 {
+            range 0..63 ;
+
+          }
+
+        }
+
+        leaf version {
+          description 'The protocol version of the SSH server. The value is 1 or 2. 
+1 : SSH version 1; 
+2 : SSH version 2.' ;
+          type uint8 {
+            range 1..2 ;
+
+          }
+
+          default 2 ;
+        }
+
+        container authentication {
+          description 'Configure the authentication type of SSH server.' ;
+          list user {
+            description 'Configure the authentication type of specified SSH user. SSH user should be configured on ADM_MGR at first.
+  If the SSH user only need password authentication, this node may be not configured. 
+  If the SSH user need public-key authentication, this node must be configured.' ;
+            key username ;
+            leaf username {
+              description 'The name of a user.' ;
+              type string {
+                length 1..65 {
+                  description 'The user name length must be between 1 and 65 characters.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf auth-type {
+              description 'The authentication type of the SSH server. Include: password authentication, pubblic-key authentication, password and public-key authentication, password or public-key authentication.' ;
+              type enumeration {
+                enum password {
+                  value 1 ;
+                  description 'Password authentication.' ;
+                }
+
+                enum publickey {
+                  value 2 ;
+                  description 'Public-key authentication.' ;
+                }
+
+                enum password-publickey {
+                  value 3 ;
+                  description 'Password and public-key authentication.' ;
+                }
+
+                enum any {
+                  value 4 ;
+                  description 'Password or public-key or keyboard-interactive authentication;' ;
+                }
+
+                enum keyboard-interactive {
+                  value 7 ;
+                  description 'Keyboard-interactive authentication.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+            choice public-key-auth-type {
+              description 'The public-key authentication type.' ;
+              case key-name {
+                description 'The key name used by public-key authentication.' ;
+                leaf key-name {
+                  type string {
+                    length 1..31 ;
+
+                  }
+
+                  description 'The key name used by public-key authentication.' ;
+                }
+
+              }
+
+              case pki-name {
+                description 'The PKI name used by certificate authentication.' ;
+                leaf pki-name {
+                  type string {
+                    length 1..63 ;
+
+                  }
+
+                  description 'The PKI name used by certificate authentication.' ;
+                }
+
+                ncd:revise-date 2025-06-18 ;
+              }
+
+            }
+
+          }
+
+          container bogus-list {
+            leaf status {
+              description 'Configure the status of bogus list.' ;
+              default disable ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+
+                enum disable {
+                  value 2 ;
+                }
+
+              }
+
+            }
+
+            description 'Configure bogus list.' ;
+            ncd:revise-date 2024-07-09 ;
+          }
+
+        }
+
+        container rekey {
+          description 'Configure the parameters of regenerate server key.' ;
+          leaf interval {
+            description 'The interval of regenerate server key. The valid value is any integer between 0 and 720. 
+The value of 0 means no regeneration.
+Only for SSH v1.' ;
+            type uint16 {
+              range 0..720 ;
+
+            }
+
+            units hour ;
+            default 1 ;
+          }
+
+          container v2 {
+            description 'Configure the parameters of regenerate server key of SSH v2 server.' ;
+            leaf max-packet {
+              type uint32 {
+                range 268435456..2147483648 ;
+
+              }
+
+              description 'Set rekey max packet count' ;
+            }
+
+            leaf time {
+              type uint16 {
+                range 30..1440 ;
+
+              }
+
+              description 'Set rekey interval time in minutes' ;
+              units minutes ;
+            }
+
+            leaf data-limit {
+              type uint16 {
+                range 1024..10240 ;
+
+              }
+
+              description 'Set rekey data limit in MB' ;
+              units MB ;
+            }
+
+            ncd:revise-date 2023-06-15 ;
+          }
+
+        }
+
+        container hmac {
+          description 'shield SSH hmac algorithm' ;
+          list hmac-algorithm-disabled {
+            description 'hmac algorithm disabled' ;
+            key hmac-algorithm ;
+            leaf hmac-algorithm {
+              description 'hmac algorithm' ;
+              type enumeration {
+                enum none {
+                  value 1 ;
+                  description 'none algorithm' ;
+                }
+
+                enum md5 {
+                  value 2 ;
+                  description 'md5 algorithm' ;
+                }
+
+                enum sha1 {
+                  value 11 ;
+                  description 'sha1 algorithm' ;
+                }
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2020-08-27 ;
+        }
+
+        container encryption {
+          description 'shield SSH encryption algorithm' ;
+          list encryption-algorithm-disabled {
+            description 'encryption algorithm disabled' ;
+            key encryption-algorithm ;
+            leaf encryption-algorithm {
+              description 'encryption algorithm' ;
+              type enumeration {
+                enum none {
+                  value 3 ;
+                  description 'none algorithm' ;
+                }
+
+                enum aes128-cbc {
+                  value 5 ;
+                  description 'aes128-cbc algorithm' ;
+                }
+
+                enum blowfish-cbc {
+                  value 6 ;
+                  description 'blowfish-cbc algorithm' ;
+                }
+
+                enum 3des-cbc {
+                  value 7 ;
+                  description '3des-cbc algorithm' ;
+                }
+
+                enum aes192-cbc {
+                  value 8 ;
+                  description 'aes192-cbc algorithm' ;
+                }
+
+                enum aes256-cbc {
+                  value 9 ;
+                  description 'aes256-cbc algorithm' ;
+                }
+
+                enum 3des-ctr {
+                  value 22 ;
+                  description '3des-ctr algorithm' ;
+                }
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2020-08-27 ;
+        }
+
+        container diffie-hellman {
+          description 'shield SSH diffie-hellman algorithm' ;
+          list diffie-hellman-algorithm-disabled {
+            description 'diffie-hellman algorithm disabled' ;
+            key diffie-hellman-algorithm ;
+            leaf diffie-hellman-algorithm {
+              description 'diffie-hellman algorithm' ;
+              type enumeration {
+                enum group1-sha1 {
+                  value 4 ;
+                  description 'group1-sha1 algorithm' ;
+                }
+
+                enum group-exchange-sha1 {
+                  value 13 ;
+                  description 'group-exchange-sha1 algorithm' ;
+                }
+
+                enum group-exchange-sha256 {
+                  value 23 ;
+                  description 'group-exchange-sha256 algorithm' ;
+                }
+
+                enum group14-sha1 {
+                  description 'group14-sha1 algorithm' ;
+                  value 12 ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container min-modulus {
+            description 'Diffie-hellman minimum modulus' ;
+            leaf modulus-bits {
+              type enumeration {
+                enum 3072 {
+                  value 3072 ;
+                }
+
+              }
+
+              description 'Minimum modulus (in bits)' ;
+            }
+
+            ncd:revise-date 2023-07-06 ;
+          }
+
+          ncd:revise-date 2020-08-27 ;
+        }
+
+        container host-key {
+          description 'shield SSH host-key algorithm' ;
+          list host-key-algorithm-disabled {
+            description 'host-key algorithm disabled' ;
+            key host-key-algorithm ;
+            leaf host-key-algorithm {
+              description 'host-key algorithm' ;
+              type enumeration {
+                enum dsa {
+                  value 28 ;
+                  description 'dsa algorithm' ;
+                }
+
+                enum rsa {
+                  value 27 ;
+                  description 'rsa algorithm' ;
+                }
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2020-08-27 ;
+        }
+
+        container algorithm-mng {
+          description 'SSH algorithm management of server' ;
+          container diffie-hellman-algorithms {
+            description 'diffie-hellman algorithm management of server' ;
+            list diffie-hellman-algorithm {
+              description 'Add or remove diffie-hellman algorithms of server' ;
+              key diffie-hellman-algorithm ;
+              leaf diffie-hellman-algorithm {
+                description 'diffie-hellman algorithm of server' ;
+                type enumeration {
+                  enum group16-sha512 {
+                    value 38 ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container encryptions {
+            description 'Encryption algorithm management of server.' ;
+            list encryption-algorithm {
+              description 'Add or remove encryption algorithms of server.' ;
+              key encryption-algorithm ;
+              leaf encryption-algorithm {
+                description 'Encryption algorithm of server.' ;
+                type enumeration {
+                  enum aead-aes-128-gcm {
+                    value 41 ;
+                  }
+
+                  enum aead-aes-256-gcm {
+                    value 42 ;
+                  }
+
+                  enum sm4-cbc {
+                    value 43 ;
+                  }
+
+                  enum sm4-cfb {
+                    value 47 ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2024-06-25 ;
+          }
+
+          container hmac {
+            list hmac-algorithm {
+              leaf hmac-algorithm {
+                type enumeration {
+                  enum sm3 {
+                    value 44 ;
+                  }
+
+                }
+
+                description 'HMAC algorithm of server.' ;
+              }
+
+              description 'Add or remove HMAC algorithms of server.' ;
+              key hmac-algorithm ;
+            }
+
+            description 'HMAC algorithm management of server.' ;
+            ncd:revise-date 2024-12-09 ;
+          }
+
+          container key-exchange {
+            list key-exchange-algorithm {
+              leaf key-exchange-algorithm {
+                type enumeration {
+                  enum sm2-sm3 {
+                    value 45 ;
+                  }
+
+                }
+
+                description 'Key exchange algorithm of server.' ;
+              }
+
+              description 'Add or remove key exchange algorithms of server.' ;
+              key key-exchange-algorithm ;
+            }
+
+            description 'Key exchange algorithm management of server.' ;
+            ncd:revise-date 2024-12-09 ;
+          }
+
+          container host-key {
+            list host-key-algorithm {
+              leaf host-key-algorithm {
+                type enumeration {
+                  enum sm2 {
+                    value 46 ;
+                  }
+
+                }
+
+                description 'Host key algorithm of server.' ;
+              }
+
+              description 'Add or remove host key algorithms of server.' ;
+              key host-key-algorithm ;
+            }
+
+            description 'Host key algorithm management of server.' ;
+            ncd:revise-date 2024-12-09 ;
+          }
+
+          ncd:revise-date 2021-03-04 ;
+        }
+
+        container recognize-packet {
+          description 'Set SSH server recognize specific type of packet.
+If the configuration is deleted or not configured, the packet of the specific type cannot be recognized.' ;
+          list recognize-packet-type {
+            description 'Set SSH server recognize packet type.' ;
+            key type ;
+            leaf type {
+              description 'SSH packet type' ;
+              type enumeration {
+                enum global-request {
+                  value 80 ;
+                  description 'SSH_MSG_GLOBAL_REQUEST packet type' ;
+                }
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2022-02-28 ;
+        }
+
+        container users-service-type {
+          description 'Configure the service type of SSH user' ;
+          list user-service-type {
+            description 'Configure the service type of SSH user. Please make sure that at least one service type is specified for the SSH user. If no service type is specified for this user, this user supports all service types by default.' ;
+            key username ;
+            leaf username {
+              description 'The specified user name' ;
+              type string {
+                length 1..65 {
+                  description 'The username length ranges from 1 to 65.' ;
+                }
+
+              }
+
+            }
+
+            leaf sftp {
+              description 'Set SFTP service type' ;
+              type empty ;
+
+            }
+
+            leaf stelnet {
+              description 'Set STelnet service type' ;
+              type empty ;
+
+            }
+
+            leaf snetconf {
+              description 'Set SNETCONF service type' ;
+              type empty ;
+
+            }
+
+          }
+
+          ncd:revise-date 2023-01-18 ;
+        }
+
+        container secure-check {
+          description 'Set SSH security-check parameters' ;
+          container diffie-hellman {
+            description 'Set Diffie-Hellman parameters' ;
+            leaf public-key {
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable ssh secure-check diffie-hellman param' ;
+                }
+
+                enum disable {
+                  value 0 ;
+                  description 'Disable ssh secure-check diffie-hellman param' ;
+                }
+
+              }
+
+              default disable ;
+              description 'Check the DH public-key range' ;
+            }
+
+          }
+
+          ncd:revise-date 2023-06-15 ;
+        }
+
+        container peer-public-key {
+          description 'Set remote peer public key' ;
+          container rsa {
+            description 'RSA public key algorithm' ;
+            container min-modulus {
+              leaf modulus-bits {
+                description 'Minimum modulus (in bits)' ;
+                type enumeration {
+                  enum 3072 {
+                    value 3072 ;
+                  }
+
+                }
+
+              }
+
+              description 'Public key minimum modulus' ;
+            }
+
+          }
+
+          ncd:revise-date 2023-07-06 ;
+        }
+
+        container ip-block {
+          leaf failed-times {
+            type uint8 {
+              range 6..20 ;
+
+            }
+
+            description 'Set consecutive authentication failures max times.' ;
+            mandatory true ;
+          }
+
+          leaf period {
+            type uint16 {
+              range 1..120 ;
+
+            }
+
+            units minute ;
+            description 'Set the duration of consecutive authentication failure monitoring, unit: Minutes.' ;
+            mandatory true ;
+          }
+
+          leaf lock-time {
+            type uint16 {
+              range 1..1440 ;
+
+            }
+
+            units minute ;
+            description 'Set locking time,unit: Minutes.' ;
+            mandatory true ;
+          }
+
+          description 'Configure authentication failure IP lock policy' ;
+          presence ip-block ;
+          ncd:revise-date 2024-06-04 ;
+        }
+
+        container strict-check {
+          container packet {
+            leaf status {
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable strict check of packet' ;
+                }
+
+                enum disable {
+                  value 2 ;
+                  description 'Disable strict check of packet' ;
+                }
+
+              }
+
+              description 'Configure strict check status for packet' ;
+              default disable ;
+            }
+
+            description 'Configure strict check of packet' ;
+          }
+
+          description 'Configure strict check status' ;
+          ncd:revise-date 2024-08-20 ;
+        }
+
+      }
+
+      container ssh-client {
+        description 'Configure the SSH client parameters.' ;
+        container algorithm-mng {
+          description 'SSH algorithm management of client' ;
+          container diffie-hellman-algorithms {
+            description 'diffie-hellman algorithm management of client' ;
+            list diffie-hellman-algorithm {
+              description 'Add or remove diffie-hellman algorithms of client' ;
+              key diffie-hellman-algorithm ;
+              leaf diffie-hellman-algorithm {
+                description 'diffie-hellman algorithm of client' ;
+                type enumeration {
+                  enum group16-sha512 {
+                    value 38 ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container encryptions {
+            description 'Encryption algorithm management of client.' ;
+            list encryption-algorithm {
+              description 'Add or remove encryption algorithms of client.' ;
+              key encryption-algorithm ;
+              leaf encryption-algorithm {
+                description 'Encryption algorithm of client.' ;
+                type enumeration {
+                  enum aead-aes-128-gcm {
+                    value 41 ;
+                  }
+
+                  enum aead-aes-256-gcm {
+                    value 42 ;
+                  }
+
+                  enum sm4-cbc {
+                    value 43 ;
+                  }
+
+                  enum sm4-cfb {
+                    value 47 ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2024-06-25 ;
+          }
+
+          container hmac {
+            list hmac-algorithm {
+              leaf hmac-algorithm {
+                type enumeration {
+                  enum sm3 {
+                    value 44 ;
+                  }
+
+                }
+
+                description 'HMAC algorithm of client.' ;
+              }
+
+              description 'Add or remove HMAC algorithms of client.' ;
+              key hmac-algorithm ;
+            }
+
+            description 'HMAC algorithm management of client.' ;
+            ncd:revise-date 2024-12-09 ;
+          }
+
+          container key-exchange {
+            list key-exchange-algorithm {
+              leaf key-exchange-algorithm {
+                type enumeration {
+                  enum sm2-sm3 {
+                    value 45 ;
+                  }
+
+                }
+
+                description 'Key exchange algorithm of client.' ;
+              }
+
+              description 'Add or remove key exchange algorithms of client.' ;
+              key key-exchange-algorithm ;
+            }
+
+            description 'Key exchange algorithm management of client.' ;
+            ncd:revise-date 2024-12-09 ;
+          }
+
+          container host-key {
+            list host-key-algorithm {
+              leaf host-key-algorithm {
+                type enumeration {
+                  enum sm2 {
+                    value 46 ;
+                  }
+
+                }
+
+                description 'Host key algorithm of client.' ;
+              }
+
+              description 'Add or remove host key algorithms of client.' ;
+              key host-key-algorithm ;
+            }
+
+            description 'Host key algorithm management of client.' ;
+            ncd:revise-date 2024-12-09 ;
+          }
+
+        }
+
+        container first-time {
+          description 'The authentication function status of first time access' ;
+          leaf status {
+            description 'The authentication function status of first time access' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+
+              enum disable {
+                value 2 ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          ncd:revise-date 2021-12-16 ;
+        }
+
+        container signature-authen {
+          description 'The status of signature authentication function' ;
+          leaf status {
+            description 'The status of signature authentication function' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+
+              enum disable {
+                value 2 ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          ncd:revise-date 2021-12-16 ;
+        }
+
+        container rekey {
+          description 'Configure the parameters of regenerate client key of SSH v2.' ;
+          container v2 {
+            leaf max-packet {
+              description 'Set rekey max packet count.' ;
+              type uint32 {
+                range 268435456..2147483648 ;
+
+              }
+
+            }
+
+            leaf time {
+              units minutes ;
+              description 'Set rekey interval time in minutes.' ;
+              type uint16 {
+                range 30..1440 ;
+
+              }
+
+            }
+
+            leaf data-limit {
+              units MB ;
+              description 'Set rekey data limit in MB.' ;
+              type uint16 {
+                range 1024..10240 ;
+
+              }
+
+            }
+
+            description 'Configure the parameters of regenerate server key of SSH v2 client.' ;
+          }
+
+          ncd:revise-date 2023-06-15 ;
+        }
+
+        container secure-check {
+          container diffie-hellman {
+            leaf public-key {
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable ssh secure-check diffie-hellman param' ;
+                }
+
+                enum disable {
+                  value 0 ;
+                  description 'Disable ssh secure-check diffie-hellman param' ;
+                }
+
+              }
+
+              description 'Check the DH public-key range' ;
+              default disable ;
+            }
+
+            description 'Set Diffie-Hellman parameters' ;
+          }
+
+          description 'Set SSH security-check parameters' ;
+          ncd:revise-date 2023-06-15 ;
+        }
+
+        container diffie-hellman {
+          description 'SSH diffie-hellman algorithm' ;
+          container min-modulus {
+            leaf modulus-bits {
+              type enumeration {
+                enum 3072 {
+                  value 3072 ;
+                }
+
+              }
+
+              description 'Minimum modulus (in bits)' ;
+            }
+
+            description 'Diffie-hellman minimum modulus' ;
+          }
+
+          ncd:revise-date 2023-07-06 ;
+        }
+
+        container peer-public-key {
+          description 'Set remote peer public key' ;
+          container rsa {
+            description 'RSA public key algorithm' ;
+            container min-modulus {
+              leaf modulus-bits {
+                type enumeration {
+                  enum 3072 {
+                    value 3072 ;
+                  }
+
+                }
+
+                description 'Minimum modulus (in bits)' ;
+              }
+
+              description 'Public key minimum modulus' ;
+            }
+
+          }
+
+          ncd:revise-date 2023-07-06 ;
+        }
+
+        ncd:revise-date 2021-03-04 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    container ssh {
+      description 'SSH state parameters' ;
+      list public-key {
+        description 'The the detail information of public-key.' ;
+        key key-name ;
+        leaf key-name {
+          description 'The name of public key.' ;
+          type string {
+            length 1..64 ;
+
+          }
+
+        }
+
+        leaf key-type {
+          description 'The type of public key.' ;
+          type enumeration {
+            enum RSA {
+              value 1 ;
+              description 'RSA type' ;
+            }
+
+            enum DSA {
+              value 2 ;
+              description 'DSA type' ;
+            }
+
+            enum ECC {
+              value 3 ;
+              description 'ECC type' ;
+            }
+
+          }
+
+        }
+
+        leaf key-module {
+          description 'The module of public key.' ;
+          type uint16 {
+            range 256..8192 ;
+
+          }
+
+        }
+
+        leaf key-code {
+          description 'The code of public key.' ;
+          type string {
+            length 1..4096 ;
+
+          }
+
+        }
+
+      }
+
+      container host-key {
+        description 'The host key information' ;
+        container rsa {
+          description 'RSA (Revest-Shamir-Adleman Algorithm) host key.' ;
+          leaf key-modulus {
+            description 'The modulus of the RSA key pair, in bits.' ;
+            type uint32 {
+              range 256..3072 ;
+
+            }
+
+          }
+
+          leaf key-code {
+            description 'RSA host public key information.' ;
+            type string {
+              length 1..2048 ;
+
+            }
+
+          }
+
+        }
+
+        list ecc {
+          description 'ECC (Elliptic Curves Cryptography) host key.' ;
+          key curve-name ;
+          leaf curve-name {
+            description 'Elliptic curve name.' ;
+            type enumeration {
+              enum nistp256 {
+                value 1 ;
+                description 'NISTP256 algorithm' ;
+              }
+
+              enum nistp384 {
+                value 2 ;
+                description 'NISTP384 algorithm' ;
+              }
+
+              enum nistp521 {
+                value 3 ;
+                description 'NISTP521 algorithm' ;
+              }
+
+              enum ed25519 {
+                value 4 ;
+                description 'ED25519 algorithm' ;
+              }
+
+            }
+
+          }
+
+          leaf key-modulus {
+            description 'The modulus of the ECC key pair, in bits.' ;
+            type uint32 {
+              range 256..2048 ;
+
+            }
+
+          }
+
+          leaf key-code {
+            description 'ECC host public key information.' ;
+            type string {
+              length 1..2048 ;
+
+            }
+
+          }
+
+        }
+
+        container sm2 {
+          description 'SM2 host key.' ;
+          leaf key-code {
+            type string {
+              length 1..2048 ;
+
+            }
+
+            description 'SM2 host public key information.' ;
+          }
+
+          ncd:revise-date 2024-12-09 ;
+        }
+
+      }
+
+      container ssh-client {
+        description 'SSH client state parameters' ;
+        container peer-public-key {
+          description 'Peer public key information' ;
+          list ipv4 {
+            description 'Peer public key information bind with IPv4 address' ;
+            key 'ipv4-addr key-type' ;
+            leaf ipv4-addr {
+              description 'IPv4 address' ;
+              type ncd:ipv4-address ;
+
+            }
+
+            leaf key-type {
+              description 'The type of public key' ;
+              type enumeration {
+                enum RSA {
+                  value 1 ;
+                  description 'RSA type' ;
+                }
+
+                enum DSA {
+                  value 2 ;
+                  description 'DSA type' ;
+                }
+
+                enum ECC {
+                  value 3 ;
+                  description 'ECC type' ;
+                }
+
+                enum SM2 {
+                  value 7 ;
+                  description 'SM2 type' ;
+                }
+
+              }
+
+            }
+
+            leaf curve-name {
+              description 'Elliptic curve name(This node has a value only when the key-type is ECC).' ;
+              type enumeration {
+                enum nistp256 {
+                  value 1 ;
+                  description 'NISTP256 algorithm' ;
+                }
+
+                enum nistp384 {
+                  value 2 ;
+                  description 'NISTP384 algorithm' ;
+                }
+
+                enum nistp521 {
+                  value 3 ;
+                  description 'NISTP521 algorithm' ;
+                }
+
+                enum ed25519 {
+                  value 4 ;
+                  description 'ED25519 algorithm' ;
+                }
+
+              }
+
+            }
+
+            leaf key-module {
+              description 'The module of public key' ;
+              type uint16 {
+                range 256..8192 ;
+
+              }
+
+            }
+
+            leaf key-code {
+              description 'The code of public key' ;
+              type ncd:long-text {
+                length 1..4095 ;
+
+              }
+
+            }
+
+            ncd:select ipv4-addr ;
+            ncd:select "ipv4-addr key-type" ;
+          }
+
+          list ipv6 {
+            description 'Peer public key information bind with IPv6 address' ;
+            key 'ipv6-addr key-type' ;
+            leaf ipv6-addr {
+              description 'IPv6 address' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf key-type {
+              description 'The type of public key' ;
+              type enumeration {
+                enum RSA {
+                  value 1 ;
+                  description 'RSA type' ;
+                }
+
+                enum DSA {
+                  value 2 ;
+                  description 'DSA type' ;
+                }
+
+                enum ECC {
+                  value 3 ;
+                  description 'ECC type' ;
+                }
+
+                enum SM2 {
+                  value 4 ;
+                  description 'SM2 type' ;
+                }
+
+              }
+
+            }
+
+            leaf curve-name {
+              description 'Elliptic curve name(This node has a value only when the key-type is ECC).' ;
+              type enumeration {
+                enum nistp256 {
+                  value 1 ;
+                  description 'NISTP256 algorithm' ;
+                }
+
+                enum nistp384 {
+                  value 2 ;
+                  description 'NISTP384 algorithm' ;
+                }
+
+                enum nistp521 {
+                  value 3 ;
+                  description 'NISTP521 algorithm' ;
+                }
+
+                enum ed25519 {
+                  value 4 ;
+                  description 'ED25519 algorithm' ;
+                }
+
+              }
+
+            }
+
+            leaf key-module {
+              description 'The module of public key' ;
+              type uint16 {
+                range 256..8192 ;
+
+              }
+
+            }
+
+            leaf key-code {
+              description 'The code of public key' ;
+              type ncd:long-text {
+                length 1..4095 ;
+
+              }
+
+            }
+
+            ncd:select ipv6-addr ;
+            ncd:select "ipv6-addr key-type" ;
+          }
+
+        }
+
+        ncd:revise-date 2021-12-16 ;
+      }
+
+      container ssh-server {
+        list ipv4-block-info {
+          leaf index {
+            type uint32 {
+              range 1..999999 ;
+
+            }
+
+            description 'Record index' ;
+          }
+
+          leaf ipv4-address {
+            type string ;
+
+            description 'Client IPv4 address' ;
+          }
+
+          leaf vrf-name {
+            type string {
+              length 1..32 ;
+
+            }
+
+            description 'VRF name' ;
+          }
+
+          leaf state {
+            description 'Client address status. locked:The IP address is locked. unlocked:The IP address is not locked.' ;
+            type enumeration {
+              enum locked {
+                value 1 ;
+              }
+
+              enum unlocked {
+                value 2 ;
+              }
+
+            }
+
+          }
+
+          leaf failed-times {
+            type uint8 ;
+
+            description 'Consecutive authentication failures times' ;
+          }
+
+          leaf remain-time {
+            type uint32 ;
+
+            description 'Remaining unlocking time, unit: Seconds.' ;
+          }
+
+          description 'Display all authentication failed and locked IPv4 info' ;
+          key index ;
+          ncd:select ipv4-address ;
+          ncd:select "ipv4-address vrf-name" ;
+        }
+
+        description 'SSH server state parameters' ;
+        list ipv6-block-info {
+          leaf index {
+            type uint32 {
+              range 1..999999 ;
+
+            }
+
+            description 'Record index' ;
+          }
+
+          leaf ipv6-address {
+            type string ;
+
+            description 'Client IPv6 address' ;
+          }
+
+          leaf vrf-name {
+            type string {
+              length 1..32 ;
+
+            }
+
+            description 'VRF name' ;
+          }
+
+          leaf state {
+            description 'Client address status. locked:The IP address is locked. unlocked:The IP address is not locked.' ;
+            type enumeration {
+              enum locked {
+                value 1 ;
+              }
+
+              enum unlocked {
+                value 2 ;
+              }
+
+            }
+
+          }
+
+          leaf failed-times {
+            type uint8 ;
+
+            description 'Consecutive authentication failures times' ;
+          }
+
+          leaf remain-time {
+            type uint32 ;
+
+            description 'Remaining unlocking time, unit: Seconds.' ;
+          }
+
+          description 'Display all authentication failed and locked IPv6 info' ;
+          key index ;
+          ncd:select ipv6-address ;
+          ncd:select "ipv6-address vrf-name" ;
+        }
+
+        ncd:revise-date 2024-06-04 ;
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'The operation model of SSH.' ;
+    container ssh {
+      description 'The parameters of SSH operation.' ;
+      container import {
+        description 'The importing operation of SSH.' ;
+        container public-key {
+          description 'Import public-key file to SSH.' ;
+          presence "The parameter key-name and key-file should be set at the same time." ;
+          leaf key-name {
+            description 'The name of public key.' ;
+            type string {
+              length 1..31 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf key-file {
+            description 'The key file and path that to be imported.' ;
+            type string {
+              length 1..159 ;
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+      container clear {
+        description 'The clearing operation of SSH.' ;
+        container public-key {
+          description 'Clear public-key of SSH.' ;
+          leaf key-name {
+            description 'The public-key name that to be cleared.' ;
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container generate {
+        description 'The generating operation of SSH.' ;
+        container key {
+          if-feature weak-host-key-algorithm ;
+
+          description 'Generate or update public/private key pairs of SSH.' ;
+          leaf key-type {
+            description 'The type of public/private key pairs. Only RSA is supported now.' ;
+            type enumeration {
+              enum RSA {
+                value 1 ;
+                description 'RSA type.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+        choice host-key {
+          if-feature strong-host-key-algorithm ;
+
+          description 'Generate or update public/private key pairs of SSH.' ;
+          case rsa {
+            description 'RSA (Revest-Shamir-Adleman Algorithm) host key.' ;
+            leaf rsa {
+              description 'RSA algorithm.' ;
+              type empty ;
+
+              mandatory true ;
+            }
+
+            leaf key-modulus {
+              description 'The modulus of the RSA key pair, in bits. default is 1024.' ;
+              type enumeration {
+                enum 1024 {
+                  value 1024 ;
+                  description 'The number of RSA modulus bits is 1024.' ;
+                }
+
+                enum 2048 {
+                  value 2048 ;
+                  description 'The number of RSA modulus bits is 2048.' ;
+                }
+
+                enum 3072 {
+                  value 3072 ;
+                  description 'The number of RSA modulus bits is 3072.' ;
+                }
+
+              }
+
+              default 1024 ;
+            }
+
+          }
+
+          case ecc {
+            description 'ECC (Elliptic Curves Cryptography) host key.' ;
+            leaf ecc {
+              description 'ECC algorithm.' ;
+              type empty ;
+
+              mandatory true ;
+            }
+
+            leaf curve-name {
+              description 'Elliptic curve name.Default is nistp521.' ;
+              type enumeration {
+                enum nistp256 {
+                  value 1 ;
+                  description 'nistp256 algorithm.' ;
+                }
+
+                enum nistp384 {
+                  value 2 ;
+                  description 'nistp384 algorithm.' ;
+                }
+
+                enum nistp521 {
+                  value 3 ;
+                  description 'nistp521 algorithm.' ;
+                }
+
+                enum ed25519 {
+                  value 4 ;
+                  description 'ed25519 algorithm.' ;
+                }
+
+              }
+
+              default nistp521 ;
+            }
+
+          }
+
+          case sm2 {
+            description 'SM2 host key.' ;
+            leaf sm2 {
+              type empty ;
+
+              description 'SM2 algorithm.' ;
+              mandatory true ;
+            }
+
+            ncd:revise-date 2024-12-09 ;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  rpc client-import-peer-public-key {
+    description 'The SSH client imports the peer public key file.' ;
+    input {
+      choice ip-addr {
+        description 'Peer IP address.' ;
+        mandatory true ;
+        case ipv4 {
+          description 'Peer IPv4 address.' ;
+          leaf ipv4-addr {
+            description 'Peer IPv4 address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+        }
+
+        case ipv6 {
+          description 'Peer IPv6 address' ;
+          leaf ipv6-addr {
+            description 'Peer IPv6 address' ;
+            type ncd:ipv6-address ;
+
+          }
+
+        }
+
+      }
+
+      leaf key-file {
+        description 'Public key file name to be imported (including path)' ;
+        type string {
+          length 1..159 ;
+
+        }
+
+        mandatory true ;
+      }
+
+    }
+
+    ncd:revise-date 2021-12-16 ;
+  }
+
+  rpc client-clear-peer-public-key {
+    description 'The SSH client clears the peer public key.' ;
+    input {
+      choice ip-addr {
+        description 'Peer IP address.' ;
+        mandatory true ;
+        case ipv4 {
+          description 'Peer IPv4 address.' ;
+          leaf ipv4-addr {
+            description 'Peer IPv4 address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+        }
+
+        case ipv6 {
+          description 'Peer IPv6 address.' ;
+          leaf ipv6-addr {
+            description 'Peer IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+        }
+
+      }
+
+      leaf key-type {
+        description 'The type of public key' ;
+        type enumeration {
+          enum RSA {
+            value 1 ;
+          }
+
+          enum DSA {
+            value 2 ;
+          }
+
+          enum ECC {
+            value 3 ;
+          }
+
+          enum SM2 {
+            value 7 ;
+          }
+
+        }
+
+        mandatory true ;
+      }
+
+    }
+
+    ncd:revise-date 2021-12-16 ;
+  }
+
+  rpc unlock-ssh-server-ipv4-block {
+    input {
+      choice ipv4 {
+        case index {
+          leaf index {
+            type uint32 {
+              range 1..999999 ;
+
+            }
+
+            description 'Index of the locked IPv4 address' ;
+          }
+
+        }
+
+        case ip-vrf {
+          leaf ipv4-address {
+            type ncd:ipv4-address ;
+
+            mandatory true ;
+            description 'Client IPv4 address' ;
+          }
+
+          leaf vrf-name {
+            type string {
+              length 1..32 ;
+
+            }
+
+            description 'VRF name' ;
+          }
+
+        }
+
+        mandatory true ;
+      }
+
+    }
+
+    description 'Unlock the IP address that is locked due to authentication failure.' ;
+    ncd:revise-date 2024-06-04 ;
+  }
+
+  rpc unlock-ssh-server-ipv6-block {
+    input {
+      choice ipv6 {
+        case index {
+          leaf index {
+            description 'Index of the locked IPv6 address' ;
+            type uint32 {
+              range 1..999999 ;
+
+            }
+
+          }
+
+        }
+
+        case ip-vrf {
+          leaf ipv6-address {
+            type ncd:ipv6-address ;
+
+            mandatory true ;
+            description 'Client IPv6 address' ;
+          }
+
+          leaf vrf-name {
+            type string {
+              length 1..32 ;
+
+            }
+
+            description 'VRF name' ;
+          }
+
+        }
+
+        mandatory true ;
+      }
+
+    }
+
+    description 'Unlock the IP address that is locked due to authentication failure.' ;
+    ncd:revise-date 2024-06-04 ;
+  }
+
+}

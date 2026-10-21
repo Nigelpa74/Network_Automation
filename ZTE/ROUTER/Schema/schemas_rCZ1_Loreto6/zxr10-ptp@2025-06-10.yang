@@ -1,0 +1,5633 @@
+module zxr10-ptp {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/ptp" ;
+  prefix ptp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe PTP.' ;
+ revision 2025-06-10 {
+    description 'Remove the T8K label from if-feature unicast-timestamp-enable.' ;
+  }
+  
+  revision 2025-05-22 {
+    description 'Add: 
+    /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:combined-oc-lists/ptp:nomode-combined-oc-lists/ptp:nomode-combined-oc/ptp:multicast-address
+    /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:combined-oc-lists/ptp:free-combined-oc-lists/ptp:free-combined-oc/ptp:multicast-address
+    change:
+    if-feature:nomode-flag
+    if-feature:multicast-address</description>' ;
+  }
+
+  revision 2025-04-30 {
+    description 'Add ：
+    if-feature ptsf-flag for PC.MSE;OTN.9700;OTN.M721;OTN.8700;OTN.7000
+    /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:oam-node/ptp:ptsf-switch
+    /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:oam-node/ptp:ptsf-lotm-holdoff
+    /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:oam-node/ptp:wtr-time
+    /ptp:operation/ptp:ptp/ptp:clear-ptsf
+    /ptp:operation/ptp:ptp/ptp:clear-wtr' ;
+  }
+
+  revision 2025-04-10 {
+    description 'Add   : /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:multicast-address' ;
+  }
+
+  revision 2025-03-20 {
+    description 'Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-node/ptp:clock-quality-check.' ;
+  }
+
+  revision 2024-09-20 {
+    description 'Add:/ptp:state/ptp:ptp/ptp:status/ptp:t2-minus-t1
+    Add:/ptp:state/ptp:ptp/ptp:status/ptp:t4-minus-t3
+    Expand range /ptp:state/ptp:ptp/ptp:status/ptp:portnum
+    Add the enumeration type for /ptp:state/ptp:ptp/ptp:status/ptp:clock-type
+    Add the enumeration type for /ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state/ptp:trans-mode
+    Expand range /ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state/ptp:port-number
+    Add:/ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state/ptp:cur-vlanid
+    Add:/ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state/ptp:status' ;
+  }
+
+  revision 2024-09-16 {
+    description 'Add the enumeration type for /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-node/ptp:time-sync-mode.' ;
+  }
+
+  revision 2024-09-03 {
+    description 'Expand range /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port-phys/ptp:phy-port/ptp:pdelay-interval
+Expand range /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:trans-mode' ;
+  }
+
+  revision 2024-08-08 {
+    description 'Add if-feature time-sync-mode for PTN.61V5_1,PC.MSE;
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-node/ptp:time-sync-mode.' ;
+  }
+
+  revision 2024-04-18 {
+    description 'Add unicast timestamp function with feature unicast-timestamp-enable:
+/configuration/ptp/ptp-1588/port/port-lists/free-ports/free-port/unicast-timestamp-enable.
+Extend range and description: /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port-phys/ptp:phy-port/ptp:status 
+' ;
+  }
+
+  revision 2024-03-14 {
+    description 'add:
+feature free-port-domain;
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:domain;
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-port-vlans/ptp:free-port-vlan/ptp:domain
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:domain' ;
+  }
+
+  revision 2022-11-09 {
+    description 'Add the enumeration type for /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-node/ptp:clock-type' ;
+  }
+
+  revision 2022-01-11 {
+    description 'add:
+/ptp:state/ptp:ptp/ptp:status/ptp:output-clockclass
+/ptp:state/ptp:ptp/ptp:status/ptp:time-status
+/ptp:state/ptp:ptp/ptp:status/ptp:utc-offset
+/ptp:state/ptp:ptp/ptp:status/ptp:device-accuracy
+/ptp:state/ptp:ptp/ptp:status/ptp:domain
+/ptp:state/ptp:ptp/ptp:status/ptp:global-status
+/ptp:state/ptp:ptp/ptp:status/ptp:algorithm
+/ptp:state/ptp:ptp/ptp:status/ptp:clock-type
+/ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state/ptp:net-protocol
+/ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state/ptp:trans-mode
+/ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state/ptp:port-number' ;
+  }
+
+  revision 2021-08-17 {
+    description 'Change the range of
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:sync-interval,
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:delay-interval,
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:combined-oc-lists/ptp:free-combined-oc-lists/ptp:free-combined-oc/ptp:sync-interval,
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:combined-oc-lists/ptp:free-combined-oc-lists/ptp:free-combined-oc/ptp:delay-interval' ;
+  }
+
+  revision 2021-07-14 {
+    description 'ADD:/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:oam-node/ptp:freq-detection-switch.' ;
+  }
+
+  revision 2021-06-11 {
+    description 'Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomde-ports/ptp:nomode-port/ptp:ann-interval
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomde-ports/ptp:nomode-port/ptp:ann-timeout
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:ann-interval
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomde-ports/ptp:nomode-port/ptp:ann-timeout
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-port-vlans/ptp:free-port-vlan/ptp:ann-interval
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-port-vlans/ptp:free-port-vlan/ptp:ann-timeout' ;
+  }
+
+  revision 2020-11-20 {
+    description 'Add /ptp:state/ptp:ptp/ptp:phy-port-state-lists,
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port-phys/ptp:phy-port/ptp:single-fiber-asymmetry-switch' ;
+  }
+
+  revision 2020-09-02 {
+    description 'Add ptp\state\ptp\node-statistics for telemetry.' ;
+  }
+
+  revision 2020-05-08 {
+    description 'Add the enum of /ptp:state/ptp:ptp/ptp:status/ptp:timesource(0XF0...0XFF);
+Add the enum of /ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state/ptp:timesource(0XF0...0XFF);
+Add the enum of /ptp:state/ptp:ptp/ptp:port-vlan-state-lists/ptp:port-vlan-state/ptp:timesource(0XF0...0XFF);
+Add the enum of /ptp:state/ptp:ptp/ptp:combined-oc-state-lists/ptp:combined-oc-state/ptp:timesource(0XF0...0XFF).' ;
+  }
+
+  revision 2020-03-05 {
+    description 'Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-node/gmid-accept-list.' ;
+  }
+
+  revision 2019-11-27 {
+    description 'If-feature :multicast-address add OTN.8700,OTN.9700,OTN.M721;
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:multicast-address,
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-port-vlans/ptp:free-port-vlan/ptp:multicast-address' ;
+  }
+
+  revision 2019-08-17 {
+    description 'Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:backhaul-if-time-status-switch,
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:backhaul-if-time-status-switch,
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-port-vlans/ptp:free-port-vlan/ptp:backhaul-if-time-status-switch,
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:fixed-ports/ptp:fixed-port/ptp:backhaul-if-time-status-switch,
+Add /ptp:state/ptp:ptp/ptp:backhaul-if-time-status-lists,
+Add notification-backhaul-if' ;
+  }
+
+  revision 2019-01-07 {
+    description 'Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:send-protocol-mode,
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:two-steps,
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:send-protocol-mode,
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:two-steps,
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-port-vlans/ptp:free-port-vlan/ptp:send-protocol-mode,
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-port-vlans/ptp:free-port-vlan/ptp:two-steps,
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port-phys/ptp:phy-port/ptp:accuracy-mode.' ;
+  }
+
+  revision 2018-05-22 {
+    description 'If-feature :utc-trace-flag add PTN.6100,PTN.6500,PTN.6700;
+           nomode-flag add PTN.6700 ;
+           time-source-flag add PTN.6700 ;
+           time-source-select add PTN.6700  ;
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:fixed-global  add "fixed-flag" if-feature;
+
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:sync-timeout;
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:delayresp-timeout;
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:trans-mode.
+Modify the minimum  of /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:fixed-global/ptp:sync-interval
+Modify the minimum  of /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:fixed-global/ptp:delay-interval' ;
+  }
+
+  revision 2018-03-02 {
+    description 'Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:slaveip-list;
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-port-vlans/ptp:free-port-vlan/ptp:slaveip-list;
+Add enum value of /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-port-vlans/ptp:free-port-vlan/ptp:trans-mode.' ;
+  }
+
+  revision 2017-09-13 {
+    description 'Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-node/ptp:unicast-request-tlv.' ;
+  }
+
+  revision 2017-05-05 {
+    description 'Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/time-source-select-mode;
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-port-vlan;
+Add /ptp:state/ptp:ptp/ptp:port-vlan-state-lists;
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:sync-timeout;
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:free-ports/ptp:free-port/ptp:delayresp-timeout.' ;
+  }
+
+  revision 2016-03-07 {
+    description 'Add /ptp:state/ptp:ptp/ptp:time-source-lists
+Add leafs for current clock in /ptp:state/ptp:ptp/ptp:status
+Add leafs for PTP port erest in /ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state and /ptp:state/ptp:ptp/ptp:combined-oc-state-lists/ptp:combined-oc-state
+Modify the description of /ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state,
+/ptp:state/ptp:ptp/ptp:port-state-lists,
+/ptp:state/ptp:ptp/ptp:combined-oc-state-lists,
+/ptp:state/ptp:ptp/ptp:combined-oc-state-lists/ptp:combined-oc-state' ;
+  }
+
+  revision 2015-12-29 {
+    description 'Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-node/ptp:ann-steps-threshold.' ;
+  }
+
+  revision 2015-12-02 {
+    description 'Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-node/ptp:statistic-switch' ;
+  }
+
+  revision 2015-10-20 {
+    description 'ADD:
+/ptp:notification-asymmetry-offset
+/ptp:operation
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:oam-node/ptp:time-detection-switch' ;
+  }
+
+  revision 2015-07-20 {
+    description 'Add enum value for /ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state/ptp:port-state and
+/ptp:state/ptp:ptp/ptp:combined-oc-state-lists/ptp:combined-oc-state/ptp:port-state' ;
+  }
+
+  revision 2015-06-24 {
+    description 'Modify the description of
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-domain/ptp:ann-timeout,
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:sync-interval,
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:delay-interval,
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:pdelay-interval,
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:nomode-ports/ptp:nomode-port/ptp:net-protocol,
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:combined-oc-lists/ptp:nomode-combined-oc-lists/ptp:nomode-combined-oc/ptp:sync-interval,
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:combined-oc-lists/ptp:nomode-combined-oc-lists/ptp:nomode-combined-oc/ptp:delay-interval,
+/ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:combined-oc-lists/ptp:nomode-combined-oc-lists/ptp:nomode-combined-oc/ptp:net-protocol;
+Modify the enum of /ptp:state/ptp:ptp/ptp:port-state-lists/ptp:port-state/ptp:port-state;
+Delete the unit of /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-domain/ptp:ann-timeout' ;
+  }
+
+  revision 2015-04-02 {
+    description 'Add /ptp:configuration/ptp:ptp/ptp:clock-source/ptp:time-source-lists/ptp:time-source/ptp:local-priority
+Add /ptp:configuration/ptp:ptp/ptp:clock-source/ptp:time-source-lists/ptp:time-source/ptp:grandmaster-id
+Add /ptp:configuration/ptp:ptp/ptp:clock-source/ptp:time-source-lists/ptp:time-source/ptp:stepsremoved
+Add /ptp:configuration/ptp:ptp/ptp:clock-source/ptp:time-source-lists/ptp:time-source/ptp:offsetscaledlogvariance
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:oam-node
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-association
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:combined-oc-lists/ptp:nomode-combined-oc-lists/ptp:nomode-combined-oc/ptp:local-priority
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:combined-oc-lists/ptp:fixed-combined-oc-lists/ptp:fixed-combined-oc/ptp:local-priority
+Add /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:combined-oc-lists/ptp:free-combined-oc-lists/ptp:free-combined-oc/ptp:local-priority' ;
+  }
+
+  revision 2015-01-08 {
+    description 'Add the enumeration type for ptp\state\ptp\port-state-lists\port-state\port-state.' ;
+  }
+
+  revision 2014-08-29 {
+    description 'Take apart the ptp\configuration\ptp-1588\port\port-lists\port to
+ptp\configuration\ptp-1588\port\port-lists\nomode-ports,
+ptp\configuration\ptp-1588\port\port-lists\fixed-ports,
+ptp\configuration\ptp-1588\port\port-lists\free-ports;
+Take apart the ptp\configuration\ptp-1588\port\combined-oc-lists\combined-oc to
+ptp\configuration\ptp-1588\port\combined-oc-lists\nomode-combined-oc-lists,
+ptp\configuration\ptp-1588\port\combined-oc-lists\fixed-combined-oc-lists,
+ptp\configuration\ptp-1588\port\combined-oc-lists\free-combined-oc-lists.' ;
+  }
+
+  revision 2014-07-01 {
+    description 'Add length for
+ptp\state\ptp\status\offset,length is 0~31;
+ptp\state\ptp\status\meandelay,length is 0~31;
+ptp\state\ptp\status\curtime,length is 0~99.
+Move ptp\configuration\ptp-1588\port-phys\phy-port\phy-status\status to
+ptp\configuration\ptp-1588\port-phys\phy-port\status.' ;
+  }
+
+  revision 2014-05-20 {
+    description 'Move /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:clock-node/ptp:source to /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:fixed-global;
+Change the range from 1-3000 to 2-3000 of /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:port/ptp:portnum;
+Change the type from string to ifname of /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port/ptp:port-lists/ptp:port/ptp:source;
+Add default value negative for /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port-phys/ptp:phy-port/ptp:unsymmetrical-sign;
+Modify the description of /ptp:configuration/ptp:ptp/ptp:ptp-1588/ptp:port-phys/ptp:phy-port/ptp:phy-status/ptp:status.' ;
+  }
+
+  revision 2014-01-02 {
+    description 'Add container for lists,take apart the global container,modify the type of ifname from string to string:ifname.' ;
+  }
+
+  revision 2013-12-25 {
+    description 'Add fixedkey for port lists,modify the type of curtime from string to string-with-black.' ;
+  }
+
+  revision 2013-11-07 {
+    description 'Add combined-oc list,combined-oc-state list,this two lists use fixedkey.Add reset value for leaf that have no default value;Modify the length of ifname of port list;Modify the enum value of porttype of port list and port-state list.' ;
+  }
+
+  revision 2013-09-25 {
+    description 'Add features,modify the length of chars,change the leaf location of port-mode and manual-port-state,use a container to contain the status leaf of phy-port,modify the type of offset and meandelay leaf,change the mandatory of port-mode of port list from false to true.' ;
+  }
+
+  revision 2013-08-27 {
+    description 'Modify the range of the leaf sync-interval of ptp global.' ;
+  }
+
+  revision 2013-08-20 {
+    description 'Delete the default of the leaf porttype of list port.' ;
+  }
+
+  revision 2013-07-23 {
+    description 'Initial version.' ;
+  }
+
+  feature fixed-flag {
+    description 'This flag identifies fixed mode is or not supported.' ;
+  }
+
+  feature utc-trace-flag {
+    description 'This flag identifies the utc-trace is or not supported.' ;
+  }
+
+  feature nomode-flag {
+    description 'This flag identifies the port mode is or not supported.' ;
+  }
+
+  feature free-flag {
+    description 'This flag identifies free mode is or not supported.' ;
+  }
+
+  feature time-source-flag {
+    description 'This flag identifies the time source is or not supported.' ;
+  }
+
+  feature ip-list-flag {
+    description 'This flag identifies the IP list is or not supported.' ;
+  }
+
+  feature free-port-vlan {
+    description 'This flag identifies the port-vlanid is or not supported.' ;
+  }
+
+  feature time-source-select ;
+
+  feature unicast-request-tlv ;
+
+  feature accepted-slave-ip ;
+
+  feature multicast-address {
+    description 'The feature of multicast-address.' ;
+  }
+
+  feature single-fiber-asymmetry ;
+
+  feature freq-detection-switch {
+    description 'Frequency detection switch.' ;
+  }
+
+  feature free-port-domain {
+    description 'This flag identifies the port domain is or not supported.' ;
+    ncd:revise-date 2024-03-14 ;
+  }
+
+  feature unicast-timestamp-enable {
+    description 'The feature of unicast timestamp enable.' ;
+    ncd:revise-date 2024-04-18 ;
+  }
+
+  feature time-sync-mode {
+    description 'Time synchronization mode.' ;
+    ncd:revise-date 2024-08-08 ;
+  }
+
+  feature ptsf-flag {
+    description 'Packet timing signal fail switch.' ;
+    ncd:revise-date 2025-04-30 ;
+  }
+
+  container configuration {
+    description 'The configuration of PTP.' ;
+    container ptp {
+      description 'The configuration of PTP.' ;
+      container clock-source {
+        description 'The GPS configuration.' ;
+        container utc-time {
+          if-feature utc-trace-flag ;
+
+          description 'The PTP global configuration of GPS time.' ;
+          leaf utc-offset {
+            description 'The UTC offset,in second.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The UTC offset.' ;
+              }
+
+            }
+
+            units second ;
+            default 35 ;
+          }
+
+          leaf leap-attr {
+            description 'The leap attribution,leap59/leap61.' ;
+            type enumeration {
+              enum leap59 {
+                value 1 ;
+                description 'The leap attribution is leap59.' ;
+              }
+
+              enum leap61 {
+                value 2 ;
+                description 'The leap attribution is leap61.' ;
+              }
+
+            }
+
+          }
+
+          leaf leap-year {
+            description 'The leap year,the range is 1980~2100.' ;
+            type uint16 {
+              range 1980..2100 {
+                description 'The leap year.' ;
+              }
+
+            }
+
+          }
+
+          leaf leap-month {
+            description 'The leap month,june/december.' ;
+            type enumeration {
+              enum june {
+                value 1 ;
+                description 'The leap month is june.' ;
+              }
+
+              enum december {
+                value 2 ;
+                description 'The leap month is december.' ;
+              }
+
+            }
+
+          }
+
+          leaf utc-trace {
+            description 'The UTC trace mode,manual/auto.' ;
+            type enumeration {
+              enum manual {
+                value 1 ;
+                description 'The UTC trace mode is manual.' ;
+              }
+
+              enum auto {
+                value 2 ;
+                description 'The UTC trace mode is auto.' ;
+              }
+
+            }
+
+            default manual ;
+          }
+
+          leaf utc-auto-holdover {
+            description 'The holdover time after UTC tod losing,the range is 0~48,in hours.This supports in auto trace mode only.' ;
+            type uint8 {
+              range 0..48 {
+                description 'The holdover time after UTC tod losing.' ;
+              }
+
+            }
+
+            units hour ;
+          }
+
+        }
+
+        container time-source-lists {
+          if-feature time-source-flag ;
+
+          description 'The time source list configuration.' ;
+          list time-source {
+            description 'The configuration of time source.' ;
+            key ifname ;
+            leaf ifname {
+              description 'The interface name of time source.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf priority1 {
+              description 'The priority1 of time source,the range is 0~255.' ;
+              type uint8 {
+                range 0..255 {
+                  description 'The priority1 of the time source.' ;
+                }
+
+              }
+
+              default 128 ;
+            }
+
+            leaf priority2 {
+              description 'The priority2 of time source,the range is 0~255.' ;
+              type uint8 {
+                range 0..255 {
+                  description 'The priority2 of the time source.' ;
+                }
+
+              }
+
+              default 128 ;
+            }
+
+            leaf local-priority {
+              description 'The local priority of time source.' ;
+              type uint8 {
+                range 1..255 {
+                  description 'The local priority of time source.' ;
+                }
+
+              }
+
+              default 128 ;
+            }
+
+            leaf grandmaster-id {
+              description 'The grandmasterIdentity of time source.' ;
+              type string {
+                length 0..16 {
+                  description 'The grandmasterIdentity of time source(0~9,A~F).' ;
+                }
+
+              }
+
+              default '' ;
+            }
+
+            leaf stepsremoved {
+              description 'The steps removed from grandmaster of time source.' ;
+              type uint8 {
+                range 0..254 {
+                  description 'The steps removed from grandmaster of time source.' ;
+                }
+
+              }
+
+              default 0 ;
+            }
+
+            leaf offsetscaledlogvariance {
+              description 'The offset scaled log variance of time source.' ;
+              type uint16 {
+                range 0..65535 {
+                  description 'The offset scaled log variance of time source.' ;
+                }
+
+              }
+
+              default 65535 ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container ptp-1588 {
+        description 'The PTP configuration.' ;
+        container clock-node {
+          description 'The PTP clock1588 configuration.' ;
+          leaf status {
+            description 'The global status of PTP,enable/disable.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable global PTP.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable global PTP.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          leaf clock-type {
+            description 'The PTP clock type,oc/bc/p2ptc/e2etc/p2poc/e2eoc.' ;
+            type enumeration {
+              enum oc {
+                value 1 ;
+                description 'Ordinary clock.' ;
+              }
+
+              enum bc {
+                value 2 ;
+                description 'Boundary clock.' ;
+              }
+
+              enum p2ptc {
+                value 4 ;
+                description 'P2P transparent clock.' ;
+              }
+
+              enum p2ptcoc {
+                value 5 ;
+                description 'P2P transparent and ordinary clock.' ;
+              }
+
+              enum e2etc {
+                value 8 ;
+                description 'E2E transparent clock.' ;
+              }
+
+              enum e2etcoc {
+                value 9 ;
+                description 'E2E transparent and ordinary clock.' ;
+              }
+
+              enum e2etcbc {
+                value 10 ;
+                description 'E2E transparent clock and boundary clock.' ;
+              }
+
+            }
+
+            default bc ;
+          }
+
+          leaf priority1 {
+            description 'The priority1 value,the range is 0~255.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The priority1 value,the range is 0~255.' ;
+              }
+
+            }
+
+            default 128 ;
+          }
+
+          leaf priority2 {
+            description 'The priority2 value,the range is 0~255.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The priority2 value,the range is 0~255.' ;
+              }
+
+            }
+
+            default 128 ;
+          }
+
+          leaf slave-only {
+            description 'The slave-only,enable/disable,only oc,e2etcoc and p2ptcoc support slave-only enable.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable slave-only.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable slave-only.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          leaf algorithm {
+            description 'The algorithm of PTP port state,manual\BMC\alternate-BMC.' ;
+            type enumeration {
+              enum manual {
+                value 1 ;
+                description 'Manually set port state.' ;
+              }
+
+              enum bmc {
+                value 2 ;
+                description 'Set port state by BMC.' ;
+              }
+
+              enum alternate-bmc {
+                value 3 ;
+                description 'Set port state by alternate-BMC.' ;
+              }
+
+            }
+
+            default manual ;
+          }
+
+          leaf two-steps {
+            description 'The two-steps,enable/disable.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'The two-step is disable.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'The two-step is enable.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          leaf clock-accuracy {
+            description 'The clock accuracy value.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock accuracy value.' ;
+              }
+
+            }
+
+            default 33 ;
+          }
+
+          leaf clock-class {
+            description 'The clock class value.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock class value.' ;
+              }
+
+            }
+
+            default 248 ;
+          }
+
+          leaf clockclass-rule {
+            description 'The clock class rule,1588v2/force.' ;
+            type enumeration {
+              enum ieee1588v2 {
+                value 1 ;
+                description 'The clock class rule is ieee1588v2.' ;
+              }
+
+              enum force {
+                value 2 ;
+                description 'The clock class rule is force.' ;
+              }
+
+            }
+
+            default ieee1588v2 ;
+          }
+
+          leaf ip-list-char {
+            if-feature ip-list-flag ;
+
+            description 'The IP list character,deny/permit.' ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Deny the IP of IP list.' ;
+              }
+
+              enum permit {
+                value 1 ;
+                description 'Permit the IP of IP list.' ;
+              }
+
+            }
+
+            default deny ;
+          }
+
+          leaf local-priority {
+            description 'The local priority value.' ;
+            type uint8 {
+              range 1..255 {
+                description 'The local priority value.' ;
+              }
+
+            }
+
+            default 128 ;
+          }
+
+          leaf statistic-switch {
+            description 'PTP node statistic switch.' ;
+            type enumeration {
+              enum off {
+                value 0 ;
+                description 'The PTP node statistic switch is off.' ;
+              }
+
+              enum on {
+                value 1 ;
+                description 'The PTP node statistic switch is on.' ;
+              }
+
+            }
+
+            default off ;
+            ncd:revise-date 2015-12-02 ;
+          }
+
+          leaf ann-steps-threshold {
+            description 'The threshold of announce steps removed from GM.' ;
+            type uint8 {
+              range 1..255 ;
+
+            }
+
+            default 35 ;
+            ncd:revise-date 2015-12-29 ;
+          }
+
+          leaf unicast-request-tlv {
+            if-feature unicast-request-tlv ;
+
+            description 'The unicast request TLV mode.' ;
+            type enumeration {
+              enum single {
+                value 0 ;
+              }
+
+              enum multiple {
+                value 1 ;
+              }
+
+            }
+
+            default single ;
+            ncd:revise-date 2017-09-13 ;
+          }
+
+          container ip-lists {
+            if-feature ip-list-flag ;
+
+            description 'The IP list configuration.' ;
+            list iplist {
+              description 'The configuration of IP list.' ;
+              key ip-addr ;
+              leaf ip-addr {
+                description 'The IPv4 address of IP list.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+            }
+
+          }
+
+          container gmid-accept-list {
+            description 'The accept grandmaster ID list configuration.' ;
+            list gmidlist {
+              description 'The configuration of accept GM ID list.' ;
+              key gm-id ;
+              leaf gm-id {
+                description 'The configuration of accept GM ID list(0~9,A~F).' ;
+                type string {
+                  length 0..16 {
+                    description 'The configuration of accept GM ID list(0~9,A~F).' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2020-03-05 ;
+          }
+
+          leaf time-sync-mode {
+            type enumeration {
+              enum invalid {
+                value 0 ;
+              }
+
+              enum atr {
+                value 1 ;
+              }
+
+              enum apts {
+                value 2 ;
+              }
+
+            }
+
+            description 'The time synchronization mode.' ;
+            default invalid ;
+            if-feature time-sync-mode ;
+
+            ncd:revise-date 2024-08-08 ;
+          }
+
+          container clock-quality-check {
+            leaf switch {
+              type enumeration {
+                enum on {
+                  value 1 ;
+                }
+
+                enum off {
+                  value 0 ;
+                }
+
+              }
+
+              description 'The clock quality check switch.' ;
+              default on ;
+            }
+
+            description 'The clock quality check configuration. ' ;
+            ncd:revise-date 2025-03-20 ;
+          }
+
+        }
+
+        container clock-domain {
+          description 'The PTP global domain configuration.' ;
+          leaf ann-interval {
+            description 'The announce interval,in log2 seconds.' ;
+            type int32 {
+              range -4..4 {
+                description 'The announce interval,in log2 seconds.' ;
+              }
+
+            }
+
+            units "log2 second" ;
+            default 1 ;
+          }
+
+          leaf ann-timeout {
+            description 'The announce timeout,multiple of announce interval.' ;
+            type int32 {
+              range 2..10 {
+                description 'The announce timeout,multiple of announce interval.' ;
+              }
+
+            }
+
+            default 3 ;
+          }
+
+          leaf domain {
+            description 'The domain value of local.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The domain value of local.' ;
+              }
+
+            }
+
+            default 0 ;
+          }
+
+          leaf domain-delay-mechanism {
+            description "The domain delay mechanism of local,e2e/p2p.The mechanism of e2etc and e2etcoc must be e2e and can't be changed to p2p,the mechanism of p2ptc and p2ptcoc must be p2p and can't be changed to e2e." ;
+            type enumeration {
+              enum e2e {
+                value 1 ;
+                description 'E2E domain delay mechanism.' ;
+              }
+
+              enum p2p {
+                value 2 ;
+                description 'P2P domain delay mechanism' ;
+              }
+
+            }
+
+            default e2e ;
+          }
+
+        }
+
+        container fixed-global {
+          if-feature fixed-flag ;
+
+          description 'The PTP global configuration of fixed mode attribution.' ;
+          leaf sync-interval {
+            description 'The sync-interval,in log2 seconds,the port whose port-mode is fixed uses this configuration.' ;
+            type int32 {
+              range -8..1 {
+                description 'The sync-interval,in log2 seconds,the port whose port-mode is fixed uses this configuration.' ;
+              }
+
+            }
+
+            units "log2 second" ;
+            default 0 ;
+          }
+
+          leaf delay-interval {
+            description 'The delay-interval,in log2 seconds,the port whose port-mode is fixed uses this configuration.' ;
+            type int32 {
+              range -8..5 {
+                description 'The delay-interval,in log2 seconds,the port whose port-mode is fixed uses this configuration.' ;
+              }
+
+            }
+
+            units "log2 second" ;
+            default 1 ;
+          }
+
+          leaf pdelay-interval {
+            description 'The pdelay-interval,in log2 seconds,the port whose port-mode is fixed uses this configuration.' ;
+            type int32 {
+              range -4..4 {
+                description 'The pdelay-interval,in log2 seconds,the port whose port-mode is fixed uses this configuration.' ;
+              }
+
+            }
+
+            units "log2 second" ;
+            default 0 ;
+          }
+
+          leaf net-protocol {
+            description 'The network protocol of PTP packet,ieee802.3/IPv4/IPv6,IPv6 is not supported now,the port whose port-mode is fixed uses this configuration.' ;
+            type enumeration {
+              enum ipv4 {
+                value 1 ;
+                description 'The network protocol is IPv4.' ;
+              }
+
+              enum ipv6 {
+                value 2 ;
+                description 'The network protocol is IPv6.' ;
+              }
+
+              enum ieee802.3 {
+                value 3 ;
+                description 'The network protocol is ieee802.3.' ;
+              }
+
+            }
+
+            default ieee802.3 ;
+          }
+
+          leaf transmit-mode {
+            description 'The transmit mode of PTP packet,multicast/unicast,the port whose port-mode is fixed uses this configuration.' ;
+            type enumeration {
+              enum multicast {
+                value 0 ;
+                description 'The transmit mode is multicast.' ;
+              }
+
+              enum unicast {
+                value 1 ;
+                description 'The transmit mode is unicast.' ;
+              }
+
+            }
+
+            default multicast ;
+          }
+
+          leaf vlan-priority {
+            description 'The VLAN priority value,the port whose port-mode is fixed uses this configuration.' ;
+            type uint8 {
+              range 0..7 {
+                description 'The VLAN priority value.' ;
+              }
+
+            }
+
+            default 7 ;
+          }
+
+          leaf source {
+            description 'The PTP source interface.' ;
+            type ncd:ifname ;
+
+          }
+
+        }
+
+        container port {
+          description 'The PTP port configuration.' ;
+          container port-lists {
+            description 'The port list configuration.' ;
+            container nomode-ports {
+              if-feature nomode-flag ;
+
+              description 'The configuration of PTP port which has no port mode.' ;
+              list nomode-port {
+                description 'The configuration of PTP port which has no port mode.' ;
+                key 'ifname porttype' ;
+                leaf ifname {
+                  description 'The interface name of PTP port.' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf porttype {
+                  description 'The port type of PTP port is normal.' ;
+                  type enumeration {
+                    enum normal {
+                      value 0 ;
+                      description 'The port type of PTP port is normal.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf portnum {
+                  description 'The port number of PTP port.' ;
+                  type uint16 {
+                    range 2..3000 {
+                      description 'The port number of PTP port.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf status {
+                  description 'The status of PTP port,enable/disable.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Disable the PTP port.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Enable the PTP port.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf manual-port-state {
+                  description 'The PTP port state by manual,passive/master/slave/master-slave.' ;
+                  type enumeration {
+                    enum master {
+                      value 6 ;
+                      description 'The port state is master.' ;
+                    }
+
+                    enum passive {
+                      value 7 ;
+                      description 'The port state is passive.' ;
+                    }
+
+                    enum slave {
+                      value 9 ;
+                      description 'The port state is slave.' ;
+                    }
+
+                    enum master-slave {
+                      value 10 ;
+                      description 'The port state is master-slave.' ;
+                    }
+
+                  }
+
+                  default passive ;
+                }
+
+                leaf one-way {
+                  description 'The request is or not supported in slave port.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'The port is not one-way.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'The port is one-way.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf packet-statistic {
+                  description 'The packet statistic,enable/disable.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Disable the packet statistic.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Enable the packet statistic.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf unicast-nego-dura {
+                  description 'The unicast negotiate duration of PTP port,in seconds.' ;
+                  type uint32 {
+                    range 60..1000 {
+                      description 'The unicast negotiate duration of the PTP port.' ;
+                    }
+
+                  }
+
+                  default 300 ;
+                }
+
+                leaf multi-domain {
+                  description 'The port is multi domain or not.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'The port is not multi-domain port.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'The port is multi-domain port.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf domain-delay-mechanism {
+                  description 'The domain delay mechanism of the PTP port,e2e/p2p,the multi-domain port uses this configuration.' ;
+                  type enumeration {
+                    enum e2e {
+                      value 1 ;
+                      description 'The delay mechanism is E2E.' ;
+                    }
+
+                    enum p2p {
+                      value 2 ;
+                      description 'The delay mechanism is P2P.' ;
+                    }
+
+                  }
+
+                  default e2e ;
+                }
+
+                leaf unsymmetrical-offset {
+                  description 'The unsymmetrical offset of PTP port.' ;
+                  type uint32 {
+                    range 0..1000000000 {
+                      description 'The unsymmetrical offset of PTP port.' ;
+                    }
+
+                  }
+
+                  units ns ;
+                  default 0 ;
+                }
+
+                leaf unsymmetrical-sign {
+                  description 'The unsymmetrical sign of PTP port,positive/negative.' ;
+                  type enumeration {
+                    enum positive {
+                      value 0 ;
+                      description 'The unsymmetrical sign is positive.' ;
+                    }
+
+                    enum negative {
+                      value 1 ;
+                      description 'The unsymmetrical sign is negative.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf source {
+                  description 'The source interface of PTP port.' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf sync-interval {
+                  description 'The sync-interval of PTP port,in log2 seconds.' ;
+                  type int32 {
+                    range -8..1 {
+                      description 'The sync-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  units "log2 second" ;
+                  default 0 ;
+                }
+
+                leaf delay-interval {
+                  description 'The delay-interval of PTP port,in log2 seconds.' ;
+                  type int32 {
+                    range -5..5 {
+                      description 'The delay-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  units "log2 second" ;
+                  default 1 ;
+                }
+
+                leaf pdelay-interval {
+                  description 'The pdelay-interval of PTP port,in log2 seconds.' ;
+                  type int32 {
+                    range -4..4 {
+                      description 'The pdelay-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  units "log2 second" ;
+                  default 0 ;
+                }
+
+                leaf net-protocol {
+                  description 'The network protocol of PTP packet.' ;
+                  type enumeration {
+                    enum ipv4 {
+                      value 1 ;
+                      description 'The network protocol of the PTP port is IPv4.' ;
+                    }
+
+                    enum ipv6 {
+                      value 2 ;
+                      description 'The network protocol of the PTP port is IPv6.' ;
+                    }
+
+                    enum ieee802.3 {
+                      value 3 ;
+                      description 'The network protocol of the PTP port is ieee802.3.' ;
+                    }
+
+                  }
+
+                  default ieee802.3 ;
+                }
+
+                leaf local-priority {
+                  description 'The local priority value.' ;
+                  type uint8 {
+                    range 1..255 {
+                      description 'The local priority value.' ;
+                    }
+
+                  }
+
+                  default 128 ;
+                }
+
+                leaf trans-mode {
+                  description 'The transmit mode of PTP packet.' ;
+                  type enumeration {
+                    enum multicast {
+                      value 0 ;
+                      description 'The transmit mode of the PTP port is multicast.' ;
+                    }
+
+                  }
+
+                  default multicast ;
+                  ncd:revise-date 2018-05-22 ;
+                }
+
+                leaf sync-timeout {
+                  description 'The timeout of sync message,multiple of sync interval.' ;
+                  type int32 {
+                    range 2..10 ;
+
+                  }
+
+                  default 3 ;
+                  ncd:revise-date 2018-05-22 ;
+                }
+
+                leaf delayresp-timeout {
+                  description 'The timeout of delay-resp message,multiple of delay-resp interval.' ;
+                  type int32 {
+                    range 2..10 ;
+
+                  }
+
+                  default 3 ;
+                  ncd:revise-date 2018-05-22 ;
+                }
+
+                container masterip-list {
+                  description 'The accept master IP list configuration.' ;
+                  list masterip {
+                    description 'The acceptable master IP list configuration of PTP port.' ;
+                    key ip-addr ;
+                    leaf ip-addr {
+                      description 'The IPv4 addrees of master IP.' ;
+                      type ncd:ipv4-address ;
+
+                    }
+
+                    leaf priority {
+                      description 'The priority of the IP.' ;
+                      type uint8 {
+                        range 0..255 {
+                          description 'The priority of the IP.' ;
+                        }
+
+                      }
+
+                      default 0 ;
+                    }
+
+                  }
+
+                }
+
+                leaf send-protocol-mode {
+                  description 'The protocol mode,adaptation/standard/exp-mode1.' ;
+                  type enumeration {
+                    enum adaptation {
+                      value 2 ;
+                    }
+
+                    enum standard {
+                      value 0 ;
+                    }
+
+                    enum exp-mode1 {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default standard ;
+                  ncd:revise-date 2019-01-07 ;
+                }
+
+                leaf two-steps {
+                  description 'The two-steps,enable/disable/invalid.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum invalid {
+                      value 254 ;
+                    }
+
+                  }
+
+                  default invalid ;
+                  ncd:revise-date 2019-01-07 ;
+                }
+
+                leaf backhaul-if-time-status-switch {
+                  description 'Backhaul interface of time difference switch.' ;
+                  type enumeration {
+                    enum off {
+                      value 0 ;
+                    }
+
+                    enum on {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default off ;
+                  ncd:revise-date 2019-08-17 ;
+                }
+
+                leaf multicast-address {
+                  if-feature multicast-address ;
+
+                  description 'Configure multicast MAC address.' ;
+                  type enumeration {
+                    enum forwardable {
+                      value 1 ;
+                      description 'multicast address is forwardable' ;
+                    }
+
+                    enum non-forwardable {
+                      value 2 ;
+                      description 'multicast address is non-forwardable' ;
+                    }
+
+                    enum normal {
+                      value 0 ;
+                      description 'multicast address is normal' ;
+                    }
+
+                  }
+
+                  default normal ;
+                  ncd:revise-date 2019-11-27 ;
+                }
+
+                leaf ann-interval {
+                  description 'The announce-interval of PTP port,in log2 seconds.The value 127 means invalid.' ;
+                  type int32 {
+                    range "-4..4 | 127" {
+                      description 'The announce interval,in log2 seconds.' ;
+                    }
+
+                  }
+
+                  units "log2 second" ;
+                  default 127 ;
+                  ncd:revise-date 2021-06-11 ;
+                }
+
+                leaf ann-timeout {
+                  description 'The announce timeout,multiple of announce interval.The value 0 means invalid.' ;
+                  type int32 {
+                    range "0 | 2..10" {
+                      description 'The announce timeout,multiple of announce interval.' ;
+                    }
+
+                  }
+
+                  default 0 ;
+                  ncd:revise-date 2021-06-11 ;
+                }
+
+                leaf domain {
+                  description 'The domain value of the PTP port.The value 65535 means invalid.' ;
+                  default 65535 ;
+                  type uint16 {
+                    range "0..255 | 65535" {
+                      description 'The domain value of the port.' ;
+                    }
+
+                  }
+
+                  ncd:revise-date 2024-03-14 ;
+                }
+
+              }
+
+            }
+
+            container fixed-ports {
+              if-feature fixed-flag ;
+
+              description 'The configuration of PTP port whose port mode is fixed.' ;
+              list fixed-port {
+                description 'The configuration of PTP port whose port mode is fixed.' ;
+                key 'ifname porttype' ;
+                leaf ifname {
+                  description 'The interface name of PTP port.' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf porttype {
+                  description 'The port type of PTP port is normal.' ;
+                  type enumeration {
+                    enum normal {
+                      value 0 ;
+                      description 'The port type of PTP port is normal.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf portnum {
+                  description 'The port number of PTP port.' ;
+                  type uint16 {
+                    range 2..3000 {
+                      description 'The port number of PTP port.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf portmode {
+                  description 'The port mode of PTP port is fixed.' ;
+                  type empty ;
+
+                  mandatory true ;
+                }
+
+                leaf status {
+                  description 'The status of PTP port,enable/disable.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Disable the PTP port.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Enable the PTP port.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf manual-port-state {
+                  description 'The PTP port state by manual,passive/master/slave/master-slave.' ;
+                  type enumeration {
+                    enum master {
+                      value 6 ;
+                      description 'The port state is master.' ;
+                    }
+
+                    enum passive {
+                      value 7 ;
+                      description 'The port state is passive.' ;
+                    }
+
+                    enum slave {
+                      value 9 ;
+                      description 'The port state is slave.' ;
+                    }
+
+                    enum master-slave {
+                      value 10 ;
+                      description 'The port state is master-slave.' ;
+                    }
+
+                  }
+
+                  default passive ;
+                }
+
+                leaf vlanid {
+                  description 'The VLAN id of PTP port.' ;
+                  type uint32 {
+                    range 0..4094 {
+                      description 'The VLAN id of PTP port.' ;
+                    }
+
+                  }
+
+                  default 0 ;
+                }
+
+                leaf packet-statistic {
+                  description 'The packet statistic,enable/disable.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Disable the packet statistic.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Enable the packet statistic.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf unicast-nego-dura {
+                  description 'The unicast negotiate duration of PTP port,in seconds.' ;
+                  type uint32 {
+                    range 60..1000 {
+                      description 'The unicast negotiate duration of the PTP port.' ;
+                    }
+
+                  }
+
+                  default 300 ;
+                }
+
+                leaf local-priority {
+                  description 'The local priority value.' ;
+                  type uint8 {
+                    range 1..255 {
+                      description 'The local priority value.' ;
+                    }
+
+                  }
+
+                  default 128 ;
+                }
+
+                container masterip-list {
+                  description 'The accept master IP list configuration.' ;
+                  list masterip {
+                    description 'The acceptable master IP list configuration of PTP port.' ;
+                    key ip-addr ;
+                    leaf ip-addr {
+                      description 'The IPv4 addrees of master IP.' ;
+                      type ncd:ipv4-address ;
+
+                    }
+
+                    leaf priority {
+                      description 'The priority of the IP.' ;
+                      type uint8 {
+                        range 0..255 {
+                          description 'The priority of the IP.' ;
+                        }
+
+                      }
+
+                      default 0 ;
+                    }
+
+                  }
+
+                }
+
+                leaf backhaul-if-time-status-switch {
+                  description 'Backhaul interface of time difference switch.' ;
+                  type enumeration {
+                    enum off {
+                      value 0 ;
+                    }
+
+                    enum on {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default off ;
+                  ncd:revise-date 2019-08-17 ;
+                }
+
+              }
+
+            }
+
+            container free-ports {
+              if-feature free-flag ;
+
+              description 'The configuration of PTP port whose port mode is free.' ;
+              list free-port {
+                description 'The configuration of PTP port whose port mode is free.' ;
+                key 'ifname porttype' ;
+                leaf ifname {
+                  description 'The interface name of PTP port.' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf porttype {
+                  description 'The port type of PTP port is normal.' ;
+                  type enumeration {
+                    enum normal {
+                      value 0 ;
+                      description 'The port type of PTP port is normal.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf portnum {
+                  description 'The port number of PTP port.' ;
+                  type uint16 {
+                    range 2..3000 {
+                      description 'The port number of PTP port.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf portmode {
+                  description 'The port mode of PTP port is free.' ;
+                  type empty ;
+
+                  mandatory true ;
+                }
+
+                leaf status {
+                  description 'The status of PTP port,enable/disable.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Disable the PTP port.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Enable the PTP port.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf manual-port-state {
+                  description 'The PTP port state by manual,passive/master/slave/master-slave.' ;
+                  type enumeration {
+                    enum master {
+                      value 6 ;
+                      description 'The port state is master.' ;
+                    }
+
+                    enum passive {
+                      value 7 ;
+                      description 'The port state is passive.' ;
+                    }
+
+                    enum slave {
+                      value 9 ;
+                      description 'The port state is slave.' ;
+                    }
+
+                    enum master-slave {
+                      value 10 ;
+                      description 'The port state is master-slave.' ;
+                    }
+
+                  }
+
+                  default passive ;
+                }
+
+                leaf vlanid {
+                  description 'The VLAN id of PTP port.' ;
+                  type uint32 {
+                    range 0..4094 {
+                      description 'The VLAN id of PTP port.' ;
+                    }
+
+                  }
+
+                  default 0 ;
+                }
+
+                leaf packet-statistic {
+                  description 'The packet statistic,enable/disable.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Disable the packet statistic.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Enable the packet statistic.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf unicast-nego-dura {
+                  description 'The unicast negotiate duration of PTP port,in seconds.' ;
+                  type uint32 {
+                    range 60..1000 {
+                      description 'The unicast negotiate duration of the PTP port.' ;
+                    }
+
+                  }
+
+                  default 300 ;
+                }
+
+                leaf domain-delay-mechanism {
+                  description 'The domain delay mechanism of the PTP port,e2e/p2p,the multi-domain port uses this configuration.' ;
+                  type enumeration {
+                    enum e2e {
+                      value 1 ;
+                      description 'The delay mechanism is E2E.' ;
+                    }
+
+                    enum p2p {
+                      value 2 ;
+                      description 'The delay mechanism is P2P.' ;
+                    }
+
+                  }
+
+                  default e2e ;
+                }
+
+                leaf multi-domain {
+                  description 'The port is multi-domain or not.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'The port is not multi-domain port.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'The port is multi-domain port.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf sync-interval {
+                  description 'The sync-interval of PTP port,in log2 seconds,the port whose port-mode is free uses this configuration.' ;
+                  type int32 {
+                    range -8..4 {
+                      description 'The sync-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  units "log2 second" ;
+                  default 0 ;
+                }
+
+                leaf delay-interval {
+                  description 'The delay-interval of PTP port,in log2 seconds,the port whose port-mode is free uses this configuration.' ;
+                  type int32 {
+                    range -8..4 {
+                      description 'The delay-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  units "log2 second" ;
+                  default 1 ;
+                }
+
+                leaf pdelay-interval {
+                  description 'The pdelay-interval of PTP port,in log2 seconds,the port whose port-mode is free uses this configuration.' ;
+                  type int32 {
+                    range -4..4 {
+                      description 'The pdelay-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  units "log2 second" ;
+                  default 0 ;
+                }
+
+                leaf net-protocol {
+                  description 'The network protocol of PTP packet,ieee802.3/IPv4/IPv6,IPv6 is not supported now,the port whose port-mode is free uses this configuration.' ;
+                  type enumeration {
+                    enum ipv4 {
+                      value 1 ;
+                      description 'The network protocol of the PTP port is IPv4.' ;
+                    }
+
+                    enum ipv6 {
+                      value 2 ;
+                      description 'The network protocol of the PTP port is IPv6.' ;
+                    }
+
+                    enum ieee802.3 {
+                      value 3 ;
+                      description 'The network protocol of the PTP port is ieee802.3.' ;
+                    }
+
+                  }
+
+                  default ieee802.3 ;
+                }
+
+                leaf trans-mode {
+                  description 'The transmit mode of PTP packet,the port whose port-mode is free uses this configuration.' ;
+                  type enumeration {
+                    enum multicast {
+                      value 0 ;
+                      description 'The transmit mode of the PTP port is multicast.' ;
+                    }
+
+                    enum unicast {
+                      value 1 ;
+                      description 'The transmit mode of the PTP port is unicast.' ;
+                    }
+
+                    enum non-nego-unicast {
+                      value 2 ;
+                      description 'The transmit mode of the PTP port is non negotiation unicast.' ;
+                    }
+
+                  }
+
+                  default multicast ;
+                }
+
+                leaf vlan-priority {
+                  description 'The VLAN priority value,the port whose port-mode is free uses this configuration.' ;
+                  type uint8 {
+                    range 0..7 {
+                      description 'The VLAN priority of the PTP port.' ;
+                    }
+
+                  }
+
+                  default 7 ;
+                }
+
+                leaf local-priority {
+                  description 'The local priority value.' ;
+                  type uint8 {
+                    range 1..255 {
+                      description 'The local priority value.' ;
+                    }
+
+                  }
+
+                  default 128 ;
+                }
+
+                leaf sync-timeout {
+                  description 'The timeout of sync message,multiple of sync interval.' ;
+                  type int32 {
+                    range 2..10 ;
+
+                  }
+
+                  default 3 ;
+                  ncd:revise-date 2017-05-05 ;
+                }
+
+                leaf delayresp-timeout {
+                  description 'The timeout of delay-resp message,multiple of delay-resp interval.' ;
+                  type int32 {
+                    range 2..10 ;
+
+                  }
+
+                  default 3 ;
+                  ncd:revise-date 2017-05-05 ;
+                }
+
+                container masterip-list {
+                  description 'The acceptable master IP list configuration.' ;
+                  list masterip {
+                    description 'The acceptable master IP list configuration of PTP port.' ;
+                    key ip-addr ;
+                    leaf ip-addr {
+                      description 'The IPv4 address of master IP.' ;
+                      type ncd:ipv4-address ;
+
+                    }
+
+                    leaf priority {
+                      description 'The priority of the IP.' ;
+                      type uint8 {
+                        range 0..255 {
+                          description 'The priority of the IP.' ;
+                        }
+
+                      }
+
+                      default 0 ;
+                    }
+
+                  }
+
+                }
+
+                container slaveip-list {
+                  if-feature accepted-slave-ip ;
+
+                  description 'The acceptable slave IP list configuration.' ;
+                  list slaveip {
+                    description 'The acceptable slave IP list configuration of PTP port.' ;
+                    key ip-addr ;
+                    leaf ip-addr {
+                      description 'The IPv4 address of slave IP.' ;
+                      type ncd:ipv4-address ;
+
+                    }
+
+                  }
+
+                  ncd:revise-date 2018-03-02 ;
+                }
+
+                leaf send-protocol-mode {
+                  description 'The protocol mode,adaptation/standard/exp-mode1.' ;
+                  type enumeration {
+                    enum adaptation {
+                      value 2 ;
+                    }
+
+                    enum standard {
+                      value 0 ;
+                    }
+
+                    enum exp-mode1 {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default standard ;
+                  ncd:revise-date 2019-01-07 ;
+                }
+
+                leaf two-steps {
+                  description 'The two-steps,enable/disable/invalid.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum invalid {
+                      value 254 ;
+                    }
+
+                  }
+
+                  default invalid ;
+                  ncd:revise-date 2019-01-07 ;
+                }
+
+                leaf backhaul-if-time-status-switch {
+                  description 'Backhaul interface of time difference switch.' ;
+                  type enumeration {
+                    enum off {
+                      value 0 ;
+                    }
+
+                    enum on {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default off ;
+                  ncd:revise-date 2019-08-17 ;
+                }
+
+                leaf ann-interval {
+                  description 'The announce-interval of PTP port,in log2 seconds.The value 127 means invalid.' ;
+                  type int32 {
+                    range "-4..4 | 127" {
+                      description 'The announce interval,in log2 seconds.' ;
+                    }
+
+                  }
+
+                  units "log2 second" ;
+                  default 127 ;
+                  ncd:revise-date 2021-06-11 ;
+                }
+
+                leaf ann-timeout {
+                  description 'The announce timeout,multiple of announce interval.The value 0 means invalid.' ;
+                  type int32 {
+                    range "0 | 2..10" {
+                      description 'The announce timeout,multiple of announce interval.' ;
+                    }
+
+                  }
+
+                  default 0 ;
+                  ncd:revise-date 2021-06-11 ;
+                }
+
+                leaf domain {
+                  description 'The domain value of the PTP port.The value 65535 means invalid.' ;
+                  default 65535 ;
+                  type uint16 {
+                    range "0..255 | 65535" {
+                      description 'The domain value of the port.' ;
+                    }
+
+                  }
+
+                  if-feature free-port-domain ;
+
+                  ncd:revise-date 2024-03-14 ;
+                }
+
+                container unicast-timestamp-enable {
+                  choice unicast-timestamp-enable {
+                    case interface-all {
+                      container interface-all {
+                        leaf interface-all {
+                          type empty ;
+
+                          description 'All interface enable.' ;
+                          mandatory true ;
+                        }
+
+                        description 'All interface enable unicast timestamp function.' ;
+                        presence "all interface" ;
+                      }
+
+                      description 'All interface enable unicast timestamp function.' ;
+                    }
+
+                    case interface-list {
+                      container interface-lists {
+                        list interface-list {
+                          leaf interface-name {
+                            type ncd:ifname ;
+
+                            description 'The interface name.' ;
+                          }
+
+                          description 'Specify interface to enable unicast timestamp function.' ;
+                          key interface-name ;
+                        }
+
+                        description 'Specify interface to enable unicast timestamp function.' ;
+                      }
+
+                      description 'Specify interface to enable unicast timestamp function.' ;
+                    }
+
+                    description 'The unicast timestamp enable function.' ;
+                  }
+
+                  if-feature unicast-timestamp-enable ;
+
+                  description 'The unicast timestamp enable function.' ;
+                  ncd:revise-date 2024-04-18 ;
+                }
+
+                leaf multicast-address {
+                  if-feature multicast-address ;
+
+                  type enumeration {
+                    enum forwardable {
+                      value 1 ;
+                      description 'multicast address is forwardable' ;
+                    }
+
+                    enum non-forwardable {
+                      value 2 ;
+                      description 'multicast address is non-forwardable' ;
+                    }
+
+                    enum normal {
+                      value 0 ;
+                      description 'multicast address is normal' ;
+                    }
+
+                  }
+
+                  description 'Configure multicast MAC address.' ;
+                  default normal ;
+                  ncd:revise-date 2025-04-10 ;
+                }
+
+              }
+
+            }
+
+            container free-port-vlans {
+              if-feature free-port-vlan ;
+
+              description 'The configuration of PTP port whose port mode is free and has port-vlanid.' ;
+              list free-port-vlan {
+                description 'The configuration of PTP port whose port mode is free and has port-vlanid.' ;
+                key 'ifname porttype port-vlanid' ;
+                leaf ifname {
+                  description 'The interface name of PTP port.' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf porttype {
+                  description 'The port type of PTP port is normal.' ;
+                  type enumeration {
+                    enum normal {
+                      value 0 ;
+                      description 'The port type of PTP port is normal.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf port-vlanid {
+                  description 'The port VLAN id of PTP port.' ;
+                  type uint32 {
+                    range 1..4094 ;
+
+                  }
+
+                }
+
+                leaf portnum {
+                  description 'The port number of PTP port.' ;
+                  type uint16 {
+                    range 2..3000 {
+                      description 'The port number of PTP port.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf portmode {
+                  description 'The port mode of PTP port is free.' ;
+                  type empty ;
+
+                  mandatory true ;
+                }
+
+                leaf status {
+                  description 'The status of PTP port,enable/disable.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Disable the PTP port.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Enable the PTP port.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf manual-port-state {
+                  description 'The PTP port state by manual,passive/master/slave/master-slave.' ;
+                  type enumeration {
+                    enum master {
+                      value 6 ;
+                      description 'The port state is master.' ;
+                    }
+
+                    enum passive {
+                      value 7 ;
+                      description 'The port state is passive.' ;
+                    }
+
+                    enum slave {
+                      value 9 ;
+                      description 'The port state is slave.' ;
+                    }
+
+                    enum master-slave {
+                      value 10 ;
+                      description 'The port state is master-slave.' ;
+                    }
+
+                  }
+
+                  default passive ;
+                }
+
+                leaf packet-statistic {
+                  description 'The packet statistic,enable/disable.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Disable the packet statistic.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Enable the packet statistic.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf unicast-nego-dura {
+                  description 'The unicast negotiate duration of PTP port,in seconds.' ;
+                  type uint32 {
+                    range 60..1000 {
+                      description 'The unicast negotiate duration of the PTP port.' ;
+                    }
+
+                  }
+
+                  default 300 ;
+                }
+
+                leaf domain-delay-mechanism {
+                  description 'The domain delay mechanism of the PTP port,e2e/p2p,the multi-domain port uses this configuration.' ;
+                  type enumeration {
+                    enum e2e {
+                      value 1 ;
+                      description 'The delay mechanism is E2E.' ;
+                    }
+
+                    enum p2p {
+                      value 2 ;
+                      description 'The delay mechanism is P2P.' ;
+                    }
+
+                  }
+
+                  default e2e ;
+                }
+
+                leaf multi-domain {
+                  description 'The port is multi-domain or not.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'The port is not multi-domain port.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'The port is multi-domain port.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf sync-interval {
+                  description 'The sync-interval of PTP port,in log2 seconds,the port whose port-mode is free uses this configuration.' ;
+                  type int32 {
+                    range -8..4 {
+                      description 'The sync-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  units "log2 second" ;
+                  default 0 ;
+                }
+
+                leaf delay-interval {
+                  description 'The delay-interval of PTP port,in log2 seconds,the port whose port-mode is free uses this configuration.' ;
+                  type int32 {
+                    range -8..4 {
+                      description 'The delay-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  units "log2 second" ;
+                  default 1 ;
+                }
+
+                leaf net-protocol {
+                  description 'The network protocol of PTP packet,ieee802.3/IPv4/IPv6,IPv6 is not supported now,the port whose port-mode is free uses this configuration.' ;
+                  type enumeration {
+                    enum ipv4 {
+                      value 1 ;
+                      description 'The network protocol of the PTP port is IPv4.' ;
+                    }
+
+                    enum ipv6 {
+                      value 2 ;
+                      description 'The network protocol of the PTP port is IPv6.' ;
+                    }
+
+                    enum ieee802.3 {
+                      value 3 ;
+                      description 'The network protocol of the PTP port is ieee802.3.' ;
+                    }
+
+                  }
+
+                  default ieee802.3 ;
+                }
+
+                leaf trans-mode {
+                  description 'The transmit mode of PTP packet,multicast/unicast,the port whose port-mode is free uses this configuration.' ;
+                  type enumeration {
+                    enum multicast {
+                      value 0 ;
+                      description 'The transmit mode of the PTP port is multicast.' ;
+                    }
+
+                    enum unicast {
+                      value 1 ;
+                      description 'The transmit mode of the PTP port is unicast.' ;
+                    }
+
+                    enum non-nego-unicast {
+                      value 2 ;
+                    }
+
+                  }
+
+                  default multicast ;
+                }
+
+                leaf vlan-priority {
+                  description 'The VLAN priority value,the port whose port-mode is free uses this configuration.' ;
+                  type uint8 {
+                    range 0..7 {
+                      description 'The VLAN priority of the PTP port.' ;
+                    }
+
+                  }
+
+                  default 7 ;
+                }
+
+                leaf local-priority {
+                  description 'The local priority value.' ;
+                  type uint8 {
+                    range 1..255 {
+                      description 'The local priority value.' ;
+                    }
+
+                  }
+
+                  default 128 ;
+                }
+
+                leaf sync-timeout {
+                  description 'The timeout of sync message,multiple of sync interval.' ;
+                  type int32 {
+                    range 2..10 ;
+
+                  }
+
+                  default 3 ;
+                }
+
+                leaf delayresp-timeout {
+                  description 'The timeout of delay-resp message,multiple of delay-resp interval.' ;
+                  type int32 {
+                    range 2..10 ;
+
+                  }
+
+                  default 3 ;
+                }
+
+                container masterip-list {
+                  description 'The acceptable master IP list configuration.' ;
+                  list masterip {
+                    description 'The acceptable master IP list configuration of PTP port.' ;
+                    key ip-addr ;
+                    leaf ip-addr {
+                      description 'The IPv4 address of master IP.' ;
+                      type ncd:ipv4-address ;
+
+                    }
+
+                    leaf priority {
+                      description 'The priority of the IP.' ;
+                      type uint8 {
+                        range 0..255 {
+                          description 'The priority of the IP.' ;
+                        }
+
+                      }
+
+                      default 0 ;
+                    }
+
+                  }
+
+                }
+
+                container slaveip-list {
+                  if-feature accepted-slave-ip ;
+
+                  description 'The acceptable slave IP list configuration.' ;
+                  list slaveip {
+                    description 'The acceptable slave IP list configuration of PTP port.' ;
+                    key ip-addr ;
+                    leaf ip-addr {
+                      description 'The IPv4 address of slave IP.' ;
+                      type ncd:ipv4-address ;
+
+                    }
+
+                  }
+
+                  ncd:revise-date 2018-03-02 ;
+                }
+
+                leaf send-protocol-mode {
+                  description 'The protocol mode,adaptation/standard/exp-mode1.' ;
+                  type enumeration {
+                    enum adaptation {
+                      value 2 ;
+                    }
+
+                    enum standard {
+                      value 0 ;
+                    }
+
+                    enum exp-mode1 {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default standard ;
+                  ncd:revise-date 2019-01-07 ;
+                }
+
+                leaf two-steps {
+                  description 'The two-steps,enable/disable/invalid.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum invalid {
+                      value 254 ;
+                    }
+
+                  }
+
+                  default invalid ;
+                  ncd:revise-date 2019-01-07 ;
+                }
+
+                leaf backhaul-if-time-status-switch {
+                  description 'Backhaul interface of time difference switch.' ;
+                  type enumeration {
+                    enum off {
+                      value 0 ;
+                    }
+
+                    enum on {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default off ;
+                  ncd:revise-date 2019-08-17 ;
+                }
+
+                leaf multicast-address {
+                  if-feature multicast-address ;
+
+                  description 'Configure multicast MAC address.' ;
+                  type enumeration {
+                    enum forwardable {
+                      value 1 ;
+                      description 'multicast address is forwardable' ;
+                    }
+
+                    enum non-forwardable {
+                      value 2 ;
+                      description 'multicast address is non-forwardable' ;
+                    }
+
+                    enum normal {
+                      value 0 ;
+                      description 'multicast address is normal' ;
+                    }
+
+                  }
+
+                  default normal ;
+                  ncd:revise-date 2019-11-27 ;
+                }
+
+                leaf ann-interval {
+                  description 'The announce-interval of PTP port,in log2 seconds.The value 127 means invalid.' ;
+                  type int32 {
+                    range "-4..4 | 127" {
+                      description 'The announce interval,in log2 seconds.' ;
+                    }
+
+                  }
+
+                  units "log2 second" ;
+                  default 127 ;
+                  ncd:revise-date 2021-06-11 ;
+                }
+
+                leaf ann-timeout {
+                  description 'The announce timeout,multiple of announce interval.The value 0 means invalid.' ;
+                  type int32 {
+                    range "0 | 2..10" {
+                      description 'The announce timeout,multiple of announce interval.' ;
+                    }
+
+                  }
+
+                  default 0 ;
+                  ncd:revise-date 2021-06-11 ;
+                }
+
+                leaf domain {
+                  description 'The domain value of the PTP port.The value 65535 means invalid.' ;
+                  default 65535 ;
+                  type uint16 {
+                    range "0..255 | 65535" {
+                      description 'The domain value of the port.' ;
+                    }
+
+                  }
+
+                  ncd:revise-date 2024-03-14 ;
+                }
+
+              }
+
+              ncd:revise-date 2017-05-05 ;
+            }
+
+          }
+
+          container combined-oc-lists {
+            description 'The combined-oc list configuration.' ;
+            container nomode-combined-oc-lists {
+              if-feature nomode-flag ;
+
+              description 'The configuration of PTP combined-oc which has no port mode.' ;
+              list nomode-combined-oc {
+                description 'The configuration of PTP combined-oc which has no port mode.' ;
+                key porttype ;
+                leaf porttype {
+                  description 'The port type of PTP port is combined-oc.' ;
+                  type enumeration {
+                    enum combined-oc {
+                      value 1 ;
+                      description 'The port type of PTP port is combined-oc.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf status {
+                  description 'The status of PTP port,enable/disable.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Disable the PTP port.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Enable the PTP port.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf manual-port-state {
+                  description 'The PTP port state by manual,passive/master/slave/master-slave.' ;
+                  type enumeration {
+                    enum master {
+                      value 6 ;
+                      description 'The port state is master.' ;
+                    }
+
+                    enum passive {
+                      value 7 ;
+                      description 'The port state is passive.' ;
+                    }
+
+                    enum slave {
+                      value 9 ;
+                      description 'The port state is slave.' ;
+                    }
+
+                    enum master-slave {
+                      value 10 ;
+                      description 'The port state is master-slave.' ;
+                    }
+
+                  }
+
+                  default passive ;
+                }
+
+                leaf sync-interval {
+                  description 'The sync-interval of PTP port,in log2 seconds.' ;
+                  type int32 {
+                    range -8..1 {
+                      description 'The sync-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  default 0 ;
+                }
+
+                leaf delay-interval {
+                  description 'The delay-interval of PTP port,in log2 seconds.' ;
+                  type int32 {
+                    range -5..5 {
+                      description 'The delay-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  default 1 ;
+                }
+
+                leaf net-protocol {
+                  description 'The network protocol of PTP packet.' ;
+                  type enumeration {
+                    enum ipv4 {
+                      value 1 ;
+                      description 'The network protocol of the PTP port is IPv4.' ;
+                    }
+
+                    enum ipv6 {
+                      value 2 ;
+                      description 'The network protocol of the PTP port is IPv6.' ;
+                    }
+
+                    enum ieee802.3 {
+                      value 3 ;
+                      description 'The network protocol of the PTP port is ieee802.3.' ;
+                    }
+
+                  }
+
+                  default ieee802.3 ;
+                }
+
+                leaf local-priority {
+                  description 'Set local priority value.' ;
+                  type uint8 {
+                    range 1..255 {
+                      description 'Set priority value.' ;
+                    }
+
+                  }
+
+                  default 128 ;
+                }
+
+                leaf multicast-address {
+                  if-feature multicast-address ;
+
+                  type enumeration {
+                    enum forwardable {
+                      value 1 ;
+                      description 'multicast address is forwardable' ;
+                    }
+
+                    enum non-forwardable {
+                      value 2 ;
+                      description 'multicast address is non-forwardable' ;
+                    }
+
+                    enum normal {
+                      value 0 ;
+                      description 'multicast address is normal' ;
+                    }
+
+                  }
+
+                  description 'Configure multicast MAC address.' ;
+                  default normal ;
+                  ncd:revise-date 2025-05-22 ;
+                }
+
+              }
+
+            }
+
+            container fixed-combined-oc-lists {
+              if-feature fixed-flag ;
+
+              description 'The configuration of PTP combined-oc whose port mode is fixed.' ;
+              list fixed-combined-oc {
+                description 'The configuration of PTP combined-oc whose port mode is fixed.' ;
+                key porttype ;
+                leaf porttype {
+                  description 'The port type of PTP port is combined-oc.' ;
+                  type enumeration {
+                    enum combined-oc {
+                      value 1 ;
+                      description 'The port type of PTP port is combined-oc.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf port-mode {
+                  description 'The port mode of PTP port is fixed.' ;
+                  type empty ;
+
+                  mandatory true ;
+                }
+
+                leaf status {
+                  description 'The status of PTP port,enable/disable.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Disable the PTP port.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Enable the PTP port.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf manual-port-state {
+                  description 'The PTP port state by manual,passive/master/slave/master-slave.' ;
+                  type enumeration {
+                    enum master {
+                      value 6 ;
+                      description 'The port state is master.' ;
+                    }
+
+                    enum passive {
+                      value 7 ;
+                      description 'The port state is passive.' ;
+                    }
+
+                    enum slave {
+                      value 9 ;
+                      description 'The port state is slave.' ;
+                    }
+
+                    enum master-slave {
+                      value 10 ;
+                      description 'The port state is master-slave.' ;
+                    }
+
+                  }
+
+                  default passive ;
+                }
+
+                leaf local-priority {
+                  description 'Set local priority value.' ;
+                  type uint8 {
+                    range 1..255 {
+                      description 'Set priority value.' ;
+                    }
+
+                  }
+
+                  default 128 ;
+                }
+
+              }
+
+            }
+
+            container free-combined-oc-lists {
+              if-feature free-flag ;
+
+              description 'The configuration of PTP combined-oc whose port mode is free.' ;
+              list free-combined-oc {
+                description 'The configuration of PTP combined-oc whose port mode is free.' ;
+                key porttype ;
+                leaf porttype {
+                  description 'The port type of PTP port is combined-oc.' ;
+                  type enumeration {
+                    enum combined-oc {
+                      value 1 ;
+                      description 'The port type of PTP port is combined-oc.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf port-mode {
+                  description 'The port mode of PTP port is free.' ;
+                  type empty ;
+
+                  mandatory true ;
+                }
+
+                leaf status {
+                  description 'The status of PTP port,enable/disable.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Disable the PTP port.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Enable the PTP port.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf manual-port-state {
+                  description 'The PTP port state by manual,passive/master/slave/master-slave.' ;
+                  type enumeration {
+                    enum master {
+                      value 6 ;
+                      description 'The port state is master.' ;
+                    }
+
+                    enum passive {
+                      value 7 ;
+                      description 'The port state is passive.' ;
+                    }
+
+                    enum slave {
+                      value 9 ;
+                      description 'The port state is slave.' ;
+                    }
+
+                    enum master-slave {
+                      value 10 ;
+                      description 'The port state is master-slave.' ;
+                    }
+
+                  }
+
+                  default passive ;
+                }
+
+                leaf sync-interval {
+                  description 'The sync-interval of PTP port,in log2 seconds,the port whose port-mode is free uses this configuration.' ;
+                  type int32 {
+                    range -8..4 {
+                      description 'The sync-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  default 0 ;
+                }
+
+                leaf delay-interval {
+                  description 'The delay-interval of PTP port,in log2 seconds,the port whose port-mode is free uses this configuration.' ;
+                  type int32 {
+                    range -8..4 {
+                      description 'The delay-interval of PTP port.' ;
+                    }
+
+                  }
+
+                  default 1 ;
+                }
+
+                leaf net-protocol {
+                  description 'The network protocol of PTP packet,ieee802.3/IPv4/IPv6,IPv6 is not supported now,the port whose port-mode is free uses this configuration.' ;
+                  type enumeration {
+                    enum ipv4 {
+                      value 1 ;
+                      description 'The network protocol of the PTP port is IPv4.' ;
+                    }
+
+                    enum ipv6 {
+                      value 2 ;
+                      description 'The network protocol of the PTP port is IPv6.' ;
+                    }
+
+                    enum ieee802.3 {
+                      value 3 ;
+                      description 'The network protocol of the PTP port is ieee802.3.' ;
+                    }
+
+                  }
+
+                  default ieee802.3 ;
+                }
+
+                leaf trans-mode {
+                  description 'The transmit mode of PTP packet,multicast/unicast,the port whose port-mode is free uses this configuration.' ;
+                  type enumeration {
+                    enum multicast {
+                      value 0 ;
+                      description 'The transmit mode of the PTP port is multicast.' ;
+                    }
+
+                    enum unicast {
+                      value 1 ;
+                      description 'The transmit mode of the PTP port is unicast.' ;
+                    }
+
+                  }
+
+                  default multicast ;
+                }
+
+                leaf vlan-priority {
+                  description 'The VLAN priority value,the port whose port-mode is free uses this configuration.' ;
+                  type uint8 {
+                    range 0..7 {
+                      description 'The VLAN priority of the PTP port.' ;
+                    }
+
+                  }
+
+                  default 7 ;
+                }
+
+                leaf local-priority {
+                  description 'Set local priority value.' ;
+                  type uint8 {
+                    range 1..255 {
+                      description 'Set priority value.' ;
+                    }
+
+                  }
+
+                  default 128 ;
+                }
+
+                leaf multicast-address {
+                  if-feature multicast-address ;
+
+                  type enumeration {
+                    enum forwardable {
+                      value 1 ;
+                      description 'multicast address is forwardable' ;
+                    }
+
+                    enum non-forwardable {
+                      value 2 ;
+                      description 'multicast address is non-forwardable' ;
+                    }
+
+                    enum normal {
+                      value 0 ;
+                      description 'multicast address is normal' ;
+                    }
+
+                  }
+
+                  description 'Configure multicast MAC address.' ;
+                  default normal ;
+                  ncd:revise-date 2025-05-22 ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container port-phys {
+          description 'The phy PTP port list configuration.' ;
+          list phy-port {
+            description 'The PTP configuration of phy port.' ;
+            key ifname ;
+            leaf ifname {
+              description 'The interface name of phy port.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf unsymmetrical-offset {
+              description 'The PTP unsymmetrical offset of phy port.' ;
+              type uint32 {
+                range 0..1000000000 {
+                  description 'The PTP unsymmetrical offset of the phy port.' ;
+                }
+
+              }
+
+              units ns ;
+              default 0 ;
+            }
+
+            leaf unsymmetrical-sign {
+              description 'The PTP unsymmetrical sign of phy port,positive/negative.' ;
+              type enumeration {
+                enum positive {
+                  value 0 ;
+                  description 'The unsymmetrical sign is positive.' ;
+                }
+
+                enum negative {
+                  value 1 ;
+                  description 'The unsymmetrical sign is negative.' ;
+                }
+
+              }
+
+              default negative ;
+            }
+
+            leaf pdelay-interval {
+              description 'The PTP pdelay-interval of phy port.' ;
+              type int32 {
+                range -8..4 {
+                  description 'The PTP pdelay-interval of phy port.' ;
+                }
+
+              }
+
+              units "log2 second" ;
+              default 0 ;
+            }
+
+            leaf status {
+              description 'The PTP status of the phy port,enable/disable/discard/receive/none forwarding.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable the phy PTP.' ;
+                }
+
+                enum enable {
+                  value 1 ;
+                  description 'Enable the phy PTP.' ;
+                }
+
+                enum discard {
+                  value 2 ;
+                  description 'Discard the PTP packets.' ;
+                }
+
+                enum receive {
+                  value 3 ;
+                  description 'Receive the PTP packets.' ;
+                }
+
+                enum none-forwarding {
+                  value 4 ;
+                  description 'No forwarding the PTP packets.' ;
+                }
+
+              }
+
+              default disable ;
+              ncd:revise-date 2024-04-18 ;
+            }
+
+            leaf accuracy-mode {
+              description 'The PTP accuracy mode of phy port.' ;
+              type enumeration {
+                enum normal {
+                  value 0 ;
+                }
+
+                enum enhanced {
+                  value 1 ;
+                }
+
+              }
+
+              default normal ;
+              ncd:revise-date 2019-01-07 ;
+            }
+
+            leaf single-fiber-asymmetry-switch {
+              if-feature single-fiber-asymmetry ;
+
+              description 'The switch of single fiber delay asymmetry.' ;
+              type enumeration {
+                enum off {
+                  value 0 ;
+                }
+
+                enum on {
+                  value 1 ;
+                }
+
+              }
+
+              default off ;
+              ncd:revise-date 2020-11-20 ;
+            }
+
+          }
+
+        }
+
+        container oam-node {
+          description 'oam node' ;
+          leaf clock-class-threshold {
+            description 'The class threshold.' ;
+            type enumeration {
+              enum value-6 {
+                value 6 ;
+                description 'The clock class threshold is 6.' ;
+              }
+
+              enum value-7 {
+                value 7 ;
+                description 'The clock class threshold is 7.' ;
+              }
+
+              enum value-8 {
+                value 8 ;
+                description 'The clock class threshold is 8.' ;
+              }
+
+              enum value-52 {
+                value 52 ;
+                description 'The clock class threshold is 52.' ;
+              }
+
+              enum value-187 {
+                value 187 ;
+                description 'The clock class threshold is 187.' ;
+              }
+
+              enum value-255 {
+                value 255 ;
+                description 'The clock class threshold is 255.' ;
+              }
+
+            }
+
+            default value-6 ;
+          }
+
+          leaf time-detection-switch {
+            description 'Time detection switch.' ;
+            type enumeration {
+              enum on {
+                value 1 ;
+                description 'time detection switch is on.' ;
+              }
+
+              enum off {
+                value 0 ;
+                description 'time detection switch is off.' ;
+              }
+
+            }
+
+            default off ;
+          }
+
+          leaf freq-detection-switch {
+            if-feature freq-detection-switch ;
+
+            description 'Frequency detection switch.' ;
+            type enumeration {
+              enum on {
+                value 1 ;
+                description 'Frequency detection switch is on.' ;
+              }
+
+              enum off {
+                value 0 ;
+                description 'Frequency detection switch is off.' ;
+              }
+
+            }
+
+            default off ;
+            ncd:revise-date 2021-07-14 ;
+          }
+
+          leaf ptsf-switch {
+            type enumeration {
+              enum off {
+                value 0 ;
+                description 'Turn off packet timing signal fail switch.' ;
+              }
+
+              enum on {
+                value 1 ;
+                description 'Turn on packet timing signal fail switch.' ;
+              }
+
+            }
+
+            if-feature ptsf-flag ;
+
+            description 'Packet timing signal fail switch.' ;
+            default off ;
+            ncd:revise-date 2025-04-30 ;
+          }
+
+          leaf wtr-time {
+            type uint8 {
+              range 0..12 {
+                description 'The WTR time value,the range is 0~12.' ;
+              }
+
+            }
+
+            if-feature ptsf-flag ;
+
+            description 'The wait time to restore.the range is 0-12 minutes.' ;
+            units minute ;
+            default 5 ;
+            ncd:revise-date 2025-04-30 ;
+          }
+
+          leaf ptsf-lotm-holdoff {
+            type uint16 {
+              range 0..600 {
+                description 'The hold off time,the range is 0~600.' ;
+              }
+
+            }
+
+            if-feature ptsf-flag ;
+
+            description 'The hold off time of loss messages in packet timing signal fail.' ;
+            units second ;
+            default 30 ;
+            ncd:revise-date 2025-04-30 ;
+          }
+
+        }
+
+        container clock-association {
+          description 'SSM relevance.' ;
+          leaf pll-associate-switch {
+            description 'PLL associate switch.' ;
+            type enumeration {
+              enum off {
+                value 0 ;
+                description 'PLL associate switch is off.' ;
+              }
+
+              enum on {
+                value 1 ;
+                description 'PLL associate switch is on.' ;
+              }
+
+            }
+
+            default off ;
+          }
+
+          leaf quality-associate-switch {
+            description 'Quality associate switch.' ;
+            type enumeration {
+              enum off {
+                value 0 ;
+                description 'Quality associate switch is off.' ;
+              }
+
+              enum on {
+                value 1 ;
+                description 'Quality associate switch is on.' ;
+              }
+
+            }
+
+            default off ;
+          }
+
+          leaf quality-associate-mode {
+            description 'Quality associate mode.' ;
+            type enumeration {
+              enum mode1 {
+                value 1 ;
+                description 'CMCC mode.' ;
+              }
+
+              enum mode2 {
+                value 2 ;
+                description 'CUCC mode.' ;
+              }
+
+            }
+
+            default mode1 ;
+          }
+
+        }
+
+        container time-source-select-mode {
+          if-feature time-source-select ;
+
+          description 'The time-source select configuration.' ;
+          choice select-mode {
+            description 'The select mode of time-source select.' ;
+            default mode ;
+            case mode {
+              description 'The time-source select mode is mix or PTP,has no interface name.' ;
+              container mode {
+                description 'The time-source select mode is mix or PTP,has no interface name.' ;
+                leaf mode {
+                  description 'The time-source select mode that has no interface name.' ;
+                  type enumeration {
+                    enum ptp {
+                      value 1 ;
+                    }
+
+                    enum mix {
+                      value 3 ;
+                    }
+
+                  }
+
+                  default mix ;
+                }
+
+              }
+
+            }
+
+            case interface {
+              description 'The time-source select mode is time source interface.' ;
+              container interface {
+                description 'The time-source select mode is time source interface.' ;
+                presence TRUE ;
+                leaf ifname {
+                  description 'The interface name of time-source select.' ;
+                  type ncd:ifname ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2017-05-05 ;
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'The state of PTP.' ;
+    container ptp {
+      description 'The PTP state.' ;
+      container status {
+        description 'The status of PTP.' ;
+        leaf distogm {
+          description 'The distance to grandmaster.' ;
+          type uint16 {
+            range 0..65535 {
+              description 'The distance between the slave and the grandmaster.' ;
+            }
+
+          }
+
+        }
+
+        leaf offset {
+          description 'The offset between slave and master.' ;
+          type string {
+            length 0..31 ;
+
+          }
+
+          units ns ;
+        }
+
+        leaf meandelay {
+          description 'The mean delay between the current slave and master.' ;
+          type string {
+            length 0..31 ;
+
+          }
+
+          units ns ;
+        }
+
+        leaf portnum {
+          description 'The port number of the current slave port.' ;
+          type uint16 {
+            range 1..65535 {
+              description 'The port number of the current slave port.' ;
+            }
+
+          }
+
+        }
+
+        leaf port-type {
+          description 'The port type of the current PTP slave port.' ;
+          type enumeration {
+            enum normal {
+              value 0 ;
+              description 'The current PTP slave port type is normal.' ;
+            }
+
+            enum combined-oc {
+              value 1 ;
+              description 'The current PTP slave port type is combined-oc.' ;
+            }
+
+          }
+
+        }
+
+        leaf ifname {
+          description 'The interface name of the current slave port.' ;
+          type string {
+            length 0..31 {
+              description 'The length of the interface name.' ;
+            }
+
+          }
+
+        }
+
+        leaf curtime {
+          description 'The current time.' ;
+          type ncd:string-with-blank {
+            length 0..99 ;
+
+          }
+
+        }
+
+        leaf curclkid {
+          description 'The local clock id.' ;
+          type string {
+            length 0..31 {
+              description 'The length of the clock id.' ;
+            }
+
+          }
+
+        }
+
+        leaf fportid {
+          description 'The father clock id.' ;
+          type string {
+            length 0..31 {
+              description 'The length of the clock id.' ;
+            }
+
+          }
+
+        }
+
+        leaf gportid {
+          description 'The grandmaster clock id.' ;
+          type string {
+            length 0..31 {
+              description 'The length of the clock id.' ;
+            }
+
+          }
+
+        }
+
+        leaf priority1 {
+          description 'The priority1 of current clock.' ;
+          type uint8 {
+            range 0..255 {
+              description 'The priority1 of grandmaster.' ;
+            }
+
+          }
+
+          ncd:revise-date 2016-03-07 ;
+        }
+
+        leaf priority2 {
+          description 'The priority2 of current clock.' ;
+          type uint8 {
+            range 0..255 {
+              description 'The priority2 of grandmaster.' ;
+            }
+
+          }
+
+          ncd:revise-date 2016-03-07 ;
+        }
+
+        leaf clock-class {
+          description 'The clock class of current clock.' ;
+          type uint8 {
+            range 0..255 {
+              description 'The clock class of grandmaster' ;
+            }
+
+          }
+
+          ncd:revise-date 2016-03-07 ;
+        }
+
+        leaf clock-accuracy {
+          description 'The clock accuracy of current clock.' ;
+          type uint8 {
+            range 0..255 {
+              description 'The clock accuracy of grandmaster.' ;
+            }
+
+          }
+
+          ncd:revise-date 2016-03-07 ;
+        }
+
+        leaf offset-scaled-log-variance {
+          description 'The offset scaled log variance of current clock.' ;
+          type uint16 {
+            range 0..65535 {
+              description 'The offset scaled log variance of grandmaster.' ;
+            }
+
+          }
+
+          ncd:revise-date 2016-03-07 ;
+        }
+
+        leaf timesource {
+          description 'The time source of current clock.' ;
+          type enumeration {
+            enum ATOMIC_CLOCK {
+              value 16 ;
+              description 'The time source of current clock is atomic resonance.' ;
+            }
+
+            enum GPS {
+              value 32 ;
+              description 'The time source of current clock is GPS.' ;
+            }
+
+            enum PTP {
+              value 64 ;
+              description 'The time source of current clock is PTP.' ;
+            }
+
+            enum NTP {
+              value 80 ;
+              description 'The time source of current clock is NTP.' ;
+            }
+
+            enum HAND_SET {
+              value 96 ;
+              description 'The time source of current clock is HAND_SET.' ;
+            }
+
+            enum OTHER {
+              value 144 ;
+              description 'The time source of current clock is other.' ;
+            }
+
+            enum INTERNAL_OSCILLATOR {
+              value 160 ;
+              description 'The time source of current clock is internal oscillator.' ;
+            }
+
+            enum TERRESTRIAL_RADIO {
+              value 48 ;
+              description 'The time source of current clock is radio.' ;
+            }
+
+            enum 0XF0 {
+              value 240 ;
+              description 'The timesource value is 0XF0.' ;
+            }
+
+            enum 0XF1 {
+              value 241 ;
+              description 'The timesource value is 0XF1.' ;
+            }
+
+            enum 0XF2 {
+              value 242 ;
+              description 'The timesource value is 0XF2.' ;
+            }
+
+            enum 0XF3 {
+              value 243 ;
+              description 'The timesource value is 0XF3.' ;
+            }
+
+            enum 0XF4 {
+              value 244 ;
+              description 'The timesource value is 0XF4.' ;
+            }
+
+            enum 0XF5 {
+              value 245 ;
+              description 'The timesource value is 0XF5.' ;
+            }
+
+            enum 0XF6 {
+              value 246 ;
+              description 'The timesource value is 0XF6.' ;
+            }
+
+            enum 0XF7 {
+              value 247 ;
+              description 'The timesource value is 0XF7.' ;
+            }
+
+            enum 0XF8 {
+              value 248 ;
+              description 'The timesource value is 0XF8.' ;
+            }
+
+            enum 0XF9 {
+              value 249 ;
+              description 'The timesource value is 0XF9.' ;
+            }
+
+            enum 0XFA {
+              value 250 ;
+              description 'The timesource value is 0XFA.' ;
+            }
+
+            enum 0XFB {
+              value 251 ;
+              description 'The timesource value is 0XFB.' ;
+            }
+
+            enum 0XFC {
+              value 252 ;
+              description 'The timesource value is 0XFC.' ;
+            }
+
+            enum 0XFD {
+              value 253 ;
+              description 'The timesource value is 0XFD.' ;
+            }
+
+            enum 0XFE {
+              value 254 ;
+              description 'The timesource value is 0XFE.' ;
+            }
+
+            enum 0XFF {
+              value 255 ;
+              description 'The timesource value is 0XFF.' ;
+            }
+
+          }
+
+          ncd:revise-date 2016-03-07 ;
+        }
+
+        leaf timescale {
+          description 'The timescale of current clock.' ;
+          type enumeration {
+            enum PTP {
+              value 1 ;
+              description 'The clock timescale is PTP.' ;
+            }
+
+            enum ARB {
+              value 0 ;
+              description 'The clock timescale is ARB.' ;
+            }
+
+          }
+
+          ncd:revise-date 2016-03-07 ;
+        }
+
+        leaf output-clockclass {
+          description 'The out clock class of current clock.' ;
+          type uint8 {
+            range 0..255 {
+              description 'The clock class of grandmaster' ;
+            }
+
+          }
+
+          ncd:revise-date 2022-01-11 ;
+        }
+
+        leaf time-status {
+          description 'The time status.' ;
+          type enumeration {
+            enum invalid {
+              value 0 ;
+              description 'Time status is invalid.' ;
+            }
+
+            enum unlock {
+              value 1 ;
+              description 'Time status is unlock.' ;
+            }
+
+            enum lock {
+              value 2 ;
+              description 'Time status is lock.' ;
+            }
+
+          }
+
+          default invalid ;
+          ncd:revise-date 2022-01-11 ;
+        }
+
+        leaf utc-offset {
+          description 'The UTC offset,in second.' ;
+          type int16 ;
+
+          units second ;
+          ncd:revise-date 2022-01-11 ;
+        }
+
+        leaf device-accuracy {
+          description 'Device accuracy,ultra-precision/high-precision.' ;
+          type enumeration {
+            enum ultra-precision {
+              value 1 ;
+              description 'Device accuracy is ultra precision.' ;
+            }
+
+            enum high-precision {
+              value 0 ;
+              description 'Device accuracy is high precision.' ;
+            }
+
+          }
+
+          ncd:revise-date 2022-01-11 ;
+        }
+
+        leaf domain {
+          description 'The domain value of local.' ;
+          type uint8 {
+            range 0..255 {
+              description 'The domain value of local.' ;
+            }
+
+          }
+
+          ncd:revise-date 2022-01-11 ;
+        }
+
+        leaf global-status {
+          description 'The global status of PTP,enable/disable.' ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'PTP global status is disable.' ;
+            }
+
+            enum enable {
+              value 1 ;
+              description 'PTP global status is enable.' ;
+            }
+
+          }
+
+          ncd:revise-date 2022-01-11 ;
+        }
+
+        leaf algorithm {
+          description 'The algorithm of PTP port state,manual\BMC\alternate-BMC.' ;
+          type enumeration {
+            enum manual {
+              value 1 ;
+              description 'Manually set port state.' ;
+            }
+
+            enum bmc {
+              value 2 ;
+              description 'Set port state by BMC.' ;
+            }
+
+            enum alternate-bmc {
+              value 3 ;
+              description 'Set port state by alternate-BMC.' ;
+            }
+
+          }
+
+          ncd:revise-date 2022-01-11 ;
+        }
+
+        leaf clock-type {
+          description 'The PTP clock type,oc/bc/p2ptc/e2etc/p2poc/e2eoc.' ;
+          type enumeration {
+            enum oc {
+              value 1 ;
+              description 'Ordinary clock.' ;
+            }
+
+            enum bc {
+              value 2 ;
+              description 'Boundary clock.' ;
+            }
+
+            enum p2ptc {
+              value 4 ;
+              description 'P2P transparent clock.' ;
+            }
+
+            enum p2ptcoc {
+              value 5 ;
+              description 'P2P transparent and ordinary clock.' ;
+            }
+
+            enum e2etc {
+              value 8 ;
+              description 'E2E transparent clock.' ;
+            }
+
+            enum e2etcoc {
+              value 9 ;
+              description 'E2E transparent and ordinary clock.' ;
+            }
+
+            enum e2etcbc {
+              value 10 ;
+              description 'E2E transparent clock and boundary clock.' ;
+            }
+
+          }
+
+          default bc ;
+          ncd:revise-date 2022-01-11 ;
+        }
+
+        leaf t2-minus-t1 {
+          description 'The time difference between T2 and T1 as computed by the slave.' ;
+          type string {
+            length 0..31 ;
+
+          }
+
+          units ns ;
+          ncd:revise-date 2024-09-20 ;
+        }
+
+        leaf t4-minus-t3 {
+          description 'The time difference between T4 and T3 as computed by the slave.' ;
+          type string {
+            length 0..31 ;
+
+          }
+
+          units ns ;
+          ncd:revise-date 2024-09-20 ;
+        }
+
+      }
+
+      container port-state-lists {
+        description 'The PTP port information list.' ;
+        list port-state {
+          description 'The PTP port information.' ;
+          key 'type ifname' ;
+          leaf type {
+            description 'The port type of PTP port.' ;
+            type enumeration {
+              enum normal {
+                value 0 ;
+                description 'The PTP port type is normal.' ;
+              }
+
+            }
+
+          }
+
+          leaf ifname {
+            description 'The interface name of PTP port.' ;
+            type string {
+              length 0..31 {
+                description 'The length of the interface name.' ;
+              }
+
+            }
+
+          }
+
+          leaf port-state {
+            description 'The state of PTP port.' ;
+            type enumeration {
+              enum initializing {
+                value 1 ;
+                description 'The PTP port state is initializing.' ;
+              }
+
+              enum faulty {
+                value 2 ;
+                description 'The PTP port state is faulty.' ;
+              }
+
+              enum disable {
+                value 3 ;
+                description 'The PTP port state is disable.' ;
+              }
+
+              enum listening {
+                value 4 ;
+                description 'The PTP port state is listening.' ;
+              }
+
+              enum pre_master {
+                value 5 ;
+                description 'The PTP port state is pre_master.' ;
+              }
+
+              enum master {
+                value 6 ;
+                description 'The PTP port state is master.' ;
+              }
+
+              enum uncalibrated {
+                value 8 ;
+                description 'The PTP port state is uncalibrated.' ;
+              }
+
+              enum slave {
+                value 9 ;
+                description 'The PTP port state is slave.' ;
+              }
+
+              enum master-slave {
+                value 10 ;
+                description 'The PTP port state is master-slave.' ;
+              }
+
+              enum checking {
+                value 11 ;
+                description 'The PTP port state is checking.' ;
+              }
+
+              enum passive {
+                value 17 ;
+                description 'The PTP port state is passive.' ;
+              }
+
+              enum invalid {
+                value 254 ;
+                description 'The PTP port state is invalid.' ;
+              }
+
+            }
+
+          }
+
+          leaf steps-removed {
+            description 'The steps removed from grandmaster of PTP port Erbest.' ;
+            type uint16 ;
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf parent-portid {
+            description 'The parent port identity of PTP port Erbest.' ;
+            type string {
+              length 1..31 {
+                description 'The length of the clock identity.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf grandmasterid {
+            description 'The grandmasterIdentity of PTP port Erbest.' ;
+            type string {
+              length 0..31 {
+                description 'The length of the clock identity.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf priority1 {
+            description 'The priority1 of PTP port Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The priority1 of grandmaster.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf priority2 {
+            description 'The priority2 of PTP port Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The priority2 of grandmaster.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf clock-class {
+            description 'The clock class of PTP port Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock class of grandmaster' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf clock-accuracy {
+            description 'The clock accuracy of PTP port Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock accuracy of grandmaster.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf offset-scaled-log-variance {
+            description 'The offset scaled log variance of PTP port Erbest.' ;
+            type uint16 {
+              range 0..65535 {
+                description 'The offset scaled log variance of grandmaster.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf timesource {
+            description 'The time source type of PTP port Erbest.' ;
+            type enumeration {
+              enum ATOMIC_CLOCK {
+                value 16 ;
+                description 'The time source type is atomic resonance.' ;
+              }
+
+              enum GPS {
+                value 32 ;
+                description 'The time source type is GPS.' ;
+              }
+
+              enum PTP {
+                value 64 ;
+                description 'The time source type is PTP.' ;
+              }
+
+              enum NTP {
+                value 80 ;
+                description 'The time source type is NTP.' ;
+              }
+
+              enum HAND_SET {
+                value 96 ;
+                description 'The time source type is HAND_SET.' ;
+              }
+
+              enum OTHER {
+                value 144 ;
+                description 'The time source type is other.' ;
+              }
+
+              enum INTERNAL_OSCILLATOR {
+                value 160 ;
+                description 'The time source type is internal oscillator.' ;
+              }
+
+              enum TERRESTRIAL_RADIO {
+                value 48 ;
+                description 'The time source type is radio.' ;
+              }
+
+              enum 0XF0 {
+                value 240 ;
+                description 'The timesource value is 0XF0.' ;
+              }
+
+              enum 0XF1 {
+                value 241 ;
+                description 'The timesource value is 0XF1.' ;
+              }
+
+              enum 0XF2 {
+                value 242 ;
+                description 'The timesource value is 0XF2.' ;
+              }
+
+              enum 0XF3 {
+                value 243 ;
+                description 'The timesource value is 0XF3.' ;
+              }
+
+              enum 0XF4 {
+                value 244 ;
+                description 'The timesource value is 0XF4.' ;
+              }
+
+              enum 0XF5 {
+                value 245 ;
+                description 'The timesource value is 0XF5.' ;
+              }
+
+              enum 0XF6 {
+                value 246 ;
+                description 'The timesource value is 0XF6.' ;
+              }
+
+              enum 0XF7 {
+                value 247 ;
+                description 'The timesource value is 0XF7.' ;
+              }
+
+              enum 0XF8 {
+                value 248 ;
+                description 'The timesource value is 0XF8.' ;
+              }
+
+              enum 0XF9 {
+                value 249 ;
+                description 'The timesource value is 0XF9.' ;
+              }
+
+              enum 0XFA {
+                value 250 ;
+                description 'The timesource value is 0XFA.' ;
+              }
+
+              enum 0XFB {
+                value 251 ;
+                description 'The timesource value is 0XFB.' ;
+              }
+
+              enum 0XFC {
+                value 252 ;
+                description 'The timesource value is 0XFC.' ;
+              }
+
+              enum 0XFD {
+                value 253 ;
+                description 'The timesource value is 0XFD.' ;
+              }
+
+              enum 0XFE {
+                value 254 ;
+                description 'The timesource value is 0XFE.' ;
+              }
+
+              enum 0XFF {
+                value 255 ;
+                description 'The timesource value is 0XFF.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf timescale {
+            description 'The timescale of PTP port Erbest.' ;
+            type enumeration {
+              enum PTP {
+                value 1 ;
+                description 'The clock timescale is PTP.' ;
+              }
+
+              enum ARB {
+                value 0 ;
+                description 'The clock timescale is ARB.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf net-protocol {
+            description 'The network protocol of PTP packet,ieee802.3/IPv4/IPv6,IPv6 is not supported now.' ;
+            type enumeration {
+              enum ipv4 {
+                value 1 ;
+                description 'The network protocol of the PTP port is IPv4.' ;
+              }
+
+              enum ipv6 {
+                value 2 ;
+                description 'The network protocol of the PTP port is IPv6.' ;
+              }
+
+              enum ieee802.3 {
+                value 3 ;
+                description 'The network protocol of the PTP port is ieee802.3.' ;
+              }
+
+            }
+
+            ncd:revise-date 2022-01-11 ;
+          }
+
+          leaf trans-mode {
+            description 'The transmit mode of PTP packet,multicast/unicast.' ;
+            type enumeration {
+              enum multicast {
+                value 0 ;
+                description 'The transmit mode of the PTP port is multicast.' ;
+              }
+
+              enum unicast {
+                value 1 ;
+                description 'The transmit mode of the PTP port is unicast.' ;
+              }
+
+              enum non-nego-unicast {
+                value 2 ;
+                description 'The transmit mode of the PTP port is non negotiation unicast.' ;
+              }
+
+            }
+
+            default multicast ;
+            ncd:revise-date 2022-01-11 ;
+          }
+
+          leaf port-number {
+            description 'The port number of PTP port.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'The port number of PTP port.' ;
+              }
+
+            }
+
+            ncd:revise-date 2022-01-11 ;
+          }
+
+          leaf cur-vlanid {
+            type uint32 ;
+
+            description 'The VLAN id of PTP port.' ;
+            ncd:revise-date 2024-09-20 ;
+          }
+
+          leaf status {
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable the PTP port.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable the PTP port.' ;
+              }
+
+            }
+
+            description 'The status of PTP port,enable/disable.' ;
+            ncd:revise-date 2024-09-20 ;
+          }
+
+        }
+
+      }
+
+      container port-vlan-state-lists {
+        if-feature free-port-vlan ;
+
+        description 'The PTP port information list,this port has port-vlanid.' ;
+        list port-vlan-state {
+          description 'The PTP port information list,this port has port-vlanid.' ;
+          key 'type ifname port-vlanid' ;
+          leaf type {
+            description 'The port type of PTP port.' ;
+            type enumeration {
+              enum normal {
+                value 0 ;
+                description 'The PTP port type is normal.' ;
+              }
+
+            }
+
+          }
+
+          leaf ifname {
+            description 'The interface name of PTP port.' ;
+            type string {
+              length 0..31 {
+                description 'The length of the interface name.' ;
+              }
+
+            }
+
+          }
+
+          leaf port-vlanid {
+            description 'The port VLAN id of PTP port.' ;
+            type uint32 {
+              range 1..4094 ;
+
+            }
+
+          }
+
+          leaf port-state {
+            description 'The state of PTP port.' ;
+            type enumeration {
+              enum initializing {
+                value 1 ;
+                description 'The PTP port state is initializing.' ;
+              }
+
+              enum faulty {
+                value 2 ;
+                description 'The PTP port state is faulty.' ;
+              }
+
+              enum disable {
+                value 3 ;
+                description 'The PTP port state is disable.' ;
+              }
+
+              enum listening {
+                value 4 ;
+                description 'The PTP port state is listening.' ;
+              }
+
+              enum pre_master {
+                value 5 ;
+                description 'The PTP port state is pre_master.' ;
+              }
+
+              enum master {
+                value 6 ;
+                description 'The PTP port state is master.' ;
+              }
+
+              enum passive {
+                value 7 ;
+                description 'The PTP port state is passive.' ;
+              }
+
+              enum uncalibrated {
+                value 8 ;
+                description 'The PTP port state is uncalibrated.' ;
+              }
+
+              enum slave {
+                value 9 ;
+                description 'The PTP port state is slave.' ;
+              }
+
+              enum master-slave {
+                value 10 ;
+                description 'The PTP port state is master-slave.' ;
+              }
+
+              enum checking {
+                value 11 ;
+                description 'The PTP port state is checking.' ;
+              }
+
+              enum invalid {
+                value 254 ;
+                description 'The PTP port state is invalid.' ;
+              }
+
+            }
+
+          }
+
+          leaf steps-removed {
+            description 'The steps removed from grandmaster of PTP port Erbest.' ;
+            type uint16 ;
+
+          }
+
+          leaf parent-portid {
+            description 'The parent port identity of PTP port Erbest.' ;
+            type string {
+              length 1..31 {
+                description 'The length of the clock identity.' ;
+              }
+
+            }
+
+          }
+
+          leaf grandmasterid {
+            description 'The grandmasterIdentity of PTP port Erbest.' ;
+            type string {
+              length 0..31 {
+                description 'The length of the clock identity.' ;
+              }
+
+            }
+
+          }
+
+          leaf priority1 {
+            description 'The priority1 of PTP port Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The priority1 of grandmaster.' ;
+              }
+
+            }
+
+          }
+
+          leaf priority2 {
+            description 'The priority2 of PTP port Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The priority2 of grandmaster.' ;
+              }
+
+            }
+
+          }
+
+          leaf clock-class {
+            description 'The clock class of PTP port Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock class of grandmaster' ;
+              }
+
+            }
+
+          }
+
+          leaf clock-accuracy {
+            description 'The clock accuracy of PTP port Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock accuracy of grandmaster.' ;
+              }
+
+            }
+
+          }
+
+          leaf offset-scaled-log-variance {
+            description 'The offset scaled log variance of PTP port Erbest.' ;
+            type uint16 {
+              range 0..65535 {
+                description 'The offset scaled log variance of grandmaster.' ;
+              }
+
+            }
+
+          }
+
+          leaf timesource {
+            description 'The time source type of PTP port Erbest.' ;
+            type enumeration {
+              enum ATOMIC_CLOCK {
+                value 16 ;
+                description 'The time source type is atomic resonance.' ;
+              }
+
+              enum GPS {
+                value 32 ;
+                description 'The time source type is GPS.' ;
+              }
+
+              enum PTP {
+                value 64 ;
+                description 'The time source type is PTP.' ;
+              }
+
+              enum NTP {
+                value 80 ;
+                description 'The time source type is NTP.' ;
+              }
+
+              enum HAND_SET {
+                value 96 ;
+                description 'The time source type is HAND_SET.' ;
+              }
+
+              enum OTHER {
+                value 144 ;
+                description 'The time source type is other.' ;
+              }
+
+              enum INTERNAL_OSCILLATOR {
+                value 160 ;
+                description 'The time source type is internal oscillator.' ;
+              }
+
+              enum TERRESTRIAL_RADIO {
+                value 48 ;
+                description 'The time source type is radio.' ;
+              }
+
+              enum 0XF0 {
+                value 240 ;
+                description 'The timesource value is 0XF0.' ;
+              }
+
+              enum 0XF1 {
+                value 241 ;
+                description 'The timesource value is 0XF1.' ;
+              }
+
+              enum 0XF2 {
+                value 242 ;
+                description 'The timesource value is 0XF2.' ;
+              }
+
+              enum 0XF3 {
+                value 243 ;
+                description 'The timesource value is 0XF3.' ;
+              }
+
+              enum 0XF4 {
+                value 244 ;
+                description 'The timesource value is 0XF4.' ;
+              }
+
+              enum 0XF5 {
+                value 245 ;
+                description 'The timesource value is 0XF5.' ;
+              }
+
+              enum 0XF6 {
+                value 246 ;
+                description 'The timesource value is 0XF6.' ;
+              }
+
+              enum 0XF7 {
+                value 247 ;
+                description 'The timesource value is 0XF7.' ;
+              }
+
+              enum 0XF8 {
+                value 248 ;
+                description 'The timesource value is 0XF8.' ;
+              }
+
+              enum 0XF9 {
+                value 249 ;
+                description 'The timesource value is 0XF9.' ;
+              }
+
+              enum 0XFA {
+                value 250 ;
+                description 'The timesource value is 0XFA.' ;
+              }
+
+              enum 0XFB {
+                value 251 ;
+                description 'The timesource value is 0XFB.' ;
+              }
+
+              enum 0XFC {
+                value 252 ;
+                description 'The timesource value is 0XFC.' ;
+              }
+
+              enum 0XFD {
+                value 253 ;
+                description 'The timesource value is 0XFD.' ;
+              }
+
+              enum 0XFE {
+                value 254 ;
+                description 'The timesource value is 0XFE.' ;
+              }
+
+              enum 0XFF {
+                value 255 ;
+                description 'The timesource value is 0XFF.' ;
+              }
+
+            }
+
+          }
+
+          leaf timescale {
+            description 'The timescale of PTP port Erbest.' ;
+            type enumeration {
+              enum PTP {
+                value 1 ;
+                description 'The clock timescale is PTP.' ;
+              }
+
+              enum ARB {
+                value 0 ;
+                description 'The clock timescale is ARB.' ;
+              }
+
+            }
+
+          }
+
+          ncd:select "type ifname port-vlanid" ;
+        }
+
+        ncd:revise-date 2017-05-05 ;
+      }
+
+      container combined-oc-state-lists {
+        description 'The combined-oc information list.' ;
+        list combined-oc-state {
+          description 'The combined-oc information.' ;
+          key type ;
+          leaf type {
+            description 'The port type of PTP port.' ;
+            type enumeration {
+              enum combined-oc {
+                value 1 ;
+                description 'The PTP port type is combined-oc.' ;
+              }
+
+            }
+
+          }
+
+          leaf port-state {
+            description 'The state of PTP port.' ;
+            type enumeration {
+              enum initializing {
+                value 1 ;
+                description 'The PTP port state is initializing.' ;
+              }
+
+              enum faulty {
+                value 2 ;
+                description 'The PTP port state is faulty.' ;
+              }
+
+              enum disable {
+                value 3 ;
+                description 'The PTP port state is disable.' ;
+              }
+
+              enum listening {
+                value 4 ;
+                description 'The PTP port state is listening.' ;
+              }
+
+              enum pre_master {
+                value 5 ;
+                description 'The PTP port state is pre_master.' ;
+              }
+
+              enum master {
+                value 6 ;
+                description 'The PTP port state is master.' ;
+              }
+
+              enum passive {
+                value 7 ;
+                description 'The PTP port state is passive.' ;
+              }
+
+              enum uncalibrated {
+                value 8 ;
+                description 'The PTP port state is uncalibrated.' ;
+              }
+
+              enum slave {
+                value 9 ;
+                description 'The PTP port state is slave.' ;
+              }
+
+              enum master-slave {
+                value 10 ;
+                description 'The PTP port state is master-slave.' ;
+              }
+
+              enum checking {
+                value 11 ;
+                description 'The PTP port state is checking.' ;
+              }
+
+            }
+
+          }
+
+          leaf steps-removed {
+            description 'The steps removed from grandmaster of combined-oc Erbest.' ;
+            type uint16 ;
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf parent-portid {
+            description 'The parent port identity of combined-oc Erbest.' ;
+            type string {
+              length 1..31 {
+                description 'The length of the clock identity.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf grandmasterid {
+            description 'The grandmasterIdentity of combined-oc Erbest.' ;
+            type string {
+              length 0..31 {
+                description 'The length of the clock identity.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf priority1 {
+            description 'The priority1 of combined-oc Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The priority1 of grandmaster.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf priority2 {
+            description 'The priority2 of combined-oc Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The priority2 of grandmaster.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf clock-class {
+            description 'The clock class of combined-oc Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock class of grandmaster' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf clock-accuracy {
+            description 'The clock accuracy of combined-oc Erbest.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock accuracy of grandmaster.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf offset-scaled-log-variance {
+            description 'The offset scaled log variance of combined-oc Erbest.' ;
+            type uint16 {
+              range 0..65535 {
+                description 'The offset scaled log variance of grandmaster.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf timesource {
+            description 'The time source type of combined-oc Erbest.' ;
+            type enumeration {
+              enum ATOMIC_CLOCK {
+                value 16 ;
+                description 'The time source type is atomic resonance.' ;
+              }
+
+              enum GPS {
+                value 32 ;
+                description 'The time source type is GPS.' ;
+              }
+
+              enum PTP {
+                value 64 ;
+                description 'The time source type is PTP.' ;
+              }
+
+              enum NTP {
+                value 80 ;
+                description 'The time source type is NTP.' ;
+              }
+
+              enum HAND_SET {
+                value 96 ;
+                description 'The time source type is HAND_SET.' ;
+              }
+
+              enum OTHER {
+                value 144 ;
+                description 'The time source type is other.' ;
+              }
+
+              enum INTERNAL_OSCILLATOR {
+                value 160 ;
+                description 'The time source type is internal oscillator.' ;
+              }
+
+              enum TERRESTRIAL_RADIO {
+                value 48 ;
+                description 'The time source type is radio.' ;
+              }
+
+              enum 0XF0 {
+                value 240 ;
+                description 'The timesource value is 0XF0.' ;
+              }
+
+              enum 0XF1 {
+                value 241 ;
+                description 'The timesource value is 0XF1.' ;
+              }
+
+              enum 0XF2 {
+                value 242 ;
+                description 'The timesource value is 0XF2.' ;
+              }
+
+              enum 0XF3 {
+                value 243 ;
+                description 'The timesource value is 0XF3.' ;
+              }
+
+              enum 0XF4 {
+                value 244 ;
+                description 'The timesource value is 0XF4.' ;
+              }
+
+              enum 0XF5 {
+                value 245 ;
+                description 'The timesource value is 0XF5.' ;
+              }
+
+              enum 0XF6 {
+                value 246 ;
+                description 'The timesource value is 0XF6.' ;
+              }
+
+              enum 0XF7 {
+                value 247 ;
+                description 'The timesource value is 0XF7.' ;
+              }
+
+              enum 0XF8 {
+                value 248 ;
+                description 'The timesource value is 0XF8.' ;
+              }
+
+              enum 0XF9 {
+                value 249 ;
+                description 'The timesource value is 0XF9.' ;
+              }
+
+              enum 0XFA {
+                value 250 ;
+                description 'The timesource value is 0XFA.' ;
+              }
+
+              enum 0XFB {
+                value 251 ;
+                description 'The timesource value is 0XFB.' ;
+              }
+
+              enum 0XFC {
+                value 252 ;
+                description 'The timesource value is 0XFC.' ;
+              }
+
+              enum 0XFD {
+                value 253 ;
+                description 'The timesource value is 0XFD.' ;
+              }
+
+              enum 0XFE {
+                value 254 ;
+                description 'The timesource value is 0XFE.' ;
+              }
+
+              enum 0XFF {
+                value 255 ;
+                description 'The timesource value is 0XFF.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+          leaf timescale {
+            description 'The timescale of combined-oc Erbest.' ;
+            type enumeration {
+              enum PTP {
+                value 1 ;
+                description 'The clock timescale is PTP.' ;
+              }
+
+              enum ARB {
+                value 0 ;
+                description 'The clock timescale is ARB.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-03-07 ;
+          }
+
+        }
+
+      }
+
+      container time-source-lists {
+        description 'The time source list.' ;
+        list time-source {
+          description 'The information of time source.' ;
+          key ifname ;
+          leaf ifname {
+            description 'The interface name of time source.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf steps-removed {
+            description 'The steps removed from grandmaster of time source interface.' ;
+            type uint16 ;
+
+          }
+
+          leaf grandmasterid {
+            description 'The grandmasterIdentity of time source interface.' ;
+            type string {
+              length 0..31 {
+                description 'The length of the clock identity.' ;
+              }
+
+            }
+
+          }
+
+          leaf priority1 {
+            description 'The priority1 of time source interface.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The priority1 of grandmaster.' ;
+              }
+
+            }
+
+          }
+
+          leaf priority2 {
+            description 'The priority2 of time source interface.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The priority2 of grandmaster.' ;
+              }
+
+            }
+
+          }
+
+          leaf clock-class {
+            description 'The clock class of time source interface.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock class of grandmaster' ;
+              }
+
+            }
+
+          }
+
+          leaf clock-accuracy {
+            description 'The clock accuracy of time source interface.' ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock accuracy of grandmaster.' ;
+              }
+
+            }
+
+          }
+
+          leaf offset-scaled-log-variance {
+            description 'The offset scaled log variance of time source interface.' ;
+            type uint16 {
+              range 0..65535 {
+                description 'The offset scaled log variance of grandmaster.' ;
+              }
+
+            }
+
+          }
+
+          leaf timesource-type {
+            description 'The time source type of time source interface.' ;
+            type enumeration {
+              enum ATOMIC_CLOCK {
+                value 16 ;
+                description 'The time source type is atomic resonance.' ;
+              }
+
+              enum GPS {
+                value 32 ;
+                description 'The time source type is GPS.' ;
+              }
+
+              enum PTP {
+                value 64 ;
+                description 'The time source type is PTP.' ;
+              }
+
+              enum NTP {
+                value 80 ;
+                description 'The time source type is NTP.' ;
+              }
+
+              enum HAND_SET {
+                value 96 ;
+                description 'The time source type is HAND_SET.' ;
+              }
+
+              enum OTHER {
+                value 144 ;
+                description 'The time source type is other.' ;
+              }
+
+              enum INTERNAL_OSCILLATOR {
+                value 160 ;
+                description 'The time source type is internal oscillator.' ;
+              }
+
+              enum TERRESTRIAL_RADIO {
+                value 48 ;
+                description 'The time source type is radio.' ;
+              }
+
+            }
+
+          }
+
+          leaf timescale {
+            description 'The clock timescale of time source interface.' ;
+            type enumeration {
+              enum PTP {
+                value 1 ;
+                description 'The clock timescale is PTP.' ;
+              }
+
+              enum ARB {
+                value 0 ;
+                description 'The clock timescale is ARB.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2016-03-07 ;
+      }
+
+      container backhaul-if-time-status-lists {
+        description 'Backhaul interface of time difference of GNSS and 1588 list.' ;
+        list backhaul-if-time-status-info {
+          description 'The information of backhaul interface of time difference of GNSS and 1588.' ;
+          key 'ifname port-vlanid' ;
+          leaf ifname {
+            description 'The interface name of PTP port.' ;
+            type string ;
+
+          }
+
+          leaf port-vlanid {
+            description 'The port VLAN id of PTP port.0 means without vlan.' ;
+            type uint32 ;
+
+          }
+
+          leaf with-gnss {
+            description 'This indicates whether the base station has GNSS.' ;
+            type boolean ;
+
+          }
+
+          leaf gnss-valid {
+            description 'This indicates whether GNSS is available.' ;
+            type boolean ;
+
+          }
+
+          leaf offset-valid {
+            description 'This indicates whether time difference of GNSS and 1588 is valid.' ;
+            type boolean ;
+
+          }
+
+          leaf ptp-valid {
+            description "This identifies whether the base station's PTP is locked ." ;
+            type boolean ;
+
+          }
+
+          leaf bs-clockid {
+            description 'The clockIdentity of base station.' ;
+            type string ;
+
+          }
+
+          leaf gnss-ptp-offset {
+            description 'Time difference of GNSS and 1588.' ;
+            type decimal64 {
+              fraction-digits 3 ;
+            }
+
+            units nanosecond ;
+          }
+
+        }
+
+        ncd:revise-date 2019-08-17 ;
+      }
+
+      container node-statistics {
+        description 'The node statistics for telemetry.' ;
+        leaf offset {
+          description 'The time difference between a master and a slave as computed by the slave,and
+the scaledNanoseconds is the time interval expressed in units of nanoseconds and multiplied by 2^16.' ;
+          type int64 ;
+
+          units scaledNanoseconds ;
+        }
+
+        leaf meandelay {
+          description 'The mean propagation time between a master and slave clock as computed by the slave,and
+the scaledNanoseconds is the time interval expressed in units of nanoseconds and multiplied by 2^16.' ;
+          type int64 ;
+
+          units scaledNanoseconds ;
+        }
+
+        leaf t2-minus-t1 {
+          description 'The time difference between T2 and T1 as computed by the slave,and
+the scaledNanoseconds is the time interval expressed in units of nanoseconds and multiplied by 2^16.' ;
+          type int64 ;
+
+          units scaledNanoseconds ;
+        }
+
+        leaf t4-minus-t3 {
+          description 'The time difference between T4 and T3 as computed by the slave,and
+the scaledNanoseconds is the time interval expressed in units of nanoseconds and multiplied by 2^16.' ;
+          type int64 ;
+
+          units scaledNanoseconds ;
+        }
+
+        leaf mean-accumulated-deviation {
+          description 'The mean offset compensation accumulated deviation within 15 minutes,and
+the scaledNanoseconds is the time interval expressed in units of nanoseconds and multiplied by 2^16.' ;
+          type int64 ;
+
+          units scaledNanoseconds ;
+        }
+
+        leaf end-accumulated-deviation {
+          description 'The end offset compensation accumulated deviation within 15 minutes,and
+the scaledNanoseconds is the time interval expressed in units of nanoseconds and multiplied by 2^16.' ;
+          type int64 ;
+
+          units scaledNanoseconds ;
+        }
+
+        ncd:revise-date 2020-09-02 ;
+      }
+
+      container phy-port-state-lists {
+        if-feature single-fiber-asymmetry ;
+
+        description 'The PTP port information list.' ;
+        list phy-port-state {
+          description 'The PTP port information.' ;
+          key ifname ;
+          leaf ifname {
+            description 'The interface name of PTP port.' ;
+            type string {
+              length 0..31 {
+                description 'The length of the interface name.' ;
+              }
+
+            }
+
+          }
+
+          leaf single-fiber-delay-asymmetry {
+            description 'The single fiber delay-asymmetry value.' ;
+            type int16 ;
+
+            units scaledNanoseconds ;
+          }
+
+        }
+
+        ncd:revise-date 2020-11-20 ;
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'The operation of PTP.' ;
+    container ptp {
+      description 'The node of PTP.' ;
+      container check-port {
+        description 'The operation of PTP checking port.' ;
+        leaf ifname {
+          description 'The interface name of PTP port.' ;
+          type ncd:ifname ;
+
+        }
+
+        leaf vlanid {
+          description 'The VLAN id of PTP port.' ;
+          type uint32 {
+            range 0..4094 {
+              description 'The VLAN id of PTP port.' ;
+            }
+
+          }
+
+          default 0 ;
+        }
+
+        leaf timeout {
+          description 'timeout interval.' ;
+          type uint32 {
+            range 1..100 ;
+
+          }
+
+          units minute ;
+          default 10 ;
+        }
+
+        leaf action {
+          description 'set/clear checking port.' ;
+          type enumeration {
+            enum set {
+              value 1 ;
+              description 'set checking port.' ;
+            }
+
+            enum clear {
+              value 2 ;
+              description 'clear checking port.' ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container clear-ptsf {
+        leaf ifname {
+          type ncd:ifname ;
+
+          description 'The interface name of PTP port.' ;
+        }
+
+        description 'Clear packet timing signal fail alarm.
+' ;
+        if-feature ptsf-flag ;
+
+        ncd:revise-date 2025-04-30 ;
+      }
+
+      container clear-wtr {
+        leaf ifname {
+          type ncd:ifname ;
+
+          description 'The interface name of PTP port.' ;
+        }
+
+        description 'Clear WTR status.' ;
+        if-feature ptsf-flag ;
+
+        ncd:revise-date 2025-04-30 ;
+      }
+
+    }
+
+  }
+
+  notification notification-asymmetry-offset {
+    description 'The notification node for asymmetry offset.' ;
+    container asymmetry-offset {
+      config false ;
+      description 'The node for asymmetry offset.' ;
+      leaf ifname {
+        description 'The interface name of PTP port.' ;
+        type ncd:ifname ;
+
+      }
+
+      leaf vlanid {
+        description 'The VLAN id of PTP port.' ;
+        type uint32 {
+          range 0..4094 ;
+
+        }
+
+      }
+
+      leaf offset {
+        description 'asymmetry offset.' ;
+        type int32 ;
+
+        units ns ;
+      }
+
+      leaf status {
+        description 'The status of report data,1 means true,0 means false.' ;
+        type uint8 {
+          range 0..1 ;
+
+        }
+
+      }
+
+      leaf report-time {
+        description 'The report time.' ;
+        type string ;
+
+      }
+
+    }
+
+  }
+
+  notification notification-backhaul-if {
+    description 'The notification node for backhaul interface.' ;
+    container backhaul-if-time-status-info {
+      config false ;
+      description 'The information of backhaul interface of time difference of GNSS and 1588.' ;
+      leaf ifname {
+        description 'The interface name of PTP port.' ;
+        type string ;
+
+      }
+
+      leaf port-vlanid {
+        description 'The port VLAN id of PTP port.0 means without vlan.' ;
+        type uint32 ;
+
+      }
+
+      leaf with-gnss {
+        description 'This indicates whether the base station has GNSS.' ;
+        type boolean ;
+
+      }
+
+      leaf gnss-valid {
+        description 'This indicates whether GNSS is available.' ;
+        type boolean ;
+
+      }
+
+      leaf offset-valid {
+        description 'This indicates whether time difference of GNSS and 1588 is valid.' ;
+        type boolean ;
+
+      }
+
+      leaf ptp-valid {
+        description "This identifies whether the base station's PTP is locked ." ;
+        type boolean ;
+
+      }
+
+      leaf bs-clockid {
+        description 'The clockIdentity of base station.' ;
+        type string ;
+
+      }
+
+      leaf gnss-ptp-offset {
+        description 'Time difference of GNSS and 1588.' ;
+        type decimal64 {
+          fraction-digits 3 ;
+        }
+
+        units nanosecond ;
+      }
+
+    }
+
+    ncd:revise-date 2019-08-17 ;
+  }
+
+}

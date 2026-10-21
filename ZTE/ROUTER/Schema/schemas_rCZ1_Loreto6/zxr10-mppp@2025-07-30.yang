@@ -1,0 +1,623 @@
+module zxr10-mppp {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/mppp" ;
+  prefix mppp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe Multilink Point TO Point Protocol(PPP)' ;
+  revision 2025-07-30 {
+    description 'Add a container of ipcp(configuration/ppp/ipcp)' ;
+  }
+
+  revision 2024-12-13 {
+    description 'Change the range of leaf mpppid(state/mppp/mppp-instance/mppp/mpppid) from 1-256 to 1-4032' ;
+  }
+
+  revision 2024-04-19 {
+    description 'Change the range of leaf mccid(state/mppp/mppp-instance/mcc/mccid) from 1-256 to 1-1128.' ;
+  }
+
+  revision 2023-12-15 {
+    description 'Add the list of mplscp(configuration/mppp/mplscp/mplsmode)' ;
+  }
+
+  revision 2017-05-09 {
+    description 'Change the range of leaf epd(state/mppp/mppp-instance/mppp/epd) from 0-31 to 0-32.
+Change the range of leaf epd(state/mppp/mppp-instance/mcc/epd) from 0-31 to 0-32.' ;
+  }
+
+  revision 2016-08-12 {
+    description 'Add a container of epd(configuration/mppp/epd)
+Add a container of mrru(configuration/mppp/mrru)
+Add a feature of mppp-mrru' ;
+  }
+
+  revision 2015-03-17 {
+    description 'Add a container of ssnhf(configuration/mppp/ssnhf)' ;
+  }
+
+  revision 2015-03-16 {
+    description 'Add a container of neighborroute(configuration/mppp/neighborroute)
+Chang some case of proper nouns,such as MPPP,MCC,MPLSCP' ;
+  }
+
+  revision 2014-02-20 {
+    description 'The initial version' ;
+  }
+
+  feature mppp-mrru {
+    description 'Set MPPP MRRU feature' ;
+  }
+
+  feature mppp-mplscp-mode {
+    description 'Set MPPP MPLSCP MODE feature' ;
+    ncd:revise-date 2023-12-15 ;
+  }
+
+  feature mppp-ipcp-address {
+    description 'Set MPPP IPCP address feature' ;
+    ncd:revise-date 2025-07-30 ;
+  }
+
+  container configuration {
+    description 'Describe the configuration of MPPP' ;
+    container mppp {
+      description 'Configuration data of MPPP' ;
+      container basic {
+        description 'MPPP basic correlation configuration' ;
+        list fragment {
+          description 'Configure multilink fragmentation' ;
+          key ifname ;
+          leaf ifname {
+            description 'This value identifies the MPPP interface name.This attribute is created by Interface Management' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf flag {
+            description 'MPPP multilink fragmentation' ;
+            type uint8 {
+              range 0..1 {
+                description '0: no mppp multilink fragmentation
+1: mppp multilink fragmentation' ;
+              }
+
+            }
+
+            default 0 ;
+          }
+
+        }
+
+      }
+
+      container policy {
+        description 'MPPP policy correlation configuration' ;
+        list loadbalance {
+          description 'Configure  MPPP load balance' ;
+          key ifname ;
+          leaf ifname {
+            description 'This value identifies the MPPP interface name.This attribute is created by Interface Management' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf flag {
+            description 'Configure  MPPP load balance' ;
+            type enumeration {
+              enum per-destination {
+                value 0 ;
+                description 'MPPP load balance by destination' ;
+              }
+
+              enum per-packet {
+                value 1 ;
+                description 'MPPP load balance by packet' ;
+              }
+
+            }
+
+            default per-destination ;
+          }
+
+        }
+
+      }
+
+      container mplscp {
+        description 'MPPP MPLSCP correlation configuration' ;
+        list mplsenable {
+          description 'Configure MPLSCP parameters' ;
+          key ifname ;
+          leaf ifname {
+            description 'This value identifies the MPPP interface name.This attribute is created by Interface Management' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf enable {
+            description 'MPPP MPLSCP enable' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable MPLSCP' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Enable MPLSCP' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+        }
+
+        list mplsmode {
+          if-feature mppp-mplscp-mode ;
+
+          description 'Configure MPLSCP mode parameters' ;
+          key ifname ;
+          leaf ifname {
+            type ncd:ifname ;
+
+            description 'This value identifies the MPPP interface name.This attribute is created by Interface Management' ;
+          }
+
+          leaf mode {
+            type enumeration {
+              enum dynamic {
+                value 0 ;
+                description 'MPLSCP dynamic mode' ;
+              }
+
+              enum static {
+                value 1 ;
+                description 'MPLSCP static mode' ;
+              }
+
+            }
+
+            description 'MPPP MPLSCP mode' ;
+            default dynamic ;
+          }
+
+          ncd:revise-date 2023-12-15 ;
+        }
+
+      }
+
+      container header {
+        description 'MPPP header correlation configuration' ;
+        list headerenable {
+          description 'Configure MPPP header parameters' ;
+          key ifname ;
+          leaf ifname {
+            description 'This value identifies the MPPP interface name.This attribute is created by Interface Management' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf enable {
+            description 'MPPP header enable' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'MPPP header disable' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'MPPP header enable' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+        }
+
+      }
+
+      container mrru {
+        if-feature mppp-mrru ;
+
+        description 'MPPP MRRU correlation configuration' ;
+        list mpppmrru {
+          description 'Set MPPP MRRU parameters' ;
+          key ifname ;
+          leaf ifname {
+            description 'This value identifies the MPPP interface name.This attribute is created by Interface Management' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf value {
+            description 'Configure multilink MRRU value' ;
+            type uint32 {
+              range 1..65535 ;
+
+            }
+
+            default 1500 ;
+          }
+
+        }
+
+        ncd:revise-date 2016-08-12 ;
+      }
+
+      container ssnhf {
+        description 'MPPP SSNHF(Short Sequence Number Header Format) correlation configuration' ;
+        container ssnhfrequest {
+          description 'MPPP SSNHF request correlation configuration' ;
+          list request {
+            description 'Set MPPP SSNHF request parameters' ;
+            key ifname ;
+            leaf ifname {
+              description 'This value identifies the MPPP interface name.This attribute is created by Interface Management' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf status {
+              description 'The enable status of MPPP SSNHF request' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable MPPP SSNHF request' ;
+                }
+
+                enum enable {
+                  value 1 ;
+                  description 'Enable MPPP SSNHF request' ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+          }
+
+        }
+
+        container ssnhfaccept {
+          description 'MPPP SSNHF accept correlation configuration' ;
+          list accept {
+            description 'Set MPPP SSNHF accept parameters' ;
+            key ifname ;
+            leaf ifname {
+              description 'This value identifies the MPPP interface name.This attribute is created by Interface Management' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf status {
+              description 'The enable status of MPPP SSNHF accept' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Disable MPPP SSNHF accept' ;
+                }
+
+                enum enable {
+                  value 1 ;
+                  description 'Enable MPPP SSNHF accept' ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container neighborroute {
+        description 'MPPP IPCP neighbor-route correlation configuration' ;
+        list ipcpneighborroute {
+          description 'Set MPPP IPCP neighbor-route parameters' ;
+          key ifname ;
+          leaf ifname {
+            description 'This value identifies the MPPP interface name.This attribute is created by Interface Management' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf status {
+            description 'The enable status of MPPP IPCP neighbor-route' ;
+            type enumeration {
+              enum enable {
+                value 0 ;
+                description 'Enable MPPP IPCP neighbor-route' ;
+              }
+
+              enum disable {
+                value 1 ;
+                description 'Disable MPPP IPCP neighbor-route' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+        }
+
+      }
+
+      container epd {
+        description 'MPPP EPD(Endpoint Discriminator) correlation configuration' ;
+        list epdstatus {
+          description 'Set MPPP EPD parameters' ;
+          key ifname ;
+          leaf ifname {
+            description 'This value identifies the MPPP interface name.This attribute is created by Interface Management' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf status {
+            description 'The enable status of MPPP EPD' ;
+            type enumeration {
+              enum enable {
+                value 0 ;
+                description 'MPPP EPD enable' ;
+              }
+
+              enum disable {
+                value 1 ;
+                description 'MPPP EPD disable' ;
+              }
+
+            }
+
+            default enable ;
+          }
+
+        }
+
+        ncd:revise-date 2016-08-12 ;
+      }
+
+      container ipcp {
+        description 'IPCP correlation configuration' ;
+        list ipcpattr {
+          description 'Configure IPCP parameters' ;
+          key ifname ;
+          leaf ifname {
+            type ncd:ifname ;
+
+            description 'This value identifies the MPPP interface name.This attribute is created by Interface Management' ;
+          }
+
+          leaf address {
+            type enumeration {
+              enum negotiate {
+                value 0 ;
+                description 'Ipcp negotiation with ip address' ;
+              }
+
+              enum ignore {
+                value 1 ;
+                description 'Ignore ipcp address' ;
+              }
+
+            }
+
+            description 'Ipcp negotiation with ip address' ;
+            default negotiate ;
+          }
+
+        }
+
+        if-feature mppp-ipcp-address ;
+
+        ncd:revise-date 2025-07-30 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'Describe the state of MPPP' ;
+    container mppp {
+      description 'State data of MPPP' ;
+      container mppp-instance {
+        description 'MPPP correlation state' ;
+        list mppp {
+          description 'Show multilink PPP bundle information' ;
+          key mpppid ;
+          leaf mpppid {
+            description 'multilink group id' ;
+            type uint32 {
+              range 1..4032 ;
+
+            }
+
+          }
+
+          leaf mpppname {
+            description 'multilink  name' ;
+            type string {
+              length 0..31 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf epd {
+            description 'Endpoint Discriminator' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf policy {
+            description 'Load Balance' ;
+            type enumeration {
+              enum per-destination {
+                value 0 ;
+                description 'per-destination' ;
+              }
+
+              enum per-packet {
+                value 1 ;
+                description 'per-packet' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf activenum {
+            description 'active member number' ;
+            type uint8 ;
+
+            mandatory true ;
+          }
+
+          leaf inactivenum {
+            description 'inactive member number' ;
+            type uint8 ;
+
+            mandatory true ;
+          }
+
+          leaf membername {
+            description 'member interface name' ;
+            type string {
+              length 1..31 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf memberstatus {
+            description 'member protocol status' ;
+            type string {
+              length 1..1024 ;
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        list mcc {
+          description 'Show MCC PPP bundle information' ;
+          key mccid ;
+          leaf mccid {
+            description 'MCC group id' ;
+            type uint32 {
+              range 1..1128 ;
+
+            }
+
+          }
+
+          leaf mccname {
+            description 'multilink  name' ;
+            type string {
+              length 0..31 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf epd {
+            description 'Endpoint Discriminator' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf policy {
+            description 'Load Balance' ;
+            type enumeration {
+              enum per-destination {
+                value 0 ;
+                description 'per-destination' ;
+              }
+
+              enum per-packet {
+                value 1 ;
+                description 'per-packet' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf activenum {
+            description 'active member number' ;
+            type uint8 ;
+
+            mandatory true ;
+          }
+
+          leaf inactivenum {
+            description 'inactive member number' ;
+            type uint8 ;
+
+            mandatory true ;
+          }
+
+          leaf membername {
+            description 'member interface name' ;
+            type string {
+              length 1..31 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf memberstatus {
+            description 'member protocol status' ;
+            type string {
+              length 0..31 ;
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

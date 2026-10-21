@@ -1,0 +1,506 @@
+module zxr10-bras-um {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/bras/um" ;
+  prefix um ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  revision 2024-02-22 {
+    description 'add list showAllUserQosInfo' ;
+  }
+
+  revision 2021-11-22 {
+    description 'Flow statistic precise' ;
+  }
+
+  revision 2021-05-11 {
+    description 'Configure sib status both init kick-off user' ;
+  }
+
+  revision 2021-04-15 {
+    description 'accounting-update-immediately coa-ack' ;
+  }
+
+  revision 2020-03-19 {
+    description 'dhcpv6 user conflict check' ;
+  }
+
+  revision 2020-03-10 {
+    description 'add flow-statistic fast-speed function' ;
+  }
+
+  revision 2020-02-18 {
+    description 'add container hotback.' ;
+  }
+
+  revision 2019-03-09 {
+    description 'add cgn filter policy' ;
+  }
+
+  revision 2019-01-18 {
+    description 'add  nat-domain container' ;
+  }
+
+  revision 2017-09-15 {
+    description 'Change the node ShowUserByIpAndVrf to showUserByIpAndVrf,SgPort to sgPort' ;
+  }
+
+  revision 2017-06-23 ;
+
+  container state {
+    config false ;
+    description 'state model info.' ;
+    list showUserByIpAndVrf {
+      description 'show the user information by IP and VRF' ;
+      key 'ipaddr vrfname' ;
+      leaf ipaddr {
+        description "The user's IP address" ;
+        type ncd:ipv4-address ;
+
+      }
+
+      leaf vrfname {
+        description 'The name of VRF' ;
+        type string ;
+
+      }
+
+      leaf usermac {
+        description "The user's MAC address" ;
+        type ncd:mac-address ;
+
+      }
+
+      leaf sourcemac {
+        description 'The source mac address' ;
+        type ncd:mac-address ;
+
+      }
+
+      leaf hotstatus {
+        description 'The status of hostback' ;
+        type enumeration {
+          enum null {
+            value 0 ;
+          }
+
+          enum master {
+            value 1 ;
+          }
+
+          enum slave {
+            value 2 ;
+          }
+
+          enum init {
+            value 3 ;
+          }
+
+        }
+
+      }
+
+      leaf interfacename {
+        description 'Interface name' ;
+        type string ;
+
+      }
+
+      leaf externalvlan {
+        description 'the external vlan' ;
+        type uint16 ;
+
+      }
+
+      leaf internalvlan {
+        description 'the internal vlan' ;
+        type uint16 ;
+
+      }
+
+      container sgPort {
+        description 'The memebers of the smartgroup interface' ;
+        list sgportmember {
+          description 'The memebers of the smartgroup interface' ;
+          key interfacename ;
+          leaf interfacename {
+            description 'Interface name' ;
+            type string ;
+
+          }
+
+        }
+
+      }
+
+    }
+
+    list showAllUserQosInfo {
+      description 'show the all user qos information' ;
+      key 'user-identify user-name mac-address' ;
+      leaf user-identify {
+        type uint32 ;
+
+        description "The user's id" ;
+      }
+
+      leaf user-name {
+        type ncd:string-all ;
+
+        description "The user' username" ;
+      }
+
+      leaf mac-address {
+        description " The user's MAC address" ;
+        type string ;
+
+      }
+
+      leaf ipv4-address {
+        type string ;
+
+        description "The user's IPv4 address" ;
+      }
+
+      leaf ipv4-vrfName {
+        type ncd:string-all ;
+
+        description "The user's IPv4 vrf name" ;
+      }
+
+      leaf agent-circuit-id {
+        type ncd:string-all ;
+
+        description "The user's location information" ;
+      }
+
+      leaf subCarInfoUp-cir-v4 {
+        type uint32 ;
+
+        description "The user's ipv4 input qos Info" ;
+      }
+
+      leaf subCarInfoUp-pir-v4 {
+        type uint32 ;
+
+        description " The user's ipv4 input qos Info" ;
+      }
+
+      leaf subCarInfoDown-cir-v4 {
+        type uint32 ;
+
+        description "The user's ipv4 output qos Info" ;
+      }
+
+      leaf subCarInfoDown-pir-v4 {
+        type uint32 ;
+
+        description "The user's ipv4 output qos Info" ;
+      }
+
+      leaf subCarInfoUp-cir-v6 {
+        type uint32 ;
+
+        description "The user's ipv6 input qos Info" ;
+      }
+
+      leaf subCarInfoUp-pir-v6 {
+        type uint32 ;
+
+        description "The user's ipv6 input qos Info" ;
+      }
+
+      leaf subCarInfoDown-cir-v6 {
+        type uint32 ;
+
+        description "The user's ipv6 output qos Info" ;
+      }
+
+      leaf subCarInfoDown-pir-v6 {
+        type uint32 ;
+
+        description "The user's ipv6 output qos Info" ;
+      }
+
+      ncd:revise-date 2024-02-22 ;
+    }
+
+  }
+
+  container configuration {
+    description 'Global configuration model.' ;
+    container subscriber-manager {
+      description 'Submanager configuration model.' ;
+      container nat-domains {
+        list nat-domain {
+          key domain-name ;
+          leaf domain-name {
+            description 'nat-domain name' ;
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          leaf lower-spu-number {
+            description 'lower-spu-number' ;
+            type uint8 {
+              range 0..63 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf threshold {
+            description 'threshold value' ;
+            type uint8 {
+              range 1..100 ;
+
+            }
+
+          }
+
+          leaf upper-spu-number {
+            description 'upper-spu-number' ;
+            type uint8 {
+              range 1..64 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf detect-time {
+            description 'detect-time' ;
+            type uint8 {
+              range 1..10 ;
+
+            }
+
+            default 3 ;
+          }
+
+          leaf detect-count {
+            description 'detect-count' ;
+            type uint8 {
+              range 1..10 ;
+
+            }
+
+            default 3 ;
+          }
+
+        }
+
+      }
+
+      container nat44-service {
+        description 'Configure the nat-44 kick switch' ;
+        leaf kick-off-subscriber {
+          description 'Specify the status to kick off nat-44 user' ;
+          type enumeration {
+            enum enable {
+              value 0 ;
+            }
+
+            enum disable {
+              value 1 ;
+            }
+
+          }
+
+          default enable ;
+        }
+
+      }
+
+      container hotback {
+        description 'Configure hotback policy' ;
+        leaf slave-user-route-metric {
+          description 'Config hotback slave user route metric.' ;
+          type uint32 ;
+
+        }
+
+        leaf slave-up-flow-drop {
+          description 'Config hotback slave discard lac user up flow switch.' ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Hotback slave discard lac user up flow.' ;
+            }
+
+            enum disable {
+              value 0 ;
+              description "Hotback slave don't discard lac user up flow." ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container cgn {
+        description 'Configure policy of cgn board' ;
+        leaf cache-filter {
+          description 'Set cache policy' ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+            }
+
+            enum disable {
+              value 0 ;
+            }
+
+          }
+
+          default enable ;
+        }
+
+        leaf subscriber-route-filter {
+          description 'Set subscriber route policy' ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+            }
+
+            enum disable {
+              value 0 ;
+            }
+
+          }
+
+          default enable ;
+        }
+
+      }
+
+      container flow-statistic {
+        description 'Config flow-statistic function' ;
+        list fast-speed {
+          description 'Config flow-statistic fast-speed function' ;
+          max-elements 18 ;
+          key slot ;
+          leaf rate {
+            description 'Set flow-statistic fast-speed rate' ;
+            type uint16 {
+              range 100..400 ;
+
+            }
+
+            default 250 ;
+          }
+
+          leaf slot {
+            description 'Set flow-statistic fast-speed rate of the designated slot' ;
+            type uint16 {
+              range 0..17 ;
+
+            }
+
+          }
+
+        }
+
+        leaf enhance {
+          description 'Flow statistic precise' ;
+          type enumeration {
+            enum enhance {
+              value 1 ;
+            }
+
+          }
+
+          ncd:revise-date 2021-11-22 ;
+        }
+
+      }
+
+      container dhcpv6-user {
+        leaf conflict-check {
+          description 'Dhcpv6 user conflict check' ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Enable conflict check' ;
+            }
+
+            enum disable {
+              value 0 ;
+              description 'Disable conflict check' ;
+            }
+
+          }
+
+          default enable ;
+        }
+
+      }
+
+      container accounting-update-immediately {
+        leaf coa-ack {
+          description 'Coa ack accounting update switch' ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+            }
+
+            enum disable {
+              value 0 ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container sib-init {
+        presence sib-init ;
+        container kick-off {
+          leaf user-type {
+            description 'Kick off usertype' ;
+            type enumeration {
+              enum pppoe {
+                value 1 ;
+              }
+
+              enum all {
+                value 2 ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf delay-time {
+            description 'Kick off delay time' ;
+            type uint16 {
+              range 5..360 ;
+
+            }
+
+            default 10 ;
+          }
+
+        }
+
+        ncd:revise-date 2021-05-11 ;
+      }
+
+    }
+
+  }
+
+}

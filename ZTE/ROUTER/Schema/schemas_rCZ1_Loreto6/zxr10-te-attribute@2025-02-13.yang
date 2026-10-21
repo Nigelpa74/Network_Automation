@@ -1,0 +1,171 @@
+module zxr10-te-attribute {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/te-attribute'
+            ;
+  prefix te-attribute ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf model for te-attribute.'
+              ;
+  revision 2025-02-13 {
+    description '1.Add the feature affinity-byte-numbering.
+2.Add the container configuration/affinity.
+3.Add the leaf configuration/affinity/additional-byte-numbering.' ;
+  }
+
+  revision 2021-08-16 {
+    description 'Initial version.'
+                ;
+  }
+
+  feature affinity-byte-numbering {
+    ncd:revise-date 2025-02-13 ;
+  }
+
+  container configuration {
+    description 'The branch of configuration model.' ;
+    container affinity {
+      leaf additional-byte-numbering {
+        type enumeration {
+          enum sequential {
+            description 'Affinity additional bytes are numbered in sequence order.' ;
+            value 1 ;
+          }
+
+          enum reverse {
+            description 'Affinity additional bytes are numbered in reverse order.' ;
+            value 0 ;
+          }
+
+        }
+
+        description 'Set affinity additional byte numbering.' ;
+        default reverse ;
+      }
+
+      description 'Set TE attribute affinity parameters.' ;
+      if-feature affinity-byte-numbering ;
+
+      ncd:revise-date 2025-02-13 ;
+    }
+
+    container affinity-maps {
+      description 'Configuration of affinity attribute map.'
+                  ;
+      list affinity-map {
+        description 'The list configuration of affinity attribute map.'
+                    ;
+        key name ;
+        max-elements 256 ;
+        leaf name {
+          description 'Affinity attribute name.'
+                      ;
+          type string {
+            length 1..32 ;
+          }
+        }
+        leaf bit-position {
+          description 'Affinity attribute bit position.The same bit position ca'
+                    + 'n only be mapped with one name.'
+                      ;
+          type uint8 {
+            range 0..255 ;
+          }
+          mandatory true ;
+        }
+      }
+    }
+    container te-attribute {
+      description 'Configure TE attribute parameters.'
+                  ;
+      container interfaces {
+        description 'Enable interface to join in TE attribute.'
+                    ;
+        list interface {
+          description 'Interface list.'
+                      ;
+          key intf-name ;
+          max-elements 255 ;
+          leaf intf-name {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          container application {
+            description 'Application of TE interface attribute.'
+                        ;
+            presence 'configure application.'
+                     ;
+            container flex-algo {
+              description 'TE interface attribute apply in flexible algorithm.'
+                          ;
+              presence 'Configure flexible algorithm.'
+                       ;
+              leaf delay {
+                description 'Configuration of delay attribute.'
+                            ;
+                type uint32 {
+                  range 1..16777215 ;
+                }
+                units us ;
+              }
+              leaf te-metric {
+                description 'Configuration of metric attribute.'
+                            ;
+                type uint32 {
+                  range 1..16777215 ;
+                }
+              }
+              container srlgs {
+                description 'Configuration of SRLG.'
+                            ;
+                leaf-list srlg {
+                  description 'SRLG value.'
+                              ;
+                  type uint32 {
+                    range 0..4294967295 ;
+                  }
+                  max-elements 16 ;
+                }
+              }
+              container affinity-bit-position {
+                description 'Configuration of affinity bit position.The affinit'
+                          + 'y of bit and name types is mutually exclusive.'
+                            ;
+                leaf-list bit-position {
+                  description 'Affinity attribute bit position.'
+                              ;
+                  type uint16 {
+                    range 0..255 ;
+                  }
+                  max-elements 256 ;
+                }
+              }
+              container affinity-name {
+                description 'Configuration of affinity attribute name.The affin'
+                          + 'ity attribute of bit and name types is mutually ex'
+                          + 'clusive.'
+                            ;
+                leaf-list name {
+                  description 'Affinity attribute name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                  max-elements 256 ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

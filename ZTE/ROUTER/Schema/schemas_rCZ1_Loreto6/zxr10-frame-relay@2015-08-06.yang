@@ -1,0 +1,609 @@
+module zxr10-frame-relay {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/frame-relay'
+            ;
+  prefix frame-relay ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe frame relay'
+              ;
+  revision 2015-08-06 {
+    description '1 Adjust the position of the node /configuration/frame-relay/i'
+              + 'ntf-mode-instance, and make it to be in the front of the node '
+              + '/configuration/frame-relay/ptop-instance.'+"\n"
+              + '2 Change the name of node from /configuration/frame-relay/dte-'
+              + 'connter-instance to /configuration/frame-relay/dte-counter-ins'
+              + 'tance'
+                ;
+  }
+  revision 2013-12-02 {
+    description 'The initial version'
+                ;
+  }
+  container configuration {
+    description 'Describe the configuration of frame relay'
+                ;
+    container frame-relay {
+      description 'Configuration data of frame relay'
+                  ;
+      container base-instance {
+        description 'Set interface type and LMI type'
+                    ;
+        list base {
+          description 'Set interface type and LMI type'
+                      ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf intf-type {
+            description 'DTE/DCE interface'
+                        ;
+            type enumeration {
+              enum dte {
+                value 0 ;
+                description 'Interface type is DTE'
+                            ;
+              }
+              enum dce {
+                value 1 ;
+                description 'Interface type is DCE'
+                            ;
+              }
+            }
+            default dte ;
+          }
+          leaf lmi-type {
+            description 'LMI type of ANSI/CISCO/Q933A'
+                        ;
+            type enumeration {
+              enum q933a {
+                value 0 ;
+                description q933a ;
+              }
+              enum cisco {
+                value 1 ;
+                description cisco ;
+              }
+              enum ansi {
+                value 2 ;
+                description ansi ;
+              }
+            }
+            default q933a ;
+          }
+        }
+      }
+      container intf-mode-instance {
+        description 'Set interface mode'
+                    ;
+        list intf-mode {
+          description 'Set interface mode'
+                      ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf mode {
+            description 'Interface mode'
+                        ;
+            type enumeration {
+              enum point-to-point {
+                value 0 ;
+                description point-to-point ;
+              }
+              enum point-to-multipoint {
+                value 1 ;
+                description point-to-multipoint ;
+              }
+            }
+            default point-to-point ;
+          }
+        }        
+      }
+      container ptop-instance {
+        description 'Set DLCI parameter'
+                    ;
+        list ptop {
+          description 'Set DLCI parameter'
+                      ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf dlci {
+            description 'interface DLCI'
+                        ;
+            type uint32 {
+              range 16..1007 {
+                description 'The range of DLCI should be 16 to 1007'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf encapsulation {
+            description 'Packet encapsulation type'
+                        ;
+            type enumeration {
+              enum ietf {
+                value 0 ;
+                description 'ietf encapsulation' ;
+              }
+              enum cisco {
+                value 1 ;
+                description 'cisco encapsulation' ;
+              }
+            }
+            default ietf ;
+          }
+          leaf broadcast {
+            description 'Broadcasts should be forwarded to this address'
+                        ;
+            type enumeration {
+              enum nobroadcast {
+                value 0 ;
+              }
+              enum broadcast {
+                value 1 ;
+              }
+            }
+            default nobroadcast ;
+          }
+        }
+      }
+      container ptomp-instance {
+        description 'Set map  parameter'
+                    ;
+        list ptomp {
+          description 'Set map  parameter'
+                      ;
+          key 'ifname dlci ipv4address'
+              ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf dlci {
+            description 'interface DLCI'
+                        ;
+            type uint32 {
+              range 16..1007 {
+                description 'The range of DLCI should be 16 to 1007'
+                            ;
+              }
+            }
+          }
+          leaf ipv4address {
+            description 'IPv4 address'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf encapsulation {
+            description 'Packet encapsulation type'
+                        ;
+            type enumeration {
+              enum ietf {
+                value 0 ;
+                description 'ietf encapsulation'
+                            ;
+              }
+              enum cisco {
+                value 1 ;
+                description 'cisco encapsulation'
+                            ;
+              }
+            }
+            default ietf ;
+          }
+          leaf broadcast {
+            description 'Broadcasts should be forwarded to this address'
+                        ;
+            type enumeration {
+              enum nobroadcast {
+                value 0 ;
+              }
+              enum broadcast {
+                value 1 ;
+              }
+            }
+            default nobroadcast ;
+          }
+        }
+      }
+      container dte-counter-instance {
+        description 'Set DTE counter'
+                    ;
+        list dte-counter {
+          description 'Set DTE counter'
+                      ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf n391dte {
+            description 'Full status polling counter'
+                        ;
+            type uint32 {
+              range 1..255 {
+                description 'n391dte counter'
+                            ;
+              }
+            }
+            default 6 ;
+          }
+          leaf n392dte {
+            description 'DTE LMI error threshold'
+                        ;
+            type uint32 {
+              range 1..10 {
+                description 'n392dte counter'
+                            ;
+              }
+            }
+            default 3 ;
+          }
+          leaf n393dte {
+            description 'DTE LMI monitored event count'
+                        ;
+            type uint32 {
+              range 1..10 {
+                description 'n393dte counter'
+                            ;
+              }
+            }
+            default 5 ;
+          }
+        }
+        ncd:revise-date 2015-08-06 ;
+      }
+      container dce-counter-instance {
+        description 'Set DCE counter'
+                    ;
+        list dce-counter {
+          description 'Set DCE counter'
+                      ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf t392dce {
+            description 'DCE LMI overtime period'
+                        ;
+            type uint32 {
+              range 5..30 {
+                description 't392dce counter'
+                            ;
+              }
+            }
+            units second ;
+            default 15 ;
+          }
+          leaf n392dce {
+            description 'DCE LMI error threshold'
+                        ;
+            type uint32 {
+              range 1..10 {
+                description 'n392dce counter'
+                            ;
+              }
+            }
+            default 3 ;
+          }
+          leaf n393dce {
+            description 'DCE LMI monitored event count'
+                        ;
+            type uint32 {
+              range 1..10 {
+                description 'n393dce counter'
+                            ;
+              }
+            }
+            default 5 ;
+          }
+        }
+      }
+      container keepalive-instance {
+        description 'Set keepalive time'
+                    ;
+        list keepalive {
+          description 'Set keepalive time'
+                      ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf keepalive {
+            description 'Keepalive time'
+                        ;
+            type uint32 {
+              range 0..29 {
+                description 'keepalive time'
+                            ;
+              }
+            }
+            units second ;
+            default 10 ;
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'Describe the state of frame relay'
+                ;
+    container frame-relay {
+      description 'State data of frame relay'
+                  ;
+      container lmi-info-instance {
+        description 'Describe the LMI information of frame relay' ;
+        list lmi-info {
+          description 'Describe the LMI information of frame relay' ;
+          key ifname ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf intf-type {
+            description 'DTE/DCE interface'
+                        ;
+            type enumeration {
+              enum dte {
+                value 0 ;
+                description 'Interface is DTE'
+                            ;
+              }
+              enum dce {
+                value 1 ;
+                description 'Interface is DCE'
+                            ;
+              }
+            }
+          }
+          leaf lmi-type {
+            description 'LMI type of ANSI/CISCO/Q933A'
+                        ;
+            type enumeration {
+              enum q933a {
+                value 0 ;
+                description 'LMI type is Q933A'
+                            ;
+              }
+              enum cisco {
+                value 1 ;
+                description 'LMI type is CISCO'
+                            ;
+              }
+              enum ansi {
+                value 2 ;
+                description 'LMI type is ANSI'
+                            ;
+              }
+            }
+          }
+          leaf invalid-unnumbered-info {
+            description 'Invalid Unnumbered info'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf invalid-prot-disc {
+            description 'Invalid Prot Disc'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf invalid-dummy-call-ref {
+            description 'Invalid dummy Call Ref'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf invalid-msg-type {
+            description 'Invalid Msg Type'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf invalid-status-message {
+            description 'Invalid Status Message'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf invalid-lock-shift {
+            description 'Invalid Lock Shift'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf invalid-information-id {
+            description 'Invalid Information ID'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf invalid-report-id-len {
+            description 'Invalid Report IE Len'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf invalid-report-request {
+            description 'Invalid report request'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf invalid-keep-ie-len {
+            description 'Invalid Keep IE Len'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf status-enq-sent {
+            description 'Num Status Enq. Sent'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf status-msgs-rcvd {
+            description 'Num Status msgs Rcvd'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf update-status-rcvd {
+            description 'Num Update Status Rcvd'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf status-timeouts {
+            description 'Num Status Timeouts'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf status-enq-rcvd {
+            description 'Num Status Enq. Rcvd'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf status-msgs-sent {
+            description 'Num Status msgs Sent'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf update-status-sent {
+            description 'Num Update Status Sent'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+          leaf stenq-timeouts {
+            description 'Num St Enq. Timeouts'
+                        ;
+            type uint32 {
+              range 0..4294967295 ;
+            }
+          }
+        }
+      }
+      container pvc-status-instance {
+        description 'Describe PVC status of frame relay'
+                    ;
+        list pvc-status {
+          description 'Describe PVC status of frame relay'
+                      ;
+          key 'ifname dlci'
+              ;
+          leaf ifname {
+            description 'Interface name'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf dlci {
+            description 'interface DLCI'
+                        ;
+            type uint32 {
+              range 16..1007 {
+                description 'The range of DLCI should be 16 to 1007'
+                            ;
+              }
+            }
+          }
+          leaf dlci-usage {
+            description 'DLCI USAGE'
+                        ;
+            type enumeration {
+              enum LOCAL {
+                value 1 ;
+                description 'DLCI which is configured' ;
+              }
+              enum UNUSED {
+                value 2 ;
+                description 'DLCI which is learned'
+                            ;
+              }
+            }
+          }
+          leaf pvc-status {
+            description 'PVC status'
+                        ;
+            type enumeration {
+              enum ACTIVE {
+                value 1 ;
+                description ATCIVE ;
+              }
+              enum INACTIVE {
+                value 2 ;
+                description INACTIVE ;
+              }
+              enum DELETED {
+                value 3 ;
+                description DELETED ;
+              }
+            }
+          }
+          leaf attached-interface {
+            description 'Interface which DLCI belongs to'
+                        ;
+            type string {
+              length 1..31 {
+                description 'Interface which DLCI belongs to'
+                            ;
+              }
+            }
+          }
+          ncd:select ifname ;
+          ncd:select dlci ;
+          ncd:select 'ifname dlci'
+                     ;
+        }
+      }
+    }
+  }
+}

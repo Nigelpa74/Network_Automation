@@ -1,0 +1,2065 @@
+module zxr10-l2tp {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/l2tp" ;
+  prefix l2tp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe L2TP.' ;
+  revision 2024-10-15 {
+    description '1.Modify the nativeDescr and description information of related nodes.
+2.Remove the default value of the first node under this path:/configuration/l2tp/global/tid-allocate-mode/first.
+3.Remove the default value of the service-type-lac node under this path:/configuration/l2tp/vpdn-groups/vpdn-group/rule-config/service-type-lac.' ;
+  }
+
+  revision 2024-07-21 {
+    description '1.Add new leaf node length-option under this path:/configuration/l2tp/global.' ;
+  }
+
+  revision 2024-03-28 {
+    description '1.Add leaf test-period under this path:/configuration/l2tp/vpdn-groups/vpdn-group.' ;
+  }
+
+  revision 2023-08-30 {
+    description '1.Modify leaf tunnel-hello-interval range value 0-3600 under this path:/configuration/l2tp/vpdn-groups/vpdn-group/tunnel-hello-interval.' ;
+  }
+
+  revision 2023-06-28 {
+    description '1.Add leaf max-session-per-tunnel range value 1-65535 under this path:/configuration/l2tp/vpdn-groups/vpdn-group/max-session-per-tunnel.
+2.Modify leaf calling-number-format description under this path:/configuration/l2tp/global/calling-number-format.
+3.Modify leaf calling-number-format description under this path:/configuration/l2tp/vpdn-groups/vpdn-group/calling-number-format.
+4.Modify container initiate-to-ipv6-addrs description under this path:/configuration/l2tp/vpdn-groups/vpdn-group/rule-config/initiate-to-ipv6-addrs.
+5.Modify leaf tunnel-weight description under this path:/configuration/l2tp/global/tid-allocate-mode/round-robin-weight.
+6.Modify leaf session-weight description under this path:/configuration/l2tp/global/tid-allocate-mode/round-robin-weight.' ;
+  }
+
+  revision 2023-04-12 {
+    description '1.Modify leaf max-session range value from 1-65535 to 1-512000 under this path:/configuration/l2tp/vpdn-groups/vpdn-group/max-session.
+2.Modify leaf virtual-template range value from 1-64 to 1-4000 under this path:/configuration/l2tp/vpdn-groups/vpdn-group/virtual-template.' ;
+  }
+
+  revision 2023-03-07 {
+    description '1.Add new leaf node tunnel-negotiation-alarm-session-number under this path:/configuration/l2tp/vpdn-groups/vpdn-group.
+2.Add new leaf node tunnel-negotiation-alarm-delay-time under this path:/configuration/l2tp/vpdn-groups/vpdn-group.' ;
+  }
+
+  revision 2022-04-20 {
+    description '1.Add new leaf node forbid-tunnel-migrate under this path:/configuration/l2tp/global.
+2.Add new leaf node tunnel-reuse-policy under this path:/configuration/l2tp/global.' ;
+  }
+
+  revision 2021-08-23 {
+    description '1.Add new container under this path:/configuration/l2tp/vpdn-groups/vpdn-group/domains.
+2.Change status from current to obsolete for this leaf node:/configuration/l2tp/vpdn-groups/vpdn-group/domain.' ;
+  }
+
+  revision 2021-02-24 {
+    description '1.Add new leaf node source-ip under this path:/configuration/l2tp/vpdn-groups/vpdn-group/rule-config/lac-config/initiate-to-ip/initiate-ip-addr/source-ip.
+2.Add new leaf node local-name under this path:/configuration/l2tp/vpdn-groups/vpdn-group/rule-config/lac-config/initiate-to-ip/initiate-ip-addr/local-name.' ;
+  }
+
+  revision 2020-08-26 {
+    description '1.Modify leaf max-session range value from 1-16000 to 1-65535 under this path:/configuration/l2tp/vpdn-groups/vpdn-group/max-session.
+2.Modify leaf max-session-per-tunnel, add perf-code for max-value&&default-value under this path:/configuration/l2tp/vpdn-groups/vpdn-group/max-session-per-tunnel.' ;
+  }
+
+  revision 2020-08-06 {
+    description '1.Obsolete leaf node show-clear under this path:/configuration/l2tp/vpdn-groups/vpdn-group/tunnel-password/plain-text/show-clear.
+2.Modify leaf encrypted-password length value from 64 to 84 under this path:/configuration/l2tp/vpdn-groups/vpdn-group/tunnel-password/plain-text/encrypted-password.' ;
+  }
+
+  revision 2019-05-18 {
+    description '1.Obsolete leaf node tid-alloc-mode under this path:/configuration/l2tp/global/tid-alloc-mode.
+2.Add new container node tid-allocate-mode under this path:/configuration/l2tp/global/tid-allocate-mode.' ;
+  }
+
+  revision 2018-10-24 {
+    description '1.Modify the default value of leaf node tid-alloc-mode under this path:/configuration/l2tp/global/tid-alloc-mode.' ;
+  }
+
+  revision 2018-08-21 {
+    description 'configuration:
+1.Modify the leaf node terminate-from-local-ip type from ipv4-address to ipv4-address-none-zero ,which path is :/configure/l2tp/vpdn-groups/vpdn-group/terminate-from-local-ip
+2.Add the leaf node terminate-from-local-ipv6 under this path:/configure/l2tp/vpdn-groups/vpdn-group.
+3.Add the container node source-ipv6-config under this path:/configure/l2tp/rule-config/different-rule/lac-config.
+4.Add the container node initiate-to-ipv6-addrs under this path:/configure/l2tp/rule-config/different-rule/lac-config.
+
+operation:
+1.Add the case node peer-ipv6 under this path:/operation/l2tp/clear-invalid-destination/type/ipv6
+
+state:
+1.Add container node tunnel-statistic-ipv6-info under this path:/state/l2tp.
+2.Modify the type of leaf node remote-ip from from ipv4-address to string-all under the path:/state/l2tp/tunnel-brief-info.
+3.Modify the type of leaf node local-ip and remote-ip from ipv4-address to string-all under the path:/state/l2tp/tunnel-detail-info.
+4.Add container node invalid-destination-ipv6-info under this path:/state/l2tp.
+5.Modify the type of leaf node local-ip and remote-ip from ipv4-address to string-all under the path:/state/l2tp/failure-detail-info. 
+6.Modify the type of leaf node local-ip and remote-ip from ipv4-address to string-all under the path:/state/l2tp/tunnel-summary-info.' ;
+  }
+
+  revision 2018-06-26 {
+    description '1.Modify the status of case clear-text-password from current to obsolete,which is under this path:/configure/l2tp/vpdn-groups/vpdn-group/tunnel-password.
+2.Add the leaf node show-clear under this path:/configure/l2tp/vpdn-groups/vpdn-group/tunnel-password/plain-text.
+3.Add the project label:MCG-5000.
+4.Add L2TP hash type.' ;
+  }
+
+  revision 2017-11-04 {
+    description 'Add case clear-text under configure/l2tp/vpdn-groups/vpdn-group/tunnel-password.' ;
+  }
+
+  revision 2017-11-03 {
+    description '1.Add leaf node named "board-name" under path:/state/l2tp/failure-detail-info/detail.' ;
+  }
+
+  revision 2017-03-23 {
+    description 'Initial version.' ;
+  }
+
+  container configuration {
+    description 'Configuration.' ;
+    container l2tp {
+      description 'L2TP config.' ;
+      container global {
+        description 'L2TP global config.' ;
+        leaf enable {
+          description 'Enable L2TP process.' ;
+          type boolean ;
+
+          default false ;
+        }
+
+        leaf default-vpdn-group {
+          description 'LNS default VPDN group name.' ;
+          type string {
+            length 1..31 {
+              description 'The length of default VPDN group name.' ;
+            }
+
+          }
+
+        }
+
+        leaf radius-vpdn-group {
+          description 'LAC default VPDN group name.' ;
+          type string {
+            length 1..31 {
+              description 'The length of RADIUS VPDN group name.' ;
+            }
+
+          }
+
+        }
+
+        leaf tsa-id {
+          description 'TSA ID.' ;
+          type string {
+            length 1..63 {
+              description 'The length of TSA ID.' ;
+            }
+
+          }
+
+        }
+
+        leaf multihop {
+          description 'Allow L2TP multihop or not.' ;
+          type boolean ;
+
+          default false ;
+        }
+
+        leaf calling-number-avp {
+          description 'Set LAC session negotiate with AVP22 or not.' ;
+          type boolean ;
+
+          default false ;
+        }
+
+        leaf check-hostname-avp {
+          description 'Check hostname AVP in tunnel negotiation or not.' ;
+          type boolean ;
+
+          default true ;
+        }
+
+        leaf invalid-peerip-timeout {
+          description 'Timeout time of invalid peer IP.[5,500].' ;
+          type uint16 {
+            range 5..500 {
+              description 'Timeout time of invalid peer IP.[5,500]. unit is seconds.' ;
+            }
+
+          }
+
+          units second ;
+          default 300 ;
+        }
+
+        leaf tid-alloc-mode {
+          status obsolete {
+            ncd:revise-date 2019-05-18 ;
+          }
+
+          description 'Set tunnel ID allocate mode.' ;
+          type enumeration {
+            enum first {
+              value 0 ;
+              description 'Set tunnel ID allocate mode first.' ;
+            }
+
+            enum round-robin {
+              value 1 ;
+              description 'Set tunnel ID allocate mode round robin.' ;
+            }
+
+          }
+
+          default round-robin ;
+        }
+
+        leaf tunnel-num-per-spu {
+          description 'Maximum tunnels per SPU.[500,64000].' ;
+          type uint16 {
+            range 500..64000 {
+              description 'Maximum tunnels per SPU.[500,64000].' ;
+            }
+
+          }
+
+          default 1000 ;
+        }
+
+        leaf calling-number-format {
+          description 'Calling-Number format.' ;
+          type enumeration {
+            enum class1 {
+              value 1 ;
+              description 'Calling-Number format: MAC address.' ;
+            }
+
+            enum class2 {
+              value 2 ;
+              description 'Calling-Number format: name#shelf/slot/subslot/port#exVlan:inVlan.' ;
+            }
+
+            enum class3 {
+              value 3 ;
+              description 'Calling-Number format: keep pppoe+ agent-circuit-id.' ;
+            }
+
+          }
+
+          default class1 ;
+        }
+
+        container tunnel-id {
+          description 'The tunnel ID config.' ;
+          presence tunnel-id ;
+          leaf tunnel-id-base {
+            description 'The base tunnel ID.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'The base tunnel ID.[1,65535].' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf tunnel-id-max {
+            description 'The maximum number of tunnel ID.[1,65535].' ;
+            type uint16 {
+              range 1..65535 {
+                description 'The maximum number of tunnel ID.[1,65535].' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        container vpdn-mode {
+          description 'Set VPDN mode.' ;
+          leaf mode {
+            description 'Set VPDN mode.' ;
+            type enumeration {
+              enum centralization {
+                value 0 ;
+                description 'Enable centralized VPDN.' ;
+              }
+
+              enum distribution {
+                value 1 ;
+                description 'Enable distributed VPDN.' ;
+              }
+
+            }
+
+            default centralization ;
+          }
+
+        }
+
+        container tid-allocate-mode {
+          description 'Set tunnel ID allocate mode.' ;
+          choice tid-allocate-mode {
+            description 'Set tunnel ID allocate mode.' ;
+            default round-robin ;
+            case first {
+              description 'Tunnel ID allocate mode first.' ;
+              leaf first {
+                description 'Tunnel ID allocate mode first.' ;
+                type enumeration {
+                  enum first {
+                    value 0 ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            case round-robin {
+              description 'Tunnel ID allocate mode round-robin.' ;
+              leaf round-robin {
+                description 'Tunnel ID allocate mode round-robin.' ;
+                type enumeration {
+                  enum round-robin {
+                    value 1 ;
+                  }
+
+                }
+
+                default round-robin ;
+              }
+
+            }
+
+            case round-robin-weight {
+              description 'Tunnel ID allocate mode round-robin-weight.' ;
+              leaf round-robin-weight {
+                description 'Tunnel ID allocate mode round-robin-weight.' ;
+                type enumeration {
+                  enum round-robin-weight {
+                    value 2 ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf tunnel-weight {
+                description 'Tunnel-weight for round-robin-weight tid allocate mode.' ;
+                type uint32 {
+                  range 0..8000 {
+                    description 'The range of tunnel weight.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf session-weight {
+                description 'Session-weight for round-robin-weight tid allocate mode.' ;
+                type uint32 {
+                  range 0..1 {
+                    description 'The range of session weight.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2019-05-18 ;
+        }
+
+        leaf forbid-tunnel-migrate {
+          description 'Forbid L2TP tunnel migrate or not.' ;
+          type boolean ;
+
+          default false ;
+          ncd:revise-date 2022-04-20 ;
+        }
+
+        leaf tunnel-reuse-policy {
+          description 'Set L2TP tunnel reuse policy.' ;
+          type enumeration {
+            enum num-least-first {
+              value 1 ;
+              description 'Set L2TP tunnel reuse policy: tunnel number least first.' ;
+            }
+
+          }
+
+          ncd:revise-date 2022-04-20 ;
+        }
+
+        leaf length-option {
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Carry the length option in data messages.' ;
+            }
+
+            enum disable {
+              description 'Do not carry the length option in data messages.' ;
+              value 0 ;
+            }
+
+          }
+
+          description 'Configure whether to carry the length option in data messages.' ;
+          default enable ;
+          ncd:revise-date 2024-07-21 ;
+        }
+
+      }
+
+      container vpdn-groups {
+        description 'L2TP VPDN group config.' ;
+        list vpdn-group {
+          description 'L2TP VPDN group config.' ;
+          key group-name ;
+          leaf group-name {
+            description 'L2TP VPDN group name.' ;
+            type string {
+              length 1..31 {
+                description 'The length of VPDN group name.' ;
+              }
+
+            }
+
+          }
+
+          leaf force-local-chap {
+            description 'Force a CHAP challenge to be instigated locally or not.' ;
+            type boolean ;
+
+            default false ;
+          }
+
+          leaf lcp-renegotiation {
+            description 'LNS LCP renegotiation config.' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Disable LCP renegotiate.' ;
+              }
+
+              enum on-mismatch {
+                value 1 ;
+                description 'Renegotiate only when mismatch.' ;
+              }
+
+              enum always {
+                value 2 ;
+                description 'Always renegotiate.' ;
+              }
+
+            }
+
+            default always ;
+          }
+
+          leaf lns-send-sli {
+            description 'LNS send SLI or not.' ;
+            type boolean ;
+
+            default false ;
+          }
+
+          leaf hidden {
+            description 'Allow AVPs to be hidden or not.' ;
+            type boolean ;
+
+            default false ;
+          }
+
+          leaf tunnel-authentication {
+            description 'Authenticate tunnel or not.' ;
+            type boolean ;
+
+            default false ;
+          }
+
+          leaf tunnel-hello-interval {
+            description 'Hello packet interval.' ;
+            type uint16 {
+              range 0..3600 {
+                description 'Hello packet interval.[0,3600]. unit is seconds.' ;
+              }
+
+            }
+
+            units second ;
+            default 600 ;
+          }
+
+          leaf tunnel-negotiation-alarm-delay-time {
+            description 'The delay time of the alarm of the number of sessions waiting for negotiation in the tunnel.' ;
+            type uint16 {
+              range 10..3600 {
+                description 'Alarm delay time parameters.[10,3600]. unit is seconds.' ;
+              }
+
+            }
+
+            units second ;
+            default 300 ;
+            ncd:revise-date 2023-03-07 ;
+          }
+
+          leaf tunnel-negotiation-alarm-session-number {
+            description 'The threshold of the alarm of the number of sessions waiting for negotiation in the tunnel.' ;
+            type uint16 {
+              range 20..65535 {
+                description 'Alarm session number threshold parameters.[20,65535].' ;
+              }
+
+            }
+
+            ncd:revise-date 2023-03-07 ;
+          }
+
+          leaf tunnel-receive-window {
+            description 'Receive window size for control channel.' ;
+            type uint16 {
+              range 4..10 {
+                description 'Receive window size for control channel.[4,10].' ;
+              }
+
+            }
+
+            default 4 ;
+          }
+
+          leaf tunnel-retransmit-retries {
+            description 'Number of retries before tearing down a tunnel.' ;
+            type uint16 {
+              range 1..10 {
+                description 'Number of retries before tearing down a tunnel.[1,10].' ;
+              }
+
+            }
+
+            default 5 ;
+          }
+
+          leaf tunnel-retransmit-timeout {
+            description 'Control packet retransmission timeout parameters.' ;
+            type uint16 {
+              range 1..8 {
+                description 'Control packet retransmission timeout parameters.[1,8]. unit is seconds.' ;
+              }
+
+            }
+
+            units second ;
+            default 8 ;
+          }
+
+          leaf tunnel-timeout-setup {
+            description 'Time permitted to setup a tunnel.' ;
+            type uint16 {
+              range 5..60 {
+                description 'Time permitted to setup a tunnel.[5,60]. unit is seconds.' ;
+              }
+
+            }
+
+            units second ;
+            default 10 ;
+          }
+
+          leaf tunnel-timeout-no-session {
+            description 'No-session timeout for tunnel.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'No-session timeout for tunnel.[1,65535]. unit is seconds.' ;
+              }
+
+            }
+
+            units second ;
+            default 15 ;
+          }
+
+          leaf hash-type {
+            description 'L2TP hash type.' ;
+            type enumeration {
+              enum md5 {
+                value 0 ;
+                description 'MD5 hash type.' ;
+              }
+
+              enum sm3 {
+                value 1 ;
+                description 'SM3 hash type.' ;
+              }
+
+            }
+
+            default md5 ;
+            ncd:revise-date 2018-06-26 ;
+          }
+
+          leaf max-session {
+            description "Maximum sessions allowed for this group. It's toplimit depends on ability of the device." ;
+            type uint32 {
+              range 1..512000 {
+                description "It's toplimit depends on ability of the device." ;
+              }
+
+            }
+
+          }
+
+          leaf max-session-per-tunnel {
+            description 'Maximum sessions in one L2TP tunnel.
+Its default value which is between 1-65535 and generally 16000, depends on product specification.
+Its maximum which is between 1-65535 and generally 16000, depends on product specification.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'Its maximum which is between 1-65535 and generally 16000, depends on product specification.' ;
+              }
+
+            }
+
+          }
+
+          leaf virtual-template {
+            description "Virtual template. It's toplimit depends on ability of the device." ;
+            type uint32 {
+              range 1..4000 {
+                description "It's toplimit depends on ability of the device." ;
+              }
+
+            }
+
+          }
+
+          leaf domain {
+            status obsolete {
+              ncd:revise-date 2021-08-23 ;
+            }
+
+            description 'VPDN group domain name.' ;
+            type string {
+              length 1..31 {
+                description 'The length of domain name.' ;
+              }
+
+            }
+
+          }
+
+          leaf local-name {
+            description 'Local name used for group authentication.' ;
+            type string {
+              length 1..64 {
+                description 'The length of local name.' ;
+              }
+
+            }
+
+          }
+
+          leaf terminate-from-hostname {
+            description 'Terminate tunnel from remote hostname.' ;
+            type string {
+              length 1..64 {
+                description 'The length of remote hostname.' ;
+              }
+
+            }
+
+          }
+
+          leaf terminate-from-local-ip {
+            description 'Terminate tunnel for LNS by IP address.' ;
+            type ncd:ipv4-address-none-zero ;
+
+          }
+
+          leaf terminate-from-local-ipv6 {
+            description 'Terminate tunnel for LNS by IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+            ncd:revise-date 2018-08-21 ;
+          }
+
+          leaf vrf {
+            description 'VPN Routing/Forwarding parameters.' ;
+            type string {
+              length 1..32 {
+                description 'The length of VRF name.' ;
+              }
+
+            }
+
+          }
+
+          leaf dscp {
+            description 'Configure the IP DSCP value.' ;
+            type uint8 {
+              range 0..63 {
+                description 'The IP DSCP value.[0,63].' ;
+              }
+
+            }
+
+            default 48 ;
+          }
+
+          leaf calling-number-format {
+            description 'Calling-Number format of VPDN group.' ;
+            type enumeration {
+              enum none {
+                value 0 ;
+                description 'Calling-Number format: none.' ;
+              }
+
+              enum class1 {
+                value 1 ;
+                description 'Calling-Number format: MAC address.' ;
+              }
+
+              enum class2 {
+                value 2 ;
+                description 'Calling-Number format: name#shelf/slot/subslot/port#exVlan:inVlan.' ;
+              }
+
+              enum class3 {
+                value 3 ;
+                description 'Calling-Number format: keep pppoe+ agent-circuit-id.' ;
+              }
+
+            }
+
+            default none ;
+          }
+
+          leaf bind-sal {
+            description 'Configure SAL.' ;
+            type string {
+              length 1..32 {
+                description 'The length of bind sal.' ;
+              }
+
+            }
+
+          }
+
+          leaf tcp-adjust-mss {
+            description 'TCP initial maximum segment size.' ;
+            type uint16 {
+              range 500..1460 {
+                description 'TCP initial maximum segment size.[500,1460].' ;
+              }
+
+            }
+
+            default 1400 ;
+          }
+
+          leaf sib-instance {
+            description 'Configure SIB-instance ID.' ;
+            type uint32 {
+              range 1..255 {
+                description 'SIB-instance ID.[1,255].' ;
+              }
+
+            }
+
+          }
+
+          leaf test-period {
+            type uint16 {
+              range 60..3600 {
+                description 'Test period time parameter.[60,3600]. unit is seconds.' ;
+              }
+
+            }
+
+            description 'Peer device test period.' ;
+            units second ;
+            ncd:revise-date 2024-03-28 ;
+          }
+
+          container tunnel-password {
+            description 'Tunnel password config.' ;
+            choice type {
+              description 'Tunnel password type.' ;
+              case plain-text {
+                description 'Tunnel plain text password for authentication.' ;
+                leaf plain-text-password {
+                  description 'Tunnel plain text password for authentication.' ;
+                  type string {
+                    length 1..31 {
+                      description 'The length of tunnel plain text password.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf show-clear {
+                  status obsolete {
+                    ncd:revise-date 2020-08-06 ;
+                  }
+
+                  description 'Show tunnel password in clear text.' ;
+                  type empty ;
+
+                  ncd:revise-date 2018-06-26 ;
+                }
+
+              }
+
+              case encrypted {
+                description 'Encrypted tunnel password.' ;
+                leaf encrypted-password {
+                  description 'Encrypted tunnel password.' ;
+                  type string {
+                    length 64..84 {
+                      description 'The length of encrypted tunnel password.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              case clear-text {
+                status obsolete {
+                  ncd:revise-date 2018-06-26 ;
+                }
+
+                description 'Clear tunnel password.' ;
+                leaf clear-text-password {
+                  status obsolete {
+                    ncd:revise-date 2018-06-26 ;
+                  }
+
+                  description 'Tunnel clear text password for authentication.' ;
+                  type string {
+                    length 1..31 {
+                      description 'The length of tunnel clear text password.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                ncd:revise-date 2017-11-04 ;
+              }
+
+            }
+
+          }
+
+          container bind-cpus {
+            description 'Configure CPU bindings.' ;
+            list bind-cpu {
+              description 'Configure CPU bindings.' ;
+              key cpu-name ;
+              leaf cpu-name {
+                description 'CPU name.' ;
+                type ncd:cpu {
+                  length 1..31 {
+                    description 'The CPU name length.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container rule-config {
+            description 'Different config for LAC and LNS.' ;
+            choice different-rule {
+              description 'Different config for LAC and LNS.' ;
+              case lac-config {
+                description "Special config for LAC. If the service type is not LAC, can't do this config." ;
+                leaf service-type-lac {
+                  description 'Set L2TP service type of LAC.' ;
+                  type enumeration {
+                    enum lac {
+                      value 0 ;
+                      description 'L2TP service type is LAC.' ;
+                    }
+
+                  }
+
+                }
+
+                container source-ip-config {
+                  description 'Set source IP address for VPDN group.' ;
+                  choice source-ip {
+                    description 'Set source IP address for VPDN group.' ;
+                    case ip {
+                      description 'Source IP address value.' ;
+                      leaf ip-addr {
+                        description 'Source IP address value.' ;
+                        type ncd:ipv4-address ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case interface {
+                      description 'Source interface name.' ;
+                      leaf interface-name {
+                        description 'Source interface name.' ;
+                        type ncd:ifname {
+                          length 1..31 {
+                            description 'The interface name length.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+                container source-ipv6-config {
+                  description 'Set source IPv6 address for VPDN group.' ;
+                  choice source-ipv6 {
+                    description 'Set source IPv6 address for VPDN group.' ;
+                    case ip {
+                      description 'Source IPv6 address value.' ;
+                      leaf ipv6-addr {
+                        description 'Source IPv6 address value.' ;
+                        type ncd:ipv6-address ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case interface {
+                      description 'Source interface name.' ;
+                      leaf interface-name {
+                        description 'Source interface name.' ;
+                        type ncd:ifname {
+                          length 1..31 {
+                            description 'The interface name length.' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  ncd:revise-date 2018-08-21 ;
+                }
+
+                container initiate-to-ip-addrs {
+                  description 'Set IP address of endpoint.' ;
+                  list initiate-to-ip-addr {
+                    description 'Set IP address of endpoint.' ;
+                    max-elements 8 ;
+                    key peer-ip ;
+                    leaf peer-ip {
+                      description 'Peer IP address value.' ;
+                      type ncd:ipv4-address ;
+
+                    }
+
+                    leaf priority {
+                      description 'IP address priority value.' ;
+                      type uint16 {
+                        range 0..65535 {
+                          description 'IP address priority value.[0,65535].' ;
+                        }
+
+                      }
+
+                      default 50 ;
+                    }
+
+                    leaf source-ip {
+                      description 'Source IP address value.' ;
+                      type ncd:ipv4-address-none-zero ;
+
+                      ncd:revise-date 2021-02-24 ;
+                    }
+
+                    leaf local-name {
+                      description 'Local name used for group authentication.' ;
+                      type string {
+                        length 1..64 {
+                          description 'The length of local name.' ;
+                        }
+
+                      }
+
+                      ncd:revise-date 2021-02-24 ;
+                    }
+
+                  }
+
+                }
+
+                container initiate-to-ipv6-addrs {
+                  description 'Set IPv6 address of endpoint.' ;
+                  list initiate-to-ipv6-addr {
+                    description 'Set IPv6 address of endpoint.' ;
+                    max-elements 8 ;
+                    key peer-ipv6 ;
+                    leaf peer-ipv6 {
+                      description 'Peer IPv6 address value.' ;
+                      type ncd:ipv6-address ;
+
+                    }
+
+                    leaf priority {
+                      description 'IPv6 address priority value.' ;
+                      type uint16 {
+                        range 0..65535 {
+                          description 'IPv6 address priority value.[0,65535].' ;
+                        }
+
+                      }
+
+                      default 50 ;
+                    }
+
+                  }
+
+                  ncd:revise-date 2018-08-21 ;
+                }
+
+              }
+
+              case lns-config {
+                description "Special config for LNS. If the service type is not LNS, can't do this config." ;
+                leaf service-type-lns {
+                  description 'Set L2TP service type of LNS.' ;
+                  type enumeration {
+                    enum lns {
+                      value 1 ;
+                      description 'L2TP service type is LNS.' ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container domains {
+            description 'VPDN group domain name.' ;
+            list domain {
+              description 'VPDN group domain name.' ;
+              key domain-name ;
+              leaf domain-name {
+                description 'VPDN group domain name.' ;
+                type string {
+                  length 1..31 {
+                    description 'The length of domain name.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2021-08-23 ;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'Operation.' ;
+    container l2tp {
+      description 'L2TP operation.' ;
+      container clear-invalid-destination {
+        description 'L2TP clear invalid destination.' ;
+        choice type {
+          description 'L2TP clear invalid destination.' ;
+          case all {
+            description 'L2TP clear all invalid destination.' ;
+            leaf all-invalid-destination {
+              description 'L2TP clear all invalid destination.' ;
+              type empty ;
+
+            }
+
+          }
+
+          case ip {
+            description 'L2TP clear invalid destination by IP address.' ;
+            leaf peer-ip {
+              description 'L2TP clear invalid destination by peer IP address.' ;
+              type ncd:ipv4-address ;
+
+            }
+
+          }
+
+          case ipv6 {
+            description 'L2TP clear invalid destination by IPv6 address.' ;
+            leaf peer-ipv6 {
+              description 'L2TP clear invalid destination by peer IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            ncd:revise-date 2018-08-21 ;
+          }
+
+        }
+
+      }
+
+      container clear-tunnel {
+        description 'L2TP clear tunnel.' ;
+        choice type {
+          description 'L2TP clear tunnel.' ;
+          case all {
+            description 'L2TP clear all tunnel.' ;
+            leaf all-tunnel {
+              description 'L2TP clear all tunnel.' ;
+              type empty ;
+
+            }
+
+          }
+
+          case local-tid-sid {
+            description 'L2TP clear tunnel by local TID, or clear session by local TID and SID.' ;
+            leaf local-tid {
+              description 'L2TP clear tunnel by local TID.' ;
+              type uint16 {
+                range 1..65535 {
+                  description 'The range of L2TP local TID.[1,65535].' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf local-sid {
+              description 'L2TP clear session by local TID and SID.' ;
+              type uint16 {
+                range 1..65535 {
+                  description 'The range of L2TP local SID.[1,65535].' ;
+                }
+
+              }
+
+            }
+
+          }
+
+          case remote-name {
+            description 'L2TP clear tunnel by remote name.' ;
+            leaf remote-name-str {
+              description 'L2TP clear tunnel by remote name.' ;
+              type string {
+                length 1..64 {
+                  description 'The length of remote name.[1,64].' ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      leaf clear-failure {
+        description 'Clear VPDN failure.' ;
+        type empty ;
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State.' ;
+    container l2tp {
+      description 'L2TP state.' ;
+      container summary-info {
+        description 'Show L2TP summary.' ;
+        leaf tunnel-number {
+          description 'Show number of tunnels.' ;
+          type uint32 ;
+
+        }
+
+        leaf session-number {
+          description 'Show number of sessions.' ;
+          type uint32 ;
+
+        }
+
+      }
+
+      container tunnel-statistic-info {
+        description 'Show tunnel statistics.' ;
+        list detail {
+          description 'Show tunnel statistic details.' ;
+          key 'board-name tunnel-type local-ip peer-ip' ;
+          leaf board-name {
+            description 'The board where tunnel statistics information is from.' ;
+            type string {
+              length 1..31 {
+                description 'The length of board name string.[1,31].' ;
+              }
+
+            }
+
+          }
+
+          leaf tunnel-type {
+            description 'The type of tunnel.' ;
+            type enumeration {
+              enum LAC {
+                value 1 ;
+                description 'The tunnel type is LAC.' ;
+              }
+
+              enum LNS {
+                value 2 ;
+                description 'The tunnel type is LNS.' ;
+              }
+
+            }
+
+          }
+
+          leaf local-ip {
+            description 'Local IP.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf peer-ip {
+            description 'Peer IP.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf tunnel-number {
+            description 'The number of tunnels.' ;
+            type uint32 ;
+
+          }
+
+          leaf session-number {
+            description 'The number of sessions.' ;
+            type uint32 ;
+
+          }
+
+        }
+
+      }
+
+      container tunnel-statistic-ipv6-info {
+        description 'Show tunnel statistics.' ;
+        list detail {
+          description 'Show tunnel statistic details.' ;
+          key 'board-name tunnel-type local-ipv6 peer-ipv6' ;
+          leaf board-name {
+            description 'The board where tunnel statistics information is from.' ;
+            type string {
+              length 1..31 {
+                description 'The length of board name string.[1,31].' ;
+              }
+
+            }
+
+          }
+
+          leaf tunnel-type {
+            description 'The type of tunnel.' ;
+            type enumeration {
+              enum LAC {
+                value 1 ;
+                description 'The tunnel type is LAC.' ;
+              }
+
+              enum LNS {
+                value 2 ;
+                description 'The tunnel type is LNS.' ;
+              }
+
+            }
+
+          }
+
+          leaf local-ipv6 {
+            description 'Local IPv6.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf peer-ipv6 {
+            description 'Peer IPv6.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf tunnel-number {
+            description 'The number of tunnels.' ;
+            type uint32 ;
+
+          }
+
+          leaf session-number {
+            description 'The number of sessions.' ;
+            type uint32 ;
+
+          }
+
+        }
+
+        ncd:revise-date 2018-08-21 ;
+      }
+
+      container tunnel-brief-info {
+        description 'Show L2TP tunnel brief information.' ;
+        list detail {
+          description 'Show L2TP tunnel brief information.' ;
+          key local-tid ;
+          leaf local-tid {
+            description 'The local TID of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf remote-tid {
+            description 'The remote TID of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf remote-name {
+            description 'The remote name of L2TP tunnel.' ;
+            type string ;
+
+          }
+
+          leaf state {
+            description 'The state of L2TP tunnel.' ;
+            type string ;
+
+          }
+
+          leaf remote-ip {
+            description 'The remote IP of L2TP tunnel.' ;
+            type ncd:string-all ;
+
+          }
+
+          leaf remote-port {
+            description 'The remote port of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf session-number {
+            description 'The session number of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+        }
+
+      }
+
+      container tunnel-detail-info {
+        description 'Show L2TP tunnel detail information.' ;
+        list detail {
+          description 'Show L2TP tunnel detail information.' ;
+          key local-tid ;
+          leaf local-tid {
+            description 'The local TID of L2TP tunnel.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'The range of L2TP local TID.[1,65535].' ;
+              }
+
+            }
+
+          }
+
+          leaf remote-tid {
+            description 'The remote TID of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf local-ip {
+            description 'The local IP of L2TP tunnel.' ;
+            type ncd:string-all ;
+
+          }
+
+          leaf remote-ip {
+            description 'The remote IP of L2TP tunnel.' ;
+            type ncd:string-all ;
+
+          }
+
+          leaf local-port {
+            description 'The local port of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf remote-port {
+            description 'The remote port of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf local-name {
+            description 'The local name of L2TP tunnel.' ;
+            type string ;
+
+          }
+
+          leaf remote-name {
+            description 'The remote name of L2TP tunnel.' ;
+            type string {
+              length 1..64 {
+                description 'The length of L2TP tunnel remote name.[1,64].' ;
+              }
+
+            }
+
+          }
+
+          leaf state {
+            description 'The state of L2TP tunnel.' ;
+            type string ;
+
+          }
+
+          leaf online-time {
+            description 'The online time of L2TP tunnel.' ;
+            type uint32 ;
+
+          }
+
+          leaf sib-instance {
+            description 'The SIB-instance ID of L2TP tunnel.' ;
+            type uint32 ;
+
+          }
+
+          leaf current-session-number {
+            description 'The current session number of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf fail-session-number {
+            description 'The failed session number of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf rcv-ctrl-packet {
+            description 'The received control packet number of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf send-ctrl-packet {
+            description 'The sended control packet number of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf rcv-zlb {
+            description 'The received ZLB packet number of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf send-zlb {
+            description 'The sended ZLB packet number of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf peer-rcv-window-size {
+            description 'The peer receive window size of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf send-window-size {
+            description 'The send window size of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf next-ns {
+            description 'The next NS to use for transmit control packet.' ;
+            type uint16 ;
+
+          }
+
+          leaf next-nr {
+            description 'The NR expected to be received for next control packet.' ;
+            type uint16 ;
+
+          }
+
+          leaf retransmit-interval {
+            description 'The retransmit interval of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf rcv-hello {
+            description 'The numbers of received hello.' ;
+            type uint16 ;
+
+          }
+
+          leaf send-hello {
+            description 'The numbers of sended hello.' ;
+            type uint16 ;
+
+          }
+
+          leaf slide-block {
+            description 'The slide block of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf slide-block-exhausted {
+            description 'The slide block exhausted or not.' ;
+            type boolean ;
+
+          }
+
+          ncd:select local-tid ;
+          ncd:select remote-name ;
+        }
+
+      }
+
+      container session-detail-info {
+        description 'Show L2TP session detail information.' ;
+        list detail {
+          description 'Show L2TP session detail information.' ;
+          key 'local-tid local-sid' ;
+          leaf local-tid {
+            description 'The local TID of L2TP tunnel.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'The range of L2TP tunnel TID.[1,65535].' ;
+              }
+
+            }
+
+          }
+
+          leaf local-sid {
+            description 'The local SID of L2TP tunnel.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'The range of L2TP session SID.[1,65535].' ;
+              }
+
+            }
+
+          }
+
+          leaf remote-tid {
+            description 'The remote TID of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf remote-sid {
+            description 'The remote SID of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf state {
+            description 'The state of L2TP session.' ;
+            type string ;
+
+          }
+
+          leaf online-time {
+            description 'The online time of L2TP session.' ;
+            type uint32 ;
+
+          }
+
+          leaf service-type {
+            description 'The service type of L2TP session: LAC or LNS.' ;
+            type string ;
+
+          }
+
+          leaf interface {
+            description 'L2TP session interface.' ;
+            type string ;
+
+          }
+
+          leaf user-name {
+            description 'The user name of L2TP session.' ;
+            type string ;
+
+          }
+
+          leaf call-serial-number {
+            description 'The call serial number of L2TP session.' ;
+            type uint32 ;
+
+          }
+
+          ncd:select local-tid ;
+          ncd:select "local-tid local-sid" ;
+        }
+
+      }
+
+      container per-card-info {
+        description 'Show VPDN summary information by card.' ;
+        list detail {
+          description 'Show VPDN summary information by card.' ;
+          key board-name ;
+          leaf board-name {
+            description 'The board where information from.' ;
+            type string {
+              length 1..31 {
+                description 'The length of board name string.[1,31].' ;
+              }
+
+            }
+
+          }
+
+          leaf tunnel-number {
+            description 'The tunnel number of current CPU.' ;
+            type uint32 ;
+
+          }
+
+          leaf session-number {
+            description 'The session number of current CPU.' ;
+            type uint32 ;
+
+          }
+
+        }
+
+      }
+
+      container tid-pool-info {
+        description 'Show VPDN tid pool information.' ;
+        list detail {
+          description 'Show VPDN TID pool information.' ;
+          key 'start-tid end-tid' ;
+          leaf start-tid {
+            description 'The start TID of TID scope.' ;
+            type uint16 ;
+
+          }
+
+          leaf end-tid {
+            description 'The end TID of TID scope.' ;
+            type uint16 ;
+
+          }
+
+          leaf board-name {
+            description 'The board where information from.' ;
+            type string {
+              length 1..31 {
+                description 'The length of board name string.[1,31].' ;
+              }
+
+            }
+
+          }
+
+          leaf used {
+            description 'The number of used TID.' ;
+            type uint32 ;
+
+          }
+
+          leaf free {
+            description 'The number of free TID.' ;
+            type uint32 ;
+
+          }
+
+        }
+
+      }
+
+      container invalid-destination-info {
+        description 'Show VPDN invalid destination information.' ;
+        list detail {
+          description 'Show VPDN invalid destination information.' ;
+          key 'board-name invalid-peer-ip' ;
+          leaf board-name {
+            description 'The board where invalid destination information from.' ;
+            type string {
+              length 1..31 {
+                description 'The length of board name.[1,31].' ;
+              }
+
+            }
+
+          }
+
+          leaf invalid-peer-ip {
+            description 'Invalid destination IP.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf remaining-time {
+            description 'The remaining invalid time.' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+        }
+
+      }
+
+      container invalid-destination-ipv6-info {
+        description 'Show VPDN invalid destination information.' ;
+        list detail {
+          description 'Show VPDN invalid destination information.' ;
+          key 'board-name invalid-peer-ipv6' ;
+          leaf board-name {
+            description 'The board where invalid destination information from.' ;
+            type string {
+              length 1..31 {
+                description 'The length of board name.[1,31].' ;
+              }
+
+            }
+
+          }
+
+          leaf invalid-peer-ipv6 {
+            description 'Invalid destination IPv6.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf remaining-time {
+            description 'The remaining invalid time.' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+        }
+
+        ncd:revise-date 2018-08-21 ;
+      }
+
+      container summary-peak-info {
+        description 'Show L2TP peak statistics.' ;
+        leaf tunnel-number {
+          description 'Show peak number of tunnels.' ;
+          type uint32 ;
+
+        }
+
+        leaf session-number {
+          description 'Show peak number of sessions.' ;
+          type uint32 ;
+
+        }
+
+        leaf occurred-time {
+          description 'Show the occurred time.' ;
+          type ncd:string-with-blank ;
+
+        }
+
+      }
+
+      container failure-detail-info {
+        description 'Show VPDN failure information.' ;
+        list detail {
+          description 'Show VPDN failure information.' ;
+          key 'board-name local-tid local-sid' ;
+          leaf board-name {
+            description 'The board where failure detail information from.' ;
+            type string ;
+
+            ncd:revise-date 2017-11-03 ;
+          }
+
+          leaf local-tid {
+            description 'The local TID of L2TP tunnel.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'The range of L2TP tunnel TID.[1,65535].' ;
+              }
+
+            }
+
+          }
+
+          leaf local-sid {
+            description 'The local SID of L2TP tunnel.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'The range of L2TP session SID.[1,65535].' ;
+              }
+
+            }
+
+          }
+
+          leaf remote-tid {
+            description 'The remote TID of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf remote-sid {
+            description 'The remote SID of L2TP tunnel.' ;
+            type uint16 ;
+
+          }
+
+          leaf service-type {
+            description 'The service type of L2TP session: LAC or LNS.' ;
+            type string ;
+
+          }
+
+          leaf user-name {
+            description 'The user name of L2TP session.' ;
+            type string ;
+
+          }
+
+          leaf session-prestate {
+            description 'The pre state of L2TP session.' ;
+            type string ;
+
+          }
+
+          leaf session-curstate {
+            description 'The current state of L2TP session.' ;
+            type string ;
+
+          }
+
+          leaf local-ip {
+            description 'The local IP of L2TP tunnel.' ;
+            type ncd:string-all ;
+
+          }
+
+          leaf remote-ip {
+            description 'The remote IP of L2TP tunnel.' ;
+            type ncd:string-all ;
+
+          }
+
+          leaf sib-instance {
+            description 'The SIB-instance ID of L2TP tunnel.' ;
+            type uint32 ;
+
+          }
+
+          leaf session-offline-reason {
+            description 'The offline reason of session.' ;
+            type ncd:string-with-blank ;
+
+          }
+
+          leaf session-offline-time {
+            description 'The offline time of session.' ;
+            type ncd:string-with-blank ;
+
+          }
+
+        }
+
+      }
+
+      container failure-brief-info {
+        list detail {
+          description 'Show VPDN failure brief information.' ;
+          key 'board-name offline-reason' ;
+          leaf board-name {
+            description 'The board where failure brief information from.' ;
+            type string {
+              length 1..31 {
+                description 'The length of board name.[1,31].' ;
+              }
+
+            }
+
+          }
+
+          leaf offline-reason {
+            description 'The offline reason.' ;
+            type ncd:string-with-blank {
+              length 1..99 {
+                description 'The length of offline reason string.[1,128].' ;
+              }
+
+            }
+
+          }
+
+          leaf offline-count {
+            description 'The count of special offline reason.' ;
+            type uint32 ;
+
+          }
+
+        }
+
+        description 'Show VPDN failure brief information.' ;
+      }
+
+      container tunnel-summary-info {
+        description 'Show L2TP tunnel summary information.' ;
+        list detail {
+          description 'Show VPDN tunnel summary information.' ;
+          key local-tid ;
+          leaf local-tid {
+            description 'The local TID of L2TP tunnel.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'The range of L2TP local TID.[1,65535].' ;
+              }
+
+            }
+
+          }
+
+          leaf remote-tid {
+            description 'The remote TID of L2TP tunnel.' ;
+            type uint16 {
+              range 1..65535 {
+                description 'The range of L2TP remote TID.[1,65535].' ;
+              }
+
+            }
+
+          }
+
+          leaf local-ip {
+            description 'The local IP of L2TP tunnel.' ;
+            type ncd:string-all ;
+
+          }
+
+          leaf remote-ip {
+            description 'The remote IP of L2TP tunnel.' ;
+            type ncd:string-all ;
+
+          }
+
+          leaf tunnel-type {
+            description 'The type of tunnel.' ;
+            type enumeration {
+              enum LAC {
+                value 1 ;
+                description 'The tunnel type is LAC.' ;
+              }
+
+              enum LNS {
+                value 2 ;
+                description 'The tunnel type is LNS.' ;
+              }
+
+            }
+
+            default LAC ;
+          }
+
+          leaf session-number {
+            description 'The session number of L2TP tunnel.' ;
+            type uint16 {
+              range 0..65535 ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

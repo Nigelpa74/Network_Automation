@@ -1,0 +1,1122 @@
+module zxr10-bras-iphost {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/bras/iphost'
+            ;
+  prefix iphost ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'This module describes the netconf model about iphost.'
+              ;
+  revision 2023-05-17 {
+    description 'netconf encrypted-password <datatype>ciphertext</datatype>  ad'
+              + 'd <log-type>password</log-type>'
+                ;
+  }
+  revision 2021-05-11 {
+    description 'add  cross-bind commend'
+                ;
+  }
+  revision 2020-12-16 {
+    description 'Encryption algorithm upgrade.'
+                ;
+  }
+  revision 2020-03-17 {
+    description 'add ipv6-host prefix-degation'
+                ;
+  }
+  revision 2020-01-15 {
+    description 'add ipv6-host detect'
+                ;
+  }
+  revision 2019-10-10 {
+    description 'add ip-host description'
+                ;
+  }
+  revision 2019-08-19 {
+    description 'Create iphost netconf'
+                ;
+  }
+  container configuration {
+    description 'configuration model info.'
+                ;
+    container subscriber-manage {
+      description 'BRAS configuration model.'
+                  ;
+      container ipv4-iphost-blocks {
+        list ipv4-block-startip {
+          key startip ;
+          leaf startip {
+            description 'Block IP address.'
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+        }
+        list ipv4-block-startip-endip {
+          key 'startip endip'
+              ;
+          leaf startip {
+            description 'Block IP address.'
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+          leaf endip {
+            description 'Block end IP address.'
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+        }
+        list ipv4-block-startip-vrf {
+          key 'startip vrf'
+              ;
+          leaf startip {
+            description 'Block IP address.'
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+          leaf vrf {
+            description 'Vrf name.'
+                        ;
+            type string {
+              length 1..32 {
+                description 'Vrf name'
+                            ;
+              }
+            }
+          }
+        }
+        list ipv4-block-startip-endip-vrf {
+          key 'startip endip vrf'
+              ;
+          leaf startip {
+            description 'Block IP address.'
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+          leaf endip {
+            description 'Block end IP address.'
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+          leaf vrf {
+            description 'Vrf name.'
+                        ;
+            type string {
+              length 1..32 {
+                description 'Vrf name'
+                            ;
+              }
+            }
+          }
+        }
+      }
+      container ipv6-iphost-blocks {
+        list ipv6-block-startip {
+          key startip ;
+          leaf startip {
+            description 'Block IP address.'
+                        ;
+            type ncd:ipv6-address-none-zero ;
+          }
+        }
+        list ipv6-block-startip-endip {
+          key 'startip endip'
+              ;
+          leaf startip {
+            description 'Block IP address.'
+                        ;
+            type ncd:ipv6-address-none-zero ;
+          }
+          leaf endip {
+            description 'Block end IP address.'
+                        ;
+            type ncd:ipv6-address-none-zero ;
+          }
+        }
+        list ipv6-block-startip-vrf {
+          key 'startip vrf'
+              ;
+          leaf startip {
+            description 'Block IP address.'
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf vrf {
+            description 'Vrf name.'
+                        ;
+            type string {
+              length 1..32 {
+                description 'Vrf name'
+                            ;
+              }
+            }
+          }
+        }
+        list ipv6-block-startip-endip-vrf {
+          key 'startip endip vrf'
+              ;
+          leaf startip {
+            description 'Block IP address.'
+                        ;
+            type ncd:ipv6-address-none-zero ;
+          }
+          leaf endip {
+            description 'Block end IP address.'
+                        ;
+            type ncd:ipv6-address-none-zero ;
+          }
+          leaf vrf {
+            description 'Vrf name.'
+                        ;
+            type string {
+              length 1..32 {
+                description 'Vrf name'
+                            ;
+              }
+            }
+          }
+        }
+      }
+      container ip-host {
+        list ip-host-description {
+          key description ;
+          leaf description {
+            description "Configure ip-host description
+\nThese characters's ASC"
+                      + "II unicode must be between 0x21-0x3E / 0x40-0x7E."
+                        ;
+            type string {
+              length 1..80 ;
+            }
+          }
+          leaf author-temp-name {
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf group-user-flag {
+            type enumeration {
+              enum group-user {
+                value 2 ;
+              }
+            }
+          }
+        }
+        ncd:revise-date 2019-10-10 ;
+      }
+    }
+    container vbui-configuration {
+      description 'Configure VBUI model.'
+                  ;
+      container ipv4-hosts {
+        description 'Configure ipv4 protocol host group.'
+                    ;
+        presence ipv4-hosts ;
+        list ipv4-host {
+          description 'Configure the ipv4-host user,this command need an end ip'
+                    + '-address.'
+                      ;
+          max-elements 1000000 ;
+          key 'vbui-ifname ipv4-start-ip ipv4-end-ip'
+              ;
+          leaf vbui-ifname {
+            description 'Configure vbui if-name'
+                        ;
+            type ncd:ifname {
+              length 0..31 {
+                description 'Vbui ifname.'
+                            ;
+              }
+            }
+          }
+          leaf description {
+            description "Ip-host group user's description."
+                        ;
+            type string {
+              length 0..80 {
+                description "Group user' name."
+                            ;
+              }
+            }
+          }
+          leaf ipv4-start-ip {
+            description "The ip-host user's IP address."
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+          leaf ipv4-end-ip {
+            description "The ip-host user's end IP address."
+                        ;
+            type ncd:ipv4-address-none-zero {
+              pattern '^[^0\.0\.0\.0$]'
+                      ;
+            }
+          }
+          leaf if-name {
+            description 'Configurate the VCC interface.'
+                        ;
+            type ncd:ifname {
+              length 0..31 {
+                description 'Vcc ifname.'
+                            ;
+              }
+            }
+          }
+          leaf vlan {
+            description "User's vlan info."
+                        ;
+            type int16 {
+              range 1..4096 {
+                description 'Vlan range is from 0 to 4096.'
+                            ;
+              }
+            }
+          }
+          leaf sec-vlan {
+            description "User's second vlan info."
+                        ;
+            type int16 {
+              range 1..4096 {
+                description 'Vlan range is from 0 to 4096.'
+                            ;
+              }
+            }
+          }
+          leaf author-temp-name {
+            description 'Authorization template name.'
+                        ;
+            type string {
+              length 0..31 {
+                description 'Authorization template name.'
+                            ;
+              }
+            }
+          }
+          leaf detect-count {
+            description 'Detect user  count.'
+                        ;
+            type int16 {
+              range 1..20 {
+                description 'User detect count.'
+                            ;
+              }
+            }
+          }
+          container user-or-domain {
+            description 'Configure user info or domain info.'
+                        ;
+            presence user-or-domain ;
+            choice user-domain {
+              description 'Configure user info or domain info.'
+                          ;
+              case user-info {
+                description 'Configure user info.'
+                            ;
+                leaf user-name {
+                  description "User's name info."
+                              ;
+                  type string {
+                    length 1..31 {
+                      description 'User name.'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf user-domain-name {
+                  description "Configure sub's domain name"
+                              ;
+                  type string {
+                    length 1..31 {
+                      description 'Domain name.'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                container passwd-or-encrypasswd {
+                  choice choose-password {
+                    mandatory true ;
+                    case passwd {
+                      leaf user-password-ex {
+                        description "User's password info."
+                                    ;
+                        type string {
+                          length 1..31 {
+                            description "User's password"
+                                        ;
+                          }
+                        }
+                      }
+                      leaf showclear {
+                        status obsolete {
+                          ncd:revise-date 2020-12-16 ;
+                        }
+                        description 'Show password in clear format'
+                                    ;
+                        type uint8 {
+                          range 0..3 ;
+                        }
+                      }
+                    }
+                    case encry-passwd {
+                      leaf encrypted_passwd {
+                        description 'Encrypted password string'
+                                    ;
+                        type string {
+                          length 64..84 ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              case domain {
+                description 'Configure domain info.'
+                            ;
+                leaf domain-name {
+                  description "Configure sub's domain name"
+                              ;
+                  type string {
+                    length 1..31 {
+                      description 'Domain name.'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          leaf group-user {
+            description 'Configure group ip-host user.'
+                        ;
+            type enumeration {
+              enum group-user {
+                value 1 ;
+              }
+            }
+          }
+          leaf cross-bind {
+            type uint8 ;
+            ncd:revise-date 2021-05-11 ;
+          }
+          leaf export {
+            description 'Config user route type user-special.'
+                        ;
+            type enumeration {
+              enum export {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2020-03-17 ;
+          }
+        }
+        list ipv4-host-no-end-ip {
+          description 'Configure the ipv4-host user,this command have only one '
+                    + 'ip-address.'
+                      ;
+          max-elements 1000000 ;
+          key 'vbui-ifname ipv4-start-ip'
+              ;
+          leaf vbui-ifname {
+            description 'Configure vbui if-name'
+                        ;
+            type ncd:ifname {
+              length 0..31 {
+                description 'Vbui ifname.'
+                            ;
+              }
+            }
+          }
+          leaf description {
+            description "Ip-host group user's description."
+                        ;
+            type string {
+              length 0..80 {
+                description "Group user' name."
+                            ;
+              }
+            }
+          }
+          leaf ipv4-start-ip {
+            description "The ip-host user's IP address."
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+          leaf if-name {
+            description 'Configurate the VCC interface.'
+                        ;
+            type ncd:ifname {
+              length 0..31 {
+                description 'Vcc ifname.'
+                            ;
+              }
+            }
+          }
+          leaf vlan {
+            description "User's vlan info."
+                        ;
+            type int16 {
+              range 1..4096 {
+                description 'Vlan range is from 0 to 4096.'
+                            ;
+              }
+            }
+          }
+          leaf sec-vlan {
+            description "User's second vlan info."
+                        ;
+            type int16 {
+              range 1..4096 {
+                description 'Vlan range is from 0 to 4096.'
+                            ;
+              }
+            }
+          }
+          leaf mac-address {
+            description "Ip-host user's MAC info."
+                        ;
+            type ncd:mac-address-none-zero ;
+          }
+          leaf author-temp-name {
+            description 'Authorization template name.'
+                        ;
+            type string {
+              length 0..31 {
+                description 'Authorization template name.'
+                            ;
+              }
+            }
+          }
+          leaf detect-count {
+            description 'Detect user count.'
+                        ;
+            type int16 {
+              range 1..20 {
+                description 'User detect count.'
+                            ;
+              }
+            }
+          }
+          container user-or-domain {
+            description 'Configure user info or domain info.'
+                        ;
+            choice user-domain {
+              description 'Configure user info or domain info.'
+                          ;
+              case user-info {
+                description 'Configure user info.'
+                            ;
+                leaf user-name {
+                  description "User's name info."
+                              ;
+                  type string {
+                    length 1..31 {
+                      description 'User name.'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf user-domain-name {
+                  description "Configure sub's domain name"
+                              ;
+                  type string {
+                    length 0..31 {
+                      description 'Domain name.'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                container passwd-or-encrypasswd {
+                  choice choose-password {
+                    mandatory true ;
+                    case passwd {
+                      leaf user-password-ex {
+                        description "User's password info."
+                                    ;
+                        type string {
+                          length 1..31 {
+                            description "User's password"
+                                        ;
+                          }
+                        }
+                      }
+                      leaf showclear {
+                        status obsolete {
+                          ncd:revise-date 2020-12-16 ;
+                        }
+                        description 'Show password in clear format'
+                                    ;
+                        type uint8 {
+                          range 0..3 ;
+                        }
+                      }
+                    }
+                    case encry-passwd {
+                      leaf encrypted_passwd {
+                        description 'Encrypted password string'
+                                    ;
+                        type string {
+                          length 64..84 ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              case domain {
+                description 'Configure domain info.'
+                            ;
+                leaf domain-name {
+                  description "Configure sub's domain name"
+                              ;
+                  type string {
+                    length 0..31 {
+                      description 'Domain name.'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          leaf group-user {
+            description 'Configure group ip-host user.'
+                        ;
+            type enumeration {
+              enum group-user {
+                value 1 ;
+              }
+            }
+          }
+          leaf cross-bind {
+            type uint8 ;
+            ncd:revise-date 2021-05-11 ;
+          }
+          leaf export {
+            description 'Config user route type user-special.'
+                        ;
+            type enumeration {
+              enum export {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2020-03-17 ;
+          }
+        }
+      }
+      container ipv6-hosts {
+        description 'Configure ipv6 protocol host group.'
+                    ;
+        presence ipv6-hosts ;
+        list ipv6-host-no-end-ip {
+          description 'Configure the ipv6-host user,this command have only one '
+                    + 'ip-address.'
+                      ;
+          max-elements 1000000 ;
+          key 'vbui-ifname ipv6-start-ip'
+              ;
+          leaf vbui-ifname {
+            description 'Configure vbui if-name'
+                        ;
+            type ncd:ifname {
+              length 0..31 {
+                description 'Vbui ifname.'
+                            ;
+              }
+            }
+          }
+          leaf description {
+            description "Ip-host group user's description."
+                        ;
+            type string {
+              length 0..80 {
+                description "Group user' name."
+                            ;
+              }
+            }
+          }
+          leaf ipv6-start-ip {
+            description "The ip-host user's IPv6 start address."
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf mac-address {
+            description "Ip-host user's MAC info."
+                        ;
+            type ncd:mac-address-none-zero ;
+          }
+          container prefix-delegation {
+            description 'Configure prefix delegation.'
+                        ;
+            choice prefix {
+              description 'Configure prefix delegation.'
+                          ;
+              case prefix-range {
+                description 'Configure prefix delegation.'
+                            ;
+                leaf start_prefix {
+                  description 'Configure start prefix address.'
+                              ;
+                  type ncd:ipv6-address ;
+                  mandatory true ;
+                }
+                leaf start_prefix_len {
+                  description 'Configure start prefix mask.'
+                              ;
+                  type uint32 {
+                    range 1..128 {
+                      description 'Config prefix address mask length.'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf end_prefix {
+                  description 'Configure end prefix.'
+                              ;
+                  type ncd:ipv6-address ;
+                }
+                leaf end_prefix_len {
+                  description 'Configure end prefix mask.'
+                              ;
+                  type uint32 {
+                    range 1..128 {
+                      description 'Config prefix address mask.'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2020-03-17 ;
+          }
+          leaf if-name {
+            description 'Configurate the VCC interface.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'Vcc ifname.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf vlan {
+            description "User's vlan info."
+                        ;
+            type int16 {
+              range 1..4094 {
+                description 'Vlan range is from 0 to 4096.'
+                            ;
+              }
+            }
+          }
+          leaf sec-vlan {
+            description "User's second vlan info."
+                        ;
+            type int16 {
+              range 1..4094 {
+                description 'Vlan range is from 0 to 4096.'
+                            ;
+              }
+            }
+          }
+          leaf author-temp-name {
+            description 'Authorization template name.'
+                        ;
+            type string {
+              length 1..31 {
+                description 'Authorization template name.'
+                            ;
+              }
+            }
+          }
+          container user-or-domain {
+            description 'Configure user info.'
+                        ;
+            choice user-domain {
+              description 'Configure user info.'
+                          ;
+              case user-info {
+                description 'Configure user info.'
+                            ;
+                leaf user-name {
+                  description "User's name info."
+                              ;
+                  type string {
+                    length 1..31 {
+                      description 'User name.'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf domain-name {
+                  description "Configure sub's domain name"
+                              ;
+                  type string {
+                    length 1..31 {
+                      description 'Domain name.'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                container passwd-or-encrypasswd {
+                  choice choose-password {
+                    mandatory true ;
+                    case passwd {
+                      leaf password-ex {
+                        description "User's password info."
+                                    ;
+                        type string {
+                          length 1..31 {
+                            description 'User password.'
+                                        ;
+                          }
+                        }
+                      }
+                      leaf showclear {
+                        status obsolete {
+                          ncd:revise-date 2020-12-16 ;
+                        }
+                        description 'Show password in clear format'
+                                    ;
+                        type uint8 {
+                          range 0..3 ;
+                        }
+                      }
+                    }
+                    case encry-passwd {
+                      leaf encrypted_passwd {
+                        description 'Encrypted password string'
+                                    ;
+                        type string {
+                          length 64..84 ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          leaf group-user {
+            description 'Configure group ip-host user.'
+                        ;
+            type enumeration {
+              enum group-user {
+                value 1 ;
+              }
+            }
+          }
+          leaf cross-bind {
+            type uint8 ;
+            ncd:revise-date 2021-05-11 ;
+          }
+          leaf detect-count {
+            description 'Detect user  count.'
+                        ;
+            type int16 {
+              range 1..20 {
+                description 'User  detect count.'
+                            ;
+              }
+            }
+            ncd:revise-date 2020-01-15 ;
+          }
+          leaf export {
+            description 'Config user route type user-special.'
+                        ;
+            type enumeration {
+              enum export {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2020-03-17 ;
+          }
+        }
+        list ipv6-host {
+          description 'Configure the ipv6-host user,this command need an end ip'
+                    + '-address.'
+                      ;
+          max-elements 1000000 ;
+          key 'vbui-ifname ipv6-start-ip ipv6-end-ip'
+              ;
+          leaf vbui-ifname {
+            description 'Configure vbui if-name'
+                        ;
+            type ncd:ifname {
+              length 0..31 {
+                description 'Vbui ifname.'
+                            ;
+              }
+            }
+          }
+          leaf description {
+            description "Ip-host group user's description."
+                        ;
+            type string {
+              length 0..80 {
+                description "Group user' name."
+                            ;
+              }
+            }
+          }
+          leaf ipv6-start-ip {
+            description "The ip-host user's IPv6 start address."
+                        ;
+            type ncd:ipv6-address ;
+          }
+          leaf ipv6-end-ip {
+            description "The ip-host user's IPv6 end address."
+                        ;
+            type ncd:ipv6-address {
+              pattern '^[^::$]'
+                      ;
+            }
+          }
+          leaf if-name {
+            description 'Configurate the VCC interface.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'Vcc ifname.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf vlan {
+            description "User's vlan info."
+                        ;
+            type int16 {
+              range 1..4094 {
+                description 'Vlan range is from 0 to 4096.'
+                            ;
+              }
+            }
+          }
+          leaf sec-vlan {
+            description "User's second vlan info."
+                        ;
+            type int16 {
+              range 1..4094 {
+                description 'Vlan range is from 0 to 4096.'
+                            ;
+              }
+            }
+          }
+          leaf author-temp-name {
+            description 'Authorization template name.'
+                        ;
+            type string {
+              length 1..31 {
+                description 'Authorization template name.'
+                            ;
+              }
+            }
+          }
+          container user-or-domain {
+            description 'Configure user info.'
+                        ;
+            presence user-info-v6 ;
+            choice user-domain {
+              case user-info {
+                leaf user-name {
+                  description "User's name info."
+                              ;
+                  type string {
+                    length 1..31 {
+                      description 'User name.'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf domain-name {
+                  description "Configure sub's domain name"
+                              ;
+                  type string {
+                    length 1..31 {
+                      description 'Domain name.'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                container passwd-or-encrypasswd {
+                  choice choose-password {
+                    mandatory true ;
+                    case passwd {
+                      leaf password-ex {
+                        description "User's password info."
+                                    ;
+                        type string {
+                          length 1..31 {
+                            description 'User password.'
+                                        ;
+                          }
+                        }
+                      }
+                      leaf showclear {
+                        status obsolete {
+                          ncd:revise-date 2020-12-16 ;
+                        }
+                        description 'Show password in clear format'
+                                    ;
+                        type uint8 {
+                          range 0..3 ;
+                        }
+                      }
+                    }
+                    case encry-passwd {
+                      leaf encrypted_passwd {
+                        description 'Encrypted password string'
+                                    ;
+                        type string {
+                          length 64..84 ;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          leaf group-user {
+            description 'Configure group ip-host user.'
+                        ;
+            type enumeration {
+              enum group-user {
+                value 1 ;
+              }
+            }
+          }
+          leaf detect-count {
+            description 'Detect user count.'
+                        ;
+            type int16 {
+              range 1..20 {
+                description 'User detect count.'
+                            ;
+              }
+            }
+            ncd:revise-date 2020-01-15 ;
+          }
+          leaf export {
+            description 'Config user route type user-special.'
+                        ;
+            type enumeration {
+              enum export {
+                value 1 ;
+              }
+            }
+            ncd:revise-date 2020-03-17 ;
+          }
+          leaf cross-bind {
+            type uint8 ;
+            ncd:revise-date 2021-05-11 ;
+          }
+        }
+      }
+      container virtual-ip-hosts {
+        list virtual-ip-host {
+          max-elements 8000 ;
+          key 'vbui-ifname user-info-name domain-name'
+              ;
+          leaf vbui-ifname {
+            type ncd:ifname {
+              length 1..31 ;
+            }
+          }
+          leaf user-info-name {
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf domain-name {
+            type string {
+              length 1..31 ;
+            }
+          }
+          choice choose-password {
+            mandatory true ;
+            case passwd {
+              leaf password-ex {
+                description "User's password info."
+                            ;
+                type string {
+                  length 1..31 {
+                    description 'User password.'
+                                ;
+                  }
+                }
+              }
+            }
+            case encry-passwd {
+              leaf encrypted_passwd {
+                description 'Encrypted password string'
+                            ;
+                type string {
+                  length 64..84 ;
+                }
+              }
+            }
+          }
+          leaf if-name {
+            type ncd:ifname {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+          choice vlan-encapsulation-type {
+            case dot1q {
+              leaf vlan {
+                type int16 {
+                  range 1..4094 ;
+                }
+              }
+            }
+            case qinq {
+              leaf ex-vlan {
+                type int16 {
+                  range 1..4094 ;
+                }
+                mandatory true ;
+              }
+              leaf in-vlan {
+                type int16 {
+                  range 1..4094 ;
+                }
+                mandatory true ;
+              }
+            }
+          }
+          leaf author-temp-name {
+            type string {
+              length 1..31 ;
+            }
+          }
+          leaf detect-count {
+            type uint16 {
+              range 1..20 ;
+            }
+          }
+        }
+        ncd:revise-date 2020-12-16 ;
+      }
+      ncd:revise-date 2019-10-10 ;
+    }
+  }
+}

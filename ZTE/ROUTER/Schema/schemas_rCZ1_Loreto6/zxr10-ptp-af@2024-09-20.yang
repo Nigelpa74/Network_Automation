@@ -1,0 +1,498 @@
+module zxr10-ptp-af {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/ptp-af'
+            ;
+  prefix ptp-af ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe PTP.'
+              ;
+  revision 2024-09-20 {
+    description 'Initial version.'
+                ;
+  }
+  container state {
+    config false ;
+    description 'The state of PTP.'
+                ;
+    container ptp {
+      description 'The PTP state.'
+                  ;
+      container status {
+        description 'The status of PTP.'
+                    ;
+        list af-node {
+          description 'AF node list of PTP.'
+                      ;
+          key name ;
+          leaf name {
+            description 'AF node name.'
+                        ;
+            type ncd:af-name {
+              length 1..32 ;
+            }
+          }
+          leaf distogm {
+            description 'The distance to grandmaster.'
+                        ;
+            type uint16 {
+              range 0..65535 {
+                description 'The distance between the slave and the grandmaster.'
+                            ;
+              }
+            }
+          }
+          leaf offset {
+            description 'The offset between slave and master.'
+                        ;
+            type string {
+              length 0..31 ;
+            }
+            units ns ;
+          }
+          leaf meandelay {
+            description 'The mean delay between the current slave and master.'
+                        ;
+            type string {
+              length 0..31 ;
+            }
+            units ns ;
+          }
+          leaf portnum {
+            description 'The port number of the current slave port.'
+                        ;
+            type uint16 {
+              range 1..65535 {
+                description 'The port number of the current slave port.'
+                            ;
+              }
+            }
+          }
+          leaf port-type {
+            description 'The port type of the current PTP slave port.'
+                        ;
+            type enumeration {
+              enum normal {
+                value 0 ;
+                description 'The current PTP slave port type is normal.'
+                            ;
+              }
+              enum combined-oc {
+                value 1 ;
+                description 'The current PTP slave port type is combined-oc.'
+                            ;
+              }
+            }
+          }
+          leaf ifname {
+            description 'The interface name of the current slave port.'
+                        ;
+            type string {
+              length 0..31 {
+                description 'The length of the interface name.'
+                            ;
+              }
+            }
+          }
+          leaf curtime {
+            description 'The current time.'
+                        ;
+            type ncd:string-with-blank {
+              length 0..99 ;
+            }
+          }
+          leaf curclkid {
+            description 'The local clock id.'
+                        ;
+            type string {
+              length 0..31 {
+                description 'The length of the clock id.'
+                            ;
+              }
+            }
+          }
+          leaf fportid {
+            description 'The father clock id.'
+                        ;
+            type string {
+              length 0..31 {
+                description 'The length of the clock id.'
+                            ;
+              }
+            }
+          }
+          leaf gportid {
+            description 'The grandmaster clock id.'
+                        ;
+            type string {
+              length 0..31 {
+                  description 'The length of the clock id.'
+                            ;
+              }
+            }
+          }
+          leaf priority1 {
+            description 'The priority1 of current clock.'
+                        ;
+            type uint8 {
+              range 0..255 {
+                  description 'The priority1 of grandmaster.'
+                            ;
+              }
+            }
+          }
+          leaf priority2 {
+            description 'The priority2 of current clock.'
+                        ;
+            type uint8 {
+              range 0..255 {
+                  description 'The priority2 of grandmaster.'
+                            ;
+              }
+            }
+          }
+          leaf clock-class {
+            description 'The clock class of current clock.'
+                        ;
+            type uint8 {
+              range 0..255 {
+                  description 'The clock class of grandmaster'
+                            ;
+              }
+            }
+          }
+          leaf clock-accuracy {
+            description 'The clock accuracy of current clock.'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock accuracy of grandmaster.'
+                            ;
+              }
+            }
+          }
+          leaf offset-scaled-log-variance {
+            description 'The offset scaled log variance of current clock.'
+                        ;
+            type uint16 {
+              range 0..65535 {
+                description 'The offset scaled log variance of grandmaster.'
+                            ;
+              }
+            }
+          }
+          leaf timesource {
+            description 'The time source of current clock.'
+                        ;
+            type enumeration {
+              enum ATOMIC_CLOCK {
+                value 16 ;
+                description 'The time source of current clock is atomic resonance.'
+                            ;
+              }
+              enum GPS {
+                value 32 ;
+                description 'The time source of current clock is GPS.'
+                            ;
+              }
+              enum PTP {
+                value 64 ;
+                description 'The time source of current clock is PTP.'
+                            ;
+              }
+              enum NTP {
+                value 80 ;
+                description 'The time source of current clock is NTP.'
+                            ;
+              }
+              enum HAND_SET {
+                value 96 ;
+                description 'The time source of current clock is HAND_SET.'
+                            ;
+              }
+              enum OTHER {
+                value 144 ;
+                description 'The time source of current clock is other.'
+                          ;
+              }
+              enum INTERNAL_OSCILLATOR {
+                value 160 ;
+                description 'The time source of current clock is internal oscilla'
+                          + 'tor.'
+                            ;
+              }
+              enum TERRESTRIAL_RADIO {
+                value 48 ;
+                description 'The time source of current clock is radio.'
+                            ;
+              }
+              enum 0XF0 {
+                value 240 ;
+                description 'The timesource value is 0XF0.'
+                            ;
+              }
+              enum 0XF1 {
+                value 241 ;
+                description 'The timesource value is 0XF1.'
+                            ;
+              }
+              enum 0XF2 {
+                value 242 ;
+                description 'The timesource value is 0XF2.'
+                            ;
+              }
+              enum 0XF3 {
+                value 243 ;
+                description 'The timesource value is 0XF3.'
+                            ;
+              }
+              enum 0XF4 {
+                value 244 ;
+                description 'The timesource value is 0XF4.'
+                            ;
+              }
+              enum 0XF5 {
+                value 245 ;
+                description 'The timesource value is 0XF5.'
+                            ;
+              }
+            enum 0XF6 {
+                value 246 ;
+                description 'The timesource value is 0XF6.'
+                            ;
+              }
+              enum 0XF7 {
+                value 247 ;
+                description 'The timesource value is 0XF7.'
+                            ;
+              }
+              enum 0XF8 {
+                value 248 ;
+                description 'The timesource value is 0XF8.'
+                            ;
+              }
+              enum 0XF9 {
+                value 249 ;
+                description 'The timesource value is 0XF9.'
+                            ;
+              }
+              enum 0XFA {
+                value 250 ;
+                description 'The timesource value is 0XFA.'
+                            ;
+              }
+              enum 0XFB {
+                value 251 ;
+                description 'The timesource value is 0XFB.'
+                            ;
+              }
+              enum 0XFC {
+                value 252 ;
+                description 'The timesource value is 0XFC.'
+                            ;
+              }
+              enum 0XFD {
+                value 253 ;
+                description 'The timesource value is 0XFD.'
+                            ;
+              }
+              enum 0XFE {
+                value 254 ;
+                description 'The timesource value is 0XFE.'
+                            ;
+              }
+              enum 0XFF {
+                value 255 ;
+                description 'The timesource value is 0XFF.'
+                            ;
+              }
+            }
+          }
+          leaf timescale {
+            description 'The timescale of current clock.'
+                      ;
+            type enumeration {
+              enum PTP {
+                value 1 ;
+                description 'The clock timescale is PTP.'
+                            ;
+              }
+              enum ARB {
+                value 0 ;
+                description 'The clock timescale is ARB.'
+                            ;
+              }
+            }
+          }
+          leaf output-clockclass {
+            description 'The out clock class of current clock.'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'The clock class of grandmaster'
+                            ;
+              }
+            }
+          }
+          leaf time-status {
+            description 'The time status.'
+                        ;
+            type enumeration {
+              enum invalid {
+                value 0 ;
+                description 'Time status is invalid.'
+                            ;
+              }
+              enum unlock {
+                value 1 ;
+                description 'Time status is unlock.'
+                            ;
+              }
+              enum lock {
+                value 2 ;
+                description 'Time status is lock.'
+                            ;
+              }
+            }
+            default invalid ;
+          }
+          leaf utc-offset {
+            description 'The UTC offset,in second.'
+                        ;
+            type int16 ;
+            units second ;
+          }
+          leaf device-accuracy {
+            description 'Device accuracy,ultra-precision/high-precision.'
+                        ;
+            type enumeration {
+              enum ultra-precision {
+                value 1 ;
+                description 'Device accuracy is ultra precision.'
+                            ;
+              }
+              enum high-precision {
+                value 0 ;
+                description 'Device accuracy is high precision.'
+                            ;
+              }
+            }
+          }
+          leaf domain {
+            description 'The domain value of local.'
+                        ;
+            type uint8 {
+              range 0..255 {
+                description 'The domain value of local.'
+                            ;
+              }
+            }
+          }
+          leaf global-status {
+            description 'The global status of PTP,enable/disable.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'PTP global status is disable.'
+                            ;
+              }
+              enum enable {
+                value 1 ;
+                description 'PTP global status is enable.'
+                            ;
+              }
+            }
+          }
+          leaf algorithm {
+            description 'The algorithm of PTP port state,manual\BMC\alternate-BMC.'
+                        ;
+            type enumeration {
+              enum manual {
+                value 1 ;
+                description 'Manually set port state.'
+                            ;
+              }
+              enum bmc {
+                value 2 ;
+                description 'Set port state by BMC.'
+                            ;
+              }
+              enum alternate-bmc {
+                value 3 ;
+                  description 'Set port state by alternate-BMC.'
+                            ;
+              }
+            }
+          }
+          leaf clock-type {
+            description 'The PTP clock type,oc/bc/p2ptc/e2etc/p2poc/e2eoc.'
+                        ;
+            type enumeration {
+              enum oc {
+                value 1 ;
+                description 'Ordinary clock.'
+                            ;
+              }
+              enum bc {
+                value 2 ;
+                description 'Boundary clock.'
+                            ;
+              }
+              enum p2ptc {
+                value 4 ;
+                description 'P2P transparent clock.'
+                            ;
+              }
+              enum p2ptcoc {
+                value 5 ;
+                description 'P2P transparent and ordinary clock.'
+                            ;
+              }
+              enum e2etc {
+                value 8 ;
+                description 'E2E transparent clock.'
+                            ;
+              }
+              enum e2etcoc {
+                value 9 ;
+                description 'E2E transparent and ordinary clock.'
+                            ;
+              }
+             enum e2etcbc {
+                value 10 ;
+                description 'E2E transparent clock and boundary clock.'
+                            ;
+              }
+            }
+            default bc ;
+          }
+          leaf t2-minus-t1 {
+            description 'The time difference between T2 and T1 as computed by the slave.'
+                        ;
+            type string {
+              length 0..31 ;
+            }
+            units ns ;
+          }
+          leaf t4-minus-t3  {
+            description 'The time difference between T4 and T3 as computed by the slave.'
+                        ;
+            type string {
+              length 0..31 ;
+            }
+            units ns ;
+          }
+        }
+      }
+    }
+  }
+}

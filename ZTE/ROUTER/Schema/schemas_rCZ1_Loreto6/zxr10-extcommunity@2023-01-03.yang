@@ -1,0 +1,901 @@
+module zxr10-extcommunity {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/extcommunity'
+            ;
+  prefix extcom ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe extcommunity.'
+              ;
+  revision 2023-01-03 {
+    description '1.Add a contaioner: /configuration/extcommunity/basics/basic/e'
+              + 'ncapsulations.'
+                ;
+  }
+  revision 2022-09-13 {
+    description '1.Modify the range of the leaf:/configuration/extcommunity/bas'
+              + 'ics/basic/list-name.'+"\n"
+              + '2.Modify the range of the leaf:/configuration/extcommunity/bas'
+              + 'ic-descriptions/basic-description/list-name.'+"\n"
+              + '3.Modify the range of the leaf:/configuration/extcommunity/adv'
+              + 'anceds/advanced/list-name.'+"\n"
+              + '4.Modify the range of the leaf:/configuration/extcommunity/adv'
+              + 'anced-descriptions/advanced-description/list-name.'
+                ;
+  }
+  revision 2021-12-01 {
+    description '1.Add a container:/configuration/extcommunity/policy-default-a'
+              + 'ction.'
+                ;
+  }
+  revision 2020-06-24 {
+    description '1.Add the container:/configuration/extcommunity/standard-descr'
+              + 'iptions.'+"\n"
+              + '2.Add the container:/configuration/extcommunity/expanded-descr'
+              + 'iptions.'+"\n"
+              + '3.Add the container:/configuration/extcommunity/basic-descript'
+              + 'ions.'+"\n"
+              + '4.Add the container:/configuration/extcommunity/advanced-descr'
+              + 'iptions.'
+                ;
+  }
+  revision 2020-03-25 {
+    description '1.Add the container:/configuration/extcommunity/trigger-delay.'
+                ;
+  }
+  revision 2017-11-20 {
+    description '1.Add the containers:/configuration/extcommunity/basics;/confi'
+              + 'guration/extcommunity/advanceds.'
+                ;
+  }
+  revision 2014-12-01 {
+    description 'Initial version'
+                ;
+  }
+  container configuration {
+    description "Extcommunity moudle's configuration"
+                ;
+    container extcommunity {
+      description 'Set extcommunity moudle'
+                  ;
+      container standards {
+        description 'Extended community list(standard)'
+                    ;
+        list standard {
+          description 'Extended community list(standard)'
+                      ;
+          max-elements 1 ;
+          key 'list-no action-type seq-no'
+              ;
+          leaf list-no {
+            description 'Extended community list number (standard),the range of'
+                      + ' value is from 1 to 99.'
+                        ;
+            type uint16 {
+              range 1..99 {
+                description 'The range of value is from 1 to 99.'
+                            ;
+              }
+            }
+          }
+          leaf action-type {
+            description 'Deny  :Specify extended community to reject'+"\n"
+                      + 'Permit:Specify extended community to accept'
+                        ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Specify extended community to reject.'
+                            ;
+              }
+              enum permit {
+                value 1 ;
+                description 'Specify extended community to accept.'
+                            ;
+              }
+            }
+          }
+          leaf seq-no {
+            description "Set extended community's sequence number"
+                        ;
+            type uint32 ;
+          }
+          choice number-choice {
+            description 'Set community number in different format(asn-nn,asnd-n'
+                      + 'n,ipadd-nn,etc).'
+                        ;
+            mandatory true ;
+            case general-case {
+              description 'Set general community number in string format(<0-42'
+                        + '94967295>:<0-4294967295>).'
+                          ;
+              container general-asns {
+                description 'General community'
+                            ;
+                list general-asn {
+                  description 'General community'
+                              ;
+                  max-elements 10 ;
+                  key value ;
+                  leaf value {
+                    description 'Set value in <0-4294967295>:<0-4294967295>.'
+                                ;
+                    type string {
+                      length 3..21 {
+                        description 'The length of this value if from 3 to 21.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            case number-case {
+              description 'Set community number in different format(asn-nn,asnd'
+                        + '-nn,ipadd-nn,etc).'
+                          ;
+              container rt-non-trans {
+                description 'Set non-Transitive Route Target'
+                            ;
+                container asns {
+                  description 'Set VPN extended community in ASN_NN'
+                              ;
+                  list asn {
+                    description 'Set VPN extended community in ASN_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <0-65535>:<0-4294967295>'
+                                  ;
+                      type ncd:asn-nn ;
+                    }
+                  }
+                }
+                container asnds {
+                  description 'Set VPN extended community in ASND_NN'
+                              ;
+                  list asnd {
+                    description 'Set VPN extended community in ASND_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <1-65535>.<0-65535>:<0-65535>'
+                                  ;
+                      type ncd:asnd-nn ;
+                    }
+                  }
+                }
+                container ipadds {
+                  description 'Set VPN extended community in IPADD_NN'
+                              ;
+                  list ipadd {
+                    description 'Set VPN extended community in IPADD_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in A.B.C.D:<0-65535>'
+                                  ;
+                      type ncd:ipadd-nn ;
+                    }
+                  }
+                }
+              }
+              container rt-trans {
+                description 'Set transitive Route Target'
+                            ;
+                container asns {
+                  description 'Set VPN extended community in ASN_NN'
+                              ;
+                  list asn {
+                    description 'Set VPN extended community in ASN_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <0-65535>:<0-4294967295>'
+                                  ;
+                      type ncd:asn-nn ;
+                    }
+                  }
+                }
+                container asnds {
+                  description 'Set VPN extended community in ASND_NN'
+                              ;
+                  list asnd {
+                    description 'Set VPN extended community in ASND_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <1-65535>.<0-65535>:<0-65535>'
+                                  ;
+                      type ncd:asnd-nn ;
+                    }
+                  }
+                }
+                container ipadds {
+                  description 'Set VPN extended community in IPADD_NN'
+                              ;
+                  list ipadd {
+                    description 'Set VPN extended community in IPADD_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in A.B.C.D:<0-65535>'
+                                  ;
+                      type ncd:ipadd-nn ;
+                    }
+                  }
+                }
+              }
+              container soo-non-trans {
+                description 'Set non-Transitive Site-of-Origin'
+                            ;
+                container asns {
+                  description 'Set VPN extended community in ASN_NN'
+                              ;
+                  list asn {
+                    description 'Set VPN extended community in ASN_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <0-65535>:<0-4294967295>'
+                                  ;
+                      type ncd:asn-nn ;
+                    }
+                  }
+                }
+                container asnds {
+                  description 'Set VPN extended community in ASND_NN'
+                              ;
+                  list asnd {
+                    description 'Set VPN extended community in ASND_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <1-65535>.<0-65535>:<0-65535>'
+                                  ;
+                      type ncd:asnd-nn ;
+                    }
+                  }
+                }
+                container ipadds {
+                  description 'Set VPN extended community in IPADD_NN'
+                              ;
+                  list ipadd {
+                    description 'Set VPN extended community in IPADD_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in A.B.C.D:<0-65535>'
+                                  ;
+                      type ncd:ipadd-nn ;
+                    }
+                  }
+                }
+              }
+              container soo-trans {
+                description 'Set transitive Site-of-Origin'
+                            ;
+                container asns {
+                  description 'Set VPN extended community in ASN_NN'
+                              ;
+                  list asn {
+                    description 'Set VPN extended community in ASN_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <0-65535>:<0-4294967295>'
+                                  ;
+                      type ncd:asn-nn ;
+                    }
+                  }
+                }
+                container asnds {
+                  description 'Set VPN extended community in ASND_NN'
+                              ;
+                  list asnd {
+                    description 'Set VPN extended community in ASND_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <1-65535>.<0-65535>:<0-65535>'
+                                  ;
+                      type ncd:asnd-nn ;
+                    }
+                  }
+                }
+                container ipadds {
+                  description 'Set VPN extended community in IPADD_NN'
+                              ;
+                  list ipadd {
+                    description 'Set VPN extended community in IPADD_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in A.B.C.D:<0-65535>'
+                                  ;
+                      type ncd:ipadd-nn ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      container standard-descriptions {
+        description 'The description of standard extcommunity list (1-79).'
+                    ;
+        list standard-description {
+          description 'The description of standard extcommunity list (1-79).'
+                      ;
+          key list-no ;
+          leaf list-no {
+            description 'Extended community list number (standard),the range of'
+                      + ' value is from 1 to 99.'
+                        ;
+            type uint16 {
+              range 1..99 {
+                description 'The range of value is from 1 to 99.'
+                            ;
+              }
+            }
+          }
+          leaf description {
+            description 'The description of extcommunity list (1-79).'
+                        ;
+            type string {
+              length 1..79 {
+                description 'The length of description of community-list is fro'
+                          + 'm 1 to 79.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2020-06-24 ;
+      }
+      container expandeds {
+        description 'Extended community list(expanded)'
+                    ;
+        list expanded {
+          description 'Extended community list(expanded)'
+                      ;
+          max-elements 1 ;
+          key 'list-no action-type seq-no'
+              ;
+          leaf list-no {
+            description 'Extended community list number (expanded),the range of'
+                      + ' value is from 100 to 500.'
+                        ;
+            type uint16 {
+              range 100..500 {
+                description 'The range of value is from 100 to 500.'
+                            ;
+              }
+            }
+          }
+          leaf action-type {
+            description 'Deny  : Specify extended community to reject'+"\n"
+                      + 'Permit: Specify extended community to accept'
+                        ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Specify extended community to reject.'
+                            ;
+              }
+              enum permit {
+                value 1 ;
+                description 'Specify extended community to accept.'
+                            ;
+              }
+            }
+          }
+          leaf seq-no {
+            description "Set extended community's sequence number"
+                        ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The range of this value is from 1 to 4294967295.'
+                            ;
+              }
+            }
+          }
+          container regex {
+            description 'An ordered list as a regular-expression'
+                        ;
+            leaf value {
+              description 'An ordered list as a regular-expression'
+                          ;
+              type ncd:string-with-blank {
+                length 1..63 {
+                  description 'The length of this value is from 1 to 63.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+      }
+      container expanded-descriptions {
+        description 'The description of expanded extcommunity list (1-79).'
+                    ;
+        list expanded-description {
+          description 'The description of expanded extcommunity list (1-79).'
+                      ;
+          key list-no ;
+          leaf list-no {
+            description 'Extended community list number (expanded),the range of'
+                      + ' value is from 100 to 500.'
+                        ;
+            type uint16 {
+              range 100..500 {
+                description 'The range of value is from 100 to 500.'
+                            ;
+              }
+            }
+          }
+          leaf description {
+            description 'The description of extcommunity list (1-79).'
+                        ;
+            type string {
+              length 1..79 {
+                description 'The length of description of community-list is fro'
+                          + 'm 1 to 79.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2020-06-24 ;
+      }
+      container basics {
+        description 'Extended community list(basic)'
+                    ;
+        list basic {
+          description 'Extended community list name(basic)'
+                      ;
+          max-elements 1 ;
+          key 'list-name action-type seq-no'
+              ;
+          leaf list-name {
+            description 'Extended community list name(basic).'
+                        ;
+            type string {
+              length 1..169 ;
+            }
+          }
+          leaf action-type {
+            description 'Deny  :Specify extended community to reject'+"\n"
+                      + 'Permit:Specify extended community to accept'
+                        ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Specify extended community to reject.'
+                            ;
+              }
+              enum permit {
+                value 1 ;
+                description 'Specify extended community to accept.'
+                            ;
+              }
+            }
+          }
+          leaf seq-no {
+            description "Set extended community's sequence number"
+                        ;
+            type uint32 ;
+          }
+          choice number-choice {
+            description 'Set community number in different format(asn-nn,asnd-n'
+                      + 'n,ipadd-nn,etc).'
+                        ;
+            mandatory true ;
+            case general-case {
+              description 'Set general community number in string format(<0-42'
+                        + '94967295>:<0-4294967295>).'
+                          ;
+              container general-asns {
+                description 'General community'
+                            ;
+                list general-asn {
+                  description 'General community'
+                              ;
+                  max-elements 10 ;
+                  key value ;
+                  leaf value {
+                    description 'Set value in <0-4294967295>:<0-4294967295>.'
+                                ;
+                    type string {
+                      length 3..21 {
+                        description 'The length of this value if from 3 to 21.'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            case number-case {
+              description 'Set community number in different format(asn-nn,asnd'
+                        + '-nn,ipadd-nn,etc).'
+                          ;
+              container rt-non-trans {
+                description 'Set non-Transitive Route Target'
+                            ;
+                container asns {
+                  description 'Set VPN extended community in ASN_NN'
+                              ;
+                  list asn {
+                    description 'Set VPN extended community in ASN_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <0-65535>:<0-4294967295>'
+                                  ;
+                      type ncd:asn-nn ;
+                    }
+                  }
+                }
+                container asnds {
+                  description 'Set VPN extended community in ASND_NN'
+                              ;
+                  list asnd {
+                    description 'Set VPN extended community in ASND_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <1-65535>.<0-65535>:<0-65535>'
+                                  ;
+                      type ncd:asnd-nn ;
+                    }
+                  }
+                }
+                container ipadds {
+                  description 'Set VPN extended community in IPADD_NN'
+                              ;
+                  list ipadd {
+                    description 'Set VPN extended community in IPADD_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in A.B.C.D:<0-65535>'
+                                  ;
+                      type ncd:ipadd-nn ;
+                    }
+                  }
+                }
+              }
+              container rt-trans {
+                description 'Set transitive Route Target'
+                            ;
+                container asns {
+                  description 'Set VPN extended community in ASN_NN'
+                              ;
+                  list asn {
+                    description 'Set VPN extended community in ASN_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <0-65535>:<0-4294967295>'
+                                  ;
+                      type ncd:asn-nn ;
+                    }
+                  }
+                }
+                container asnds {
+                  description 'Set VPN extended community in ASND_NN'
+                              ;
+                  list asnd {
+                    description 'Set VPN extended community in ASND_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <1-65535>.<0-65535>:<0-65535>'
+                                  ;
+                      type ncd:asnd-nn ;
+                    }
+                  }
+                }
+                container ipadds {
+                  description 'Set VPN extended community in IPADD_NN'
+                              ;
+                  list ipadd {
+                    description 'Set VPN extended community in IPADD_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in A.B.C.D:<0-65535>'
+                                  ;
+                      type ncd:ipadd-nn ;
+                    }
+                  }
+                }
+              }
+              container soo-non-trans {
+                description 'Set non-Transitive Site-of-Origin'
+                            ;
+                container asns {
+                  description 'Set VPN extended community in ASN_NN'
+                              ;
+                  list asn {
+                    description 'Set VPN extended community in ASN_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <0-65535>:<0-4294967295>'
+                                  ;
+                      type ncd:asn-nn ;
+                    }
+                  }
+                }
+                container asnds {
+                  description 'Set VPN extended community in ASND_NN'
+                              ;
+                  list asnd {
+                    description 'Set VPN extended community in ASND_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <1-65535>.<0-65535>:<0-65535>'
+                                  ;
+                      type ncd:asnd-nn ;
+                    }
+                  }
+                }
+                container ipadds {
+                  description 'Set VPN extended community in IPADD_NN'
+                              ;
+                  list ipadd {
+                    description 'Set VPN extended community in IPADD_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in A.B.C.D:<0-65535>'
+                                  ;
+                      type ncd:ipadd-nn ;
+                    }
+                  }
+                }
+              }
+              container soo-trans {
+                description 'Set transitive Site-of-Origin'
+                            ;
+                container asns {
+                  description 'Set VPN extended community in ASN_NN'
+                              ;
+                  list asn {
+                    description 'Set VPN extended community in ASN_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <0-65535>:<0-4294967295>'
+                                  ;
+                      type ncd:asn-nn ;
+                    }
+                  }
+                }
+                container asnds {
+                  description 'Set VPN extended community in ASND_NN'
+                              ;
+                  list asnd {
+                    description 'Set VPN extended community in ASND_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in <1-65535>.<0-65535>:<0-65535>'
+                                  ;
+                      type ncd:asnd-nn ;
+                    }
+                  }
+                }
+                container ipadds {
+                  description 'Set VPN extended community in IPADD_NN'
+                              ;
+                  list ipadd {
+                    description 'Set VPN extended community in IPADD_NN'
+                                ;
+                    key value ;
+                    leaf value {
+                      description 'Set value in A.B.C.D:<0-65535>'
+                                  ;
+                      type ncd:ipadd-nn ;
+                    }
+                  }
+                }
+              }
+            }
+            case encapsulation-case {
+              description 'Set encapsulation extended community number in strin'
+                        + 'g format(<0>:<0-65535>).'
+                          ;
+              container encapsulations {
+                description 'Set encapsulation extended community.'
+                            ;
+                list encapsulation {
+                  description 'Set encapsulation extended community.'
+                              ;
+                  max-elements 10 ;
+                  key value ;
+                  leaf value {
+                    description 'Set value in <0>:<0-65535>'
+                                ;
+                    type ncd:asn-nn ;
+                  }
+                }
+              }
+              ncd:revise-date 2023-01-03 ;
+            }
+          }
+        }
+        ncd:revise-date 2017-11-20 ;
+      }
+      container basic-descriptions {
+        description 'The description of basic extcommunity list (1-79).'
+                    ;
+        list basic-description {
+          description 'The description of basic extcommunity list (1-79).'
+                      ;
+          key list-name ;
+          leaf list-name {
+            description 'Extended community list name(basic).'
+                        ;
+            type string {
+              length 1..169 ;
+            }
+          }
+          leaf description {
+            description 'The description of extcommunity list (1-79).'
+                        ;
+            type string {
+              length 1..79 {
+                description 'The length of description of community-list is fro'
+                          + 'm 1 to 79.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2020-06-24 ;
+      }
+      container advanceds {
+        description 'Extended community list name(advanced)'
+                    ;
+        list advanced {
+          description 'Extended community list name(advanced)'
+                      ;
+          max-elements 1 ;
+          key 'list-name action-type seq-no'
+              ;
+          leaf list-name {
+            description 'Extended community list number (advanced).'
+                        ;
+            type string {
+              length 1..169 ;
+            }
+          }
+          leaf action-type {
+            description 'Deny  : Specify extended community to reject'+"\n"
+                      + 'Permit: Specify extended community to accept'
+                        ;
+            type enumeration {
+              enum deny {
+                value 0 ;
+                description 'Specify extended community to reject.'
+                            ;
+              }
+              enum permit {
+                value 1 ;
+                description 'Specify extended community to accept.'
+                            ;
+              }
+            }
+          }
+          leaf seq-no {
+            description "Set extended community's sequence number"
+                        ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The range of this value is from 1 to 4294967295.'
+                            ;
+              }
+            }
+          }
+          container regex {
+            description 'An ordered list as a regular-expression'
+                        ;
+            leaf value {
+              description 'An ordered list as a regular-expression'
+                          ;
+              type ncd:string-with-blank {
+                length 1..63 {
+                  description 'The length of this value is from 1 to 63.'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+        ncd:revise-date 2017-11-20 ;
+      }
+      container advanced-descriptions {
+        description 'The description of advanced extcommunity list (1-79).'
+                    ;
+        list advanced-description {
+          description 'The description of advanced extcommunity list (1-79).'
+                      ;
+          key list-name ;
+          leaf list-name {
+            description 'Extended community list number (advanced).'
+                        ;
+            type string {
+              length 1..169 ;
+            }
+          }
+          leaf description {
+            description 'The description of extcommunity list (1-79).'
+                        ;
+            type string {
+              length 1..79 {
+                description 'The length of description of community-list is fro'
+                          + 'm 1 to 79.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+        ncd:revise-date 2020-06-24 ;
+      }
+      container trigger-delay {
+        description 'The delay time value (second) of trigger delay.'
+                    ;
+        presence trigger-delay ;
+        leaf delay-time {
+          description 'The delay time value (second) of trigger delay.'
+                      ;
+          type uint32 {
+            range 0..30 ;
+          }
+          mandatory true ;
+        }
+        ncd:revise-date 2020-03-25 ;
+      }
+      container policy-default-action {
+        description 'Configure default action.'
+                    ;
+        presence policy-default-action ;
+        leaf default-action {
+          description 'Permit:Specify packets to permit;'+"\n"
+                    + 'Deny:Specify packets to reject.'
+                      ;
+          type enumeration {
+            enum permit {
+              value 1 ;
+            }
+            enum deny {
+              value 2 ;
+            }
+          }
+          mandatory true ;
+        }
+        ncd:revise-date 2021-12-01 ;
+      }
+    }
+  }
+}

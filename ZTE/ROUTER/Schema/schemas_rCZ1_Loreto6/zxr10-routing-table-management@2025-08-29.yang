@@ -1,0 +1,4822 @@
+module zxr10-routing-table-management {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/rtm" ;
+  prefix rtm ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the routing table management(rtm).' ;
+  revision 2025-08-29 {
+    description 'Modify the ttl-ignore and tos-ignore node enumeration value.' ;
+  }
+
+  revision 2025-06-08 {
+    description 'Add three new leaf "ttl-ignore","tos-ignore","flowlabel" for container "rtm:ldsh-hash-key-board" and "rtm:ldsh-hash-key-global".Add a new container "/rtm:configuration/rtm:rtm/rtm:ldsh/rtm:hash/rtm:ldsh-hash-key-interface".' ;
+  }
+
+  revision 2025-03-27 {
+    description 'Add container /rtm:configuration/rtm:rtm/rtm:ldsh/rtm:load-sharing-mode for load-sharing mode configuration.' ;
+  }
+
+  revision 2024-07-06 {
+    description '1. Add leaf node "routeChangeType" to "changeRouteInfo/ipRoute/forward-infos/forward-info" and "changeRoute6Info/ipv6Route/forward-infos /forward-info" to add leaf node routeChangeType for telemetry to report route change types.
+2. Delete the key attribute "metric" from the leaf node added in "changeRouteInfo/ipRoute/forward-infos/forward-info" and "changeRoute6Info/ipv6Route/forward-infos/forward-info".	' ;
+  }
+
+  revision 2024-06-04 {
+    description 'Support the configuration of multiple factors for the upstream flow participating in the hash operation. The path is "configuration/rtm/hash/ldsh-hash-fields/ldsh-hash-field/multi-factors"' ;
+  }
+
+  revision 2024-06-01 {
+    description 'Remove the project label "PC.SWITCH" from feature "hash-port-attribute"; add the project label "PC.SWITCH" to feature "hash-port-factor".' ;
+  }
+
+  revision 2024-04-07 {
+    description 'Add nodes to support WTR in second. The paths are configuration/rtm/ldsh/wtr/wtr-second, configuration/rtm/ldsh/public-wtr, configuration/rtm/ldsh/private-wtr.' ;
+  }
+
+  revision 2024-04-02 {
+    description 'Add case "configuration/rtm/ldsh/hash/hash-algorithm/ldsh-hash-algorithm/algorithm/hash".' ;
+  }
+
+  revision 2024-02-22 {
+    description 'The notification leaf nodes "routeSummary/specific/route-owner" and "route6Summary/specific/route-owner" are defined as keys.' ;
+  }
+
+  revision 2024-01-30 {
+    description 'Add choice "configuration/rtm/ldsh/hash/ldsh-hash-fields/ldsh-hash-fields/hash-element-port" to distinguish incoming port as hash factor..' ;
+  }
+
+  revision 2024-01-16 {
+    description 'Add list "forward-infos" for telemetry.' ;
+  }
+
+  revision 2023-10-11 {
+    description 'Add one ipv6 route owner type(bgp_fs)to the enumeration of ipv6-owner-type.
+Add one route type(bgp_fs) to the list of route6-statistic.
+Add one route type(bgp_fs) to the list of route6-path-statistic.
+Add one ipv6 route owner type(bgp-fs)to the enumeration of owner-type.
+Add one route type(bgp-fs) to the list of route-statistic.
+Add one route type(bgp-fs) to the list of route-path-statistic.' ;
+  }
+
+  revision 2023-04-07 {
+    description 'Add if-feature for load sharing scramble. The path is configuration/rtm/ldsh/hash/ldsh-hash-scramble.' ;
+  }
+
+  revision 2023-03-07 {
+    description 'Add one ipv6 route owner type(ipv6_source)to the enumeration of ipv6-owner-type.
+Add one route type(ipv6_source) to the list of route6-statistic.
+Add one route type(ipv6_source) to the list of route6-path-statistic.' ;
+  }
+
+  revision 2022-11-07 {
+    description 'Add node for requirement: show the routes by assigned prefix in all vrfs.' ;
+  }
+
+  revision 2022-08-15 {
+    description 'Add node for selecting load-sharing hash crc polynomial, the path is configuration/rtm/ldsh/hash/ldsh-hash-polynomials.' ;
+  }
+
+  revision 2022-05-13 {
+    description 'Add node for dynamic VPN routes information in list route-summary-all' ;
+  }
+
+  revision 2022-04-26 {
+    description 'command load-share support new parameter:l2-l3' ;
+  }
+
+  revision 2022-02-22 {
+    description "Support show VPN name with '?'." ;
+  }
+
+  revision 2022-01-26 {
+    description 'Remove the container of configuration/rtm/ldsh/hash/ldsh-hash-fields/ldsh-hash-fields/hash-element/l3/l3-elements, restore the l3 leaf node.' ;
+  }
+
+  revision 2021-12-24 {
+    description 'Modify for UFP-58754 show direct-forward-type in route forward table searching result.' ;
+  }
+
+  revision 2021-11-22 {
+    description 'Add new node to query OSPFv2,OSPFv3,ISISv4,ISISv6,BGP4,BGP4+ global or vpn route summary for telemetry' ;
+  }
+
+  revision 2021-11-16 {
+    description 'Modify for ROSNG-202625:optimize for command load-sharing support filed gtp te-id' ;
+  }
+
+  revision 2021-06-22 {
+    description 'Add ignore-cword leaf which in configuration/rtm/ldsh/hash/mpls-ldsh-hash-fields/mpls-l2-ldsh-hash-field.' ;
+  }
+
+  revision 2021-05-11 {
+    description 'Obsolete deprecated containers of frr6, route6, route6-path-statistic, route6-statistics, state/rtm6/route-summary-alls.' ;
+  }
+
+  revision 2021-04-15 {
+    description 'Add node to set hash fields element of ignoring protocols.' ;
+  }
+
+  revision 2021-03-06 {
+    description 'Add nodes for MPAR routes.' ;
+  }
+
+  revision 2020-10-16 {
+    description 'Add one route owner type(npt_v6)to the enumeration of owner-type.
+Add one route type(npt_v6) to the list of route6-statistic.
+Add one route type(npt_v6) to the list of route6-path-statistic.' ;
+  }
+
+  revision 2020-05-05 {
+    description 'add gateway leaf in instance node iproute\iproute6' ;
+  }
+
+  revision 2020-03-23 {
+    description 'Modify the data type of vpnname nodes to support more VPN(such as DCN).' ;
+    reference "container frr/route/route-statistics/route-path-statistics/route-summary-alls
+    container frr6/route6/route6-statistics/route6-path-statistics/route6-summary-alls" ;
+  }
+
+  revision 2020-02-13 {
+    description 'Add new nodes for incoming port number to hash fields. The paths are "configuration/rtm/ldsh/hash/ldsh-hash-fields/ldsh-hash-fields/incoming-port-num","configuration/rtm/ldsh/hash/mpls-ldsh-hash-fields/mpls-ldsh-hash-field/incoming-port-num" and "configuration/rtm/ldsh/hash/mpls-ldsh-hash-fields/mpls-l2-hash-field/incoming-port-num".' ;
+  }
+
+  revision 2019-11-29 {
+    description 'Add new nodes to display the status of slave nexthop. The paths are "state/rtm/frr/ipfrr/route-slave-status" and "state/rtm6/frr6/ipfrr6/route6-slave-status".' ;
+  }
+
+  revision 2019-10-29 {
+    description 'Rollback the element value of enum named owner-type.
+Rollback the element value of enum name ipv6-owner-type.
+Reason: Network management can not update cause of the modification of the enum.' ;
+  }
+
+  revision 2019-07-23 {
+    description 'Add one route owner type(bgp-evpn) to the enumeration of owner-type.
+Add one route type(bgp-evpn) to the list of route-statistic.
+Add one route type(bgp-evpn) to the list of route-path-statistic.
+Add one route type(bgp-evpn) to the list of route6-statistic.
+
+Add one route type(bgp-evpn) to the list of route6-path-statistic.' ;
+  }
+
+  revision 2019-05-28 {
+    description 'Add a notification node of changed IPv6 routes, the path is "changeRoute6Info".' ;
+  }
+
+  revision 2019-01-23 {
+    description 'Add a notification node of changed IP routes, the path is "changeRouteInfo".' ;
+  }
+
+  revision 2019-01-10 {
+    description 'Add new owner-type dynamic-leased-line into model.' ;
+  }
+
+  revision 2018-07-20 {
+    description 'Modify for suit ipv4 route have ipv6 nexthop case.' ;
+  }
+
+  revision 2018-07-12 {
+    description 'Add one route owner type(nat-mask) to the enumeration of owner-type.
+Add one route type(nat-mask) to the list of route-statistic.
+Add one route type(nat-mask) to the list of route-path-statistic.
+Add one route type(srv6) to the list of route6-statistic.
+Add one route type(srv6) to the list of route6-path-statistic.
+Add one route owner type(srv6) to the enumeration of ipv6-owner-type.' ;
+  }
+
+  revision 2017-03-09 {
+    description 'Add the state node for IPv4 forwarding route.
+The path is "state/rtm/route/forward-info".' ;
+  }
+
+  revision 2017-02-06 {
+    description 'Add two route owner type(sgw and bras-pool) to the enumeration of owner-type.
+Add two route type(sgw and bras-pool) to the list of route-statistic.
+Add two route type(sgw and bras-pool) to the list of route-path-statistic.
+Add one route type(bras-pool) to the list of route6-statistic.
+Add one route type(bras-pool) to the list of route6-path-statistic.
+Add one route owner type(bras-pool) to the enumeration of ipv6-owner-type.' ;
+  }
+
+  revision 2017-01-13 {
+    description '1.Add the mpls-l2-ldsh-hash-field list in configuration/rtm/ldsh/mpls-ldsh-hash-fields.' ;
+  }
+
+  revision 2016-10-26 {
+    description 'This Netconf module provides IPv4/IPv6 routes statistics of global and all VPN routes
+this version add two nodes:
+1 state/rtm/route-summary-alls
+2 state/rtm6/route-summary-alls' ;
+  }
+
+  revision 2016-04-16 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version add four nodes:
+1.state\rtm6\route6-statistics\route6-statistics\user-network;
+2.state\rtm6\route6-statistics\route6-statistics\user-special;
+3.state\rtm6\route6-path-statistics\route6-path-statistics\user-network;
+4.state\rtm6\route6-path-statistics\route6-path-statistics\user-special;
+This version add two new values:user-network and user-special in choice ipv6-owner-type.' ;
+  }
+
+  revision 2015-05-18 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version add two nodes:
+1.state\rtm6\route6-statistics\route6-statistics\ldp-area;
+2.state\rtm6\route6-path-statistics\route6-path-statistics\ldp-area;
+This version add a new value:ldp-area in choice ipv6-owner-type.' ;
+  }
+
+  revision 2015-05-07 {
+    description "This Netconf module provides commonly used textual conventions for RTM.
+
+    This version change the MimDateType of iproute6's route-owner." ;
+  }
+
+  revision 2015-04-15 {
+    description "This Netconf module provides commonly used textual conventions for RTM.
+
+    This version change the MimDateType of iproute6's route-owner." ;
+  }
+
+  revision 2015-02-10 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version change spell of msp and lsp.' ;
+  }
+
+  revision 2015-02-02 {
+    description "This Netconf module provides commonly used textual conventions for RTM.
+
+    This version change the MimDateType of iproute's route-owner." ;
+  }
+
+  revision 2015-01-19 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version change the valuemap of ipv6 on ldsh-hash-key-board and ldsh-hash-key-global.' ;
+  }
+
+  revision 2014-12-05 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version add filter for ldsh-hash-key.' ;
+  }
+
+  revision 2014-09-16 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version add route frr status for state iproute.' ;
+  }
+
+  revision 2014-07-09 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version add state for statistics of fib.' ;
+  }
+
+  revision 2014-05-12 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version add state for information of ipv6 route.' ;
+  }
+
+  revision 2014-04-30 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version change mim action of ldsh-hash-fields,mpls-ldsh-hash-fields and ldsh-hash-algorithm.' ;
+  }
+
+  revision 2014-04-11 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version add state of route statistic.' ;
+  }
+
+  revision 2014-03-27 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version add configuration about mpls ldsh hash configuration,hash scramble and bandwidth refresh.' ;
+  }
+
+  revision 2014-02-20 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version deal spelling mistake of owner-type bgp-label and vpn-label.' ;
+  }
+
+  revision 2014-02-11 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version deal spelling mistake of owner-type static-vrf-global-nh.' ;
+  }
+
+  revision 2013-12-10 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version select the leaf route-nexthop and route-ifname as key of ip-route.' ;
+  }
+
+  revision 2013-10-10 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version add information about route for state, and add configuration about ldsh.' ;
+  }
+
+  revision 2013-08-05 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version changes the query condition.Adding objtype to identify the frr in global routing table or vpn routing table.' ;
+  }
+
+  revision 2013-07-30 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version changes the enumeration of forward-status.' ;
+  }
+
+  revision 2013-07-18 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+This version changes the module name form zxr10-rtm to zxr10-routing-table-management.' ;
+  }
+
+  revision 2013-06-13 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+It is initial version.' ;
+  }
+
+  feature changeRouteInfo {
+    description 'This function is for the information of changed routes.' ;
+  }
+
+  feature ldsh-scramble {
+    description 'For load sharing scramble.' ;
+    ncd:revise-date 2023-04-07 ;
+  }
+
+  feature hash-port-attribute {
+    description 'Set incoming port number as attribute.' ;
+    ncd:revise-date 2024-01-30 ;
+  }
+
+  feature hash-port-factor {
+    description 'Set incoming port number as hash factor.' ;
+    ncd:revise-date 2024-01-30 ;
+  }
+
+  feature ldsh-wtr-second {
+    description 'Set load sharing WTR in second.' ;
+    ncd:revise-date 2024-04-07 ;
+  }
+
+  feature ldsh-network-wtr {
+    description 'Set load sharing WTR in second.' ;
+    ncd:revise-date 2024-04-07 ;
+  }
+
+  feature hash-key-flowlabel {
+    description 'For load sharing hash-key flowlabel.' ;
+    ncd:revise-date 2025-06-08 ;
+  }
+
+  typedef owner-type {
+    type enumeration {
+      enum init {
+        value 0 ;
+        description 'This owner should not appear.' ;
+      }
+
+      enum static {
+        value 1 ;
+        description 'Route owner is static.' ;
+      }
+
+      enum direct {
+        value 2 ;
+        description 'Route owner is direct.' ;
+      }
+
+      enum broadcast {
+        value 3 ;
+        description 'Route owner is broadcast.' ;
+      }
+
+      enum multicast {
+        value 4 ;
+        description 'Route owner is multicast.' ;
+      }
+
+      enum martian {
+        value 5 ;
+        description 'Route owner is martian.' ;
+      }
+
+      enum address {
+        value 6 ;
+        description 'Route owner is address.' ;
+      }
+
+      enum ospf {
+        value 7 ;
+        description 'Route owner is ospf.' ;
+      }
+
+      enum bgp {
+        value 8 ;
+        description 'Route owner is bgp.' ;
+      }
+
+      enum bgp-label {
+        value 9 ;
+        description 'Route owner is bgp-label.' ;
+      }
+
+      enum rip {
+        value 10 ;
+        description 'Route owner is rip.' ;
+      }
+
+      enum isis-l1 {
+        value 11 ;
+        description 'Route owner is isis-l1.' ;
+      }
+
+      enum isis-l2 {
+        value 12 ;
+        description 'Route owner is isis-l2.' ;
+      }
+
+      enum icmp {
+        value 13 ;
+        description 'Route owner is icmp.' ;
+      }
+
+      enum snmp {
+        value 14 ;
+        description 'Route owner is snmp.' ;
+      }
+
+      enum nat {
+        value 15 ;
+        description 'Route owner is nat.' ;
+      }
+
+      enum natpt {
+        value 16 ;
+        description 'Route owner is natpt.' ;
+      }
+
+      enum vrrp {
+        value 17 ;
+        description 'Route owner is vrrp.' ;
+      }
+
+      enum ppp {
+        value 18 ;
+        description 'Route owner is ppp.' ;
+      }
+
+      enum asbr-vpn {
+        value 19 ;
+        description 'Route owner is asbr-vpn.' ;
+      }
+
+      enum rsvp-te {
+        value 20 ;
+        description 'Route owner is rsvp-te.' ;
+      }
+
+      enum user-ipaddress {
+        value 21 ;
+        description 'Route owner is user-ipaddress.' ;
+      }
+
+      enum user-network {
+        value 22 ;
+        description 'Route owner is user-network.' ;
+      }
+
+      enum static-vrf-global-nh {
+        value 23 ;
+        description 'Route owner is static-vrf-global-nh.' ;
+      }
+
+      enum IPSec {
+        value 24 ;
+        description 'Route owner is IPSec.' ;
+      }
+
+      enum vpn-label {
+        value 25 ;
+        description 'Route owner is vpn-label.' ;
+      }
+
+      enum psbusi-address {
+        value 26 ;
+        description 'Route owner is psbusi-address.' ;
+      }
+
+      enum psuser-address {
+        value 27 ;
+        description 'Route owner is psuser-address.' ;
+      }
+
+      enum ldp-area {
+        value 28 ;
+        description 'Route owner is ldp-area.' ;
+      }
+
+      enum user-special {
+        value 29 ;
+        description 'Route owner is user-special.' ;
+      }
+
+      enum dhcp-default {
+        value 30 ;
+        description 'Route owner is dhcp-default.' ;
+      }
+
+      enum dhcp-static {
+        value 31 ;
+        description 'Route owner is dhcp-static.' ;
+      }
+
+      enum slnat64 {
+        value 32 ;
+        description 'Route owner is slnat64.' ;
+      }
+
+      enum ves {
+        value 33 ;
+        description 'Route owner is ves.' ;
+      }
+
+      enum bras-pool {
+        value 34 ;
+        description 'Route owner is bras-pool.' ;
+      }
+
+      enum hagp {
+        value 35 ;
+        description 'Route owner is hybrid-access-gateway-protocol.' ;
+      }
+
+      enum nat-mask {
+        value 36 ;
+        description 'Route owner is nat-mask.' ;
+      }
+
+      enum dynamic-leased-line {
+        value 37 ;
+        description 'Route owner is dynamic-leased-line' ;
+      }
+
+      enum bgp-evpn {
+        value 38 ;
+        description 'Route owner is bgp-evpn.' ;
+      }
+
+      enum bgp-fs {
+        value 39 ;
+        description 'Route owner is bgp-flowspec.' ;
+      }
+
+    }
+
+    description 'The owner type of nexthop.' ;
+  }
+
+  typedef forward-status {
+    type enumeration {
+      enum master {
+        value 0 ;
+        description 'The master nexthop of this frr is active.' ;
+      }
+
+      enum slave {
+        value 1 ;
+        description 'The slave nexthop of this frr is active.' ;
+      }
+
+      enum no-forwarding {
+        value 2 ;
+        description 'There is no active nexthop for this frr.' ;
+      }
+
+      enum wtr {
+        value 3 ;
+        description 'This frr is waiting for cutback.' ;
+      }
+
+    }
+
+    description 'The forwarding status of frr.' ;
+  }
+
+  typedef select-module {
+    type enumeration {
+      enum global {
+        value 1 ;
+        description 'The frr in global routing table.' ;
+      }
+
+      enum vpn {
+        value 2 ;
+        description 'The frr in vpn routing table.' ;
+      }
+
+      enum global-vpn {
+        value 3 ;
+        description 'The frr in global routing table or vpn routing table.' ;
+      }
+
+      enum dynamic-vpnv4 {
+        value 4 ;
+        description 'The frr in dynamic-vpnv4 routing table.' ;
+      }
+
+      enum dynamic-vpnv6 {
+        value 5 ;
+        description 'The frr in dynamic-vpnv6 routing table.' ;
+      }
+
+      enum dynamic-evpn {
+        value 6 ;
+        description 'The frr in dynamic-evpn routing table.' ;
+      }
+
+    }
+
+    description 'The select module of frr.' ;
+  }
+
+  typedef ipv6-owner-type {
+    type enumeration {
+      enum init {
+        value 0 ;
+        description 'Route owner is init.' ;
+      }
+
+      enum kernel {
+        value 1 ;
+        description 'Route owner is kernel.' ;
+      }
+
+      enum direct {
+        value 2 ;
+        description 'Route owner is connect.' ;
+      }
+
+      enum static {
+        value 3 ;
+        description 'Route owner is static.' ;
+      }
+
+      enum rip {
+        value 4 ;
+        description 'Route owner is rip.' ;
+      }
+
+      enum ripng {
+        value 5 ;
+        description 'Route owner is ripng.' ;
+      }
+
+      enum ospfv2 {
+        value 6 ;
+        description 'Route owner is ospfv2.' ;
+      }
+
+      enum ospfv3 {
+        value 7 ;
+        description 'Route owner is ospfv3.' ;
+      }
+
+      enum bgp {
+        value 8 ;
+        description 'Route owner is bgp.' ;
+      }
+
+      enum isis_l1 {
+        value 9 ;
+        description 'Route owner is isis_l1.' ;
+      }
+
+      enum isis_l2 {
+        value 10 ;
+        description 'Route owner is isis_l2.' ;
+      }
+
+      enum icmp {
+        value 11 ;
+        description 'Route owner is icmp.' ;
+      }
+
+      enum multicast {
+        value 12 ;
+        description 'Route owner is multicast.' ;
+      }
+
+      enum user_ipaddr {
+        value 13 ;
+        description 'Route owner is user_ipaddr.' ;
+      }
+
+      enum vrrp {
+        value 14 ;
+        description 'Route owner is vrrp.' ;
+      }
+
+      enum ppp {
+        value 15 ;
+        description 'Route owner is ppp.' ;
+      }
+
+      enum nd {
+        value 16 ;
+        description 'Route owner is nd.' ;
+      }
+
+      enum address {
+        value 17 ;
+        description 'Route owner is address.' ;
+      }
+
+      enum dhcp {
+        value 18 ;
+        description 'Route owner is dhcp.' ;
+      }
+
+      enum sf_nat64 {
+        value 19 ;
+        description 'Route owner is sf_nat64.' ;
+      }
+
+      enum sl_nat64 {
+        value 20 ;
+        description 'Route owner is sl_nat64.' ;
+      }
+
+      enum aftr {
+        value 21 ;
+        description 'Route owner is aftr.' ;
+      }
+
+      enum bgp-label {
+        value 22 ;
+        description 'Route owner is bgp-label.' ;
+      }
+
+      enum psbusi-address {
+        value 23 ;
+        description 'Route owner is psbusi-address.' ;
+      }
+
+      enum psuser-address {
+        value 24 ;
+        description 'Route owner is psuser-address.' ;
+      }
+
+      enum ldp-area {
+        value 25 ;
+        description 'Route owner is ldp-area.' ;
+      }
+
+      enum user-network {
+        value 26 ;
+        description 'Route owner is user-network.' ;
+      }
+
+      enum user-special {
+        value 27 ;
+        description 'Route owner is user-special.' ;
+      }
+
+      enum bras-pool {
+        value 28 ;
+        description 'Route owner is bras-pool.' ;
+      }
+
+      enum srv6 {
+        value 30 ;
+        description 'Route owner is SRv6.' ;
+      }
+
+      enum dynamic-leased-line {
+        value 31 ;
+        description 'Route owner is dynamic-leased-line.' ;
+      }
+
+      enum bgp-evpn {
+        value 32 ;
+        description 'Route owner is bgp-evpn.' ;
+      }
+
+      enum npt_v6 {
+        value 33 ;
+        description 'Route owner is network-prefix-translation IPv6.' ;
+      }
+
+      enum mpra {
+        value 34 ;
+        description 'Multicast policy reserved address routes.' ;
+      }
+
+      enum ipv6_source {
+        value 35 ;
+      }
+
+      enum bgp_fs {
+        value 36 ;
+        description 'Route owner is bgp-flowspec.' ;
+      }
+
+    }
+
+  }
+
+  typedef change-type {
+    type enumeration {
+      enum create {
+        value 1 ;
+      }
+
+      enum update {
+        value 2 ;
+      }
+
+      enum delete {
+        value 3 ;
+      }
+
+    }
+
+  }
+
+  typedef slave-status {
+    type enumeration {
+      enum enable {
+        value 0 ;
+        description 'The slave nexthop is available.' ;
+      }
+
+      enum disable {
+        value 1 ;
+        description 'The slave nexthop is unavailable.' ;
+      }
+
+    }
+
+  }
+
+  typedef forward-type {
+    type enumeration {
+      enum init {
+        value 0 ;
+      }
+
+      enum direct {
+        value 1 ;
+      }
+
+    }
+
+    description 'The forward type of nexthop.' ;
+  }
+
+  typedef hash-polynomial {
+    type enumeration {
+      enum polynomial1 {
+        value 1 ;
+        description 'Select hash polynomial1.' ;
+      }
+
+      enum polynomial2 {
+        value 2 ;
+        description 'Select hash polynomial2.' ;
+      }
+
+      enum polynomial3 {
+        value 3 ;
+        description 'Select hash polynomial3.' ;
+      }
+
+      enum polynomial4 {
+        value 4 ;
+        description 'Select hash polynomial4.' ;
+      }
+
+      enum polynomial5 {
+        value 5 ;
+        description 'Select hash polynomial5.' ;
+      }
+
+      enum polynomial6 {
+        value 6 ;
+        description 'Select hash polynomial6.' ;
+      }
+
+    }
+
+    description 'Selection of load-sharing hash polynomial.' ;
+  }
+
+  typedef ecmp-or-ucmp {
+    type enumeration {
+      enum ucmp {
+        value 0 ;
+        description 'Select unequal cost multiple path mode.' ;
+      }
+
+      enum ecmp {
+        description 'Select equal cost multiple path mode.' ;
+        value 1 ;
+      }
+
+    }
+
+    description 'Selection of load-sharing-mode.' ;
+  }
+
+  container state {
+    config false ;
+    description 'This module show the forwarding information of routing table management.' ;
+    container rtm {
+      description 'This module show information about routing table management(rtm).' ;
+      container fib-statistics {
+        description 'The statistic of fib resource.' ;
+        leaf fib-used {
+          description 'The statistic of used fib.' ;
+          type uint32 ;
+
+        }
+
+        leaf fib-free {
+          description 'The statistic of unused fib.' ;
+          type uint32 ;
+
+        }
+
+      }
+
+      container frr {
+        description 'This module show the forwarding information of frr.' ;
+        list ipfrr {
+          description 'This module show the forwarding information of ip frr.
+For the frr of global,need select objtype(1),route-dest,route-prefix.
+For all frr of global,need select objtype(1).
+For the frr of the vpn,need select objtype(2),route-vrfname,route-dest,route-prefix.
+For all frr of the vpn,need select objtype(2),route-vrfname.
+For all frr of global and all vpn,need select objtype(3).' ;
+          key 'objtype route-vrfname route-dest route-prefix' ;
+          leaf objtype {
+            description 'The select module of ipfrr.' ;
+            type select-module ;
+
+          }
+
+          leaf route-vrfname {
+            description 'VRF name of the route.' ;
+            type ncd:string-quesiton-mark {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf route-dest {
+            description 'The destination IP address of this route.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf route-prefix {
+            description 'The mask of this route.' ;
+            type ncd:ipv4-mask ;
+
+          }
+
+          leaf route-master-nexthop {
+            description 'The nexthop of master route.' ;
+            type string ;
+
+            mandatory true ;
+          }
+
+          leaf route-master-ifname {
+            description 'The local interface name through which the master next hop of this route should be reached.' ;
+            type string {
+              length 0..31 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf route-master-owner {
+            description 'The protocol of master route.' ;
+            type owner-type ;
+
+            mandatory true ;
+          }
+
+          leaf route-master-label {
+            description 'The out label of master route.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf route-master-priority {
+            description 'The priority of master route.' ;
+            type uint8 {
+              range 0..255 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf route-master-metric {
+            description 'The metric of master route.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf route-master-is-pe {
+            description "Whether the next hop of master route is PE.
+
+            Ture:It's pe.
+
+            False:It's not pe." ;
+            type boolean ;
+
+            mandatory true ;
+          }
+
+          leaf route-slave-nexthop {
+            description 'The nexthop of slave route.' ;
+            type string ;
+
+            mandatory true ;
+          }
+
+          leaf route-slave-ifname {
+            description 'The local interface name through which the slave next hop of this route should be reached.' ;
+            type string {
+              length 0..31 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf route-slave-owner {
+            description 'The protocol of slave route.' ;
+            type owner-type ;
+
+            mandatory true ;
+          }
+
+          leaf route-slave-label {
+            description 'The out label of slave route.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf route-slave-priority {
+            description 'The priority of slave route.' ;
+            type uint8 {
+              range 0..255 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf route-slave-metric {
+            description 'The metric of slave route.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf route-slave-is-pe {
+            description "Whether the next hop of slave route is PE.
+
+            True:It's pe.
+
+            False:It's not pe." ;
+            type boolean ;
+
+            mandatory true ;
+          }
+
+          leaf route-forwarding-status {
+            description 'Forwarding status of frr.' ;
+            type forward-status ;
+
+            mandatory true ;
+          }
+
+          leaf route-slave-status {
+            description 'The status of slave nexthop.' ;
+            type slave-status ;
+
+            ncd:revise-date 2019-11-29 ;
+          }
+
+          ncd:select "objtype route-vrfname route-dest route-prefix" ;
+          ncd:select "objtype route-dest route-prefix" ;
+          ncd:select "objtype route-vrfname" ;
+          ncd:select objtype ;
+        }
+
+      }
+
+      container route {
+        description 'This module show the forwarding infor of route.' ;
+        list iproute {
+          description 'This module show the forwarding infor of ip route.
+For all route of global,need select objtype(1).
+For the special protocol route of global, need select object(1),route-owner.
+For exact match the route of global,need select objtype(1),route-dest,route-prefix and route-match-type(true).
+For best match the route of global,need select objtype(1),route-dest and route-prefix.
+For all route of the vrf,need select objtype(2),route-vpnname.
+For the special protocol route of the vrf, need select object(2),route-owner.
+For exact match the route of the vrf,need select objtype(2),route-vpnname,route-dest,route-prefix and route-match-type(true).
+For best match the route of the vrf,need select objtype(2),route-vpnname,route-dest and route-prefix.' ;
+          key 'objtype route-vpnname route-owner route-dest route-prefix route-is-exact-match route-nexthop route-ifname' ;
+          leaf objtype {
+            description 'The select module of fib.' ;
+            type select-module ;
+
+          }
+
+          leaf route-vpnname {
+            description 'VRF name of the route.' ;
+            type ncd:string-quesiton-mark {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf route-owner {
+            description 'The protocol of route.' ;
+            type owner-type ;
+
+          }
+
+          leaf route-dest {
+            description 'The destination IP address of this route.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf route-prefix {
+            description 'The mask of this route.' ;
+            type ncd:ipv4-mask ;
+
+          }
+
+          leaf route-is-exact-match {
+            description 'The match type of route.True is exact match,false is best match.' ;
+            type boolean ;
+
+          }
+
+          leaf route-nexthop {
+            description 'The nexthop of route.' ;
+            type string ;
+
+          }
+
+          leaf route-ifname {
+            description 'The local interface name through which the next hop of this route should be reached.' ;
+            type string {
+              length 0..31 ;
+
+            }
+
+          }
+
+          leaf route-priority {
+            description 'The priority of route.' ;
+            type uint8 {
+              range 0..255 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf route-metric {
+            description 'The metric of route.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf route-has-frr {
+            description 'Route frr relation flag.' ;
+            type boolean ;
+
+            mandatory true ;
+          }
+
+          leaf route-is-valid {
+            description 'route valid flag.' ;
+            type boolean ;
+
+            mandatory true ;
+          }
+
+          leaf route-is-backup {
+            description 'Route is frr back path.' ;
+            type empty ;
+
+          }
+
+          leaf route-gw {
+            description 'The gateway of route.' ;
+            type string ;
+
+            ncd:revise-date 2020-05-05 ;
+          }
+
+          leaf route-forward-type {
+            type forward-type ;
+
+            ncd:revise-date 2021-12-24 ;
+          }
+
+          ncd:select objtype ;
+          ncd:select "objtype route-owner" ;
+          ncd:select "objtype route-dest route-prefix route-is-exact-match" ;
+          ncd:select "objtype route-vpnname" ;
+          ncd:select "objtype route-vpnname route-owner" ;
+          ncd:select "objtype route-vpnname route-dest route-prefix route-is-exact-match" ;
+          ncd:select "objtype route-vpnname route-dest route-prefix" ;
+          ncd:select "objtype route-dest route-prefix" ;
+        }
+
+        list forward-info {
+          description 'The forwarding information for IPv4 route.
+For the best match route of global,need select objtype(1),route-dest.
+For the exact match route of global,need select objtype(1),route-dest,route-mask.
+For the best match route of the vpn,need select objtype(2),route-vrfname,route-dest.
+For the best match route of the vpn,need select objtype(2),route-vrfname,route-dest,route-mask.' ;
+          key 'objtype vpnname dest mask forward-index' ;
+          leaf objtype {
+            description 'The select module of the route.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'The VPN name of the route.' ;
+            type ncd:string-quesiton-mark {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf dest {
+            description 'The destination IP address of the route.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf mask {
+            description 'The mask of the route.' ;
+            type ncd:ipv4-mask ;
+
+          }
+
+          leaf forward-index {
+            description 'The forwarding index of the route.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf ifname {
+            description 'The local interface name through which the next hop of this route should be reached.' ;
+            type string {
+              length 0..31 ;
+
+            }
+
+          }
+
+          leaf nexthop {
+            description 'The forwarding nexthop of the route.' ;
+            type string ;
+
+          }
+
+          leaf label {
+            description 'The forwarding label stack of the route' ;
+            type string {
+              length 0..31 ;
+
+            }
+
+          }
+
+          ncd:revise-date 2017-03-09 ;
+          ncd:select "objtype vpnname dest mask" ;
+          ncd:select "objtype vpnname dest" ;
+          ncd:select "objtype dest mask" ;
+          ncd:select "objtype dest" ;
+        }
+
+      }
+
+      container route-statistics {
+        description 'This module show the statistic infor of route.' ;
+        list route-statistic {
+          description 'The statistic of routes.
+For statistic of global route,need select objtype(1).
+For statistic of the vpn route,need select objtype(2) and vpnname.
+For statistic of all route,need select objtype(3).' ;
+          key 'objtype vpnname' ;
+          leaf objtype {
+            description 'The select module of route statistic.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'VRF name of the route.' ;
+            type ncd:string-quesiton-mark {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf static {
+            description 'The statistic of static route.' ;
+            type uint32 ;
+
+          }
+
+          leaf direct {
+            description 'The statistic of direct route.' ;
+            type uint32 ;
+
+          }
+
+          leaf broadcast {
+            description 'The statistic of broadcast route.' ;
+            type uint32 ;
+
+          }
+
+          leaf multicast {
+            description 'The statistic of multicast route.' ;
+            type uint32 ;
+
+          }
+
+          leaf martian {
+            description 'The statistic of martian route.' ;
+            type uint32 ;
+
+          }
+
+          leaf address {
+            description 'The statistic of address route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ospf {
+            description 'The statistic of ospf route.' ;
+            type uint32 ;
+
+          }
+
+          leaf bgp {
+            description 'The statistic of bgp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf rip {
+            description 'The statistic of rip route.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis-l1 {
+            description 'The statistic of isis-l1 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis-l2 {
+            description 'The statistic of isis-l2 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf icmp {
+            description 'The statistic of icmp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf snmp {
+            description 'The statistic of snmp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf nat {
+            description 'The statistic of nat route.' ;
+            type uint32 ;
+
+          }
+
+          leaf pat {
+            description 'The statistic of pat route.' ;
+            type uint32 ;
+
+          }
+
+          leaf vrrp {
+            description 'The statistic of vrrp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ppp {
+            description 'The statistic of ppp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf asbrvpn {
+            description 'The statistic of asbrvpn route.' ;
+            type uint32 ;
+
+          }
+
+          leaf rsvpte {
+            description 'The statistic of rsvpte route.' ;
+            type uint32 ;
+
+          }
+
+          leaf user-ipaddr {
+            description 'The statistic of dhcp-dtf route.' ;
+            type uint32 ;
+
+          }
+
+          leaf user-network {
+            description 'The statistic of user-network route.' ;
+            type uint32 ;
+
+          }
+
+          leaf static-vrf {
+            description 'The statistic of static-vrf route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ipsec {
+            description 'The statistic of ipsec route.' ;
+            type uint32 ;
+
+          }
+
+          leaf perVrf-label {
+            description 'The statistic of perVrf-label route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ps-busi {
+            description 'The statistic of ps-busi route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ps-user {
+            description 'The statistic of ps-user route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ldp-area {
+            description 'The statistic of ldp-area route.' ;
+            type uint32 ;
+
+          }
+
+          leaf user-special {
+            description 'The statistic of user-special route.' ;
+            type uint32 ;
+
+          }
+
+          leaf dhcp-dft {
+            description 'The statistic of dhcp-dtf route.' ;
+            type uint32 ;
+
+          }
+
+          leaf dhcp-static {
+            description 'The statistic of dhcp-static route.' ;
+            type uint32 ;
+
+          }
+
+          leaf nat64-sl {
+            description 'The statistic of nat64-sl route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ves {
+            description 'The statistic of ves route.' ;
+            type uint32 ;
+
+          }
+
+          leaf bras-pool {
+            description 'The statistic of bras-pool route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2017-02-06 ;
+          }
+
+          leaf hagp {
+            description 'The statistic of hybrid-access-gateway-protocol route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2017-02-06 ;
+          }
+
+          leaf nat-mask {
+            description 'The statistic of nat-mask route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2018-07-12 ;
+          }
+
+          leaf dynamic-leased-line {
+            description 'The statistic of dynamic-leased-line route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2019-01-10 ;
+          }
+
+          leaf total {
+            description 'The statistic of all routes.' ;
+            type uint32 ;
+
+          }
+
+          leaf bgp-evpn {
+            description 'The statistic of bgp-evpn route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2019-07-23 ;
+          }
+
+          leaf bgp-fs {
+            description 'The statistic of bgp-flowspec route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2023-10-11 ;
+          }
+
+          ncd:select objtype ;
+          ncd:select "objtype vpnname" ;
+        }
+
+      }
+
+      container route-path-statistics {
+        description 'This module show the forwarding infor of route path.' ;
+        list route-path-statistic {
+          description 'The statistic of all routes.' ;
+          key 'objtype vpnname' ;
+          leaf objtype {
+            description 'The statistic of all route path.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'VRF name of the route.' ;
+            type ncd:string-quesiton-mark {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf static {
+            description 'The statistic of static route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf direct {
+            description 'The statistic of direct route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf broadcast {
+            description 'The statistic of broadcast route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf multicast {
+            description 'The statistic of multicast route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf martian {
+            description 'The statistic of martian route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf address {
+            description 'The statistic of address route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf ospf {
+            description 'The statistic of ospf route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf bgp {
+            description 'The statistic of bgp route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf rip {
+            description 'The statistic of rip route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis-l1 {
+            description 'The statistic of isis-l1 route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis-l2 {
+            description 'The statistic of isis-l2 route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf icmp {
+            description 'The statistic of icmp route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf snmp {
+            description 'The statistic of snmp route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf nat {
+            description 'The statistic of nat route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf pat {
+            description 'The statistic of pat route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf vrrp {
+            description 'The statistic of vrrp route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf ppp {
+            description 'The statistic of ppp route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf asbrvpn {
+            description 'The statistic of asbrvpn route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf rsvpte {
+            description 'The statistic of rsvpte route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf user-ipaddr {
+            description 'The statistic of dhcp-dtf route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf user-network {
+            description 'The statistic of user-network route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf static-vrf {
+            description 'The statistic of static-vrf route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf ipsec {
+            description 'The statistic of ipsec route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf perVrf-label {
+            description 'The statistic of perVrf-label route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf ps-busi {
+            description 'The statistic of ps-busi route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf ps-userCopy {
+            description 'The statistic of ps-user route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf ldp-area {
+            description 'The statistic of ldp-area route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf user-special {
+            description 'The statistic of user-special route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf dhcp-dft {
+            description 'The statistic of dhcp-dtf route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf dhcp-static {
+            description 'The statistic of dhcp-static route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf nat64-sl {
+            description 'The statistic of nat64-sl route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf ves {
+            description 'The statistic of ves route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf bras-pool {
+            description 'The statistic of bras-pool.' ;
+            type uint32 ;
+
+            ncd:revise-date 2017-02-06 ;
+          }
+
+          leaf hagp {
+            description 'The statistic of hagp route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2017-02-06 ;
+          }
+
+          leaf nat-mask {
+            description 'The statistic of nat-mask route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2018-07-12 ;
+          }
+
+          leaf dynamic-leased-line {
+            description 'The statistic of dynamic-leased-line route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2019-01-10 ;
+          }
+
+          leaf total {
+            description 'The statistic of all route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf bgp-evpn {
+            description 'The statistic of bgp-evpn route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2019-07-23 ;
+          }
+
+          leaf bgp-fs {
+            description 'The statistic of bgp-flowspec route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2023-10-11 ;
+          }
+
+        }
+
+      }
+
+      container route-summary-alls {
+        description 'Show statistics of global and all VPN routes.' ;
+        leaf capacity {
+          description 'The performance parameters of IPv4 route' ;
+          type uint32 ;
+
+        }
+
+        leaf used-route-count {
+          description 'The used count of IPv4 route' ;
+          type uint32 ;
+
+          default 0 ;
+        }
+
+        list route-summary-all {
+          description 'The count of IPv4 route for global and all VRF,but do not support the query conditions' ;
+          key 'objtype route-vpnname' ;
+          leaf objtype {
+            description 'The select module of IPv4 route statistic for global and all VRF.' ;
+            type select-module ;
+
+          }
+
+          leaf route-vpnname {
+            description 'VRF name of the route.' ;
+            type ncd:string-quesiton-mark {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf rd {
+            description 'RD of the Dynamic vrf route.' ;
+            type ncd:string-quesiton-mark ;
+
+            ncd:revise-date 2022-05-13 ;
+          }
+
+          leaf route-count {
+            description 'The count of IPv4 route for global or VRF' ;
+            type uint32 ;
+
+            default 0 ;
+          }
+
+        }
+
+        ncd:revise-date 2016-10-26 ;
+      }
+
+      container all-routes {
+        description 'Show the routes by assigned prefix in all vrfs.' ;
+        list all-route {
+          description 'The routes by assigned prefix in all vrfs.
+For the best match route of all vrfs,need select objtype(1),route-dest.' ;
+          key 'objtype vpnname rd dest mask forward-index' ;
+          leaf objtype {
+            description 'The select module of the route.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'The VPN name of the route.' ;
+            type ncd:string-quesiton-mark {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf rd {
+            description 'RD of the Dynamic vrf route.' ;
+            type ncd:string-quesiton-mark ;
+
+          }
+
+          leaf dest {
+            description 'The destination IP address of the route.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf mask {
+            description 'The mask of the route.' ;
+            type ncd:ipv4-mask ;
+
+          }
+
+          leaf forward-index {
+            description 'The forwarding index of the route.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf ifname {
+            description 'The local interface name through which the next hop of this route should be reached.' ;
+            type string {
+              length 0..31 ;
+
+            }
+
+          }
+
+          leaf nexthop {
+            description 'The forwarding nexthop of the route.' ;
+            type string ;
+
+          }
+
+          leaf owner {
+            description 'The protocol of route.' ;
+            type owner-type ;
+
+          }
+
+          leaf priority {
+            description 'The priority of route.' ;
+            type uint8 {
+              range 0..255 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf metric {
+            description 'The metric of route.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          ncd:select dest ;
+        }
+
+        ncd:revise-date 2022-11-07 ;
+      }
+
+    }
+
+    container rtm6 {
+      container route6-forward-statistics {
+        description 'Show the statistic information of IPv6 routes.' ;
+        list route6-statistic {
+          description 'The statistic of routes.
+For statistic of global route,need select objtype(1).
+For statistic of the vpn route,need select objtype(2) and vpnname.
+For statistic of all route,need select objtype(3).' ;
+          key 'objtype vpnname' ;
+          leaf objtype {
+            description 'The select module of route statistic.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'The vpn name.' ;
+            type ncd:string-quesiton-mark ;
+
+          }
+
+          leaf kernel {
+            description 'The statistic of kernel route.' ;
+            type uint32 ;
+
+          }
+
+          leaf connect {
+            description 'The statistic of connect route.' ;
+            type uint32 ;
+
+          }
+
+          leaf static {
+            description 'The statistic of static route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ripng {
+            description 'The statistic of ripng route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ospfv3 {
+            description 'The statistic of ospfv3 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf bgp {
+            description 'The statistic of bgp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis_l1 {
+            description 'The statistic of isis_l1 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis_l2 {
+            description 'The statistic of isis_l2 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf icmp {
+            description 'The statistic of icmp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf multicast {
+            description 'The statistic of multicast route.' ;
+            type uint32 ;
+
+          }
+
+          leaf user_ipaddr {
+            description 'The statistic of user_ipaddr route.' ;
+            type uint32 ;
+
+          }
+
+          leaf vrrp {
+            description 'The statistic of vrrp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ppp {
+            description 'The statistic of ppp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf nd {
+            description 'The statistic of nd route.' ;
+            type uint32 ;
+
+          }
+
+          leaf address {
+            description 'The statistic of address route.' ;
+            type uint32 ;
+
+          }
+
+          leaf dhcp {
+            description 'The statistic of dhcp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf sf_nat64 {
+            description 'The statistic of sf_nat64 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf sl_nat64 {
+            description 'The statistic of sl_nat64 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf aftr {
+            description 'The statistic of aftr route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ps-busi {
+            description 'The statistic of ps-busi route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ps-user {
+            description 'The statistic of ps-user route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ldp-area {
+            description 'The statistic of ldp-area route.' ;
+            type uint32 ;
+
+          }
+
+          leaf user-network {
+            description 'The statistic of user-network route.' ;
+            type uint32 ;
+
+          }
+
+          leaf user-special {
+            description 'The statistic of user-special route.' ;
+            type uint32 ;
+
+          }
+
+          leaf bras-pool {
+            description 'The statistic of bras-pool route.' ;
+            type uint32 ;
+
+          }
+
+          leaf srv6 {
+            description 'The statistic of SRv6 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf dynamic-leased-line {
+            description 'The statistic of dynamic-leased-line route.' ;
+            type int32 ;
+
+          }
+
+          leaf bgp-evpn {
+            description 'The statistic of bgp-evpn route.' ;
+            type uint32 ;
+
+          }
+
+          leaf total {
+            description 'The statistic of total route.' ;
+            type uint32 ;
+
+          }
+
+          leaf npt {
+            description 'The statistic of IPv6 network-prefix-translation route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2020-10-16 ;
+          }
+
+          leaf mpra {
+            type uint32 ;
+
+            ncd:revise-date 2021-03-06 ;
+          }
+
+          leaf ipv6-source {
+            type uint32 ;
+
+            ncd:revise-date 2023-03-07 ;
+          }
+
+          leaf bgp-fs {
+            description 'The statistic of bgp-flowspec route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2023-10-11 ;
+          }
+
+          ncd:select objtype ;
+          ncd:select "objtype vpnname" ;
+        }
+
+        ncd:revise-date 2020-03-23 ;
+      }
+
+      container route6-forward-path-statistic {
+        description 'Show the statistic information of IPv6 route paths.' ;
+        list route6-path-statistic {
+          description 'The statistic of all route path.' ;
+          key 'objtype vpnname' ;
+          leaf objtype {
+            description 'The statistic of all route path.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'The vpn name.' ;
+            type ncd:string-quesiton-mark ;
+
+          }
+
+          leaf kernel {
+            description 'The statistic of kernel route.' ;
+            type uint32 ;
+
+          }
+
+          leaf connect {
+            description 'The statistic of connect route.' ;
+            type uint32 ;
+
+          }
+
+          leaf static {
+            description 'The statistic of static route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ripng {
+            description 'The statistic of ripng route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ospfv3 {
+            description 'The statistic of ospfv3 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf bgp {
+            description 'The statistic of bgp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis_l1 {
+            description 'The statistic of isis_l1 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis_l2 {
+            description 'The statistic of isis_l2 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf icmp {
+            description 'The statistic of icmp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf multicast {
+            description 'The statistic of multicast route.' ;
+            type uint32 ;
+
+          }
+
+          leaf user_ipaddr {
+            description 'The statistic of user_ipaddr route.' ;
+            type uint32 ;
+
+          }
+
+          leaf vrrp {
+            description 'The statistic of vrrp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ppp {
+            description 'The statistic of ppp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf nd {
+            description 'The statistic of nd route.' ;
+            type uint32 ;
+
+          }
+
+          leaf address {
+            description 'The statistic of address route.' ;
+            type uint32 ;
+
+          }
+
+          leaf dhcp {
+            description 'The statistic of dhcp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf sf_nat64 {
+            description 'The statistic of sf_nat64 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf sl_nat64 {
+            description 'The statistic of sl_nat64 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf aftr {
+            description 'The statistic of aftr route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ps-busi {
+            description 'The statistic of ps-busi route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf ps-user {
+            description 'The statistic of ps-user route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf ldp-area {
+            description 'The statistic of ldp-area route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf user-network {
+            description 'The statistic of user-network route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf user-special {
+            description 'The statistic of user-special route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf bras-pool {
+            description 'The statistic of bras-pool route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf srv6 {
+            description 'The statistic of SRv6 route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf dynamic-leased-line {
+            description 'The statistic of dynamic-leased-line route.' ;
+            type int32 ;
+
+          }
+
+          leaf bgp-evpn {
+            description 'The statistic of bgp-evpn route path.' ;
+            type uint32 ;
+
+          }
+
+          leaf total {
+            description 'The statistic of total route.' ;
+            type uint32 ;
+
+          }
+
+          leaf npt {
+            description 'The statistic of IPv6 network-prefix-translation route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2020-10-16 ;
+          }
+
+          leaf mpra {
+            type uint32 ;
+
+            ncd:revise-date 2021-03-06 ;
+          }
+
+          leaf ipv6-source {
+            type uint32 ;
+
+            ncd:revise-date 2023-03-07 ;
+          }
+
+          leaf bgp-fs {
+            description 'The statistic of bgp-flowspec route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2023-10-11 ;
+          }
+
+        }
+
+        ncd:revise-date 2020-03-23 ;
+      }
+
+      container route6-forward {
+        description 'Show the forwarding information of IPv6 routes.' ;
+        list iproute6 {
+          description 'This module show the forwarding infor of ipv6 route.' ;
+          key 'objtype vpnname owner dest mask route6-is-exact-match nexthop ifname' ;
+          leaf objtype {
+            description 'The select module of fib.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'VRF name of the route.' ;
+            type ncd:string-quesiton-mark ;
+
+          }
+
+          leaf owner {
+            description 'The protocol of route.' ;
+            type ipv6-owner-type ;
+
+          }
+
+          leaf dest {
+            description 'The destination address of this route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf mask {
+            description 'The mask length of this route.' ;
+            type uint32 {
+              range 0..128 ;
+
+            }
+
+          }
+
+          leaf route6-is-exact-match {
+            description 'Whether exact match route.' ;
+            type boolean ;
+
+          }
+
+          leaf nexthop {
+            description 'The nexthop of route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf ifname {
+            description 'The local interface name through which the next hop of this route should be reached.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf priority {
+            description 'The priority of route.' ;
+            type uint32 ;
+
+          }
+
+          leaf metric {
+            description 'The metric of route.' ;
+            type uint32 ;
+
+          }
+
+          leaf route6-has-frr {
+            description 'Route frr relation flag.' ;
+            type boolean ;
+
+          }
+
+          leaf route6-is-valid {
+            description 'route valid flag.' ;
+            type boolean ;
+
+          }
+
+          leaf route6-is-backup {
+            description 'Route is frr back path.' ;
+            type empty ;
+
+          }
+
+          leaf gw {
+            description 'The gateway of route.' ;
+            type string ;
+
+            ncd:revise-date 2020-05-05 ;
+          }
+
+          leaf forward-type {
+            type forward-type ;
+
+            ncd:revise-date 2021-12-24 ;
+          }
+
+          ncd:select objtype ;
+          ncd:select "objtype vpnname" ;
+          ncd:select "objtype owner" ;
+          ncd:select "objtype vpnname owner" ;
+          ncd:select "objtype dest mask route6-is-exact-match" ;
+          ncd:select "objtype vpnname dest mask route6-is-exact-match" ;
+          ncd:select "objtype vpnname dest mask" ;
+          ncd:select "objtype dest mask" ;
+        }
+
+        ncd:revise-date 2020-03-23 ;
+      }
+
+      container frr6-forward {
+        description 'Show the forwarding information of IPv6 FRR.' ;
+        list ipfrr6 {
+          description 'Show the forwarding information of IPv6 FRR.
+For the frr of global,need select objtype(1),route6-dest,route6-prefixlen.
+For the frr of the vpn,need select objtype(2),route6-vpnname,route6-dest,route6-prefixlen.
+For all frr of global,need select objtype(1).
+For all frr of the vpn,need select objtype(2),route6-vpnname.
+For all frr of global and all vpn,need select objtype(3).' ;
+          key 'objtype vpnname dest mask' ;
+          leaf objtype {
+            description 'The select module of ipv6 frr.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'VRF name of the route.' ;
+            type ncd:string-quesiton-mark ;
+
+          }
+
+          leaf dest {
+            description 'The destination IP address of this route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf mask {
+            description 'The mask length of this route.' ;
+            type uint32 {
+              range 0..128 ;
+
+            }
+
+          }
+
+          leaf master-nexthop {
+            description 'The nexthop of master route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf master-ifname {
+            description 'The local interface name through which the master next hop of this route should be reached.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf master-priority {
+            description 'The priority of master route.' ;
+            type uint32 ;
+
+          }
+
+          leaf master-metric {
+            description 'The metric of master route.' ;
+            type uint32 ;
+
+          }
+
+          leaf master-owner {
+            description 'The protocol of master route.' ;
+            type ipv6-owner-type ;
+
+          }
+
+          leaf master-label {
+            description 'The out label of master route.' ;
+            type uint32 ;
+
+          }
+
+          leaf master-is-pe {
+            description 'Whether the next hop of master route is PE.' ;
+            type boolean ;
+
+          }
+
+          leaf slave-nexthop {
+            description 'The nexthop of slave route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf slave-ifname {
+            description 'The local interface name through which the slave next hop of this route should be reached.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf slave-priority {
+            description 'The priority of slave route.' ;
+            type uint32 ;
+
+          }
+
+          leaf slave-metric {
+            description 'The metric of slave route.' ;
+            type uint32 ;
+
+          }
+
+          leaf slave-owner {
+            description 'The protocol of slave route.' ;
+            type ipv6-owner-type ;
+
+          }
+
+          leaf slave-label {
+            description 'The out label of slave route.' ;
+            type uint32 ;
+
+          }
+
+          leaf slave-is-pe {
+            description 'Whether the next hop of slave route is PE.' ;
+            type boolean ;
+
+          }
+
+          leaf frr-status {
+            description 'Forwarding status of frr.' ;
+            type forward-status ;
+
+          }
+
+          leaf slave-status {
+            description 'The status of slave nexthop.' ;
+            type slave-status ;
+
+          }
+
+          ncd:select objtype ;
+          ncd:select "objtype vpnname" ;
+          ncd:select "objtype dest mask" ;
+          ncd:select "objtype vpnname dest mask" ;
+        }
+
+        ncd:revise-date 2020-03-23 ;
+      }
+
+      container route6-forward-summary-alls {
+        leaf capacity {
+          description 'The performance parameters of IPv6 route' ;
+          type uint32 ;
+
+        }
+
+        leaf used-route-count {
+          description 'The used count of IPv6 route' ;
+          type uint32 ;
+
+          default 0 ;
+        }
+
+        list route-summary-all {
+          description 'The count of IPv6 route for global and all VRF,but do not support the query conditions' ;
+          key 'objtype vpnname' ;
+          leaf objtype {
+            description 'The select module of IPv6 route statistic for global and all VRF.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'VRF name of the route.' ;
+            type ncd:string-quesiton-mark ;
+
+          }
+
+          leaf rd {
+            description 'RD of the Dynamic vrf route.' ;
+            type ncd:string-quesiton-mark ;
+
+            ncd:revise-date 2022-05-13 ;
+          }
+
+          leaf route-count {
+            description 'The count of IPv6 route for global or VRF' ;
+            type uint32 ;
+
+            default 0 ;
+          }
+
+        }
+
+        ncd:revise-date 2020-03-23 ;
+      }
+
+      container route6-statistics {
+        status obsolete {
+          ncd:revise-date 2021-05-11 ;
+        }
+
+        description 'This module show the statistic infor of ipv6 route.' ;
+        list route6-statistic {
+          description 'The statistic of routes.
+For statistic of global route,need select objtype(1).
+For statistic of the vpn route,need select objtype(2) and vpnname.
+For statistic of all route,need select objtype(3).' ;
+          key 'objtype vpnname' ;
+          leaf objtype {
+            description 'The select module of route statistic.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'The vpn name.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf kernel {
+            description 'The statistic of kernel route.' ;
+            type uint32 ;
+
+          }
+
+          leaf connect {
+            description 'The statistic of connect route.' ;
+            type uint32 ;
+
+          }
+
+          leaf static {
+            description 'The statistic of static route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ripng {
+            description 'The statistic of ripng route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ospfv3 {
+            description 'The statistic of ospfv3 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf bgp {
+            description 'The statistic of bgp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis_l1 {
+            description 'The statistic of isis_l1 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis_l2 {
+            description 'The statistic of isis_l2 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf icmp {
+            description 'The statistic of icmp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf multicast {
+            description 'The statistic of multicast route.' ;
+            type uint32 ;
+
+          }
+
+          leaf user_ipaddr {
+            description 'The statistic of user_ipaddr route.' ;
+            type uint32 ;
+
+          }
+
+          leaf vrrp {
+            description 'The statistic of vrrp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ppp {
+            description 'The statistic of ppp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf nd {
+            description 'The statistic of nd route.' ;
+            type uint32 ;
+
+          }
+
+          leaf address {
+            description 'The statistic of address route.' ;
+            type uint32 ;
+
+          }
+
+          leaf dhcp {
+            description 'The statistic of dhcp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf sf_nat64 {
+            description 'The statistic of sf_nat64 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf sl_nat64 {
+            description 'The statistic of sl_nat64 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf aftr {
+            description 'The statistic of aftr route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ps-busi {
+            description 'The statistic of ps-busi route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2015-04-15 ;
+          }
+
+          leaf ps-user {
+            description 'The statistic of ps-user route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2015-04-15 ;
+          }
+
+          leaf ldp-area {
+            description 'The statistic of ldp-area route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2015-05-18 ;
+          }
+
+          leaf user-network {
+            description 'The statistic of user-network route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2016-04-16 ;
+          }
+
+          leaf user-special {
+            description 'The statistic of user-special route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2016-04-16 ;
+          }
+
+          leaf bras-pool {
+            description 'The statistic of bras-pool route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2017-02-06 ;
+          }
+
+          leaf srv6 {
+            description 'The statistic of SRv6 route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2018-07-12 ;
+          }
+
+          leaf dynamic-leased-line {
+            description 'The statistic of dynamic-leased-line route.' ;
+            type int32 ;
+
+            ncd:revise-date 2019-01-10 ;
+          }
+
+          leaf bgp-evpn {
+            description 'The statistic of bgp-evpn route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2019-07-23 ;
+          }
+
+          leaf total {
+            description 'The statistic of total route.' ;
+            type uint32 ;
+
+          }
+
+          leaf npt {
+            description 'The statistic of IPv6 network-prefix-translation route.' ;
+            type uint32 ;
+
+            ncd:revise-date 2020-10-16 ;
+          }
+
+          ncd:select objtype ;
+          ncd:select "objtype vpnname" ;
+        }
+
+      }
+
+      container route6-path-statistic {
+        status obsolete {
+          ncd:revise-date 2021-05-11 ;
+        }
+
+        description 'This module show the statistic infor of ipv6 route path.' ;
+        list route6-path-statistic {
+          description 'The statistic of all route path.' ;
+          key 'objtype vpnname' ;
+          leaf objtype {
+            description 'The statistic of all route path.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'The vpn name.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf kernel {
+            description 'The statistic of kernel route.' ;
+            type uint32 ;
+
+          }
+
+          leaf connect {
+            description 'The statistic of connect route.' ;
+            type uint32 ;
+
+          }
+
+          leaf static {
+            description 'The statistic of static route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ripng {
+            description 'The statistic of ripng route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ospfv3 {
+            description 'The statistic of ospfv3 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf bgp {
+            description 'The statistic of bgp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis_l1 {
+            description 'The statistic of isis_l1 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf isis_l2 {
+            description 'The statistic of isis_l2 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf icmp {
+            description 'The statistic of icmp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf multicast {
+            description 'The statistic of multicast route.' ;
+            type uint32 ;
+
+          }
+
+          leaf user_ipaddr {
+            description 'The statistic of user_ipaddr route.' ;
+            type uint32 ;
+
+          }
+
+          leaf vrrp {
+            description 'The statistic of vrrp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ppp {
+            description 'The statistic of ppp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf nd {
+            description 'The statistic of nd route.' ;
+            type uint32 ;
+
+          }
+
+          leaf address {
+            description 'The statistic of address route.' ;
+            type uint32 ;
+
+          }
+
+          leaf dhcp {
+            description 'The statistic of dhcp route.' ;
+            type uint32 ;
+
+          }
+
+          leaf sf_nat64 {
+            description 'The statistic of sf_nat64 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf sl_nat64 {
+            description 'The statistic of sl_nat64 route.' ;
+            type uint32 ;
+
+          }
+
+          leaf aftr {
+            description 'The statistic of aftr route.' ;
+            type uint32 ;
+
+          }
+
+          leaf ps-busi {
+            description 'The statistic of ps-busi route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2015-04-15 ;
+          }
+
+          leaf ps-user {
+            description 'The statistic of ps-user route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2015-04-15 ;
+          }
+
+          leaf ldp-area {
+            description 'The statistic of ldp-area route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2015-05-18 ;
+          }
+
+          leaf user-network {
+            description 'The statistic of user-network route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2016-04-16 ;
+          }
+
+          leaf user-special {
+            description 'The statistic of user-special route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2016-04-16 ;
+          }
+
+          leaf bras-pool {
+            description 'The statistic of bras-pool route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2017-02-06 ;
+          }
+
+          leaf srv6 {
+            description 'The statistic of SRv6 route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2018-07-12 ;
+          }
+
+          leaf dynamic-leased-line {
+            description 'The statistic of dynamic-leased-line route.' ;
+            type int32 ;
+
+            ncd:revise-date 2019-01-10 ;
+          }
+
+          leaf bgp-evpn {
+            description 'The statistic of bgp-evpn route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2019-07-23 ;
+          }
+
+          leaf total {
+            description 'The statistic of total route.' ;
+            type uint32 ;
+
+          }
+
+          leaf npt {
+            description 'The statistic of IPv6 network-prefix-translation route path.' ;
+            type uint32 ;
+
+            ncd:revise-date 2020-10-16 ;
+          }
+
+        }
+
+      }
+
+      container route6 {
+        status obsolete {
+          ncd:revise-date 2021-05-11 ;
+        }
+
+        description 'This module show the forwarding infor of ipv6 route.' ;
+        list iproute6 {
+          description 'This module show the forwarding infor of ipv6 route.' ;
+          key 'objtype route6-vpnname route6-owner route6-dest route6-prefixlen route6-is-exact-match route6-nexthop route6-ifname' ;
+          leaf objtype {
+            description 'The select module of fib.' ;
+            type select-module ;
+
+          }
+
+          leaf route6-vpnname {
+            description 'VRF name of the route.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf route6-owner {
+            description 'The protocol of route.' ;
+            type ipv6-owner-type ;
+
+          }
+
+          leaf route6-dest {
+            description 'The destination address of this route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf route6-prefixlen {
+            description 'The mask length of this route.' ;
+            type uint32 {
+              range 0..128 ;
+
+            }
+
+          }
+
+          leaf route6-is-exact-match {
+            description 'Whether exact match route.' ;
+            type boolean ;
+
+          }
+
+          leaf route6-nexthop {
+            description 'The nexthop of route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf route6-ifname {
+            description 'The local interface name through which the next hop of this route should be reached.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf route6-priority {
+            description 'The priority of route.' ;
+            type uint32 ;
+
+          }
+
+          leaf route6-metric {
+            description 'The metric of route.' ;
+            type uint32 ;
+
+          }
+
+          leaf route6-has-frr {
+            description 'Route frr relation flag.' ;
+            type boolean ;
+
+          }
+
+          leaf route6-is-valid {
+            description 'route valid flag.' ;
+            type boolean ;
+
+          }
+
+          leaf route6-is-backup {
+            description 'Route is frr back path.' ;
+            type empty ;
+
+          }
+
+          ncd:select objtype ;
+          ncd:select "objtype route6-vpnname" ;
+          ncd:select "objtype route6-owner" ;
+          ncd:select "objtype route6-vpnname route6-owner" ;
+          ncd:select "objtype route6-dest route6-prefixlen route6-is-exact-match" ;
+          ncd:select "objtype route6-vpnname route6-dest route6-prefixlen route6-is-exact-match" ;
+          ncd:select "objtype route6-vpnname route6-dest route6-prefixlen" ;
+          ncd:select "objtype route6-dest route6-prefixlen" ;
+        }
+
+      }
+
+      container frr6 {
+        status obsolete {
+          ncd:revise-date 2021-05-11 ;
+        }
+
+        list ipfrr6 {
+          description 'This module show the forwarding infor of ipv6 frr.
+For the frr of global,need select objtype(1),route6-dest,route6-prefixlen.
+For the frr of the vpn,need select objtype(2),route6-vpnname,route6-dest,route6-prefixlen.
+For all frr of global,need select objtype(1).
+For all frr of the vpn,need select objtype(2),route6-vpnname.
+For all frr of global and all vpn,need select objtype(3).' ;
+          key 'objtype route6-vpnname route6-dest route6-prefixlen' ;
+          leaf objtype {
+            description 'The select module of ipv6 frr.' ;
+            type select-module ;
+
+          }
+
+          leaf route6-vpnname {
+            description 'VRF name of the route.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf route6-dest {
+            description 'The destination IP address of this route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf route6-prefixlen {
+            description 'The mask length of this route.' ;
+            type uint32 {
+              range 0..128 ;
+
+            }
+
+          }
+
+          leaf route6-master-nexthop {
+            description 'The nexthop of master route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf route6-master-ifname {
+            description 'The local interface name through which the master next hop of this route should be reached.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf route6-master-priority {
+            description 'The priority of master route.' ;
+            type uint32 ;
+
+          }
+
+          leaf route6-master-metric {
+            description 'The metric of master route.' ;
+            type uint32 ;
+
+          }
+
+          leaf route6-master-owner {
+            description 'The protocol of master route.' ;
+            type ipv6-owner-type ;
+
+          }
+
+          leaf route6-master-label {
+            description 'The out label of master route.' ;
+            type uint32 ;
+
+          }
+
+          leaf route6-master-is-pe {
+            description 'Whether the next hop of master route is PE.' ;
+            type boolean ;
+
+          }
+
+          leaf route6-slave-nexthop {
+            description 'The nexthop of slave route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf route6-slave-ifname {
+            description 'The local interface name through which the slave next hop of this route should be reached.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf route6-slave-priority {
+            description 'The priority of slave route.' ;
+            type uint32 ;
+
+          }
+
+          leaf route6-slave-metric {
+            description 'The metric of slave route.' ;
+            type uint32 ;
+
+          }
+
+          leaf route6-slave-owner {
+            description 'The protocol of slave route.' ;
+            type ipv6-owner-type ;
+
+          }
+
+          leaf route6-slave-label {
+            description 'The out label of slave route.' ;
+            type uint32 ;
+
+          }
+
+          leaf route6-slave-is-pe {
+            description 'Whether the next hop of slave route is PE.' ;
+            type boolean ;
+
+          }
+
+          leaf route6-frr-status {
+            description 'Forwarding status of frr.' ;
+            type forward-status ;
+
+          }
+
+          leaf route6-slave-status {
+            description 'The status of slave nexthop.' ;
+            type slave-status ;
+
+            ncd:revise-date 2019-11-29 ;
+          }
+
+          ncd:select objtype ;
+          ncd:select "objtype route6-vpnname" ;
+          ncd:select "objtype route6-dest route6-prefixlen" ;
+          ncd:select "objtype route6-vpnname route6-dest route6-prefixlen" ;
+        }
+
+      }
+
+      container route-summary-alls {
+        status obsolete {
+          ncd:revise-date 2021-05-11 ;
+        }
+
+        leaf capacity {
+          description 'The performance parameters of IPv6 route' ;
+          type uint32 ;
+
+        }
+
+        leaf used-route-count {
+          description 'The used count of IPv6 route' ;
+          type uint32 ;
+
+          default 0 ;
+        }
+
+        list route-summary-all {
+          description 'The count of IPv6 route for global and all VRF,but do not support the query conditions' ;
+          key 'objtype route-vpnname' ;
+          leaf objtype {
+            description 'The select module of IPv6 route statistic for global and all VRF.' ;
+            type select-module ;
+
+          }
+
+          leaf route-vpnname {
+            description 'VRF name of the route.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf route-count {
+            description 'The count of IPv6 route for global or VRF' ;
+            type uint32 ;
+
+            default 0 ;
+          }
+
+        }
+
+        ncd:revise-date 2016-10-26 ;
+      }
+
+      container route6-all-routes {
+        description 'This modules show all vrf by specify route6 addr' ;
+        list all-routes {
+          key 'objtype vpnname dest prefixlen forward-index rd' ;
+          leaf objtype {
+            description 'The select module of fib.' ;
+            type select-module ;
+
+          }
+
+          leaf vpnname {
+            description 'VRF name of the route.' ;
+            type ncd:string-quesiton-mark {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf dest {
+            description 'The destination address of this route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf prefixlen {
+            description 'The mask length of this route.' ;
+            type uint32 ;
+
+          }
+
+          leaf forward-index {
+            description 'The forward-index used by internal breakpoints,user does not care about this field' ;
+            type uint32 ;
+
+          }
+
+          leaf rd {
+            description 'RD of the Dynamic vrf route.' ;
+            type ncd:string-quesiton-mark ;
+
+          }
+
+          leaf owner {
+            description 'The protocol of route.' ;
+            type ipv6-owner-type ;
+
+          }
+
+          leaf ifname {
+            description 'The local interface name through which the next hop of this route should be reached.' ;
+            type string ;
+
+          }
+
+          leaf priority {
+            description 'The priority of route.' ;
+            type uint32 ;
+
+          }
+
+          leaf metric {
+            description 'The metric of route.' ;
+            type uint32 ;
+
+          }
+
+          leaf nexthop {
+            description 'The nexthop of route.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          ncd:select dest ;
+        }
+
+        ncd:revise-date 2022-11-07 ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'This module config ldsh precision configuration.' ;
+    container rtm {
+      description 'This module config information about routing table management(rtm).' ;
+      container ldsh {
+        description 'This module config information aboutldsh.' ;
+        container bandwidth {
+          description 'Specifies ldsh response outer ldsh bandwidth changes.' ;
+          leaf unaware {
+            description 'Specifies ldsh response outer ldsh bandwidth changes.' ;
+            type empty ;
+
+          }
+
+        }
+
+        container wtr {
+          description 'Config WTR time of ECMP. The range is 1 to 720 seconds.' ;
+          presence "ldsh wtr time" ;
+          leaf time {
+            description 'The minute part of WTR.' ;
+            type uint8 {
+              range 0..12 {
+                description 'Ecmp wtr time is 0 to 12 min.' ;
+              }
+
+            }
+
+            units min ;
+            mandatory true ;
+          }
+
+          leaf wtr-second {
+            type uint32 {
+              range 0..59 ;
+
+            }
+
+            description 'The second part of WTR.' ;
+            units sec ;
+            if-feature ldsh-wtr-second ;
+
+            ncd:revise-date 2024-04-07 ;
+          }
+
+        }
+
+        container hash {
+          description 'Config information about ldsh hash configuration.' ;
+          container ldsh-hash-scramble {
+            description 'This module set hash scramble.' ;
+            leaf scramble-value {
+              description 'This module set hash scramble.' ;
+              type uint32 {
+                range 1..65535 ;
+
+              }
+
+              default 1 ;
+            }
+
+            if-feature ldsh-scramble ;
+
+          }
+
+          container ldsh-hash-fields {
+            description 'This module config the hash configuration of ldsh.' ;
+            list ldsh-hash-fields {
+              description 'This module config the hash configuration of ldsh.
+When config ipv4 enable,ipv6 need be configed false.
+When config ipv6 enable,ipv4 need be configed false.' ;
+              key 'ipv4 ipv6 board-name' ;
+              leaf ipv4 {
+                description 'Config ipv4 address family.' ;
+                type boolean ;
+
+              }
+
+              leaf ipv6 {
+                description 'Config ipv6 address family.' ;
+                type boolean ;
+
+              }
+
+              leaf board-name {
+                description 'Config board name,and "global" meaning config all boards.' ;
+                type string {
+                  length 1..33 ;
+
+                }
+
+              }
+
+              choice hash-element {
+                description 'Config information participating hash operation.' ;
+                mandatory true ;
+                case l3 {
+                  description 'Config l3 information of upstream flow participating hash operation.' ;
+                  leaf l3 {
+                    description 'Config l3 information of upstream flow participating hash operation.' ;
+                    type empty ;
+
+                    mandatory true ;
+                    ncd:revise-date 2022-01-26 ;
+                  }
+
+                  leaf ignore-protocol {
+                    description 'Enable or disable' ;
+                    type empty ;
+
+                    ncd:revise-date 2022-01-26 ;
+                  }
+
+                }
+
+                case l4 {
+                  description 'Config l4 information of upstream flow participating hash operation.' ;
+                  leaf l4 {
+                    description 'Config l4 information of upstream flow participating hash operation.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case l3src {
+                  description 'Config l3 original information of upstream flow participating hash operation.' ;
+                  leaf l3src {
+                    description 'Config l3 original information of upstream flow participating hash operation.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case gtp {
+                  description 'Config gtp information of upstream flow participating hash operation.' ;
+                  container gtp-elements {
+                    leaf gtp {
+                      description 'Config gtp information of upstream flow participating hash operation.' ;
+                      type empty ;
+
+                      mandatory true ;
+                    }
+
+                    leaf te-id {
+                      description 'Enable or disable the ability to use the TE tunnel ID in HASH field.' ;
+                      type empty ;
+
+                    }
+
+                  }
+
+                  ncd:revise-date 2021-11-16 ;
+                }
+
+                case l2-l3 {
+                  description 'Config l2-l3 information of upstream flow participating hash operation.' ;
+                  leaf l2-l3 {
+                    description 'Config l2-l3 information of upstream flow participating hash operation.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                  ncd:revise-date 2022-04-26 ;
+                }
+
+                if-feature hash-port-attribute {
+                  ncd:revise-date 2024-01-30 ;
+                }
+
+              }
+
+              leaf incoming-port-num {
+                description 'Enable or disable the ability to use the incoming port number in HASH field.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                if-feature hash-port-attribute {
+                  ncd:revise-date 2024-01-30 ;
+                }
+
+                ncd:revise-date 2020-02-13 ;
+              }
+
+              choice hash-element-port {
+                case l3-factor {
+                  leaf l3-factor {
+                    type empty ;
+
+                    description 'Config l3 information of upstream flow participating hash operation.' ;
+                  }
+
+                  description 'Config l3 information of upstream flow participating hash operation.' ;
+                }
+
+                case l4-factor {
+                  leaf l4-factor {
+                    type empty ;
+
+                    description 'Config l4 information of upstream flow participating hash operation.' ;
+                  }
+
+                  description 'Config l4 information of upstream flow participating hash operation.' ;
+                }
+
+                case l3src-factor {
+                  leaf l3src-factor {
+                    type empty ;
+
+                    description 'Config l3 original information of upstream flow participating hash operation.' ;
+                  }
+
+                  description 'Config l3 original information of upstream flow participating hash operation.' ;
+                }
+
+                case l2-l3-factor {
+                  leaf l2-l3-factor {
+                    type empty ;
+
+                    description 'Config l2-l3 information of upstream flow participating hash operation.' ;
+                  }
+
+                  description 'Config l2-l3 information of upstream flow participating hash operation.' ;
+                }
+
+                case incoming-port-num-factor {
+                  leaf incoming-port-num-factor {
+                    type empty ;
+
+                    description 'Enable or disable the ability to use the incoming port number in HASH field.' ;
+                  }
+
+                  description 'Config incoming-port-num information of upstream flow participating hash operation.' ;
+                }
+
+                if-feature hash-port-factor ;
+
+                description 'Config information participating hash operation.' ;
+                case n-tuple {
+                  container n-tuple {
+                    leaf src-ip {
+                      type empty ;
+
+                      description 'The IP address of the sending host or device.' ;
+                    }
+
+                    leaf dst-ip {
+                      type empty ;
+
+                      description 'The IP address of the receiving host or device.' ;
+                    }
+
+                    leaf protocol {
+                      type empty ;
+
+                      description 'The transport layer protocol type.' ;
+                    }
+
+                    leaf src-port {
+                      type empty ;
+
+                      description 'The port number used by the application sending the packets.' ;
+                    }
+
+                    leaf dst-port {
+                      type empty ;
+
+                      description ' The port number used by the application receiving the packets.' ;
+                    }
+
+                    description 'Configure multiple factors of the upstream flow participating in the hash operation.' ;
+                  }
+
+                  if-feature hash-port-factor ;
+
+                  description 'Configure multiple factors of the upstream flow participating in the hash operation.' ;
+                  ncd:revise-date 2024-06-04 ;
+                }
+
+                ncd:revise-date 2024-01-30 ;
+              }
+
+            }
+
+          }
+
+          container ldsh-hash-key-board {
+            description 'This module config the hash precise configuration of ldsh for the board.' ;
+            list ldsh-hash-key-board {
+              description 'This module config the hash precise configuration of ldsh for the board.' ;
+              key 'ipv6 board-name' ;
+              leaf ipv6 {
+                description 'Config ipv6 address family.
+It must be selected temporarily.' ;
+                type boolean ;
+
+              }
+
+              leaf board-name {
+                description 'Config board name.' ;
+                type string {
+                  length 1..33 {
+                    description "The board name can't be null." ;
+                  }
+
+                }
+
+              }
+
+              leaf lsb {
+                description 'Config low byte of ip address participating hash operation.' ;
+                type boolean ;
+
+                mandatory true ;
+              }
+
+              leaf msb {
+                description 'Config high byte of ip address participating hash operation.' ;
+                type boolean ;
+
+                mandatory true ;
+              }
+
+              leaf ttl-ignore {
+                type enumeration {
+                  enum disable {
+                    value 2 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                description 'Config TTL(Time To Live) participating hash operation.' ;
+                ncd:revise-date 2025-06-08 ;
+              }
+
+              leaf tos-ignore {
+                type enumeration {
+                  enum disable {
+                    value 2 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                description 'Config TOS(Type Of Service) participating hash operation.' ;
+                ncd:revise-date 2025-06-08 ;
+              }
+
+              leaf flowlabel {
+                type enumeration {
+                  enum disable {
+                    value 2 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum no-config {
+                    value 0 ;
+                  }
+
+                }
+
+                description 'Config flow-label participating hash operation.The IPv4 protocol does not support flowlabel, so it must be of the "no-config" enumeration type.' ;
+                if-feature hash-key-flowlabel ;
+
+                ncd:revise-date 2025-06-08 ;
+              }
+
+            }
+
+          }
+
+          container ldsh-hash-algorithm {
+            description 'Config hash operation algorithm.' ;
+            list ldsh-hash-algorithm {
+              description 'Config hash operation algorithm.' ;
+              key board-name ;
+              leaf board-name {
+                description 'Config board name,and "global" meaning config all boards.' ;
+                type string {
+                  length 1..33 ;
+
+                }
+
+              }
+
+              choice algorithm {
+                description 'Choice crc configuration.' ;
+                mandatory true ;
+                case crc16 {
+                  description 'Config crc16 algorithm.' ;
+                  leaf crc16 {
+                    description 'Config crc16 algorithm.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case crc32 {
+                  description 'Config crc32 algorithm.' ;
+                  leaf crc32 {
+                    description 'Config crc32 algorithm.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case hash {
+                  leaf hash {
+                    type empty ;
+
+                    description 'Config hash algorithm.' ;
+                    mandatory true ;
+                  }
+
+                  description 'Config hash algorithm.' ;
+                  ncd:revise-date 2024-04-02 ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container ldsh-hash-key-global {
+            description 'This module config the hash precise configuration of ldsh for all boards.' ;
+            list ldsh-hash-key-global {
+              description 'This module config the hash precise configuration of ldsh for all boards.' ;
+              key ipv6 ;
+              leaf ipv6 {
+                description 'Config ipv6 address family.
+It must be selected temporarily.' ;
+                type boolean ;
+
+              }
+
+              leaf lsb {
+                description 'Config low byte of ip address participating hash operation.' ;
+                type boolean ;
+
+                mandatory true ;
+              }
+
+              leaf msb {
+                description 'Config high byte of ip address participating hash operation.' ;
+                type boolean ;
+
+                mandatory true ;
+              }
+
+              leaf ttl-ignore {
+                type enumeration {
+                  enum disable {
+                    value 2 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                description 'Config TTL(Time To Live) participating hash operation.' ;
+                ncd:revise-date 2025-06-08 ;
+              }
+
+              leaf tos-ignore {
+                type enumeration {
+                  enum disable {
+                    value 2 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                description 'Config TOS(Type Of Service) participating hash operation.' ;
+                ncd:revise-date 2025-06-08 ;
+              }
+
+              leaf flowlabel {
+                type enumeration {
+                  enum disable {
+                    value 2 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum no-config {
+                    value 0 ;
+                  }
+
+                }
+
+                description 'Config flow-label participating hash operation.The IPv4 protocol does not support flowlabel, so it must be of the "no-config" enumeration type.' ;
+                if-feature hash-key-flowlabel ;
+
+                ncd:revise-date 2025-06-08 ;
+              }
+
+            }
+
+          }
+
+          container mpls-ldsh-hash-fields {
+            description 'This module config the hash configuration of mpls ldsh.' ;
+            list mpls-ldsh-hash-field {
+              description 'This module config the hash configuration of mpls ldsh.' ;
+              key board-name ;
+              leaf board-name {
+                description 'Config board name,and "global" meaning config all boards.' ;
+                type string {
+                  length 1..33 ;
+
+                }
+
+              }
+
+              choice hash-element {
+                description 'Config information participating hash operation.' ;
+                mandatory true ;
+                case ip-l3 {
+                  description 'Config the ip ternary group information as hash factor.' ;
+                  leaf ip-l3 {
+                    description 'Config the ip ternary group information as hash factor.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case ip-l4 {
+                  description 'Config the ip quintuple group information as hash factor.' ;
+                  leaf ip-l4 {
+                    description 'Config the ip quintuple group information as hash factor.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case label {
+                  description 'Config label information as hash factor.' ;
+                  leaf label {
+                    description 'Config label information as hash factor.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              leaf incoming-port-num {
+                description 'Enable or disable the ability to use the incoming port number in MPLS HASH field.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                ncd:revise-date 2020-02-13 ;
+              }
+
+            }
+
+            list mpls-l2-ldsh-hash-field {
+              description 'This module is the hash configuration of mpls l2 ldsh.' ;
+              key board-name ;
+              leaf board-name {
+                description 'Config board name,and "global" meaning config all boards.' ;
+                type string {
+                  length 1..32 {
+                    description 'The length of board-name.' ;
+                  }
+
+                }
+
+              }
+
+              leaf incoming-port {
+                description 'The hash incoming-port enable or not.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                    description 'The hash incoming-port is disable.' ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                    description 'The hash incoming-port is enable.' ;
+                  }
+
+                }
+
+                default disable ;
+                ncd:revise-date 2020-02-13 ;
+              }
+
+              leaf ignore-cword {
+                description 'The hash ignore-cword enable or not.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                    description 'The hash does not ignore cword.' ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                    description 'The hash ignore cword.' ;
+                  }
+
+                }
+
+                default disable ;
+                ncd:revise-date 2021-06-22 ;
+              }
+
+              ncd:revise-date 2017-01-13 ;
+            }
+
+          }
+
+          container ldsh-hash-polynomials {
+            description 'This module config the hash polynomial selection of load-sharing.' ;
+            list ldsh-hash-polynomial {
+              description 'This module config the hash polynomial selection of load-sharing.' ;
+              key board-name ;
+              leaf board-name {
+                description 'Config board name,default is "global".' ;
+                type ncd:string-all ;
+
+              }
+
+              leaf hash-polynomial {
+                description 'The result of load-sharing hash polynomial selection.' ;
+                type hash-polynomial ;
+
+                mandatory true ;
+              }
+
+            }
+
+            ncd:revise-date 2022-08-15 ;
+          }
+
+          container ldsh-hash-key-interface {
+            description 'This module config the hash precise configuration of ldsh for the interface.' ;
+            container ipv4-hash-keys {
+              description 'This module config the  ipv4 address family hash precise configuration of ldsh.' ;
+              list ipv4-hash-key {
+                description 'This module config the  ipv4 address family hash precise configuration of ldsh.' ;
+                key interface ;
+                leaf interface {
+                  type ncd:ifname ;
+
+                  description 'Config interface name.' ;
+                }
+
+                leaf lsb {
+                  type boolean ;
+
+                  description 'Config low byte of ip address participating hash operation.' ;
+                }
+
+                leaf msb {
+                  type boolean ;
+
+                  description 'Config high byte of ip address participating hash operation.' ;
+                }
+
+                leaf ttl-ignore {
+                  type enumeration {
+                    enum disable {
+                      value 2 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  description 'Config TTL(Time To Live) participating hash operation.' ;
+                }
+
+                leaf tos-ignore {
+                  type enumeration {
+                    enum disable {
+                      value 2 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  description 'Config TOS(Type Of Service) participating hash operation.' ;
+                }
+
+              }
+
+            }
+
+            container ipv6-hash-keys {
+              description 'This module config the  ipv6 address family hash precise configuration of ldsh.' ;
+              list ipv6-hash-key {
+                leaf interface {
+                  type ncd:ifname ;
+
+                  description 'Config interface name.' ;
+                }
+
+                leaf lsb {
+                  type boolean ;
+
+                  description 'Config low byte of ip address participating hash operation.' ;
+                }
+
+                leaf msb {
+                  type boolean ;
+
+                  description 'Config high byte of ip address participating hash operation.' ;
+                }
+
+                leaf ttl-ignore {
+                  type enumeration {
+                    enum disable {
+                      value 2 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  description 'Config TTL(Time To Live) participating hash operation.' ;
+                }
+
+                leaf tos-ignore {
+                  type enumeration {
+                    enum disable {
+                      value 2 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  description 'Config TOS(Type Of Service) participating hash operation.' ;
+                }
+
+                leaf flowlabel {
+                  type enumeration {
+                    enum disable {
+                      value 2 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum no-config {
+                      value 0 ;
+                    }
+
+                  }
+
+                  description 'Config flow-label participating hash operation.' ;
+                  if-feature hash-key-flowlabel {
+                    ncd:revise-date 2025-06-08 ;
+                  }
+
+                }
+
+                description 'This module config the  ipv6 address family hash precise configuration of ldsh.' ;
+                key interface ;
+              }
+
+            }
+
+            ncd:revise-date 2025-06-08 ;
+          }
+
+        }
+
+        container network-wtr {
+          leaf public-wtr {
+            type uint32 {
+              range 1..720 ;
+
+            }
+
+            description 'Config WTR time of ECMP in public network.' ;
+          }
+
+          leaf private-wtr {
+            type uint32 {
+              range 1..720 ;
+
+            }
+
+            description 'Config WTR time of ECMP in private network.' ;
+          }
+
+          if-feature ldsh-network-wtr ;
+
+          ncd:revise-date 2024-04-07 ;
+        }
+
+        container load-sharing-mode {
+          description 'Config information about load-sharing mode, equal cost multiple path or unequal cost multiple path.' ;
+          leaf mode {
+            type ecmp-or-ucmp ;
+
+            description 'The result of load-sharing-mode selection.' ;
+          }
+
+          ncd:revise-date 2025-03-27 ;
+        }
+
+      }
+
+    }
+
+  }
+
+  notification changeRouteInfo {
+    description 'Notification of the change for IPv4 route.' ;
+    if-feature changeRouteInfo ;
+
+    list ipRoute {
+      config false ;
+      description 'The forwarding info list of changed IPv4 routes.' ;
+      key 'vrfName addr mask' ;
+      leaf vrfName {
+        description 'Name of the VPN to which a prefix belongs.' ;
+        type string {
+          length 0..32 ;
+
+        }
+
+      }
+
+      leaf addr {
+        description 'Destination IP address.' ;
+        type ncd:ipv4-address ;
+
+      }
+
+      leaf mask {
+        description 'Mask of an IP address.' ;
+        type ncd:ipv4-mask ;
+
+      }
+
+      leaf changeType {
+        description 'The type of current change.' ;
+        type uint8 {
+          range 1..3 ;
+
+        }
+
+      }
+
+      container forward-infos {
+        list forward-info {
+          description 'The forwarding information of the route.' ;
+          key 'nexthop interface-name owner' ;
+          config false ;
+          leaf nexthop {
+            type string {
+              length 0..70 ;
+
+            }
+
+            description 'The forwarding nexthop of the route.' ;
+          }
+
+          leaf interface-name {
+            type string {
+              length 0..31 ;
+
+            }
+
+            description 'The local interface name through which the next hop of this route should be reached.' ;
+          }
+
+          leaf owner {
+            type string {
+              length 0..31 ;
+
+            }
+
+            description 'The protocol of route.' ;
+          }
+
+          leaf metric {
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            description 'The metric of route.' ;
+          }
+
+          leaf routeChangeType {
+            type uint8 {
+              range 1..3 ;
+
+            }
+
+            description 'The type of current change.' ;
+            ncd:revise-date 2024-07-06 ;
+          }
+
+        }
+
+        description 'The forwarding information of the route.' ;
+        ncd:revise-date 2024-01-16 ;
+      }
+
+    }
+
+    ncd:revise-date 2019-01-23 ;
+  }
+
+  notification changeRoute6Info {
+    description 'Notification of the change for IPv6 route.' ;
+    if-feature changeRouteInfo ;
+
+    list ipv6route {
+      config false ;
+      description 'The forwarding info list of changed IPv6 routes.' ;
+      key 'vrfName addr maskLength' ;
+      leaf vrfName {
+        description 'Name of the VPN to which a prefix belongs.' ;
+        type string {
+          length 0..32 ;
+
+        }
+
+      }
+
+      leaf addr {
+        description 'Destination IPv6 address.' ;
+        type ncd:ipv6-address ;
+
+      }
+
+      leaf maskLength {
+        description 'Mask length of an IP address.' ;
+        type uint32 ;
+
+      }
+
+      leaf changeType {
+        description 'The type of current change.' ;
+        type uint8 {
+          range 1..3 ;
+
+        }
+
+      }
+
+      container forward-infos {
+        list forward-info {
+          leaf nexthop {
+            type string {
+              length 0..70 ;
+
+            }
+
+            description 'The forwarding nexthop of the route.' ;
+          }
+
+          leaf interface-name {
+            type string {
+              length 0..31 ;
+
+            }
+
+            description 'The local interface name through which the next hop of this route should be reached.' ;
+          }
+
+          leaf owner {
+            type string {
+              length 0..31 ;
+
+            }
+
+            description 'The protocol of route.' ;
+          }
+
+          leaf metric {
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            description 'The metric of route.' ;
+          }
+
+          key 'nexthop interface-name owner' ;
+          description 'The forwarding information of the route.' ;
+          config false ;
+          leaf routeChangeType {
+            type uint8 {
+              range 1..3 ;
+
+            }
+
+            description 'The type of current change.' ;
+            ncd:revise-date 2024-07-06 ;
+          }
+
+        }
+
+        description 'The forwarding information of the route.' ;
+        ncd:revise-date 2024-01-16 ;
+      }
+
+    }
+
+    ncd:revise-date 2019-05-28 ;
+  }
+
+  notification routeSummary {
+    list specific {
+      config false ;
+      key 'vrfName route-owner' ;
+      leaf vrfName {
+        description 'Vrf name' ;
+        type ncd:string-quesiton-mark ;
+
+      }
+
+      leaf route-owner {
+        description 'Protocol name' ;
+        type string ;
+
+      }
+
+      leaf route-count {
+        description 'Route summary' ;
+        type uint32 ;
+
+      }
+
+    }
+
+    list vpnAll {
+      config false ;
+      description 'BGP/OSPF/ISIS vrf route summary' ;
+      key route-owner ;
+      leaf route-owner {
+        description 'Protocol type' ;
+        type string ;
+
+      }
+
+      leaf route-count {
+        description 'Route summary' ;
+        type uint32 ;
+
+      }
+
+    }
+
+    list all {
+      config false ;
+      description 'BGP/OSPF/ISIS global or vrf route summary' ;
+      key route-owner ;
+      leaf route-owner {
+        description 'Protocol type' ;
+        type string ;
+
+      }
+
+      leaf route-count {
+        description 'Route summary' ;
+        type uint32 ;
+
+      }
+
+    }
+
+    ncd:revise-date 2021-11-22 ;
+  }
+
+  notification route6Summary {
+    list vpnAll {
+      config false ;
+      description 'BGP/OSPF/ISIS vrf route summary' ;
+      key route-owner ;
+      leaf route-owner {
+        description 'Protocol name' ;
+        type string ;
+
+      }
+
+      leaf route-count {
+        description 'Route summary' ;
+        type uint32 ;
+
+      }
+
+    }
+
+    list specific {
+      config false ;
+      key 'vrfName route-owner' ;
+      leaf vrfName {
+        description 'Vrf name' ;
+        type ncd:string-quesiton-mark ;
+
+      }
+
+      leaf route-owner {
+        description 'Protocol name' ;
+        type string ;
+
+      }
+
+      leaf route-count {
+        description 'Route summary' ;
+        type uint32 ;
+
+      }
+
+    }
+
+    list all {
+      config false ;
+      description 'BGP/OSPF/ISIS global or vrf route summary' ;
+      key route-owner ;
+      leaf route-owner {
+        description 'Protocol name' ;
+        type string ;
+
+      }
+
+      leaf route-count {
+        description 'Route summary' ;
+        type uint32 ;
+
+      }
+
+    }
+
+    ncd:revise-date 2021-11-22 ;
+  }
+
+}

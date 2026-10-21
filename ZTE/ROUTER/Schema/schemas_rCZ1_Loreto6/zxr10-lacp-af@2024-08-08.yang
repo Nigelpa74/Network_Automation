@@ -1,0 +1,590 @@
+module zxr10-lacp-af {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/lacp-af" ;
+  prefix lacp-af ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the Link Aggregation Control Protocol' ;
+  revision 2024-08-08 {
+    description 'Obsolete feature node global-lag-bfd.
+Obsolete container node configuration/lacp/global/lag-bfd.' ;
+  }
+
+  revision 2023-05-12 {
+    description 'Add range to leaf node /lacp-af:configuration/lacp-af:af-nodes/lacp-af:af-node/lacp-af:lacp/lacp-af:global/lacp-af:lag-bfd/lacp-af:time/lacp-af:min-rx.
+Add range to leaf node /lacp-af:configuration/lacp-af:af-nodes/lacp-af:af-node/lacp-af:lacp/lacp-af:global/lacp-af:lag-bfd/lacp-af:time/lacp-af:min-tx.' ;
+  }
+
+  revision 2022-03-03 {
+    description 'Add project label PTN.6100 and PTN.61V5_1 for feature node global-lag-bfd.' ;
+  }
+
+  revision 2021-06-23 {
+    description 'Add feature node local-config.
+Add feature node global-lag-bfd.
+Add the feature local-config to container node configuration/af-nodes/af-node/lacp/local.
+Add container node configuration/af-nodes/af-node/lacp/global.
+Add container node configuration/af-nodes/af-node/lacp/global/lag-bfd.
+Add container node state.
+Add container node state/lacp.
+Add list node state/lacp/member.
+Add container node state/lacp/member/ports.
+Add list node state/lacp/member/ports/port.' ;
+  }
+
+  revision 2017-12-18 {
+    description 'Add length for the leaf of af-node name.' ;
+  }
+
+  revision 2017-08-16 {
+    description 'The initial version' ;
+  }
+
+  feature local-config {
+    description 'Describe the parameters of smartgroup and member port to be configured.' ;
+  }
+
+  feature global-lag-bfd {
+    description 'The lag-bfd of global.' ;
+    status obsolete {
+      ncd:revise-date 2024-08-08 ;
+    }
+  }
+
+  feature member-state {
+    description 'Describe the member port information of smartgroup.' ;
+  }
+
+  container configuration {
+    description 'Describe the configuration of Link Aggregation Control Protocol.' ;
+    container af-nodes {
+      list af-node {
+        key name ;
+        leaf name {
+          type ncd:af-name {
+            length 1..32 {
+              description 'The length of af-node name.' ;
+            }
+
+          }
+
+        }
+
+        container lacp {
+          description 'Describe the parameters of LACP to be configured.' ;
+          container local {
+            if-feature local-config ;
+
+            description 'Describe the parameters of smartgroup and member port to be configured.' ;
+            container smartgroups {
+              description 'Describe the parameters of smartgroup to be configured.' ;
+              list smartgroup {
+                description 'Describe the parameters of smartgroup to be configured. The smartgroup interface is created and deleted by Interface Management.' ;
+                key interface-name ;
+                leaf interface-name {
+                  description 'The interface name of smartgroup.' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf bond-mode {
+                  description 'The bond mode of smartgroup. Smartgroup has two modes, on and 802.3ad.' ;
+                  type enumeration {
+                    enum on {
+                      value 0 ;
+                      description 'The aggregated mode is on.' ;
+                    }
+
+                    enum 802.3ad {
+                      value 1 ;
+                      description 'The aggregated mode is 802.3ad.' ;
+                    }
+
+                  }
+
+                  default on ;
+                }
+
+                leaf load-balance {
+                  description 'The load sharing strategy of smartgroup, its default value depends on the performance parameters.' ;
+                  type enumeration {
+                    enum dst-ip {
+                      value 1 ;
+                      description 'The load-balance mode is dst-ip.' ;
+                    }
+
+                    enum src-ip {
+                      value 5 ;
+                      description 'The load-balance mode is src-ip.' ;
+                    }
+
+                    enum per-destination {
+                      value 10 ;
+                      description 'The load-balance mode is per-destination.' ;
+                    }
+
+                    enum per-packet {
+                      value 11 ;
+                      description 'The load-balance mode is per-packet.' ;
+                    }
+
+                    enum pri-label {
+                      value 12 ;
+                      description 'The load-balance mode is pri-label.' ;
+                    }
+
+                    enum pub-label {
+                      value 13 ;
+                      description 'The load-balance mode is pub-label.' ;
+                    }
+
+                    enum pub-pri-label {
+                      value 14 ;
+                      description 'The load-balance mode is pub-pri-label.' ;
+                    }
+
+                    enum per-subinterface {
+                      value 18 ;
+                      description 'The load-balance mode is per-subinterface.' ;
+                    }
+
+                  }
+
+                  default per-destination ;
+                }
+
+                leaf active-number {
+                  description 'The active number of smartgroup, its maximum value depends on the performance parameters.' ;
+                  type uint32 {
+                    range 1..16 {
+                      description 'The maximum value depends on the performance parameters.' ;
+                    }
+
+                  }
+
+                  default 1 ;
+                }
+
+                leaf active-limit {
+                  description 'The active limit of smartgroup, its maximum value and default value depend on the performance parameters.' ;
+                  type uint32 {
+                    range 0..16 {
+                      description 'The maximum value and default value depend on the performance parameters.' ;
+                    }
+
+                  }
+
+                  default 16 ;
+                }
+
+              }
+
+            }
+
+            container ports {
+              description 'Describe the parameters of member port to be configured.' ;
+              list port {
+                description 'Describe the parameters of member port to be configured.' ;
+                key interface-name ;
+                leaf interface-name {
+                  description 'The interface name of member port.' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf smartgroup-id {
+                  description 'The group id bound by member port, its maximum value depends on the performance parameters.' ;
+                  type uint32 {
+                    range 1..64 {
+                      description 'The maximum value depends on the performance parameters.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf mode {
+                  description 'The bind mode of member port. Member port has three bind modes, on and passive and active.' ;
+                  type enumeration {
+                    enum passive {
+                      value 1 ;
+                      description 'The bind mode is passive.' ;
+                    }
+
+                    enum on {
+                      value 2 ;
+                      description 'The bind mode is on.' ;
+                    }
+
+                    enum active {
+                      value 3 ;
+                      description 'The bind mode is active.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf port-priority {
+                  description 'The priority of member port.' ;
+                  type uint16 {
+                    range 1..65535 ;
+
+                  }
+
+                  default 32768 ;
+                }
+
+                leaf timeout {
+                  description 'The timeout type of member port. Timeout has two types, long and short.' ;
+                  type enumeration {
+                    enum long {
+                      value 0 ;
+                      description 'The time-out type is long.' ;
+                    }
+
+                    enum short {
+                      value 1 ;
+                      description 'The time-out type is short.' ;
+                    }
+
+                  }
+
+                  default long ;
+                }
+
+              }
+
+            }
+
+          }
+
+          container global {
+            description 'Describe the global parameters to be configured.' ;
+            container lag-bfd {
+              if-feature global-lag-bfd ;
+
+              description 'The lag-bfd of global.' ;
+              status obsolete {
+                ncd:revise-date 2024-08-08 ;
+              }
+              presence "destination should be mandatory" ;
+              leaf source {
+                description 'The source IP of lag-bfd.' ;
+                type ncd:ipv4-address-none-zero ;
+
+                status obsolete ;
+
+              }
+
+              leaf destination {
+                description 'The source IP of lag-bfd.' ;
+                type ncd:ipv4-address-none-zero ;
+
+                mandatory true ;
+                status obsolete ;
+
+              }
+
+              container time {
+                description 'The time parameters of lag-bfd.' ;
+                presence "min-tx and min-rx and multiplier should be mandatory" ;
+                leaf min-tx {
+                  description 'The minimum send interval of lag-bfd, its minimum value and maximum value depend on the performance parameters.' ;
+                  type uint32 {
+                    range 1..65535 ;
+
+                  }
+
+                  units millisecond ;
+                  mandatory true ;
+                  status obsolete ;
+
+                }
+
+                leaf min-rx {
+                  description 'The minimum receive interval of lag-bfd, its minimum value and maximum value depend on the performance parameters.' ;
+                  type uint32 {
+                    range 1..65535 ;
+
+                  }
+
+                  units millisecond ;
+                  mandatory true ;
+                  status obsolete ;
+
+                }
+
+                leaf multiplier {
+                  description 'The detect multiplier of lag-bfd.' ;
+                  type uint8 {
+                    range 3..50 ;
+
+                  }
+
+                  mandatory true ;
+                  status obsolete ;
+
+                }
+
+                status obsolete ;
+
+              }
+
+            }
+
+            ncd:revise-date 2021-06-23 ;
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'Describe the state of Link Aggregation Control Protocol.' ;
+    container lacp {
+      description 'Describe the state of LACP.' ;
+      list member {
+        if-feature member-state ;
+
+        description 'Describe the member port information of smartgroup.' ;
+        key 'af-name interface-name' ;
+        leaf af-name {
+          description 'AF node name.' ;
+          type ncd:af-name ;
+
+        }
+
+        leaf interface-name {
+          description 'The interface name of smartgroup.' ;
+          type ncd:ifname ;
+
+        }
+
+        container ports {
+          description 'Describe the information of member port.' ;
+          list port {
+            description 'Describe the information of member port.' ;
+            key port-name ;
+            leaf port-name {
+              description 'The interface name of member port.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf port-state {
+              description 'The state of member port. LACP has two port states, active and inactive.' ;
+              type enumeration {
+                enum inactive {
+                  value 1 ;
+                  description 'The LACP port state is inactive.' ;
+                }
+
+                enum active {
+                  value 2 ;
+                  description 'The LACP port state is active.' ;
+                }
+
+              }
+
+            }
+
+            leaf port-mode {
+              description 'The mode of member port.' ;
+              type enumeration {
+                enum passive {
+                  value 1 ;
+                  description 'The port mode is passive.' ;
+                }
+
+                enum on {
+                  value 2 ;
+                  description 'The port mode is on.' ;
+                }
+
+                enum active {
+                  value 3 ;
+                  description 'The port mode is active.' ;
+                }
+
+              }
+
+            }
+
+            leaf ptx-state {
+              description 'The periodic transmission machine state of member port.' ;
+              type enumeration {
+                enum no-periodic {
+                  value 1 ;
+                  description 'Periodic transmissions are disabled.' ;
+                }
+
+                enum fast-periodic {
+                  value 2 ;
+                  description 'Periodic transmissions are enabled at a fast transmission rate.' ;
+                }
+
+                enum slow-periodic {
+                  value 3 ;
+                  description 'Periodic transmissions are enabled at a slow transmission rate.' ;
+                }
+
+                enum periodic-tx {
+                  value 4 ;
+                  description 'Transitory state entered on periodic_timer expiry.' ;
+                }
+
+              }
+
+            }
+
+            leaf agg-state {
+              description 'The aggregation state of member port.' ;
+              type enumeration {
+                enum active {
+                  value 0 ;
+                  description 'The LACP port aggregation state is active.' ;
+                }
+
+                enum inactive {
+                  value 1 ;
+                  description 'The LACP port aggregation state is inactive.' ;
+                }
+
+                enum loop {
+                  value 2 ;
+                  description 'The LACP port aggregation state is loop.' ;
+                }
+
+              }
+
+            }
+
+            leaf periodic-time {
+              description 'The number of seconds between periodic transmissions of member port.' ;
+              type uint16 ;
+
+              units second ;
+            }
+
+            leaf port-priority {
+              description 'The port priority of member port.' ;
+              type uint16 ;
+
+            }
+
+            leaf oper-key {
+              description 'The operational key of member port.' ;
+              type uint16 ;
+
+            }
+
+            leaf oper-state {
+              description 'The operational state of member port.' ;
+              type uint8 ;
+
+            }
+
+            leaf rx-state {
+              description 'The receive machine state of member port.' ;
+              type enumeration {
+                enum initialize {
+                  value 1 ;
+                  description 'The LACP port receive machine state is initialize.' ;
+                }
+
+                enum port-disabled {
+                  value 2 ;
+                  description 'The LACP port receive machine state is port disabled.' ;
+                }
+
+                enum lacp-disabled {
+                  value 3 ;
+                  description 'The LACP port receive machine state is lacp disabled.' ;
+                }
+
+                enum expired {
+                  value 4 ;
+                  description 'The LACP port receive machine state is expired.' ;
+                }
+
+                enum defaulted {
+                  value 5 ;
+                  description 'The LACP port receive machine state is defaulted.' ;
+                }
+
+                enum current {
+                  value 6 ;
+                  description 'The LACP port receive machine state is current.' ;
+                }
+
+              }
+
+            }
+
+            leaf mux-state {
+              description 'The mux state of member port.' ;
+              type enumeration {
+                enum detached {
+                  value 1 ;
+                  description 'The LACP port mux machine state is detached.' ;
+                }
+
+                enum waiting {
+                  value 2 ;
+                  description 'The LACP port mux machine state is waiting.' ;
+                }
+
+                enum attached {
+                  value 3 ;
+                  description 'The LACP port mux machine state is attached.' ;
+                }
+
+                enum collecting {
+                  value 4 ;
+                  description 'The LACP port mux machine state is collecting.' ;
+                }
+
+                enum distributing {
+                  value 5 ;
+                  description 'The LACP port mux machine state is distributing.' ;
+                }
+
+                enum collecting-distributing {
+                  value 6 ;
+                  description 'The LACP port mux machine state is collecting and distributing.' ;
+                }
+
+              }
+
+            }
+
+            ncd:select port-name ;
+          }
+
+        }
+
+        ncd:select af-name ;
+        ncd:select "af-name interface-name" ;
+      }
+
+    }
+
+    ncd:revise-date 2021-06-23 ;
+  }
+
+}

@@ -1,0 +1,301 @@
+module zxr10-timerange {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/timerange" ;
+  prefix timerange ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe time range.' ;
+  revision 2024-12-28 {
+    description 'This modification is only for polishing the description.' ;
+  }
+
+  revision 2015-07-28 {
+    description 'Remove config attribute of all state nodes.' ;
+  }
+
+  revision 2015-01-19 {
+    description "Modify enum value of 'configuration/timerange/global-configuration/instances/instance/period-non-endday-rules/non-endday-rule/startday' from 0-9 to 0,8,9" ;
+  }
+
+  revision 2014-07-01 {
+    description 'Initial version.' ;
+  }
+
+  container configuration {
+    description 'Configuration model.' ;
+    container timerange {
+      description 'Configuration related to the time range.' ;
+      container global-configuration {
+        description 'The global configuration model for time range.' ;
+        container enable {
+          description 'Enable or disable the time range configuration feature.' ;
+          leaf status {
+            description 'Specify the status of the time range feature switch.' ;
+            type enumeration {
+              enum off {
+                value 0 ;
+                description 'config disable status.' ;
+              }
+
+              enum on {
+                value 1 ;
+                description 'config enable status.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+        container instances {
+          description 'Configure the collection of time range instances.' ;
+          list instance {
+            description 'Configure the time range instance.' ;
+            max-elements 2048 ;
+            key name ;
+            leaf name {
+              description 'Specify the name of the time range.' ;
+              type string {
+                length 1..31 ;
+
+              }
+
+            }
+
+            container absolute-rule {
+              description 'Configure absolute time settings.' ;
+              container startdate {
+                description 'Configure the start date.' ;
+                presence "Mandatory leafs are included." ;
+                leaf startday {
+                  description 'Configure the start day.' ;
+                  type ncd:date ;
+
+                  mandatory true ;
+                }
+
+                leaf starttime {
+                  description 'Configure the start time.' ;
+                  type ncd:time ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              container enddate {
+                description 'Configure the end date.' ;
+                presence "Mandatory leafs are included." ;
+                leaf endday {
+                  description 'Configure the end day.' ;
+                  type ncd:date ;
+
+                  mandatory true ;
+                }
+
+                leaf endtime {
+                  description 'Configure the end time.' ;
+                  type ncd:time ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            container period-endday-exist-rules {
+              description 'Configure multiple segments of periodic time that include an end day.' ;
+              list endday-exist-rule {
+                description 'Configure a periodic time that includes an end day.' ;
+                max-elements 2048 ;
+                key 'startday daytime-begin endday daytime-end' ;
+                leaf startday {
+                  description 'Configure the start day.' ;
+                  type enumeration {
+                    enum Monday {
+                      value 1 ;
+                    }
+
+                    enum Tuesday {
+                      value 2 ;
+                    }
+
+                    enum Wednesday {
+                      value 3 ;
+                    }
+
+                    enum Thursday {
+                      value 4 ;
+                    }
+
+                    enum Friday {
+                      value 5 ;
+                    }
+
+                    enum Saturday {
+                      value 6 ;
+                    }
+
+                    enum Sunday {
+                      value 7 ;
+                    }
+
+                  }
+
+                }
+
+                leaf daytime-begin {
+                  description 'Configure the start time.' ;
+                  type ncd:time ;
+
+                }
+
+                leaf endday {
+                  description 'Configure the end day.' ;
+                  type enumeration {
+                    enum Monday {
+                      value 1 ;
+                    }
+
+                    enum Tuesday {
+                      value 2 ;
+                    }
+
+                    enum Wednesday {
+                      value 3 ;
+                    }
+
+                    enum Thursday {
+                      value 4 ;
+                    }
+
+                    enum Friday {
+                      value 5 ;
+                    }
+
+                    enum Saturday {
+                      value 6 ;
+                    }
+
+                    enum Sunday {
+                      value 7 ;
+                    }
+
+                  }
+
+                }
+
+                leaf daytime-end {
+                  description 'Configure the end time.' ;
+                  type ncd:time ;
+
+                }
+
+              }
+
+            }
+
+            container period-non-endday-rules {
+              description 'Configure multiple segments of periodic time without an end day.' ;
+              list non-endday-rule {
+                description 'Configure a periodic time without an end day.' ;
+                max-elements 2048 ;
+                key 'startday daytime-begin daytime-end' ;
+                leaf startday {
+                  description 'Configure the start day.' ;
+                  type enumeration {
+                    enum Weekdays {
+                      value 0 ;
+                      description 'From Monday to Friday.' ;
+                    }
+
+                    enum Weekend {
+                      value 8 ;
+                      description 'Saturday and Sunday.' ;
+                    }
+
+                    enum Daily {
+                      value 9 ;
+                      description 'From Monday to Sunday.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf daytime-begin {
+                  description 'Configure the start time.' ;
+                  type ncd:time ;
+
+                }
+
+                leaf daytime-end {
+                  description 'Configure the end time.' ;
+                  type ncd:time ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State model.' ;
+    container timerange {
+      description 'State related to the time range.' ;
+      list state-info {
+        description 'State information.' ;
+        max-elements 2048 ;
+        key name ;
+        leaf name {
+          description 'Specify the name of the time range.' ;
+          type string {
+            length 1..31 ;
+
+          }
+
+        }
+
+        leaf state {
+          description 'Status of the time range.' ;
+          type enumeration {
+            enum inactive {
+              value 0 ;
+            }
+
+            enum active {
+              value 1 ;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

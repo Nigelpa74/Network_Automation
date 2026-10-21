@@ -1,0 +1,98 @@
+module zxr10-bras-ipox {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/bras-ipox" ;
+  prefix ipox ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe IPoX.' ;
+  revision 2024-06-17 {
+    description 'Add dhcpv6-user check-relay-gateway.' ;
+  }
+
+  revision 2021-03-30 {
+    description 'Add dhcp-user check-relay-gateway.' ;
+  }
+
+  revision 2019-07-25 {
+    description 'First create
+Add dhcpv6-duid-conflict' ;
+  }
+
+  container configuration {
+    description 'Configuration' ;
+    container bras-ipox {
+      description 'Configuration about ipox module.' ;
+      container ipox-dhcpv6-cfg {
+        description 'Configuration about dhcpv6.' ;
+        leaf dhcpv6-duid-conflict-kick-off {
+          description 'Configure the dhcpv6-duid-conflict policy.' ;
+          type enumeration {
+            enum new-coming-user {
+              value 1 ;
+              description 'To kick off the new coming user' ;
+            }
+
+            enum existing-user {
+              value 2 ;
+              description 'To kick off the existing user' ;
+            }
+
+          }
+
+          default new-coming-user ;
+        }
+
+        leaf check-relay-gateway {
+          type enumeration {
+            enum release {
+              value 1 ;
+              description 'Send release to dhcpv6 server.' ;
+            }
+
+            enum no-release {
+              description "Don't send release to dhcpv6 server." ;
+              value 2 ;
+            }
+
+          }
+
+          description 'Check dhcpv6 relay user gateway.' ;
+          ncd:revise-date 2024-06-17 ;
+        }
+
+      }
+
+      container ipox-dhcpv4-cfg {
+        description 'Configuration about dhcpv4.' ;
+        leaf check-relay-gateway {
+          description 'Check relay user gateway.' ;
+          type enumeration {
+            enum no-release {
+              value 2 ;
+              description "Don't send release to dhcp-server." ;
+            }
+
+            enum release {
+              value 1 ;
+              description 'Send release to dhcp-server.' ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2021-03-30 ;
+      }
+
+    }
+
+  }
+
+}

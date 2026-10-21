@@ -1,0 +1,426 @@
+module zxr10-telnet {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/TELNET" ;
+  prefix telnet ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the TELNET.' ;
+  revision 2024-07-16 {
+    description 'The leaf node /state/telnet/users/username supports standard strings.' ;
+  }
+
+  revision 2022-01-24 {
+    description 'add two leaf nodes(only-telnet-max-link, ssh-max-link) to container configuration/container telnet/container telnet-server' ;
+  }
+
+  revision 2015-04-14 {
+    description 'Modify the type of history-size, modify Max-elements of users and terminal,modify range of sty-no and vty-no.' ;
+  }
+
+  revision 2015-03-13 {
+    description 'Delete the leaf node of max-link, add a leaf node of max-connection.' ;
+  }
+
+  revision 2014-05-06 {
+    description 'Modify the default value of dscp.' ;
+  }
+
+  revision 2014-02-24 {
+    description 'Modify length of line and username of users.' ;
+  }
+
+  revision 2013-12-12 {
+    description 'Modify version of import defs file; Modify the type of line,type,login-time,from string to string-with-blank' ;
+  }
+
+  revision 2013-10-10 {
+    description 'Initial version.' ;
+  }
+
+  container configuration {
+    description 'The configuration model of TELNET.' ;
+    container telnet {
+      description 'Configure the TELNET parameters.' ;
+      container telnet-server {
+        description 'Configure the TELNET server parameters.' ;
+        choice status {
+          description 'To configure the TELNET server enable or disable.' ;
+          default enable ;
+          case disable {
+            description 'To configure the TELNET server disable.' ;
+            leaf disable {
+              description 'Disable the TELNET server.' ;
+              type empty ;
+
+            }
+
+          }
+
+          case enable {
+            description 'To configure the TELNET server enable.' ;
+            leaf enable {
+              description 'Enable TELNET server.' ;
+              type empty ;
+
+            }
+
+            leaf listen-port {
+              description 'The listenning port of the TELNET server. It can be configured as 23 or any integer between 49152 and 65535. It cannot be changed while TELNET server has been enabled.' ;
+              type uint16 {
+                range "23 | 49152..65535" ;
+
+              }
+
+              default 23 ;
+            }
+
+          }
+
+        }
+
+        leaf dscp {
+          description 'The DSCP value is used in packets of the TELNET server. It can be configured any integer between 0 and 63.' ;
+          type uint8 {
+            range 0..63 ;
+
+          }
+
+        }
+
+        leaf idle-timeout {
+          description 'Telnet maximum idle time in minutes(0-1000).Distinguish project,support performance parameter.' ;
+          type uint16 {
+            range 0..1000 ;
+
+          }
+
+          units minute ;
+          default 120 ;
+        }
+
+        leaf absolute-timeout {
+          description 'Telnet maximum online time in minutes(0-10000).Distinguish project,support performance parameter.' ;
+          type uint16 {
+            range 0..10000 ;
+
+          }
+
+          units minute ;
+          default 1440 ;
+        }
+
+        leaf max-link {
+          status obsolete {
+            ncd:revise-date 2015-04-14 ;
+          }
+
+          description 'Maximum number of telnet links.' ;
+          type uint8 {
+            range 1..15 ;
+
+          }
+
+          default 15 ;
+        }
+
+        leaf ipv4-acl {
+          description 'The IPv4 ACL name which is binded to the TELNET server.' ;
+          type string {
+            length 1..31 ;
+
+          }
+
+        }
+
+        leaf ipv6-acl {
+          description 'The IPv6 ACL name which is binded to the TELNET server.' ;
+          type string {
+            length 1..31 ;
+
+          }
+
+        }
+
+        leaf max-connection {
+          description 'Sum of telnet and SSH maximum connections.' ;
+          type uint32 {
+            range 1..32 {
+              description 'Maximum value support performance parameter.' ;
+            }
+
+          }
+
+          default 15 ;
+        }
+
+        leaf only-telnet-max-link {
+          description 'Maximum number of telnet connection, default values vary by Projects.' ;
+          type uint32 {
+            range 1..32 {
+              description 'Maximum value support performance parameter.' ;
+            }
+
+          }
+
+          ncd:revise-date 2022-01-24 ;
+        }
+
+        leaf ssh-max-link {
+          description 'Maximum number of SSH connections, default values vary by Projects.' ;
+          type uint32 {
+            range 1..32 {
+              description 'Maximum value support performance parameter.' ;
+            }
+
+          }
+
+          ncd:revise-date 2022-01-24 ;
+        }
+
+      }
+
+      container console {
+        description 'Configure the console parameters.' ;
+        leaf idle-timeout {
+          description 'Console maximum idle time in minutes(0-1000).
+Distinguish project,support performance parameter.' ;
+          type uint16 {
+            range 0..1000 ;
+
+          }
+
+          units minute ;
+          default 30 ;
+        }
+
+        leaf absolute-timeout {
+          description 'Console maximum absolute time in minutes(0-10000).
+Distinguish project,support performance parameter.' ;
+          type uint16 {
+            range 0..10000 ;
+
+          }
+
+          units minute ;
+          default 1440 ;
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State model of TELNET.' ;
+    container telnet {
+      description 'State of terminals and login users.' ;
+      list users {
+        description 'Information of login users.' ;
+        max-elements 33 ;
+        key sty-no ;
+        leaf sty-no {
+          description 'Sty number.' ;
+          type uint8 {
+            range 0..32 ;
+
+          }
+
+        }
+
+        leaf line {
+          description 'Sty virtual information.' ;
+          type ncd:string-with-blank {
+            length 0..15 ;
+
+          }
+
+        }
+
+        leaf username {
+          type string {
+            length 0..65 ;
+
+          }
+
+          description 'User name.' ;
+        }
+
+        leaf remote-addr {
+          description 'Address of remote server.' ;
+          type string {
+            length 0..45 ;
+
+          }
+
+        }
+
+        leaf local-addr {
+          description 'Client address.' ;
+          type string {
+            length 0..45 ;
+
+          }
+
+        }
+
+        leaf idle-time {
+          description 'Idle time in minutes.' ;
+          type string {
+            length 0..32 ;
+
+          }
+
+        }
+
+      }
+
+      list terminal {
+        description 'Information of terminal.' ;
+        max-elements 33 ;
+        key sty-no ;
+        leaf sty-no {
+          description 'Sty number.' ;
+          type uint8 {
+            range 0..32 ;
+
+          }
+
+        }
+
+        leaf location {
+          description 'Client address.' ;
+          type string {
+            length 0..45 ;
+
+          }
+
+        }
+
+        leaf type {
+          description 'Type of terminal.' ;
+          type ncd:string-with-blank {
+            length 0..32 ;
+
+          }
+
+        }
+
+        leaf baudrate {
+          description 'Baudrate of terminal.' ;
+          type uint32 ;
+
+        }
+
+        leaf capability {
+          description 'Capability of teminal.' ;
+          type string {
+            length 0..32 ;
+
+          }
+
+        }
+
+        leaf online-time {
+          description 'Online time of terminal.' ;
+          type string {
+            length 0..32 ;
+
+          }
+
+        }
+
+        leaf editing-state {
+          description 'Editing state of terminal.' ;
+          type string {
+            length 0..32 ;
+
+          }
+
+        }
+
+        leaf history-state {
+          description 'History state of terminal.' ;
+          type string {
+            length 0..32 ;
+
+          }
+
+        }
+
+        leaf history-size {
+          description 'History size of terminal.' ;
+          type uint16 {
+            range 5..256 ;
+
+          }
+
+        }
+
+        leaf length {
+          description 'Screen height of teminal.' ;
+          type uint16 {
+            range 0..512 ;
+
+          }
+
+          default 24 ;
+        }
+
+        leaf width {
+          description 'Screen width of terminal.' ;
+          type uint16 {
+            range 80..512 ;
+
+          }
+
+          default 80 ;
+        }
+
+        leaf login-time {
+          description 'Login time of terminal.' ;
+          type ncd:string-with-blank {
+            length 0..32 ;
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'Operation model of TELNET.' ;
+    container telnet {
+      description 'Operation of TELNET.' ;
+      container clear-vty {
+        description 'Reset a terminal line.' ;
+        leaf vty-no {
+          description 'Vty number.' ;
+          type uint8 {
+            range 0..31 ;
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

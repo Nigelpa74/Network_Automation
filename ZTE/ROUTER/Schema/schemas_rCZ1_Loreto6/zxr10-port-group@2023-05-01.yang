@@ -1,0 +1,1467 @@
+module zxr10-port-group {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/port-group" ;
+  prefix port-group ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf model to describe port group.' ;
+  revision 2023-05-01 {
+    description 'Add FlexE-sub sncp/mc-sncp protect group .' ;
+  }
+
+  revision 2020-09-01 {
+    description 'Add FlexE-sub group type container.' ;
+  }
+
+  revision 2019-10-08 {
+    description '1,Add protect-receiver-onebyone typedef;
+2,Abandon configuration/port-group/flexe/multicast/port-group-id/protect-type/one-by-one/single-receiver leaf;
+3,Add configuration/port-group/flexe/multicast/port-group-id/protect-type/one-by-one/protect-receiver leaf.' ;
+  }
+
+  revision 2019-07-17 {
+    description '1,Modify configuration/port-group/multicasts/multicast/port-group-id range from <1025-1152> to <1-128>;
+2,Modify configuration/port-group/otns/otn/port-group-id range from <4097-8192> to <1-512>;
+3,Modify configuration/port-group/flexe/flexe/port-group-id range from <10241-18432> to <1-8192>;
+4,Add configuration/port-group/ether-service in configuration container;
+5,Add state/multicasts,state/otns,state/flexe,state/ether-service in state container;' ;
+  }
+
+  revision 2017-10-10 {
+    description 'Add flexe group type.' ;
+  }
+
+  revision 2014-06-06 {
+    description '1.Add if-feature otn-linear-protection;
+2,Add configuration/port-group/otns container;
+3,Add configuration/port-group/otns/otn list of configuration/port-group/otns container;
+4,Add configuration/port-group/otns/otn/port-group-id leaf,configuration/port-group/otns/otn/group-type,configuration/port-group/otns/otn/protect-type,configuration/port-group/otns/otn/work-if,configuration/port-group/otns/otn/protect-if,configuration/port-group/otns/otn/protect-strategy container of configuration/port-group/otns/otn list.
+5,Modify /state/port-group/port-group/port-group-id gets max id from performance parameter.' ;
+  }
+
+  revision 2013-12-30 {
+    description 'Modify the following contents:
+(1)Add presence of group-type container in msp list
+(2)Add presence of protect-type container in msp list
+(3)Add presence of work-if container in msp list
+(4)Add presence of protect-if container in msp list
+(5)Add presence of communicate-unit container in msp list
+(6)Add presence of protect-strategy container in msp list
+(7)Add presence of group-type container in multicast list
+(8)Add presence of protect-type container in multicast list
+(9)Add presence of work-if container in multicast list
+(10)Add presence of protect-if container in multicast list
+(11)Add presence of protect-strategy container in multicast list' ;
+  }
+
+  revision 2013-12-06 {
+    description 'Modify the following contents:
+(1)Add zxr10-netconf-defs import
+(2)Change type of work-if leaf in msp list
+(3)Change type of protect-if leaf in msp list
+(4)Change type of work-if leaf in multicast list
+(5)Change type of protect-if leaf in multicast list' ;
+  }
+
+  revision 2013-11-20 {
+    description 'Modify the following contents:
+(1)Delete If_Features of configuration container
+(2)Delete If_Features of port-group container' ;
+  }
+
+  revision 2013-10-02 {
+    description 'Modify the following contents:
+(1)Delete port-group list of configuration container
+(2)Modify protect-strategy, protect-receiver typedef
+(3)Add swtich-version, router-version feature
+(4)Add msp, multicast container in configuration container' ;
+  }
+
+  revision 2013-07-18 {
+    description 'Initial version.' ;
+  }
+
+  feature router-version {
+    description 'Router version.' ;
+  }
+
+  feature switch-version {
+    description 'Switch version.' ;
+  }
+
+  feature otn-linear-protection {
+    description 'OTN(Optical Transport Network) linear protection feature.' ;
+  }
+
+  feature flexe-version {
+    description 'Add for FlexE protection.' ;
+  }
+
+  feature ether-service-version {
+    description 'Add for ether-service protection.' ;
+  }
+
+  feature flexe-sub-version {
+    description 'Add for FlexE-sub protection.' ;
+  }
+
+  feature sncp-version {
+    description 'SNCP protection feature.' ;
+    ncd:revise-date 2023-05-01 ;
+  }
+
+  typedef group-type {
+    type enumeration {
+      enum msp {
+        value 1 ;
+        description 'Port group type is msp.' ;
+      }
+
+      enum mc-aps {
+        value 2 ;
+        description 'Port group type is mc-aps.' ;
+      }
+
+    }
+
+    description 'Port group type.' ;
+  }
+
+  typedef protect-direction {
+    type enumeration {
+      enum unidirection {
+        value 1 ;
+        description 'Port group protection direction is unidirection.' ;
+      }
+
+      enum bidirection {
+        value 2 ;
+        description 'Port group protection direction is bidirection.' ;
+      }
+
+    }
+
+    description 'Protection direction of port group.' ;
+  }
+
+  typedef protect-receiver {
+    type enumeration {
+      enum single-receiver {
+        value 1 ;
+        description 'Protection receiver of port group is single receiver.' ;
+      }
+
+    }
+
+    description 'Protection receiver of port group.' ;
+  }
+
+  typedef protect-strategy {
+    type enumeration {
+      enum aps {
+        value 1 ;
+        description 'Protection strategy of port group is aps.' ;
+      }
+
+    }
+
+    description 'Protection strategy of port group.' ;
+  }
+
+  typedef if-state {
+    type enumeration {
+      enum ok {
+        value 0 ;
+        description 'Interface state of port group is ok.' ;
+      }
+
+      enum sf {
+        value 1 ;
+        description 'Interface state of port group is sf.' ;
+      }
+
+      enum sd {
+        value 2 ;
+        description 'Interface state of port group is sd.' ;
+      }
+
+    }
+
+    description 'Interface state of port group.' ;
+  }
+
+  typedef switch-flag {
+    type enumeration {
+      enum unknown {
+        value 0 ;
+        description 'The switch flag of port group is unknown.' ;
+      }
+
+      enum switch {
+        value 1 ;
+        description 'The switch flag of port group is switch.' ;
+      }
+
+      enum no-switch {
+        value 2 ;
+        description 'The switch flag of port group is no switch.' ;
+      }
+
+      enum both-send-working-receive {
+        value 3 ;
+        description 'The switch flag of port group is both send working receive.' ;
+      }
+
+      enum both-send-protect-receive {
+        value 4 ;
+        description 'The switch flag of port group is both send protect receive.' ;
+      }
+
+    }
+
+    description 'The switch flag of port group.' ;
+  }
+
+  typedef flexe-type {
+    type enumeration {
+      enum flexe-cross {
+        value 6 ;
+        description 'flexe-cross group type' ;
+      }
+
+      enum flexe-terminal {
+        value 7 ;
+        description 'flexe-terminal group type' ;
+      }
+
+    }
+
+  }
+
+  typedef protect-receiver-onebyone {
+    type enumeration {
+      enum single-receiver {
+        value 1 ;
+        description 'Protection receiver of port group is single receiver.' ;
+      }
+
+      enum both-receiver {
+        value 2 ;
+        description 'Protection receiver of port group is both receiver.' ;
+      }
+
+    }
+
+    description 'Protection receiver of onebyone port group.' ;
+  }
+
+  typedef flexe-sub-type {
+    type enumeration {
+      enum flexe-sub-cross {
+        value 8 ;
+        description 'flexe-sub-cross group type' ;
+      }
+
+      enum flexe-sub-terminal {
+        value 9 ;
+        description 'flexe-sub-terminal group type' ;
+      }
+
+      enum sncp {
+        value 10 ;
+        description 'flexe sub sncp type' ;
+      }
+
+      enum mc-sncp {
+        value 11 ;
+        description 'flexe sub mc-sncp type' ;
+      }
+
+    }
+
+  }
+
+  typedef tcm-level {
+    description 'Config mc-sncp tcm level.' ;
+    type enumeration {
+      enum tcm_level1 {
+        value 1 ;
+      }
+
+      enum tcm_level2 {
+        value 2 ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'Configuration model info.' ;
+    container port-group {
+      description 'Configure port group parameters.' ;
+      container msps {
+        if-feature router-version ;
+
+        description 'Configure MSP/MC-APS type of port group parameters.' ;
+        list msp {
+          description 'Configure MSP/MC-APS type of port group parameters.' ;
+          key port-group-id ;
+          leaf port-group-id {
+            description 'Port group id.' ;
+            type uint32 {
+              range 1..256 {
+                description 'Port group id for MSP/MC-APS.' ;
+              }
+
+            }
+
+          }
+
+          container group-type {
+            description 'Configure group type of port group.' ;
+            presence "Configure group type" ;
+            leaf group-type {
+              description 'Port group type of port group.' ;
+              type group-type ;
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-type {
+            description 'Configure protection type of port group.' ;
+            presence "Configure protection type" ;
+            choice protect-type {
+              description 'Protection type of port group.' ;
+              case one-by-one {
+                description 'Configure one-by-one protection type.' ;
+                container one-by-one {
+                  description 'Configure one-by-one protection type.' ;
+                  presence "Configure 1:1 protection type" ;
+                  leaf bidirection {
+                    description 'Protection direction of port group is bidirection.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                  leaf single-receiver {
+                    description 'Protection receiver of port group is single receiver.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              case one-plus-one {
+                description 'Configure one-plus-one protection type.' ;
+                container one-plus-one {
+                  description 'Configure one-plus-one protection type.' ;
+                  presence "Configure 1+1 protection type" ;
+                  leaf protect-direction {
+                    description 'Protection direction of port group.' ;
+                    type protect-direction ;
+
+                    mandatory true ;
+                  }
+
+                  leaf protect-receiver {
+                    description 'Protection receiver of port group.' ;
+                    type protect-receiver ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container work-if {
+            description 'Configure working interface of port group.' ;
+            presence "Configure working interface" ;
+            leaf work-if-name {
+              description 'Working port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Working port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-if {
+            description 'Configure protection interface of port group.' ;
+            presence "Configure protection interface" ;
+            leaf protect-if-name {
+              description 'Protection port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Protect port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container communicate-unit {
+            description 'Configure communication unit of mc-aps port group.' ;
+            presence "Configure communication unit" ;
+            leaf communicate-unit {
+              description 'Communication unit of port group.' ;
+              type uint32 {
+                range 1..4294967295 {
+                  description 'Communicate unit of port group.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-strategy {
+            description 'Configure protection strategy of port group.' ;
+            presence "Configure protection strategy" ;
+            leaf protect-strategy {
+              description 'Protection strategy of port group.' ;
+              type protect-strategy ;
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container multicasts {
+        if-feature switch-version ;
+
+        description 'Configure multicast type of port group parameters.' ;
+        list multicast {
+          description 'Configure multicast type of port group parameters.' ;
+          key port-group-id ;
+          leaf port-group-id {
+            description 'Port group id.' ;
+            type uint32 {
+              range 1..128 {
+                description 'Port group id for multicast.' ;
+              }
+
+            }
+
+          }
+
+          container group-type {
+            description 'Configure group type of port group.' ;
+            presence "Configure group type" ;
+            leaf multicast {
+              description 'Port group type: multicast.' ;
+              type empty ;
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-type {
+            description 'Configure protection type of port group.' ;
+            presence "Configure protection type" ;
+            leaf one-plus-one {
+              description 'Protection type of port group is 1+1.' ;
+              type empty ;
+
+              mandatory true ;
+            }
+
+            leaf unidirection {
+              description 'Protection direction of port group is unidirection.' ;
+              type empty ;
+
+              mandatory true ;
+            }
+
+            leaf single-receiver {
+              description 'Protection receiver of port group is single receiver.' ;
+              type empty ;
+
+              mandatory true ;
+            }
+
+          }
+
+          container work-if {
+            description 'Configure working interface of port group.' ;
+            presence "Configure working interface" ;
+            leaf work-if-name {
+              description 'Working port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Working port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-if {
+            description 'Configure protection interface of port group.' ;
+            presence "Configure protection interface" ;
+            leaf protect-if-name {
+              description 'Protection port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Protect port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-strategy {
+            description 'Configure protection strategy of port group.' ;
+            presence "Configure protection strategy" ;
+            leaf protect-strategy {
+              description 'Protection strategy of port group.' ;
+              type protect-strategy ;
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container otns {
+        if-feature otn-linear-protection ;
+
+        description 'Configure OTN(Optical Transport Network) type of port group parameters.' ;
+        list otn {
+          description 'Configure ONT type of port group parameters.' ;
+          key port-group-id ;
+          leaf port-group-id {
+            description 'Port group id.' ;
+            type uint32 {
+              range 1..512 {
+                description 'Port group id for OTN.' ;
+              }
+
+            }
+
+          }
+
+          container group-type {
+            description 'Configure group type of port group.' ;
+            presence "Configure group type" ;
+            leaf otn {
+              description 'Port group type: OTN.' ;
+              type empty ;
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-type {
+            description 'Configure protection type of port group.' ;
+            presence "Configure protection type" ;
+            choice protect-type {
+              description 'Protection type of port group.' ;
+              case one-by-one {
+                description 'Configure one-by-one protection type.' ;
+                container one-by-one {
+                  description 'Configure one-by-one protection type.' ;
+                  presence "Configure 1:1 protection type" ;
+                  leaf bidirection {
+                    description 'Protection direction of port group is bidirection.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                  leaf single-receiver {
+                    description 'Protection receiver of port group is single receiver.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              case one-plus-one {
+                description 'Configure one-plus-one protection type.' ;
+                container one-plus-one {
+                  description 'Configure one-plus-one protection type.' ;
+                  presence "Configure 1+1 protection type" ;
+                  leaf protect-direction {
+                    description 'Protection direction of port group.' ;
+                    type protect-direction ;
+
+                    mandatory true ;
+                  }
+
+                  leaf protect-receiver {
+                    description 'Protection receiver of port group.' ;
+                    type protect-receiver ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container work-if {
+            description 'Configure working interface of port group.' ;
+            presence "Configure working interface" ;
+            leaf work-if-name {
+              description 'Working port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Working port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-if {
+            description 'Configure protection interface of port group.' ;
+            presence "Configure protection interface" ;
+            leaf protect-if-name {
+              description 'Protection port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Protect port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-strategy {
+            description 'Configure protection strategy of port group.' ;
+            presence "Configure protection strategy" ;
+            leaf protect-strategy {
+              description 'Protection strategy of port group.' ;
+              type protect-strategy ;
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container flexe {
+        if-feature flexe-version ;
+
+        description 'Configure FlexE type of port group parameters.' ;
+        list flexe {
+          description 'Configure FlexE type of port group parameters.' ;
+          key port-group-id ;
+          leaf port-group-id {
+            description 'Port group id.' ;
+            type uint32 {
+              range 1..8192 {
+                description 'Port group id for FlexE.' ;
+              }
+
+            }
+
+          }
+
+          container group-type {
+            description 'Configure group type of port group.' ;
+            presence "Configure group type" ;
+            leaf group-type {
+              description 'Port group type of port group.' ;
+              type flexe-type ;
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-type {
+            description 'Configure protection type of port group.' ;
+            presence "Configure protection type" ;
+            choice protect-type {
+              description 'Protection type of port group.' ;
+              case one-by-one {
+                description 'Configure one-by-one protection type.' ;
+                container one-by-one {
+                  description 'Configure one-by-one protection type.' ;
+                  presence "Configure 1:1 protection type" ;
+                  leaf bidirection {
+                    description 'Protection direction of port group is bidirection.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                  leaf single-receiver {
+                    status obsolete {
+                      ncd:revise-date 2019-10-08 ;
+                    }
+
+                    description 'Protection receiver of port group is single receiver.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                  leaf protect-receiver {
+                    description 'Protection receiver of port group,including single and both.' ;
+                    type protect-receiver-onebyone ;
+
+                    mandatory true ;
+                    ncd:revise-date 2019-10-08 ;
+                  }
+
+                }
+
+              }
+
+              case one-plus-one {
+                description 'Configure one-plus-one protection type.' ;
+                container one-plus-one {
+                  description 'Configure one-plus-one protection type.' ;
+                  presence "Configure 1+1 protection type" ;
+                  leaf protect-direction {
+                    description 'Protection direction of port group.' ;
+                    type protect-direction ;
+
+                    mandatory true ;
+                  }
+
+                  leaf protect-receiver {
+                    description 'Protection receiver of port group.' ;
+                    type protect-receiver ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container work-if {
+            description 'Configure working interface of port group.' ;
+            presence "Configure working interface" ;
+            leaf work-if-name {
+              description 'Working port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Working port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-if {
+            description 'Configure protection interface of port group.' ;
+            presence "Configure protection interface" ;
+            leaf protect-if-name {
+              description 'Protection port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Protect port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-strategy {
+            description 'Configure protection strategy of port group.' ;
+            presence "Configure protection strategy" ;
+            leaf protect-strategy {
+              description 'Protection strategy of port group.' ;
+              type protect-strategy ;
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+        ncd:revise-date 2017-10-10 ;
+      }
+
+      container ether-service {
+        if-feature ether-service-version ;
+
+        description 'Configure ether-service type of port group parameters.' ;
+        list ether-service {
+          description 'Configure ether-service of port group parameters.' ;
+          key port-group-id ;
+          leaf port-group-id {
+            description 'Port group id.' ;
+            type uint32 {
+              range 1..2048 {
+                description 'Port group id for ether-service.' ;
+              }
+
+            }
+
+          }
+
+          container group-type {
+            description 'Configure group type of port group.' ;
+            presence "Configure group type" ;
+            leaf ether-service {
+              description 'Port group type: ether-service.' ;
+              type empty ;
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-type {
+            description 'Configure protection type of port group.' ;
+            presence "Configure protection type" ;
+            choice protect-type {
+              description 'Protection type of port group.' ;
+              case one-by-one {
+                description 'Configure one-by-one protection type.' ;
+                container one-by-one {
+                  description 'Configure one-by-one protection type.' ;
+                  presence "Configure 1:1 protection type" ;
+                  leaf bidirection {
+                    description 'Protection direction of port group is bidirection.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                  leaf single-receiver {
+                    description 'Protection receiver of port group is single receiver.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              case one-plus-one {
+                description 'Configure one-plus-one protection type.' ;
+                container one-plus-one {
+                  description 'Configure one-plus-one protection type.' ;
+                  presence "Configure 1+1 protection type" ;
+                  leaf protect-direction {
+                    description 'Protection direction of port group.' ;
+                    type protect-direction ;
+
+                    mandatory true ;
+                  }
+
+                  leaf protect-receiver {
+                    description 'Protection receiver of port group.' ;
+                    type protect-receiver ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container work-if {
+            description 'Configure working interface of port group.' ;
+            presence "Configure working interface" ;
+            leaf work-if-name {
+              description 'Working port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Working port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container work-track {
+            description 'Configure working interface track of port group.' ;
+            presence "Configure working interface track" ;
+            leaf work-track-name {
+              description 'Working port track name of port group.' ;
+              type string {
+                length 1..31 {
+                  description 'Working port track name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-if {
+            description 'Configure protection interface of port group.' ;
+            presence "Configure protection interface" ;
+            leaf protect-if-name {
+              description 'Protection port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Protect port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-track {
+            description 'Configure protection interface track of port group.' ;
+            presence "Configure protection interface track" ;
+            leaf protect-track-name {
+              description 'Protection port track name of port group.' ;
+              type string {
+                length 1..31 {
+                  description 'Protect port track name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-strategy {
+            description 'Configure protection strategy of port group.' ;
+            presence "Configure protection strategy" ;
+            leaf protect-strategy {
+              description 'Protection strategy of port group.' ;
+              type protect-strategy ;
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+        ncd:revise-date 2019-07-17 ;
+      }
+
+      container flexe-sub {
+        if-feature flexe-sub-version ;
+
+        description 'Configure FlexE-sub type of port group parameters.' ;
+        list flexe-sub {
+          description 'Configure FlexE-sub type of port group parameters.' ;
+          key port-group-id ;
+          leaf port-group-id {
+            description 'Port group id.' ;
+            type uint32 {
+              range 1..8192 {
+                description 'Port group id for FlexE-sub.' ;
+              }
+
+            }
+
+          }
+
+          container group-type {
+            description 'Configure group type of port group.' ;
+            presence "Configure group type" ;
+            leaf group-type {
+              description 'Port group type of port group.' ;
+              type flexe-sub-type ;
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-type {
+            description 'Configure protection type of port group.' ;
+            presence "Configure protection type" ;
+            choice protect-type {
+              description 'Protection type of port group.' ;
+              case one-by-one {
+                description 'Configure one-by-one protection type.' ;
+                container one-by-one {
+                  description 'Configure one-by-one protection type.' ;
+                  presence "Configure 1:1 protection type" ;
+                  leaf bidirection {
+                    description 'Protection direction of port group is bidirection.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                  leaf protect-receiver {
+                    description 'Protection receiver of port group,including single and both.' ;
+                    type protect-receiver-onebyone ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              case one-plus-one {
+                description 'Configure one-plus-one protection type.' ;
+                container one-plus-one {
+                  description 'Configure one-plus-one protection type.' ;
+                  presence "Configure 1+1 protection type" ;
+                  leaf protect-direction {
+                    description 'Protection direction of port group.' ;
+                    type protect-direction ;
+
+                    mandatory true ;
+                  }
+
+                  leaf protect-receiver {
+                    description 'Protection receiver of port group.' ;
+                    type protect-receiver ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container tcm {
+            leaf tcm-level {
+              description 'SNCP protect tcm level.' ;
+              type uint32 {
+                range 0..2 ;
+
+              }
+
+            }
+
+            if-feature sncp-version ;
+
+            ncd:revise-date 2023-05-01 ;
+          }
+
+          container work-if {
+            description 'Configure working interface of port group.' ;
+            presence "Configure working interface" ;
+            leaf work-if-name {
+              description 'Working port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Working port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container work-dni-if {
+            description 'Configure working dni port of mc-sncp port group.' ;
+            leaf work-dni-if-name {
+              description 'Working DNI port name of port group.' ;
+              type ncd:ifname ;
+
+            }
+
+            if-feature sncp-version ;
+
+            ncd:revise-date 2023-05-01 ;
+          }
+
+          container protect-if {
+            description 'Configure protection interface of port group.' ;
+            presence "Configure protection interface" ;
+            leaf protect-if-name {
+              description 'Protection port name of port group.' ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Protect port name.' ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          container protect-dni-if {
+            description 'Configure protect dni port of mc-sncp port group.' ;
+            leaf protect-dni-if-name {
+              description 'Protection DNI port name of port group.' ;
+              type ncd:ifname ;
+
+            }
+
+            if-feature sncp-version ;
+
+            ncd:revise-date 2023-05-01 ;
+          }
+
+          container communicate-unit {
+            presence "Configure communication unit" ;
+            description 'Configure communication unit of mc-aps port group.' ;
+            leaf communicate-unit {
+              type uint32 ;
+
+              description 'Communication unit of port group.' ;
+            }
+
+            if-feature sncp-version ;
+
+            ncd:revise-date 2023-05-01 ;
+          }
+
+          container protect-strategy {
+            description 'Configure protection strategy of port group.' ;
+            presence "Configure protection strategy" ;
+            leaf protect-strategy {
+              description 'Protection strategy of port group.' ;
+              type protect-strategy ;
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2020-09-01 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State model info.' ;
+    container port-group {
+      description 'Port group state information.' ;
+      list port-group {
+        description 'The state information of port-group.' ;
+        key port-group-id ;
+        leaf port-group-id {
+          description 'Port group id of port group.' ;
+          type uint32 {
+            range 1..256 {
+              description 'Port group id.' ;
+            }
+
+          }
+
+        }
+
+        leaf work-if-state {
+          description 'Working port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf protect-if-state {
+          description 'Portection port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf switch-flag {
+          description 'Switch flag of port group.' ;
+          type switch-flag ;
+
+          mandatory true ;
+        }
+
+      }
+
+    }
+
+    container multicasts {
+      description 'Port group state information.' ;
+      list port-group {
+        description 'The state information of port-group.' ;
+        key port-group-id ;
+        leaf port-group-id {
+          description 'Port group id of port group.' ;
+          type uint32 {
+            range 1..128 {
+              description 'Port group id.' ;
+            }
+
+          }
+
+        }
+
+        leaf work-if-state {
+          description 'Working port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf protect-if-state {
+          description 'Portection port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf switch-flag {
+          description 'Switch flag of port group.' ;
+          type switch-flag ;
+
+          mandatory true ;
+        }
+
+      }
+      ncd:revise-date 2019-07-17 ;
+    }
+
+    container otns {
+      description 'Port group state information.' ;
+      list port-group {
+        description 'The state information of port-group.' ;
+        key port-group-id ;
+        leaf port-group-id {
+          description 'Port group id of port group.' ;
+          type uint32 {
+            range 1..512 {
+              description 'Port group id.' ;
+            }
+
+          }
+
+        }
+
+        leaf work-if-state {
+          description 'Working port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf protect-if-state {
+          description 'Portection port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf switch-flag {
+          description 'Switch flag of port group.' ;
+          type switch-flag ;
+
+          mandatory true ;
+        }
+
+      }
+      ncd:revise-date 2019-07-17 ;
+    }
+
+    container flexe {
+      description 'Port group state information.' ;
+      list port-group {
+        description 'The state information of port-group.' ;
+        key port-group-id ;
+        leaf port-group-id {
+          description 'Port group id of port group.' ;
+          type uint32 {
+            range 1..8192 {
+              description 'Port group id.' ;
+            }
+
+          }
+
+        }
+
+        leaf work-if-state {
+          description 'Working port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf protect-if-state {
+          description 'Portection port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf switch-flag {
+          description 'Switch flag of port group.' ;
+          type switch-flag ;
+
+          mandatory true ;
+        }
+
+      }
+      ncd:revise-date 2019-07-17 ;
+    }
+
+    container ether-service {
+      description 'Port group state information.' ;
+      list port-group {
+        description 'The state information of port-group.' ;
+        key port-group-id ;
+        leaf port-group-id {
+          description 'Port group id of port group.' ;
+          type uint32 {
+            range 1..2048 {
+              description 'Port group id.' ;
+            }
+
+          }
+
+        }
+
+        leaf work-if-state {
+          description 'Working port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf protect-if-state {
+          description 'Portection port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf switch-flag {
+          description 'Switch flag of port group.' ;
+          type switch-flag ;
+
+          mandatory true ;
+        }
+
+      }
+      ncd:revise-date 2019-07-17 ;
+    }
+
+    container flexe-sub {
+      description 'Port group state information.' ;
+      list port-group {
+        description 'The state information of port-group.' ;
+        key port-group-id ;
+        leaf port-group-id {
+          description 'Port group id of port group.' ;
+          type uint32 {
+            range 1..8192 {
+              description 'Port group id.' ;
+            }
+
+          }
+
+        }
+
+        leaf work-if-state {
+          description 'Working port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf protect-if-state {
+          description 'Portection port state of port group.' ;
+          type if-state ;
+
+          mandatory true ;
+        }
+
+        leaf switch-flag {
+          description 'Switch flag of port group.' ;
+          type switch-flag ;
+
+          mandatory true ;
+        }
+
+      }
+
+      ncd:revise-date 2020-09-01 ;
+    }
+
+  }
+
+}

@@ -1,0 +1,68 @@
+module zxr10-bras-leasedline {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/bras/leasedline'
+            ;
+  prefix leasedline ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2023-05-17 {
+    description 'netconf encrypted-password <datatype>ciphertext</datatype>  ad'
+              + 'd <log-type>password</log-type>'
+                ;
+  }
+  revision 2020-12-22 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    container leased-line-configuration {
+      list leased-line {
+        max-elements 8000 ;
+        key if-name ;
+        leaf if-name {
+          type ncd:ifname ;
+        }
+        container user-info {
+          presence user-info ;
+          leaf user-name {
+            type string {
+              length 1..127 ;
+            }
+            mandatory true ;
+          }
+          leaf domain-name {
+            type string {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+          choice choose-password {
+            mandatory true ;
+            case password {
+              leaf password-ex {
+                type string {
+                  length 1..31 ;
+                }
+              }
+            }
+            case encrypt-password {
+              leaf encrypted-password {
+                type string {
+                  length 64..84 ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

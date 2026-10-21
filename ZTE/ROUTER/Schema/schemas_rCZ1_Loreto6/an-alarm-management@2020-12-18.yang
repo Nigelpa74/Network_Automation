@@ -1,0 +1,238 @@
+module an-alarm-management {
+    yang-version 1.1;
+    namespace "urn:an:yang:an-alarm-management";
+    prefix "an-alm";
+    import ietf-alarms {
+        prefix "al";
+    }
+    import ietf-yang-types {
+        prefix "yang";
+        revision-date 2013-07-15;
+    }
+
+    organization
+        "Research Institute of China Telecom";
+
+    contact
+        "Editor:      Liang Zhenming, China Telecom
+                                    <mailto:liangzhm@chinatelecom.cn>
+
+         Editor:      Yang Ziyao, China Telecom
+                                    <mailto:yangziyao@chinatelecom.cn>
+
+         Editor:      Tang Jian, China Telecom
+                                    <mailto:tangj10@chinatelecom.cn>
+
+         Editor:      Shi Shuguang, Huawei
+                                    <mailto:shishuguang@huawei.com>
+
+         Editor:      Huang Yueping, Huawei
+                                    <mailto:huangyueping@huawei.com>
+
+         Editor:      Feng Xiaodong, CICT
+                                    <mailto:xdfeng@fiberhome.com>
+
+         Editor:      Wu Hao, CICT
+                                    <mailto:wuh@fiberhome.com>
+
+         Editor:      Xie Yu, ZTE
+                                    <mailto:10001002@zte.com.cn>
+
+         Editor:      Ni Shenliu, ZTE
+                                    <mailto:00026486@zte.com.cn>
+
+         Leader:      Zhang Dezhi, China Telecom
+                                    <mailto:zhangdzh@chinatelecom.cn>";
+
+    description
+        "Copyright (c) 2020, Research Institute of China Telecom
+
+         Redistribution and use in source and binary forms, with or
+         without modification, are permitted provided that the following
+         conditions are met:
+
+         1. Redistributions of source code must retain the above copyright
+            notice, this list of conditions and the following disclaimer.
+
+         2. Redistributions in binary form must reproduce the above
+            copyright notice, this list of conditions and the following
+            disclaimer in the documentation and/or other materials
+            provided with the distribution.
+
+         3. Neither the name of the copyright holder nor the names of its
+            contributors may be used to endorse or promote products
+            derived from this software without specific prior written
+            permission.
+
+         THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+         CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+         INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+         MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+         DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+         CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+         SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+         NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+         LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+         CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+         STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+         ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+         ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+         The above license is used as a license under copyright only.
+
+         Any moral rights which are necessary to exercise under the above
+         license grant are also deemed granted under this license.";
+
+    revision 2020-12-18;
+
+    identity an-alarm-type-id {
+        base al:alarm-type-id;
+    }
+    identity equipment-alarm {
+        base an-alarm-type-id;
+    }
+    identity environmental-alarm {
+        base an-alarm-type-id;
+    }
+    identity communications-alarm {
+        base an-alarm-type-id;
+    }
+    identity quality-of-service-alarm {
+        base an-alarm-type-id;
+    }
+    identity processing-error-alarm {
+        base an-alarm-type-id;
+    }
+    identity device-event {
+        base an-alarm-type-id;
+    }
+    
+    grouping an-notification-serial-id {
+        leaf notification-serial-id {
+            type yang:gauge32;
+            description "告警通知流水号";
+        }
+    }
+    grouping an-alarm-name {
+        leaf alarm-name {
+            type string {
+                length "0..256";
+            }
+            description "告警名称，与告警ID（alarm-type-qualifier）相对应";
+        }
+    }
+
+    augment "/al:alarms/al:control/al:alarm-shelving/al:shelf" {
+        leaf severity {
+            type al:severity;
+            description "告警屏蔽模版中的告警级别";
+        }
+    }
+    augment "/al:alarms/al:control/al:alarm-shelving" {
+        leaf alarm-shelving-enabled {
+            type boolean;
+            default "false";
+            description "告警屏蔽启用/禁用,true表示启用告警屏蔽功能";
+        }
+    }
+    augment "/al:alarm-notification" {
+        uses an-notification-serial-id;
+        uses an-alarm-name;
+    }
+    augment "/al:alarms/al:alarm-list/al:alarm" {
+        uses an-notification-serial-id;
+        uses an-alarm-name;
+    }
+    augment "/al:alarms/al:shelved-alarms/al:shelved-alarm" {
+        uses an-alarm-name;
+    }
+    augment "/al:alarms" {
+        container historical-alarms {
+            config false;
+            description "历史告警";
+            leaf number-of-historical-alarm {
+                type yang:gauge32;
+                description "统计的历史告警数量";
+            }
+            leaf historical-alarms-last-changed {
+                type yang:date-and-time;
+                description 
+                    "历史告警列表上次更改的时间戳。 管理员可以使用该值来启动告警
+                     重新同步过程。";
+            }
+            list historical-alarm {
+                key notification-serial-id;
+                uses an-notification-serial-id;
+                uses an-alarm-name;
+                leaf resource {
+                    type al:resource;
+                    mandatory true;
+                    description "告警所在位置";
+                }
+                leaf alarm-type-id {
+                    type al:alarm-type-id;
+                    mandatory true;
+                    description "告警类型";
+                }
+                leaf alarm-type-qualifier {
+                    type al:alarm-type-qualifier;
+                    description "告警ID";
+                }
+                leaf severity {
+                    type al:severity;
+                    mandatory true;
+                    description "告警等级";
+                }
+                leaf fault-flag {
+                    type enumeration {
+                        enum fault {
+                            description "故障";
+                        }
+                        enum recovery {
+                            description "清除";
+                        }
+                        enum event {
+                            description "事件";
+                        }
+                    }
+                    mandatory true;
+                    description "告警状态";
+                }
+                leaf time-created {
+                    type yang:date-and-time;
+                    mandatory true;
+                    description "告警产生时间";
+                }
+                leaf recover-time {
+                    type yang:date-and-time;
+                    description "告警恢复时间";
+                }
+                leaf alarm-text {
+                    type string {
+                        length "0..256";
+                    }
+                    description "附加信息，描述告警相关附加信息";
+                }
+                leaf probable-cause-desc {
+                    type string{
+                        length "0..256";
+                    }
+                    description "告警原因";
+                }
+                leaf probable-cause-code {
+                    type int32;
+                    description "告警原因代码";
+                }
+                leaf proposed-advise {
+                    type string{
+                        length "0..256";
+                    }
+                    description "处理建议";
+                }
+            }
+        }
+    }
+    augment "/al:alarms/al:alarm-list/al:purge-alarms/al:input" {
+        uses an-notification-serial-id;
+    }
+}

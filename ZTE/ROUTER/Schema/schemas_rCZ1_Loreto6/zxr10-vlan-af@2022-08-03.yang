@@ -1,0 +1,347 @@
+module zxr10-vlan-af {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/vlan-af'
+            ;
+  prefix vlan-af ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2017-03-30 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe VLAN-AF.'
+              ;
+  revision 2022-08-03 {
+    description 'change /vlan:configuration/vlan:af-nodes/vlan:af-node/vlan:vla'
+              + 'n/vlan:vlan-range-brdcst-flag/vlan:vlan-range-brdcst/vlan:rang'
+              + 'e-enable,set this node mandatory and no default value.'
+                ;
+  }
+  revision 2017-04-19 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model info.'
+                ;
+    container af-nodes {
+      list af-node {
+        description 'AF name.'
+                    ;
+        key name ;
+        leaf name {
+          description 'AF name.'
+                      ;
+          type ncd:af-name {
+            length 1..32 {
+              description 'AF name.'
+                          ;
+            }
+          }
+        }
+        container vlan {
+          description 'Configure VLAN parameters.'
+                      ;
+          container vlan-tpid {
+            description 'The sub port configurate PID TAG info.'
+                        ;
+            list vlan-pidtag {
+              description 'The sub port configurate PID TAG info.'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'The interface will configurate pid tag.'
+                            ;
+                type ncd:ifname ;
+              }
+              leaf external-tpid {
+                description 'External pid-tag info of this port.'
+                            ;
+                type enumeration {
+                  enum pidtag88a8 {
+                    value 1 ;
+                    description 'Pid tag 0x88a8.'
+                                ;
+                  }
+                  enum pidtag8100 {
+                    value 2 ;
+                    description 'Pid tag 0x8100.'
+                                ;
+                  }
+                  enum pidtag9100 {
+                    value 3 ;
+                    description 'Pid tag 0x9100.'
+                                ;
+                  }
+                  enum pidtag9200 {
+                    value 4 ;
+                    description 'Pid tag 0x9200.'
+                                ;
+                  }
+                  enum pidtag9300 {
+                    value 5 ;
+                    description 'Pid tag 0x9300.'
+                                ;
+                  }
+                  enum pidtag88e8 {
+                    value 6 ;
+                    description 'Pid tag 0x88e8.'
+                                ;
+                  }
+                }
+                default pidtag8100 ;
+              }
+              leaf internal-tpid {
+                description 'Internal pid-tag info of this port.'
+                            ;
+                type enumeration {
+                  enum pidtag88a8 {
+                    value 1 ;
+                    description 'Pig tag 0x88a8.'
+                                ;
+                  }
+                  enum pidtag8100 {
+                    value 2 ;
+                    description 'Pid tag 0x8100.'
+                                ;
+                  }
+                  enum pidtag9100 {
+                    value 3 ;
+                    description 'Pig tag 0x9100.'
+                                ;
+                  }
+                  enum pidtag9200 {
+                    value 4 ;
+                    description 'Pid tag 0x9200.'
+                                ;
+                  }
+                  enum pidtag9300 {
+                    value 5 ;
+                    description 'Pig tag 0x9300.'
+                                ;
+                  }
+                  enum pidtag88e8 {
+                    value 6 ;
+                    description 'Pid tag 0x88e8.'
+                                ;
+                  }
+                }
+                default pidtag8100 ;
+              }
+            }
+          }
+          container vlan-dynamic-encapsulation {
+            description 'The sub port encapsulate dynamic VLAN info.'
+                        ;
+            list any-other-vlan {
+              description 'The sub port encapsulate the flag of any-other-vlan.'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'The interface will be encapsulated the flag of any'
+                          + '-other-vlan.'
+                            ;
+                type ncd:ifname ;
+              }
+              leaf vlan-anyother {
+                description 'The flag of any-other-vlan.'
+                            ;
+                type enumeration {
+                  enum qinq {
+                    value 32 ;
+                    description 'QinQ type.'
+                                ;
+                  }
+                  enum dot1q {
+                    value 16 ;
+                    description 'Dot1q type.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+            list user-dynamic-vlan {
+              description 'The sub port encapsulate the flag of dynamic VLAN.'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'The interface will be encapsulated dynamic VLAN.'
+                            ;
+                type ncd:ifname ;
+              }
+              leaf dynamic-flag {
+                description 'The flag of dynamic VLAN.'
+                            ;
+                type enumeration {
+                  enum any-other-dot1q {
+                    value 1 ;
+                    description 'User-Dynamic-Vlan Any-other-Dot1q.'
+                                ;
+                  }
+                  enum any-other-qinq {
+                    value 2 ;
+                    description 'User-Dynamic-Vlan Any-other-Qinq.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+          }
+          container vlan-encapsulation {
+            description 'The sub port encapsulate VLAN info.'
+                        ;
+            list vlan-dot1q {
+              description 'The sub port encapsulate VLAN info of the DOT1Q type.'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'The interface will be encapsulated VLAN of the DOT'
+                          + '1Q type.'
+                            ;
+                type ncd:ifname ;
+              }
+              leaf vlan {
+                description 'The VLAN info of the sub port which be encapsulate'
+                          + 'd VLAN of the DOT1Q type.'
+                            ;
+                type uint16 {
+                  range 1..4094 {
+                    description 'The value of VLAN,it must between 1 to 4094.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+            list vlan-do1q-range {
+              description 'The sub port encapsulate VLAN info of the DOT1Q rang'
+                        + 'e type.'
+                          ;
+              key 'if-name vlan'
+                  ;
+              leaf if-name {
+                description 'The interface will be encapsulated VLAN of the DOT'
+                          + '1Q range type.'
+                            ;
+                type ncd:ifname ;
+              }
+              leaf vlan {
+                description 'The VLAN info of the sub port which be encapsulate'
+                          + 'd VLAN of the DOT1Q range type.'
+                            ;
+                type ncd:single-range ;
+              }
+            }
+            list vlan-qinq {
+              description 'The sub port encapsulate VLAN info of the QinQ type.'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'The interface will be encapsulated VLAN of the Qin'
+                          + 'Q type.'
+                            ;
+                type ncd:ifname ;
+              }
+              leaf inter-vlan {
+                description 'The internal VLAN info of the sub port which be en'
+                          + 'capsulated VLAN of the QinQ type.'
+                            ;
+                type uint16 {
+                  range 1..4094 {
+                    description 'The value of VLAN,it must between 1 to 4094.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+              leaf exter-vlan {
+                description 'The external VLAN info of the sub port which be en'
+                          + 'capsulated VLAN of the QinQ type.'
+                            ;
+                type uint16 {
+                  range 1..4094 {
+                    description 'The value of VLAN,it must between 1 to 4094.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+            list vlan-qinq-range {
+              description 'The sub port encapsulate VLAN info of the QinQ range'
+                        + ' type.'
+                          ;
+              key 'if-name inter-range-vlan exter-range-vlan'
+                  ;
+              leaf if-name {
+                description 'The interface will be encapsulated VLAN of the Qin'
+                          + 'Q range type.'
+                            ;
+                type ncd:ifname ;
+              }
+              leaf inter-range-vlan {
+                description 'The Internal range VLAN info of the sub port which'
+                          + ' be encapsulated VLAN of the QinQ range type.'
+                            ;
+                type ncd:single-range ;
+              }
+              leaf exter-range-vlan {
+                description 'The external VLAN info of the sub port which be en'
+                          + 'capsulated VLAN of the QinQ range type.'
+                            ;
+                type ncd:single-range ;
+              }
+            }
+          }
+          container vlan-range-brdcst-flag {
+            description 'VLAN range broadcast flag configuration.'
+                        ;
+            list vlan-range-brdcst {
+              description 'VLAN range broadcast flag configuration.'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'The interface will configurate vlan range broadcas'
+                          + 't flag.'
+                            ;
+                type ncd:ifname ;
+              }
+              leaf range-enable {
+                description 'VLAN range broadcast enable.'
+                            ;
+                type enumeration {
+                  enum disable {
+                    value 1 ;
+                  }
+                  enum enable {
+                    value 2 ;
+                  }
+                }
+                mandatory true ;
+              }
+              leaf single-layer-enable {
+                description 'VLAN single layer enable.'
+                            ;
+                type enumeration {
+                  enum disable {
+                    value 1 ;
+                  }
+                  enum enable {
+                    value 2 ;
+                  }
+                }
+                default disable ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

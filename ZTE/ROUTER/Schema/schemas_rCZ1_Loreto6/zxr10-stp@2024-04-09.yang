@@ -1,0 +1,2525 @@
+module zxr10-stp {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/stp" ;
+  prefix stp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the STP.' ;
+  revision 2024-04-09 {
+    description '1.add configuration/stp/global/auto-edge leaf,
+2.add configuration/stp/ports/ports-config/port-config/auto-edge leaf,
+3.add configuration/stp-multi-process/processes/global/auto-edge leaf,
+4.add configuration/stp-multi-process/processes/ports/ports-config/port-config/auto-edge leaf.' ;
+  }
+
+  revision 2024-01-10 {
+    description 'Add global bpdu-guard and global bpdu-guard revovery, port bpdu-guard recovery, port bpdu-guard leaf and refine port bpdu-guard description' ;
+  }
+
+  revision 2022-03-31 {
+    description 'Align with the dat file to support products' ;
+  }
+
+  revision 2021-09-01 {
+    description 'Align with the dat file to support products' ;
+  }
+
+  revision 2021-06-03 {
+    description 'Support product C600' ;
+  }
+
+  revision 2018-11-13 {
+    description 'Add configuration/stp/global/graceful-restart container and configuration/stp-multi-process/process/process/global/graceful-restart container' ;
+  }
+
+  revision 2018-09-03 {
+    description 'delete leaf vlan-range default value.' ;
+  }
+
+  revision 2017-03-02 {
+    description '1. Support stp multiprocess.' ;
+  }
+
+  revision 2015-12-05 {
+    description '1.add configuration/stp/global/state container,delete configuration/stp/global/state choice node.' ;
+  }
+
+  revision 2015-10-08 {
+    description '1.modify /configuration/stp/ports/ports-config/port-config/vlan-id node to be /configuration/stp/ports/ports-config/port-config/vlan-tag/vlan-id node.
+2.add /configuration/stp/ports/ports-config/port-config/vlan-tag/priority node.
+3.put /configuration/stp/ports/ports-config/port-config/subinterface-notify node before /configuration/stp/ports/ports-config/port-config/vlan-tag.' ;
+  }
+
+  revision 2015-07-13 {
+    description '1.add /configuration/stp/ports/ports-config/port-instances/guard node.' ;
+  }
+
+  revision 2015-05-25 {
+    description '1.Modify type enumeration of /state/stp/ports/port-instances/port-instance/state,/state/stp/ports/port-instances/port-instance/role. 
+2.Modify description of /configuration, /configuration/stp/ports and its son nodes, /configuration/stp/instances and its son nodes, son nodes of /state/stp/ports/port-instances/port-instance and son nodes of /state/stp/instances/instance.
+3.Put /configuration/stp/instances node before /configuration/stp/ports node.' ;
+  }
+
+  revision 2015-05-15 {
+    description '1.add /configuration/stp/global/cisco-digest-self-adapt leaf node.
+2.add /operation and son node.' ;
+  }
+
+  revision 2014-01-15 {
+    description 'Initial version.' ;
+  }
+
+  feature stp-multi-process {
+    description 'Spanning Tree Protocol Multi-Process' ;
+  }
+
+  feature bpdu-guard-recovery {
+    description 'This feature provides the ability to configure the behavior of BPDU guard recovery.' ;
+  }
+
+  feature global-bpdu-guard {
+    description 'This feature provides the ability to configure BPDU guard,which applies to all edged ports.' ;
+  }
+
+  container configuration {
+    description 'STP configuration' ;
+    container stp {
+      description 'Spanning Tree Protocol' ;
+      container global {
+        description 'STP global configuration' ;
+        leaf hello-time {
+          description 'Configure hello-time parameter' ;
+          type uint8 {
+            range 1..10 {
+              description 'Number of seconds' ;
+            }
+
+          }
+
+          units second ;
+          default 2 ;
+        }
+
+        leaf max-age {
+          description 'Configure max-age parameter' ;
+          type uint8 {
+            range 6..40 {
+              description 'Number of seconds' ;
+            }
+
+          }
+
+          units second ;
+          default 20 ;
+        }
+
+        leaf forward-delay {
+          description 'Configure forward-delay parameter' ;
+          type uint8 {
+            range 4..30 {
+              description 'Number of seconds' ;
+            }
+
+          }
+
+          units second ;
+          default 15 ;
+        }
+
+        leaf max-hops {
+          description 'Configure max-hops parameter' ;
+          type uint8 {
+            range 1..40 {
+              description 'Number of max hops' ;
+            }
+
+          }
+
+          default 20 ;
+        }
+
+        leaf mst-name {
+          description 'Configure MST region name' ;
+          type string {
+            length 1..32 {
+              description 'MST name string' ;
+            }
+
+          }
+
+        }
+
+        leaf mst-revision {
+          description 'Configure MST revision' ;
+          type uint16 {
+            range 0..65535 {
+              description 'Revision number' ;
+            }
+
+          }
+
+          default 0 ;
+        }
+
+        leaf mode {
+          description 'Configure STP mode' ;
+          type enumeration {
+            enum sstp {
+              value 0 ;
+              description 'Single Spanning Tree' ;
+            }
+
+            enum rstp {
+              value 2 ;
+              description 'Rapid Spanning Tree' ;
+            }
+
+            enum mstp {
+              value 3 ;
+              description 'Multiple Spanning Tree' ;
+            }
+
+          }
+
+          default mstp ;
+        }
+
+        leaf huawei-hmd5-key {
+          description 'Set MST HUAWEI HMAC-MD5 key' ;
+          type string {
+            length 34 {
+              description 'HMAC-MD5 key(0x... 32 hex-keys) (must be 34 characters)' ;
+            }
+
+          }
+
+          default 0x13ac06a62e47fd51f95d2ba243cd0346 ;
+        }
+
+        leaf cisco-hmd5-key {
+          description 'Set MST CISCO HMAC-MD5 key' ;
+          type string {
+            length 34 {
+              description 'HMAC-MD5 key(0x... 32 hex-keys) (must be 34 characters)' ;
+            }
+
+          }
+
+          default 0x13ac06a62e47fd51f95d2ba243cd0346 ;
+        }
+
+        leaf huawei-hmd5-digest {
+          description 'Set MST HUAWEI HMAC-MD5 digest' ;
+          type string {
+            length 34 {
+              description 'HMAC-MD5 digest(0x... 32 hex-keys) (must be 34 characters)' ;
+            }
+
+          }
+
+          default 0x00000000000000000000000000000000 ;
+        }
+
+        leaf cisco-hmd5-digest {
+          description 'Set MST CISCO HMAC-MD5 digest' ;
+          type string {
+            length 34 {
+              description 'HMAC-MD5 digest(0x... 32 hex-keys) (must be 34 characters)' ;
+            }
+
+          }
+
+          default 0x00000000000000000000000000000000 ;
+        }
+
+        leaf cisco-digest-self-adapt {
+          description 'Configure MST digest auto adapt to CISCO' ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Configure the function disable' ;
+            }
+
+            enum enable {
+              value 1 ;
+              description 'Configure the function enable' ;
+            }
+
+          }
+
+          default disable ;
+          ncd:revise-date 2015-05-15 ;
+        }
+
+        container state {
+          description 'Configure the global state and the transparent state.' ;
+          choice state-type {
+            description 'Configure the STP global or transparent state.' ;
+            case global {
+              description 'Configure the STP global state.' ;
+              leaf global-state {
+                description 'Configure the STP global state.' ;
+                type empty ;
+
+              }
+
+            }
+
+            case transparent {
+              description 'Configure the transparent state.' ;
+              leaf transparent-state {
+                description 'Configure the transparent state.' ;
+                type empty ;
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2015-12-05 ;
+        }
+
+        container graceful-restart {
+          description 'Configure graceful-restart parameter.' ;
+          leaf rcvdinfo-holding-threshold {
+            description 'Configure graceful-restart rcvdInfo holding-threshold.' ;
+            type uint32 {
+              range 180..18000 {
+                description 'Duration.' ;
+              }
+
+            }
+
+            units second ;
+            default 300 ;
+          }
+
+          ncd:revise-date 2018-11-13 ;
+        }
+
+        leaf bpdu-guard {
+          if-feature global-bpdu-guard ;
+
+          description 'Configure global BPDU guard.' ;
+          default disable ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Set global BPDU guard disable.' ;
+            }
+
+            enum shutdown {
+              value 1 ;
+              description 'Set global BPDU guard shutdown.' ;
+            }
+
+          }
+
+          ncd:revise-date 2024-01-10 ;
+        }
+
+        container bpdu-guard-recovery {
+          if-feature global-bpdu-guard ;
+
+          if-feature bpdu-guard-recovery ;
+
+          description 'Configure global BPDU guard recovery mode.' ;
+          choice recovery-mode {
+            description 'Configure bpdu-guard recovery mode.' ;
+            case auto-case {
+              description 'Configure bpdu-guard recovery mode auto.' ;
+              leaf auto-mode {
+                description 'Set recovery mode auto.' ;
+                mandatory true ;
+                type empty ;
+
+              }
+
+              leaf interval {
+                description 'Set recovery interval.' ;
+                type uint32 {
+                  range 10..300 ;
+
+                }
+
+                default 10 ;
+              }
+
+            }
+
+            case manual-case {
+              description 'Configure bpdu-guard recovery mode manual.' ;
+              leaf manual-mode {
+                description 'Set recovery mode manual.' ;
+                type empty ;
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2024-01-10 ;
+        }
+
+        leaf auto-edge {
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'Enable global auto-edge.' ;
+            }
+
+            enum disable {
+              value 2 ;
+              description 'Disable global auto-edge.' ;
+            }
+
+          }
+
+          description 'Configure global auto-edge.' ;
+          default disable ;
+          ncd:revise-date 2024-04-09 ;
+        }
+
+      }
+
+      container instances {
+        description 'Configure instances parameter' ;
+        list instance {
+          description 'Configure instance' ;
+          key instance-id ;
+          leaf instance-id {
+            description 'Instance ID' ;
+            type uint32 {
+              range 0..64 ;
+
+            }
+
+          }
+
+          leaf vlan-range {
+            description 'VLAN ID or VLAN range' ;
+            type ncd:bitmap {
+              length 0..4094 {
+                description 'VLAN ID or VLAN range' ;
+              }
+
+            }
+
+          }
+
+          container instance-priority {
+            description 'Configure instance priority.' ;
+            leaf priority-value {
+              description 'Instance priority' ;
+              type enumeration {
+                enum 0 {
+                  value 0 ;
+                }
+
+                enum 4096 {
+                  value 4096 ;
+                }
+
+                enum 8192 {
+                  value 8192 ;
+                }
+
+                enum 12288 {
+                  value 12288 ;
+                }
+
+                enum 16384 {
+                  value 16384 ;
+                }
+
+                enum 20480 {
+                  value 20480 ;
+                }
+
+                enum 24576 {
+                  value 24576 ;
+                }
+
+                enum 28672 {
+                  value 28672 ;
+                }
+
+                enum 32768 {
+                  value 32768 ;
+                }
+
+                enum 36864 {
+                  value 36864 ;
+                }
+
+                enum 40960 {
+                  value 40960 ;
+                }
+
+                enum 45056 {
+                  value 45056 ;
+                }
+
+                enum 49152 {
+                  value 49152 ;
+                }
+
+                enum 53248 {
+                  value 53248 ;
+                }
+
+                enum 57344 {
+                  value 57344 ;
+                }
+
+                enum 61440 {
+                  value 61440 ;
+                }
+
+              }
+
+              default 32768 ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container ports {
+        description 'Configuration of ports' ;
+        container ports-config {
+          description 'Configuration of ports' ;
+          list port-config {
+            description 'Select a port to configure' ;
+            key if-name ;
+            leaf if-name {
+              description 'Port name' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf link-type {
+              description 'Configure port link-type' ;
+              type enumeration {
+                enum share {
+                  value 0 ;
+                  description 'STP link type share' ;
+                }
+
+                enum p2p {
+                  value 1 ;
+                  description 'STP link type p2p' ;
+                }
+
+                enum auto {
+                  value 2 ;
+                  description 'STP link type auto' ;
+                }
+
+              }
+
+              default auto ;
+            }
+
+            leaf admin-state {
+              description 'Enable or disable STP protocol of the port' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Configure port STP enable' ;
+                }
+
+                enum enable {
+                  value 1 ;
+                  description 'Configure port STP disable' ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf edged-port-state {
+              description 'Configure the port as an edge port' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'STP edged-port disable' ;
+                }
+
+                enum enable {
+                  value 1 ;
+                  description 'STP edged-port enable' ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+            leaf packet-type {
+              description 'Configure MST BPDU packet-type' ;
+              type enumeration {
+                enum ieee {
+                  value 0 ;
+                  description 'STP IEEE packet-type' ;
+                }
+
+                enum cisco {
+                  value 1 ;
+                  description 'STP CISCO packet-type' ;
+                }
+
+                enum hammer {
+                  value 2 ;
+                  description 'STP HAMMER packet-type' ;
+                }
+
+                enum huawei {
+                  value 3 ;
+                  description 'STP HUAWEI packet-type' ;
+                }
+
+              }
+
+              default ieee ;
+            }
+
+            leaf bpdu-guard {
+              description 'Enable or disable BPDU guard of the port' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Set port BPDU guard disable.However,when the global bpdu-guard configuration is not disable, the port takes effect according to the global configuration value.' ;
+                }
+
+                enum shutdown {
+                  value 1 ;
+                  description 'Set port BPDU guard action shutdown.' ;
+                }
+
+                enum discard {
+                  value 2 ;
+                  description 'Set port BPDU guard discard.' ;
+                }
+
+                enum explicitly-disable {
+                  value 3 ;
+                  description 'Set port BPDU guard explicitly-disable. When the global bpdu-guard configuration is not disable, the port bpdu-guard still takes effect as disabled.' ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+            leaf digest-self-adapt-flag {
+              description 'Configure MST digest auto adapt to CISCO' ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Configure the function enable' ;
+                }
+
+                enum disable {
+                  value 2 ;
+                  description 'Configure the function disable' ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+            leaf subinterface-notify {
+              description 'The flag of the function that whether the state of STP transfers to VPLS subinterface.' ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Configure the function enable.' ;
+                }
+
+                enum disable {
+                  value 2 ;
+                  description 'Configure the function disable.' ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+            container vlan-tag {
+              description 'Configure VLAN tag of BPDU encapsulation.' ;
+              presence vlan-tag ;
+              leaf vlan-id {
+                description 'The VLAN ID in the packet of STP.' ;
+                type uint16 {
+                  range 1..4094 {
+                    description 'BPDU VLAN ID' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf priority {
+                description 'The 802.1p priority of VLAN tag.' ;
+                type uint8 {
+                  range 0..7 ;
+
+                }
+
+                default 0 ;
+              }
+
+              ncd:revise-date 2015-10-08 ;
+            }
+
+            container bpdu-guard-recovery {
+              if-feature bpdu-guard-recovery ;
+
+              description 'Configure BPDU guard recovery mode.' ;
+              choice recovery-mode {
+                description 'Configure bpdu-guard recovery mode.' ;
+                case auto-case {
+                  description 'Configure bpdu-guard recovery auto.' ;
+                  leaf auto-mode {
+                    description 'Configure BPDU guard recovery auto.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                  leaf interval {
+                    description 'Configure BPDU guard recovery interval.' ;
+                    type uint32 {
+                      range 10..300 ;
+
+                    }
+
+                    default 10 ;
+                  }
+
+                }
+
+                case manual-case {
+                  description 'Configure bpdu-guard recovery manual.' ;
+                  leaf manual-mode {
+                    description 'Configure BPDU guard recovery manual.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2024-01-10 ;
+            }
+
+            leaf auto-edge {
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable port auto-edge.' ;
+                }
+
+                enum disable {
+                  value 2 ;
+                  description 'Disable port auto-edge.' ;
+                }
+
+              }
+
+              description 'Configure port auto-edge.' ;
+              ncd:revise-date 2024-04-09 ;
+            }
+
+          }
+
+        }
+
+        container port-instances {
+          description 'Configure port instance' ;
+          list port-instance {
+            description 'Configure port instance' ;
+            key 'if-name instance-id' ;
+            leaf if-name {
+              description 'Port name' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf instance-id {
+              description 'Instance ID' ;
+              type uint32 {
+                range 0..64 ;
+
+              }
+
+            }
+
+            leaf path-cost {
+              description 'Configure path cost of the port in specified instance' ;
+              type uint32 {
+                range 1..2000000 ;
+
+              }
+
+            }
+
+            leaf priority {
+              description 'Configure priority of the port in specified instance' ;
+              type enumeration {
+                enum 0 {
+                  value 0 ;
+                  description 'Port priority of instance is 0.' ;
+                }
+
+                enum 16 {
+                  value 16 ;
+                  description 'Port priority of instance is 16.' ;
+                }
+
+                enum 32 {
+                  value 32 ;
+                  description 'Port priority of instance is 32.' ;
+                }
+
+                enum 48 {
+                  value 48 ;
+                  description 'Port priority of instance is 48.' ;
+                }
+
+                enum 64 {
+                  value 64 ;
+                  description 'Port priority of instance is 64.' ;
+                }
+
+                enum 80 {
+                  value 80 ;
+                  description 'Port priority of instance is 80.' ;
+                }
+
+                enum 96 {
+                  value 96 ;
+                  description 'Port priority of instance is 96.' ;
+                }
+
+                enum 112 {
+                  value 112 ;
+                  description 'Port priority of instance is 112.' ;
+                }
+
+                enum 128 {
+                  value 128 ;
+                  description 'Port priority of instance is 128.' ;
+                }
+
+                enum 144 {
+                  value 144 ;
+                  description 'Port priority of instance is 144.' ;
+                }
+
+                enum 160 {
+                  value 160 ;
+                  description 'Port priority of instance is 160.' ;
+                }
+
+                enum 176 {
+                  value 176 ;
+                  description 'Port priority of instance is 176.' ;
+                }
+
+                enum 192 {
+                  value 192 ;
+                  description 'Port priority of instance is 192.' ;
+                }
+
+                enum 208 {
+                  value 208 ;
+                  description 'Port priority of instance is 208.' ;
+                }
+
+                enum 224 {
+                  value 224 ;
+                  description 'Port priority of instance is 224.' ;
+                }
+
+                enum 240 {
+                  value 240 ;
+                  description 'Port priority of instance is 240.' ;
+                }
+
+              }
+
+              default 128 ;
+            }
+
+            container guard {
+              description 'Configure guard type' ;
+              choice guard-type {
+                description 'Guard type' ;
+                case loop-case {
+                  description 'Choice loop' ;
+                  leaf loop {
+                    description 'Loop guard' ;
+                    type enumeration {
+                      enum disable {
+                        value 0 ;
+                        description 'Set loop-guard disable.' ;
+                      }
+
+                      enum enable {
+                        value 1 ;
+                        description 'Set loop-guard enable.' ;
+                      }
+
+                    }
+
+                    default disable ;
+                  }
+
+                }
+
+                case root-case {
+                  description 'Choice root' ;
+                  leaf root {
+                    description 'Root guard' ;
+                    type enumeration {
+                      enum disable {
+                        value 0 ;
+                        description 'Set root-guard disable.' ;
+                      }
+
+                      enum enable {
+                        value 1 ;
+                        description 'Set root-guard enable.' ;
+                      }
+
+                    }
+
+                    default disable ;
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2015-07-13 ;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    container stp-multi-process {
+      if-feature stp-multi-process ;
+
+      description 'Spanning Tree Protocol Multi-Process' ;
+      container processes {
+        description 'Multi-Process' ;
+        list process {
+          description 'Process configuration' ;
+          key process-id ;
+          leaf process-id {
+            description 'process ID' ;
+            type uint32 {
+              range 1..255 ;
+
+            }
+
+          }
+
+          container global {
+            description 'STP global configuration' ;
+            leaf hello-time {
+              description 'Configure hello-time parameter' ;
+              type uint8 {
+                range 1..10 {
+                  description 'Number of seconds' ;
+                }
+
+              }
+
+              units second ;
+              default 2 ;
+            }
+
+            leaf max-age {
+              description 'Configure max-age parameter' ;
+              type uint8 {
+                range 6..40 {
+                  description 'Number of seconds' ;
+                }
+
+              }
+
+              units second ;
+              default 20 ;
+            }
+
+            leaf forward-delay {
+              description 'Configure forward-delay parameter' ;
+              type uint8 {
+                range 4..30 {
+                  description 'Number of seconds' ;
+                }
+
+              }
+
+              units second ;
+              default 15 ;
+            }
+
+            leaf mode {
+              description 'Configure STP mode' ;
+              type enumeration {
+                enum sstp {
+                  value 0 ;
+                  description 'Single Spanning Tree' ;
+                }
+
+                enum rstp {
+                  value 2 ;
+                  description 'Rapid Spanning Tree' ;
+                }
+
+                enum mstp {
+                  value 3 ;
+                  description 'Multiple Spanning Tree' ;
+                }
+
+              }
+
+              default mstp ;
+            }
+
+            leaf cisco-digest-self-adapt {
+              description 'Configure MST digest auto adapt to CISCO' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                  description 'Configure the function disable' ;
+                }
+
+                enum enable {
+                  value 1 ;
+                  description 'Configure the function enable' ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+            container mst {
+              description 'STP global MST configuration' ;
+              leaf name {
+                description 'Configure MST region name' ;
+                type string {
+                  length 1..32 {
+                    description 'MST name string' ;
+                  }
+
+                }
+
+              }
+
+              leaf revision {
+                description 'Configure MST revision' ;
+                type uint16 {
+                  range 0..65535 {
+                    description 'Revision number' ;
+                  }
+
+                }
+
+                default 0 ;
+              }
+
+              leaf max-hops {
+                description 'Configure max-hops parameter' ;
+                type uint8 {
+                  range 1..40 {
+                    description 'Number of max hops' ;
+                  }
+
+                }
+
+                default 20 ;
+              }
+
+              leaf huawei-hmd5-key {
+                description 'Set MST HUAWEI HMAC-MD5 key' ;
+                type string {
+                  length 34 {
+                    description 'HMAC-MD5 key(0x... 32 hex-keys) (must be 34 characters)' ;
+                  }
+
+                }
+
+                default 0x13ac06a62e47fd51f95d2ba243cd0346 ;
+              }
+
+              leaf cisco-hmd5-key {
+                description 'Set MST CISCO HMAC-MD5 key' ;
+                type string {
+                  length 34 {
+                    description 'HMAC-MD5 key(0x... 32 hex-keys) (must be 34 characters)' ;
+                  }
+
+                }
+
+                default 0x13ac06a62e47fd51f95d2ba243cd0346 ;
+              }
+
+              leaf huawei-hmd5-digest {
+                description 'Set MST HUAWEI HMAC-MD5 digest' ;
+                type string {
+                  length 34 {
+                    description 'HMAC-MD5 digest(0x... 32 hex-keys) (must be 34 characters)' ;
+                  }
+
+                }
+
+                default 0x00000000000000000000000000000000 ;
+              }
+
+              leaf cisco-hmd5-digest {
+                description 'Set MST CISCO HMAC-MD5 digest' ;
+                type string {
+                  length 34 {
+                    description 'HMAC-MD5 digest(0x... 32 hex-keys) (must be 34 characters)' ;
+                  }
+
+                }
+
+                default 0x00000000000000000000000000000000 ;
+              }
+
+            }
+
+            container state {
+              description 'Configure the global state and the transparent state.' ;
+              choice state-type {
+                description 'Configure the STP global or transparent state.' ;
+                case global {
+                  description 'Configure the STP global state.' ;
+                  leaf global-state {
+                    description 'Configure the STP global state.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            container graceful-restart {
+              description 'Configure graceful-restart parameter.' ;
+              leaf rcvdinfo-holding-threshold {
+                description 'Configure graceful-restart rcvdInfo holding-threshold.' ;
+                type uint32 {
+                  range 180..18000 {
+                    description 'Duration.' ;
+                  }
+
+                }
+
+                units second ;
+                default 300 ;
+              }
+
+              ncd:revise-date 2018-11-13 ;
+            }
+
+            leaf auto-edge {
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                  description 'Enable global auto-edge.' ;
+                }
+
+                enum disable {
+                  value 2 ;
+                  description 'Disable global auto-edge.' ;
+                }
+
+              }
+
+              description 'Configure global auto-edge.' ;
+              default disable ;
+              ncd:revise-date 2024-04-09 ;
+            }
+
+          }
+
+          container ports {
+            description 'Configuration of ports' ;
+            container ports-config {
+              description 'Configuration of ports' ;
+              list port-config {
+                description 'Select a port to configure' ;
+                key if-name ;
+                leaf if-name {
+                  description 'Port name' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf admin-state {
+                  description 'Enable or disable STP protocol of the port' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Configure port STP disable' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Configure port STP enable' ;
+                    }
+
+                  }
+
+                }
+
+                leaf link-type {
+                  description 'Configure port link-type' ;
+                  type enumeration {
+                    enum share {
+                      value 0 ;
+                      description 'STP link type share' ;
+                    }
+
+                    enum p2p {
+                      value 1 ;
+                      description 'STP link type p2p' ;
+                    }
+
+                    enum auto {
+                      value 2 ;
+                      description 'STP link type auto' ;
+                    }
+
+                  }
+
+                  default auto ;
+                }
+
+                leaf edged-port-state {
+                  description 'Configure the port as an edge port' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'STP edged-port disable' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'STP edged-port enable' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf packet-type {
+                  description 'Configure MST BPDU packet-type' ;
+                  type enumeration {
+                    enum ieee {
+                      value 0 ;
+                      description 'STP IEEE packet-type' ;
+                    }
+
+                    enum cisco {
+                      value 1 ;
+                      description 'STP CISCO packet-type' ;
+                    }
+
+                    enum hammer {
+                      value 2 ;
+                      description 'STP HAMMER packet-type' ;
+                    }
+
+                    enum huawei {
+                      value 3 ;
+                      description 'STP HUAWEI packet-type' ;
+                    }
+
+                  }
+
+                  default ieee ;
+                }
+
+                leaf bpdu-guard {
+                  description 'Enable or disable BPDU guard of the port' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Set port BPDU guard disable.' ;
+                    }
+
+                    enum shutdown {
+                      value 1 ;
+                      description 'Set port BPDU guard action shutdown.' ;
+                    }
+
+                    enum discard {
+                      value 2 ;
+                      description 'Set port BPDU guard discard.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf digest-self-adapt-flag {
+                  description 'Configure MST digest auto adapt to CISCO' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                      description 'Configure the function enable' ;
+                    }
+
+                    enum disable {
+                      value 2 ;
+                      description 'Configure the function disable' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf subinterface-notify {
+                  description 'The flag of the function that whether the state of STP transfers to VPLS subinterface.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                      description 'Configure the function enable.' ;
+                    }
+
+                    enum disable {
+                      value 2 ;
+                      description 'Configure the function disable.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                container vlan-tag {
+                  description 'Configure VLAN tag of BPDU encapsulation.' ;
+                  presence vlan-tag ;
+                  leaf vlan-id {
+                    description 'The VLAN ID in the packet of STP.' ;
+                    type uint16 {
+                      range 1..4094 {
+                        description 'BPDU VLAN ID' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf priority {
+                    description 'The 802.1p priority of VLAN tag.' ;
+                    type uint8 {
+                      range 0..7 ;
+
+                    }
+
+                    default 0 ;
+                  }
+
+                }
+
+                leaf auto-edge {
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                      description 'Enable port auto-edge.' ;
+                    }
+
+                    enum disable {
+                      value 2 ;
+                      description 'Disable port auto-edge.' ;
+                    }
+
+                  }
+
+                  description 'Configure port auto-edge.' ;
+                  ncd:revise-date 2024-04-09 ;
+                }
+
+              }
+
+            }
+
+            container port-instances {
+              description 'Configure port instance' ;
+              list port-instance {
+                description 'Configure port instance' ;
+                key 'if-name instance-id' ;
+                leaf if-name {
+                  description 'Port name' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf instance-id {
+                  description 'Instance ID' ;
+                  type uint32 {
+                    range 0..64 ;
+
+                  }
+
+                }
+
+                leaf path-cost {
+                  description 'Configure path cost of the port in specified instance' ;
+                  type uint32 {
+                    range 1..2000000 ;
+
+                  }
+
+                }
+
+                leaf priority {
+                  description 'Configure priority of the port in specified instance' ;
+                  type enumeration {
+                    enum 0 {
+                      value 0 ;
+                      description 'Port priority of instance is 0.' ;
+                    }
+
+                    enum 16 {
+                      value 16 ;
+                      description 'Port priority of instance is 16.' ;
+                    }
+
+                    enum 32 {
+                      value 32 ;
+                      description 'Port priority of instance is 32.' ;
+                    }
+
+                    enum 48 {
+                      value 48 ;
+                      description 'Port priority of instance is 48.' ;
+                    }
+
+                    enum 64 {
+                      value 64 ;
+                      description 'Port priority of instance is 64.' ;
+                    }
+
+                    enum 80 {
+                      value 80 ;
+                      description 'Port priority of instance is 80.' ;
+                    }
+
+                    enum 96 {
+                      value 96 ;
+                      description 'Port priority of instance is 96.' ;
+                    }
+
+                    enum 112 {
+                      value 112 ;
+                      description 'Port priority of instance is 112.' ;
+                    }
+
+                    enum 128 {
+                      value 128 ;
+                      description 'Port priority of instance is 128.' ;
+                    }
+
+                    enum 144 {
+                      value 144 ;
+                      description 'Port priority of instance is 144.' ;
+                    }
+
+                    enum 160 {
+                      value 160 ;
+                      description 'Port priority of instance is 160.' ;
+                    }
+
+                    enum 176 {
+                      value 176 ;
+                      description 'Port priority of instance is 176.' ;
+                    }
+
+                    enum 192 {
+                      value 192 ;
+                      description 'Port priority of instance is 192.' ;
+                    }
+
+                    enum 208 {
+                      value 208 ;
+                      description 'Port priority of instance is 208.' ;
+                    }
+
+                    enum 224 {
+                      value 224 ;
+                      description 'Port priority of instance is 224.' ;
+                    }
+
+                    enum 240 {
+                      value 240 ;
+                      description 'Port priority of instance is 240.' ;
+                    }
+
+                  }
+
+                  default 128 ;
+                }
+
+                container guard {
+                  description 'Configure prot instance guard type' ;
+                  presence guard ;
+                  leaf type {
+                    description 'Guard type' ;
+                    type enumeration {
+                      enum loop {
+                        value 1 ;
+                        description 'Set loop-guard enable.' ;
+                      }
+
+                      enum root {
+                        value 2 ;
+                        description 'Set root-guard enable.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container instances {
+            description 'Configure instances parameter' ;
+            list instance {
+              description 'Configure instance' ;
+              key instance-id ;
+              leaf instance-id {
+                description 'Instance ID' ;
+                type uint32 {
+                  range 0..64 ;
+
+                }
+
+              }
+
+              leaf vlan-range {
+                description 'VLAN ID or VLAN range' ;
+                type ncd:bitmap {
+                  length 0..4094 {
+                    description 'VLAN ID or VLAN range' ;
+                  }
+
+                }
+
+              }
+
+              leaf priority {
+                description 'Instance priority' ;
+                type enumeration {
+                  enum 0 {
+                    value 0 ;
+                  }
+
+                  enum 4096 {
+                    value 4096 ;
+                  }
+
+                  enum 8192 {
+                    value 8192 ;
+                  }
+
+                  enum 12288 {
+                    value 12288 ;
+                  }
+
+                  enum 16384 {
+                    value 16384 ;
+                  }
+
+                  enum 20480 {
+                    value 20480 ;
+                  }
+
+                  enum 24576 {
+                    value 24576 ;
+                  }
+
+                  enum 28672 {
+                    value 28672 ;
+                  }
+
+                  enum 32768 {
+                    value 32768 ;
+                  }
+
+                  enum 36864 {
+                    value 36864 ;
+                  }
+
+                  enum 40960 {
+                    value 40960 ;
+                  }
+
+                  enum 45056 {
+                    value 45056 ;
+                  }
+
+                  enum 49152 {
+                    value 49152 ;
+                  }
+
+                  enum 53248 {
+                    value 53248 ;
+                  }
+
+                  enum 57344 {
+                    value 57344 ;
+                  }
+
+                  enum 61440 {
+                    value 61440 ;
+                  }
+
+                }
+
+                default 32768 ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2017-03-02 ;
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'STP state information' ;
+    container stp {
+      description 'Spanning Tree Protocol' ;
+      container ports {
+        description 'Show the information of port' ;
+        container port-instances {
+          description 'Show the information of port' ;
+          list port-instance {
+            description 'Show the information of port' ;
+            key 'if-name instance-id' ;
+            leaf if-name {
+              description 'Port name' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf instance-id {
+              description 'Instance ID' ;
+              type uint32 {
+                range 0..64 ;
+
+              }
+
+            }
+
+            leaf port-id {
+              description 'Port ID' ;
+              type string ;
+
+            }
+
+            leaf cost {
+              description 'Path cost of the port in specified instance' ;
+              type uint32 ;
+
+            }
+
+            leaf state {
+              description 'State of the port in specified instance' ;
+              type enumeration {
+                enum Learn {
+                  value 2 ;
+                  description 'The state is learn' ;
+                }
+
+                enum Forward {
+                  value 3 ;
+                  description 'The state is forward' ;
+                }
+
+                enum Discard {
+                  value 4 ;
+                  description 'The state is discard' ;
+                }
+
+                enum "Discard*" {
+                  value 5 ;
+                  description 'The state is discard*' ;
+                }
+
+              }
+
+            }
+
+            leaf role {
+              description 'Role of the port in specified instance' ;
+              type enumeration {
+                enum Alternate {
+                  value 1 ;
+                  description 'The role is alternate' ;
+                }
+
+                enum Backup {
+                  value 2 ;
+                  description 'The role is backup' ;
+                }
+
+                enum Root {
+                  value 3 ;
+                  description 'The role is root' ;
+                }
+
+                enum Designated {
+                  value 4 ;
+                  description 'The role is designated' ;
+                }
+
+                enum Master {
+                  value 5 ;
+                  description 'The role is master' ;
+                }
+
+              }
+
+            }
+
+            leaf link-type {
+              description 'Port link type' ;
+              type enumeration {
+                enum edge {
+                  value 1 ;
+                  description 'The link-type is edge' ;
+                }
+
+                enum p2p {
+                  value 2 ;
+                  description 'The link-type is p2p' ;
+                }
+
+                enum share {
+                  value 3 ;
+                  description 'The link-type is share' ;
+                }
+
+              }
+
+            }
+
+            leaf bound {
+              description 'STP mode of the neighbour' ;
+              type enumeration {
+                enum SSTP {
+                  value 0 ;
+                  description 'Single Spanning Tree' ;
+                }
+
+                enum RSTP {
+                  value 2 ;
+                  description 'Rapid Spanning Tree' ;
+                }
+
+                enum MSTP {
+                  value 3 ;
+                  description 'Multiple Spanning Tree' ;
+                }
+
+              }
+
+            }
+
+            leaf designated-mac {
+              description 'Designated MAC address' ;
+              type ncd:mac-address ;
+
+            }
+
+            leaf designated-priority {
+              description 'Designated priority' ;
+              type uint16 ;
+
+            }
+
+            leaf designated-cost {
+              description 'Designated cost of path' ;
+              type uint32 ;
+
+            }
+
+            leaf designated-port {
+              description 'Designated port ID' ;
+              type uint16 ;
+
+            }
+
+            leaf inconsistent-state {
+              description 'Inconsistent state' ;
+              type enumeration {
+                enum loop-inconsistent {
+                  value 1 ;
+                  description 'The state is loop' ;
+                }
+
+                enum root-inconsistent {
+                  value 2 ;
+                  description 'The state is root' ;
+                }
+
+              }
+
+            }
+
+            ncd:select if-name ;
+            ncd:select instance-id ;
+            ncd:select "if-name instance-id" ;
+          }
+
+        }
+
+      }
+
+      container instances {
+        description 'Show the information of instance' ;
+        list instance {
+          description 'Show the information of instance' ;
+          key instance-id ;
+          leaf instance-id {
+            description 'Instance ID' ;
+            type uint32 {
+              range 0..64 ;
+
+            }
+
+          }
+
+          leaf force-version {
+            description 'The force version' ;
+            type enumeration {
+              enum SSTP {
+                value 0 ;
+                description 'Single Spanning Tree' ;
+              }
+
+              enum RSTP {
+                value 2 ;
+                description 'Rapid Spanning Tree' ;
+              }
+
+              enum MSTP {
+                value 3 ;
+                description 'Multiple Spanning Tree' ;
+              }
+
+            }
+
+          }
+
+          leaf root-priority {
+            description 'The priority of root' ;
+            type uint16 ;
+
+          }
+
+          leaf root-mac {
+            description 'The MAC of root bridge' ;
+            type ncd:mac-address ;
+
+          }
+
+          leaf hello-time {
+            description 'Hello time' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf max-age {
+            description 'The time of max age' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf forward-delay {
+            description 'The time of forward delay' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf region-root-priority {
+            description 'The priority of region root.' ;
+            type uint16 ;
+
+          }
+
+          leaf region-root-mac {
+            description 'The MAC of region root.' ;
+            type ncd:mac-address ;
+
+          }
+
+          leaf bridge-mac {
+            description 'The MAC of bridge' ;
+            type ncd:mac-address ;
+
+          }
+
+          leaf bridge-message-age {
+            description 'The message ageing time of bridge' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf bridge-remain-hop {
+            description 'The remain-hop of bridge' ;
+            type uint32 ;
+
+          }
+
+        }
+
+      }
+
+      container statistics {
+        description 'Show the statistic info' ;
+        container ports-statistic {
+          description 'Show statistic information.' ;
+          list port-statistic {
+            description 'Show statistic information.' ;
+            key if-name ;
+            leaf if-name {
+              description 'Port name' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf all-bpdu-tx {
+              description 'All BPDU transmitted' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf all-bpdu-rx {
+              description 'All BPDU received' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf mst-bpdu-tx {
+              description 'Number of MST BPDU transmitted' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf mst-bpdu-rx {
+              description 'Number of MST BPDU received' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf rst-bpdu-tx {
+              description 'Number of RST BPDU transmitted' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf rst-bpdu-rx {
+              description 'Number of RST BPDU received' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf con-bpdu-tx {
+              description 'Number of config BPDU transmitted' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf con-bpdu-rx {
+              description 'Number of config BPDU received' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf tcn-bpdu-tx {
+              description 'Number of TCN BPDU transmitted' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf tcn-bpdu-rx {
+              description 'Number of TCN BPDU received' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf discard-bpdu-rx {
+              description 'Number of discard BPDU' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    container stp-multi-process {
+      if-feature stp-multi-process ;
+
+      description 'Spanning Tree Protocol Multi-Process' ;
+      container ports {
+        description 'Show the information of port' ;
+        container port-instances {
+          description 'Show the information of port' ;
+          list port-instance {
+            description 'Show the information of port' ;
+            key 'if-name instance-id process-id' ;
+            leaf process-id {
+              description 'process ID' ;
+              type uint32 {
+                range 1..255 ;
+
+              }
+
+            }
+
+            leaf if-name {
+              description 'Port name' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf instance-id {
+              description 'Instance ID' ;
+              type uint32 {
+                range 0..64 ;
+
+              }
+
+            }
+
+            leaf port-id {
+              description 'Port ID' ;
+              type string ;
+
+            }
+
+            leaf cost {
+              description 'Path cost of the port in specified instance' ;
+              type uint32 ;
+
+            }
+
+            leaf state {
+              description 'State of the port in specified instance' ;
+              type enumeration {
+                enum Learn {
+                  value 2 ;
+                  description 'The state is learn' ;
+                }
+
+                enum Forward {
+                  value 3 ;
+                  description 'The state is forward' ;
+                }
+
+                enum Discard {
+                  value 4 ;
+                  description 'The state is discard' ;
+                }
+
+                enum "Discard*" {
+                  value 5 ;
+                  description 'The state is discard*' ;
+                }
+
+              }
+
+            }
+
+            leaf role {
+              description 'Role of the port in specified instance' ;
+              type enumeration {
+                enum Alternate {
+                  value 1 ;
+                  description 'The role is alternate' ;
+                }
+
+                enum Backup {
+                  value 2 ;
+                  description 'The role is backup' ;
+                }
+
+                enum Root {
+                  value 3 ;
+                  description 'The role is root' ;
+                }
+
+                enum Designated {
+                  value 4 ;
+                  description 'The role is designated' ;
+                }
+
+                enum Master {
+                  value 5 ;
+                  description 'The role is master' ;
+                }
+
+              }
+
+            }
+
+            leaf link-type {
+              description 'Port link type' ;
+              type enumeration {
+                enum edge {
+                  value 1 ;
+                  description 'The link-type is edge' ;
+                }
+
+                enum p2p {
+                  value 2 ;
+                  description 'The link-type is p2p' ;
+                }
+
+                enum share {
+                  value 3 ;
+                  description 'The link-type is share' ;
+                }
+
+              }
+
+            }
+
+            leaf bound {
+              description 'STP mode of the neighbour' ;
+              type enumeration {
+                enum SSTP {
+                  value 0 ;
+                  description 'Single Spanning Tree' ;
+                }
+
+                enum RSTP {
+                  value 2 ;
+                  description 'Rapid Spanning Tree' ;
+                }
+
+                enum MSTP {
+                  value 3 ;
+                  description 'Multiple Spanning Tree' ;
+                }
+
+              }
+
+            }
+
+            leaf designated-mac {
+              description 'Designated MAC address' ;
+              type ncd:mac-address ;
+
+            }
+
+            leaf designated-priority {
+              description 'Designated priority' ;
+              type uint16 ;
+
+            }
+
+            leaf designated-cost {
+              description 'Designated cost of path' ;
+              type uint32 ;
+
+            }
+
+            leaf designated-port {
+              description 'Designated port ID' ;
+              type uint16 ;
+
+            }
+
+            leaf inconsistent-state {
+              description 'Inconsistent state' ;
+              type enumeration {
+                enum loop-inconsistent {
+                  value 1 ;
+                  description 'The state is loop' ;
+                }
+
+                enum root-inconsistent {
+                  value 2 ;
+                  description 'The state is root' ;
+                }
+
+              }
+
+            }
+
+            ncd:select "process-id if-name instance-id" ;
+            ncd:select "process-id if-name" ;
+            ncd:select "process-id instance-id" ;
+          }
+
+        }
+
+      }
+
+      container instances {
+        description 'Show the information of instance' ;
+        list instance {
+          description 'Show the information of instance' ;
+          key 'instance-id process-id' ;
+          leaf process-id {
+            description 'process ID' ;
+            type uint32 {
+              range 1..255 ;
+
+            }
+
+          }
+
+          leaf instance-id {
+            description 'Instance ID' ;
+            type uint32 {
+              range 0..64 ;
+
+            }
+
+          }
+
+          leaf force-version {
+            description 'The force version' ;
+            type enumeration {
+              enum SSTP {
+                value 0 ;
+                description 'Single Spanning Tree' ;
+              }
+
+              enum RSTP {
+                value 2 ;
+                description 'Rapid Spanning Tree' ;
+              }
+
+              enum MSTP {
+                value 3 ;
+                description 'Multiple Spanning Tree' ;
+              }
+
+            }
+
+          }
+
+          leaf root-priority {
+            description 'The priority of root' ;
+            type uint16 ;
+
+          }
+
+          leaf root-mac {
+            description 'The MAC of root bridge' ;
+            type ncd:mac-address ;
+
+          }
+
+          leaf hello-time {
+            description 'Hello time' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf max-age {
+            description 'The time of max age' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf forward-delay {
+            description 'The time of forward delay' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf region-root-priority {
+            description 'The priority of region root.' ;
+            type uint16 ;
+
+          }
+
+          leaf region-root-mac {
+            description 'The MAC of region root.' ;
+            type ncd:mac-address ;
+
+          }
+
+          leaf bridge-mac {
+            description 'The MAC of bridge' ;
+            type ncd:mac-address ;
+
+          }
+
+          leaf bridge-message-age {
+            description 'The message ageing time of bridge' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf bridge-remain-hop {
+            description 'The remain-hop of bridge' ;
+            type uint32 ;
+
+          }
+
+          ncd:select process-id ;
+          ncd:select "process-id instance-id" ;
+        }
+
+      }
+
+      container statistics {
+        description 'Show the statistic info' ;
+        container ports-statistic {
+          description 'Show statistic information.' ;
+          list port-statistic {
+            description 'Show statistic information.' ;
+            key 'if-name process-id' ;
+            leaf process-id {
+              description 'process ID.' ;
+              type uint32 {
+                range 1..255 ;
+
+              }
+
+            }
+
+            leaf if-name {
+              description 'Port name' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf all-bpdu-tx {
+              description 'All BPDU transmitted' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf all-bpdu-rx {
+              description 'All BPDU received' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf mst-bpdu-tx {
+              description 'Number of MST BPDU transmitted' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf mst-bpdu-rx {
+              description 'Number of MST BPDU received' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf rst-bpdu-tx {
+              description 'Number of RST BPDU transmitted' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf rst-bpdu-rx {
+              description 'Number of RST BPDU received' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf con-bpdu-tx {
+              description 'Number of config BPDU transmitted' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf con-bpdu-rx {
+              description 'Number of config BPDU received' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf tcn-bpdu-tx {
+              description 'Number of TCN BPDU transmitted' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf tcn-bpdu-rx {
+              description 'Number of TCN BPDU received' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            leaf discard-bpdu-rx {
+              description 'Number of discard BPDU' ;
+              type uint32 ;
+
+              default 0 ;
+            }
+
+            ncd:select "process-id if-name" ;
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2017-03-02 ;
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'STP operation' ;
+    container stp {
+      description 'Spanning Tree Protocol' ;
+      container mcheck {
+        description 'STP Interface mcheck' ;
+        container ports {
+          description 'STP port' ;
+          list port {
+            description 'STP port' ;
+            key if-name ;
+            leaf if-name {
+              description 'Port name' ;
+              type ncd:ifname ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    container stp-multi-process {
+      if-feature stp-multi-process ;
+
+      description 'Spanning Tree Protocol Multi-Process' ;
+      container mcheck {
+        description 'STP Interface mcheck' ;
+        container ports {
+          description 'STP port' ;
+          list port {
+            description 'STP port' ;
+            key 'process-id if-name' ;
+            leaf process-id {
+              description 'process ID.' ;
+              type uint32 {
+                range 1..255 ;
+
+              }
+
+            }
+
+            leaf if-name {
+              description 'Port name' ;
+              type ncd:ifname ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2017-03-02 ;
+    }
+
+    ncd:revise-date 2015-05-15 ;
+  }
+
+}

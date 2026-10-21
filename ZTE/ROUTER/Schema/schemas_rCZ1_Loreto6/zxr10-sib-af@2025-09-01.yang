@@ -1,0 +1,938 @@
+module zxr10-sib-af {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/sib-af" ;
+  prefix sib-af ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2017-08-15 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe SIB.' ;
+  revision 2025-09-01 {
+    description 'Modify the description of configuration/af-nodes/af-node/sib/peer-groups/peer-group/links/link/peer-type/type1/one-link.
+Modify the description of configuration/af-nodes/af-node/sib/peer-groups/peer-group/links/link/tcp-sc-type/type1/server.' ;
+  }
+
+  revision 2024-08-30 {
+    description 'Modify the description of all nodes and add a period.
+Modify choice  mandatory value as follows:configuration\af-nodes\af-node\sib\policys\policy\ipv6-vrf-traffic-backs\ipv6-vrf-traffic-back\redirect-type.
+Modify choice  mandatory value as follows:configuration\af-nodes\af-node\sib\policys\policy\ipv4-vrf-traffic-backs\ipv4-vrf-traffic-back\redirect-type.' ;
+  }
+
+  revision 2021-06-08 {
+    description 'Add leafs as follows:configuration\sib\peer-groups\peer-group\links\link\tcp-sc-type' ;
+  }
+
+  revision 2021-03-13 {
+    description 'Modify leafs default as follows:configuration\af-nodes\af-node\sib\instances\instance\interfaces\interface\mark-name.
+                                configuration\af-nodes\af-node\sib\instances\instance\loadshare-interfaces\interface\mark-name.
+                                configuration\af-nodes\af-node\sib\instances\instance\description.' ;
+  }
+
+  revision 2020-07-22 {
+    description 'Obsolete nodes as follows:configuration\af-nodes\af-node\sib\instances\instance\role
+Obsolete nodes as follows:configuration\af-nodes\af-node\sib\instances\instance\switch-interfaces
+Obsolete nodes as follows:configuration\af-nodes\af-node\sib\instances\instance\tracks' ;
+  }
+
+  revision 2020-04-26 {
+    description 'Modify leafs description as follows:configuration\af-nodes\af-node\sib\instances\instance\role.
+                                   configuration\af-nodes\af-node\sib\instances\instance\shutdown-flag.
+                                   configuration\af-nodes\af-node\sib\policys\policy\ipv6-traffic-back\ipv6\strict-flag.
+                                   configuration\af-nodes\af-node\sib\policys\policy\ipv6-vrf-traffic-backs\ipv6-vrf-traffic-back\ipv6\strict-flag.
+                                   configuration\af-nodes\af-node\sib\policys\policy\ipv4-vrf-traffic-backs\ipv4-vrf-traffic-back\ipv4\strict-flag.
+                                   configuration\af-nodes\af-node\sib\policys\policy\ipv4-traffic-back\ipv4\strict-flag.
+Modify leafs length as follow:configuration\af-nodes\af-node\sib\policys\policy\ipv6-vrf-traffic-backs\ipv6-vrf-traffic-back\vrf-name.
+                              configuration\af-nodes\af-node\sib\policys\policy\ipv4-vrf-traffic-backs\ipv4-vrf-traffic-back\vrf-name.
+							  configuration\af-nodes\af-node\sib\peer-groups\peer-group\links\link\vrf-name.
+Obsolete nodes as follows:configuration\af-nodes\af-node\sib\peer-groups\peer-group\links\default-link.
+Cancel mandatory of leafs as follows:configuration\af-nodes\af-node\sib\instances\instance\peer-group\peer-group\peer-group-name.
+                                     configuration\af-nodes\af-node\sib\instances\instance\tracks\track\track-name.
+                                     configuration\af-nodes\af-node\sib\instances\instance\policys\policy\policy-name.
+Modify leafs range and reset value as follows:configuration\af-nodes\af-node\sib\instances\instance\role.
+Modify leafs reset value as follow:configuration\af-nodes\af-node\sib\instances\instance\description.
+Add default value of leafs as follows:configuration\af-nodes\af-node\sib\instances\instance\role.
+                                      configuration\af-nodes\af-node\sib\instances\instance\ipv6-linklocal.' ;
+  }
+
+  revision 2020-03-10 {
+    description 'Add containers as follows:
+configuration\af-nodes\af-node\sib\instances\instance\switch-interfaces
+configuration\af-nodes\af-node\sib\instances\instance\peer-group
+configuration\af-nodes\af-node\sib\instances\instance\tracks
+configuration\af-nodes\af-node\sib\instances\instance\policys
+configuration\af-nodes\af-node\sib\policys
+configuration\af-nodes\af-node\sib\peer-groups
+
+Add leafs as follows:
+configuration\af-nodes\af-node\sib\instances\instance\role
+configuration\af-nodes\af-node\sib\instances\instance\shutdown-flag
+configuration\af-nodes\af-node\sib\instances\instance\description' ;
+  }
+
+  revision 2020-02-20 {
+    description 'Add containers as follows:configuration\af-nodes\af-node\sib\instances\instance\loadshare-interfaces.' ;
+  }
+
+  revision 2019-12-09 {
+    description 'Add leafs as follows:configuration\af-nodes\af-node\sib\instances\instance\ipv6-linklocal.' ;
+  }
+
+  revision 2018-08-13 {
+    description '1.Add configuration container and leafs under this container.' ;
+  }
+
+  container configuration {
+    container af-nodes {
+      description 'Configure AF nodes.' ;
+      list af-node {
+        description 'Configure AF node.' ;
+        key af-name ;
+        leaf af-name {
+          description 'AF name.' ;
+          type ncd:af-name {
+            length 1..32 {
+              description 'AF name' ;
+            }
+
+          }
+
+        }
+
+        container sib {
+          description 'SIB config.' ;
+          container policys {
+            description 'SIB policy list.' ;
+            list policy {
+              description 'SIB policy configuration.' ;
+              key policy-name ;
+              leaf policy-name {
+                description 'Policy name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              container ipv6-traffic-back {
+                description 'IPv6 traffic back configurations.' ;
+                choice redirect-type {
+                  description 'Traffic redirect type.' ;
+                  case ipv6 {
+                    description 'IPv6.' ;
+                    container ipv6 {
+                      description 'IPv6.' ;
+                      presence ipv6 ;
+                      leaf ipv6-address {
+                        description 'IPv6 address.' ;
+                        type ncd:ipv6-address ;
+
+                        mandatory true ;
+                      }
+
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname ;
+
+                        mandatory true ;
+                      }
+
+                      leaf strict-flag {
+                        description 'Prevent loop marks.
+0:Invalid.
+1:Valid.' ;
+                        type uint32 {
+                          range 0..1 ;
+
+                        }
+
+                        default 0 ;
+                      }
+
+                    }
+
+                  }
+
+                  case te {
+                    description 'Te tunnel.' ;
+                    container te {
+                      description 'Te tunnel.' ;
+                      presence te ;
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  case lsp {
+                    description 'Lsp.' ;
+                    container lsp {
+                      description 'Lsp.' ;
+                      presence lsp ;
+                      leaf ipv6-address {
+                        description 'IPv6 address.' ;
+                        type ncd:ipv6-address ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  case gre {
+                    description 'Gre.' ;
+                    container gre {
+                      description 'Gre.' ;
+                      presence gre ;
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container ipv6-vrf-traffic-backs {
+                description 'IPv6 vrf traffic back list.' ;
+                list ipv6-vrf-traffic-back {
+                  description 'IPv6 vrf traffic back configurations.' ;
+                  key vrf-name ;
+                  leaf vrf-name {
+                    description 'VRF name.' ;
+                    type string {
+                      length 1..32 ;
+
+                    }
+
+                  }
+
+                  choice redirect-type {
+                    description 'Traffic redirect type.' ;
+                    mandatory true ;
+                    case ipv6 {
+                      description 'IPv6.' ;
+                      container ipv6 {
+                        description 'IPv6.' ;
+                        presence ipv6 ;
+                        leaf ipv6-address {
+                          description 'IPv6 address.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname ;
+
+                          mandatory true ;
+                        }
+
+                        leaf strict-flag {
+                          description 'Prevent loop marks.
+0:Invalid.
+1:Valid.' ;
+                          type uint32 {
+                            range 0..1 ;
+
+                          }
+
+                          default 0 ;
+                        }
+
+                      }
+
+                    }
+
+                    case gre {
+                      description 'Gre.' ;
+                      container gre {
+                        description 'Gre.' ;
+                        presence gre ;
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container out-traffic-back {
+                description 'Traffic back of out direction configurations.' ;
+                choice redirect-type {
+                  description 'Traffic redirect type.' ;
+                  case vxlan {
+                    description 'Vxlan.' ;
+                    container vxlan {
+                      description 'Vxlan.' ;
+                      presence vxlan ;
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container ipv4-vrf-traffic-backs {
+                description 'IPv4 vrf traffic back list.' ;
+                list ipv4-vrf-traffic-back {
+                  description 'IPv4 vrf traffic back configurations.' ;
+                  key vrf-name ;
+                  leaf vrf-name {
+                    description 'VRF name.' ;
+                    type string {
+                      length 1..32 ;
+
+                    }
+
+                  }
+
+                  choice redirect-type {
+                    description 'Traffic redirect type.' ;
+                    mandatory true ;
+                    case ipv4 {
+                      description 'IPv4.' ;
+                      container ipv4 {
+                        description 'IPv4.' ;
+                        presence ipv4 ;
+                        leaf ipv4-address {
+                          description 'IPv4 address.' ;
+                          type ncd:ipv4-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname ;
+
+                          mandatory true ;
+                        }
+
+                        leaf strict-flag {
+                          description 'Prevent loop marks.
+0:Invalid.
+1:Valid.' ;
+                          type uint32 {
+                            range 0..1 ;
+
+                          }
+
+                          default 0 ;
+                        }
+
+                      }
+
+                    }
+
+                    case gre {
+                      description 'Gre.' ;
+                      container gre {
+                        description 'Gre.' ;
+                        presence gre ;
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container ipv4-traffic-back {
+                description 'IPv4 traffic back configurations.' ;
+                choice redirect-type {
+                  description 'Traffic redirect type.' ;
+                  case ipv4 {
+                    description 'IPv4.' ;
+                    container ipv4 {
+                      description 'IPv4.' ;
+                      presence ipv4 ;
+                      leaf ipv4-address {
+                        description 'IPv4 address.' ;
+                        type ncd:ipv4-address ;
+
+                        mandatory true ;
+                      }
+
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname ;
+
+                        mandatory true ;
+                      }
+
+                      leaf strict-flag {
+                        description 'Prevent loop marks.
+0:Invalid.
+1:Valid.' ;
+                        type uint32 {
+                          range 0..1 ;
+
+                        }
+
+                        default 0 ;
+                      }
+
+                    }
+
+                  }
+
+                  case te {
+                    description 'Te tunnel.' ;
+                    container te {
+                      description 'te tunnel.' ;
+                      presence te ;
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  case lsp {
+                    description 'Lsp.' ;
+                    container lsp {
+                      description 'Lsp.' ;
+                      presence lsp ;
+                      leaf ipv4-address {
+                        description 'IPv4 address.' ;
+                        type ncd:ipv4-address ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  case gre {
+                    description 'Gre.' ;
+                    container gre {
+                      description 'Gre.' ;
+                      presence gre ;
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2020-03-10 ;
+          }
+
+          container peer-groups {
+            description 'SIB peer group list.' ;
+            list peer-group {
+              description 'SIB peer group configuration.' ;
+              key peer-group-name ;
+              leaf peer-group-type {
+                description 'Peer group type.' ;
+                type enumeration {
+                  enum global {
+                    value 1 ;
+                  }
+
+                  enum default {
+                    value 3 ;
+                  }
+
+                }
+
+                default default ;
+              }
+
+              leaf peer-group-name {
+                description 'Peer group name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              container links {
+                description 'Peer configurations.' ;
+                list link {
+                  description 'SIB Peer Link configuration.' ;
+                  key peer-type ;
+                  leaf peer-type {
+                    description 'Peer type.' ;
+                    type enumeration {
+                      enum data {
+                        value 2 ;
+                        description 'peer for user data' ;
+                      }
+
+                      enum protocol {
+                        value 3 ;
+                        description 'peer for protocol data' ;
+                      }
+
+                      enum one-link {
+                        value 1 ;
+                        description 'Normal peer' ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf local-port {
+                    description 'Peer local port.' ;
+                    type uint32 {
+                      range 1025..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf local-ip {
+                    description 'Peer localIP.' ;
+                    type ncd:ipv4-address ;
+
+                    mandatory true ;
+                  }
+
+                  leaf remote-port {
+                    description 'Peer remote port.' ;
+                    type uint32 {
+                      range 1025..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf remote-ip {
+                    description 'Peer remote IP.' ;
+                    type ncd:ipv4-address ;
+
+                    mandatory true ;
+                  }
+
+                  leaf vrf-name {
+                    description 'Peer VRF name.' ;
+                    type string {
+                      length 1..32 ;
+
+                    }
+
+                  }
+
+                  leaf tcp-mss {
+                    description 'Peer tcp mss.' ;
+                    type uint32 {
+                      range 68..10000 ;
+
+                    }
+
+                    default 1400 ;
+                  }
+
+                  leaf tcp-sc-type {
+                    description 'Peer tcp server or client type.' ;
+                    type enumeration {
+                      enum server {
+                        value 1 ;
+                        description 'Tcp listener' ;
+                      }
+
+                      enum client {
+                        value 2 ;
+                        description 'Tcp client' ;
+                      }
+
+                      enum default {
+                        value 0 ;
+                        description 'Establish tcp according to the local and remote ip sizes' ;
+                      }
+
+                    }
+
+                    ncd:revise-date 2021-06-08 ;
+                  }
+
+                }
+
+                container default-link {
+                  status obsolete {
+                    ncd:revise-date 2020-04-26 ;
+                  }
+
+                  description 'SIB Peer Link configuration.' ;
+                  presence default-link ;
+                  leaf local-port {
+                    description 'Peer local port' ;
+                    type uint32 {
+                      range 1025..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf local-ip {
+                    description 'Peer localIP' ;
+                    type ncd:ipv4-address ;
+
+                    mandatory true ;
+                  }
+
+                  leaf remote-port {
+                    description 'Peer remote port' ;
+                    type uint32 {
+                      range 1025..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf remote-ip {
+                    description 'Peer remote IP' ;
+                    type ncd:ipv4-address ;
+
+                    mandatory true ;
+                  }
+
+                  leaf vrf-name {
+                    description 'Peer VRF name' ;
+                    type string {
+                      length 0..35 ;
+
+                    }
+
+                    default '' ;
+                  }
+
+                  leaf tcp-mss {
+                    description 'Peer tcp mss.' ;
+                    type uint32 {
+                      range 68..10000 ;
+
+                    }
+
+                    default 1400 ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2020-03-10 ;
+          }
+
+          container instances {
+            description 'Instance-related configurations.' ;
+            list instance {
+              description 'SIB instance common configuration.' ;
+              key instance-id ;
+              leaf instance-id {
+                description 'Instance ID.' ;
+                type uint32 {
+                  range 1..255 ;
+
+                }
+
+              }
+
+              container loadshare-interfaces {
+                description 'Load share interface-related configurations.' ;
+                list interface {
+                  description 'SIB interface common configuration.Dependent on the interface.' ;
+                  key interface-name ;
+                  leaf interface-name {
+                    description 'Interface name.' ;
+                    type ncd:ifname ;
+
+                  }
+
+                  leaf mark-name {
+                    description 'Mark name.' ;
+                    type string {
+                      length 1..31 ;
+
+                    }
+
+                  }
+
+                  leaf parity {
+                    description 'Parity identification.' ;
+                    type enumeration {
+                      enum no-parity {
+                        value 0 ;
+                        description 'Configure interface without user mac parity' ;
+                      }
+
+                      enum odd {
+                        value 1 ;
+                        description 'Configure interface with odd user mac' ;
+                      }
+
+                      enum even {
+                        value 2 ;
+                        description 'Configure interface with even user mac' ;
+                      }
+
+                    }
+
+                    default no-parity ;
+                  }
+
+                }
+
+                ncd:revise-date 2020-02-20 ;
+              }
+
+              container interfaces {
+                description 'Interface-related configurations.' ;
+                list interface {
+                  description 'SIB interface common configuration.Dependent on the interface.' ;
+                  key interface-name ;
+                  leaf interface-name {
+                    description 'Interface name.' ;
+                    type ncd:ifname ;
+
+                  }
+
+                  leaf mark-name {
+                    description 'Mark name.' ;
+                    type string {
+                      length 1..31 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf ipv6-linklocal {
+                description 'ipv6 link-local address.' ;
+                type ncd:ipv6-address ;
+
+                default :: ;
+                ncd:revise-date 2019-12-09 ;
+              }
+
+              leaf role {
+                status obsolete {
+                  ncd:revise-date 2020-07-22 ;
+                }
+
+                description 'Role.
+0: no role.
+1:role master.
+2:role slave.' ;
+                type uint32 {
+                  range 0..2 ;
+
+                }
+
+                default 0 ;
+                ncd:revise-date 2020-03-10 ;
+              }
+
+              leaf shutdown-flag {
+                description 'Shutdown flag.
+0:no shutdown.
+1:shutdown.' ;
+                type uint8 ;
+
+                default 0 ;
+                ncd:revise-date 2020-03-10 ;
+              }
+
+              leaf description {
+                description 'Description.' ;
+                type string ;
+
+                ncd:revise-date 2020-03-10 ;
+              }
+
+              container switch-interfaces {
+                status obsolete {
+                  ncd:revise-date 2020-07-22 ;
+                }
+
+                description 'switch-interface-related configurations.' ;
+                list interface {
+                  description 'SIB interface common configuration.Dependent on the interface.' ;
+                  key interface-name ;
+                  leaf interface-name {
+                    description 'Interface name.' ;
+                    type ncd:ifname ;
+
+                  }
+
+                }
+
+                ncd:revise-date 2020-03-10 ;
+              }
+
+              container peer-group {
+                description 'SIB bind peer-group list.' ;
+                list peer-group {
+                  description 'SIB instance bind peer-group configuration.' ;
+                  key peer-group-name ;
+                  leaf peer-group-name {
+                    description 'Peer groupname.' ;
+                    type string {
+                      length 1..31 ;
+
+                    }
+
+                  }
+
+                }
+
+                ncd:revise-date 2020-03-10 ;
+              }
+
+              container tracks {
+                status obsolete {
+                  ncd:revise-date 2020-07-22 ;
+                }
+
+                description 'SIB track samgr list.' ;
+                list track-interface {
+                  description 'SIB instance track interface configuration.' ;
+                  key interface-name ;
+                  leaf interface-name {
+                    description 'track interface name.' ;
+                    type ncd:ifname ;
+
+                  }
+
+                }
+
+                list track {
+                  description 'SIB instance track samgr configuration.' ;
+                  key 'track-name track-type' ;
+                  leaf track-name {
+                    description 'track name' ;
+                    type string {
+                      length 1..31 ;
+
+                    }
+
+                  }
+
+                  leaf track-type {
+                    description 'track type' ;
+                    type enumeration {
+                      enum object {
+                        value 1 ;
+                        description 'samgr object' ;
+                      }
+
+                      enum group {
+                        value 2 ;
+                        description 'samgr group' ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+                ncd:revise-date 2020-03-10 ;
+              }
+
+              container policys {
+                description 'SIB bind policy list.' ;
+                list policy {
+                  description 'SIB instance bind policy configuration.' ;
+                  key policy-name ;
+                  leaf policy-name {
+                    description 'Policy name.' ;
+                    type string {
+                      length 1..31 ;
+
+                    }
+
+                  }
+
+                }
+
+                ncd:revise-date 2020-03-10 ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    description 'Configuration.' ;
+  }
+
+}

@@ -1,0 +1,72 @@
+module zxr10-bras-xpu {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/bras/xpu'
+            ;
+  prefix bras-xpu ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the bras-xpu'
+              ;
+  revision 2022-05-19 {
+    description 'leaf "slot-number" add range'
+                ;
+  }
+  revision 2019-06-18 {
+    description 'Initial version'
+                ;
+  }
+  container configuration {
+    description 'configuration model info.'
+                ;
+    container xpu {
+      description 'Configure xpu parameters.'
+                  ;
+      container xpu-route-board {
+        description 'Configure route board parameters.'
+                    ;
+        container slot-strategys {
+          description 'Configure route board slot strategy.'
+                      ;
+          presence slot-strategy ;
+          list slot-strategy {
+            description 'Configure route board slot strategy.'
+                        ;
+            key slot-number ;
+            leaf slot-number {
+              description 'Route board slot number'
+                          ;
+              type uint8 {
+                range 0..20 ;
+              }
+            }
+            leaf strategy {
+              description 'slot strategy'
+                          ;
+              type enumeration {
+                enum exclude {
+                  value 1 ;
+                  description 'exclude this slot'
+                              ;
+                }
+                enum include {
+                  value 2 ;
+                  description 'assigned this slot'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+      }
+    }
+  }
+}

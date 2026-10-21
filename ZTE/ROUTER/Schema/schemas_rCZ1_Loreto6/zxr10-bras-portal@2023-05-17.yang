@@ -1,0 +1,1317 @@
+module zxr10-bras-portal {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/bras/portal'
+            ;
+  prefix bras-portal ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2023-05-17 {
+    description 'netconf encrypted-password <datatype>ciphertext</datatype>  ad'
+              + 'd <log-type>password</log-type>'
+                ;
+  }
+  revision 2022-11-22 {
+    description 'modify webforce-param mac-format under Global portal.'+"\n"
+              + 'modify http-param-user-mac-key user-mac-format under web-serve'
+              + 'r.'+"\n"
+              + 'add user-url-key length under Global portal.'+"\n"
+              + 'modify http-param length under web-server.'
+                ;
+  }
+  revision 2020-12-16 {
+    description 'Add http-param-user-mac-encrypt and user-mac-encrypt.'
+                ;
+  }
+  revision 2019-09-11 {
+    description 'Modify the enum value of disable attribute under web-server.'+"\n"
+              + 'Modify the enum value of disable attribute under Global portal'
+              + '.'
+                ;
+  }
+  revision 2019-08-28 {
+    description 'Modify the default value of url-key attribute under web-server'
+              + '.'+"\n"
+              + '                 Modify the default value of url-key attribute'
+              + ' under Global portal.'
+                ;
+  }
+  revision 2016-04-07 {
+    description 'The initial version'
+                ;
+  }
+  container configuration {
+    description 'configuration model info.'
+                ;
+    container portal {
+      description portal ;
+      container portal-global {
+        description 'Configuring portal global model information.'
+                    ;
+        presence portal-global ;
+        leaf detect-ip {
+          description 'The user-ip carried by detection message.'
+                      ;
+          type ncd:ipv4-address ;
+          default 1.1.1.1 ;
+        }
+        leaf kick-user-web-off {
+          description 'Configuring the swith that the web on user from the serv'
+                    + 'er to web off ,when the Portal server down.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+            }
+            enum enable {
+              value 1 ;
+            }
+          }
+          default disable ;
+        }
+        leaf portal {
+          description 'Portal enable switch'
+                      ;
+          type enumeration {
+            enum enable {
+              value 0 ;
+            }
+            enum disable {
+              value 1 ;
+            }
+          }
+          default enable ;
+        }
+        leaf web-method {
+          description 'configuration the mode of HTTP operation with client'
+                      ;
+          type enumeration {
+            enum get {
+              value 0 ;
+            }
+            enum post {
+              value 1 ;
+            }
+            enum mixer {
+              value 2 ;
+            }
+          }
+          default get ;
+        }
+        leaf log {
+          description 'The log function enable switch.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+            }
+            enum enable {
+              value 1 ;
+            }
+          }
+          default disable ;
+        }
+        container webforce-param {
+          description 'The information of the parameters carried in a redirect '
+                    + 'message.'
+                      ;
+          presence webforce-param ;
+          leaf user-mac-key {
+            description "The key of Carry user's mac"
+                        ;
+            type string {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+          choice mac-format-choice {
+            description 'Mac format in redirect message'
+                        ;
+            default mac-format-defined ;
+            case mac-format-defined {
+              description 'Use the defined mac format'
+                          ;
+              leaf mac-format {
+                description 'mac format'
+                            ;
+                type enumeration {
+                  enum xx:xx:xx:xx:xx:xx {
+                    value 0 ;
+                    description 'set mac optionl configuration format'
+                                ;
+                  }
+                  enum xx-xx-xx-xx-xx-xx {
+                    value 1 ;
+                    description 'set mac optionl configuration format'
+                                ;
+                  }
+                  enum xxxx:xxxx:xxxx {
+                    value 2 ;
+                    description 'set mac optionl configuration format'
+                                ;
+                  }
+                  enum xxxx-xxxx-xxxx {
+                    value 3 ;
+                    description 'set mac optionl configuration format'
+                                ;
+                  }
+                  enum xxxxxxxxxxxx {
+                    value 4 ;
+                    description 'set mac optionl configuration format'
+                                ;
+                  }
+                  enum xxxx.xxxx.xxxx {
+                    value 5 ;
+                    description 'set mac optionl configuration format'
+                                ;
+                  }
+                  enum xx.xx.xx.xx.xx.xx {
+                    value 6 ;
+                    description 'set mac optionl configuration format'
+                                ;
+                  }
+                }
+                default xx:xx:xx:xx:xx:xx ;
+              }
+            }
+            case user-defined {
+              description 'User defined mac format'
+                          ;
+              leaf mac-format-width {
+                description 'the width of mac format'
+                            ;
+                type enumeration {
+                  enum 1 {
+                    value 1 ;
+                    description 'set mac-format-width'
+                                ;
+                  }
+                  enum 2 {
+                    value 2 ;
+                    description 'set mac-format-width'
+                                ;
+                  }
+                  enum 3 {
+                    value 3 ;
+                    description 'set mac-format-width'
+                                ;
+                  }
+                  enum 4 {
+                    value 4 ;
+                    description 'set mac-format-width'
+                                ;
+                  }
+                  enum 6 {
+                    value 6 ;
+                    description 'set mac-format-width'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+              leaf mac-format-delimeter {
+                description 'the delimeter of mac format'
+                            ;
+                type enumeration {
+                  enum ! {
+                    value 33 ;
+                  }
+                  enum # {
+                    value 35 ;
+                  }
+                  enum $ {
+                    value 36 ;
+                  }
+                  enum % {
+                    value 37 ;
+                  }
+                  enum & {
+                    value 38 ;
+                  }
+                  enum "'"
+                       {
+                    value 39 ;
+                  }
+                  enum ( {
+                    value 40 ;
+                  }
+                  enum ) {
+                    value 41 ;
+                  }
+                  enum * {
+                    value 42 ;
+                  }
+                  enum + {
+                    value 43 ;
+                  }
+                  enum , {
+                    value 44 ;
+                  }
+                  enum - {
+                    value 45 ;
+                  }
+                  enum . {
+                    value 46 ;
+                  }
+                  enum / {
+                    value 47 ;
+                  }
+                  enum : {
+                    value 58 ;
+                  }
+                  enum ';'
+                       {
+                    value 59 ;
+                  }
+                  enum < {
+                    value 60 ;
+                  }
+                  enum = {
+                    value 61 ;
+                  }
+                  enum > {
+                    value 62 ;
+                  }
+                  enum @ {
+                    value 64 ;
+                  }
+                  enum [ {
+                    value 91 ;
+                  }
+                  enum ] {
+                    value 93 ;
+                  }
+                  enum ^ {
+                    value 94 ;
+                  }
+                  enum _ {
+                    value 95 ;
+                  }
+                  enum ` {
+                    value 96 ;
+                  }
+                  enum '{'
+                       {
+                    value 123 ;
+                  }
+                  enum | {
+                    value 124 ;
+                  }
+                  enum '}'
+                       {
+                    value 125 ;
+                  }
+                  enum ~ {
+                    value 126 ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+            ncd:revise-date 2022-11-22 ;
+          }
+          leaf mac-match {
+            description 'The size of MAC write format'
+                        ;
+            type enumeration {
+              enum lowercase {
+                value 0 ;
+                description 'lowercase mac'
+                            ;
+              }
+              enum majuscule {
+                value 1 ;
+                description 'majuscule mac'
+                            ;
+              }
+            }
+            default lowercase ;
+          }
+          leaf web-force-type {
+            description 'Pushing type of the redirect message.'
+                        ;
+            type enumeration {
+              enum advertise {
+                value 1 ;
+                description 'advertise force web'
+                            ;
+              }
+              enum owe {
+                value 2 ;
+                description 'owe force web'
+                            ;
+              }
+              enum all {
+                value 0 ;
+              }
+            }
+            default all ;
+          }
+        }
+        container user-url {
+          description 'Carrying user original URL switch.'
+                      ;
+          presence user-url ;
+          choice support {
+            description 'The redirection message support the user with the orig'
+                      + 'inal URL switch'
+                        ;
+            default enables ;
+            case enables {
+              description 'Support to carry the original url.'
+                          ;
+              leaf enable {
+                description 'Support to carry the original url.'
+                            ;
+                type enumeration {
+                  enum enable {
+                    value 0 ;
+                  }
+                }
+              }
+              leaf url-key {
+                description 'Key words of the original URL.'
+                            ;
+                type string {
+                  length 1..32 ;
+                }
+                default url ;
+              }
+            }
+            case disables {
+              description 'Do not support the  user to carry original url.'
+                          ;
+              leaf disable {
+                description 'Carry the original URL is not supported.'
+                            ;
+                type enumeration {
+                  enum disable {
+                    value 1 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        container webforce-user-mac-encrypt {
+          choice mac-encrypt {
+            case disables {
+              leaf disable {
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+            case enables {
+              leaf enable {
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                  }
+                }
+                mandatory true ;
+              }
+              leaf encrypt-algorithm {
+                type enumeration {
+                  enum des {
+                    value 1 ;
+                  }
+                }
+                mandatory true ;
+              }
+              choice key {
+                mandatory true ;
+                case passwords {
+                  leaf password {
+                    type string {
+                      length 8 ;
+                    }
+                  }
+                }
+                case encrypted-passwords {
+                  leaf encrypted-password {
+                    type string {
+                      length 16..64 ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          ncd:revise-date 2020-12-16 ;
+        }
+      }
+      container web-server {
+        description 'Configuring web-server model information.'
+                    ;
+        presence web-server ;
+        list portal_svr {
+          description 'portal server OBJ'
+                      ;
+          max-elements 128 ;
+          key server-id ;
+          leaf server-id {
+            description 'web-server template number'
+                        ;
+            type uint8 {
+              range 1..128 ;
+            }
+            mandatory true ;
+          }
+          leaf url {
+            description 'Configure forced web server url'
+                        ;
+            type ncd:url {
+              length 1..127 ;
+            }
+          }
+          leaf url-ipv6 {
+            description 'Configure forced web server IPv6 url'
+                        ;
+            type ncd:url {
+              length 1..127 ;
+            }
+          }
+          leaf http-param-ac-ssid {
+            description 'Display SSID information key words in browser address '
+                      + 'bar'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf http-param-uas-id {
+            description 'Display device ID information in browser address bar'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf http-param-uas-ip-key {
+            description 'Display device IP address key word in browser address '
+                      + 'bar'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf http-param-uas-name {
+            description 'Device name information displayed in the browser addre'
+                      + 'ss bar'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf http-param-user-name {
+            description 'The user name information displayed by the browser add'
+                      + 'ress bar'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          leaf http-param-user-location-key {
+            description 'Display user circuit information in browser address bar'
+                        ;
+            type string {
+              length 1..32 ;
+            }
+          }
+          container http-param-user-mac-key {
+            presence user-mac-key ;
+            leaf user-mac-key {
+              description "The key of Carry user's mac"
+                          ;
+              type string {
+                length 1..32 ;
+              }
+              mandatory true ;
+            }
+            choice user-mac-format-choice {
+              description 'mac format'
+                          ;
+              default user-mac-format-defined ;
+              case user-mac-format-defined {
+                description 'Use the defined mac format'
+                            ;
+                leaf user-mac-format {
+                  description 'mac format'
+                              ;
+                  type enumeration {
+                    enum xx:xx:xx:xx:xx:xx {
+                      value 0 ;
+                      description 'set mac-format'
+                                  ;
+                    }
+                    enum xx-xx-xx-xx-xx-xx {
+                      value 1 ;
+                      description 'set mac-format'
+                                  ;
+                    }
+                    enum xxxx:xxxx:xxxx {
+                      value 2 ;
+                      description 'set mac-format'
+                                  ;
+                    }
+                    enum xxxx-xxxx-xxxx {
+                      value 3 ;
+                      description 'set mac-format'
+                                  ;
+                    }
+                    enum xxxxxxxxxxxx {
+                      value 4 ;
+                      description 'set mac-format'
+                                  ;
+                    }
+                    enum xxxx.xxxx.xxxx {
+                      value 5 ;
+                      description 'set mac-format'
+                                  ;
+                    }
+                    enum xx.xx.xx.xx.xx.xx {
+                      value 6 ;
+                      description 'set mac-format'
+                                  ;
+                    }
+                  }
+                  default xx:xx:xx:xx:xx:xx ;
+                }
+              }
+              case user-defined {
+                description 'user defined mac format'
+                            ;
+                leaf user-mac-format-width {
+                  description 'the width of mac format'
+                              ;
+                  type enumeration {
+                    enum 1 {
+                      value 1 ;
+                      description 'set mac-format-width'
+                                  ;
+                    }
+                    enum 2 {
+                      value 2 ;
+                      description 'set mac-format-width'
+                                  ;
+                    }
+                    enum 3 {
+                      value 3 ;
+                      description 'set mac-format-width'
+                                  ;
+                    }
+                    enum 4 {
+                      value 4 ;
+                      description 'set mac-format-width'
+                                  ;
+                    }
+                    enum 6 {
+                      value 6 ;
+                      description 'set mac-format-width'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf user-mac-format-delimeter {
+                  description 'the delimeter of mac format'
+                              ;
+                  type enumeration {
+                    enum ! {
+                      value 33 ;
+                    }
+                    enum # {
+                      value 35 ;
+                    }
+                    enum $ {
+                      value 36 ;
+                    }
+                    enum % {
+                      value 37 ;
+                    }
+                    enum & {
+                      value 38 ;
+                    }
+                    enum "'"
+                         {
+                      value 39 ;
+                    }
+                    enum ( {
+                      value 40 ;
+                    }
+                    enum ) {
+                      value 41 ;
+                    }
+                    enum * {
+                      value 42 ;
+                    }
+                    enum + {
+                      value 43 ;
+                    }
+                    enum , {
+                      value 44 ;
+                    }
+                    enum - {
+                      value 45 ;
+                    }
+                    enum . {
+                      value 46 ;
+                    }
+                    enum / {
+                      value 47 ;
+                    }
+                    enum : {
+                      value 58 ;
+                    }
+                    enum ';'
+                         {
+                      value 59 ;
+                    }
+                    enum < {
+                      value 60 ;
+                    }
+                    enum = {
+                      value 61 ;
+                    }
+                    enum > {
+                      value 62 ;
+                    }
+                    enum @ {
+                      value 64 ;
+                    }
+                    enum [ {
+                      value 91 ;
+                    }
+                    enum ] {
+                      value 93 ;
+                    }
+                    enum ^ {
+                      value 94 ;
+                    }
+                    enum _ {
+                      value 95 ;
+                    }
+                    enum ` {
+                      value 96 ;
+                    }
+                    enum '{'
+                         {
+                      value 123 ;
+                    }
+                    enum | {
+                      value 124 ;
+                    }
+                    enum '}'
+                         {
+                      value 125 ;
+                    }
+                    enum ~ {
+                      value 126 ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+              ncd:revise-date 2022-11-22 ;
+            }
+            leaf user-mac-match {
+              description 'The size of MAC write format'
+                          ;
+              type enumeration {
+                enum lowercase {
+                  value 0 ;
+                  description 'lowercase mac'
+                              ;
+                }
+                enum majuscule {
+                  value 1 ;
+                  description 'majuscule mac'
+                              ;
+                }
+              }
+              default lowercase ;
+            }
+          }
+          container ip-addr {
+            description 'Configure web-server address information.'
+                        ;
+            presence ip-addr ;
+            list ip-master {
+              description 'Set IP address and UDP port of the web server'
+                          ;
+              key ip-address ;
+              leaf ip-address {
+                description 'web server IP address'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf port {
+                description 'UDP port of web authentication'
+                            ;
+                type uint16 {
+                  range 1..65535 ;
+                }
+                default 50100 ;
+              }
+            }
+            list ip-backup {
+              description 'Configure web-sevver backup IP address.'
+                          ;
+              key ip-address ;
+              leaf ip-address {
+                description 'web server IP address'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf backup {
+                description 'backup address'
+                            ;
+                type enumeration {
+                  enum backup {
+                    value 2 ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+          }
+          container version {
+            description 'Portal certification related information'
+                        ;
+            presence version ;
+            choice version {
+              description 'Protocol version of portal'
+                          ;
+              default v1 ;
+              case v1 {
+                description 'v1 version'
+                            ;
+                leaf version1 {
+                  description 'v1 version'
+                              ;
+                  type enumeration {
+                    enum v1 {
+                      value 1 ;
+                    }
+                  }
+                  default v1 ;
+                }
+              }
+              case v2 {
+                description 'Configure V2 version information.'
+                            ;
+                leaf version2 {
+                  description 'v2 version'
+                              ;
+                  type enumeration {
+                    enum v2 {
+                      value 2 ;
+                    }
+                    enum v1 {
+                      value 1 ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf v2-key {
+                  status obsolete {
+                    ncd:revise-date 2020-12-16 ;
+                  }
+                  description 'Keyword of V2 version'
+                              ;
+                  type string {
+                    length 0..16 ;
+                  }
+                  default ''
+                          ;
+                }
+                leaf v2-encrypt-flag {
+                  status obsolete {
+                    ncd:revise-date 2020-12-16 ;
+                  }
+                  description 'Encrypt the message'
+                              ;
+                  type enumeration {
+                    enum encrypt {
+                      value 1 ;
+                    }
+                    enum nonesense {
+                      value 0 ;
+                    }
+                  }
+                  default nonesense ;
+                }
+                leaf v2-encryptedkey {
+                  status obsolete {
+                    ncd:revise-date 2020-12-16 ;
+                  }
+                  description 'Configure encryption key.'
+                              ;
+                  type string {
+                    length 0..32 ;
+                  }
+                  default ''
+                          ;
+                }
+                choice choose-v2-key {
+                  case key {
+                    leaf v2-key-new {
+                      type string {
+                        length 1..16 ;
+                      }
+                    }
+                  }
+                  case encrypted-key {
+                    leaf v2-encrypted-key-new {
+                      type string {
+                        length 32..84 ;
+                      }
+                    }
+                  }
+                  ncd:revise-date 2020-12-16 ;
+                }
+              }
+              case v3 {
+                description 'Configure V3 version information.'
+                            ;
+                leaf version3 {
+                  description 'v3 version'
+                              ;
+                  type enumeration {
+                    enum v3 {
+                      value 3 ;
+                    }
+                    enum v1 {
+                      value 1 ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf v3-key {
+                  status obsolete {
+                    ncd:revise-date 2020-12-16 ;
+                  }
+                  description 'Keyword of V3 version'
+                              ;
+                  type string {
+                    length 0..16 ;
+                  }
+                  default ''
+                          ;
+                }
+                leaf v3-encrypt-flag {
+                  status obsolete {
+                    ncd:revise-date 2020-12-16 ;
+                  }
+                  description 'Encrypt the message'
+                              ;
+                  type enumeration {
+                    enum encrypt {
+                      value 1 ;
+                    }
+                    enum nonesense {
+                      value 0 ;
+                    }
+                  }
+                  default nonesense ;
+                }
+                leaf v3-encryptedkey {
+                  status obsolete {
+                    ncd:revise-date 2020-12-16 ;
+                  }
+                  description 'Configure encryption key.'
+                              ;
+                  type string {
+                    length 0..32 ;
+                  }
+                  default ''
+                          ;
+                }
+                choice choose-v3-key {
+                  case key {
+                    leaf v3-key-new {
+                      type string {
+                        length 1..16 ;
+                      }
+                    }
+                  }
+                  case encrypted-key {
+                    leaf v3-encrypted-key-new {
+                      type string {
+                        length 32..84 ;
+                      }
+                    }
+                  }
+                  ncd:revise-date 2020-12-16 ;
+                }
+              }
+            }
+          }
+          container uas-ip {
+            description 'Configuration interface information of bras with porta'
+                      + 'l server.'
+                        ;
+            presence uas-ip ;
+            leaf uas-ip {
+              description 'Configuration interface address.'
+                          ;
+              type ncd:ipv4-address ;
+              mandatory true ;
+            }
+            leaf interface-name {
+              description 'Configure interface name'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+              mandatory true ;
+            }
+          }
+          container listening-portal {
+            description 'Configure listener port information'
+                        ;
+            presence listening-portal ;
+            list listen-port {
+              description 'Configure alternate listener ports'
+                          ;
+              key port-num ;
+              leaf port-num {
+                description 'Listener port number'
+                            ;
+                type uint16 {
+                  range 1..65535 ;
+                }
+                mandatory true ;
+              }
+              leaf status {
+                description 'Reserve port mark'
+                            ;
+                type enumeration {
+                  enum second {
+                    value 1 ;
+                  }
+                  enum first {
+                    value 0 ;
+                  }
+                }
+              }
+            }
+          }
+          container server-detect {
+            description 'Configuration detection information'
+                        ;
+            presence server-detect ;
+            leaf count {
+              description 'Configuration detect times.'
+                          ;
+              type uint32 {
+                range 1..10 ;
+              }
+              mandatory true ;
+            }
+            leaf timer {
+              description 'Configuration detection interval'
+                          ;
+              type uint32 {
+                range 60..864000 ;
+              }
+              default 60 ;
+            }
+          }
+          container user-url {
+            description 'Carrying user original URL switch.'
+                        ;
+            presence user-url ;
+            choice support {
+              description 'The redirection message support the user with the or'
+                        + 'iginal URL switch'
+                          ;
+              default enables ;
+              case disables {
+                description 'Do not support the  user to carry original url.'
+                            ;
+                leaf disable {
+                  description 'Carry the original URL is not supported.'
+                              ;
+                  type enumeration {
+                    enum disable {
+                      value 1 ;
+                    }
+                  }
+                }
+              }
+              case enables {
+                description 'Support to carry the original url.'
+                            ;
+                leaf enable {
+                  description 'Support to carry the original url.'
+                              ;
+                  type enumeration {
+                    enum enable {
+                      value 0 ;
+                    }
+                  }
+                }
+                leaf url-key {
+                  description 'Key words of the original URL.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                  default url ;
+                }
+              }
+            }
+          }
+          container default {
+            description 'Default web-server switch'
+                        ;
+            presence default ;
+            choice default-flag {
+              description 'Default web-server switch'
+                          ;
+              default default-disable ;
+              case default-disable {
+                description 'Default enable function is not supported.'
+                            ;
+                leaf disable {
+                  description 'Default enable function is not supported.'
+                              ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+                  }
+                }
+              }
+              case default-enable {
+                description 'Enable default enable function.'
+                            ;
+                leaf enable {
+                  description 'Enable default enable function.'
+                              ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+                    enum disable {
+                      value 0 ;
+                    }
+                  }
+                }
+                leaf default-port {
+                  description 'Configure the default port.'
+                              ;
+                  type uint16 {
+                    range 1..65535 ;
+                  }
+                  default 50100 ;
+                }
+              }
+            }
+          }
+          container ipv6-address {
+            description 'Configure web-server IPv6 address information.'
+                        ;
+            presence ipv6-address ;
+            list ipv6-master {
+              description 'Set IPv6 address and UDP port of the web server'
+                          ;
+              key ipv6-address ;
+              leaf ipv6-address {
+                description 'Configure the IPv6 address of the Web server'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf port {
+                description 'Configure port value'
+                            ;
+                type uint16 {
+                  range 1..65535 ;
+                }
+                default 50100 ;
+              }
+            }
+            list ipv6-backup {
+              description 'Configure web-sevver backup IPv6 address.'
+                          ;
+              key ip-address ;
+              leaf ip-address {
+                description 'Configure the IPv6 address of the Web server'
+                            ;
+                type ncd:ipv6-address ;
+              }
+              leaf backup {
+                description 'Alternate IPv6 address mark'
+                            ;
+                type enumeration {
+                  enum backup {
+                    value 2 ;
+                  }
+                }
+              }
+            }
+          }
+          container uas-ipv6 {
+            description 'Configuration IPv6 interface information of bras with '
+                      + 'portal server.'
+                        ;
+            presence uas-ipv6 ;
+            leaf uas-ipv6 {
+              description 'Configuration interface IPv6 address.'
+                          ;
+              type ncd:ipv6-address ;
+              mandatory true ;
+            }
+            leaf interface-name {
+              description 'Configure interface name'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+              mandatory true ;
+            }
+          }
+          container http-param-user-mac-encrypt {
+            choice mac-encrypt {
+              case disables {
+                leaf disable {
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+              case enables {
+                leaf enable {
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                leaf encrypt-algorithm {
+                  type enumeration {
+                    enum des {
+                      value 1 ;
+                    }
+                  }
+                  mandatory true ;
+                }
+                choice key {
+                  mandatory true ;
+                  case passwords {
+                    leaf password {
+                      type string {
+                        length 8 ;
+                      }
+                    }
+                  }
+                  case encrypted-passwords {
+                    leaf encrypted-password {
+                      type string {
+                        length 16..64 ;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2020-12-16 ;
+          }
+        }
+      }
+      list web-server-group {
+        description 'Configuring web-server-group model information.'
+                    ;
+        key group_id ;
+        leaf group_id {
+          description 'configure web-server-group ID.'
+                      ;
+          type uint8 {
+            range 1..24 ;
+          }
+        }
+        leaf algorithm {
+          description 'Configuration binding web-server selection strategy.'
+                      ;
+          type enumeration {
+            enum first {
+              value 1 ;
+            }
+            enum round-robin {
+              value 2 ;
+            }
+          }
+          default first ;
+        }
+        leaf deadtime {
+          description "Configure web-server's death time."
+                      ;
+          type uint32 {
+            range 0..3600 ;
+          }
+          default 5 ;
+        }
+        leaf timeout {
+          description 'Configuration detection message timeout'
+                      ;
+          type uint8 {
+            range 1..255 ;
+          }
+          default 3 ;
+        }
+        container servers {
+          description 'bind web-sever'
+                      ;
+          presence servers ;
+          list server {
+            description 'bind web-server'
+                        ;
+            key server-id ;
+            leaf server-id {
+              description 'bind server id'
+                          ;
+              type uint8 {
+                range 1..128 ;
+              }
+            }
+            leaf server-type {
+              description 'Main preparation status of server.'
+                          ;
+              type enumeration {
+                enum master {
+                  value 2 ;
+                  description 'Set the current server as master server'
+                              ;
+                }
+                enum slave {
+                  value 1 ;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+  }
+  container operation {
+    config false ;
+  }
+}

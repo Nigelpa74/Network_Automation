@@ -1,0 +1,564 @@
+module zxr10-pss-rtm {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/pss-rtm" ;
+  prefix pss-rtm ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the routing table management(rtm).' ;
+  revision 2024-04-08 {
+    description 'Add a configuration node for converting FRR switchover alarms to notifications. The path is  "configuration/alarm-config/frr-alarm-notification-to-log".' ;
+  }
+
+  revision 2024-03-02 {
+    description 'Add new nodes to set ipv4 or ipv6 critical route.' ;
+  }
+
+  revision 2023-05-11 {
+    description 'Add new nodes to set the threshold of peer overload alarm. The paths are "configuration/alarm-config/peer-high-threshold/warning-threshold" and "configuration/alarm-config/peer-high-threshold/clear-warning-threshold"' ;
+  }
+
+  revision 2023-04-02 {
+    description 'Add service class configuration of SRv6 differentiated service mode configuration.The path is "configuration/srv6-diffserv-mode-ingress/mode/service-class".' ;
+  }
+
+  revision 2023-03-06 {
+    description 'Add new nodes to set the threshold of ECMP overload alarm. The paths are "configuration/alarm-config/ecmp-high-threshold/warning-threshold" and "configuration/alarm-config/ecmp-high-threshold/clear-warning-threshold"' ;
+  }
+
+  revision 2022-10-21 {
+    description 'Add new nodes to set the threshold of clear fib overload alarm. The paths are "configuration/alarm-config/ipv4-fib-high-threshold/clear-warning-threshold" and "configuration/alarm-config/ipv6-fib-high-threshold/clear-warning-threshold"' ;
+  }
+
+  revision 2022-09-20 {
+    description 'Add srv6 differentiated service mode configuration.
+The paths are "configuration/srv6-diffserv-mode-egress" and "configuration/srv6-diffserv-mode-ingress".' ;
+  }
+
+  revision 2021-06-11 {
+    description 'Add all project to support fib-high-threshold.' ;
+  }
+
+  revision 2019-12-11 {
+    description 'Add new project label of 6100/6700/65V5 to support fib-high-threshold.' ;
+  }
+
+  revision 2019-06-28 {
+    description 'This Netconf module provides commonly used textual conventions for RTM.
+It is initial version.' ;
+  }
+
+  feature fib-high-threshold ;
+
+  typedef ingress-uniform-mode {
+    type enumeration {
+      enum phb {
+        value 1 ;
+        description 'Inherit PHB' ;
+      }
+
+      enum non-phb {
+        value 2 ;
+        description 'Inherit 802.1P or DSCP' ;
+      }
+
+    }
+
+    description 'Enumeration of SRv6 ingress uniform mode.' ;
+  }
+
+  typedef egress-mode {
+    type enumeration {
+      enum pipe {
+        value 1 ;
+        description 'Pipe mode' ;
+      }
+
+      enum uniform {
+        value 2 ;
+        description 'Uniform mode' ;
+      }
+
+      enum short-pipe {
+        value 3 ;
+        description 'Short-pipe mode' ;
+      }
+
+    }
+
+    description 'Enumeration of SRv6 egress mode.' ;
+  }
+
+  typedef pipe-serviceclass {
+    type enumeration {
+      enum be {
+        value 1 ;
+        description 'Best effort.' ;
+      }
+
+      enum af1 {
+        value 2 ;
+        description 'Assured forwarding class 1.' ;
+      }
+
+      enum af2 {
+        value 3 ;
+        description 'Assured forwarding class 2.' ;
+      }
+
+      enum af3 {
+        value 4 ;
+        description 'Assured forwarding class 3.' ;
+      }
+
+      enum af4 {
+        value 5 ;
+        description 'Assured forwarding class 4.' ;
+      }
+
+      enum ef {
+        value 6 ;
+        description 'Expedited forward.' ;
+      }
+
+      enum cs6 {
+        value 7 ;
+        description 'Internetwork control service class.' ;
+      }
+
+      enum cs7 {
+        value 8 ;
+        description 'Network control service class.' ;
+      }
+
+    }
+
+    description 'Enumeration of SRv6 ingress pipe service class.' ;
+  }
+
+  typedef pipe-color {
+    type enumeration {
+      enum green {
+        value 1 ;
+        description 'Green packets.' ;
+      }
+
+      enum red {
+        value 2 ;
+        description 'Red packets.' ;
+      }
+
+      enum yellow {
+        value 3 ;
+        description 'Yellow packets.' ;
+      }
+
+    }
+
+    description 'Enumeration of SRv6 ingress pipe color.' ;
+  }
+
+  container configuration {
+    description 'This module config rtm configuration.' ;
+    container alarm-config {
+      description 'This module config rtm alarm configuration.' ;
+      container ipv4-fib-high-threshold {
+        if-feature fib-high-threshold ;
+
+        description 'IPv4 FIB alarm threshold configuration.' ;
+        presence ipv4-fib-high-threshold ;
+        leaf warning-threshold {
+          description 'Maximum IPv4 FIB threshold to set.' ;
+          type uint8 {
+            range 1..100 ;
+
+          }
+
+          mandatory true ;
+        }
+
+        leaf clear-warning-threshold {
+          description 'Warning clear threshold value. This alarm is cleared when the counts of IPv4 fibs is lower than the threshold.' ;
+          type uint8 {
+            range 1..100 ;
+
+          }
+
+          mandatory true ;
+          ncd:revise-date 2022-10-21 ;
+        }
+
+      }
+
+      container ipv6-fib-high-threshold {
+        if-feature fib-high-threshold ;
+
+        description 'IPv6 FIB alarm threshold configuration.' ;
+        presence ipv6-fib-high-threshold ;
+        leaf warning-threshold {
+          description 'Maximum IPv6 FIB threshold to set.' ;
+          type uint8 {
+            range 1..100 ;
+
+          }
+
+          mandatory true ;
+        }
+
+        leaf clear-warning-threshold {
+          description 'Warning clear threshold value. This alarm is cleared when the counts of IPv6 fibs is lower than the threshold.' ;
+          type uint8 {
+            range 1..100 ;
+
+          }
+
+          mandatory true ;
+          ncd:revise-date 2022-10-21 ;
+        }
+
+      }
+
+      container ecmp-high-threshold {
+        description 'ECMP alarm threshold configuration.' ;
+        presence ecmp-high-threshold ;
+        leaf warning-threshold {
+          description 'Maximum ECMP threshold to set.' ;
+          type uint8 {
+            range 1..100 ;
+
+          }
+
+          mandatory true ;
+        }
+
+        leaf clear-warning-threshold {
+          description 'Warning clear threshold value. This alarm is cleared when the counts of ECMP is lower than the threshold.' ;
+          type uint8 {
+            range 1..100 ;
+
+          }
+
+          mandatory true ;
+        }
+
+        ncd:revise-date 2023-03-06 ;
+      }
+
+      container nexthop-high-threshold {
+        presence nexthop-high-threshold ;
+        description 'Nexthop overload alarm threshold configuration.' ;
+        leaf warning-threshold {
+          type uint8 {
+            range 1..100 ;
+
+          }
+
+          mandatory true ;
+          description 'Maximum nexthop threshold to set.' ;
+        }
+
+        leaf clear-warning-threshold {
+          type uint8 {
+            range 1..100 ;
+
+          }
+
+          mandatory true ;
+          description 'Warning clear threshold value. This alarm is cleared when the count of nexthops is lower than the threshold.' ;
+        }
+
+        ncd:revise-date 2023-05-11 ;
+      }
+
+      container frr-alarm-notification-to-log {
+        leaf notification-to-log {
+          description 'The switch for FRR switchover notification logging. "Enable" means that the alarm notification triggered when FRR switchover occurs will be converted to an alarm log. "Disable" means that the alarm notification triggered when FRR switchover occurs will still be reported without being converted to an alarm log.' ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description '"Enable" means that the alarm notification triggered when FRR switchover occurs will be converted to an alarm log.' ;
+            }
+
+            enum disable {
+              value 0 ;
+              description '"Disable" means that the alarm notification triggered when FRR switchover occurs will still be reported without being converted to an alarm log.' ;
+            }
+
+          }
+
+          default disable ;
+        }
+
+        description 'The switch for FRR switchover notification logging. ' ;
+        ncd:revise-date 2024-04-08 ;
+      }
+
+    }
+
+    container srv6-diffserv-mode-egress {
+      description 'Configure the SRv6 differentiated service mode of egress.' ;
+      presence egress ;
+      leaf mode {
+        description 'Configure the SRv6 differentiated service mode of egress.' ;
+        type egress-mode ;
+
+        mandatory true ;
+      }
+
+      ncd:revise-date 2022-09-20 ;
+    }
+
+    container srv6-diffserv-mode-ingress {
+      description 'Configure the SRv6 differentiated service mode of ingress.' ;
+      presence ingress ;
+      choice mode {
+        description 'Configure the SRv6 differentiated service mode of ingress.' ;
+        mandatory true ;
+        case pipe {
+          description 'Pipe mode configuration.' ;
+          leaf pipe-dscp-value {
+            description 'DSCP value in pipe mode.' ;
+            type uint8 {
+              range 0..63 {
+                description 'DSCP value.' ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        case uniform {
+          description 'Uniform mode configuration' ;
+          leaf uniform-mode {
+            description 'Uniform mode selection.' ;
+            type ingress-uniform-mode ;
+
+            mandatory true ;
+          }
+
+        }
+
+        case service-class {
+          container service-class {
+            description 'Set the pipe mode by scheduling priority.' ;
+            leaf serviceclass {
+              type pipe-serviceclass ;
+
+              mandatory true ;
+              description 'Local scheduling priority.' ;
+            }
+
+            leaf color {
+              type pipe-color ;
+
+              mandatory true ;
+              description 'Local drop priority.' ;
+            }
+
+          }
+
+          ncd:revise-date 2023-04-02 ;
+        }
+
+      }
+
+      ncd:revise-date 2022-09-20 ;
+    }
+
+    container critical-route-log {
+      description 'Critical route log configuration' ;
+      container ipv4 {
+        description 'IPv4 critical route' ;
+        container public {
+          description 'Public route' ;
+          list route-config {
+            description 'Route configuration' ;
+            key 'destination mask' ;
+            leaf destination {
+              description 'The destination address of route.' ;
+              type ncd:ipv4-address ;
+
+            }
+
+            leaf mask {
+              description 'The mask of route.' ;
+              type ncd:ipv4-mask ;
+
+            }
+
+            leaf need-alarm {
+              description 'Need to send alarm.' ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+
+                enum disable {
+                  value 0 ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+          }
+
+        }
+
+        container private {
+          description 'Private route' ;
+          list route-config {
+            description 'Route configuration' ;
+            key 'vrf-name destination mask' ;
+            leaf vrf-name {
+              description 'The name of the private network VPN.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf destination {
+              description 'The destination address of route.' ;
+              type ncd:ipv4-address ;
+
+            }
+
+            leaf mask {
+              description 'The mask of route.' ;
+              type ncd:ipv4-mask ;
+
+            }
+
+            leaf need-alarm {
+              description 'Need to send alarm.' ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+
+                enum disable {
+                  value 0 ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container ipv6 {
+        description 'IPv6 critical route' ;
+        container public {
+          description 'Public route' ;
+          list route-config {
+            description 'Route configuration' ;
+            key 'destination mask-length' ;
+            leaf destination {
+              description 'The destination address of route.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf mask-length {
+              description 'The mask length of route.' ;
+              type uint8 {
+                range 0..128 ;
+
+              }
+
+            }
+
+            leaf need-alarm {
+              description 'Need to send alarm.' ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+
+                enum disable {
+                  value 0 ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+          }
+
+        }
+
+        container private {
+          description 'Private route' ;
+          list route-config {
+            description 'Route configuration' ;
+            key 'vrf-name destination mask-length' ;
+            leaf vrf-name {
+              description 'The name of the private network VPN.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf destination {
+              description 'The destination address of route.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf mask-length {
+              description 'The mask length of route.' ;
+              type uint8 {
+                range 0..128 ;
+
+              }
+
+            }
+
+            leaf need-alarm {
+              description 'Need to send alarm.' ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+
+                enum disable {
+                  value 0 ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2024-03-02 ;
+    }
+
+  }
+
+}

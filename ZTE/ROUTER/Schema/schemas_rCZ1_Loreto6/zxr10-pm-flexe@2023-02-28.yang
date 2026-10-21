@@ -1,0 +1,695 @@
+module zxr10-pm-flexe {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-flexe'
+            ;
+  prefix pm-flexe ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2018-09-30 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2023-02-28 {
+    reference 'updata zxr10-netconf-defs to zxr10-netconf-defs@2018-09-30.'
+              ;
+  }
+  revision 2022-12-28 {
+    description 'rename enhanced-mode to traffic type.'
+                ;
+  }
+  revision 2022-12-05 {
+    description mtn-channel ;
+  }
+  revision 2022-08-19 {
+    reference "add subclient's netid-number."
+              ;
+  }
+  revision 2022-05-20 {
+    reference 'add detete2reset lable to flexegroup/client/subclient ifattr.'
+              ;
+  }
+  revision 2022-04-02 {
+    description 'add flexe_subclient enhanced-mode.'
+                ;
+  }
+  revision 2022-03-25 {
+    description 'add flexe_subclient bandwidth adjust mode/timeout.'
+                ;
+  }
+  revision 2021-12-29 {
+    description 'add flexe subclient bind physical interface timeslots info que'
+              + 'ry.'
+                ;
+  }
+  revision 2021-12-03 {
+    description 'add flexe client timeslot info query.'
+                ;
+  }
+  revision 2021-11-16 {
+    description 'add flexe group bandwidth and timeslot info query.'
+                ;
+  }
+  revision 2021-10-27 {
+    description 'change netid number to string-type'
+                ;
+  }
+  revision 2021-10-18 {
+    description 'add flexe subclient bind phy-interface.'
+                ;
+  }
+  revision 2021-10-14 {
+    description 'add netid number'
+                ;
+  }
+  revision 2021-05-10 {
+    description 'add flexe group bind type.'
+                ;
+  }
+  revision 2021-04-01 {
+    description 'add vei relevant info query.'
+                ;
+  }
+  revision 2020-11-05 {
+    description 'add ptn-config.'
+                ;
+  }
+  revision 2020-08-11 {
+    description 'add flexe client minavailrate percent'
+                ;
+  }
+  revision 2020-04-27 {
+    description "add flexe_subclient's timeslot"
+                ;
+  }
+  revision 2020-02-17 {
+    description 'add show flexegroup-overhead'
+                ;
+  }
+  revision 2019-11-13 {
+    description 'add container flexe_subclients'
+                ;
+  }
+  revision 2019-07-30 {
+    description 'add tx-neg-timeout'
+                ;
+  }
+  revision 2019-07-24 {
+    description 'The maximum value of group-number is decide by 570687642'
+                ;
+  }
+  revision 2019-01-18 {
+    description 'add filter node to flexe_group&flexe_client'
+                ;
+  }
+  revision 2018-11-21 {
+    description 'modify length of timeslots'
+                ;
+  }
+  revision 2018-03-16 {
+    description 'remove create-if container, add leaf node reply-ca-mode'
+                ;
+  }
+  revision 2017-09-30 {
+    description 'create the module'
+                ;
+  }
+  feature ptn-config ;
+  feature spn {
+    ncd:revise-date 2022-12-28 ;
+  }
+  container configuration {
+    container flexe_groups {
+      list flexe_group {
+        description 'flexe_group attribute'
+                    ;
+        key ifname ;
+        leaf ifname {
+          description 'flexegroup interface name'
+                      ;
+          type ncd:ifname ;
+        }
+        container ifattribute {
+          leaf group-number {
+            type uint32 {
+              range 1..1048575 ;
+            }
+          }
+          leaf receive-mode {
+            type enumeration {
+              enum auto {
+                value 1 ;
+              }
+              enum static {
+                value 2 ;
+              }
+            }
+          }
+          leaf skew {
+            type uint32 {
+              range 1..1000 ;
+            }
+          }
+          leaf alarm-insertion {
+            type enumeration {
+              enum standard {
+                value 1 ;
+              }
+              enum extended {
+                value 2 ;
+              }
+            }
+          }
+          leaf rx-calendar {
+            type enumeration {
+              enum A {
+                value 1 ;
+              }
+              enum B {
+                value 2 ;
+              }
+            }
+          }
+          leaf tx-calendar {
+            type enumeration {
+              enum A {
+                value 1 ;
+              }
+              enum B {
+                value 2 ;
+              }
+            }
+          }
+          leaf tx-calendar-neg {
+            type enumeration {
+              enum manual {
+                value 1 ;
+              }
+              enum protocol-force {
+                value 2 ;
+              }
+              enum protocol-normal {
+                value 3 ;
+              }
+            }
+          }
+          leaf reply-ca-mode {
+            type enumeration {
+              enum never {
+                value 1 ;
+                description 'never reply ca'
+                            ;
+              }
+              enum immediately {
+                value 2 ;
+                description 'immediately reply ca'
+                            ;
+              }
+              enum ask-controller {
+                value 3 ;
+                description 'ask-controller if need reply ca'
+                            ;
+              }
+            }
+          }
+          leaf tx-calendar-neg-timeout {
+            type uint32 {
+              range 10..600000 ;
+            }
+            ncd:revise-date 2019-07-30 ;
+          }
+          ncd:revise-date 2018-03-16 ;
+        }
+        container bind-timeslots {
+          list bind {
+            key phy-interface ;
+            leaf phy-interface {
+              type string ;
+            }
+            leaf phy-number {
+              type uint32 {
+                range 1..254 ;
+              }
+              mandatory true ;
+            }
+            leaf timeslots {
+              type ncd:range ;
+            }
+            leaf timeslots-all {
+              type boolean ;
+            }
+          }
+        }
+        container bind-mode {
+          leaf bind-mode {
+            type enumeration {
+              enum timeslot {
+                value 0 ;
+              }
+              enum bandwidth {
+                value 1 ;
+              }
+            }
+          }
+          ncd:revise-date 2021-05-10 ;
+        }
+      }
+    }
+    container flexe_clients {
+      list flexe_client {
+        description 'flexe_client attribute'
+                    ;
+        key ifname ;
+        leaf ifname {
+          description 'flexe_client interfacename'
+                      ;
+          type ncd:ifname ;
+        }
+        container ifattribute {
+          leaf client-number {
+            type uint32 {
+              range 1..65534 ;
+            }
+          }
+          leaf terminal {
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 2 ;
+              }
+            }
+          }
+          leaf subclient-enable {
+            if-feature ptn-config ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 0 ;
+              }
+            }
+            ncd:revise-date 2019-11-13 ;
+          }
+          leaf minavailrate {
+            if-feature ptn-config ;
+            type uint8 {
+              range 0..100 ;
+            }
+            ncd:revise-date 2020-08-11 ;
+          }
+          ncd:revise-date 2018-03-16 ;
+        }
+        container bind-timeslots {
+          list bind {
+            key 'calendar phy-interface'
+                ;
+            leaf calendar {
+              type enumeration {
+                enum A {
+                  value 1 ;
+                }
+                enum B {
+                  value 2 ;
+                }
+              }
+            }
+            leaf phy-interface {
+              type string ;
+            }
+            leaf flexe_group {
+              type string ;
+            }
+            leaf timeslots {
+              type ncd:range ;
+              mandatory true ;
+            }
+          }
+        }
+        container background {
+          leaf flexe_group-ifname {
+            type string ;
+          }
+        }
+        container bind-bandwidth {
+          list bind {
+            key flexe_group ;
+            leaf flexe_group {
+              type string ;
+            }
+            leaf bandwidth {
+              type uint32 {
+                range 1..800 ;
+              }
+            }
+          }
+          ncd:revise-date 2021-05-10 ;
+        }
+        container netid-attribute {
+          leaf netid-number {
+            type string {
+              length 0..400 ;
+            }
+          }
+          ncd:revise-date 2021-10-27 ;
+        }
+      }
+    }
+    container veis {
+      list vei {
+        description 'vei bind flexe_client'
+                    ;
+        key ifname ;
+        leaf ifname {
+          type string ;
+        }
+        container bind {
+          leaf flexe_client-ifname {
+            type string ;
+          }
+          ncd:revise-date 2018-03-16 ;
+        }
+      }
+    }
+    container flexe_subclients {
+      list flexe_subclient {
+        key ifname ;
+        leaf ifname {
+          description 'flexe_subclient ifname'
+                      ;
+          type ncd:ifname ;
+        }
+        container ifattribute {
+          leaf subclient-number {
+            type uint32 {
+              range 1..4000 ;
+            }
+          }
+          leaf terminal {
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 2 ;
+              }
+            }
+          }
+          leaf bandwidth-adjust-mode {
+            description 'Bandwidth adjust mode.'
+                        ;
+            type enumeration {
+              enum force {
+                value 1 ;
+              }
+              enum lossless {
+                value 2 ;
+              }
+            }
+            default lossless ;
+            ncd:revise-date 2022-03-25 ;
+          }
+          leaf bandwidth-adjust-timeout {
+            description 'Bandwidth adjust timeout.'
+                        ;
+            type uint32 {
+              range 3..60 ;
+            }
+            default 3 ;
+            ncd:revise-date 2022-03-25 ;
+          }
+          leaf traffic-type {
+            description 'Subclient traffic type.'
+                        ;
+            type enumeration {
+              enum share {
+                value 1 ;
+              }
+              enum normal {
+                value 2 ;
+              }
+            }
+            default normal ;
+            ncd:revise-date 2022-12-28 ;
+          }
+        }
+        container bind-client {
+          leaf parent-client {
+            type string ;
+          }
+          choice timeslot {
+            case bandwidth {
+              leaf bandwidth {
+                type uint32 {
+                  range 1..800 ;
+                }
+              }
+            }
+            case cells {
+              leaf timeslots {
+                type ncd:range ;
+              }
+            }
+            ncd:revise-date 2020-04-27 ;
+          }
+        }
+        container bind-interface {
+          leaf phy-interface {
+            type string ;
+          }
+          leaf cells {
+            type ncd:range ;
+          }
+          ncd:revise-date 2021-10-18 ;
+        }
+        container netid-attribute {
+          leaf netid-number {
+            type string {
+              length 0..400 ;
+            }
+          }
+          ncd:revise-date 2022-08-19 ;
+        }
+      }
+      ncd:revise-date 2019-11-13 ;
+    }
+    container mtn-channel-pes {
+      list mtn-channel-pe {
+        description 'channel attach flexe client'
+                    ;
+        key mtn-channel-name ;
+        leaf mtn-channel-name {
+          type string {
+            length 1..32 ;
+          }
+        }
+        leaf flexe_client-ifname {
+          type string ;
+        }
+      }
+      ncd:revise-date 2022-12-05 ;
+    }
+    container mtn-fgchannel-pes {
+      list mtn-fgchannel-pe {
+        description 'fgchannel attach flexe subclient'
+                    ;
+        key mtn-fgchannel-name ;
+        leaf mtn-fgchannel-name {
+          type string {
+            length 1..32 ;
+          }
+        }
+        leaf flexe_subclient-ifname {
+          type string ;
+        }
+      }
+      ncd:revise-date 2022-12-05 ;
+    }
+    container mtn-channel-binds {
+      list mtn-channel-bind {
+        key 'ifname mtn-channel-name'
+            ;
+        leaf ifname {
+          type string ;
+        }
+        leaf mtn-channel-name {
+          type string {
+            length 1..50 ;
+          }
+        }
+      }
+      ncd:revise-date 2022-12-05 ;
+    }
+    container mtn-fgchannel-binds {
+      list mtn-fgchannel-bind {
+        key 'ifname mtn-fgchannel-name'
+            ;
+        leaf ifname {
+          type string ;
+        }
+        leaf mtn-fgchannel-name {
+          type string {
+            length 1..50 ;
+          }
+        }
+      }
+      ncd:revise-date 2022-12-05 ;
+    }
+  }
+  container state {
+    config false ;
+    container flexegroup_ohs {
+      list flexegroup_oh {
+        key ifname ;
+        leaf ifname {
+          description 'flexegroup interface name'
+                      ;
+          type ncd:ifname ;
+        }
+        leaf rx-calendar-bit {
+          description 'rx calendar'
+                      ;
+          type string ;
+        }
+      }
+    }
+    container vei_relevant_infos {
+      list vei_relevant_info {
+        key ifname ;
+        leaf ifname {
+          description 'vei interface name'
+                      ;
+          type ncd:ifname ;
+        }
+        leaf status {
+          type enumeration {
+            enum up {
+              value 1 ;
+              description 'vei up'
+                          ;
+            }
+            enum down {
+              value 0 ;
+              description 'vei down'
+                          ;
+            }
+          }
+        }
+        leaf subclient {
+          type string ;
+        }
+        leaf client {
+          type string ;
+        }
+        leaf bandwidth {
+          type uint32 ;
+        }
+        leaf group {
+          type string ;
+        }
+        list bind {
+          key phy-interface ;
+          leaf phy-interface {
+            type string ;
+          }
+        }
+      }
+      ncd:revise-date 2021-04-01 ;
+    }
+    container flexegroup_bws {
+      list flexegroup_bw {
+        key ifname ;
+        leaf ifname {
+          description 'flexegroup interface name'
+                      ;
+          type ncd:ifname ;
+        }
+        leaf total-bandwidth {
+          description 'flexe group total bandwidth'
+                      ;
+          type string ;
+          units G ;
+        }
+        leaf remain-bandwidth {
+          description 'flexe group remain bandwidth'
+                      ;
+          type string ;
+          units G ;
+        }
+      }
+      ncd:revise-date 2021-11-16 ;
+    }
+    container flexegroup_tss {
+      list flexegroup_ts {
+        key ifname ;
+        leaf ifname {
+          description 'flexegroup interface name'
+                      ;
+          type ncd:ifname ;
+        }
+        container bind-timeslots {
+          list bind {
+            key phy-interface ;
+            leaf phy-interface {
+              type string ;
+            }
+            leaf remain-timeslots {
+              type string ;
+            }
+            leaf used-timeslots {
+              type string ;
+            }
+          }
+        }
+      }
+      ncd:revise-date 2021-11-16 ;
+    }
+    container flexeclient_tss {
+      if-feature spn {
+        ncd:revise-date 2021-12-29 ;
+      }
+      list flexeclient_ts {
+        key ifname ;
+        leaf ifname {
+          description 'flexeclient interface name'
+                      ;
+          type ncd:ifname ;
+        }
+        leaf remain-timeslots {
+          description 'remain timeslots'
+                      ;
+          type string ;
+        }
+        leaf used-timeslots {
+          description 'used timeslots'
+                      ;
+          type string ;
+        }
+      }
+      ncd:revise-date 2021-12-03 ;
+    }
+    container flexesubclient_tss {
+      if-feature spn ;
+      list flexesubclient_ts {
+        key phy_interface ;
+        leaf phy_interface {
+          type ncd:ifname ;
+        }
+        leaf remain-timeslots {
+          type string ;
+        }
+        leaf used-timeslots {
+          type string ;
+        }
+      }
+      ncd:revise-date 2021-12-29 ;
+    }
+    ncd:revise-date 2020-02-17 ;
+  }
+}

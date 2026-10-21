@@ -1,0 +1,1093 @@
+module zxr10-bras-sa {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/bras/bras-sa" ;
+  prefix bras-sa ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  revision 2025-05-29 {
+    description 'Add rate-limit' ;
+  }
+
+  revision 2025-05-27 ;
+
+  revision 2025-04-03 {
+    description 'Flow table limit per user change' ;
+  }
+
+  revision 2024-06-20 {
+    description 'flow-table alarm-threshold default change' ;
+  }
+
+  revision 2024-05-28 {
+    reference "sa-link vrf-name len error" ;
+  }
+
+  revision 2024-05-20 ;
+
+  revision 2024-05-17 ;
+
+  revision 2024-05-07 {
+    description 'add sa suppress' ;
+  }
+
+  revision 2024-04-08 ;
+
+  revision 2024-03-18 ;
+
+  revision 2024-03-11 ;
+
+  revision 2024-02-22 ;
+
+  revision 2023-12-04 {
+    description 'Add drop packet stats all policy' ;
+  }
+
+  revision 2023-11-27 {
+    description 'Add qos policy.' ;
+  }
+
+  revision 2023-11-21 {
+    description 'Add flow table alarm threshold policy' ;
+  }
+
+  revision 2023-10-15 {
+    description 'Add show flow table and persist match policy ' ;
+  }
+
+  revision 2023-10-08 {
+    description 'Add unicom-rms cfg.' ;
+  }
+
+  revision 2023-07-13 {
+    description 'Add enhance policy.' ;
+  }
+
+  revision 2022-04-18 {
+    description 'create sa yang' ;
+  }
+
+  container configuration {
+    container sa {
+      container sa-groups {
+        presence sa-groups ;
+        list sa-group {
+          max-elements 32 ;
+          key sa-group-name ;
+          leaf sa-group-name {
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          container interfaces {
+            presence interfaces ;
+            list interface {
+              max-elements 32 ;
+              key interface-name ;
+              leaf interface-name {
+                type ncd:ifname {
+                  length 1..31 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container sa-instances {
+        presence sa-instances ;
+        list sa-instance {
+          key instance-name ;
+          leaf instance-name {
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          container sa-begin {
+            leaf time-range {
+              type string {
+                length 1..31 ;
+
+              }
+
+            }
+
+          }
+
+          container sa-link {
+            container base-source-port {
+              presence base-source-port ;
+              leaf port-id {
+                type uint16 {
+                  range 1025..65535 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+            container links {
+              presence links ;
+              list link {
+                key 'source-ip dest-ip dest-port spu-name' ;
+                leaf source-ip {
+                  type ncd:ipv4-address ;
+
+                }
+
+                leaf dest-ip {
+                  type ncd:ipv4-address ;
+
+                }
+
+                leaf dest-port {
+                  type uint16 {
+                    range 1025..65535 ;
+
+                  }
+
+                }
+
+                leaf spu-name {
+                  type string {
+                    length 1..12 ;
+
+                  }
+
+                }
+
+              }
+
+              list link-vrf {
+                key 'source-ip vrf-name dest-ip dest-port spu-name' ;
+                leaf source-ip {
+                  type ncd:ipv4-address ;
+
+                }
+
+                leaf vrf-name {
+                  type string {
+                    length 1..32 ;
+
+                  }
+
+                }
+
+                leaf dest-ip {
+                  type ncd:ipv4-address ;
+
+                }
+
+                leaf dest-port {
+                  type uint16 {
+                    range 1025..65535 ;
+
+                  }
+
+                }
+
+                leaf spu-name {
+                  type string {
+                    length 1..12 ;
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            container tcp {
+              leaf adjust-mss {
+                type uint16 {
+                  range 500..1460 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              presence tcp ;
+              ncd:revise-date 2024-03-11 ;
+            }
+
+          }
+
+          container nodes {
+            list node {
+              key node-id ;
+              leaf node-id {
+                type uint16 {
+                  range 1..64 ;
+
+                }
+
+              }
+
+              leaf spu-name {
+                type ncd:cpu {
+                  length 1..31 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          container sa-groups {
+            presence sa-groups ;
+            list sa-group {
+              key sa-group-name ;
+              leaf sa-group-name {
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf sa-sequence {
+                type uint16 {
+                  range 1..256 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              choice switch-type {
+                mandatory true ;
+                case case-hours {
+                  leaf hours {
+                    type uint16 {
+                      range 1..720 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                case case-days {
+                  leaf days {
+                    type uint16 {
+                      range 1..366 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          container sa-switch {
+            presence sa-switch ;
+            leaf sa {
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+
+                enum disable {
+                  value 0 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container enhance-policys {
+        presence enhance-policys ;
+        list enhance-policy {
+          max-elements 255 ;
+          key policy-name ;
+          leaf policy-name {
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          container ipv4-policy {
+            leaf route-map {
+              type string {
+                length 1..200 ;
+
+              }
+
+            }
+
+          }
+
+          container ipv6-policy {
+            leaf route-map {
+              type string {
+                length 1..200 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2023-07-13 ;
+      }
+
+      container unicom-rms {
+        list server-ipv4 {
+          key 'server-ipv4 link-port' ;
+          leaf server-ipv4 {
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf link-port {
+            type uint16 {
+              range 1..65535 ;
+
+            }
+
+          }
+
+        }
+
+        presence unicom-rms ;
+        ncd:revise-date 2023-10-08 ;
+      }
+
+      container sa-persistence-policies {
+        container match {
+          list domain {
+            leaf domain-name {
+              type string {
+                length 1..31 ;
+
+              }
+
+            }
+
+            key domain-name ;
+            description 'Configure domain matching rule' ;
+          }
+
+          list interface {
+            leaf interface-name {
+              type ncd:ifname ;
+
+            }
+
+            key interface-name ;
+            description 'Configure interface matching rule' ;
+          }
+
+          list username {
+            leaf username {
+              type string {
+                length 1..127 ;
+
+              }
+
+            }
+
+            key username ;
+            description 'Configure username matching rule' ;
+            ncd:revise-date 2023-10-20 ;
+          }
+
+          list ipv4-address {
+            leaf start-ipv4 {
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            leaf end-ipv4 {
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            leaf vrf-name {
+              type string {
+                length 1..32 {
+                  description 'Vrf name' ;
+                }
+
+              }
+
+            }
+
+            key 'start-ipv4 end-ipv4 vrf-name' ;
+            description 'Configure the ipv4 match rules' ;
+            ncd:revise-date 2023-10-20 ;
+          }
+
+          list ipv4-address-single {
+            leaf start-ipv4 {
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            leaf vrf-name {
+              type string {
+                length 1..32 {
+                  description 'Vrf name' ;
+                }
+
+              }
+
+            }
+
+            key 'start-ipv4 vrf-name' ;
+            ncd:revise-date 2023-10-20 ;
+          }
+
+          list ipv4-address-no-vrf {
+            leaf start-ipv4 {
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            leaf end-ipv4 {
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            key 'start-ipv4 end-ipv4' ;
+            description 'Configure the ipv4 no vrf match rules' ;
+            ncd:revise-date 2023-10-20 ;
+          }
+
+          list ipv4-address-single-no-vrf {
+            leaf start-ipv4 {
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            key start-ipv4 ;
+            description 'Configure the ipv4 no end ip no vrf match rules' ;
+            ncd:revise-date 2023-10-20 ;
+          }
+
+          list ipv6-address {
+            leaf start-ipv6 {
+              type ncd:ipv6-address-none-zero ;
+
+            }
+
+            leaf end-ipv6 {
+              type ncd:ipv6-address-none-zero ;
+
+            }
+
+            leaf vrf-name {
+              type string {
+                length 1..32 {
+                  description 'Vrf name' ;
+                }
+
+              }
+
+            }
+
+            key 'start-ipv6 end-ipv6 vrf-name' ;
+            description 'Configure the ipv6 match rules,this command need an end ip-address.' ;
+            ncd:revise-date 2023-10-20 ;
+          }
+
+          list ipv6-address-single {
+            leaf start-ipv6 {
+              type ncd:ipv6-address-none-zero ;
+
+            }
+
+            leaf vrf-name {
+              type string {
+                length 1..32 {
+                  description 'Vrf name' ;
+                }
+
+              }
+
+            }
+
+            key 'start-ipv6 vrf-name' ;
+            description 'Configure the ipv6 no end ip match rules' ;
+            ncd:revise-date 2023-10-20 ;
+          }
+
+          list ipv6-address-no-vrf {
+            leaf start-ipv6 {
+              type ncd:ipv6-address-none-zero ;
+
+            }
+
+            leaf end-ipv6 {
+              type ncd:ipv6-address-none-zero ;
+
+            }
+
+            key 'start-ipv6 end-ipv6' ;
+            description 'Configure the ipv6 no vrf match rules' ;
+            ncd:revise-date 2023-10-20 ;
+          }
+
+          list ipv6-address-single-no-vrf {
+            leaf start-ipv6 {
+              type ncd:ipv6-address-none-zero ;
+
+            }
+
+            key start-ipv6 ;
+            description 'Configure the ipv6 no end ip no vrf match rules' ;
+            ncd:revise-date 2023-10-20 ;
+          }
+
+          list ipv6-prefix {
+            leaf ipv6-prefix {
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ipv6-prefix-mask {
+              type uint32 {
+                range 1..128 ;
+
+              }
+
+            }
+
+            leaf ipv6-prefix-len {
+              type uint32 {
+                range 1..128 ;
+
+              }
+
+            }
+
+            leaf vrf-name {
+              type string {
+                length 1..32 {
+                  description 'Vrf name' ;
+                }
+
+              }
+
+            }
+
+            key 'ipv6-prefix ipv6-prefix-mask ipv6-prefix-len vrf-name' ;
+          }
+
+          list ipv6-prefix-no-vrf {
+            leaf ipv6-prefix {
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ipv6-prefix-mask {
+              type uint32 {
+                range 1..128 ;
+
+              }
+
+            }
+
+            leaf ipv6-prefix-len {
+              type uint32 {
+                range 1..128 ;
+
+              }
+
+            }
+
+            key 'ipv6-prefix ipv6-prefix-mask ipv6-prefix-len' ;
+          }
+
+          presence match ;
+        }
+
+        ncd:revise-date 2023-10-15 ;
+      }
+
+      container flow-table {
+        leaf ageing-time {
+          type uint8 {
+            range 1..15 ;
+
+          }
+
+        }
+
+        leaf analysis-interval {
+          type uint8 {
+            range 1..15 ;
+
+          }
+
+        }
+
+        leaf limit-per-user {
+          type uint32 {
+            range 400..3000000 ;
+
+          }
+
+          description 'Flow table limit per user' ;
+          ncd:revise-date 2025-04-03 ;
+        }
+
+        ncd:revise-date 2023-10-15 ;
+      }
+
+      container flow-table-alarm-threshold {
+        presence flow-table-alarm-threshold ;
+        leaf upper-limit {
+          mandatory true ;
+          type uint8 {
+            range 2..100 ;
+
+          }
+
+        }
+
+        leaf lower-limit {
+          mandatory true ;
+          type uint8 {
+            range 1..99 ;
+
+          }
+
+        }
+
+        ncd:revise-date 2023-11-21 ;
+      }
+
+      container qos-policies {
+        list qos-policy {
+          leaf policy-name {
+            type string {
+              length 1..31 ;
+
+            }
+
+            description 'Policy name.' ;
+          }
+
+          max-elements 255 ;
+          key policy-name ;
+          choice policy {
+            case car-input {
+              container car-input {
+                leaf cir {
+                  mandatory true ;
+                  type uint32 {
+                    range 66..16777215 ;
+
+                  }
+
+                  description 'Committed information rate(kbps).' ;
+                }
+
+                leaf cbs {
+                  type uint32 {
+                    range 15..512000 ;
+
+                  }
+
+                  description 'Committed burst size(KB).' ;
+                }
+
+                presence car-input ;
+                description 'Configure the input car.' ;
+              }
+
+            }
+
+            case drop {
+              leaf drop {
+                type enumeration {
+                  enum input {
+                    value 2 ;
+                  }
+
+                }
+
+                description 'Configure the direction of traffic to drop.' ;
+              }
+
+            }
+
+          }
+
+          description 'Configure qos policy.' ;
+          choice set-input-policy {
+            description 'Mark a input packet' ;
+            case dscp {
+              leaf dscp {
+                type uint8 {
+                  range 0..63 ;
+
+                }
+
+              }
+
+            }
+
+            case precedence {
+              leaf precedence {
+                type uint8 {
+                  range 0..7 ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+          leaf nni-rate-limit-switch {
+            type enumeration {
+              enum disable {
+                status current ;
+
+                value 0 ;
+                description 'Disable nni rate limit.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                status current ;
+
+                description 'Enable nni rate limit.' ;
+              }
+
+            }
+
+            mandatory false ;
+            description 'Configure nni rate limit switch.' ;
+            default disable ;
+            config true ;
+            ncd:revise-date 2025-05-29 ;
+          }
+
+          ncd:revise-date 2024-02-22 ;
+        }
+
+        presence qos-policies ;
+        ncd:revise-date 2023-11-27 ;
+      }
+
+      container enhanced-drop-packet {
+        description 'Configure sa enhanced-drop-packet policy' ;
+        container stats {
+          description 'Set statistics rules' ;
+          presence stats ;
+          list all {
+            description 'Set all statistics' ;
+            key all ;
+            leaf all {
+              type enumeration {
+                enum all {
+                  value 1 ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2023-12-04 ;
+      }
+
+      leaf bind-accounting-template {
+        type string {
+          length 1..31 ;
+
+        }
+
+        description 'Accounting template name' ;
+        ncd:revise-date 2024-04-08 ;
+      }
+
+      container service-entity-alarm-threshold {
+        leaf upper-limit {
+          type uint8 {
+            range 2..100 ;
+
+          }
+
+          mandatory true ;
+        }
+
+        leaf lower-limit {
+          mandatory true ;
+          type uint8 {
+            range 1..99 ;
+
+          }
+
+        }
+
+        presence sa-entity-alarm-threshold ;
+        ncd:revise-date 2024-05-20 ;
+      }
+
+      container sa-suppress {
+        leaf switch {
+          status obsolete {
+            ncd:revise-date 2025-05-27 ;
+          }
+
+          type enumeration {
+            enum enable {
+              value 1 ;
+            }
+
+            enum disable {
+              value 0 ;
+            }
+
+          }
+
+          default enable ;
+        }
+
+        choice sa-suppress-switch {
+          case sa-suppress-enable {
+            leaf sa-suppress-enable {
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf effective-users {
+              type enumeration {
+                enum exclude {
+                  value 0 ;
+                }
+
+                enum include {
+                  value 1 ;
+                }
+
+              }
+
+            }
+
+          }
+
+          case sa-suppress-disable {
+            leaf sa-suppress-disable {
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          ncd:revise-date 2025-05-27 ;
+        }
+
+        leaf utilization-threshold-high {
+          type uint8 {
+            range 2..100 ;
+
+          }
+
+          default 90 ;
+        }
+
+        leaf utilization-threshold-low {
+          type uint8 {
+            range 1..99 ;
+
+          }
+
+          default 70 ;
+        }
+
+        ncd:revise-date 2024-05-07 ;
+      }
+
+      container rate-limits {
+        list rate-limit-output {
+          leaf if-name {
+            type ncd:ifname {
+              length 1..31 ;
+
+            }
+
+            description 'Configure the name of the attaching interface.' ;
+            config true ;
+          }
+
+          leaf cir {
+            type uint32 {
+              range 8..4294967295 ;
+
+            }
+
+            description 'Configure the CIR(Committed Information Rate) value (default: kilobits per second).' ;
+            mandatory true ;
+            config true ;
+          }
+
+          leaf cir-unit {
+            type enumeration {
+              enum kbps {
+                status current ;
+
+                value 1 ;
+              }
+
+              enum mbps {
+                value 2 ;
+                status current ;
+
+              }
+
+              enum gbps {
+                value 3 ;
+                status current ;
+
+              }
+
+            }
+
+            description 'Set cir unit, such as kbps, mbps, gbps.' ;
+            default kbps ;
+            config true ;
+          }
+
+          leaf cbs {
+            type uint32 {
+              range 1..5120000 ;
+
+            }
+
+            description 'Configure the CBS(Committed Burst Size) size in KB.' ;
+            config true ;
+          }
+
+          container pir {
+            leaf pir {
+              type uint32 {
+                range 8..4294967295 ;
+
+              }
+
+              description 'Configure the PIR(Peak Information Rate) value (default: kilobits per second).' ;
+              mandatory true ;
+              config true ;
+            }
+
+            leaf pir-unit {
+              type enumeration {
+                enum kbps {
+                  value 1 ;
+                  status current ;
+
+                }
+
+                enum mbps {
+                  value 2 ;
+                  status current ;
+
+                }
+
+                enum gbps {
+                  value 3 ;
+                  status current ;
+
+                }
+
+              }
+
+              description 'Set pir unit, such as kbps, mbps, gbps.' ;
+              default kbps ;
+              mandatory false ;
+              config true ;
+            }
+
+            leaf pbs {
+              type uint32 {
+                range 1..5120000 ;
+
+              }
+
+              mandatory false ;
+              description 'Configure the PBS(Peak Burst Size) size in KB.' ;
+              config true ;
+            }
+
+            description 'Configure the pir parameters.' ;
+            presence pir ;
+            config true ;
+          }
+
+          config true ;
+          max-elements 128 ;
+          key if-name ;
+        }
+
+        ncd:revise-date 2025-05-29 ;
+      }
+
+    }
+
+  }
+
+}

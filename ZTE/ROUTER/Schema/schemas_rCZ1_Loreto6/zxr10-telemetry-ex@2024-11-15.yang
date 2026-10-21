@@ -1,0 +1,552 @@
+module zxr10-telemetry-ex {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/telemetry" ;
+  prefix zxr10-telemetry-ex ;
+  import openconfig-telemetry {
+    prefix oc-telemetry ;
+  }
+
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'Data model which creates the configuration for the telemetry
+systems and functions on the device.' ;
+  revision 2024-11-15 {
+    description 'Add container congestion-avoid.' ;
+  }
+
+  revision 2023-11-10 {
+    description 'proto-name gNMI.' ;
+  }
+
+  revision 2023-04-03 {
+    description 'proto-name telecom-dci.' ;
+  }
+
+  revision 2021-10-15 {
+    description 'Add container json.' ;
+  }
+
+  revision 2021-05-18 {
+    description 'Add case self-defined in conditions.' ;
+  }
+
+  revision 2021-01-22 {
+    description 'Adding leaf pki-profile to /oc-telemetry:telemetry-system/oc-telemetry:destination-groups/oc-telemetry:destination-group/oc-telemetry:destinations/oc-telemetry:destination/oc-telemetry:config.
+Adding leaf pki-profile to /oc-telemetry:telemetry-system/oc-telemetry:destination-groups/oc-telemetry:destination-group/oc-telemetry:destinations/oc-telemetry:destination/oc-telemetry:state.' ;
+  }
+
+  revision 2021-01-12 {
+    description 'condition add multi.' ;
+  }
+
+  revision 2020-11-10 {
+    description 'proto-name add cmcc-spn and telecom-olt.' ;
+  }
+
+  revision 2020-07-27 {
+    description 'Add container proto.' ;
+  }
+
+  revision 2019-08-22 {
+    description 'Add container system-id.' ;
+  }
+
+  revision 2019-05-24 {
+    description 'Add container destinations-vrf.' ;
+    reference "0.1.0" ;
+  }
+
+  revision 2018-12-25 {
+    description 'Initial release.' ;
+    reference "0.1.0" ;
+  }
+
+  feature proto {
+    description 'Proto feature.' ;
+  }
+
+  typedef proto-name {
+    type enumeration {
+      enum zte-v1 {
+        value 1 ;
+        description 'The 1st version proto of ZTE.' ;
+      }
+
+      enum zte-v2 {
+        value 2 ;
+        description 'The 2nd version proto of ZTE.' ;
+      }
+
+      enum baidu {
+        value 3 ;
+        description 'The proto of Baidu.' ;
+      }
+
+      enum tencent {
+        value 51 ;
+        description 'The proto of Tencent.' ;
+      }
+
+      enum cmcc-spn {
+        value 4 ;
+        description 'The proto of CMCC Slicing Packet Network.' ;
+      }
+
+      enum telecom-olt {
+        value 5 ;
+        description 'The proto of Telecom Optical Line Terminal.' ;
+      }
+
+      enum telecom-dci {
+        value 6 ;
+        description 'The proto of Telecom DCI.' ;
+      }
+
+      enum gnmi {
+        value 7 ;
+        description 'The proto of gNMI.' ;
+      }
+    }
+
+    description 'The proto name used in grpc connections.' ;
+  }
+
+  augment "/oc-telemetry:telemetry-system/oc-telemetry:sensor-groups/oc-telemetry:sensor-group/oc-telemetry:sensor-paths/oc-telemetry:sensor-path/oc-telemetry:config" {
+    description 'Adding condition to sensor-path.' ;
+    container conditions {
+      description 'Configuration parameters relating to the sensor path condition.' ;
+      choice choice {
+        description 'The choice of conditions.' ;
+        case single {
+          description 'Single express.' ;
+          leaf express {
+            description 'The express allows certain values in the the telemetry stream.' ;
+            type ncd:string-with-blank {
+              length 1..107 ;
+
+              pattern '(^\S+\s{1}(eq|ge|gt|le|lt)\s{1}\S+$)|(^\S+\s{1}(eq|ge|gt|le|lt)\s{1}\S+\s{1}(and|or)\s{1}(eq|ge|gt|le|lt)\s{1}\S+$)' ;
+
+            }
+
+          }
+
+        }
+
+        case multi {
+          description 'Multi filters.' ;
+          container filters {
+            description 'Top level container for filters. If the filter criteria are met, sampled data is sent to a collector. A filter and heartbeat interval or redundancy suppression cannot be configured at the same time.' ;
+            list filter {
+              description 'Filter list of a sampling path.' ;
+              key "name" ;
+              max-elements 1 ;
+              leaf name {
+                description 'Filter name of a sampling path.' ;
+                type string {
+                  length 1..8 ;
+
+                  pattern "[A-Za-z0-9]+" ;
+
+                }
+
+              }
+
+              leaf condition-relation {
+                description 'Relationship between filter criteria in a filter of a sampling path.' ;
+                type enumeration {
+                  enum and {
+                    value 1 ;
+                    description 'The relationship between filter criteria in a filter of a sampling path is and.' ;
+                  }
+
+                  enum or {
+                    value 2 ;
+                    description 'The relationship between filter criteria in a filter of a sampling path is or.' ;
+                  }
+
+                }
+
+                default and ;
+              }
+
+              container conditions {
+                description 'Top level container for filter criteria, including the filter information such as op-field, op-type, and op-value.' ;
+                list condition {
+                  description 'List of filter criteria.' ;
+                  key "op-field op-type op-value" ;
+                  max-elements 2 ;
+                  leaf op-field {
+                    description 'Reference to the op-field of the filter criterion.' ;
+                    type string {
+                      length 1..63 ;
+
+                    }
+
+                  }
+
+                  leaf op-type {
+                    description 'Reference to the op-type of the filter criterion.' ;
+                    type enumeration {
+                      enum eq {
+                        value 0 ;
+                        description 'Equal.' ;
+                      }
+
+                      enum gt {
+                        value 1 ;
+                        description 'Greater than.' ;
+                      }
+
+                      enum ge {
+                        value 2 ;
+                        description 'Greater than or equal.' ;
+                      }
+
+                      enum lt {
+                        value 3 ;
+                        description 'Less than.' ;
+                      }
+
+                      enum le {
+                        value 4 ;
+                        description 'Less than or equal.' ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf op-value {
+                    description 'Comparison value of the filter criterion. For the actual value range, see the definition of op-field in the YANG model.' ;
+                    type string {
+                      length 1..63 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2021-01-12 ;
+        }
+
+        case self-defined-event {
+          description 'Self defined event.' ;
+          container self-defined-event {
+            description 'Self defined event.' ;
+            leaf level {
+              description 'The level of self defined event.' ;
+              type uint8 ;
+
+            }
+
+            leaf description {
+              description 'The description of self defined event.' ;
+              type string {
+                length 1..63 ;
+
+              }
+
+            }
+
+            leaf suppress-redundant {
+              description 'The suppress redundant time in seconds of self defined event (unit:s).' ;
+              type uint16 {
+                range 0..3600 ;
+
+              }
+
+            }
+
+            container filters {
+              description 'The filters of self defined event.' ;
+              list filter {
+                description 'The filter list of self defined event.' ;
+                key "name" ;
+                max-elements 1 ;
+                leaf name {
+                  description 'Filter name of self defined event.' ;
+                  type string {
+                    length 1..8 ;
+
+                    pattern "[A-Za-z0-9]+" ;
+
+                  }
+
+                }
+
+                leaf condition-relation {
+                  description 'Relationship between filter criteria in a filter of a self defined event.' ;
+                  type enumeration {
+                    enum and {
+                      value 1 ;
+                      description 'The relationship between filter criteria in a filter of a sampling path is and.' ;
+                    }
+
+                    enum or {
+                      value 2 ;
+                      description 'The relationship between filter criteria in a filter of a sampling path is or.' ;
+                    }
+
+                  }
+
+                  default and ;
+                }
+
+                container conditions {
+                  description 'Top level container for filter criteria, including the filter information such as op-field, op-type, and op-value.' ;
+                  list condition {
+                    description 'List of filter criteria.' ;
+                    key "op-field op-type op-value" ;
+                    max-elements 2 ;
+                    leaf op-field {
+                      description 'Reference to the op-field of the filter criterion.' ;
+                      type string {
+                        length 1..63 ;
+
+                      }
+
+                    }
+
+                    leaf op-type {
+                      description 'Reference to the op-type of the filter criterion.' ;
+                      type enumeration {
+                        enum eq {
+                          value 0 ;
+                          description 'Equal.' ;
+                        }
+
+                        enum gt {
+                          value 1 ;
+                          description 'Greater than.' ;
+                        }
+
+                        enum ge {
+                          value 2 ;
+                          description 'Greater than or equal.' ;
+                        }
+
+                        enum lt {
+                          value 3 ;
+                          description 'Less than.' ;
+                        }
+
+                        enum le {
+                          value 4 ;
+                          description 'Less than or equal.' ;
+                        }
+
+                      }
+
+                    }
+
+                    leaf op-value {
+                      description 'Comparison value of the filter criterion. For the actual value range, see the definition of op-field in the YANG model.' ;
+                      type string {
+                        length 1..63 ;
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2021-05-18 ;
+        }
+
+      }
+
+    }
+
+  }
+
+  augment "/oc-telemetry:telemetry-system/oc-telemetry:destination-groups/oc-telemetry:destination-group" {
+    description 'Adding destination with vrf to destination-group.' ;
+    container destinations-vrf {
+      description 'The destination container lists the destination information such as IP address, VRF name and port of the telemetry messages from the network element.' ;
+      list destination {
+        description 'List of telemetry stream destinations.' ;
+        key "destination-address destination-port vrf" ;
+        leaf destination-address {
+          description 'Reference to the destination address of the telemetry stream.' ;
+          type ncd:ip-address-string {
+            length 1..46 ;
+
+          }
+
+        }
+
+        leaf destination-port {
+          description 'Reference to the port number of the stream destination.' ;
+          type uint16 {
+            range 1..65535 ;
+
+          }
+
+        }
+
+        leaf vrf {
+          description 'VPN routing/forwarding instance (VRF) name.' ;
+          type string {
+            length 1..32 ;
+
+          }
+
+        }
+
+        leaf pki-profile {
+          description 'PKI profile name.' ;
+          type string {
+            length 1..63 ;
+
+          }
+
+          ncd:revise-date 2021-01-22 ;
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2019-05-24 ;
+  }
+
+  augment "/oc-telemetry:telemetry-system/oc-telemetry:destination-groups/oc-telemetry:destination-group/oc-telemetry:destinations/oc-telemetry:destination/oc-telemetry:config" {
+    description 'Adding leaf pki-profile to /oc-telemetry:telemetry-system/oc-telemetry:destination-groups/oc-telemetry:destination-group/oc-telemetry:destinations/oc-telemetry:destination/oc-telemetry:config.' ;
+    leaf pki-profile {
+      description 'PKI profile name.' ;
+      type string {
+        length 1..63 ;
+
+      }
+
+    }
+
+    ncd:revise-date 2021-01-22 ;
+  }
+
+  augment "/oc-telemetry:telemetry-system/oc-telemetry:destination-groups/oc-telemetry:destination-group/oc-telemetry:destinations/oc-telemetry:destination/oc-telemetry:state" {
+    description 'Adding leaf pki-profile to /oc-telemetry:telemetry-system/oc-telemetry:destination-groups/oc-telemetry:destination-group/oc-telemetry:destinations/oc-telemetry:destination/oc-telemetry:state.' ;
+    leaf pki-profile {
+      description 'PKI profile name.' ;
+      config false ;
+      type string {
+        length 1..63 ;
+
+      }
+
+    }
+
+    ncd:revise-date 2021-01-22 ;
+  }
+
+  augment "/oc-telemetry:telemetry-system" {
+    description 'Adding node under telemetry-system.' ;
+    container system-id {
+      description 'System ID.' ;
+      leaf name {
+        description 'system ID name.' ;
+        type string {
+          length 1..63 ;
+
+        }
+
+      }
+
+    }
+
+    container proto {
+      if-feature proto ;
+
+      description 'The proto used in grpc connections.' ;
+      leaf name {
+        description 'The proto name used in grpc connections.' ;
+        type proto-name ;
+
+      }
+
+      ncd:revise-date 2020-07-27 ;
+    }
+
+    container json {
+      description 'Encode JSON.' ;
+      leaf only-content {
+        description 'Content layer JSON encoding only.' ;
+        type boolean ;
+
+        default false ;
+      }
+
+      ncd:revise-date 2021-10-15 ;
+    }
+
+    container congestion-avoid {
+      description 'The congestion avoidance function for telemetry gRPC queues.' ;
+      leaf switch {
+        description 'The switch of congestion avoidance.' ;
+        type enumeration {
+          enum disable {
+            value 1 ;
+            description 'Close congestion-avoid switch.' ;
+          }
+
+          enum enable {
+            value 2 ;
+            description 'Open congestion-avoid switch.' ;
+          }
+
+        }
+
+        default enable ;
+      }
+
+      leaf level {
+        description 'The level of congestion avoidance.' ;
+        type enumeration {
+          enum low {
+            value 1 ;
+            description 'The low level of congestion avoidance.' ;
+          }
+
+          enum middle {
+            value 2 ;
+            description 'The middle level of congestion avoidance.' ;
+          }
+
+          enum high {
+            value 3 ;
+            description 'The high level of congestion avoidance.' ;
+          }
+        
+        }
+
+        default high ;
+      }
+
+      ncd:revise-date 2024-11-15 ;
+    }
+
+    ncd:revise-date 2019-08-22 ;
+  }
+
+}

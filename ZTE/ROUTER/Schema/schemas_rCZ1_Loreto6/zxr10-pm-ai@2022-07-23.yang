@@ -1,0 +1,437 @@
+module zxr10-pm-ai {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/pm-ai'
+            ;
+  prefix pm-ai ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2021-02-19 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2022-07-23 {
+    description 'A new feature is added for each node, and a total of seven fea'
+              + 'tures are added.'+"\n"
+              + 'energy-saving-switch-cfg, energy-weight-cfg, energy-broadband-'
+              + 'cfg, energy-saving-static-cfg, energy-saving-mode-query, energ'
+              + 'y-file-update-operation, model-training-response, energy-model'
+              + '-training-req'
+                ;
+  }
+  revision 2022-04-28 {
+    description 'Add container energy-saving-static'
+                ;
+  }
+  revision 2022-04-27 ;
+  feature ai-energy-saving ;
+  feature energy-saving-switch-cfg {
+    ncd:revise-date 2022-07-23 ;
+  }
+  feature energy-weight-cfg {
+    ncd:revise-date 2022-07-23 ;
+  }
+  feature energy-broadband-cfg {
+    ncd:revise-date 2022-07-23 ;
+  }
+  feature energy-saving-static-cfg {
+    ncd:revise-date 2022-07-23 ;
+  }
+  feature energy-saving-mode-query {
+    ncd:revise-date 2022-07-23 ;
+  }
+  feature energy-file-update-operation {
+    ncd:revise-date 2022-07-23 ;
+  }
+  feature model-training-response {
+    ncd:revise-date 2022-07-23 ;
+  }
+  feature energy-model-training-req {
+    ncd:revise-date 2022-07-23 ;
+  }
+  container configuration {
+    container energy-saving-switch-model-configuration {
+      if-feature ai-energy-saving ;
+      if-feature energy-saving-switch-cfg {
+        ncd:revise-date 2022-07-23 ;
+      }
+      choice energy-saving-switch {
+        default close ;
+        case open {
+          leaf energy-saving-mode {
+            type enumeration {
+              enum standard-energy-saving-mode {
+                value 1 ;
+              }
+              enum basic-energy-saving-mode {
+                value 2 ;
+              }
+              enum deep-energy-saving-mode {
+                value 3 ;
+              }
+              enum extreme-energy-saving-mode {
+                value 4 ;
+              }
+            }
+          }
+          leaf virtual-energy-saving-switch {
+            type enumeration {
+              enum close {
+                value 1 ;
+              }
+              enum open {
+                value 2 ;
+              }
+            }
+          }
+        }
+        case close {
+          leaf disable {
+            type empty ;
+          }
+        }
+      }
+    }
+    container energy-weight-configuration {
+      if-feature ai-energy-saving ;
+      if-feature energy-weight-cfg {
+        ncd:revise-date 2022-07-23 ;
+      }
+      list energy-weight-configurations {
+        key 'model-usage model-type'
+            ;
+        leaf model-usage {
+          description 'What is the model for'
+                      ;
+          type enumeration {
+            enum long-term-forecast {
+              value 1 ;
+              description 'Long term forecast'
+                          ;
+            }
+            enum short-term-forecast {
+              value 2 ;
+              description 'Short term forecast'
+                          ;
+            }
+          }
+        }
+        leaf model-type {
+          type enumeration {
+            enum STL {
+              value 1 ;
+            }
+            enum ARIMA {
+              value 2 ;
+            }
+            enum LSTM {
+              value 3 ;
+            }
+            enum EXPONENTIAL {
+              value 4 ;
+            }
+          }
+        }
+        leaf model-weight {
+          type uint8 {
+            range 0..5 {
+              description 'Model weight configuration value range'
+                          ;
+            }
+          }
+        }
+      }
+    }
+    container energy-conservation-broadband {
+      if-feature ai-energy-saving ;
+      if-feature energy-broadband-cfg {
+        ncd:revise-date 2022-07-23 ;
+      }
+      list energy-conservation-broadbands {
+        key 'if-name energy-saving-time-stamp'
+            ;
+        leaf if-name {
+          type ncd:string-with-blank ;
+        }
+        leaf energy-saving-time-stamp {
+          type ncd:string-with-blank ;
+        }
+        leaf sender-bandwidth {
+          description 'Bandwidth of sender'
+                      ;
+          type uint32 {
+            range 1..1024 ;
+          }
+        }
+        leaf receiver-bandwidth {
+          description 'Receiver bandwidth'
+                      ;
+          type uint32 {
+            range 1..1024 ;
+          }
+        }
+      }
+    }
+    container energy-saving-static {
+      if-feature ai-energy-saving ;
+      if-feature energy-saving-static-cfg {
+        ncd:revise-date 2022-07-23 ;
+      }
+      list energy-saving-statics {
+        key 'shelf slot subslot'
+            ;
+        leaf shelf {
+          description 'Shelf number.'
+                      ;
+          type int8 {
+            range 0..127 ;
+          }
+        }
+        leaf slot {
+          description 'Slot number.'
+                      ;
+          type int8 {
+            range 1..127 ;
+          }
+        }
+        leaf subslot {
+          description 'Subslot number, the default value is 0.'
+                      ;
+          type uint8 ;
+        }
+        leaf status {
+          type enumeration {
+            enum invalid {
+              value 0 ;
+            }
+            enum close {
+              value 1 ;
+            }
+            enum open {
+              value 2 ;
+            }
+          }
+        }
+      }
+      ncd:revise-date 2022-04-28 ;
+    }
+  }
+  container state {
+    config false ;
+    container energy-saving-power-consumption {
+      if-feature ai-energy-saving ;
+      if-feature energy-saving-mode-query {
+        ncd:revise-date 2022-07-23 ;
+      }
+      list energy-saving-power-consumptions {
+        key energy-saving-time-stamp ;
+        ncd:select 'start-energy-saving-time end-energy-saving-time'
+                   ;
+        leaf start-energy-saving-time {
+          description 'Start time of power consumption'
+                      ;
+          type ncd:string-with-blank ;
+        }
+        leaf end-energy-saving-time {
+          description 'Endtime of power consumption'
+                      ;
+          type ncd:string-with-blank ;
+        }
+        leaf energy-saving-time-stamp {
+          description timestamp ;
+          type ncd:string-with-blank ;
+        }
+        leaf energy-saving-mode {
+          description 'Energy saving mode'
+                      ;
+          type enumeration {
+            enum energy-saving-switch-close {
+              value 0 ;
+            }
+            enum standard-energy-saving-mode {
+              value 1 ;
+            }
+            enum basic-energy-saving-mode {
+              value 2 ;
+            }
+            enum deep-energy-saving-mode {
+              value 3 ;
+            }
+            enum extreme-energy-saving-mode {
+              value 4 ;
+            }
+          }
+        }
+        leaf virtual-energy-saving-switch {
+          type enumeration {
+            enum close {
+              value 0 ;
+            }
+            enum open {
+              value 1 ;
+            }
+          }
+        }
+        leaf power-consumption-before-energy-saving {
+          description 'Power consumption before energy saving'
+                      ;
+          type uint16 {
+            range 0..65535 ;
+          }
+        }
+        leaf power-consumption-after-energy-saving {
+          description 'Power consumption after energy saving'
+                      ;
+          type uint16 {
+            range 0..65535 ;
+          }
+        }
+        leaf energy-saving-state {
+          description 'Energy-saving state'
+                      ;
+          type enumeration {
+            enum start-preparation {
+              value 1 ;
+              description 'Start preparation'
+                          ;
+            }
+            enum partially-ready {
+              value 2 ;
+              description 'Partially ready'
+                          ;
+            }
+            enum fully-ready {
+              value 3 ;
+              description 'Fully ready'
+                          ;
+            }
+            enum risk-alert {
+              value 4 ;
+              description 'Risk alert'
+                          ;
+            }
+            enum ready-exit {
+              value 5 ;
+              description 'Ready to exit'
+                          ;
+            }
+            enum fully-exit {
+              value 6 ;
+              description 'Fully to exit'
+                          ;
+            }
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    container ai {
+      container energy-file-update {
+        if-feature ai-energy-saving ;
+        if-feature energy-file-update-operation {
+          ncd:revise-date 2022-07-23 ;
+        }
+        list energy-file-updates {
+          key 'model-usage model-type'
+              ;
+          leaf model-usage {
+            description 'What is the model for'
+                        ;
+            type enumeration {
+              enum long-term-forecast {
+                value 1 ;
+                description 'Long term forecast'
+                            ;
+              }
+              enum short-term-forecast {
+                value 2 ;
+                description 'Short term forecast'
+                            ;
+              }
+            }
+          }
+          leaf model-type {
+            description 'Type of model'
+                        ;
+            type enumeration {
+              enum LSTM {
+                value 3 ;
+                description LSTM ;
+              }
+            }
+          }
+          leaf model-file-path {
+            description 'Model file path, for example:ftp://test:test@192.168.0'
+                      + '.1:21/profile'
+                        ;
+            type ncd:string-all-with-chinese ;
+          }
+          leaf model-file-name {
+            description 'Model file name'
+                        ;
+            type ncd:string-all-with-chinese ;
+          }
+          leaf vrfname {
+            type string ;
+          }
+          leaf localip {
+            description 'example: 1.2.3.4'
+                        ;
+            type ncd:ipv4-address-none-zero ;
+          }
+        }
+      }
+      container model-training-response-status {
+        if-feature ai-energy-saving ;
+        if-feature model-training-response {
+          ncd:revise-date 2022-07-23 ;
+        }
+        leaf status {
+          description 'Identifies the model training request that the network m'
+                    + 'anager received the response successfully.'+"\n"
+                    + 'Value is 0: the command response is successfully receive'
+                    + 'd.'
+                      ;
+          type uint8 ;
+        }
+      }
+    }
+  }
+  notification event {
+    container energy-model-training-request {
+      if-feature ai-energy-saving ;
+      if-feature energy-model-training-req {
+        ncd:revise-date 2022-07-23 ;
+      }
+      config false ;
+      leaf model-usage {
+        type enumeration {
+          enum long-term-forecast {
+            value 1 ;
+            description 'Long term forecast'
+                        ;
+          }
+          enum short-term-forecast {
+            value 2 ;
+            description 'Short term forecast'
+                        ;
+          }
+        }
+      }
+      leaf model-type {
+        type enumeration {
+          enum LSTM {
+            value 3 ;
+            description LSTM ;
+          }
+        }
+      }
+    }
+  }
+}

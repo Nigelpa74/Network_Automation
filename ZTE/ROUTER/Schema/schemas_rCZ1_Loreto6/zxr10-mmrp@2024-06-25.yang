@@ -1,0 +1,91 @@
+module zxr10-mmrp {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/mmrp" ;
+  prefix mmrp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    revision-date 2013-11-22 ;
+    prefix ncd ;
+  }
+
+  description 'The netconf module to describe the MMRP.' ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  organization "ZTE Corporation" ;
+  revision 2024-06-25 {
+    description '1.Change the length of b-vpls name to 32' ;
+  }
+
+  revision 2023-04-20 {
+    description 'Initial version.' ;
+  }
+
+  container configuration {
+    container mmrp {
+      container mmrp-instances {
+        list mmrp-instance {
+          leaf b-vpls-name {
+            type string ;
+
+            description 'B-VPLS instance name.' ;
+          }
+
+          leaf state {
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description 'Enable MMRP instance status' ;
+              }
+
+              enum disable {
+                value 2 ;
+                description 'Disable MMRP instance status' ;
+              }
+
+            }
+
+            default disable ;
+            description 'MMRP instance state.' ;
+          }
+
+          key b-vpls-name ;
+          description 'MMRP instance information.' ;
+        }
+
+        description 'MMRP instance information.' ;
+      }
+
+      container times {
+        list time {
+          leaf b-vpls-name {
+            type string ;
+
+            description 'B-VPLS instance name.' ;
+          }
+
+          leaf leave-all-time {
+            type uint32 {
+              range 20..3275 ;
+
+            }
+
+            default 100 ;
+            units 100ms ;
+            description 'MMRP packet sending period.' ;
+          }
+
+          key b-vpls-name ;
+          description 'MMRP time information.' ;
+        }
+
+        description 'MMRP time information.' ;
+      }
+
+      description 'MMRP configuration information.' ;
+    }
+
+    description 'MMRP configuration information.' ;
+  }
+
+}

@@ -1,0 +1,5722 @@
+module zxr10-cgn-af {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/cgn-af" ;
+  prefix cgn-af ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2017-08-15 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe CGN.' ;
+  revision 2025-04-10 {
+    description 'Add http-alg-feature.' ;
+  }
+
+  revision 2024-10-31 {
+    description '1）Modified some comments.
+2）Add an enumeration value for the node:
+configuration/af-nodes/af-node/cgn/instance-list/default-instance/location-list/location/track/type.' ;
+  }
+
+  revision 2023-12-05 {
+    description 'Modify nodes:
+configuration\af-nodes\af-node\cgn\pool-list\nat-pool\section-list\section\section-no range from 1-200 to 1-2000
+configuration\af-nodes\af-node\cgn\pool-list\nat-pool\max-number range from 1-200 to 1-2000
+configuration\af-nodes\af-node\cgn\pool-list\nat-pool\max-number default 200
+configuration\af-nodes\af-node\cgn\pool-list\pat-pool\section-list\section\section-no range from 1-200 to 1-2000
+configuration\af-nodes\af-node\cgn\pool-list\pat-pool\max-number range from 1-200 to 1-2000
+configuration\af-nodes\af-node\cgn\pool-list\pat-pool\max-number default 200
+configuration\af-nodes\af-node\cgn\pool-list\nat-pool\lock-ip-list\lock-ip\lock-ip-type\section\section-no range from 1-200 to 1-2000
+configuration\af-nodes\af-node\cgn\pool-list\pat-pool\lock-ip-list\lock-ip\lock-ip-type\section\section-no range from 1-200 to 1-2000' ;
+  }
+
+  revision 2023-11-28 {
+    description 'modify max-private-address-num range from 1-500000 to 1-1000000' ;
+  }
+
+  revision 2023-04-11 {
+    description 'Add nodes:
+configuration\af-nodes\af-node\cgn\log-list\destination\ipflow\ipflow-list\log-type' ;
+  }
+
+  revision 2022-04-14 {
+    description 'Obsolete nodes as follows:
+configuration\cgn\log-list\log\destination\ipflow\ipflow
+configuration\cgn\log-list\log\destination\ipflow\flow-exporter-name
+Add notes as follows:
+configuration\cgn\log-list\log\destination\ipflow\ipflow-list' ;
+  }
+
+  revision 2022-03-02 {
+    description 'Add nodes:
+configuration\cgn\pool-list\pat-pool\max-idle-port-range' ;
+  }
+
+  revision 2021-09-11 {
+    description 'Add nodes:
+configuration\af-nodes\af-node\cgn\domain-list\domain\max-trans-per-ipv4-addr-list' ;
+  }
+
+  revision 2021-04-29 {
+    description 'Add the default of the choice as follows:
+configuration\global\cgn-res-alloc-disconnect' ;
+  }
+
+  revision 2021-03-31 {
+    description 'Obsolete leafs as follows:
+configuration\af-nodes\af-node\cgn\pool-list\nat-pool\port-alarm-value
+configuration\af-nodes\af-node\cgn\instance-list\default-instance\allocate-mode
+configuration\af-nodes\af-node\cgn\instance-list\instance\allocate-mode
+Add leafs as follows:
+configuration\af-nodes\af-node\cgn\pool-list\nat-pool\ip-alarm-value' ;
+  }
+
+  revision 2020-05-28 {
+    description 'Add leafs as follows:
+configuration\af-nodes\af-node\cgn\car-policy-template\car-policy-name\description
+configuration\af-nodes\af-node\cgn\user-list\public-user\description
+configuration\af-nodes\af-node\cgn\user-list\vrf-user\description
+Modify leafs inbound-route-map length from 31 to 200' ;
+  }
+
+  revision 2020-05-16 {
+    description 'Change the length of the poolname to 64.' ;
+  }
+
+  revision 2019-10-25 {
+    description 'Initial version.' ;
+  }
+
+  feature static-rule-interface-feature {
+    description 'Static rule interface feature.' ;
+  }
+
+  feature http-alg-feature {
+    description 'HTTP ALG feature.' ;
+    ncd:revise-date 2025-04-10 ;
+  }
+
+  container state {
+    config false ;
+    description 'The state of CGN.' ;
+  }
+
+  container configuration {
+    description 'The configuration of CGN.' ;
+    container af-nodes {
+      description 'Configure AF node.' ;
+      list af-node {
+        description 'Configure AF node.' ;
+        key af-name ;
+        leaf af-name {
+          description 'AF name.' ;
+          type ncd:af-name {
+            length 1..32 {
+              description 'AF name.' ;
+            }
+
+          }
+
+        }
+
+        container cgn {
+          description 'Configure CGN.' ;
+          container instance-list {
+            description 'The CGN instance list.' ;
+            container default-instance {
+              description 'Default instance.' ;
+              presence default-instance ;
+              leaf instance-info {
+                description 'Instance information.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+              container location-list {
+                description 'The location list.' ;
+                list location {
+                  description 'The location.' ;
+                  key node-id ;
+                  leaf node-id {
+                    description 'Node ID.' ;
+                    type uint32 {
+                      range 1..64 ;
+
+                    }
+
+                  }
+
+                  leaf master-cpu {
+                    description 'Master CPU.' ;
+                    type ncd:cpu ;
+
+                    mandatory true ;
+                  }
+
+                  leaf slave-cpu {
+                    description 'Slave CPU.' ;
+                    type ncd:cpu ;
+
+                    default '' ;
+                  }
+
+                  container track {
+                    description 'Event track information.' ;
+                    presence track ;
+                    leaf type {
+                      description 'Track type.' ;
+                      type enumeration {
+                        enum object {
+                          value 1 ;
+                          description 'Track object.' ;
+                        }
+
+                        enum group {
+                          value 2 ;
+                          description 'Track group.' ;
+                        }
+
+                        enum null {
+                          value 0 ;
+                          description 'No track.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                    leaf name {
+                      description 'Track name.' ;
+                      type string ;
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf resource-exhaust-action {
+                description 'Resource exhaustion behavior.' ;
+                type enumeration {
+                  enum drop {
+                    value 0 ;
+                    description 'Drop if resource exhaust' ;
+                  }
+
+                  enum sendIcmpError {
+                    value 1 ;
+                    description 'Send ICMP error if resource exhaust' ;
+                  }
+
+                }
+
+                default drop ;
+              }
+
+              leaf max-blocks-number {
+                description 'Maximum blocks of dynamic port range.' ;
+                type uint8 {
+                  range 0..3 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf statistics-switch {
+                description 'Statistics switch.' ;
+                type enumeration {
+                  enum on {
+                    value 1 ;
+                  }
+
+                  enum off {
+                    value 0 ;
+                  }
+
+                }
+
+                default off ;
+              }
+
+              leaf allocate-mode {
+                status obsolete {
+                  ncd:revise-date 2021-03-31 ;
+                }
+
+                description 'Allocate mode of dynamic port range.' ;
+                type enumeration {
+                  enum prefix {
+                    value 1 ;
+                  }
+
+                  enum softwire {
+                    value 0 ;
+                  }
+
+                }
+
+                default prefix ;
+              }
+
+            }
+
+            list instance {
+              description 'The instance.' ;
+              key instance-name ;
+              leaf instance-name {
+                description 'Instance name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf instance-id {
+                description 'Instance ID.' ;
+                type uint32 {
+                  range 1..63 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              container location-list {
+                description 'The location list.' ;
+                list location {
+                  description 'The location.' ;
+                  key node-id ;
+                  leaf node-id {
+                    description 'Node ID.' ;
+                    type uint32 {
+                      range 1..64 ;
+
+                    }
+
+                  }
+
+                  leaf master-spu {
+                    description 'Master CPU.' ;
+                    type ncd:cpu ;
+
+                    mandatory true ;
+                  }
+
+                  leaf slave-spu {
+                    description 'Slave CPU.' ;
+                    type ncd:cpu ;
+
+                    default '' ;
+                  }
+
+                  container track {
+                    description 'Event track information.' ;
+                    presence track ;
+                    leaf type {
+                      description 'Track type.' ;
+                      type enumeration {
+                        enum object {
+                          value 1 ;
+                          description 'Track object.' ;
+                        }
+
+                        enum group {
+                          value 2 ;
+                          description 'Track group.' ;
+                        }
+
+                        enum null {
+                          description 'No track.' ;
+                          value 0 ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                    leaf name {
+                      description 'Track name.' ;
+                      type string ;
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf resource-exhaust-action {
+                description 'Resource exhaustion behavior.' ;
+                type enumeration {
+                  enum drop {
+                    value 0 ;
+                    description 'Drop if resource exhaust' ;
+                  }
+
+                  enum sendIcmpError {
+                    value 1 ;
+                    description 'Send ICMP error if resource exhaust' ;
+                  }
+
+                }
+
+                default drop ;
+              }
+
+              leaf max-blocks-number {
+                description 'Maximum blocks of dynamic port range.' ;
+                type uint8 {
+                  range 0..3 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf statistics-switch {
+                description 'Statistics switch.' ;
+                type enumeration {
+                  enum on {
+                    value 1 ;
+                  }
+
+                  enum off {
+                    value 0 ;
+                  }
+
+                }
+
+                default off ;
+              }
+
+              leaf allocate-mode {
+                status obsolete {
+                  ncd:revise-date 2021-03-31 ;
+                }
+
+                description 'Allocate mode of dynamic port range.' ;
+                type enumeration {
+                  enum prefix {
+                    value 1 ;
+                  }
+
+                  enum softwire {
+                    value 0 ;
+                  }
+
+                }
+
+                default prefix ;
+              }
+
+            }
+
+          }
+
+          container car-policy-template {
+            description 'CAR policy template.' ;
+            list car-policy-list {
+              description 'CAR policy list.' ;
+              key car-policy-name ;
+              leaf car-policy-name {
+                description 'CAR policy name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark ;
+
+                mandatory true ;
+              }
+
+              container inbound-car {
+                description 'Inbound CAR.' ;
+                presence inbound-car ;
+                leaf inbound-cir {
+                  description 'Inbound committed information rate(kbps).' ;
+                  type uint32 {
+                    range 66..16777215 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf inbound-cbs {
+                  description 'Inbound committed burst size(KB).' ;
+                  type uint32 {
+                    range 15..2000000 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf inbound-pir {
+                  description 'Inbound peak information rate(kbps).' ;
+                  type uint32 {
+                    range 66..16777215 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf inbound-pbs {
+                  description 'Inbound peak burst size(KB).' ;
+                  type uint32 {
+                    range 15..2000000 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              container outbound-car {
+                description 'Outbound CAR.' ;
+                presence outbound-car ;
+                leaf outbound-cir {
+                  description 'Outbound committed information rate(kbps).' ;
+                  type uint32 {
+                    range 66..16777215 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf outbound-cbs {
+                  description 'Outbound committed burst size(KB).' ;
+                  type uint32 {
+                    range 15..2000000 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf outbound-pir {
+                  description 'Outbound peak information rate(kbps).' ;
+                  type uint32 {
+                    range 66..16777215 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf outbound-pbs {
+                  description 'Outbound peak burst size(KB).' ;
+                  type uint32 {
+                    range 15..2000000 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              leaf description {
+                description 'Description.' ;
+                type string {
+                  length 1..64 ;
+
+                }
+
+                ncd:revise-date 2020-05-28 ;
+              }
+
+            }
+
+          }
+
+          container pool-list {
+            description 'Pool list.' ;
+            list nat-pool {
+              description 'NAT pool.' ;
+              key 'pool-id pool-name' ;
+              leaf pool-id {
+                description 'Pool ID.' ;
+                type uint32 {
+                  range 0..1999 ;
+
+                }
+
+              }
+
+              leaf pool-name {
+                description 'Pool name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark ;
+
+                mandatory true ;
+              }
+
+              leaf vrf-name {
+                description 'VRF name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf description {
+                description 'Description.' ;
+                type string {
+                  length 1..63 ;
+
+                }
+
+              }
+
+              leaf sib-instance {
+                description 'SIB instance.' ;
+                type uint32 {
+                  range 1..255 ;
+
+                }
+
+              }
+
+              leaf port-alarm-value {
+                status obsolete {
+                  ncd:revise-date 2021-03-31 ;
+                }
+
+                description 'Alarm threshold of IP utilization ratio.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 80 ;
+              }
+
+              choice hot-standby-policy {
+                description 'Hot standby policy.' ;
+                case all {
+                  description 'All.' ;
+                  leaf all-live-time {
+                    description 'Live time of all protocols.' ;
+                    type uint32 {
+                      range 1..65535 ;
+
+                    }
+
+                  }
+
+                }
+
+                case protocol {
+                  description 'Protocol.' ;
+                  leaf ip-live-time {
+                    description 'Live time of IP protocol.' ;
+                    type uint32 {
+                      range 1..65535 ;
+
+                    }
+
+                  }
+
+                  leaf alg-live-time {
+                    description 'Live time of ALG protocol.' ;
+                    type uint32 {
+                      range 1..65535 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf interface-name {
+                description 'Interface name.' ;
+                type ncd:ifname ;
+
+              }
+
+              container section-list {
+                description 'Section list.' ;
+                list section {
+                  description 'Section.' ;
+                  key section-no ;
+                  leaf section-no {
+                    description 'Section number.' ;
+                    type uint32 {
+                      range 1..2000 ;
+
+                    }
+
+                  }
+
+                  choice section-type {
+                    description 'Section type.' ;
+                    mandatory true ;
+                    case ip {
+                      description 'IP.' ;
+                      leaf start-ip {
+                        description 'Start IP address.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                        mandatory true ;
+                      }
+
+                      leaf end-ip {
+                        description 'End IP address.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                      }
+
+                    }
+
+                    case range {
+                      description 'IP range.' ;
+                      leaf mask-length {
+                        description 'Mask length.' ;
+                        type ncd:ipv4-mask ;
+
+                        mandatory true ;
+                      }
+
+                      leaf base-ip {
+                        description 'Base IP.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case interface {
+                      description 'Interface address.' ;
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf hot-standby-route-metric {
+                description 'Route metric of low priority pool.' ;
+                type uint32 {
+                  range 0..4261412864 ;
+
+                }
+
+                default 50 ;
+              }
+
+              leaf hot-standby-route-priority {
+                description 'Route priority of low priority pool.' ;
+                type uint32 {
+                  range 0..254 ;
+
+                }
+
+                default 50 ;
+              }
+
+              leaf location-node {
+                description 'Location node.' ;
+                type uint16 {
+                  range 1..64 ;
+
+                }
+
+              }
+
+              leaf position {
+                description 'The server position to obtain IP ranges.' ;
+                type enumeration {
+                  enum local {
+                    value 1 ;
+                  }
+
+                  enum remote {
+                    value 2 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf ippool-name {
+                description 'IP pool name.' ;
+                type string {
+                  length 1..64 ;
+
+                }
+
+              }
+
+              leaf low {
+                description 'The low threshold.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 20 ;
+              }
+
+              leaf high {
+                description 'The high threshold.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 80 ;
+              }
+
+              leaf mask {
+                description 'The mask of range.' ;
+                type uint32 {
+                  range 20..32 ;
+
+                }
+
+                default 27 ;
+              }
+
+              leaf max-number {
+                description 'The max number of ranges.' ;
+                default 200 ;
+                type uint32 {
+                  range 1..2000 ;
+
+                }
+
+              }
+
+              leaf recycle {
+                description 'Force recycle resources.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf assign {
+                description 'Assign obtain IP ranges policy.' ;
+                type enumeration {
+                  enum none {
+                    value 0 ;
+                    description 'Assign policy none' ;
+                  }
+
+                  enum forward {
+                    value 1 ;
+                    description 'Assign policy forward' ;
+                  }
+
+                  enum backward {
+                    value 2 ;
+                    description 'Assign policy backward' ;
+                  }
+
+                }
+
+                default none ;
+              }
+
+              container lock-ip-list {
+                description 'Lock IP list.' ;
+                list lock-ip {
+                  description 'Lock IP.' ;
+                  key lock-ip-no ;
+                  leaf lock-ip-no {
+                    description 'Lock IP number.' ;
+                    type uint32 {
+                      range 1..10 ;
+
+                    }
+
+                  }
+
+                  choice lock-ip-type {
+                    description 'Lock IP type.' ;
+                    case ip {
+                      description 'IP.' ;
+                      leaf start-ip {
+                        description 'Start IP address.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                      }
+
+                      leaf end-ip {
+                        description 'End IP address.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                      }
+
+                    }
+
+                    case section {
+                      description 'Section.' ;
+                      leaf section-no {
+                        description 'Section number.' ;
+                        type uint32 {
+                          range 1..2000 ;
+
+                        }
+
+                      }
+
+                    }
+
+                    case all {
+                      description 'Lock all.' ;
+                      leaf all {
+                        description 'Lock all.' ;
+                        type enumeration {
+                          enum all {
+                            value 1 ;
+                            description 'Lock all.' ;
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf detect-retransmit-number {
+                description 'Detect retransmit number.' ;
+                type uint32 {
+                  range 0..10 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf detect-interval-day {
+                description 'Detect interval day number.' ;
+                type uint32 {
+                  range 0..999 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf detect-interval-hour {
+                description 'Detect interval hour number.' ;
+                type uint32 {
+                  range 0..23 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf detect-interval-minute {
+                description 'Detect interval minute number.' ;
+                type uint32 {
+                  range 0..59 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf ip-alarm-value {
+                description 'Alarm threshold of IP utilization ratio.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 80 ;
+                ncd:revise-date 2021-03-31 ;
+              }
+
+            }
+
+            list pat-pool {
+              description 'PAT pool.' ;
+              key 'pool-id pool-name' ;
+              leaf pool-id {
+                description 'Pool ID.' ;
+                type uint32 {
+                  range 0..1999 ;
+
+                }
+
+              }
+
+              leaf pool-name {
+                description 'Pool name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark ;
+
+                mandatory true ;
+              }
+
+              leaf address-user-ratio {
+                description 'User sharing ratio.' ;
+                type uint32 {
+                  range 1..1000 ;
+
+                }
+
+              }
+
+              leaf vrf-name {
+                description 'VRF name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf description {
+                description 'Description.' ;
+                type string {
+                  length 1..63 ;
+
+                }
+
+              }
+
+              leaf max-ports-per-address {
+                description 'Max ports of each protocol for one address.' ;
+                type uint32 {
+                  range 1..65535 ;
+
+                }
+
+                default 65535 ;
+              }
+
+              leaf portrange-size {
+                description 'Port range size.' ;
+                type uint32 {
+                  range 1..65536 ;
+
+                }
+
+              }
+
+              leaf sib-instance {
+                description 'SIB instance.' ;
+                type uint32 {
+                  range 1..255 ;
+
+                }
+
+              }
+
+              leaf port-alarm-value {
+                description 'Alarm threshold of IP ports utilization ratio.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 80 ;
+              }
+
+              leaf port-range-alarm-value {
+                description 'Alarm threshold of port range ports utilization ratio.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 80 ;
+              }
+
+              leaf share-ratio-alarm-value {
+                description 'Alarm threshold of sharing ratio.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 80 ;
+              }
+
+              choice hot-standby-policy {
+                description 'Hot standby policy.' ;
+                case all {
+                  description 'All.' ;
+                  leaf all-live-time {
+                    description 'Live time of all protocols.' ;
+                    type uint32 {
+                      range 1..65535 ;
+
+                    }
+
+                  }
+
+                }
+
+                case protocol {
+                  description 'Protocol.' ;
+                  leaf tcp-live-time {
+                    description 'Live time of TCP protocol.' ;
+                    type uint32 {
+                      range 1..65535 ;
+
+                    }
+
+                  }
+
+                  leaf udp-live-time {
+                    description 'Live time of UDP protocol.' ;
+                    type uint32 {
+                      range 1..65535 ;
+
+                    }
+
+                  }
+
+                  leaf icmp-live-time {
+                    description 'Live time of ICMP protocol.' ;
+                    type uint32 {
+                      range 1..65535 ;
+
+                    }
+
+                  }
+
+                  leaf pcp-live-time {
+                    description 'Live time of PCP protocol.' ;
+                    type uint32 {
+                      range 1..65535 ;
+
+                    }
+
+                  }
+
+                  leaf alg-live-time {
+                    description 'Live time of ALG protocol.' ;
+                    type uint32 {
+                      range 1..65535 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf portrange-start-port {
+                description 'Start port.' ;
+                type uint16 {
+                  range 1..65535 ;
+
+                }
+
+                default 1 ;
+              }
+
+              leaf portrange-end-port {
+                description 'End port.' ;
+                type uint16 {
+                  range 1..65535 ;
+
+                }
+
+                default 65535 ;
+              }
+
+              leaf portrange-block-alarm-value {
+                description 'Alarm threshold of port range block ratio.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 80 ;
+              }
+
+              leaf pool-port-alarm-value {
+                description 'Alarm threshold of ports utilization ratio.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 80 ;
+              }
+
+              leaf spr-block-alarm-value {
+                description 'Alarm threshold of static port range block ratio.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 80 ;
+              }
+
+              leaf well-known-ports-forbidden {
+                description 'Well known ports forbidden.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf forbidden-start-port {
+                description 'Start port of well known ports forbidden.' ;
+                type uint32 {
+                  range 64..8192 ;
+
+                }
+
+              }
+
+              leaf interface-name {
+                description 'Interface name.' ;
+                type ncd:ifname ;
+
+              }
+
+              container section-list {
+                description 'Section list.' ;
+                list section {
+                  description 'Section.' ;
+                  key section-no ;
+                  leaf section-no {
+                    description 'Section number.' ;
+                    type uint32 {
+                      range 1..2000 ;
+
+                    }
+
+                  }
+
+                  choice section-type {
+                    description 'Section type.' ;
+                    mandatory true ;
+                    case ip {
+                      description 'IP.' ;
+                      leaf start-ip {
+                        description 'Start IP address.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                        mandatory true ;
+                      }
+
+                      leaf end-ip {
+                        description 'End IP address.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                      }
+
+                    }
+
+                    case range {
+                      description 'IP range.' ;
+                      leaf mask-length {
+                        description 'Mask length.' ;
+                        type ncd:ipv4-mask ;
+
+                        mandatory true ;
+                      }
+
+                      leaf base-ip {
+                        description 'Base IP.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case interface {
+                      description 'Interface address.' ;
+                      leaf interface-name {
+                        description 'Interface name.' ;
+                        type ncd:ifname ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf hot-standby-route-metric {
+                description 'Route metric of low priority pool.' ;
+                type uint32 {
+                  range 0..4261412864 ;
+
+                }
+
+                default 50 ;
+              }
+
+              leaf hot-standby-route-priority {
+                description 'Route priority of low priority pool.' ;
+                type uint32 {
+                  range 0..254 ;
+
+                }
+
+                default 50 ;
+              }
+
+              leaf location-node {
+                description 'Location node.' ;
+                type uint16 {
+                  range 1..64 ;
+
+                }
+
+              }
+
+              leaf port-reserved {
+                description 'Port reserved.' ;
+                type uint32 {
+                  range 0..4096 ;
+
+                }
+
+                default 64 ;
+              }
+
+              leaf position {
+                description 'The server position to obtain IP ranges.' ;
+                type enumeration {
+                  enum local {
+                    value 1 ;
+                  }
+
+                  enum remote {
+                    value 2 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf ippool-name {
+                description 'IP pool name.' ;
+                type string {
+                  length 1..64 ;
+
+                }
+
+              }
+
+              leaf low {
+                description 'The low threshold.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 20 ;
+              }
+
+              leaf high {
+                description 'The high threshold.' ;
+                type uint32 {
+                  range 1..100 ;
+
+                }
+
+                default 80 ;
+              }
+
+              leaf mask {
+                description 'The mask of range.' ;
+                type uint32 {
+                  range 20..32 ;
+
+                }
+
+                default 27 ;
+              }
+
+              leaf max-number {
+                description 'The max number of ranges.' ;
+                default 200 ;
+                type uint32 {
+                  range 1..2000 ;
+
+                }
+
+              }
+
+              leaf max-static-port-range-blocks {
+                description 'Max blocks of static portrange for one user.' ;
+                type uint8 {
+                  range 1..4 ;
+
+                }
+
+                default 1 ;
+              }
+
+              leaf recycle {
+                description 'Force recycle resources' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf assign {
+                description 'Assign obtain IP ranges policy.' ;
+                type enumeration {
+                  enum none {
+                    value 0 ;
+                    description 'Assign policy none' ;
+                  }
+
+                  enum forward {
+                    value 1 ;
+                    description 'Assign policy forward' ;
+                  }
+
+                  enum backward {
+                    value 2 ;
+                    description 'Assign policy backward' ;
+                  }
+
+                }
+
+                default none ;
+              }
+
+              container lock-ip-list {
+                description 'Lock IP list.' ;
+                list lock-ip {
+                  description 'Lock IP.' ;
+                  key lock-ip-no ;
+                  leaf lock-ip-no {
+                    description 'Lock IP number.' ;
+                    type uint32 {
+                      range 1..10 ;
+
+                    }
+
+                  }
+
+                  choice lock-ip-type {
+                    description 'Lock IP type.' ;
+                    mandatory true ;
+                    case ip {
+                      description 'IP.' ;
+                      leaf start-ip {
+                        description 'Start IP address.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                      }
+
+                      leaf end-ip {
+                        description 'End IP address.' ;
+                        type ncd:ipv4-address-none-zero ;
+
+                      }
+
+                    }
+
+                    case section {
+                      description 'Section.' ;
+                      leaf section-no {
+                        description 'Section number.' ;
+                        type uint32 {
+                          range 1..2000 ;
+
+                        }
+
+                      }
+
+                    }
+
+                    case all {
+                      description 'Lock all.' ;
+                      leaf all {
+                        description 'Lock all.' ;
+                        type enumeration {
+                          enum all {
+                            value 1 ;
+                            description 'Lock all.' ;
+                          }
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf detect-retransmit-number {
+                description 'Detect retransmit number.' ;
+                type uint32 {
+                  range 0..10 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf detect-interval-day {
+                description 'Detect interval day number.' ;
+                type uint32 {
+                  range 0..999 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf detect-interval-hour {
+                description 'Detect interval hour number.' ;
+                type uint32 {
+                  range 0..23 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf detect-interval-minute {
+                description 'Detect interval minute number.' ;
+                type uint32 {
+                  range 0..59 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf max-idle-port-range {
+                description 'Max idle port range number(0:not limit).' ;
+                type uint32 {
+                  range 0..2097152 ;
+
+                }
+
+                ncd:revise-date 2022-03-02 ;
+              }
+
+            }
+
+          }
+
+          container domain-list {
+            description 'Domain list.' ;
+            list domain {
+              description 'Domain.' ;
+              key domain-name ;
+              leaf domain-name {
+                description 'Domain name.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf domain-id {
+                description 'Domain ID.' ;
+                type uint32 {
+                  range 1..4000 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf type {
+                description 'Domain type.' ;
+                type enumeration {
+                  enum standalone {
+                    value 1 ;
+                    description 'Standalone CGN product.' ;
+                  }
+
+                  enum sr {
+                    value 2 ;
+                    description 'Service Router product.' ;
+                  }
+
+                  enum bras {
+                    value 3 ;
+                    description 'Brandband Remote Access Server/Broadband product.' ;
+                  }
+
+                  enum xgw {
+                    value 4 ;
+                    description 'Wireless Core Network packet switch node (GGSN).' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf ip-version-issued {
+                description 'IP version issued.' ;
+                type enumeration {
+                  enum ipv4-issued {
+                    value 1 ;
+                    description 'Configure as NAT44 or NAT46.' ;
+                  }
+
+                  enum ipv6-issued {
+                    value 2 ;
+                    description 'Configure as DualStack-Lite or NAT64.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark ;
+
+                mandatory true ;
+              }
+
+              leaf description {
+                description 'Description.' ;
+                type string {
+                  length 1..63 ;
+
+                }
+
+              }
+
+              leaf quota-exceed-action {
+                description 'The action of quota exceeded.' ;
+                type enumeration {
+                  enum discard {
+                    value 0 ;
+                    description 'Discard the packet if exceed max translations' ;
+                  }
+
+                  enum send-icmp-error {
+                    value 1 ;
+                    description 'Send ICMP error if exceed max translations' ;
+                  }
+
+                }
+
+                default discard ;
+              }
+
+              leaf dns-no-limit {
+                description "Don't limit the PAT sessions that destination port is DNS." ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable limit of DNS sessions' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Disable limit of DNS sessions' ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf max-private-address-num {
+                description 'The max IPv4 number of the same user.' ;
+                type uint32 {
+                  range 1..1000000 {
+                    description 'The max IPv4 number of the same user' ;
+                  }
+
+                }
+
+                default 200000 ;
+              }
+
+              leaf new-session-create-speed {
+                description 'Speed of new session created.' ;
+                type uint32 {
+                  range 1..50000 {
+                    description 'Configure speed (pps)' ;
+                  }
+
+                }
+
+              }
+
+              container dynamic-rule-list {
+                description 'Dynamic rule list.' ;
+                list dynamic-rule {
+                  description 'Dynamic rule.' ;
+                  key rule-id ;
+                  leaf rule-id {
+                    description 'Rule ID.' ;
+                    type uint32 {
+                      range 1..2000 ;
+
+                    }
+
+                  }
+
+                  leaf acl-type {
+                    description 'ACL type.' ;
+                    type enumeration {
+                      enum ipv4-list {
+                        value 1 ;
+                        description 'Specify IPv4 access list.' ;
+                      }
+
+                      enum ipv6-list {
+                        value 2 ;
+                        description 'Specify IPv6 access list.' ;
+                      }
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf acl-name {
+                    description 'ACL Name.' ;
+                    type string {
+                      length 1..31 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  choice action {
+                    description 'Action.' ;
+                    mandatory true ;
+                    case permit {
+                      description 'Permit.' ;
+                      container permit {
+                        description 'Permit.' ;
+                        leaf permit {
+                          description 'Permit.' ;
+                          type enumeration {
+                            enum permit {
+                              value 1 ;
+                            }
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                        leaf pool-name {
+                          description 'Pool name.' ;
+                          type string {
+                            length 1..31 ;
+
+                          }
+
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname ;
+
+                        }
+
+                        leaf flow-ip {
+                          description 'Flow IP address.' ;
+                          type ncd:ipv4-address-none-zero ;
+
+                        }
+
+                      }
+
+                    }
+
+                    case drop {
+                      description 'Drop.' ;
+                      container drop {
+                        description 'Drop.' ;
+                        leaf drop {
+                          description 'Drop.' ;
+                          type enumeration {
+                            enum drop {
+                              value 2 ;
+                            }
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname ;
+
+                        }
+
+                      }
+
+                    }
+
+                    case deny {
+                      description 'Deny.' ;
+                      container deny {
+                        description 'Deny.' ;
+                        leaf deny {
+                          description 'Deny.' ;
+                          type enumeration {
+                            enum deny {
+                              value 3 ;
+                            }
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                        leaf interface-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname ;
+
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container static-rule-list {
+                description 'Static rule list.' ;
+                list static-rule {
+                  description 'Static rule.' ;
+                  key rule-id ;
+                  leaf rule-id {
+                    description 'Rule ID.' ;
+                    type uint32 {
+                      range 1..2000 ;
+
+                    }
+
+                  }
+
+                  choice user-type {
+                    description 'User type.' ;
+                    mandatory true ;
+                    case dslite-ipv6 {
+                      description 'Softwire.' ;
+                      container dslite-ipv6 {
+                        description 'Softwire.' ;
+                        leaf cpe-ipv6-address {
+                          description 'IPv6 address of CPE.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf local-ip {
+                          description 'Local IP address.' ;
+                          type ncd:ipv4-address-none-zero ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case vrf {
+                      description 'VRF.' ;
+                      container vrf {
+                        description 'VRF.' ;
+                        leaf vrf-name {
+                          description 'VRF name.' ;
+                          type string {
+                            length 1..32 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                        leaf local-ip {
+                          description 'Local IP address.' ;
+                          type ncd:ipv4-address-none-zero ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case nat64-ipv6 {
+                      description 'CPE.' ;
+                      container nat64-ipv6 {
+                        description 'CPE.' ;
+                        leaf cpe-ipv6-address {
+                          description 'IPv6 address of CPE.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf cpe-vrf {
+                          description 'VRF of CPE.' ;
+                          type string {
+                            length 1..32 ;
+
+                          }
+
+                        }
+
+                        leaf nat64-prefix {
+                          description 'NAT64 prefix.' ;
+                          type ncd:ipv6-address ;
+
+                          mandatory true ;
+                        }
+
+                        leaf nat64-prefix-vrf {
+                          description 'VRF of NAT64 prefix.' ;
+                          type string {
+                            length 1..32 ;
+
+                          }
+
+                        }
+
+                        leaf nat64-prefix-length {
+                          description 'Prefix length of NAT64(Only support 96 bits prefix length).' ;
+                          type enumeration {
+                            enum 96 {
+                              value 96 ;
+                            }
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case public {
+                      description 'Public.' ;
+                      container public {
+                        description 'Public.' ;
+                        leaf local-ip {
+                          description 'Local IP address.' ;
+                          type ncd:ipv4-address-none-zero ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  choice trans-mode {
+                    description 'Translation mode.' ;
+                    mandatory true ;
+                    case pat {
+                      description 'PAT.' ;
+                      container pat {
+                        description 'PAT.' ;
+                        leaf local-port {
+                          description 'Local port.' ;
+                          type uint16 {
+                            range 1..65535 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                        leaf global-ip {
+                          description 'Global IP address.' ;
+                          type ncd:ipv4-address-none-zero ;
+
+                          mandatory true ;
+                        }
+
+                        leaf global-port {
+                          description 'Global port.' ;
+                          type uint16 {
+                            range 1..65535 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                        leaf protocol {
+                          description 'Protocol.' ;
+                          type enumeration {
+                            enum tcp {
+                              value 6 ;
+                            }
+
+                            enum udp {
+                              value 17 ;
+                            }
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case nat {
+                      description 'NAT.' ;
+                      container nat {
+                        description 'NAT.' ;
+                        leaf global-ip {
+                          description 'Global IP address.' ;
+                          type ncd:ipv4-address-none-zero ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case interface-pat {
+                      if-feature static-rule-interface-feature ;
+
+                      description 'Interface pat.' ;
+                      container if-pat {
+                        description 'PAT.' ;
+                        leaf local-port {
+                          description 'Local port.' ;
+                          type uint16 {
+                            range 1..65535 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                        leaf if-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname ;
+
+                          mandatory true ;
+                        }
+
+                        leaf global-port {
+                          description 'Global port.' ;
+                          type uint16 {
+                            range 1..65535 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                        leaf protocol {
+                          description 'Protocol.' ;
+                          type enumeration {
+                            enum tcp {
+                              value 6 ;
+                            }
+
+                            enum udp {
+                              value 17 ;
+                            }
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    case interface-nat {
+                      if-feature static-rule-interface-feature ;
+
+                      description 'Interface nat.' ;
+                      container if-nat {
+                        description 'NAT.' ;
+                        leaf if-name {
+                          description 'Interface name.' ;
+                          type ncd:ifname ;
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                  leaf car-policy {
+                    description 'CAR policy.' ;
+                    type string {
+                      length 1..31 ;
+
+                    }
+
+                  }
+
+                  leaf time-range {
+                    description 'Time range.' ;
+                    type string {
+                      length 1..31 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container same-address-policy {
+                description 'Same address policy.' ;
+                presence same-address-policy ;
+                leaf same-addr-for-same-ipv4 {
+                  description 'Allocate the same global IP for one local IPv4 address.' ;
+                  type enumeration {
+                    enum must {
+                      value 2 ;
+                    }
+
+                    enum try-best {
+                      value 1 ;
+                    }
+
+                    enum random {
+                      value 0 ;
+                    }
+
+                  }
+
+                  default random ;
+                }
+
+              }
+
+              container different-address-policy {
+                description 'Different address policy.' ;
+                presence diff-address-policy ;
+                list different-addr-tcp-udp {
+                  description 'Allocate different address for TCP or UDP.' ;
+                  key 'protocol-type dest-port' ;
+                  leaf protocol-type {
+                    description 'Protocol type.' ;
+                    type enumeration {
+                      enum tcp {
+                        value 6 ;
+                      }
+
+                      enum udp {
+                        value 17 ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf dest-port {
+                    description 'Destination port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                  }
+
+                  leaf description {
+                    description 'Description.' ;
+                    type string {
+                      length 1..31 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                list different-addr-icmp {
+                  description 'Allocate different address for ICMP.' ;
+                  max-elements 1 ;
+                  key protocol-type ;
+                  leaf protocol-type {
+                    description 'Protocol type.' ;
+                    type enumeration {
+                      enum icmp {
+                        value 1 ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf description {
+                    description 'Description.' ;
+                    type string {
+                      length 1..31 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              container tcp-policy {
+                description 'TCP policy.' ;
+                presence tcp-policy ;
+                leaf filtering-mode {
+                  description 'Filtering mode.' ;
+                  type enumeration {
+                    enum endpoint-independent {
+                      value 1 ;
+                    }
+
+                    enum address-dependent {
+                      value 2 ;
+                    }
+
+                    enum address-and-port-dependent {
+                      value 3 ;
+                    }
+
+                  }
+
+                  default endpoint-independent ;
+                }
+
+                leaf mapping-mode {
+                  description 'Mapping mode.' ;
+                  type enumeration {
+                    enum endpoint-independent {
+                      value 1 ;
+                    }
+
+                    enum address-dependent {
+                      value 2 ;
+                    }
+
+                    enum address-and-port-dependent {
+                      value 3 ;
+                    }
+
+                  }
+
+                  default endpoint-independent ;
+                }
+
+                leaf refreshing-mode {
+                  description 'Refreshing mode.' ;
+                  type enumeration {
+                    enum inbound {
+                      value 1 ;
+                    }
+
+                    enum outbound {
+                      value 2 ;
+                    }
+
+                    enum both-bounds {
+                      value 3 ;
+                    }
+
+                  }
+
+                  default outbound ;
+                }
+
+                leaf well-known-port-timeout {
+                  description 'Timeout of well-known port.' ;
+                  type uint16 {
+                    range 1..7200 ;
+
+                  }
+
+                  default 120 ;
+                }
+
+                leaf well-known-syn-timeout {
+                  description 'Timeout of well-known TCP SYN.' ;
+                  type uint16 {
+                    range 1..7200 ;
+
+                  }
+
+                  default 10 ;
+                }
+
+                leaf well-known-fin-rst-timeout {
+                  description 'Timeout of well-known TCP FIN or TCP RST.' ;
+                  type uint16 {
+                    range 1..7200 ;
+
+                  }
+
+                  default 2 ;
+                }
+
+                leaf unwell-known-port-timeout {
+                  description 'Timeout of unwell-known port.' ;
+                  type uint16 {
+                    range 1..7200 ;
+
+                  }
+
+                  default 120 ;
+                }
+
+                leaf unwell-known-syn-timeout {
+                  description 'Timeout of unwell-known TCP SYN.' ;
+                  type uint16 {
+                    range 1..7200 ;
+
+                  }
+
+                  default 10 ;
+                }
+
+                leaf unwell-known-fin-rst-timeout {
+                  description 'Timeout of unwell-known TCP FIN or TCP RST.' ;
+                  type uint16 {
+                    range 1..7200 ;
+
+                  }
+
+                  default 2 ;
+                }
+
+                leaf port-random {
+                  description 'Randomization of port.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                container allowed-port-range {
+                  description 'Allowed port range.' ;
+                  presence allowed-range-port ;
+                  leaf start-port {
+                    description 'Start port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf end-port {
+                    description 'End port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                container forbidden-port-range {
+                  description 'Forbidden port range.' ;
+                  presence forbidden-port-range ;
+                  leaf start-port {
+                    description 'Start port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf end-port {
+                    description 'End port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                leaf well-known-fin-wait-timeout {
+                  description 'Timeout of well-known TCP FIN wait.' ;
+                  type uint16 {
+                    range 0..7200 ;
+
+                  }
+
+                  default 0 ;
+                }
+
+                leaf unwell-known-fin-wait-timeout {
+                  description 'Timeout of unwell-known TCP FIN wait.' ;
+                  type uint16 {
+                    range 0..7200 ;
+
+                  }
+
+                  default 0 ;
+                }
+
+              }
+
+              container udp-policy {
+                description 'UDP policy.' ;
+                presence udp-policy ;
+                leaf filtering-mode {
+                  description 'Filtering mode.' ;
+                  type enumeration {
+                    enum endpoint-independent {
+                      value 1 ;
+                    }
+
+                    enum address-dependent {
+                      value 2 ;
+                    }
+
+                    enum address-and-port-dependent {
+                      value 3 ;
+                    }
+
+                  }
+
+                  default endpoint-independent ;
+                }
+
+                leaf mapping-mode {
+                  description 'Mapping mode.' ;
+                  type enumeration {
+                    enum endpoint-independent {
+                      value 1 ;
+                    }
+
+                    enum address-dependent {
+                      value 2 ;
+                    }
+
+                    enum address-and-port-dependent {
+                      value 3 ;
+                    }
+
+                  }
+
+                  default endpoint-independent ;
+                }
+
+                leaf refreshing-mode {
+                  description 'Refreshing mode.' ;
+                  type enumeration {
+                    enum inbound {
+                      value 1 ;
+                    }
+
+                    enum outbound {
+                      value 2 ;
+                    }
+
+                    enum both-bounds {
+                      value 3 ;
+                    }
+
+                  }
+
+                  default outbound ;
+                }
+
+                leaf well-known-port-timeout {
+                  description 'Timeout of well-known port.' ;
+                  type uint16 {
+                    range 1..7200 ;
+
+                  }
+
+                  default 180 ;
+                }
+
+                leaf unwell-known-port-timeout {
+                  description 'Timeout of unwell-known port.' ;
+                  type uint16 {
+                    range 1..7200 ;
+
+                  }
+
+                  default 180 ;
+                }
+
+                leaf port-random {
+                  description 'Randomization of port.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                container allowed-port-range {
+                  description 'Configure allowed port range' ;
+                  presence allowed-range-port ;
+                  leaf start-port {
+                    description 'Start port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf end-port {
+                    description 'End port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                container forbidden-port-range {
+                  description 'Configure forbidden port range' ;
+                  presence forbidden-port-range ;
+                  leaf start-port {
+                    description 'Start port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  leaf end-port {
+                    description 'End port.' ;
+                    type uint16 {
+                      range 1..65535 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              container icmp-policy {
+                description 'ICMP policy.' ;
+                leaf filtering-mode {
+                  description 'Filtering mode.' ;
+                  type enumeration {
+                    enum endpoint-independent {
+                      value 1 ;
+                    }
+
+                    enum address-dependent {
+                      value 2 ;
+                    }
+
+                  }
+
+                  default endpoint-independent ;
+                }
+
+                leaf mapping-mode {
+                  description 'Mapping mode.' ;
+                  type enumeration {
+                    enum endpoint-independent {
+                      value 1 ;
+                    }
+
+                    enum address-dependent {
+                      value 2 ;
+                    }
+
+                  }
+
+                  default endpoint-independent ;
+                }
+
+                leaf refreshing-mode {
+                  description 'Refreshing mode.' ;
+                  type enumeration {
+                    enum inbound {
+                      value 1 ;
+                    }
+
+                    enum outbound {
+                      value 2 ;
+                    }
+
+                    enum both-bounds {
+                      value 3 ;
+                    }
+
+                  }
+
+                  default outbound ;
+                }
+
+                leaf timeout {
+                  description 'Timeout.' ;
+                  type uint16 {
+                    range 1..7200 ;
+
+                  }
+
+                  default 60 ;
+                }
+
+              }
+
+              container nat-policy {
+                description 'NAT policy.' ;
+                leaf filtering-mode {
+                  description 'Filtering mode.' ;
+                  type enumeration {
+                    enum endpoint-independent {
+                      value 1 ;
+                    }
+
+                    enum address-dependent {
+                      value 2 ;
+                    }
+
+                  }
+
+                  default endpoint-independent ;
+                }
+
+                leaf mapping-mode {
+                  description 'Mapping mode.' ;
+                  type enumeration {
+                    enum endpoint-independent {
+                      value 1 ;
+                    }
+
+                    enum address-dependent {
+                      value 2 ;
+                    }
+
+                  }
+
+                  default endpoint-independent ;
+                }
+
+                leaf refreshing-mode {
+                  description 'Refreshing mode.' ;
+                  type enumeration {
+                    enum inbound {
+                      value 1 ;
+                    }
+
+                    enum outbound {
+                      value 2 ;
+                    }
+
+                    enum both-bounds {
+                      value 3 ;
+                    }
+
+                  }
+
+                  default outbound ;
+                }
+
+                leaf timeout {
+                  description 'Timeout.' ;
+                  type uint16 {
+                    range 1..7200 ;
+
+                  }
+
+                  default 120 ;
+                }
+
+              }
+
+              container domain-rate-limit-list {
+                description 'Rate limit list of domain.' ;
+                list domain-rate-limit {
+                  description 'Rate limit of domain.' ;
+                  key type ;
+                  leaf type {
+                    description 'Type.' ;
+                    type enumeration {
+                      enum tcp {
+                        value 1 ;
+                        description 'Configure TCP rate limiting' ;
+                      }
+
+                      enum udp {
+                        value 2 ;
+                        description 'Configure UDP rate limiting' ;
+                      }
+
+                      enum icmp {
+                        value 3 ;
+                        description 'Configure ICMP rate limiting' ;
+                      }
+
+                      enum subscriber {
+                        value 4 ;
+                        description 'Configure subscriber rate limiting' ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf car-policy-name {
+                    description 'CAR policy name.' ;
+                    type string ;
+
+                    mandatory true ;
+                  }
+
+                  leaf instance-name {
+                    description 'Instance name.' ;
+                    type ncd:string-quesiton-mark ;
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              container max-translations-list {
+                description 'Max translations list.' ;
+                list max-translations {
+                  description 'Max translations.' ;
+                  key 'limit-type limit-protocol' ;
+                  leaf limit-type {
+                    description 'Limit type.' ;
+                    type enumeration {
+                      enum per-ipv4 {
+                        value 3 ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf limit-protocol {
+                    description 'Limit protocol.' ;
+                    type enumeration {
+                      enum tcp {
+                        value 1 ;
+                      }
+
+                      enum udp {
+                        value 2 ;
+                      }
+
+                      enum icmp {
+                        value 3 ;
+                      }
+
+                      enum nat {
+                        value 4 ;
+                      }
+
+                      enum all {
+                        value 5 ;
+                      }
+
+                    }
+
+                  }
+
+                  choice translations-type {
+                    description 'Translations type.' ;
+                    mandatory true ;
+                    case dynamic {
+                      description 'Dynamic.' ;
+                      leaf dynamic {
+                        description 'Dynamic.' ;
+                        type uint32 {
+                          range 0..32000000 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case pcp {
+                      description 'PCP.' ;
+                      leaf pcp {
+                        description 'PCP.' ;
+                        type uint32 {
+                          range 0..32000000 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                    case all {
+                      description 'All.' ;
+                      leaf all-dynamic {
+                        description 'All dynamic.' ;
+                        type uint32 {
+                          range 0..32000000 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                      leaf all-pcp {
+                        description 'All PCP.' ;
+                        type uint32 {
+                          range 0..32000000 ;
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                  container time-range {
+                    description 'Time range.' ;
+                    presence time-range ;
+                    leaf time-range {
+                      description 'Time range.' ;
+                      type string {
+                        length 1..31 ;
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                    choice translation-type {
+                      description 'Translation type.' ;
+                      mandatory true ;
+                      case dynamic {
+                        description 'Dynamic.' ;
+                        leaf dynamic {
+                          description 'Dynamic.' ;
+                          type uint32 {
+                            range 0..32000000 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                      case pcp {
+                        description 'PCP.' ;
+                        leaf pcp {
+                          description 'PCP.' ;
+                          type uint32 {
+                            range 0..32000000 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                      case all {
+                        description 'All.' ;
+                        leaf all-dynamic {
+                          description 'All dynamic.' ;
+                          type uint32 {
+                            range 0..32000000 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                        leaf all-pcp {
+                          description 'All PCP.' ;
+                          type uint32 {
+                            range 0..32000000 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container max-trans-per-apps {
+                description 'Max translations per app list.' ;
+                list max-trans-per-app {
+                  description 'Max translations per app.' ;
+                  key 'type protocol port' ;
+                  leaf type {
+                    description 'Type.' ;
+                    type enumeration {
+                      enum per-ipv4 {
+                        value 1 ;
+                      }
+
+                      enum per-ipv6 {
+                        value 2 ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf protocol {
+                    description 'Protocol.' ;
+                    type enumeration {
+                      enum tcp {
+                        value 1 ;
+                      }
+
+                      enum udp {
+                        value 2 ;
+                      }
+
+                    }
+
+                  }
+
+                  leaf port {
+                    description 'Port.' ;
+                    type uint32 {
+                      range 1..65535 ;
+
+                    }
+
+                  }
+
+                  leaf total {
+                    description 'Total num.' ;
+                    type uint32 {
+                      range 0..32000000 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              container bind-pool-list {
+                description 'Bind pool list.' ;
+                list bind-pool {
+                  description 'Bind pool.' ;
+                  key pool-name ;
+                  leaf pool-name {
+                    description 'Pool name.' ;
+                    type string {
+                      length 1..31 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              container max-trans-per-ipv4-addr-list {
+                list max-trans-per-ipv4-addr-public {
+                  description 'Maximum number of IPv4 address-based translation entries.' ;
+                  key 'start-ip end-ip' ;
+                  leaf start-ip {
+                    description 'Start IP address.' ;
+                    type ncd:ipv4-address-none-zero ;
+
+                  }
+
+                  leaf end-ip {
+                    description 'End IP address.' ;
+                    type ncd:ipv4-address-none-zero ;
+
+                  }
+
+                  leaf max-translations-num {
+                    description 'Max translations number.' ;
+                    type uint32 {
+                      range 0..32000000 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                list max-trans-per-ipv4-addr-vrf {
+                  description 'Maximum number of IPv4 address-based translation entries with VRF.' ;
+                  key 'vrf-name start-ip end-ip' ;
+                  leaf vrf-name {
+                    description 'VRF name.' ;
+                    type string {
+                      length 1..32 ;
+
+                    }
+
+                  }
+
+                  leaf start-ip {
+                    description 'Start IP address.' ;
+                    type ncd:ipv4-address-none-zero ;
+
+                  }
+
+                  leaf end-ip {
+                    description 'End IP address.' ;
+                    type ncd:ipv4-address-none-zero ;
+
+                  }
+
+                  leaf max-translations-num {
+                    description 'Max translations number.' ;
+                    type uint32 {
+                      range 0..32000000 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+                description 'Maximum number of IPv4 address-based translation entries.' ;
+                ncd:revise-date 2021-09-11 ;
+              }
+
+            }
+
+          }
+
+          container spr-list {
+            description 'Static port-range list.' ;
+            list spr-ipv4 {
+              description 'Static port-range of public.' ;
+              key 'instance-name start-ipv4' ;
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf start-ipv4 {
+                description 'The start private IPv4 address.' ;
+                type ncd:ipv4-address-none-zero ;
+
+              }
+
+              leaf end-ipv4 {
+                description 'The end private IPv4 address.' ;
+                type ncd:ipv4-address-none-zero ;
+
+                mandatory true ;
+              }
+
+              leaf pool-id {
+                description 'Pool ID.' ;
+                type uint32 {
+                  range 0..1999 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf domain-id {
+                description 'Domain ID.' ;
+                type uint32 {
+                  range 1..4000 ;
+
+                }
+
+              }
+
+              leaf extend {
+                description 'Extend mode.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              ncd:select pool-id ;
+              ncd:select start-ipv4 ;
+            }
+
+            list spr-ipv4-interface {
+              description 'Static port-range of public.' ;
+              key 'instance-name start-ipv4 interface-name' ;
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf start-ipv4 {
+                description 'The start private IPv4 address.' ;
+                type ncd:ipv4-address-none-zero ;
+
+              }
+
+              leaf interface-name {
+                description 'Interface name.' ;
+                type ncd:ifname {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf end-ipv4 {
+                description 'The end private IPv4 address.' ;
+                type ncd:ipv4-address-none-zero ;
+
+                mandatory true ;
+              }
+
+              leaf pool-id {
+                description 'Pool ID.' ;
+                type uint32 {
+                  range 0..1999 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf domain-id {
+                description 'Domain ID.' ;
+                type uint32 {
+                  range 1..4000 ;
+
+                }
+
+              }
+
+              ncd:select pool-id ;
+              ncd:select start-ipv4 ;
+              ncd:select "start-ipv4 interface-name" ;
+            }
+
+            list spr-vrf-ipv4 {
+              description 'Static port-range of VRF.' ;
+              key 'instance-name vrf-name start-ipv4' ;
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf vrf-name {
+                description 'VRF name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf start-ipv4 {
+                description 'The start private IPv4 address.' ;
+                type ncd:ipv4-address-none-zero ;
+
+              }
+
+              leaf end-ipv4 {
+                description 'The end private IPv4 address.' ;
+                type ncd:ipv4-address-none-zero ;
+
+                mandatory true ;
+              }
+
+              leaf pool-id {
+                description 'Pool ID.' ;
+                type uint32 {
+                  range 0..1999 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf domain-id {
+                description 'Domain ID.' ;
+                type uint32 {
+                  range 1..4000 ;
+
+                }
+
+              }
+
+              leaf extend {
+                description 'Extend mode.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              ncd:select pool-id ;
+              ncd:select "vrf-name start-ipv4" ;
+            }
+
+            list spr-vrf-ipv4-interface {
+              description 'Static port-range of VRF.' ;
+              key 'instance-name vrf-name start-ipv4 interface-name' ;
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf vrf-name {
+                description 'VRF name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf start-ipv4 {
+                description 'The start private IPv4 address.' ;
+                type ncd:ipv4-address-none-zero ;
+
+              }
+
+              leaf interface-name {
+                description 'Interface name.' ;
+                type ncd:ifname {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf end-ipv4 {
+                description 'The end private IPv4 address.' ;
+                type ncd:ipv4-address-none-zero ;
+
+                mandatory true ;
+              }
+
+              leaf pool-id {
+                description 'Pool ID.' ;
+                type uint32 {
+                  range 0..1999 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf domain-id {
+                description 'Domain ID.' ;
+                type uint32 {
+                  range 1..4000 ;
+
+                }
+
+              }
+
+              ncd:select pool-id ;
+              ncd:select "vrf-name start-ipv4" ;
+              ncd:select "vrf-name start-ipv4 interface-name" ;
+            }
+
+          }
+
+          container user-list {
+            description 'User list.' ;
+            list public-user {
+              description 'Public user.' ;
+              max-elements 1 ;
+              key instance-name ;
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark ;
+
+              }
+
+              leaf subscriber-id {
+                description 'Subscriber id.' ;
+                type uint32 {
+                  range 1..8000 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf nat-domain-id {
+                description 'NAT domain id.' ;
+                type uint32 {
+                  range 1..4000 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf dpi-policy {
+                description 'DPI policy.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              container interface-list {
+                description 'Interface list.' ;
+                list interface {
+                  description 'Interface.' ;
+                  key interface-name ;
+                  leaf interface-name {
+                    description 'Interface name.' ;
+                    type ncd:ifname ;
+
+                  }
+
+                }
+
+              }
+
+              leaf inbound-route-map {
+                description 'Inbound route map name.' ;
+                type string ;
+
+              }
+
+              leaf description {
+                description 'Description.' ;
+                type string {
+                  length 1..64 ;
+
+                }
+
+                ncd:revise-date 2020-05-28 ;
+              }
+
+            }
+
+            list vrf-user {
+              description 'VRF user.' ;
+              key 'vrf-name instance-name' ;
+              leaf vrf-name {
+                description 'VRF name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark ;
+
+              }
+
+              leaf subscriber-id {
+                description 'Subscriber id.' ;
+                type uint32 {
+                  range 1..8000 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf nat-domain-id {
+                description 'NAT domain id.' ;
+                type uint32 {
+                  range 1..4000 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf dpi-policy {
+                description 'DPI policy.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              container interface-list {
+                description 'Interface list.' ;
+                list interface {
+                  description 'Interface.' ;
+                  key interface-name ;
+                  leaf interface-name {
+                    description 'Interface name.' ;
+                    type ncd:ifname ;
+
+                  }
+
+                }
+
+              }
+
+              leaf inbound-route-map {
+                description 'Inbound route map name.' ;
+                type string ;
+
+              }
+
+              leaf description {
+                description 'Description.' ;
+                type string {
+                  length 1..64 ;
+
+                }
+
+                ncd:revise-date 2020-05-28 ;
+              }
+
+            }
+
+          }
+
+          container log-list {
+            description 'Log list.' ;
+            list log {
+              description 'Log.' ;
+              key instance-name ;
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark ;
+
+              }
+
+              leaf log-switch {
+                description 'Log switch.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              choice destination {
+                description 'Destination.' ;
+                case syslog {
+                  description 'Syslog.' ;
+                  leaf syslog {
+                    description 'Syslog.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+                case ipflow {
+                  description 'Ipflow.' ;
+                  leaf ipflow {
+                    status obsolete {
+                      ncd:revise-date 2022-04-14 ;
+                    }
+
+                    description 'Ipflow.' ;
+                    type empty ;
+
+                    mandatory true ;
+                  }
+
+                  leaf flow-exporter-name {
+                    status obsolete {
+                      ncd:revise-date 2022-04-14 ;
+                    }
+
+                    description 'Flow exporter name.' ;
+                    type string {
+                      length 1..32 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                  list ipflow-list {
+                    description 'Ipflow list.' ;
+                    key flow-exporter-name ;
+                    leaf flow-exporter-name {
+                      description 'Flow exporter name.' ;
+                      type string {
+                        length 1..32 ;
+
+                      }
+
+                    }
+
+                    leaf log-type {
+                      description 'Log type.' ;
+                      type enumeration {
+                        enum all {
+                          value 0 ;
+                          description 'Send all log.' ;
+                        }
+
+                        enum translation {
+                          value 1 ;
+                          description 'Send translation log.' ;
+                        }
+
+                        enum portrange {
+                          value 2 ;
+                          description 'Send portrange log.' ;
+                        }
+
+                      }
+
+                      ncd:revise-date 2023-04-11 ;
+                    }
+
+                    ncd:revise-date 2022-04-14 ;
+                  }
+
+                }
+
+                case local {
+                  description 'Local.' ;
+                  leaf local {
+                    description 'Local.' ;
+                    type empty ;
+
+                  }
+
+                }
+
+              }
+
+              leaf log-buffer-size {
+                description 'Log buffer size.' ;
+                type int16 {
+                  range 10..64 ;
+
+                }
+
+                default 16 ;
+              }
+
+              leaf format {
+                description 'Format.' ;
+                type enumeration {
+                  enum text {
+                    value 0 ;
+                  }
+
+                  enum binary {
+                    value 1 ;
+                  }
+
+                }
+
+                default text ;
+              }
+
+              leaf syslog-merging {
+                description 'Syslog merging.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf log-style {
+                description 'Log style.' ;
+                type enumeration {
+                  enum style1 {
+                    value 0 ;
+                  }
+
+                  enum style2 {
+                    value 1 ;
+                  }
+
+                  enum style3 {
+                    value 2 ;
+                  }
+
+                }
+
+                default style1 ;
+              }
+
+              leaf log-style1-start-end-time-with-zone {
+                description 'Record start and end time with zone of the style1 log.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf log-style1-start-end-time {
+                description 'Record start and end time of the style1 log.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf log-style1-year {
+                description 'Record year of the in style1 log.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf log-style1-duration {
+                description 'Record duration of the style1 log.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf log-style2-duration {
+                description 'Generate style2 log according to session duration.' ;
+                type int16 {
+                  range 0..10 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf log-portrange-detail {
+                description 'Generate session log when port range pool is used.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf portrange-log-create {
+                description 'Generate log when port range is allocated.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf portrange-log-delete {
+                description 'Generate log when port range is released.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf portrange-log-first-session-create {
+                description 'Generate log when port range is used firstly.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf portrange-log-last-session-delete {
+                description 'Generate log when port range is no longer used.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf log-translation-when {
+                description 'Generate log according to creating or deleting session.' ;
+                type enumeration {
+                  enum created-and-deleted {
+                    value 0 ;
+                  }
+
+                  enum created {
+                    value 1 ;
+                  }
+
+                  enum deleted {
+                    value 2 ;
+                  }
+
+                }
+
+                default created-and-deleted ;
+              }
+
+              leaf log-protocol-tcp {
+                description 'Log protocol of TCP.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default enable ;
+              }
+
+              leaf log-protocol-udp {
+                description 'Log protocol of UDP.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default enable ;
+              }
+
+              leaf log-protocol-icmp {
+                description 'Log protocol of ICMP.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default enable ;
+              }
+
+              leaf resource-exhaust-action {
+                description 'The action of resource exhausted.' ;
+                type enumeration {
+                  enum stop-logging {
+                    value 0 ;
+                  }
+
+                  enum stop-cgn-service {
+                    value 1 ;
+                  }
+
+                }
+
+                default stop-logging ;
+              }
+
+              leaf stop-service-on-err {
+                description 'Stop service on logging error.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf bras-inside-port {
+                description 'Inside port of BRAS.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf bras-mapping-mode {
+                description 'Mapping mode of BRAS.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf bras-filtering-mode {
+                description 'Filtering mode of BRAS.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf bras-inbound-packets {
+                description 'Inbound packets of BRAS.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf bras-outbound-packets {
+                description 'Outbound packets of BRAS.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf bras-inbound-bytes {
+                description 'Inbound bytes of BRAS.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf bras-outbound-bytes {
+                description 'Outbound bytes of BRAS.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf dslite-inside-port {
+                description 'Inside port of DSLITE or NAT64.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf dslite-mapping-mode {
+                description 'Mapping mode of DSLITE or NAT64.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf dslite-filtering-mode {
+                description 'Filtering mode of DSLITE or NAT64.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf dslite-inbound-packets {
+                description 'Inbound packets of DSLITE or NAT64.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf dslite-outbound-packets {
+                description 'Outbound packets of DSLITE or NAT64.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf dslite-inbound-bytes {
+                description 'Inbound bytes of DSLITE or NAT64.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf dslite-outbound-bytes {
+                description 'Outbound bytes of DSLITE or NAT64.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf dslite-cpe-address {
+                description 'CPE address of DSLITE or NAT64.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf xgw-inside-port {
+                description 'Inside port of XGW.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf xgw-mapping-mode {
+                description 'Mapping mode of XGW.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf xgw-filtering-mode {
+                description 'Filtering mode of XGW.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf xgw-inbound-packets {
+                description 'Inbound packets of XGW.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf xgw-outbound-packets {
+                description 'Outbound packets of XGW.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf xgw-inbound-bytes {
+                description 'Inbound bytes of XGW.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf xgw-outbound-bytes {
+                description 'Outbound bytes of XGW.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf syslog-vrf {
+                description 'VRF of syslog.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf syslog-destination-ip {
+                description 'Destination IP of syslog.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf syslog-destination-port {
+                description 'Destination port of syslog.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf syslog-inbound-packets {
+                description 'Inbound packets of syslog.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf syslog-outbound-packets {
+                description 'Outbound packets of syslog.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf syslog-inbound-bytes {
+                description 'Inbound bytes of syslog.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf syslog-outbound-bytes {
+                description 'Outbound bytes of syslog.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf sr-inside-port {
+                description 'Inside port of SR.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf sr-mapping-mode {
+                description 'Mapping mode of SR.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf sr-filtering-mode {
+                description 'Filtering mode of SR.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf sr-inbound-packets {
+                description 'Inbound packets of SR.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf sr-outbound-packets {
+                description 'Outbound packets of SR.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf sr-inbound-bytes {
+                description 'Inbound bytes of SR.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf sr-outbound-bytes {
+                description 'Outbound bytes of SR.' ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                  }
+
+                  enum enable {
+                    value 1 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              container log-ipflow {
+                description 'Log ipflow.' ;
+                leaf ipflow-session-create-start-time {
+                  description 'Start time of ipflow log when session is created.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf ipflow-session-delete-start-time {
+                  description 'Start time of ipflow log when session is deleted.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf ipflow-session-delete-cgn-ip {
+                  description 'Outside source IP of ipflow log when session is deleted.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf ipflow-session-delete-end-time {
+                  description 'End time of ipflow log when session is deleted.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf ipflow-session-delete-inbound-bytes {
+                  description 'Inbound bytes of ipflow log when session is deleted.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf ipflow-session-delete-inbound-packets {
+                  description 'Inbound packets of ipflow log when session is deleted.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf ipflow-session-delete-outbound-bytes {
+                  description 'Outbound bytes of ipflow log when session is deleted.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf ipflow-session-delete-outbound-packets {
+                  description 'Outbound packets of ipflow log when session is deleted.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf ipflow-session-delete-vpn-id {
+                  description 'VPN ID of ipflow log when session is deleted.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf ipflow-session-delete-cgn-port {
+                  description 'Outside source port of ipflow log when session is deleted.' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+              }
+
+              leaf urllog-switch {
+                description 'URL log switch.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+            }
+
+          }
+
+          container advanced-and-pcp-service-list {
+            description 'Advanced service and PCP service list.' ;
+            list advanced-service {
+              description 'Advanced service.' ;
+              key instance-name ;
+              leaf instance-name {
+                description 'CGN instance name' ;
+                type ncd:string-quesiton-mark {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf advanced-switch {
+                description 'Switch of advanced service.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              choice tcp-mss-clamp {
+                description 'TCP MSS clamps.' ;
+                default tcp-mss-switch ;
+                case tcp-mss-switch {
+                  description 'TCP MSS switch' ;
+                  leaf disable {
+                    description 'Disable.' ;
+                    type enumeration {
+                      enum disable {
+                        value 0 ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+                case tcp-mss-auto {
+                  description 'Negotiate TCP MSS automatically.' ;
+                  leaf auto {
+                    description 'Auto.' ;
+                    type enumeration {
+                      enum auto {
+                        value 1 ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+                case tcp-mss-value {
+                  description 'TCP MSS value.' ;
+                  leaf value {
+                    description 'Value' ;
+                    type uint16 {
+                      range 64..9216 ;
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf tcp-state-track {
+                description 'TCP state tracking.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf session-mode {
+                description 'Session mode.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf pool-reuse {
+                description 'Pool reuse.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+            }
+
+            list pcp-service {
+              description 'PCP service.' ;
+              key instance-name ;
+              leaf instance-name {
+                description 'Instance name' ;
+                type ncd:string-quesiton-mark {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf pcp-switch {
+                description 'PCP switch.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf min-life-time {
+                description 'Mapping minimum life time.' ;
+                type uint32 {
+                  range 120..86400 ;
+
+                }
+
+                default 120 ;
+              }
+
+              leaf max-life-time {
+                description 'Maximal life time.' ;
+                type uint32 {
+                  range 120..86400 ;
+
+                }
+
+                default 86400 ;
+              }
+
+              leaf ipv4-acl {
+                description 'IPv4 access control list.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf ipv6-acl {
+                description 'IPv6 access control list.' ;
+                type string {
+                  length 1..31 ;
+
+                }
+
+              }
+
+            }
+
+            list protocol-session-timeout {
+              description 'Session timeout for different protocol.' ;
+              max-elements 512 ;
+              key 'instance-name protocol destination-port' ;
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark {
+                  length 1..31 ;
+
+                }
+
+              }
+
+              leaf protocol {
+                description 'Protocol.' ;
+                type enumeration {
+                  enum tcp {
+                    value 6 ;
+                  }
+
+                  enum udp {
+                    value 17 ;
+                  }
+
+                }
+
+              }
+
+              leaf destination-port {
+                description 'Destination port.' ;
+                type uint16 {
+                  range 1..65535 ;
+
+                }
+
+              }
+
+              leaf description {
+                description 'Description.' ;
+                type string {
+                  length 1..63 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf timeout {
+                description 'Timeout.' ;
+                type uint16 {
+                  range 1..7200 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          container alg-list {
+            description 'ALG list.' ;
+            list alg-switch {
+              description 'ALG switch.' ;
+              key instance-name ;
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark ;
+
+              }
+
+              leaf ftp {
+                description 'FTP.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable FTP ALG' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Disable FTP ALG' ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf icmp {
+                description 'ICMP.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable ICMP ALG' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Disable ICMP ALG' ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf dns {
+                description 'DNS.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable DNS ALG' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Disable DNS ALG' ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf rtsp {
+                description 'RTSP.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable RTSP ALG' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Disable RTSP ALG' ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf h323 {
+                description 'H323.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable H323 ALG' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Disable H323 ALG' ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf sip {
+                description 'SIP.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable SIP ALG' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Disable SIP ALG' ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf pptp {
+                description 'PPTP.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable PPTP ALG' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Disable PPTP ALG' ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf http {
+                description 'HTTP.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable HTTP ALG' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Disable HTTP ALG' ;
+                  }
+
+                }
+
+                default disable ;
+                if-feature http-alg-feature {
+                  ncd:revise-date 2025-04-10 ;
+                }
+
+              }
+
+              leaf dhcp {
+                description 'DHCP.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Enable DHCP ALG' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Disable DHCP ALG' ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+            }
+
+            list alg-port {
+              description 'ALG port.' ;
+              max-elements 16 ;
+              key 'instance-name protocol port' ;
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark ;
+
+              }
+
+              leaf protocol {
+                description 'Protocol.' ;
+                type enumeration {
+                  enum tcp {
+                    value 6 ;
+                    description 'TCP' ;
+                  }
+
+                }
+
+              }
+
+              leaf port {
+                description 'Port.' ;
+                type uint16 {
+                  range 1..65535 {
+                    description '1-65535' ;
+                  }
+
+                }
+
+              }
+
+              leaf alg-type {
+                description 'ALG type.' ;
+                type enumeration {
+                  enum ftp {
+                    value 0 ;
+                    description 'FTP' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          container alarm-list {
+            description 'Alarm list.' ;
+            list alarm {
+              description 'Alarm.' ;
+              key instance-name ;
+              leaf instance-name {
+                description 'Instance name.' ;
+                type ncd:string-quesiton-mark ;
+
+              }
+
+              leaf alarm-switch {
+                description 'Alarm switch.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Start CGN alarm' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Stop CGN alarm' ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf warning-switch {
+                description 'Warning switch.' ;
+                type enumeration {
+                  enum enable {
+                    value 0 ;
+                    description 'Start CGN warning' ;
+                  }
+
+                  enum disable {
+                    value 1 ;
+                    description 'Stop CGN warning' ;
+                  }
+
+                }
+
+                default enable ;
+              }
+
+              leaf port-range-block-alarm-switch {
+                description 'Alarm switch of port range block utilization.' ;
+                type enumeration {
+                  enum enable {
+                    value 1 ;
+                    description 'Start alarm' ;
+                  }
+
+                  enum disable {
+                    value 0 ;
+                    description 'Stop alarm' ;
+                  }
+
+                }
+
+                default disable ;
+              }
+
+              leaf ip-resource-threshold {
+                description 'IP resource alarm threshold of NAT pool.' ;
+                type uint16 {
+                  range 1..100 {
+                    description '<1-100>' ;
+                  }
+
+                }
+
+                default 80 ;
+              }
+
+              leaf port-resource-threshold {
+                description 'Port resource alarm threshold of PAT pool.' ;
+                type uint16 {
+                  range 1..100 {
+                    description '<1-100>' ;
+                  }
+
+                }
+
+                default 80 ;
+              }
+
+              leaf translations-threshold-high-level {
+                description 'High level threshold of translations.' ;
+                type uint16 {
+                  range 1..100 ;
+
+                }
+
+              }
+
+              leaf translations-threshold-middle-level {
+                description 'Middle level threshold of translations.' ;
+                type uint16 {
+                  range 1..100 ;
+
+                }
+
+              }
+
+              leaf translations-threshold {
+                description 'Translations alarm threshold.' ;
+                type uint16 {
+                  range 1..100 {
+                    description '<1-100>' ;
+                  }
+
+                }
+
+                default 80 ;
+              }
+
+              leaf performance-statistics-switch {
+                description 'Performance statistics switch.' ;
+                type enumeration {
+                  enum on {
+                    value 1 ;
+                    description 'Start CGN performance statistics switch.' ;
+                  }
+
+                  enum off {
+                    value 0 ;
+                    description 'Stop CGN performance statistics switch.' ;
+                  }
+
+                }
+
+                default off ;
+              }
+
+              container local-ip-threshold {
+                description 'Local IP threshold.' ;
+                leaf high-level {
+                  description 'High level threshold of local IP.' ;
+                  type int16 {
+                    range 1..100 ;
+
+                  }
+
+                }
+
+                leaf middle-level {
+                  description 'Middle level threshold of local IP.' ;
+                  type int16 {
+                    range 1..100 ;
+
+                  }
+
+                }
+
+                leaf low-level {
+                  description 'Low level threshold of local IP.' ;
+                  type int16 {
+                    range 1..100 ;
+
+                  }
+
+                  default 80 ;
+                }
+
+              }
+
+              leaf static-port-range-threshold {
+                description 'Static port range alarm threshold.' ;
+                type uint8 {
+                  range 1..100 ;
+
+                }
+
+                default 95 ;
+              }
+
+            }
+
+          }
+
+        }
+
+        container global {
+          description 'Global configuration.' ;
+          leaf spu-auto-add {
+            description 'SPU auto add.' ;
+            type enumeration {
+              enum off {
+                value 0 ;
+              }
+
+              enum on {
+                value 1 ;
+              }
+
+            }
+
+            default off ;
+          }
+
+          leaf all-translations-alarm-threshold {
+            description 'All translations alarm threshold.' ;
+            type uint32 {
+              range 1..100 ;
+
+            }
+
+            default 100 ;
+          }
+
+          container cgn-outside-interface-list {
+            description 'CGN outside interface list.' ;
+            list cgn-outside-interface {
+              description 'CGN outside interface.' ;
+              key interface-name ;
+              leaf interface-name {
+                description 'Interface name.' ;
+                type ncd:ifname ;
+
+              }
+
+            }
+
+          }
+
+          choice cgn-res-alloc-disconnect {
+            description 'CGN resource allocate disconnect time.' ;
+            default response-delay ;
+            case response-delay {
+              description 'Response delay.' ;
+              leaf response-delay-time {
+                description 'Response delay time.' ;
+                type uint32 {
+                  range 0..2880 ;
+
+                }
+
+                default 240 ;
+              }
+
+            }
+
+            case forever {
+              description 'Forever.' ;
+              leaf forever {
+                description 'Forever.' ;
+                type uint32 {
+                  range 0..1 ;
+
+                }
+
+                default 0 ;
+              }
+
+            }
+
+          }
+
+          container log-ipflow-template {
+            description 'Log ipflow.' ;
+            leaf create-translation-template-nat44 {
+              description 'Configure create translation ipflow templates NAT44 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf create-session-template-nat44 {
+              description 'Configure create session ipflow templates NAT44 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf create-portrange-template-nat44 {
+              description 'Configure create portrange ipflow templates NAT44 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf delete-translation-template-nat44 {
+              description 'Configure delete translation ipflow templates NAT44 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf delete-session-template-nat44 {
+              description 'Configure delete session ipflow templates NAT44 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf delete-portrange-template-nat44 {
+              description 'Configure delete portrange ipflow templates NAT44 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf create-translation-template-nat64 {
+              description 'Configure create translation ipflow templates NAT64 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf create-session-template-nat64 {
+              description 'Configure create session ipflow templates NAT64 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf create-portrange-template-nat64 {
+              description 'Configure create portrange ipflow templates NAT64 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf delete-translation-template-nat64 {
+              description 'Configure delete translation ipflow templates NAT64 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf delete-session-template-nat64 {
+              description 'Configure delete session ipflow templates NAT64 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf delete-portrange-template-nat64 {
+              description 'Configure delete portrange ipflow templates NAT64 switch.' ;
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+
+                enum enable {
+                  value 1 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

@@ -1,0 +1,3002 @@
+module zxr10-alarm {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/alarm" ;
+  prefix alm ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe alarm.' ;
+  revision 2025-06-20 {
+    description "Add rpc '/alarm-clear'." ;
+  }
+
+  revision 2025-01-06 {
+    description "(1) Add leaf '/state/alarm/currentAlarm/curRecords/module'.
+    (2) Add leaf '/state/alarm/historyAlarm/hisRecords/module'.
+    (3) Add leaf '/state/alarm/notification/record/module'.
+    (4) Add leaf '/current-alarm-report/module'.
+    (5) Add leaf '/notification-report/module'." ;
+  }
+
+  revision 2024-07-09 {
+    description "(1)Add PTN.6700;PTN.65V5 in 'netconf-report' feature node.
+    (2)Add OTN.7000 in 'shield-profiles' feature node." ;
+  }
+
+  revision 2024-05-22 {
+    description "(1) Add '/state/alam/currentAlarm/curRecords' leaf nodes 'tpid-desc'." ;
+  }
+
+  revision 2023-11-03 {
+    description "(1) Add '/configuration/alarm/mib-encode' container.
+    (2) Add '/configuration/alarm/mib-encode/para-value' leaf.
+    (3) Add '/configuration/alarm/trap/alarm-oid-exclude' list.
+    (4) Add '/configuration/alarm/trap/alarm-oid-exclude/oid' leaf.
+    (5) Add '/configuration/alarm/trap/notification-oid-exclude' list.
+    (6) Add '/configuration/alarm/trap/notification-oid-exclude/oid' leaf." ;
+  }
+
+  revision 2023-08-03 {
+    description "Add 59E in 'performance-threshold-alarm' feature node." ;
+  }
+
+  revision 2023-07-14 {
+    description "(1)Add 6100 in 'shield-profiles' feature node.
+    (2)Add 6100 in 'shield-profiles-tpid-type' feature node." ;
+  }
+
+  revision 2023-03-21 {
+    description "(1) Add '/state/alam/currentAlarm/curRecords' leaf nodes 'peid'.
+    (2) Add '/state/alam/historyAlarm/hisRecords' leaf nodes 'peid'.
+    (3) Add '/state/alam/notification/record' leaf nodes 'peid'.
+    (4) Add '/current-alarm-report' leaf nodes 'peid'.
+    (5) Add '/notification-report' leaf nodes 'peid'." ;
+  }
+
+  revision 2023-02-13 {
+    description "(1) Modify leaf '/configuration/alarm/shield-profiles/shield-profile/codes/code/code' does not support 4294967295 when leaf '/configuration/alarm/shield-profiles/shield-profile/codes/code/severity' is configured." ;
+  }
+
+  revision 2022-12-27 {
+    description "(1)Add 59E in 'shield-profiles' feature node.
+    (2)Add 59E in 'shield-profiles-status-level' feature node." ;
+  }
+
+  revision 2022-11-02 {
+    description "(1)Add 6500,6700,65V5,61V5_1,99X,5960X,5960M,C600,C89E,9700,M721,8700,7000 in 'performance-threshold-alarm' feature node.
+    (2)Add 6500,6700,65V5 in 'shield-profiles' feature node.
+    (3)Add 7000 in 'shield-profiles-tpid-type' feature node." ;
+  }
+
+  revision 2022-09-02 {
+    description "(1)Add 61V5_1 in 'shield-profiles' feature node.
+    (2)Add 61V5_1 in 'shield-profiles-tpid-type' feature node." ;
+  }
+
+  revision 2022-03-28 {
+    description "(1) Modify '/configuration/alarm/almRelayPara/occurTime' defaut from 0 to perfpara.
+    (2) Modify '/configuration/alarm/almRelayPara/clearTime' defaut from 5 to perfpara." ;
+  }
+
+  revision 2022-03-11 {
+    description "(1) Add 61-SSP,99,5960,99X,5960X,T8000,15K,C89E,9700,M721,8700,vRouter,vBRAS-C,CDB in 'shield-profiles' feature node.
+    (2) Add 'shield-profiles-status-level feature'.
+    (3) Add 'shield-profiles-tpid-type feature'.
+    (4) Add '/configuration/alarm/shield-profiles/codes-typeid-tpye' container." ;
+  }
+
+  revision 2022-03-06 {
+    description "(1) Add '/configuration/alarm/trap' leaf version." ;
+  }
+
+  revision 2021-10-28 {
+    description "(1) Add '/configuration/alarm/alarmPreload' leaf timer." ;
+  }
+
+  revision 2021-10-21 {
+    description '(1)Add leaf "/configuration/alarm/trap/para-varbind-list".' ;
+  }
+
+  revision 2021-02-26 {
+    description "(1) Modify leaf '/configuration/alarm/netconf-report/severity' type,enumeration add off value." ;
+  }
+
+  revision 2019-05-09 {
+    description "(1) Add '/configuration/alarm/shield-profiles/shield-profile/codes/code' leaf severity.
+    (2) Modify leaf '/configuration/alarm/shield-profiles/shield-profile/codes/code/status' mandatory attribute to false." ;
+  }
+
+  revision 2018-12-12 {
+    description '(1)Add enumeration value five-minutes to leaf /current-alarm-report/perf-alarm-period, /state/alam/currentAlarm/curRecords/thAlmPeriod and /state/alam/historyAlarm/hisRecords/thAlmPeriod.' ;
+  }
+
+  revision 2018-09-05 {
+    description "(1)Add 'notification-report' leaf 'occurrence-ms', 'update-ms' and 'disappeared-ms'.
+    (2)Add 'notification-report' leaf 'occur-ms'.
+    (3)Add '/state/alarm/currentAlarm/curRecords' leaf 'almOccurMs' and 'almUpdateMs'.
+    (4)Add '/state/alarm/historyAlarm/hisRecords' leaf 'almOccurMs', 'almUpdateMs' and 'almDisappearMs'.
+    (5)Add '/state/alarm/notification/record' leaf 'occur-ms'." ;
+  }
+
+  revision 2018-08-02 {
+    description "(1)Modify length of leaf /current-alarm-report/description to 'from 256 to 512'.
+    (2)Modify length of leaf /notification-report/description to 'from 256 to 512'.
+    (3)Modify length of leaf /state/alarm/currentAlarm/curRecords/description  to 'from 256 to 512'.
+    (4)Modify length of leaf /state/alarm/historyAlarm/hisRecords/description  to 'from 256 to 512'.
+    (5)Modify length of leaf /state/alarm/notification/record/description  to 'from 256 to 512'." ;
+  }
+
+  revision 2018-02-08 {
+    description "(1) Add '/configuration/alarm/shield-profiles' container." ;
+  }
+
+  revision 2017-12-19 {
+    description "(1)Add selects xGW-GM,9700,M721,8700,vRouter,vBRAS-C,VDC to 'netconf-report' feature node.
+    (2)Add selects xGW-GM,vRouter,vBRAS-C,VDC to 'performance-threshold-alarm' feature node." ;
+  }
+
+  revision 2017-08-23 {
+    description "(1)Add '/notification-report' leaf 'sort'.
+    (2)Add '/notification-report' leaf 'sort'.
+    (3)Add '/state/alarm/currentAlarm/flowId' leaf 'sort' and selects 'sort'.
+    (4)Add '/state/alarm/currentAlarm/curRecords' leaf 'sort'.
+    (3)Add '/state/alarm/historyAlarm/hisRecords' leaf 'sort' and selects 'sort'.
+    (3)Add '/state/alarm/notification/record' leaf 'sort' and selects 'sort'." ;
+  }
+
+  revision 2017-01-22 {
+    description "(1)Add MCG-5000 in 'performance-threshold-alarm' feature node.
+    (2)Add MCG-5000 in 'netconf-report' feature node." ;
+  }
+
+  revision 2016-03-15 {
+    description "(1)Add selects ASR,ZSRV2,6100,6500,59,89,99,5960,T8000,M6000,xGW to 'netconf-report' feature node." ;
+  }
+
+  revision 2015-12-25 {
+    description "(1)Modify length of leaf /state/alarm/currentAlarm/curRecords/tpid to 'from 62 to 128';
+    (2)Modify length of leaf /state/alarm/currentAlarm/curRecords/srcTpid to 'from 62 to 128';
+    (3)Modify length of leaf /state/alarm/currentAlarm/curRecords/protectTpid to 'from 62 to 128';
+    (4)Modify length of leaf /state/alarm/currentAlarm/curRecords/previosTpid to 'from 62 to 128';
+    (5)Modify length of leaf /state/alarm/currentAlarm/curRecords/currentTpid to 'from 62 to 128';
+    (6)Modify length of leaf /state/alarm/historyAlarm/hisRecords/tpid to 'from 62 to 128';
+    (7)Modify length of leaf /state/alarm/historyAlarm/hisRecords/srcTpid to 'from 62 to 128';
+    (8)Modify length of leaf /state/alarm/historyAlarm/hisRecords/protectTpid to 'from 62 to 128';
+    (9)Modify length of leaf /state/alarm/historyAlarm/hisRecords/previosTpid to 'from 62 to 128';
+    (10)Modify length of leaf /state/alarm/historyAlarm/hisRecords/currentTpid to 'from 62 to 128';
+    (11)Modify length of leaf /state/alarm/notification/record/tpid to 'from 62 to 128';
+    (12)Modify length of leaf /current-alarm-report/tpid to 'from 62 to 128';
+    (13)Modify length of leaf /current-alarm-report/source-tpid to 'from 62 to 128';
+    (14)Modify length of leaf /current-alarm-report/protect-tpid to 'from 62 to 128';
+    (15)Modify length of leaf /current-alarm-report/previous-tpid to 'from 62 to 128';
+    (16)Modify length of leaf /current-alarm-report/current-tpid to 'from 62 to 128';
+    (17)Modify length of leaf /notification-report/tpid to 'from 62 to 128';
+    (18)Modify range of leaf /state/alarm/currentAlarm/curRecords/tpidLen to 'from 62 to 128';
+    (19)Modify range of leaf /state/alarm/currentAlarm/curRecords/srcTpidLen to 'from 62 to 128';
+    (20)Modify range of leaf /state/alarm/currentAlarm/curRecords/protectTpidLen to 'from 62 to 128';
+    (21)Modify range of leaf /state/alarm/currentAlarm/curRecords/previosTpidLen to 'from 62 to 128';
+    (22)Modify range of leaf /state/alarm/currentAlarm/curRecords/currentTpidLen to 'from 62 to 128';
+    (23)Modify range of leaf /state/alarm/historyAlarm/hisRecords/tpidLen to 'from 62 to 128';
+    (24)Modify range of leaf /state/alarm/historyAlarm/hisRecords/srcTpidLen to 'from 62 to 128';
+    (25)Modify range of leaf /state/alarm/historyAlarm/hisRecords/protectTpidLen to 'from 62 to 128';
+    (26)Modify range of leaf /state/alarm/historyAlarm/hisRecords/previosTpidLen to 'from 62 to 128';
+    (27)Modify range of leaf /state/alarm/historyAlarm/hisRecords/currentTpidLen to 'from 62 to 128';
+    (28)Modify range of leaf /state/alarm/notification/record/tpidLen to 'from 62 to 128';
+    (29)Modify range of leaf /current-alarm-report/tpid-length to 'from 62 to 128';
+    (30)Modify range of leaf /current-alarm-report/source-tpid-length to 'from 62 to 128';
+    (31)Modify range of leaf /current-alarm-report/protect-tpid-length to 'from 62 to 128';
+    (32)Modify range of leaf /current-alarm-report/previous-tpid-length to 'from 62 to 128';
+    (33)Modify range of leaf /current-alarm-report/current-tpid-length to 'from 62 to 128';
+    (34)Modify range of leaf /notification-report/tpid-length to 'from 62 to 128';" ;
+  }
+
+  revision 2015-10-16 {
+    description "(1)Add typedef 'performance-alarm-type'.
+    (2)Add type enumeration value of '/current-alarm-report/perf-alarm-type'.
+    (3)Add type enumeration value of '/state/alarm/currentAlarm/curRecords/perfAlmType'.
+    (4)Add type enumeration value of '/state/alarm/historyAlarm/hisRecords/perfAlmType'." ;
+  }
+
+  revision 2015-09-10 {
+    description "(1)Modify description of '/current-alarm-report'.
+    (2)Modify description of '/state/alarm/historyAlarm/hisRecords'." ;
+  }
+
+  revision 2015-04-15 {
+    description "(1)Add 'performance-threshold-alarm' and 'netconf-report' feature node.
+    (2)Add feature to '/configuration/alam/performance-threshold-alarm'.
+    (3)Add feature to '/configuration/alam/netconf-report'.
+    (4)Add feature to '/current-alarm-report'.
+    (5)Add feature to '/notification-report'.
+    (6)Add feature to '/alarm-preload-cancel-report'." ;
+  }
+
+  revision 2015-01-20 {
+    description "(1)Add '/state/alarm/currentAlarm/flowId' leaf node almClass enumeration value common-event.
+    (2)Add '/state/alarm/currentAlarm/curRecords' leaf node almClass enumeration value common-event.
+    (3)Delete '/state/alarm/historyAlarm/hisRecords' table leaf nodes almClass enumeration value comments." ;
+  }
+
+  revision 2014-11-28 {
+    description "(1) Add /current-alarm-report, /notification-report and /alarm-preload-cancel-report nodes which type is notification.
+    (2) Add '/configuration/alam/netconf-report' container." ;
+  }
+
+  revision 2014-11-21 {
+    description "(1)Modfiy 'hisRecords' table leaf nodes almClass enumeration value switch-event comments.
+    (2)Add 'hisRecords' table leaf nodes almClass enumeration value common-event." ;
+  }
+
+  revision 2014-02-19 {
+    description "(1) Modify the type of leaf 'ifName' /alam/alarmPreload/preloadBasedIf ' to 'ncd:ifname'.;
+    (2) Delete '/configuration/alam/alarmPreload/preloadBasedIf' leaf 'preloadstat',enumeration value 'not-reverse'." ;
+  }
+
+  revision 2014-02-13 {
+    description "(1) Add '/configuration/alam/performance-threshold-alarm' container." ;
+  }
+
+  revision 2014-01-10 {
+    description "(1) Add '/configuration/alam/alarmMasks/alarmMask' key leaf 'checkPointTpidClass'." ;
+  }
+
+  revision 2014-01-07 {
+    description "(1) Add '/state/alam/currentAlarm/curRecords' leaf nodes 'tpidLen','srcTpidLen','protectTpidLen','previosTpidLen','currentTpidLen'.
+    (2) Add '/state/alam/historyAlarm/hisRecords' leaf nodes 'tpidLen','srcTpidLen','protectTpidLen','previosTpidLen','currentTpidLen'.
+    (3) Add '/state/alam/notification/record' leaf nodes 'tpidLen'." ;
+  }
+
+  revision 2013-12-20 {
+    description "(1) Add '/configuration/alam/alarmMasks/alarmMask' leaf 'checkPointTpidLen'.
+    (2) Modify ObjectId of '/configuration/alam/alarmMasks/alarmMask' leaf 'checkPointType','checkPointTpid','tpidMask','code' to 1663.
+    (3) Modify Type Range of '/configuration/alam/alarmMasks/alarmMask' leaf 'checkPointTpid' to 'from 62 to 128'.
+    (4) Modify Type Range of '/configuration/alam/alarmMasks/alarmMask' leaf 'tpidMask' to 'from 8 to 16'.
+    (5) Delete '/configuration/alam/almRelayPara' leaf 'tpidType','tpid'." ;
+  }
+
+  revision 2013-11-26 {
+    description "(1) Add '/configuration/alam/almSeveritys/almSeverity ' leaf 'tpidType'.
+    (2) Add '/state/alam/almLevel' leaf 'tpidType'.
+    (3) Modify the type of leaf 'description' and 'caption' to 'string-all' in '/state/alam/currentAlarm/curRecords ','/state/alam/historyAlarm/hisRecords ' and '/state/alam/notification/record'." ;
+  }
+
+  revision 2013-11-11 {
+    description "(1) The enumeratorname 'communicateion-alarm' of '/state/alarm/currentAlarm/curRecords/almType' changed to 'communication-alarm'." ;
+  }
+
+  revision 2013-10-30 {
+    description "(1) Add '/configuration/alam/alarmMasks/alarmMask ' leaf 'checkPointType' range 1~0xFFFF.
+    (2) Add '/configuration/alam/alarmMasks/alarmMask ' leaf 'code' range 1~0xFFFFFFFF.
+    (3) Add '/configuration/alam/almSeveritys/almSeverity ' leaf 'code' range 1~0xFFFFFFFE.
+    (4) Add '/configuration/alam/almRelayPara ' leaf 'tpidType' range 1~0xFFFF." ;
+  }
+
+  revision 2013-08-21 {
+    description "(1) Add 'notification' table.
+    (2) To 'current alarm', 'historical alarm', 'notification' table new leaf node representing the title 'caption'.
+    (3) '/state/alam/currentAlarm/curRecords/flowid' under the leaf nodes 'almType' renamed 'almClass'.
+    (4) Delete '/state/alam/currentAlarm/curRecords/flowid' leaf 'almClass' enumeration value 'common-event'. This value is useless.
+    (5)  'curRecords' table to delete almClass values common-event. almClass enumeration value switch-event add comments.
+    (6) To 'hisRecords' table leaf nodes almClass enumeration value switch-event add comments." ;
+  }
+
+  revision 2013-07-22 {
+    description "The 'almRelayPara' from 'List' modify 'container'.
+    Insert container 'alarmMasks' and 'almSeveritys'." ;
+  }
+
+  revision 2013-04-25 {
+    description 'Initial revision.' ;
+  }
+
+  feature performance-threshold-alarm {
+    description 'Performance threshold alarm feature.' ;
+  }
+
+  feature netconf-report {
+    description 'Netconf report feature.' ;
+  }
+
+  feature shield-profiles {
+    description 'Alarm shield profile feature.' ;
+  }
+
+  feature shield-profiles-status-level {
+    description 'Alarm shield profile status level feature.' ;
+    ncd:revise-date 2022-03-11 ;
+  }
+
+  feature shield-profiles-tpid-type {
+    description 'Alarm shield profile tpid-type feature.' ;
+    ncd:revise-date 2022-03-11 ;
+  }
+
+  typedef alarm-level {
+    type enumeration {
+      enum emergencies {
+        value 1 ;
+        description 'Level of emergency.' ;
+      }
+
+      enum alerts {
+        value 2 ;
+        description 'Level of alert.' ;
+      }
+
+      enum critical {
+        value 3 ;
+        description 'Level of critical.' ;
+      }
+
+      enum errors {
+        value 4 ;
+        description 'Level of error.' ;
+      }
+
+      enum warnings {
+        value 5 ;
+        description 'Level of warning.' ;
+      }
+
+      enum notifications {
+        value 6 ;
+        description 'Level of notification.' ;
+      }
+
+      enum informational {
+        value 7 ;
+        description 'Level of information.' ;
+      }
+
+      enum debugging {
+        value 8 ;
+        description 'Level of debug.' ;
+      }
+
+    }
+
+    description 'Alarm level.' ;
+  }
+
+  typedef alarm-type {
+    type enumeration {
+      enum communication-alarm {
+        value 0 ;
+      }
+
+      enum qos-alarm {
+        value 1 ;
+      }
+
+      enum device-alarm {
+        value 2 ;
+      }
+
+      enum process-err-alarm {
+        value 3 ;
+      }
+
+      enum environment-alarm {
+        value 4 ;
+      }
+
+    }
+
+    description 'Alarm type.' ;
+  }
+
+  typedef performance-alarm-type {
+    type enumeration {
+      enum high-threshhold-alarm {
+        value 1 ;
+      }
+
+      enum warn-high-threshhold-alarm {
+        value 2 ;
+      }
+
+      enum warn-low-threshhold-alarm {
+        value 3 ;
+      }
+
+      enum low-threshhold-alarm {
+        value 4 ;
+      }
+
+      enum max-reference-value-alarm {
+        value 5 ;
+      }
+
+      enum min-reference-value-alarm {
+        value 6 ;
+      }
+
+      enum invalid-perf-type {
+        value 254 ;
+      }
+
+    }
+
+    description 'Performance alarm type.' ;
+  }
+
+  typedef alarm-clear-result {
+    type enumeration {
+      enum success {
+        description 'The alarm clearing operation is successful.' ;
+        value 1 ;
+      }
+
+      enum common-fail {
+        description 'Failed to execute command.' ;
+        value 2 ;
+      }
+
+      enum cleared-alarms-max {
+        value 3 ;
+        description 'The number of manually cleared alarms reaches the maximum number.' ;
+      }
+
+      enum clear-number-gt-100 {
+        description 'The number of flow ID can not exceed 100.' ;
+        value 4 ;
+      }
+
+    }
+
+    description 'Alarm clearing result.' ;
+  }
+
+  container configuration {
+    container alarm {
+      description 'For alarm configuration.' ;
+      container alarmMasks {
+        description 'Set some rules based TPID for mask alarm.' ;
+        list alarmMask {
+          description 'Set some rules based TPID for mask alarm.' ;
+          max-elements 2048 ;
+          key 'checkPointType checkPointTpid tpidMask code checkPointTpidClass' ;
+          leaf checkPointType {
+            description 'The type of check point. Range 1~0xFFFF, 0xFFFF indicates any type.' ;
+            type uint16 {
+              range 1..65535 ;
+
+            }
+
+          }
+
+          leaf checkPointTpid {
+            description 'TPID be masked. Length range is from 62 to 128 bytes.' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf tpidMask {
+            description "Mask bit of attribute 'checkPointTpid'. Length is from 8 to 16 bytes. 1 indicates that the corresponding byte is valid." ;
+            type binary {
+              length 8..16 ;
+
+            }
+
+          }
+
+          leaf code {
+            description 'Alarm code for mask. Range 1~0xFFFFFFFF ,0xFFFFFFFF for any code.' ;
+            type uint32 {
+              range 1..4294967295 ;
+
+            }
+
+          }
+
+          leaf checkPointTpidClass {
+            description 'TPID class.' ;
+            type enumeration {
+              enum board {
+                value 1 ;
+              }
+
+              enum CPU {
+                value 2 ;
+              }
+
+              enum system {
+                value 3 ;
+              }
+
+              enum all {
+                value 255 ;
+              }
+
+            }
+
+          }
+
+          leaf checkPointTpidLen {
+            description 'TPID length.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container almSeveritys {
+        list almSeverity {
+          description 'Set the alarm level.' ;
+          key 'code tpidType' ;
+          leaf code {
+            description 'Alarm code.Range 1~0xFFFFFFFE.' ;
+            type uint32 {
+              range 1..4294967294 ;
+
+            }
+
+          }
+
+          leaf tpidType {
+            description 'The type of check point. Range 1~0xFFFF, 0xFFFF indicates any type.' ;
+            type uint16 {
+              range 1..65535 ;
+
+            }
+
+          }
+
+          leaf severity {
+            description 'Severity level.' ;
+            type enumeration {
+              enum emergenciy {
+                value 1 ;
+              }
+
+              enum alert {
+                value 2 ;
+              }
+
+              enum critical {
+                value 3 ;
+              }
+
+              enum error {
+                value 4 ;
+              }
+
+              enum warning {
+                value 5 ;
+              }
+
+              enum notice {
+                value 6 ;
+              }
+
+              enum informational {
+                value 7 ;
+              }
+
+              enum debug {
+                value 8 ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+      container almRelayPara {
+        description 'Set relay time to alarm occur or disappear. Only support for NE.' ;
+        presence "Alarm acknowledgment time setting." ;
+        leaf occurTime {
+          description 'Confirm time for alarm occur.There are default values, which are different in different environments.' ;
+          type uint8 {
+            range 0..10 ;
+
+          }
+
+          units second ;
+          default 0 ;
+        }
+
+        leaf clearTime {
+          description 'Confirm time for alarm disappear.There are default values, which are different in different environments.' ;
+          type uint8 {
+            range 0..10 ;
+
+          }
+
+          units second ;
+          default 5 ;
+        }
+
+      }
+
+      container alarmPreload {
+        description 'Alarm preload setup.' ;
+        list preloadBasedIf {
+          description 'Port-based pre-alarm setup.' ;
+          key ifName ;
+          leaf ifName {
+            description 'Interface name.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf preloadstat {
+            description 'Alarm preload status.' ;
+            type enumeration {
+              enum auto-recover-report {
+                value 1 ;
+              }
+
+              enum alarm-reverse {
+                value 2 ;
+              }
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        leaf timer {
+          description 'Configure autorecover timer for preload.' ;
+          type int8 {
+            range 0..10 ;
+
+          }
+
+          default 0 ;
+          ncd:revise-date 2021-10-28 ;
+        }
+
+      }
+
+      container performance-threshold-alarm {
+        if-feature performance-threshold-alarm ;
+
+        description 'Set performance threshold alarm switch.' ;
+        leaf state {
+          description 'State of performance threshold alarm switch.' ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Disable switch.' ;
+            }
+
+            enum enable {
+              value 1 ;
+              description 'Enable switch.' ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container netconf-report {
+        if-feature netconf-report ;
+
+        description 'Set the reporting alarm level.' ;
+        leaf severity {
+          description 'Severity level of the alarm code. If the customized alarm level of the product is any level in the 1-8 by default, the customized alarm level or above can be reported through netconf. The get node value is the customized alarm level. If the product has no customized default value, the get node value is off.' ;
+          type enumeration {
+            enum emergencies {
+              value 1 ;
+              description 'Level of emergencies.' ;
+            }
+
+            enum alerts {
+              value 2 ;
+              description 'Level of alerts.' ;
+            }
+
+            enum critical {
+              value 3 ;
+              description 'Level of critical.' ;
+            }
+
+            enum errors {
+              value 4 ;
+              description 'Level of errors.' ;
+            }
+
+            enum warnings {
+              value 5 ;
+              description 'Level of warnings.' ;
+            }
+
+            enum notifications {
+              value 6 ;
+              description 'Level of notifications.' ;
+            }
+
+            enum informational {
+              value 7 ;
+              description 'Level of informational.' ;
+            }
+
+            enum debugging {
+              value 8 ;
+              description 'Level of debugging.' ;
+            }
+
+            enum off {
+              value 9 ;
+              description 'Turn off alarm reporting through netconf.' ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container shield-profiles {
+        if-feature shield-profiles ;
+
+        description 'Config alarm shield profile.' ;
+        list shield-profile {
+          description 'Config alarm shield profile instance.' ;
+          max-elements 10 ;
+          key profile-name ;
+          leaf profile-name {
+            description "The alarm shield profile name.
+            These characters's ASCII unicode must be between 0x21-0x3E / 0x40-0x7E." ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          container codes {
+            if-feature shield-profiles-status-level {
+              ncd:revise-date 2022-03-11 ;
+            }
+
+            description 'Config alarm shield profile alarm codes.' ;
+            presence codes ;
+            list code {
+              description 'Config alarm shield profile alarm code instance.' ;
+              max-elements 32 ;
+              key code ;
+              leaf code {
+                description 'Alarm code. Range 1~0xFFFFFFFF, 0xFFFFFFFF for any code.' ;
+                type uint32 {
+                  range 1..4294967295 ;
+
+                }
+
+              }
+
+              leaf status {
+                description 'Alarm shield status.' ;
+                type enumeration {
+                  enum forever {
+                    value 1 ;
+                    description 'Shielded forever.' ;
+                  }
+
+                  enum once {
+                    value 2 ;
+                    description 'Shielded before the alarm is cleared.' ;
+                  }
+
+                }
+
+              }
+
+              leaf severity {
+                description 'The severity level of the alarm code modification.' ;
+                type alarm-level ;
+
+                ncd:revise-date 2019-05-09 ;
+              }
+
+            }
+
+          }
+
+          container apply-system {
+            description 'Set the shield for the whole system.' ;
+            presence apply-system ;
+            leaf system {
+              description 'System.' ;
+              type empty ;
+
+              mandatory true ;
+            }
+
+          }
+
+          container apply-boards {
+            description 'Set the shield for boards.' ;
+            list board {
+              description 'Set the shield for the board.' ;
+              max-elements 100 ;
+              key name ;
+              leaf name {
+                description 'Board name.' ;
+                type ncd:board ;
+
+              }
+
+            }
+
+          }
+
+          container apply-interfaces {
+            description 'Set the shield for interfaces.' ;
+            list interface {
+              description 'Set the shield for the interface.' ;
+              max-elements 100 ;
+              key name ;
+              leaf name {
+                description 'Interface name.' ;
+                type ncd:ifname ;
+
+              }
+
+            }
+
+          }
+
+          container codes-tpid-type {
+            if-feature shield-profiles-tpid-type ;
+
+            description 'Config alarm shield profile alarm codes.' ;
+            list code-tpid-type {
+              description 'Config alarm shield profile alarm code instance.' ;
+              max-elements 32 ;
+              key 'code tpid-type' ;
+              leaf code {
+                description 'Alarm code. Range 1~0xFFFFFFFF, 0xFFFFFFFF for any code.' ;
+                type uint32 {
+                  range 1..4294967295 ;
+
+                }
+
+              }
+
+              leaf tpid-type {
+                description 'Tpid type.Range 1~0xFFFF, 0xFFFF for any tpid type.' ;
+                type uint32 {
+                  range 1..65535 {
+                    description 'The tpid type, 65535 means all.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2022-03-11 ;
+          }
+
+        }
+
+        ncd:revise-date 2018-02-08 ;
+      }
+
+      container trap {
+        description 'Configure alarm trap.' ;
+        leaf para-varbind-list {
+          description 'Configure alarm trap para-varbind-list.' ;
+          type enumeration {
+            enum enable {
+              value 1 ;
+              description 'enable' ;
+            }
+
+            enum disable {
+              value 0 ;
+              description 'disable' ;
+            }
+
+          }
+
+        }
+
+        leaf version {
+          description 'Alarm trap version.
+v1: In alarm trap, the binding variable data type of id 1, 7, 8, 17, 18, 30, 31, 32, 33, 34, 35 and 36 is Integer32. In notification trap, the binding variable data type of id 1, 5, 14, 15 and 16 is Integer32. 
+v2: In alarm trap, the binding variable data type of id 1, 7, 8, 17, 18, 30, 32, 33, 34, 35 and 36 is Unsigned32. In the notification trap, the binding variable data type of id 1, 5, 14, 15 and 16 is Unsigned32.' ;
+          type enumeration {
+            enum v1 {
+              value 1 ;
+              description 'The 1st version alarm trap of ZTE.' ;
+            }
+
+            enum v2 {
+              value 2 ;
+              description 'The 2nd version alarm trap of ZTE.' ;
+            }
+
+          }
+
+          default v2 ;
+          ncd:revise-date 2022-03-06 ;
+        }
+
+        list alarm-oid-exclude {
+          leaf oid {
+            type enumeration {
+              enum curAlarmTPIDType {
+                value 9 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.9' ;
+              }
+
+              enum curAlarmTPID {
+                value 10 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.10' ;
+              }
+
+              enum curAlarmParaType {
+                value 11 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.11' ;
+              }
+
+              enum curAlarmParaValue {
+                value 12 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.12' ;
+              }
+
+              enum curAlarmDescription {
+                value 13 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.13' ;
+              }
+
+              enum curAlarmStdCode {
+                value 14 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.14' ;
+              }
+
+              enum curAlarmComment {
+                value 15 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.15' ;
+              }
+
+              enum curAlarmNetID {
+                value 16 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.16' ;
+              }
+
+              enum curAlarmUpdatedTime {
+                value 18 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.18' ;
+              }
+
+              enum curAlarmThAlmPeriod {
+                value 19 ;
+                description '1.3.6.1.4.1.3902.3.302.2.1.19' ;
+              }
+
+              enum curAlarmThAlmType {
+                value 20 ;
+                description '1.3.6.1.4.1.3902.3.302.2.1.20' ;
+              }
+
+              enum curAlarmThPerfValue {
+                value 21 ;
+                description '1.3.6.1.4.1.3902.3.302.2.1.21' ;
+              }
+
+              enum curAlarmReturnMode {
+                value 22 ;
+                description '1.3.6.1.4.1.3902.3.302.2.1.22' ;
+              }
+
+              enum curAlarmProtectType {
+                value 23 ;
+                description '1.3.6.1.4.1.3902.3.302.2.1.23' ;
+              }
+
+              enum curAlarmSwitchReason {
+                value 24 ;
+                description '1.3.6.1.4.1.3902.3.302.2.1.24' ;
+              }
+
+              enum curAlarmUlPrtGroupWrkStat {
+                description '1.3.6.1.4.1.3902.3.302.2.1.25' ;
+                value 25 ;
+              }
+
+              enum curAlarmTPIDTypeSwitchFrom {
+                value 26 ;
+                description '1.3.6.1.4.1.3902.3.302.2.1.26' ;
+              }
+
+              enum curAlarmTPIDSwitchFrom {
+                value 27 ;
+                description '1.3.6.1.4.1.3902.3.302.2.1.27' ;
+              }
+
+              enum curAlarmTPIDTypeSwitchTo {
+                value 28 ;
+                description '1.3.6.1.4.1.3902.3.302.2.1.28' ;
+              }
+
+              enum curAlarmTPIDSwitchTo {
+                value 29 ;
+                description '1.3.6.1.4.1.3902.3.302.2.1.29' ;
+              }
+
+              enum curAlarmTPIDLen {
+                value 31 ;
+                description '1.3.6.1.4.1.3902.3.302.2.1.31' ;
+              }
+
+              enum curAlarmTPIDLenSwitchFrom {
+                value 32 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.32' ;
+              }
+
+              enum curAlarmTPIDLenSwitchTo {
+                value 33 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.33' ;
+              }
+
+              enum curAlarmOccuredMs {
+                value 34 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.34' ;
+              }
+
+              enum curAlarmUpdatedMs {
+                value 35 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.35' ;
+              }
+
+              enum curAlarmDisappearedMs {
+                description '1.3.6.1.4.1.3902.3.302.1.1.36' ;
+                value 36 ;
+              }
+
+              enum curAlarmNeedConfirm {
+                value 37 ;
+                description '1.3.6.1.4.1.3902.3.302.1.1.37' ;
+              }
+
+              enum curAlarmName {
+                description '1.3.6.1.4.1.3902.3.302.1.1.39' ;
+                value 39 ;
+              }
+
+            }
+
+            description 'Variable binding OID.' ;
+          }
+
+          max-elements 100 ;
+          key oid ;
+          description 'Exclude variable binding from alarm trap.' ;
+          ncd:revise-date 2023-11-03 ;
+        }
+
+        list notification-oid-exclude {
+          leaf oid {
+            type enumeration {
+              enum notificationTPIDType {
+                value 6 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.6' ;
+              }
+
+              enum notificationTPID {
+                value 7 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.7' ;
+              }
+
+              enum notificationAlmParaType {
+                value 8 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.8' ;
+              }
+
+              enum notificationAlmParaValue {
+                value 9 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.9' ;
+              }
+
+              enum notificationAlmDescription {
+                value 10 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.10' ;
+              }
+
+              enum notificationAlmStdCode {
+                value 11 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.11' ;
+              }
+
+              enum notificationAlmComment {
+                value 12 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.12' ;
+              }
+
+              enum notificationAlmNetID {
+                value 13 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.13' ;
+              }
+
+              enum notificationTPIDLen {
+                value 15 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.15' ;
+              }
+
+              enum notificationAlmOccuredMs {
+                value 16 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.16' ;
+              }
+
+              enum notificationNeedConfirm {
+                value 17 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.17' ;
+              }
+
+              enum notificationAlmName {
+                value 19 ;
+                description '1.3.6.1.4.1.3902.3.302.6.1.19' ;
+              }
+
+            }
+
+            description 'Variable binding OID.' ;
+          }
+
+          max-elements 100 ;
+          key oid ;
+          description 'Exclude variable binding from notification trap.' ;
+          ncd:revise-date 2023-11-03 ;
+        }
+
+        ncd:revise-date 2021-10-21 ;
+      }
+
+      container mib-encode {
+        description 'Encode mib file.' ;
+        leaf para-value {
+          default hex-ascii ;
+          description 'Parameter value.' ;
+          type enumeration {
+            enum hex-ascii {
+              value 1 ;
+              description 'Hex-ascii encoding format.' ;
+            }
+
+            enum byte {
+              value 2 ;
+              description 'Byte encoding format.' ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2023-11-03 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    container alarm {
+      description 'Some query operation.' ;
+      list almLevel {
+        description 'For query severity level of alarm. Query condition: (1) code;(2)code+tpidType;(3)none for all.' ;
+        key 'code tpidType' ;
+        leaf code {
+          description 'Alarm code.' ;
+          type uint32 ;
+
+        }
+
+        leaf tpidType {
+          description 'The TPID type for alarm been detected.' ;
+          type uint16 ;
+
+        }
+
+        leaf level {
+          description 'Alarm severity level.' ;
+          type enumeration {
+            enum emergenciy {
+              value 1 ;
+            }
+
+            enum alert {
+              value 2 ;
+            }
+
+            enum critical {
+              value 3 ;
+            }
+
+            enum error {
+              value 4 ;
+            }
+
+            enum warning {
+              value 5 ;
+            }
+
+            enum notice {
+              value 6 ;
+            }
+
+            enum informational {
+              value 7 ;
+            }
+
+            enum debug {
+              value 8 ;
+            }
+
+          }
+
+        }
+
+        ncd:select code ;
+        ncd:select "code tpidType" ;
+      }
+
+      container currentAlarm {
+        description 'Current alarm info.' ;
+        list flowId {
+          description 'For query all alarm flow ID. Query condition: (1) almClass. (2) almFlwId + timeStamp. (3) sort' ;
+          key 'almFlwId timeStamp' ;
+          leaf almFlwId {
+            description 'Flow ID of alarm.' ;
+            type uint32 ;
+
+          }
+
+          leaf timeStamp {
+            description 'Time stamp of this alarm.' ;
+            type uint32 ;
+
+          }
+
+          leaf almClass {
+            description 'The class of alarm.' ;
+            type enumeration {
+              enum common-alarm {
+                value 1 ;
+              }
+
+              enum digital-perf-alarm {
+                value 2 ;
+              }
+
+              enum simulation-perf-alarm {
+                value 3 ;
+              }
+
+              enum switch-event {
+                value 4 ;
+              }
+
+              enum common-event {
+                value 5 ;
+              }
+
+            }
+
+          }
+
+          leaf sort {
+            description 'The sort of alarm.
+1:resources-full.' ;
+            type uint16 ;
+
+            ncd:revise-date 2017-08-23 ;
+          }
+
+          ncd:select almClass ;
+          ncd:select "almFlwId timeStamp" ;
+          ncd:select sort ;
+        }
+
+        list curRecords {
+          description 'Used to search current alarm, and return type switching events. Query condition: almFlwId + timeStamp.
+Four type: common alarm, protected switch event, and performence data alarm(digital or simulation).Every record is one of them.
+common alarm --- almFlwId/timeStamp/code/severity/almTime/almType/almStat/almClass/description/TpidType/Tpid/srcTpidType/srcTpid/sort.
+performence alarm --- almFlwId/timeStamp/code/severity/almTime/almType/almStat/almClass/description/TpidType/Tpid/srcTpidType/srcTpid/perfAlmType/threshAlmType/thPerfVal/sort.
+protected switch event --- almFlwId/timeStamp/code/severity/almTime/almType/almStat/almClass/description/protectTpidType/protectTpid/reason/returnMode/prtGroupWrkStat/switchTpidType/previosTpid/currentTpid/protectType/sort.' ;
+          key 'almFlwId timeStamp' ;
+          leaf almFlwId {
+            description 'Flow ID of alarm.' ;
+            type uint32 ;
+
+          }
+
+          leaf timeStamp {
+            description 'Time stamp of this alarm.' ;
+            type uint32 ;
+
+          }
+
+          leaf code {
+            description 'Alarm code.' ;
+            type uint32 ;
+
+          }
+
+          leaf severity {
+            description 'Secerity level for alarm.' ;
+            type enumeration {
+              enum emergenciy {
+                value 1 ;
+              }
+
+              enum alert {
+                value 2 ;
+              }
+
+              enum critical {
+                value 3 ;
+              }
+
+              enum error {
+                value 4 ;
+              }
+
+              enum warning {
+                value 5 ;
+              }
+
+              enum notice {
+                value 6 ;
+              }
+
+              enum informational {
+                value 7 ;
+              }
+
+              enum debug {
+                value 8 ;
+              }
+
+            }
+
+          }
+
+          leaf almOccurTime {
+            description 'Occur time, UTC, second from 1970-1-1 00:00:00. This leaf is valid when alarm stat is occur.' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf almUpdateTime {
+            description 'Occur time, UTC, second from 1970-1-1 00:00:00. This leaf is valid when alarm stat is update.' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf almType {
+            description 'Alarm type.' ;
+            type enumeration {
+              enum communication-alarm {
+                value 0 ;
+              }
+
+              enum qos-alarm {
+                value 1 ;
+              }
+
+              enum device-alarm {
+                value 2 ;
+              }
+
+              enum process-err-alarm {
+                value 3 ;
+              }
+
+              enum enviroment-alarm {
+                value 4 ;
+              }
+
+            }
+
+          }
+
+          leaf almStat {
+            description 'Alarm status.' ;
+            type enumeration {
+              enum disappear {
+                value 0 ;
+              }
+
+              enum occur {
+                value 1 ;
+              }
+
+              enum update {
+                value 2 ;
+              }
+
+            }
+
+          }
+
+          leaf almClass {
+            description 'Alarm class.' ;
+            type enumeration {
+              enum common-alarm {
+                value 1 ;
+              }
+
+              enum digital-alarm {
+                value 2 ;
+              }
+
+              enum simulation-alarm {
+                value 3 ;
+              }
+
+              enum switch-event {
+                value 4 ;
+              }
+
+              enum common-event {
+                value 5 ;
+              }
+
+            }
+
+          }
+
+          leaf description {
+            description 'Description for alarm.' ;
+            type ncd:string-all {
+              length 0..512 ;
+
+            }
+
+          }
+
+          leaf caption {
+            description "Alarm title. The 'caption' and 'description' together constitute a complete description of the alarm. That is, the complete description = 'caption' + 'description'." ;
+            type ncd:string-all {
+              length 0..80 ;
+
+            }
+
+          }
+
+          leaf tpidType {
+            description 'The TPID type for alarm been detected.' ;
+            type uint16 ;
+
+          }
+
+          leaf tpid {
+            description 'The TPID for alarm been detected.' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf tpidLen {
+            description 'The TPID length for alarm been detected.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+          leaf srcTpidType {
+            description 'The TPID type of alarm from.' ;
+            type uint16 ;
+
+          }
+
+          leaf srcTpid {
+            description 'The TPID of alarm from.' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf srcTpidLen {
+            description 'The TPID length of alarm from.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+          leaf perfAlmType {
+            description 'Type of performance alarm.' ;
+            type performance-alarm-type ;
+
+          }
+
+          leaf thAlmPeriod {
+            description 'Performance alarm type, 15(5)min or 24h.' ;
+            type enumeration {
+              enum fifteen-minutes {
+                value 15 ;
+              }
+
+              enum twenty-four-hours {
+                value 24 ;
+              }
+
+              enum invalid-period {
+                value 254 ;
+              }
+
+              enum five-minutes {
+                value 5 ;
+              }
+
+            }
+
+          }
+
+          leaf thPerfVal {
+            description 'The performance value when alarm occur. Length 10 bytes( see document).' ;
+            type binary {
+              length 10 ;
+
+            }
+
+          }
+
+          leaf protectTpidType {
+            description 'Protect TPID type.' ;
+            type uint16 ;
+
+          }
+
+          leaf protectTpid {
+            description 'Protect TPID (protect group).' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf protectTpidLen {
+            description 'Protect TPID length.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+          leaf reason {
+            description 'Reason code for switch-event or common event. Reason code see document.' ;
+            type uint16 ;
+
+          }
+
+          leaf returnMode {
+            description 'Return mode switching events.' ;
+            type enumeration {
+              enum return-mode {
+                value 1 ;
+              }
+
+              enum not-return-mode {
+                value 2 ;
+              }
+
+              enum invalid-mode {
+                value 254 ;
+              }
+
+            }
+
+          }
+
+          leaf prtGroupWrkStat {
+            description 'Work status of protect group.' ;
+            type uint32 ;
+
+          }
+
+          leaf swtichTpidType {
+            description "The TPID type be protected. That's the TPID type of previos and current." ;
+            type uint16 ;
+
+          }
+
+          leaf previosTpid {
+            description 'Leave TPID when protecting.' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf previosTpidLen {
+            description 'Leave TPID length when protecting.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+          leaf currentTpid {
+            description 'The destination TPID when protecting.' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf currentTpidLen {
+            description 'The destination TPID length when protecting.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+          leaf protectType {
+            description 'Protect type.' ;
+            type uint16 ;
+
+          }
+
+          leaf sort {
+            description 'The sort of alarm.
+1:resources-full.' ;
+            type uint16 ;
+
+            ncd:revise-date 2017-08-23 ;
+          }
+
+          leaf almOccurMs {
+            description 'Occur millisecond. This leaf is valid when alarm stat is occur.' ;
+            type uint16 ;
+
+            units millisecond ;
+            ncd:revise-date 2018-09-05 ;
+          }
+
+          leaf almUpdateMs {
+            description 'Occur millisecond. This leaf is valid when alarm stat is update.' ;
+            type uint16 ;
+
+            units millisecond ;
+            ncd:revise-date 2018-09-05 ;
+          }
+
+          leaf peid {
+            description 'Satellite ID. 0:Invalid Value' ;
+            type uint32 {
+              range 0..250 ;
+
+            }
+
+            ncd:revise-date 2023-03-21 ;
+          }
+
+          leaf tpid-desc {
+            description 'The description of TPID.' ;
+            type ncd:string-all {
+              length 0..127 ;
+
+            }
+
+            ncd:revise-date 2024-05-22 ;
+          }
+
+          leaf module {
+            type ncd:string-all {
+              length 0..35 ;
+
+            }
+
+            description 'Alarm module name.' ;
+            ncd:revise-date 2025-01-06 ;
+          }
+
+          ncd:select "almFlwId timeStamp" ;
+        }
+
+      }
+
+      container historyAlarm {
+        description 'history alarm info.' ;
+        list hisRecords {
+          description 'Used to search current alarm. 
+Query condition: 
+ (1) almFlwId + timeStamp.
+ (2) almClass + beginTime + endTime. 
+ (3) beginTime + endTime.
+ (4) sort
+Four type: common alarm, common event, switch event, and performence data alarm.Every record is one of them.
+common alarm --- almFlwId/timeStamp/code/severity/almOccurTime/almDisappearTime/almUpdateTime/almType/almStat/almClass/description/TpidType/Tpid/srcTpidType/srcTpid/sort.
+common event --- almFlwId/timeStamp/code/severity/almOccurTime/almClass/description/TpidType/Tpid/reason.
+performence alarm --- almFlwId/timeStamp/code/severity/almOccurTime/almDisappearTime/almUpdateTime/almType/almStat/almClass/description/TpidType/Tpid/srcTpidType/srcTpid/perfAlmType/threshAlmType/thPerfVal/sort.
+switch event --- almFlwId/timeStamp/code/severity/almOccurTime/almDisappearTime/almUpdateTime/almType/almStat/almClass/description/protectTpidType/protectTpid/reason/returnMode/prtGroupWrkStat/switchTpidType/previosTpid/currentTpid/protectType/sort.' ;
+          key 'almFlwId timeStamp' ;
+          leaf almFlwId {
+            description 'Flow ID of alarm.' ;
+            type uint32 ;
+
+          }
+
+          leaf timeStamp {
+            description 'Time stamp of this alarm.' ;
+            type uint32 ;
+
+          }
+
+          leaf code {
+            description 'Alarm code.' ;
+            type uint32 ;
+
+          }
+
+          leaf severity {
+            description 'Secerity level for alarm.' ;
+            type enumeration {
+              enum emergenciy {
+                value 1 ;
+              }
+
+              enum alert {
+                value 2 ;
+              }
+
+              enum critical {
+                value 3 ;
+              }
+
+              enum error {
+                value 4 ;
+              }
+
+              enum warning {
+                value 5 ;
+              }
+
+              enum notice {
+                value 6 ;
+              }
+
+              enum informational {
+                value 7 ;
+              }
+
+              enum debug {
+                value 8 ;
+              }
+
+            }
+
+          }
+
+          leaf almOccurTime {
+            description 'Occur time, UTC, second from 1970-1-1 00:00:00.' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf almDisappearTime {
+            description 'Disappear time, UTC, second from 1970-1-1 00:00:00.' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf almUpdateTime {
+            description 'Disappear time, UTC, second from 1970-1-1 00:00:00. Used when alarm status is update.' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf almType {
+            description 'Alarm type.' ;
+            type enumeration {
+              enum communication-alarm {
+                value 0 ;
+              }
+
+              enum qos-alarm {
+                value 1 ;
+              }
+
+              enum device-alarm {
+                value 2 ;
+              }
+
+              enum process-err-alarm {
+                value 3 ;
+              }
+
+              enum enviroment-alarm {
+                value 4 ;
+              }
+
+            }
+
+          }
+
+          leaf almStat {
+            description 'Alarm status.' ;
+            type enumeration {
+              enum disappear {
+                value 0 ;
+              }
+
+              enum occur {
+                value 1 ;
+              }
+
+              enum update {
+                value 2 ;
+              }
+
+            }
+
+          }
+
+          leaf almClass {
+            description 'Alarm class.' ;
+            type enumeration {
+              enum common-alarm {
+                value 1 ;
+              }
+
+              enum digital-alarm {
+                value 2 ;
+              }
+
+              enum simulation-alarm {
+                value 3 ;
+              }
+
+              enum switch-event {
+                value 4 ;
+              }
+
+              enum common-event {
+                value 5 ;
+              }
+
+            }
+
+          }
+
+          leaf description {
+            description 'Description for alarm.' ;
+            type ncd:string-all {
+              length 0..512 ;
+
+            }
+
+          }
+
+          leaf caption {
+            description "Alarm title. The 'caption' and 'description' together constitute a complete description of the alarm. That is, the complete description = 'caption' + 'description'." ;
+            type ncd:string-all {
+              length 0..80 ;
+
+            }
+
+          }
+
+          leaf tpidType {
+            description 'The TPID type for alarm been detected.' ;
+            type uint16 ;
+
+          }
+
+          leaf tpid {
+            description 'The TPID for alarm been detected.' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf tpidLen {
+            description 'The TPID length for alarm been detected.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+          leaf srcTpidType {
+            description 'The TPID type of alarm from.' ;
+            type uint16 ;
+
+          }
+
+          leaf srcTpid {
+            description 'The TPID of alarm from.' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf srcTpidLen {
+            description 'The TPID length of alarm from.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+          leaf perfAlmType {
+            description 'Type of performance alarm.' ;
+            type performance-alarm-type ;
+
+          }
+
+          leaf thAlmPeriod {
+            description 'Performance alarm type, 15(5)min or 24h.' ;
+            type enumeration {
+              enum fifteen-minutes {
+                value 15 ;
+              }
+
+              enum twenty-four-hours {
+                value 24 ;
+              }
+
+              enum invalid-period {
+                value 254 ;
+              }
+
+              enum five-minutes {
+                value 5 ;
+              }
+
+            }
+
+          }
+
+          leaf thPerfVal {
+            description 'The performance value when alarm occur. Length 10 bytes( see document).' ;
+            type binary {
+              length 10 ;
+
+            }
+
+          }
+
+          leaf protectTpidType {
+            description 'Protect TPID type.' ;
+            type uint16 ;
+
+          }
+
+          leaf protectTpid {
+            description 'Protect TPID (protect group).' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf protectTpidLen {
+            description 'Protect TPID length.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+          leaf reason {
+            description 'Reason code for switch-event or common event. Reason code see document.' ;
+            type uint16 ;
+
+          }
+
+          leaf returnMode {
+            description 'Return mode switching events.' ;
+            type enumeration {
+              enum return-mode {
+                value 1 ;
+              }
+
+              enum not-return-mode {
+                value 2 ;
+              }
+
+              enum invalid-mode {
+                value 254 ;
+              }
+
+            }
+
+          }
+
+          leaf prtGroupWrkStat {
+            description 'Work status of protect group.' ;
+            type uint32 ;
+
+          }
+
+          leaf swtichTpidType {
+            description "The TPID type be protected. That's the TPID type of previos and current." ;
+            type uint16 ;
+
+          }
+
+          leaf previosTpid {
+            description 'Leave TPID when protecting.' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf previosTpidLen {
+            description 'Leave TPID length when protecting.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+          leaf currentTpid {
+            description 'The destination TPID when protecting.' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf currentTpidLen {
+            description 'The destination TPID length when protecting.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+          leaf protectType {
+            description 'Protect type.' ;
+            type uint16 ;
+
+          }
+
+          leaf beginTime {
+            description 'The start time for search.When return is useless.' ;
+            type ncd:datetime ;
+
+          }
+
+          leaf endTime {
+            description 'The end time for search.When return is useless.' ;
+            type ncd:datetime ;
+
+          }
+
+          leaf sort {
+            description 'The sort of alarm.
+1:resources-full.' ;
+            type uint16 ;
+
+            ncd:revise-date 2017-08-23 ;
+          }
+
+          leaf almOccurMs {
+            description 'Occur millisecond.' ;
+            type uint16 ;
+
+            units millisecond ;
+            ncd:revise-date 2018-09-05 ;
+          }
+
+          leaf almUpdateMs {
+            description 'Occur millisecond.' ;
+            type uint16 ;
+
+            units millisecond ;
+            ncd:revise-date 2018-09-05 ;
+          }
+
+          leaf almDisappearMs {
+            description 'Disappear millisecond.' ;
+            type uint16 ;
+
+            units millisecond ;
+            ncd:revise-date 2018-09-05 ;
+          }
+
+          leaf peid {
+            description 'Satellite ID. 0:Invalid Value' ;
+            type uint32 {
+              range 0..250 ;
+
+            }
+
+            ncd:revise-date 2023-03-21 ;
+          }
+
+          leaf module {
+            type ncd:string-all {
+              length 0..35 ;
+
+            }
+
+            description 'Alarm module name.' ;
+            ncd:revise-date 2025-01-06 ;
+          }
+
+          ncd:select "almFlwId timeStamp" ;
+          ncd:select "almClass beginTime endTime" ;
+          ncd:select "beginTime endTime" ;
+          ncd:select sort ;
+        }
+
+      }
+
+      container notification {
+        description 'Notification info.' ;
+        list record {
+          description 'Used to search notification. 
+Query condition: 
+ (1) flwid + timestamp.
+ (2) begin-time + end-time.
+ (3) sort.' ;
+          key 'flwid timestamp' ;
+          leaf flwid {
+            description 'Flow ID of alarm.' ;
+            type uint32 ;
+
+          }
+
+          leaf timestamp {
+            description 'Time stamp of this alarm.' ;
+            type uint32 ;
+
+          }
+
+          leaf code {
+            description 'Alarm code.' ;
+            type uint32 ;
+
+          }
+
+          leaf severity {
+            description 'Secerity level for alarm.' ;
+            type enumeration {
+              enum emergenciy {
+                value 1 ;
+              }
+
+              enum alert {
+                value 2 ;
+              }
+
+              enum critical {
+                value 3 ;
+              }
+
+              enum error {
+                value 4 ;
+              }
+
+              enum warning {
+                value 5 ;
+              }
+
+              enum notice {
+                value 6 ;
+              }
+
+              enum informational {
+                value 7 ;
+              }
+
+              enum debug {
+                value 8 ;
+              }
+
+            }
+
+          }
+
+          leaf occur-time {
+            description 'Occur time, UTC, second from 1970-1-1 00:00:00.' ;
+            type uint32 ;
+
+            units second ;
+          }
+
+          leaf classify {
+            description 'Alarm type.' ;
+            type enumeration {
+              enum communication-alarm {
+                value 0 ;
+              }
+
+              enum qos-alarm {
+                value 1 ;
+              }
+
+              enum device-alarm {
+                value 2 ;
+              }
+
+              enum process-err-alarm {
+                value 3 ;
+              }
+
+              enum enviroment-alarm {
+                value 4 ;
+              }
+
+            }
+
+          }
+
+          leaf description {
+            description 'Description for notification.' ;
+            type ncd:string-all {
+              length 0..512 ;
+
+            }
+
+          }
+
+          leaf caption {
+            description "Title for notification. The 'caption' and 'description' together constitute a complete description of the notification. That is, the complete description = 'caption' + 'description'." ;
+            type ncd:string-all {
+              length 0..80 ;
+
+            }
+
+          }
+
+          leaf tpid-type {
+            description 'The TPID type for alarm been detected.' ;
+            type uint16 ;
+
+          }
+
+          leaf tpid {
+            description 'The TPID for alarm been detected.' ;
+            type binary {
+              length 62..128 ;
+
+            }
+
+          }
+
+          leaf tpidLen {
+            description 'The TPID length for alarm been detected.' ;
+            type uint8 {
+              range 62..128 ;
+
+            }
+
+          }
+
+          leaf begin-time {
+            description 'The start time for search.When return is useless.' ;
+            type ncd:datetime ;
+
+          }
+
+          leaf end-time {
+            description 'The end time for search.When return is useless.' ;
+            type ncd:datetime ;
+
+          }
+
+          leaf sort {
+            description 'The sort of alarm.
+1:resources-full.' ;
+            type uint16 ;
+
+            ncd:revise-date 2017-08-23 ;
+          }
+
+          leaf occur-ms {
+            description 'Occur millisecond.' ;
+            type uint16 ;
+
+            units millisecond ;
+            ncd:revise-date 2018-09-05 ;
+          }
+
+          leaf peid {
+            description 'Satellite ID. 0:Invalid Value' ;
+            type uint32 {
+              range 0..250 ;
+
+            }
+
+            ncd:revise-date 2023-03-21 ;
+          }
+
+          leaf module {
+            type ncd:string-all {
+              length 0..35 ;
+
+            }
+
+            description 'Alarm module name.' ;
+            ncd:revise-date 2025-01-06 ;
+          }
+
+          ncd:select "flwid timestamp" ;
+          ncd:select "begin-time end-time" ;
+          ncd:select sort ;
+        }
+
+      }
+
+    }
+
+  }
+
+  notification current-alarm-report {
+    description 'Report alarm to network manager.
+Five type: common alarm, switch event, common event and performence alarm(digital or simulation).Every record is one of them.
+common alarm --- flow-id/timestamp/code/severity/alarm-time/alarm-type/alarm-status/alarm-class/description/tpid-type/tpid/tpid-length/source-tpid-type/source-tpid/source-tpid-length.
+performence alarm --- flow-id/timestamp/code/severity/alarm-time/alarm-type/alarm-status/alarm-class/description/tpid-type/tpid/tpid-length/source-tpid-type/source-tpid/source-tpid-length/perf-alarm-type/perf-alarm-period/perf-alarm-value.
+switch event --- flow-id/timestamp/code/severity/alarm-time/alarm-type/alarm-status/alarm-class/description/protect-tpid-type/protect-tpid/protect-tpid-length/reason/return-mode/protect-group-work-status/swtich-tpid-type/previous-tpid/previous-tpid-length/current-tpid/current-tpid-length/protect-type.
+common event --- flow-id/timestamp/code/severity/occurrence-time/alarm-class/description/tpid-type/tpid/tpid-length/reason.' ;
+    if-feature netconf-report ;
+
+    leaf flow-id {
+      config false ;
+      description 'Flow ID of alarm.' ;
+      type uint32 ;
+
+    }
+
+    leaf timestamp {
+      config false ;
+      description 'Time stamp of this alarm.' ;
+      type uint32 ;
+
+    }
+
+    leaf code {
+      config false ;
+      description 'Alarm code.' ;
+      type uint32 ;
+
+    }
+
+    leaf severity {
+      config false ;
+      description 'Secerity level for alarm.' ;
+      type alarm-level ;
+
+    }
+
+    leaf occurrence-time {
+      config false ;
+      description 'Occurrence time, UTC, second from 1970-1-1 00:00:00. This leaf is valid when alarm stat is occur.' ;
+      type uint32 ;
+
+      units second ;
+    }
+
+    leaf update-time {
+      config false ;
+      description 'Occur time, UTC, second from 1970-1-1 00:00:00. This leaf is valid when alarm stat is update.' ;
+      type uint32 ;
+
+      units second ;
+    }
+
+    leaf disappeared-time {
+      config false ;
+      description 'Disappear time, UTC, second from 1970-1-1 00:00:00.' ;
+      type uint32 ;
+
+      units second ;
+    }
+
+    leaf alarm-type {
+      config false ;
+      description 'Alarm type.' ;
+      type alarm-type ;
+
+    }
+
+    leaf alarm-status {
+      config false ;
+      description 'Alarm status.' ;
+      type enumeration {
+        enum disappear {
+          value 0 ;
+        }
+
+        enum occur {
+          value 1 ;
+        }
+
+        enum update {
+          value 2 ;
+        }
+
+      }
+
+    }
+
+    leaf alarm-class {
+      config false ;
+      description 'Alarm class.' ;
+      type enumeration {
+        enum common-alarm {
+          value 1 ;
+        }
+
+        enum digital-alarm {
+          value 2 ;
+        }
+
+        enum simulation-alarm {
+          value 3 ;
+        }
+
+        enum switch-event {
+          value 4 ;
+        }
+
+        enum common-event {
+          value 5 ;
+        }
+
+      }
+
+    }
+
+    leaf description {
+      config false ;
+      description 'Description for alarm.' ;
+      type ncd:string-all {
+        length 0..512 ;
+
+      }
+
+    }
+
+    leaf caption {
+      config false ;
+      description "Alarm title. The 'caption' and 'description' together constitute a complete description of the alarm. That is, the complete description = 'caption' + 'description'." ;
+      type ncd:string-all {
+        length 0..80 ;
+
+      }
+
+    }
+
+    leaf tpid-type {
+      config false ;
+      description 'The TPID type for alarm been detected.' ;
+      type uint16 ;
+
+    }
+
+    leaf tpid {
+      config false ;
+      description 'The TPID for alarm been detected.' ;
+      type binary {
+        length 62..128 ;
+
+      }
+
+    }
+
+    leaf tpid-length {
+      config false ;
+      description 'The TPID length for alarm been detected.' ;
+      type uint8 {
+        range 62..128 ;
+
+      }
+
+    }
+
+    leaf source-tpid-type {
+      config false ;
+      description 'The TPID type of alarm from.' ;
+      type uint16 ;
+
+    }
+
+    leaf source-tpid {
+      config false ;
+      description 'The TPID of alarm from.' ;
+      type binary {
+        length 62..128 ;
+
+      }
+
+    }
+
+    leaf source-tpid-length {
+      config false ;
+      description 'The TPID length of alarm from.' ;
+      type uint8 {
+        range 62..128 ;
+
+      }
+
+    }
+
+    leaf perf-alarm-type {
+      config false ;
+      description 'Type of performance alarm.' ;
+      type performance-alarm-type ;
+
+    }
+
+    leaf perf-alarm-period {
+      config false ;
+      description 'Performance alarm type, 15(5)min or 24h.' ;
+      type enumeration {
+        enum fifteen-minutes {
+          value 15 ;
+        }
+
+        enum twenty-four-hours {
+          value 24 ;
+        }
+
+        enum invalid-period {
+          value 254 ;
+        }
+
+        enum five-minutes {
+          value 5 ;
+        }
+
+      }
+
+    }
+
+    leaf perf-alarm-value {
+      config false ;
+      description 'The performance value when alarm occur. Length 10 bytes( see document).' ;
+      type binary {
+        length 10 ;
+
+      }
+
+    }
+
+    leaf protect-tpid-type {
+      config false ;
+      description 'Protect TPID type.' ;
+      type uint16 ;
+
+    }
+
+    leaf protect-tpid {
+      config false ;
+      description 'Protect TPID (protect group).' ;
+      type binary {
+        length 62..128 ;
+
+      }
+
+    }
+
+    leaf protect-tpid-length {
+      config false ;
+      description 'Protect TPID length.' ;
+      type uint8 {
+        range 62..128 ;
+
+      }
+
+    }
+
+    leaf reason {
+      config false ;
+      description 'Reason code for switch-event or common event. Reason code see document.' ;
+      type uint16 ;
+
+    }
+
+    leaf return-mode {
+      config false ;
+      description 'Return mode switching events.' ;
+      type enumeration {
+        enum return-mode {
+          value 1 ;
+        }
+
+        enum not-return-mode {
+          value 2 ;
+        }
+
+        enum invalid-mode {
+          value 254 ;
+        }
+
+      }
+
+    }
+
+    leaf protect-group-work-status {
+      config false ;
+      description 'Work status of protect group.' ;
+      type uint32 ;
+
+    }
+
+    leaf swtich-tpid-type {
+      config false ;
+      description "The TPID type be protected. That's the TPID type of previos and current." ;
+      type uint16 ;
+
+    }
+
+    leaf previous-tpid {
+      config false ;
+      description 'Leave TPID when protecting.' ;
+      type binary {
+        length 62..128 ;
+
+      }
+
+    }
+
+    leaf previous-tpid-length {
+      config false ;
+      description 'Leave TPID length when protecting.' ;
+      type uint8 {
+        range 62..128 ;
+
+      }
+
+    }
+
+    leaf current-tpid {
+      config false ;
+      description 'The destination TPID when protecting.' ;
+      type binary {
+        length 62..128 ;
+
+      }
+
+    }
+
+    leaf current-tpid-length {
+      config false ;
+      description 'The destination TPID length when protecting.' ;
+      type uint8 {
+        range 62..128 ;
+
+      }
+
+    }
+
+    leaf protect-type {
+      config false ;
+      description 'Protect type.' ;
+      type uint16 ;
+
+    }
+
+    leaf sort {
+      config false ;
+      description 'The sort of alarm.
+1:resources-full.' ;
+      type uint16 ;
+
+      ncd:revise-date 2017-08-23 ;
+    }
+
+    leaf occurrence-ms {
+      config false ;
+      description 'Occurrence millisecond. This leaf is valid when alarm stat is occur.' ;
+      type uint16 {
+        range 0..999 ;
+
+      }
+
+      units millisecond ;
+      ncd:revise-date 2018-09-05 ;
+    }
+
+    leaf update-ms {
+      config false ;
+      description 'Occur millisecond. This leaf is valid when alarm stat is update.' ;
+      type uint16 ;
+
+      units millisecond ;
+      ncd:revise-date 2018-09-05 ;
+    }
+
+    leaf disappeared-ms {
+      config false ;
+      description 'Disappear millisecond. This leaf is valid when alarm stat is disappear.' ;
+      type uint16 ;
+
+      units millisecond ;
+      ncd:revise-date 2018-09-05 ;
+    }
+
+    leaf peid {
+      config false ;
+      description 'Satellite ID. 0:Invalid Value' ;
+      type uint32 {
+        range 0..250 ;
+
+      }
+
+      ncd:revise-date 2023-03-21 ;
+    }
+
+    leaf module {
+      type ncd:string-all {
+        length 0..35 ;
+
+      }
+
+      description 'Alarm module name.' ;
+      config false ;
+      ncd:revise-date 2025-01-06 ;
+    }
+
+    ncd:revise-date 2014-11-28 ;
+  }
+
+  notification notification-report {
+    description 'Report notification to network manager.' ;
+    if-feature netconf-report ;
+
+    leaf flow-id {
+      config false ;
+      description 'Flow ID of alarm.' ;
+      type uint32 ;
+
+    }
+
+    leaf timestamp {
+      config false ;
+      description 'Time stamp of this alarm.' ;
+      type uint32 ;
+
+    }
+
+    leaf code {
+      config false ;
+      description 'Alarm code.' ;
+      type uint32 ;
+
+    }
+
+    leaf severity {
+      config false ;
+      description 'Secerity level for alarm.' ;
+      type alarm-level ;
+
+    }
+
+    leaf occur-time {
+      config false ;
+      description 'Occur time, UTC, second from 1970-1-1 00:00:00.' ;
+      type uint32 ;
+
+      units second ;
+    }
+
+    leaf classification {
+      config false ;
+      description 'Alarm type.' ;
+      type alarm-type ;
+
+    }
+
+    leaf description {
+      config false ;
+      description 'Description for notification.' ;
+      type ncd:string-all {
+        length 0..512 ;
+
+      }
+
+    }
+
+    leaf caption {
+      config false ;
+      description "Title for notification. The 'caption' and 'description' together constitute a complete description of the notification. That is, the complete description = 'caption' + 'description'." ;
+      type ncd:string-all {
+        length 0..80 ;
+
+      }
+
+    }
+
+    leaf tpid-type {
+      config false ;
+      description 'The TPID type for alarm been detected.' ;
+      type uint16 ;
+
+    }
+
+    leaf tpid {
+      config false ;
+      description 'The TPID for alarm been detected.' ;
+      type binary {
+        length 62..128 ;
+
+      }
+
+    }
+
+    leaf tpid-length {
+      config false ;
+      description 'The TPID length for alarm been detected.' ;
+      type uint8 {
+        range 62..128 ;
+
+      }
+
+    }
+
+    leaf sort {
+      config false ;
+      description 'The sort of alarm.
+1:resources-full.' ;
+      type uint16 ;
+
+      ncd:revise-date 2017-08-23 ;
+    }
+
+    leaf occur-ms {
+      config false ;
+      description 'Occur millisecond.' ;
+      type uint16 ;
+
+      units millisecond ;
+      ncd:revise-date 2018-09-05 ;
+    }
+
+    leaf peid {
+      config false ;
+      description 'Satellite ID. 0:Invalid Value' ;
+      type uint32 {
+        range 0..250 ;
+
+      }
+
+      ncd:revise-date 2023-03-21 ;
+    }
+
+    leaf module {
+      type ncd:string-all {
+        length 0..35 ;
+
+      }
+
+      description 'Alarm module name.' ;
+      config false ;
+      ncd:revise-date 2025-01-06 ;
+    }
+
+    ncd:revise-date 2014-11-28 ;
+  }
+
+  notification alarm-preload-cancel-report {
+    description 'When an alarm preload autorecover rule canceled, report it to network manager.' ;
+    if-feature netconf-report ;
+
+    leaf if-name {
+      config false ;
+      description 'Interface name.' ;
+      type ncd:ifname ;
+
+    }
+
+    ncd:revise-date 2014-11-28 ;
+  }
+
+  rpc alarm-clear {
+    input {
+      container clear-para {
+        description 'The parameters for alarm clearing.' ;
+        config false ;
+        leaf-list alarm-flow-id {
+          type uint32 ;
+
+          description 'The alarm flow ID to be cleared. No more than 100 entries can be cleared per operation.' ;
+        }
+
+      }
+
+    }
+
+    description 'This operation deletes uncleared alarms on the device. ' ;
+    output {
+      leaf clear-result {
+        type alarm-clear-result ;
+
+        config false ;
+        description 'Result of the clear operation.' ;
+      }
+
+      container flow-id-result {
+        leaf processed-number {
+          type uint32 ;
+
+          description 'Number of processed flow ID.' ;
+        }
+
+        list non-existent-flow-id {
+          leaf alarm-flow-id {
+            type uint32 ;
+
+            description 'The alarm flow ID.' ;
+          }
+
+          description 'List of alarm flow IDs that do not exist.' ;
+        }
+
+        description 'Result of the flow ID.' ;
+        config false ;
+        list success-flow-id {
+          leaf alarm-flow-id {
+            type uint32 ;
+
+            description 'The alarm flow ID.' ;
+          }
+
+          description 'List of alarm flow IDs that are cleared successfully. If the clear-result node value is success, this list is not reported.' ;
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2025-06-20 ;
+  }
+
+}

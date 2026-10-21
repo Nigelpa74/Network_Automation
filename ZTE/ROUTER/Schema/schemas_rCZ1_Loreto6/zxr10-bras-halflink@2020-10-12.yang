@@ -1,0 +1,160 @@
+module zxr10-bras-halflink {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/bras-halflink'
+            ;
+  prefix halflink ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  revision 2020-10-12 {
+    description 'Add user-type IP-Host'
+                ;
+  }
+  revision 2020-07-16 {
+    description 'Add dynamic control.'
+                ;
+  }
+  revision 2020-06-20 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description Configuration ;
+    container subscriber-manager {
+      container user-request {
+        container global-user-request {
+          leaf switch {
+            type enumeration {
+              enum disable {
+                value 0 ;
+              }
+              enum enable {
+                value 1 ;
+              }
+            }
+            default enable ;
+          }
+          leaf pppox-threshold {
+            type uint32 {
+              range 1..48000 ;
+            }
+            default 2000 ;
+          }
+          leaf pppox-timeout {
+            type uint16 {
+              range 60..600 ;
+            }
+            default 60 ;
+          }
+          leaf iphost-threshold {
+            type uint32 {
+              range 1..48000 ;
+            }
+            default 200 ;
+            ncd:revise-date 2020-10-12 ;
+          }
+          leaf iphost-timeout {
+            type uint16 {
+              range 60..600 ;
+            }
+            default 60 ;
+            ncd:revise-date 2020-10-12 ;
+          }
+          leaf ipox-threshold {
+            type uint32 {
+              range 1..48000 ;
+            }
+            default 200 ;
+          }
+          leaf ipox-timeout {
+            type uint16 {
+              range 60..600 ;
+            }
+            default 60 ;
+          }
+        }
+        list slot-user-request {
+          key 'slot user-type'
+              ;
+          leaf slot {
+            type uint8 {
+              range 0..17 ;
+            }
+          }
+          leaf switch {
+            type enumeration {
+              enum disable {
+                value 0 ;
+              }
+              enum enable {
+                value 1 ;
+              }
+            }
+          }
+          leaf threshold {
+            type uint32 {
+              range 1..48000 ;
+            }
+          }
+          leaf timeout {
+            type uint16 {
+              range 60..600 ;
+            }
+          }
+          leaf user-type {
+            type enumeration {
+              enum ipox {
+                value 0 ;
+              }
+              enum pppox {
+                value 1 ;
+              }
+              enum ip-host {
+                value 2 ;
+              }
+            }
+          }
+        }
+        container dynamic-control {
+          leaf global-dynamic-switch {
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+              enum disable {
+                value 0 ;
+              }
+            }
+            default enable ;
+          }
+          list slot-dynamic-switch {
+            key slot ;
+            leaf slot {
+              type uint8 {
+                range 0..17 ;
+              }
+            }
+            leaf switch {
+              type enumeration {
+                enum disable {
+                  value 0 ;
+                }
+                enum enable {
+                  value 1 ;
+                }
+              }
+            }
+          }
+          ncd:revise-date 2020-07-16 ;
+        }
+      }
+    }
+  }
+}

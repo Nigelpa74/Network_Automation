@@ -17,14 +17,13 @@ USAR_CAPS_ZTE = True         # True: Anuncia las capabilities requeridas por ROS
 # =============================================================================
 CONFIG_XML = """
 <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-
     <!-- Módulo 1: Gestión de servidor Tacacs+ (Tacplus) -->
     <configuration xmlns="http://www.zte.com.cn/zxr10/netconf/schema/rosng/tacplus">
       <tacplus>
         <global>
           <enable-state>enable</enable-state>
           <tacacs-client>
-            <source-interface>vlan99</source-interface>
+            <source-interface>vlan94</source-interface>
           </tacacs-client>
           <timeout>5</timeout>
         </global>
@@ -82,10 +81,11 @@ CONFIG_XML = """
       </aaa>
   </configuration>
 
+
+
   <!-- Módulo 3: Gestión de Usuarios (adm-mgr) -->
   <configuration xmlns="http://www.zte.com.cn/zxr10/netconf/schema/rosng/adm-mgr">
     <adm-mgr>
-
       <global-configuration>
         <account-switch>
           <on/>
@@ -97,66 +97,115 @@ CONFIG_XML = """
         </default-user>
       </global-configuration>
 
+
       <usernames>
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>aoncebay</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>3</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username>
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>sartica</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>3</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username>
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>rsanchez</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>3</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username>
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>operador.global</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>3</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username>
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>wjesus</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>3</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username>
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>jhuaman</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>3</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username>
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>jmoreno</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>3</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username>
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>yhuatuco</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>3</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username>
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>gcahuana</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>3</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username>
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>amendez</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>3</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username>        
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>acuba</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>3</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username> 
         <username xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="merge">
           <name>Admin</name>
           <bind-authen-template>2</bind-authen-template>
           <bind-author-template>2</bind-author-template>
+          <enable-type>
+            <aaa-authentication/>
+            <authentication-template>2</authentication-template>
+          </enable-type>
         </username> 
       </usernames>
 
@@ -306,7 +355,7 @@ def aplicar_push_y_guardar(r):
                 print(f"[{nombre}] No se pudo obtener la verificación general: {e}")
 
             # Confirmación interactiva del operador
-            confirmacion = input("Confirmar el cambio de forma definitiva? [s/N]: ").strip().lower()
+            # confirmacion = input("Confirmar el cambio de forma definitiva? [s/N]: ").strip().lower()
             if AUTO_CONFIRM:
                 confirmacion = "s"
                 print(f"[{nombre}] AUTO_CONFIRM habilitado: confirmando automáticamente...")

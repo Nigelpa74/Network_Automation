@@ -1,0 +1,388 @@
+module zxr10-mff {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/mff'
+            ;
+  prefix mff ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description "add configuration nodes:
+\ninterface-container   MFF configurati"
+            + "on commands of interface type.
+\nmode-container        MFF confi"
+            + "guration commands of MFF mode.
+\ndetect-container      MFF confi"
+            + "guration commands of gateway detect.
+\ngateway-container     MFF"
+            + " configuration commands of default gateway.
+\nglobal-gateway-con"
+            + "tainer   MFF configuration commands of global gateway.
+\n
+\nadd "
+            + "statenodes:
+\ngateway         Show gateway infomation about MFF."
+            + "
+\nglobal-gateway  Show MAC of global gateway about MFF.
+\nmff-c"
+            + "onfig    Show the configuration of MFF.
+\nmff-interface   Show i"
+            + "nterfaces's infomation about MFF."
+              ;
+  revision 2016-01-07 {
+    description '1.Modify the enumeration type of configuration/mff/interface-c'
+              + 'ontainer/interface-list/port-mode to network-port and user-por'
+              + 't.'+"\n"
+              + '2.Modify the enumeration type of configuration/mff/mode-contai'
+              + 'ner/mode-list/flag to off,auto and manual.'
+                ;
+  }
+  revision 2015-08-07 {
+    description 'Remove the node of vlan-container.'
+                ;
+  }
+  revision 2015-04-28 {
+    description 'Add the node of vlan-container.'+"\n"
+              + 'Add the description of the node of global-gateway-container.'
+                ;
+  }
+  revision 2015-01-15 {
+    description "remove the \"mac\" leaf form zxr10-mff/configuation/mff/global"
+              + "-gateway-container/global-gateway-list to zxr10-mff/configuati"
+              + "on/mff/global-gateway-container,and delete the node zxr10-mff/"
+              + "configuation/mff/global-gateway-container/global-gateway-list."
+              + "
+\nChange the name of leaf note port_mode to port-mode,and cha"
+              + "nge it's mandatory attribute to TRUE.
+\nChange a leaf note of "
+              + "ip to the key note under the list note of gateway-list,and cha"
+              + "nge a leaf note of vlan-id to the select note."
+                ;
+  }
+  revision 2014-07-08 {
+    description 'Initial version'
+                ;
+  }
+  feature mffv4 {
+    description 'MFF about IPV4.'
+                ;
+  }
+  container configuration {
+    description 'MFF configuration commands.'
+                ;
+    container mff {
+      description 'MFF configuration commands.'
+                  ;
+      container interface-container {
+        if-feature mffv4 ;
+        description 'MFF configuration commands of interface type.'
+                    ;
+        list interface-list {
+          description 'MFF configuration commands of interface type.'
+                      ;
+          key interface ;
+          leaf interface {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf port-mode {
+            description 'Port mode.'
+                        ;
+            type enumeration {
+              enum user-port {
+                value 0 ;
+                description user-port. ;
+              }
+              enum network-port {
+                value 1 ;
+                description network-port. ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+      }
+      container mode-container {
+        if-feature mffv4 ;
+        description 'MFF configuration commands of MFF mode.'
+                    ;
+        list mode-list {
+          description 'MFF configuration commands of MFF mode.'
+                      ;
+          key vlan-id ;
+          leaf vlan-id {
+            description 'VLAN id.'
+                        ;
+            type uint16 ;
+          }
+          leaf mode {
+            description 'Port mode.'
+                        ;
+            type enumeration {
+              enum mode {
+                value 1 ;
+                description 'MFF mode.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf flag {
+            description 'Port mode flag.'
+                        ;
+            type enumeration {
+              enum off {
+                value 0 ;
+                description 'off mode.'
+                            ;
+              }
+              enum auto {
+                value 1 ;
+                description 'auto mode.'
+                            ;
+              }
+              enum manual {
+                value 2 ;
+                description 'manual mode.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+      }
+      container detect-container {
+        if-feature mffv4 ;
+        description 'MFF configuration commands of gateway detect.'
+                    ;
+        list detect-list {
+          description 'MFF configuration commands of gateway detect.'
+                      ;
+          key vlan-id ;
+          leaf vlan-id {
+            description 'VLAN ID.'
+                        ;
+            type uint16 ;
+          }
+          leaf detect {
+            description 'Gateway detecting.'
+                        ;
+            type enumeration {
+              enum detect {
+                value 1 ;
+                description 'MFF gateway detect.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf flag {
+            description 'Gateway detecting flag.'
+                        ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+                description enable ;
+              }
+              enum disable {
+                value 2 ;
+                description disable ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+      }
+      container gateway-container {
+        if-feature mffv4 ;
+        description 'MFF configuration commands of default gateway.'
+                    ;
+        list gateway-list {
+          description 'MFF configuration commands of default gateway.'
+                      ;
+          key vlan-id ;
+          leaf vlan-id {
+            description 'VLAN ID.'
+                        ;
+            type uint16 ;
+          }
+          leaf gateway {
+            description Gateway. ;
+            type enumeration {
+              enum gateway {
+                value 1 ;
+                description 'MFF gateway.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+          leaf ip {
+            description 'Gateway IP.'
+                        ;
+            type ncd:ipv4-address ;
+            mandatory true ;
+          }
+        }
+      }
+      container global-gateway-container {
+        if-feature mffv4 ;
+        description 'Global gateway MAC.'
+                    ;
+        leaf mac {
+          description 'Global gateway MAC.'
+                      ;
+          type ncd:mac-address ;
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'MFF state commands.'
+                ;
+    container mff {
+      description 'MFF state commands.'
+                  ;
+      container gateway {
+        if-feature mffv4 ;
+        description 'Show gateway infomation about MFF.'
+                    ;
+        list gateway-list {
+          description 'Show gateway infomation about MFF.'
+                      ;
+          key 'vlan-id ip'
+              ;
+          leaf vlan-id {
+            description 'VLAN ID.'
+                        ;
+            type uint16 ;
+          }
+          leaf ip {
+            description 'Gateway IP.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+          leaf mac {
+            description 'Gateway MAC.'
+                        ;
+            type ncd:mac-address ;
+          }
+          ncd:select vlan-id ;
+        }
+      }
+      container global-gateway {
+        if-feature mffv4 ;
+        description 'Show MAC of global gateway about MFF.'
+                    ;
+        leaf mac {
+          description 'Global gateway MAC.'
+                      ;
+          type ncd:mac-address ;
+        }
+      }
+      container mff-config {
+        if-feature mffv4 ;
+        description 'Show the configuration of MFF.'
+                    ;
+        list mff-config-list {
+          description 'Show the configuration of MFF.'
+                      ;
+          key vlan-id ;
+          leaf vlan-id {
+            description 'VLAN ID.'
+                        ;
+            type uint16 {
+              range 1..4094 {
+                description 'From 1 to 4094.'
+                            ;
+              }
+            }
+          }
+          leaf mode {
+            description 'MFF mode.'
+                        ;
+            type enumeration {
+              enum mode_off {
+                value 0 ;
+                description 'Off mode.'
+                            ;
+              }
+              enum mode_auto {
+                value 1 ;
+                description 'Auto mode.'
+                            ;
+              }
+              enum mode_manual {
+                value 2 ;
+                description 'Manual mode.'
+                            ;
+              }
+            }
+            default mode_off ;
+          }
+          leaf gateway-detect {
+            description 'Gateway detecting.'
+                        ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description Disable. ;
+              }
+              enum enable {
+                value 1 ;
+                description Enable. ;
+              }
+            }
+            default disable ;
+          }
+          leaf ip {
+            description 'IP address.'
+                        ;
+            type ncd:ipv4-address ;
+          }
+        }
+      }
+      container mff-interface {
+        if-feature mffv4 ;
+        description "Show interfaces's infomation about MFF."
+                    ;
+        list mff-interface-list {
+          description "Show interfaces's infomation about MFF."
+                      ;
+          key interface ;
+          leaf interface {
+            description 'Interface name.'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf type {
+            description 'The MFF type of interfaces.'
+                        ;
+            type enumeration {
+              enum net_side {
+                value 0 ;
+                description 'Network side.'
+                            ;
+              }
+              enum user_side {
+                value 1 ;
+                description 'User side.'
+                            ;
+              }
+            }
+            default user_side ;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,4672 @@
+module zxr10-rpm-segment {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/rpm-segment" ;
+  prefix rpm-segment ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  revision 2024-12-03 {
+    description 'Remove the mandatory attribute from the key node. paths are "configuration/locators/locator/slice-end-x-sids/auto-slice-end-x-sids/auto-slice- end-x-sid/interface" and "configuration/locators/locator/slice-end-x-sids/auto-slice-end-x-sids/auto-slice-end-x-sid/nexthop"' ;
+  }
+
+  revision 2024-07-04 {
+    description "Add a configuration node for the switch of automatic generation of extended routes for the uSID locator. The path is 'configuration/srv6/usid-locators/usid-locator/terminate-local-usid-lookup'." ;
+  }
+
+  revision 2024-03-25 {
+    description 'Add a new locator configuration node for setting the anycast attribute of the locator.The path is “configuration/srv6/locators/locator”' ;
+  }
+
+  revision 2023-12-19 {
+    description 'Add configuration node of srv6-sid-alarm-threshold.' ;
+  }
+
+  revision 2023-11-03 {
+    description '1.Add new leaf of “state/srv6/local-sids/local-sid/function-type-standard”,and modify the status of node "state/srv6/local-sids/local-sid/function-type" to deprecated;
+2.Add new container of "state/srv6/local-sid-statistics", and modify the status of container "state/srv6/local-sid-summary" to deprecated.' ;
+  }
+
+  revision 2023-07-17 {
+    description 'Add leaf in local-sid for support segment-list ID of SRv6 SID. The paths are "state/srv6/local-sids/local-sid/segment-list-id".' ;
+  }
+
+  revision 2023-04-06 {
+    description 'Modify the range of tunnel ID. The paths are configuration/ipv4/adjacency-ip-protect-tunnels/adjacency-ip-protect-tunnel and configuration/ipv4/adjacency-id-protect-tunnels/adjacency-id-protect-tunnel' ;
+  }
+
+  revision 2023-03-06 {
+    description 'Add leaf in local-sid for support member of out-interface. The paths are "state/srv6/local-sids/local-sid/l2-bundle-member".' ;
+  }
+
+  revision 2023-01-13 {
+    description 'Add list in local-sid for support multiple nexthops. The paths are "state/srv6/local-sids/local-sid/multiple-nexthops/multiple-nexthop".' ;
+  }
+
+  revision 2022-09-21 {
+    description 'Add containers for SRv6 End.X and SRv6 End. The paths are "configuration/srv6/locators/locator/end-x-sids" and "configuration/srv6/locators/end-sids".' ;
+  }
+
+  revision 2022-08-06 {
+    description 'Add containers for SRv6 slice End.X. The paths are "configuration/srv6/locators/locator/slice-end-x-sids" and "state/srv6/slice-end-x-infos".
+Add new value of enumeration "SRV6-LOCAL-SID-FUNCTYPE",the value is 25.' ;
+  }
+
+  revision 2022-07-15 {
+    description 'Modify the range of node "adj-sid-holdtime/holdtime".' ;
+  }
+
+  revision 2022-07-06 {
+    description 'Modify the leaf node: "/configuration/srv6/adjacency/sid-hold-time".' ;
+  }
+
+  revision 2022-06-09 {
+    description 'Add containers for SRv6 END.BXC. The paths are "configuration/srv6/locators/locator/end-bxc-sids"
+Add new value of enumeration "SRV6-LOCAL-SID-FUNCTYPE",the value is 24.' ;
+  }
+
+  revision 2022-03-17 {
+    description "Support show VPN name with '?'." ;
+  }
+
+  revision 2022-03-16 {
+    description 'Modify the leaf "sid-hold-time". Its default value depends on product specification.' ;
+  }
+
+  revision 2022-03-09 {
+    description "Add containers for SRv6 compressed static length. The paths are \"configuration/srv6/locators/locator/sid-rang/compress\"
+    Add new leaves \"static-length-compress\", \"auto-sid-begin-compress\" and \"auto-sid-end-compress\" for get locator's compressed static length and compressed auto sid range. The path is \"state/srv6/locators/locator\"." ;
+  }
+
+  revision 2022-02-10 {
+    description 'Add containers for SRv6 uSID functions. The paths are "configuration/srv6/usid-locators" and "state/srv6/usid-locators"
+Add a new leaf "usid-length" for get local SRv6 uSID. The path is "state/srv6/local-sids/local-sid".
+Add a new value uN in enumeration SRV6-LOCAL-SID-FUNCTYPE.' ;
+  }
+
+  revision 2022-02-09 {
+    description 'Add new function types for END.B6 in SRV6-LOCAL-SID-FUNCTYPE.' ;
+  }
+
+  revision 2021-12-20 {
+    description 'Add container for interface prefix sid, the path is configuration/if-prefix-sids.' ;
+  }
+
+  revision 2021-10-12 {
+    description 'Modify the range of args-lenth form <16-16> to 1-64.' ;
+  }
+
+  revision 2021-09-18 {
+    description 'Add container for service programming functions. The path is "configuration/service-programs".
+Add a new leaf "service-programming-name" for get local SRv6 SID from service program. The path is "state/srv6/local-sids/local-sid".
+Add a new value END.AS in enumeration SRV6-LOCAL-SID-FUNCTYPE.
+Add a new feature "service-program" for service programming functions.' ;
+  }
+
+  revision 2021-07-26 {
+    description '1. Add leaves "block-length" and "function-length" in state list locator,the path is "/rpm-segment:configuration/rpm-segment:srv6/rpm-segment:locators/rpm-segment:locator/rpm-segment:sid-range"
+2. Add leaves "block-length-normal","node-length-normal"and"function-length-normal" in state list locator,the path is "/rpm-segment:state/rpm-segment:srv6/rpm-segment:locators/rpm-segment:locator"' ;
+  }
+
+  revision 2021-06-17 {
+    description '1. Add a container reserved,the path is "/rpm-segment:configuration/rpm-segment:srv6/rpm-segment:locators/rpm-segment:srv6/rpm-segment:sid-range/rpm-segment:srv6/rpm-segment:reserved"
+2. Add leaves "reserved-start" and "reserved-count" in state list locator,the path is "/rpm-segment:state/rpm-segment:srv6/rpm-segment:locators/rpm-segment:locator"
+3. Add leaf "dynamic-length" in state list locator,the path is "/rpm-segment:state/rpm-segment:srv6/rpm-segment:locators/rpm-segment:locator"' ;
+  }
+
+  revision 2021-06-02 {
+    description 'Add selects "fa-id" in "/rpm-segment:state/rpm-segment:srv6/rpm-segment:local-sids".' ;
+  }
+
+  revision 2021-03-30 {
+    description 'Add a new leaf node sid-hold-time.The path is "configuration/srv6/adjacency/sid-hold-time".' ;
+  }
+
+  revision 2021-02-05 {
+    description 'Add a new value END.M in enumeration SRV6-LOCAL-SID-FUNCTYPE.' ;
+  }
+
+  revision 2020-11-06 {
+    description "Modify the max value of SRv6 locator's ipv6-prefix-length from 92 to 120.
+    Modify the max value of SRv6 locator's block-length from 91 to 96." ;
+  }
+
+  revision 2020-10-29 {
+    description 'Add a new leaf node vpls-name to support VPLS name.The paths is "state/srv6/local-sids/local-sid/vpls-name".
+Add a new leaf node fa-id to support SRv6 in slice.The paths is "state/srv6/local-sids/local-sid/fa-id".' ;
+  }
+
+  revision 2020-09-22 {
+    description '1. Obsolete the container srv6-sids, the path is "/rpm-segment:state/rpm-segment:srv6/rpm-segment:srv6-sids";
+2. Add a container local-sids,the path is "/rpm-segment:state/rpm-segment:srv6/rpm-segment:local-sids"
+3. Add a container local-sid-summary,the path is "/rpm-segment:state/rpm-segment:srv6/rpm-segment:local-sid-summary"
+4. Add a typedef "SRV6-LOCAL-SID-FUNCTYPE"' ;
+  }
+
+  revision 2020-09-06 {
+    description "Add nodes for SRv6 locator's flex-algorithm ID configuration and state." ;
+  }
+
+  revision 2020-08-18 {
+    description 'Add new nodes for SR adjacency sid holdtime configuration. The path is "configuration/adj-sid-holdtime".' ;
+  }
+
+  revision 2020-07-25 {
+    description '1. Obsolete the nodes of /rpm-segment:configuration/rpm-segment:srv6/rpm-segment:locators/rpm-segment:locator/rpm-segment:is-default;
+2. Obsolete the nodes of /rpm-segment:state/rpm-segment:srv6/rpm-segment:locators/rpm-segment:locator/rpm-segment:is-default;' ;
+  }
+
+  revision 2020-06-20 {
+    description 'Add new nodes for SR EPE configuration. The path is "configuration/sr-epes".' ;
+  }
+
+  revision 2020-06-06 {
+    description '1.Add nodes for SRv6 locator configuration and state.
+2.Obsolete the nodes of /rpm-segment:configuration/rpm-segment:srv6/rpm-segment:sid-range;
+3.Obsolete the nodes of /rpm-segment:state/rpm-segment:srv6/rpm-segment:srv6-sid-range.' ;
+  }
+
+  revision 2020-05-19 {
+    description 'Add a new node sr-policy-binding-sids. The paths is "configuration/sr-policy-binding-sids".' ;
+  }
+
+  revision 2020-04-18 {
+    description '1. Obsolete the nodes of /rpm-segment:state/rpm-segment:ipv4/rpm-segment:adjacency-sid;
+2. Obsolete the nodes of /rpm-segment:state/rpm-segment:ipv4/rpm-segment:adjacency-sid-new;
+3. Obsolete the nodes of /rpm-segment:state/rpm-segment:ipv6/rpm-segment:adjacency-sid;
+4. Obsolete the nodes of /rpm-segment:state/rpm-segment:ipv6/rpm-segment:adjacency-sid-new.' ;
+  }
+
+  revision 2020-03-30 {
+    description 'Obsolete the nodes of configuration/ipv4/adjacency-protect-ips and configuration/ipv4/adjacency-protect-ids. Add the new nodes of configuration/ipv4/adjacency-ip-protect-tunnels and configuration/ipv4/adjacency-id-protect-tunnels.' ;
+  }
+
+  revision 2020-03-04 {
+    description 'Modify node for static binding SID to a choice node. The path is configuration/binding-sids/binding-sid/label. Add a new type of assign binding SID automatically, the path is configuration/binding-sids/binding-sid/label/auto.' ;
+  }
+
+  revision 2020-02-16 {
+    description 'Add nodes for SRv6 configuration and state.' ;
+  }
+
+  revision 2020-02-04 {
+    description 'Modify the range of prefix-sid index to 0-4294967294.' ;
+  }
+
+  revision 2020-01-15 {
+    description 'Add new nodes adjacencys and adjacency-intfs in aii to support adj-sid in slice. The paths are "configuration/aiis/aii/ipv4/adjacencys " and "configuration/aiis/aii/ipv4/adjacency-intfs".
+Delete feature in configuration container fa and state leaf fa-id.' ;
+  }
+
+  revision 2019-12-21 {
+    description 'Add new nodes for interface aii.The paths are "configuration/interface "and "configuration/interface/aii".' ;
+  }
+
+  revision 2019-11-20 {
+    description 'Add new nodes for adjacency protect SID, the paths are configuration/ipv4/adjacencys/adjacency/protect-sid, configuration/ipv4/adjacencys/adjacency-intfs/protect-sid. Add new nodes for adjacency protect sr-path, the paths are configuration/ipv4/adjacency-protect-ips, configuration/ipv4/adjacency-protect-ids.' ;
+  }
+
+  revision 2019-11-15 {
+    description 'Add new nodes aiis and fas for SR slice. The paths are "configuration/aiis" and "configuration/fas".' ;
+  }
+
+  revision 2019-10-30 {
+    description 'Add a new leaf node erld to support max-sid-depth erld.The paths is "configuration/max-sid-depths/erld-value".' ;
+  }
+
+  revision 2019-09-07 {
+    description 'Add containers "state/ipv4/adjacency-sid-new" and "state/ipv6/adjacency-sid-new".' ;
+  }
+
+  revision 2019-09-01 {
+    description 'Add new project label of MSR to support SR.' ;
+  }
+
+  revision 2019-06-10 {
+    description 'Absolute this revision
+Add the query node keys "local-id", "remote-id" and "local-interface" for segment-routing adjacency SID information.
+The paths are "state/ipv4/adjacency-sid" and "state/ipv6/adjacency-sid".
+Add container adjacency-intfs to support unnumbered interface ADJ-SID.The paths are "configuration/ipv4/adjacency-intfs" and "configuration/ipv6/adjacency-intfs"' ;
+  }
+
+  revision 2019-05-31 {
+    description '1. Obsolete the leaf node router-id. The paths is "state/ipv6/remote-prefix-sid/information/router-id".
+2. Add a new leaf node router-id-str to support ipv6 address. The paths is "state/ipv6/remote-prefix-sid/information/router-id-str".' ;
+  }
+
+  revision 2019-05-10 {
+    description 'Add new project label of 6700 and T8000 to support SRMS.' ;
+  }
+
+  revision 2019-04-08 {
+    description 'Add new project label of MW(NR8000) to support segment-routing.' ;
+  }
+
+  revision 2019-02-21 {
+    description 'Add new project label of 6100/65v5/6700 to support msd.' ;
+  }
+
+  revision 2019-02-13 {
+    description 'Add the query node for ipv6 segment-routing adjacency SID information.
+The path is "state/ipv6/adjacency-sid".' ;
+  }
+
+  revision 2018-12-27 {
+    description 'Add a new node adjacencys. The paths is "configuration/ipv6/adjacencys".
+Add new project label.' ;
+  }
+
+  revision 2018-09-19 {
+    description 'Add a new node maximum-sid-depths. The paths is "configuration/maximum-sid-depths".
+Add new nodes mapping-servers. The paths are "configuration/ipv4/mapping-servers" and "configuration/ipv6/mapping-servers".
+Add new nodes prefix-sid-maps. The paths are "state/ipv4/prefix-sid-map" and "state/ipv6/prefix-sid-map".' ;
+  }
+
+  revision 2018-08-13 {
+    description 'Add a new node adjacencys. The paths is "configuration/ipv4/adjacencys".' ;
+  }
+
+  revision 2018-08-07 {
+    description 'Add a new node binding-sids. The paths is "configuration/binding-sids".' ;
+  }
+
+  revision 2018-05-29 {
+    description '1. Obsolete the node remote-srgb. The paths is "state/ipv4/remote-srgb".
+2. Add a new node remote-srgbs. The paths is "state/ipv4/remote-srgbs".' ;
+  }
+
+  revision 2017-08-21 {
+    description '1.Add the node for IPv6 segment-routing.
+The path is "configuration/ipv6".
+The path is "state/ipv6".' ;
+  }
+
+  revision 2017-01-05 {
+    description '1.Add the query node for segment-routing local prefix SID information.
+The path is "state/ipv4/local-prefix-sid".
+2.Add the query node for segment-routing remote prefix SID information.
+The path is "state/ipv4/remote-prefix-sid".
+3.Add the query node for segment-routing local SRGB information.
+The path is "state/ipv4/local-srgb".
+4.Add the query node for segment-routing remote SRGB information.
+The path is "state/ipv4/remote-srgb".' ;
+  }
+
+  revision 2016-12-20 {
+    description 'Add the query node for segment-routing adjacency SID information.
+The path is "state/adjacency-sid".' ;
+  }
+
+  revision 2016-10-19 {
+    description 'The initial version.' ;
+  }
+
+  feature mapping-server {
+    description 'This configuration is used to configure the map of prefix and sid.' ;
+  }
+
+  feature msd {
+    description 'This configuration is used to configure maximum SID depth.' ;
+  }
+
+  feature network-slice ;
+
+  feature service-program {
+    ncd:revise-date 2021-09-18 ;
+  }
+
+  feature if-prefix-sid {
+    description 'Only for convertion of spn-isis.yang.' ;
+    ncd:revise-date 2021-12-20 ;
+  }
+
+  feature end-bxc {
+    description 'This configuration is used to configure END.BXC.' ;
+    ncd:revise-date 2022-06-09 ;
+  }
+
+  feature slice-end-x {
+    description 'This configuration is used to configure slice End.X.' ;
+    ncd:revise-date 2022-08-06 ;
+  }
+
+  typedef GLOBAL-STATUS {
+    description 'Value of segment routing status.' ;
+    default ENABLE ;
+    type enumeration {
+      enum ENABLE {
+        value 0 ;
+      }
+
+      enum DISABLE {
+        value 1 ;
+      }
+
+    }
+
+  }
+
+  typedef LOCAL-PREFIX-PHP-FLAG {
+    description 'The php-flag of local prefix sid.' ;
+    default NULL ;
+    type enumeration {
+      enum EXPLICIT {
+        value 1 ;
+      }
+
+      enum IMPLICIT {
+        value 2 ;
+      }
+
+      enum NULL {
+        value 0 ;
+      }
+
+    }
+
+  }
+
+  typedef LOCAL-PREFIX-NODE-FLAG {
+    description 'The node-flag of local prefix sid.' ;
+    default FALSE ;
+    type enumeration {
+      enum TRUE {
+        value 1 ;
+        description 'Node flag.' ;
+      }
+
+      enum FALSE {
+        value 0 ;
+        description 'No node flag.' ;
+      }
+
+    }
+
+  }
+
+  typedef ADJ-TYPE {
+    description 'The type of adjacency SID.' ;
+    default INVALID ;
+    type enumeration {
+      enum INVALID {
+        value 0 ;
+      }
+
+      enum LOCAL {
+        value 1 ;
+      }
+
+      enum REMOTE {
+        value 2 ;
+      }
+
+    }
+
+  }
+
+  typedef REMOTE-PREFIX-FLAG {
+    description 'The sid flag of remote prefix sid.' ;
+    default NULL ;
+    type enumeration {
+      enum NULL {
+        value 0 ;
+      }
+
+      enum IMPLICIT {
+        value 1 ;
+      }
+
+      enum EXPLICIT {
+        value 2 ;
+      }
+
+      enum NODE {
+        value 3 ;
+      }
+
+      enum IMPLICIT-NODE {
+        value 4 ;
+      }
+
+      enum EXPLICIT-NODE {
+        value 5 ;
+      }
+
+    }
+
+  }
+
+  typedef SRV6-LOCAL-SID-FUNCTYPE {
+    status deprecated ;
+
+    description 'The function type of srv6 local sid.' ;
+    type enumeration {
+      enum END {
+        value 1 ;
+      }
+
+      enum END.X {
+        value 2 ;
+      }
+
+      enum END.B6 {
+        value 3 ;
+      }
+
+      enum END.BM {
+        value 4 ;
+      }
+
+      enum L3VPN.DX4 {
+        value 5 ;
+      }
+
+      enum L3VPN.DX6 {
+        value 6 ;
+      }
+
+      enum L3VPN.DT4 {
+        value 7 ;
+      }
+
+      enum L3VPN.DT6 {
+        value 8 ;
+      }
+
+      enum L3VPN.DT46 {
+        value 9 ;
+      }
+
+      enum VPWS.DX2 {
+        value 10 ;
+      }
+
+      enum VPWS.DX2V {
+        value 11 ;
+      }
+
+      enum QVPLS.DT2U {
+        value 12 ;
+      }
+
+      enum VPLS.DT2U {
+        value 13 ;
+      }
+
+      enum VPLS.DX2 {
+        value 14 ;
+      }
+
+      enum QVPLS.DX2 {
+        value 15 ;
+      }
+
+      enum VPLS.DT2M {
+        value 16 ;
+      }
+
+      enum QVPLS.DT2M {
+        value 17 ;
+      }
+
+      enum END.OP {
+        value 18 ;
+      }
+
+      enum END.M {
+        value 19 ;
+      }
+
+      enum END.AS {
+        value 20 ;
+      }
+
+      enum END_B6_ENCAP_RED {
+        value 21 ;
+      }
+
+      enum END_B6_INSERT {
+        value 22 ;
+      }
+
+      enum END_B6_INSERT_RED {
+        value 23 ;
+      }
+
+      enum END_BXC {
+        value 24 ;
+      }
+
+      enum SLICE.END.X {
+        value 25 ;
+      }
+
+    }
+
+  }
+
+  typedef SERVICE-FUNCTION-TYPE {
+    type enumeration {
+      enum firewall {
+        value 1 ;
+      }
+
+      enum dpi {
+        value 2 ;
+      }
+
+      enum classifier {
+        value 4 ;
+      }
+
+      enum load-balancer {
+        value 5 ;
+      }
+
+    }
+
+  }
+
+  typedef SERVICE-PROXY-INNER-PKT-TYPE {
+    type enumeration {
+      enum IPv4 {
+        value 1 ;
+      }
+
+      enum IPv6 {
+        value 2 ;
+      }
+
+      enum Ethernet {
+        value 3 ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'The configuration information processing of segment-routing module.' ;
+    container ipv4 {
+      description 'The node for IPv4 segment-routing.' ;
+      container global-status {
+        description 'The node of global segment-routing status.' ;
+        leaf status {
+          description 'Enable or disable the status of global IPv4 segment-routing.' ;
+          type GLOBAL-STATUS ;
+
+          default ENABLE ;
+        }
+
+      }
+
+      container local-prefix-sid {
+        description 'The configuration node of local prefix sid.' ;
+        list local-prefix-sid {
+          description 'The configuration node of local prefix sid.' ;
+          key 'dest-addr mask-addr' ;
+          leaf dest-addr {
+            description 'The destination address of local prefix sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf mask-addr {
+            description 'The mask address of local prefix sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf index {
+            description 'The index value of local prefix sid.' ;
+            type uint32 {
+              range 0..4294967294 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf node-flag {
+            description 'The node-flag of local prefix sid.' ;
+            type LOCAL-PREFIX-NODE-FLAG ;
+
+            default FALSE ;
+          }
+
+          leaf php-flag {
+            description 'The label operation of penultimate hop.' ;
+            type LOCAL-PREFIX-PHP-FLAG ;
+
+            default NULL ;
+          }
+
+        }
+
+      }
+
+      container adjacencys {
+        description 'The configuration node of SR adjacency-SID.' ;
+        list adjacency {
+          description 'The configuration node of SR adjacency-SID.' ;
+          key 'local-ip remote-ip' ;
+          leaf local-ip {
+            description 'The local IP address of SR adjacency-SID.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf remote-ip {
+            description 'The remote IP address of SR adjacency-SID.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf sid {
+            description 'The SID value of SR adjacency-SID.' ;
+            type int32 ;
+
+          }
+
+          leaf protect-sid {
+            description 'The SID of protect path.' ;
+            type uint32 {
+              range 16..1048575 ;
+
+            }
+
+            ncd:revise-date 2019-11-20 ;
+          }
+
+        }
+
+        ncd:revise-date 2018-08-13 ;
+      }
+
+      container mapping-server {
+        if-feature mapping-server ;
+
+        description 'The configuration node of prefix-sid-map in ipv4.' ;
+        list prefix-sid-map {
+          description 'The configuration node of prefix-sid-map in ipv4.' ;
+          key 'dest-addr mask-addr' ;
+          leaf dest-addr {
+            description 'The first prefix mapped with sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf mask-addr {
+            description 'The mask address of first v4 prefix mapped with sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf first-sid {
+            description 'The first SID.' ;
+            type int32 {
+              range 0..1048559 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf range {
+            description 'The quantity of maps of prefix and sid.' ;
+            type int32 {
+              range 1..65535 ;
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2018-09-19 ;
+      }
+
+      container adjacency-intfs {
+        description 'The configuration node of SR adjacency-SID-interface unnumbered.' ;
+        list adjacency-intf {
+          description 'The configuration node of SR adjacency-SID-interface unnumbered.' ;
+          key 'local-interface remote-router-id' ;
+          leaf local-interface {
+            description 'the local interface of SR adjacency-SID.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf remote-router-id {
+            description 'The remote router ID SR adjacency-SID.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf sid {
+            description 'The SID value of SR adjacency-SID.' ;
+            type int32 ;
+
+          }
+
+          leaf protect-sid {
+            description 'The SID of protect path.' ;
+            type uint32 {
+              range 16..1048575 ;
+
+            }
+
+            ncd:revise-date 2019-11-20 ;
+          }
+
+        }
+
+        ncd:revise-date 2019-06-10 ;
+      }
+
+      container adjacency-ip-protect-tunnels {
+        description 'Set the protect tunnel of adjacency(IP type).' ;
+        presence primary-tunnel-id ;
+        list adjacency-ip-protect-tunnel {
+          key 'loca-ip remote-ip' ;
+          leaf loca-ip {
+            description 'The local IP address of SR adjacency.' ;
+            type ncd:ipv4-address-none-zero ;
+
+          }
+
+          leaf remote-ip {
+            description 'The remote IP address of SR adjacency.' ;
+            type ncd:ipv4-address-none-zero ;
+
+          }
+
+          leaf primary-tunnel-id {
+            description 'The primary protect tunnel ID.' ;
+            type uint32 {
+              range 1..97535 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf secondary-tunnel-id {
+            description 'The secondary protect tunnel ID.' ;
+            type uint32 {
+              range 1..97535 ;
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2020-03-30 ;
+      }
+
+      container adjacency-id-protect-tunnels {
+        description 'Set the protect tunnel of adjacency(ID type).' ;
+        presence primary-tunnel-id ;
+        list adjacency-id-protect-tunnel {
+          key 'local-interface remote-router-id' ;
+          leaf local-interface {
+            description 'The local interface of SR adjacency.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf remote-router-id {
+            description 'The remote router ID SR adjacency.' ;
+            type ncd:ipv4-address-none-zero ;
+
+          }
+
+          leaf primary-tunnel-id {
+            description 'The primary protect tunnel ID.' ;
+            type uint32 {
+              range 1..97535 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf secondary-tunnel-id {
+            description 'The secondary protect tunnel ID.' ;
+            type uint32 {
+              range 1..97535 ;
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2020-03-30 ;
+      }
+
+      container adjacency-protect-ips {
+        status obsolete {
+          ncd:revise-date 2020-03-30 ;
+        }
+
+        list adjacency-protect-ip {
+          key 'loca-ip remote-ip sr-path-identifier' ;
+          leaf loca-ip {
+            description 'The local IP address of SR adjacency.' ;
+            type ncd:ipv4-address-none-zero ;
+
+          }
+
+          leaf remote-ip {
+            description 'The remote IP address of SR adjacency.' ;
+            type ncd:ipv4-address-none-zero ;
+
+          }
+
+          leaf sr-path-identifier {
+            description 'The protect SR path identifier.' ;
+            type uint32 {
+              range 1..65535 ;
+
+            }
+
+          }
+
+          leaf bfd-rd {
+            description 'Remote discriminator for BFD.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf bfd-template-name {
+            description 'The template name for BFD.' ;
+            type string {
+              length 0..31 ;
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2019-11-20 ;
+      }
+
+      container adjacency-protect-ids {
+        status obsolete {
+          ncd:revise-date 2020-03-30 ;
+        }
+
+        list adjacency-protect-id {
+          key 'local-interface remote-router-id sr-path-identifier' ;
+          leaf local-interface {
+            description 'The local interface of SR adjacency.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf remote-router-id {
+            description 'The remote router ID SR adjacency.' ;
+            type ncd:ipv4-address-none-zero ;
+
+          }
+
+          leaf sr-path-identifier {
+            description 'The protect SR path identifier.' ;
+            type uint32 {
+              range 1..65535 ;
+
+            }
+
+          }
+
+          leaf bfd-rd {
+            description 'Remote discriminator for BFD.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf bfd-template-name {
+            description 'The template name for BFD.' ;
+            type string {
+              length 0..31 ;
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2019-11-20 ;
+      }
+
+    }
+
+    container ipv6 {
+      description 'The node for IPv6 segment-routing.' ;
+      container global-status {
+        description 'The node of global segment-routing status.' ;
+        leaf status {
+          description 'Enable or disable the status of global IPv6 segment-routing.' ;
+          type GLOBAL-STATUS ;
+
+          default ENABLE ;
+        }
+
+      }
+
+      container local-prefix-sid {
+        description 'The configuration node of local prefix sid.' ;
+        list local-prefix-sid {
+          description 'The configuration node of local prefix sid.' ;
+          key 'prefix prefix-length' ;
+          leaf prefix {
+            description 'The destination address of local prefix sid.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf prefix-length {
+            description 'The prefix length of local prefix sid.' ;
+            type uint8 {
+              range 0..128 ;
+
+            }
+
+          }
+
+          leaf index {
+            description 'The index value of local prefix sid.' ;
+            type uint32 {
+              range 0..4294967294 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf node-flag {
+            description 'The node-flag of local prefix sid.' ;
+            type LOCAL-PREFIX-NODE-FLAG ;
+
+            default FALSE ;
+          }
+
+          leaf php-flag {
+            description 'The label operation of penultimate hop.' ;
+            type LOCAL-PREFIX-PHP-FLAG ;
+
+            default NULL ;
+          }
+
+        }
+
+      }
+
+      container mapping-server {
+        if-feature mapping-server ;
+
+        description 'The configuration node of prefix-sid-map in ipv6.' ;
+        list prefix-sid-map {
+          description 'The configuration node of prefix-sid-map in ipv6.' ;
+          key 'prefix prefix-len' ;
+          leaf prefix {
+            description 'The first ipv6 prefix mapped with sid.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf prefix-len {
+            description 'The lenth of first ipv6 prefix mapped with sid.' ;
+            type uint8 {
+              range 1..128 ;
+
+            }
+
+          }
+
+          leaf first-sid {
+            description 'The first SID.' ;
+            type int32 {
+              range 0..1048559 ;
+
+            }
+
+            mandatory true ;
+          }
+
+          leaf range {
+            description 'The quantity of maps of prefix and sid.' ;
+            type int32 {
+              range 1..65535 ;
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2018-09-19 ;
+      }
+
+      container adjacencys {
+        description 'The configuration node of SR adjacency-SID.' ;
+        list adjacency {
+          description 'The configuration node of IPv6 SR adjacency-SID.' ;
+          key 'local-ipv6 remote-ipv6' ;
+          leaf local-ipv6 {
+            description 'the local IPv6 address of IPv6 SR adjacency-SID.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf remote-ipv6 {
+            description 'The remote IPv6 address of IPv6 SR adjacency-SID.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf sid {
+            description 'The SID value of IPv6 SR adjacency-SID.' ;
+            type int32 {
+              range 16..1048575 ;
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2018-12-27 ;
+      }
+
+      container adjacency-intfs {
+        description 'The configuration node of SR adjacency-SID-interface unnumbered.' ;
+        list adjacency-intf {
+          description 'The configuration node of SR adjacency-SID-interface unnumbered.' ;
+          key 'local-interface remote-router-id' ;
+          leaf local-interface {
+            description 'the local interface of SR adjacency-SID.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf remote-router-id {
+            description 'The remote router ID SR adjacency-SID.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf sid {
+            description 'The SID value of SR adjacency-SID.' ;
+            type int32 {
+              range 16..1048575 ;
+
+            }
+
+            mandatory true ;
+          }
+
+        }
+
+        ncd:revise-date 2019-06-10 ;
+      }
+
+      ncd:revise-date 2017-08-21 ;
+    }
+
+    container binding-sids {
+      description 'The configuration node of SR binding-SID.' ;
+      list binding-sid {
+        description 'The configuration node of SR binding-SID.' ;
+        key tunnel-id ;
+        leaf tunnel-id {
+          description 'The tunnel id of SR binding-SID.' ;
+          type uint32 {
+            range 1..4294967295 ;
+
+          }
+
+        }
+
+        choice label {
+          description 'Choose the type of assigning binding SID.
+sid: Specify the SID value.
+auto: Assign the SID automatically.' ;
+          case sid {
+            description 'Specify the SID value case.' ;
+            leaf sid {
+              description 'The SID of SR binding-SID.' ;
+              type uint32 {
+                range 16..1048575 ;
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          case auto {
+            description 'Assign SID automatically case.' ;
+            leaf auto {
+              description 'Assign SID automatically.' ;
+              type enumeration {
+                enum auto {
+                  value 1 ;
+                }
+
+              }
+
+              mandatory true ;
+            }
+
+            ncd:revise-date 2020-03-04 ;
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2018-08-07 ;
+    }
+
+    container max-sid-depths {
+      if-feature msd ;
+
+      description 'The configuration of maximum SID depth.' ;
+      list max-sid-depth {
+        description 'The configuration of maximum SID depth.' ;
+        key type ;
+        leaf type {
+          description 'The sub type of MSD,such as MPLS.' ;
+          type enumeration {
+            enum mpls {
+              value 1 ;
+              description 'MPLS MSD' ;
+            }
+
+          }
+
+        }
+
+        leaf value {
+          description 'The value of MSD.' ;
+          type uint32 {
+            range 0..254 {
+              description 'MSD value' ;
+            }
+
+          }
+
+          mandatory true ;
+        }
+
+      }
+
+      leaf erld-value {
+        description 'The configuration of max-sid-depth erld.' ;
+        type int32 {
+          range 0..254 {
+            description 'ERLD value' ;
+          }
+
+        }
+
+        ncd:revise-date 2019-10-30 ;
+      }
+
+      ncd:revise-date 2018-09-19 ;
+    }
+
+    container aiis {
+      if-feature network-slice ;
+
+      description 'The node for segment-routing administrative instance.' ;
+      list aii {
+        description 'The node for segment-routing administrative instances.' ;
+        key id ;
+        leaf id {
+          description 'Segment-routing slice identifier.' ;
+          type uint32 {
+            range 1..4294967295 ;
+
+          }
+
+        }
+
+        container ipv4 {
+          description 'The node for IPv4 segment-routing.' ;
+          container local-prefix-sids {
+            description 'The configuration node of local prefix sid.' ;
+            list local-prefix-sid {
+              description 'The configuration node of local prefix sid.' ;
+              key 'dest-addr mask-addr' ;
+              leaf dest-addr {
+                description 'The destination address of local prefix sid.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+              leaf mask-addr {
+                description 'The mask address of local prefix sid.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+              leaf index {
+                description 'The index value of local prefix sid.' ;
+                type uint32 {
+                  range 0..4294967294 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf node-flag {
+                description 'The node-flag of local prefix sid.' ;
+                type LOCAL-PREFIX-NODE-FLAG ;
+
+                default FALSE ;
+              }
+
+              leaf php-flag {
+                description 'The label operation of penultimate hop.' ;
+                type LOCAL-PREFIX-PHP-FLAG ;
+
+                default NULL ;
+              }
+
+            }
+
+          }
+
+          container adjacencys {
+            description 'The configuration node of SR adjacency-SID.' ;
+            list adjacency {
+              description 'The configuration node of SR adjacency-SID.' ;
+              key 'local-ip remote-ip' ;
+              leaf local-ip {
+                description 'the local IP address of SR adjacency-SID.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+              leaf remote-ip {
+                description 'The remote IP address of SR adjacency-SID.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+              leaf sid {
+                description 'The SID value of SR adjacency-SID.' ;
+                type int32 {
+                  range 16..1048575 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+            ncd:revise-date 2020-01-15 ;
+          }
+
+          container adjacency-intfs {
+            description 'The configuration node of SR adjacency-SID-interface unnumbered.' ;
+            list adjacency-intf {
+              description 'The configuration node of SR adjacency-SID-interface unnumbered.' ;
+              key 'local-interface remote-router-id' ;
+              leaf local-interface {
+                description 'the local interface of SR adjacency-SID.' ;
+                type ncd:ifname ;
+
+              }
+
+              leaf remote-router-id {
+                description 'The remote router ID SR adjacency-SID.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+              leaf sid {
+                description 'The SID value of SR adjacency-SID.' ;
+                type int32 {
+                  range 16..1048575 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+            ncd:revise-date 2020-01-15 ;
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2019-11-15 ;
+    }
+
+    container fas {
+      description 'The node for segment-routing Flex-Algorithm.' ;
+      list fa {
+        description 'The node for segment-routing Flex-Algorithm.' ;
+        key fa-id ;
+        leaf fa-id {
+          description 'The node for segment-routing Flex-Algorithm identifier.' ;
+          type uint32 {
+            range 128..255 ;
+
+          }
+
+        }
+
+        container ipv4 {
+          description 'The node for IPv4 segment-routing.' ;
+          container local-prefix-sids {
+            description 'The configuration node of local prefix sid.' ;
+            list local-prefix-sid {
+              description 'The configuration node of local prefix sid.' ;
+              key 'dest-addr mask-addr' ;
+              leaf dest-addr {
+                description 'The destination address of local prefix sid.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+              leaf mask-addr {
+                description 'The mask address of local prefix sid.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+              leaf index {
+                description 'The index value of local prefix sid.' ;
+                type uint32 {
+                  range 0..4294967294 ;
+
+                }
+
+                default 0 ;
+              }
+
+              leaf node-flag {
+                description 'The node-flag of local prefix sid.' ;
+                type LOCAL-PREFIX-NODE-FLAG ;
+
+                default FALSE ;
+              }
+
+              leaf php-flag {
+                description 'The label operation of penultimate hop.' ;
+                type LOCAL-PREFIX-PHP-FLAG ;
+
+                default NULL ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2019-11-15 ;
+    }
+
+    container interfaces-aiis {
+      if-feature network-slice ;
+
+      description 'The configuration of interface aii.' ;
+      list interface-aii {
+        description 'The configuration of interface aiis.' ;
+        key 'interface-name aii' ;
+        leaf interface-name {
+          description 'The interface name of needing AII.' ;
+          type ncd:ifname ;
+
+        }
+
+        leaf aii {
+          description 'The configuration of interface AII.' ;
+          type uint32 {
+            range 1..4294967295 {
+              description 'aii-value' ;
+            }
+
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2019-12-21 ;
+    }
+
+    container srv6 {
+      leaf global-status {
+        description 'SRv6 global status configuration.' ;
+        type GLOBAL-STATUS ;
+
+        default DISABLE ;
+      }
+
+      container sid-range {
+        status obsolete {
+          ncd:revise-date 2020-06-06 ;
+        }
+
+        choice range-type {
+          case hybrid {
+            description 'Specify the SRv6 SID range is hybrid.' ;
+            container hybird {
+              leaf hybrid {
+                description 'Specify the SRv6 SID range is hybrid.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+              leaf prefix {
+                description 'Specify the prefix.' ;
+                type ncd:ipv6-address ;
+
+                mandatory true ;
+              }
+
+              leaf prefix-length {
+                description 'Specify the length of prefix.' ;
+                type ncd:ipv6-mask-length {
+                  range 8..68 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf static-sub-range {
+                description 'Specify static sub range type in hybrid mode' ;
+                type enumeration {
+                  enum RANDOM {
+                    value 1 ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          case dynamic-only {
+            description 'Specify the SRv6 SID range is dynamic only' ;
+            container dynamic-ony {
+              leaf dynamic-only {
+                description 'Specify the SRv6 SID range is dynamic only.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+              leaf dynamic-prefix {
+                description 'Specify the prefix.' ;
+                type ncd:ipv6-address ;
+
+                mandatory true ;
+              }
+
+              leaf dynamic-prefix-length {
+                description 'Specify the length of prefix.' ;
+                type ncd:ipv6-mask-length {
+                  range 8..68 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          case static-only {
+            description 'Specify the SRv6 SID range is static only.' ;
+            container static {
+              leaf static-only {
+                description 'Specify the SRv6 SID range is static only.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+              leaf static-prefix {
+                description 'Specify the prefix.' ;
+                type ncd:ipv6-address ;
+
+                mandatory true ;
+              }
+
+              leaf static-prefix-length {
+                description 'Specify the length of prefix.' ;
+                type ncd:ipv6-mask-length {
+                  range 8..120 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container locators {
+        description 'The configuration of SRv6 locator.' ;
+        list locator {
+          description 'The configuration of SRv6 locator.' ;
+          key locator-name ;
+          leaf locator-name {
+            description "The locator's name.The max length of locator-name is 31." ;
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          leaf is-default {
+            status obsolete {
+              ncd:revise-date 2020-07-25 ;
+            }
+
+            description "Configure this locator's default attribute.True means configure the locator to default locator,and false means not. There is at most one default locator on a device." ;
+            type boolean ;
+
+          }
+
+          container sid-range {
+            description 'The configuration of SRv6 locator sid-range.' ;
+            presence locator-range ;
+            leaf ipv6-prefix {
+              description 'Specify the IPv6 prefix of locator.' ;
+              type ncd:ipv6-address-none-zero ;
+
+              mandatory true ;
+            }
+
+            leaf ipv6-prefix-length {
+              description 'Specify the length of prefix.' ;
+              type ncd:ipv6-mask-length {
+                range 8..120 ;
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf static-length {
+              description 'Specify the static opcode length of locator.' ;
+              type uint8 {
+                range 0..120 ;
+
+              }
+
+            }
+
+            leaf args-length {
+              description 'Specify the arguments length of locator.Its range is 1 to 64.' ;
+              type uint8 {
+                range 1..64 ;
+
+              }
+
+            }
+
+            container compress {
+              description "The configuration of SRv6 locator's compress attribute." ;
+              presence compress ;
+              leaf c-target {
+                description 'Specify the compress target.' ;
+                type enumeration {
+                  enum 32 {
+                    value 32 ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf block-length {
+                description 'Specify the block length.' ;
+                type uint8 {
+                  range 0..96 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              container static-config {
+                description "The configuration of SRv6 locator's compressed static length attribute." ;
+                presence static-length ;
+                leaf static-length {
+                  description "The configuration of SRv6 locator's compressed static length.It's range is 0-31." ;
+                  type uint8 {
+                    range 0..31 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                ncd:revise-date 2022-03-09 ;
+              }
+
+            }
+
+            container reserved {
+              description 'Specify the reserved opcode of locator.' ;
+              presence reserved ;
+              leaf reserved-start {
+                description 'Specify the start of reserved opcode.' ;
+                type ncd:ipv6-address-none-zero ;
+
+                mandatory true ;
+              }
+
+              leaf reserved-count {
+                description 'Specify the count of reserved opcode.' ;
+                type uint32 {
+                  range 1..4294967295 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              ncd:revise-date 2021-06-17 ;
+            }
+
+            leaf block-length {
+              description 'Specify the block length.' ;
+              type uint8 {
+                range 0..120 ;
+
+              }
+
+              ncd:revise-date 2021-07-26 ;
+            }
+
+            leaf function-length {
+              description 'Specify the block length.' ;
+              type uint8 {
+                range 0..120 ;
+
+              }
+
+              ncd:revise-date 2021-07-26 ;
+            }
+
+          }
+
+          leaf fa-id {
+            description "The node for SRv6 locator's Flex-Algorithm identifier.It's range is 128-255." ;
+            type uint32 {
+              range 128..255 ;
+
+            }
+
+            ncd:revise-date 2020-09-06 ;
+          }
+
+          leaf anycast {
+            type boolean ;
+
+            description "Configure this locator's anycast attribute.True means configure the locator to be anycast,and false means not." ;
+            default false ;
+            ncd:revise-date 2024-03-25 ;
+          }
+
+          container end-bxc-sids {
+            if-feature end-bxc ;
+
+            description 'SRv6 END.BXC SID container.' ;
+            list end-bxc-sid {
+              description 'The configuration of SRv6 END.BXC.' ;
+              key func-code ;
+              leaf func-code {
+                description 'Function scope of END.BXC SID.' ;
+                type ncd:std-ipv6-address ;
+
+              }
+
+              leaf interface {
+                description 'Interface name on which END.BXC SID bound with.' ;
+                type ncd:ifname ;
+
+                mandatory true ;
+              }
+
+            }
+
+            ncd:revise-date 2022-06-09 ;
+          }
+
+          container slice-end-x-sids {
+            if-feature slice-end-x ;
+
+            description 'Configuration node of SRv6 slice End.X SID.' ;
+            container auto-slice-end-x-sids {
+              description 'Configuration node of the automatically allocated SRv6 slice.End.X SID.' ;
+              list auto-slice-end-x-sid {
+                description 'Configuration node of the automatically allocated SRv6 slice End.X SID.' ;
+                key 'interface slice-id nexthop compress encapsulation-type psp usd usp' ;
+                leaf interface {
+                  description 'The name of interface associated with slice End.X SID.' ;
+                  type ncd:ifname ;
+
+                }
+
+                leaf slice-id {
+                  description 'The slice ID of slice End.X SID.' ;
+                  type uint32 {
+                    range 1..65535 ;
+
+                  }
+
+                }
+
+                leaf nexthop {
+                  description 'Nexthop of slice END.X SID.' ;
+                  type ncd:ipv6-address-none-zero ;
+
+                }
+
+                leaf compress {
+                  description 'The compression attribute of slice End.X SID.Use enable to enable its compression attribute. Use disable to disable its compression attribute.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                }
+
+                leaf encapsulation-type {
+                  description 'The encapsulation type attribute of slice End.X SID.Options: uet-32 and uet-128.' ;
+                  type enumeration {
+                    enum uet-32 {
+                      value 1 ;
+                    }
+
+                    enum uet-128 {
+                      value 0 ;
+                    }
+
+                  }
+
+                }
+
+                leaf psp {
+                  description 'The PSP attribute of slice End.X SID.Use enable to specify the flavor be with the PSP flag. Use disable to clear the PSP flag.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                }
+
+                leaf usd {
+                  description 'The USD attribute of slice End.X SID.Use enable to specify the flavor be with the USD flag. Use disable to clear the USD flag.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                }
+
+                leaf usp {
+                  description 'The USP attribute of slice End.X SID.Use enable to specify the flavor be with the USP flag. Use disable to clear the USP flag.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2022-08-06 ;
+          }
+
+          container end-x-sids {
+            description 'Configuration node of SRv6 End.X SID.' ;
+            container static-end-x-sids {
+              description 'Configuration node of the static SRv6 End.X SID.' ;
+              list static-end-x-sid {
+                description 'Configuration node of the static SRv6 End.X SID.' ;
+                key 'func-code compress' ;
+                leaf compress {
+                  description 'The compression attribute of End.X SID.Use enable to enable its compression attribute. Use disable to disable its compression attribute.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                }
+
+                leaf func-code {
+                  description 'Function scope of End.X SID.' ;
+                  type ncd:std-ipv6-address ;
+
+                }
+
+                leaf interface {
+                  description 'The name of interface associated with End.X SID.' ;
+                  type ncd:ifname ;
+
+                  mandatory true ;
+                }
+
+                leaf nexthop {
+                  description 'Nexthop of END.X SID.' ;
+                  type ncd:ipv6-address-none-zero ;
+
+                  mandatory true ;
+                }
+
+                leaf encapsulation-type {
+                  description 'The encapsulation type attribute of End.X SID.Options: uet-32 and uet-128.' ;
+                  type enumeration {
+                    enum uet-32 {
+                      value 1 ;
+                    }
+
+                    enum uet-128 {
+                      value 0 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf psp {
+                  description 'The PSP attribute of End.X SID.Use enable to specify the flavor be with the PSP flag. Use disable to clear the PSP flag.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf usp {
+                  description 'The USP attribute of End.X SID.Use enable to specify the flavor be with the USP flag. Use disable to clear the USP flag.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf usd {
+                  description 'The USD attribute of End.X SID.Use enable to specify the flavor be with the USD flag. Use disable to clear the USD flag.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2022-09-21 ;
+          }
+
+          container end-sids {
+            description 'Configuration node of SRv6 End SID.' ;
+            container static-end-sids {
+              description 'Configuration node of the static SRv6 End SID.' ;
+              list static-end-sid {
+                description 'Configuration node of the static SRv6 End SID.' ;
+                key 'func-code compress' ;
+                leaf compress {
+                  description 'The compression attribute of End SID.Use enable to enable its compression attribute. Use disable to disable its compression attribute.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                }
+
+                leaf func-code {
+                  description 'Function scope of End SID.' ;
+                  type ncd:std-ipv6-address ;
+
+                }
+
+                leaf encapsulation-type {
+                  description 'The encapsulation type attribute of End SID.Options: uet-32 and uet-128.' ;
+                  type enumeration {
+                    enum uet-32 {
+                      value 1 ;
+                    }
+
+                    enum uet-128 {
+                      value 0 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf psp {
+                  description 'The PSP attribute of End SID.Use enable to specify the flavor be with the PSP flag. Use disable to clear the PSP flag.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf usp {
+                  description 'The USP attribute of End SID.Use enable to specify the flavor be with the USP flag. Use disable to clear the USP flag.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf usd {
+                  description 'The USD attribute of End SID.Use enable to specify the flavor be with the USD flag. Use disable to clear the USD flag.' ;
+                  type enumeration {
+                    enum enable {
+                      value 1 ;
+                    }
+
+                    enum disable {
+                      value 0 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2022-09-21 ;
+          }
+
+        }
+
+        ncd:revise-date 2020-06-06 ;
+      }
+
+      container adjacency {
+        description 'SRv6 Adjacency configuration.' ;
+        presence "Adjacency configuration" ;
+        leaf sid-hold-time {
+          description "SRv6 adjacency SID hold time in minutes.It's range is 0-20160.Its default value which is between <0>-<20160> and generally <30> ,depends on product specification.The actual default value of some products may be different from the default statement definition." ;
+          type uint16 {
+            range 0..20160 ;
+
+          }
+
+          default 30 ;
+        }
+
+        ncd:revise-date 2021-03-30 ;
+      }
+
+      container usid-locators {
+        description 'The configuration of SRv6 uSID locator.' ;
+        list usid-locator {
+          description 'The configuration of SRv6 uSID locator.' ;
+          key locator-name ;
+          leaf locator-name {
+            description "The uSID locator's name.The max length of locator-name is 31." ;
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          leaf fa-id {
+            description "The node for SRv6 uSID locator's Flex-Algorithm identifier.It's range is 128-255." ;
+            type uint32 {
+              range 128..255 ;
+
+            }
+
+          }
+
+          leaf anycast {
+            type boolean ;
+
+            description "Configure this locator's anycast attribute.True means configure the locator to be anycast,and false means not." ;
+            default false ;
+            ncd:revise-date 2024-03-25 ;
+          }
+
+          leaf terminate-local-usid-lookup {
+            type boolean ;
+
+            description 'Configure the local uSID lookup termination property of the uSID locator. Setting it to "true" means configuring it for lookup termination, and setting it to "false" means disabling lookup termination.
+' ;
+            default false ;
+            ncd:revise-date 2024-07-04 ;
+          }
+
+          container usid-ipv6-prefix {
+            description "The configuration of SRv6 uSID locator's sid-range." ;
+            presence locator-range ;
+            leaf ipv6-prefix {
+              description 'Specify the IPv6 prefix of uSID locator.' ;
+              type ncd:ipv6-address-none-zero ;
+
+              mandatory true ;
+            }
+
+            leaf ipv6-prefix-length {
+              description 'Specify the length of prefix.In this version, this parameter can only be set to 48.' ;
+              type ncd:ipv6-mask-length {
+                range 48 ;
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf block-length {
+              description 'Specify the block length of uSID locator.In this version, this parameter can only be set to 32.' ;
+              type uint8 {
+                range 32 ;
+
+              }
+
+              mandatory true ;
+            }
+
+            leaf static-length {
+              description 'Specify the static length of locator.In this version, this parameter can only be set to 1-12.' ;
+              type uint8 {
+                range 1..12 ;
+
+              }
+
+            }
+
+            leaf args-length {
+              description 'Specify the arguments length of locator.In this version, this parameter can only be set to 16.' ;
+              type uint8 {
+                range 16 ;
+
+              }
+
+            }
+
+          }
+
+          container flavor {
+            description "The configuration of SRv6 uSID locator's flavor." ;
+            leaf psp {
+              description 'Configure the PSP flag of flavor.Use enable to specify the flavor be with the PSP flag. Use disable to clear the PSP flag. This function is enabled by default.' ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+
+                enum disable {
+                  value 0 ;
+                }
+
+              }
+
+              default enable ;
+            }
+
+            leaf usd {
+              description 'Specify the flavor of uSID locator with USD. Use enable to specify the flavor be with the USD flag. Use disable to clear the USD flag. This function is disabled by default.' ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+
+                enum disable {
+                  value 0 ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+            leaf usp {
+              description 'Specify the flavor of uSID locator with USP. Use enable to specify the flavor be with the USP flag. Use disable to clear the USP flag. This function is disabled by default.' ;
+              type enumeration {
+                enum enable {
+                  value 1 ;
+                }
+
+                enum disable {
+                  value 0 ;
+                }
+
+              }
+
+              default disable ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2022-02-10 ;
+      }
+
+      ncd:revise-date 2020-02-16 ;
+    }
+
+    container sr-policys {
+      description 'The configuration node of SR-policy.' ;
+      presence end-point ;
+      container ipv4 {
+        description 'The ipv4 node of SR-policy.' ;
+        container binding-sids {
+          list binding-sid {
+            description "The configuration of SR-policy's binding-SID." ;
+            key 'color end-point-ipv4' ;
+            leaf color {
+              description 'The color of SR-policy.' ;
+              type uint32 {
+                range 1..4294967295 ;
+
+              }
+
+            }
+
+            leaf end-point-ipv4 {
+              description 'Specify the IPv4 address at the end-point end.' ;
+              type ncd:ipv4-address-none-zero ;
+
+            }
+
+            choice label {
+              description 'Choose the type of assigning binding SID.
+sid: Specify the SID value.
+auto: Assign the SID automatically.' ;
+              case sid {
+                description 'Specify the SID value case.' ;
+                leaf sid {
+                  description "The SID of SR-policy's binding-SID." ;
+                  type uint32 {
+                    range 16..1048575 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              case auto {
+                description 'Assign SID automatically case.' ;
+                leaf auto {
+                  description 'Assign SID automatically.' ;
+                  type enumeration {
+                    enum auto {
+                      value 1 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container ipv6 {
+        description 'The ipv6 node of SR-policy.' ;
+        container binding-sids {
+          list binding-sid {
+            description "The configuration of SR-policy's binding-SID." ;
+            key 'color end-point-ipv6' ;
+            leaf color {
+              description 'The color of SR-policy.' ;
+              type uint32 {
+                range 1..4294967295 ;
+
+              }
+
+            }
+
+            leaf end-point-ipv6 {
+              description 'Specify the IPv6 address at the end-point end.' ;
+              type ncd:ipv6-address-none-zero ;
+
+            }
+
+            choice label {
+              description 'Choose the type of assigning binding SID.
+sid: Specify the SID value.
+auto: Assign the SID automatically.' ;
+              case sid {
+                description 'Specify the SID value case.' ;
+                leaf sid {
+                  description "The SID of SR-policy's binding-SID." ;
+                  type uint32 {
+                    range 16..1048575 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              case auto {
+                description 'Assign SID automatically case.' ;
+                leaf auto {
+                  description 'Assign SID automatically.' ;
+                  type enumeration {
+                    enum auto {
+                      value 1 ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2020-05-19 ;
+    }
+
+    container sr-epes {
+      description 'The configuration node of SR EPE.' ;
+      container ipv4-peer-sids {
+        description "The IPv4 node of SR EPE's peer node." ;
+        list ipv4-peer-sid {
+          description "The configuration node of SR EPE's IPv4 peer node." ;
+          key ipv4-address ;
+          leaf ipv4-address {
+            description 'The IPv4 address of peer node.' ;
+            type ncd:ipv4-address-none-zero ;
+
+          }
+
+          leaf sid {
+            description "The SID of SR EPE's peer node." ;
+            type uint32 {
+              range 16..1048575 ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container ipv6-peer-sids {
+        description "The IPv6 node of SR EPE's peer node." ;
+        list ipv6-peer-sid {
+          description "The configuration node of SR EPE's IPv6 peer node." ;
+          key ipv6-address ;
+          leaf ipv6-address {
+            description 'The IPv6 address of peer node.' ;
+            type ncd:ipv6-address-none-zero ;
+
+          }
+
+          leaf sid {
+            description "The SID of SR EPE's peer node." ;
+            type uint32 {
+              range 16..1048575 ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container peer-set-sids {
+        description 'The peer set node of SR EPE.' ;
+        list peer-set-sid {
+          description "The configuration node of SR EPE's peer set." ;
+          key name ;
+          leaf name {
+            description "The peer set's name.The max length of name is 31." ;
+            type ncd:string-all ;
+
+          }
+
+          leaf sid {
+            description "The SID of SR EPE's peer set." ;
+            type uint32 {
+              range 16..1048575 ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2020-06-20 ;
+    }
+
+    container adj-sid-holdtime {
+      description "The configuration node  of SR dynamic adjacency-SID's holdtime." ;
+      leaf holdtime {
+        description "Holdtime in minutes.It's range is 1-10080,and default value is 30." ;
+        type uint32 {
+          range 0..20160 ;
+
+        }
+
+        default 30 ;
+      }
+
+      ncd:revise-date 2020-08-18 ;
+    }
+
+    container service-programmings {
+      if-feature service-program ;
+
+      description 'Service programmings container.' ;
+      list service-programming {
+        description 'Service programming list.' ;
+        key name ;
+        leaf name {
+          description 'Service programming name to identify a specific function.' ;
+          type string {
+            length 1..31 ;
+
+          }
+
+        }
+
+        leaf service-type {
+          description 'Service-Type defined by IANA Service Type Table (STT). Like Firewall, DPI etc...' ;
+          type SERVICE-FUNCTION-TYPE ;
+
+        }
+
+        container pair-sid {
+          description 'Service pair SID container.' ;
+          container srv6 {
+            description 'SRv6 Service pair SID container.' ;
+            presence sid ;
+            leaf sid {
+              description 'SRv6 SID value.' ;
+              type ncd:ipv6-address ;
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+        container binding-sid {
+          description 'Service SID binding container.' ;
+          container srv6 {
+            description 'SRv6 Service SID binding container.' ;
+            presence srv6-sid-locator ;
+            leaf sid {
+              description 'Function scope of SRv6 SID.' ;
+              type ncd:ipv6-address ;
+
+              mandatory true ;
+            }
+
+            leaf locator-name {
+              description "Locator's name." ;
+              type string ;
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+        container service-proxy {
+          description 'Service Proxy for SR unaware services.' ;
+          container static-proxys {
+            description 'Parameters related to static service proxy.' ;
+            presence proxy ;
+            list static-proxy {
+              description 'Static proxy list.' ;
+              key id ;
+              leaf id {
+                description 'The ID of this static proxy.' ;
+                type uint32 {
+                  range 1..65535 ;
+
+                }
+
+              }
+
+              leaf priority {
+                description 'Output priority of this static proxy.' ;
+                type uint32 {
+                  range 1..65535 ;
+
+                }
+
+                mandatory true ;
+              }
+
+              container proxy-info {
+                description 'Static proxy base info.' ;
+                presence proxy-info ;
+                leaf inner-packet-type {
+                  description 'Defines the expected inner packet type. The value can be "IPv4","IPv6", or "Ethernet".' ;
+                  type SERVICE-PROXY-INNER-PKT-TYPE ;
+
+                  mandatory true ;
+                }
+
+                choice next-hop {
+                  description 'Choose the type of next-hop.' ;
+                  mandatory true ;
+                  case ipv4 {
+                    description 'Specify the IPv4 nexthop.' ;
+                    leaf next-hop-ipv4 {
+                      description 'Nexthop IPv4 address.' ;
+                      type ncd:ipv4-address ;
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                  case ipv6 {
+                    description 'Specify the IPv6 nexthop.' ;
+                    leaf next-hop-ipv6 {
+                      description 'Nexthop IPv6 address.' ;
+                      type ncd:ipv6-address ;
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+                leaf out-interface-name {
+                  description 'Interface name on which the packet sent to the service endpoint.' ;
+                  type ncd:ifname ;
+
+                  mandatory true ;
+                }
+
+                leaf in-interface-name {
+                  description 'Interface name on which the packet received from the service endpoint.' ;
+                  type ncd:ifname ;
+
+                  mandatory true ;
+                }
+
+              }
+
+              container packet-cache-info {
+                description 'SR information to be attached on the traffic coming back from the service.' ;
+                container srv6-packet-cache-info {
+                  description 'SRv6 SID stack.' ;
+                  container source-address {
+                    description 'IPv6 source address that needs in the case if SRv6.' ;
+                    leaf ipv6-source-address {
+                      description 'IPv6 source address that needs in the case if SRv6.' ;
+                      type ncd:ipv6-address ;
+
+                    }
+
+                  }
+
+                  container srv6-sids {
+                    description 'SRv6 SID list.' ;
+                    presence srv6-sid ;
+                    list srv6-sid {
+                      description 'SRv6 SID list.' ;
+                      key index ;
+                      leaf index {
+                        description 'Cache index. Its range is 1 to 11.' ;
+                        type uint8 {
+                          range 1..11 ;
+
+                        }
+
+                      }
+
+                      leaf srv6-sid {
+                        description 'SRv6 SID.' ;
+                        type ncd:ipv6-address ;
+
+                        mandatory true ;
+                      }
+
+                    }
+
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      ncd:revise-date 2021-09-18 ;
+    }
+
+    container if-prefix-sids {
+      status deprecated ;
+
+      if-feature if-prefix-sid ;
+
+      list if-prefix-sid {
+        status deprecated ;
+
+        key 'interface-name af-type protocol instance-id' ;
+        leaf interface-name {
+          status deprecated ;
+
+          description 'Loopback interface name.' ;
+          type ncd:ifname {
+            length 1..31 ;
+
+          }
+
+        }
+
+        leaf af-type {
+          status deprecated ;
+
+          description 'The address-family.' ;
+          type enumeration {
+            enum ipv4 {
+              value 1 ;
+              description 'IPv4' ;
+            }
+
+            enum ipv6 {
+              value 2 ;
+              description 'IPv6' ;
+            }
+
+          }
+
+        }
+
+        leaf protocol {
+          status deprecated ;
+
+          description 'The type of protocol.' ;
+          type enumeration {
+            enum isis {
+              value 1 ;
+              description 'ISIS' ;
+            }
+
+          }
+
+        }
+
+        leaf instance-id {
+          status deprecated ;
+
+          description 'The instance ID of protocol.' ;
+          type uint32 {
+            range 0..4294967295 ;
+
+          }
+
+        }
+
+        leaf type {
+          status deprecated ;
+
+          description 'The type of SID.' ;
+          type enumeration {
+            enum index {
+              value 2 ;
+              description 'Index SID' ;
+            }
+
+          }
+
+          mandatory true ;
+        }
+
+        leaf index-id {
+          status deprecated ;
+
+          description 'Index SID.' ;
+          type uint32 {
+            range 0..1048560 ;
+
+          }
+
+          mandatory true ;
+        }
+
+      }
+
+      ncd:revise-date 2021-12-20 ;
+    }
+
+    container srv6-sid-alarm-threshold {
+      description 'SRv6 alarm threshold configuration.' ;
+      presence "Alarm threshold configuration" ;
+      leaf occur-value {
+        description 'The value of SRv6 SID alarm occur threshold.' ;
+        type uint8 {
+          range 1..100 ;
+
+        }
+
+        mandatory true ;
+      }
+
+      leaf clear-value {
+        description 'The value of SRv6 SID alarm clear threshold.' ;
+        type uint8 {
+          range 1..100 ;
+
+        }
+
+        default 72 ;
+      }
+
+      ncd:revise-date 2023-12-19 ;
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'The query node for segment-routing information.' ;
+    container ipv4 {
+      description 'The query node for IPv4 segment-routing information.' ;
+      container global-status {
+        description 'The query node for segment-routing global status information.' ;
+        leaf status {
+          description 'The query node for segment-routing global status information.' ;
+          type GLOBAL-STATUS ;
+
+          default ENABLE ;
+        }
+
+      }
+
+      container adjacency-sid {
+        status obsolete {
+          ncd:revise-date 2020-04-18 ;
+        }
+
+        description 'The query node for segment-routing adjacency SID information.' ;
+        list information {
+          status deprecated ;
+
+          description 'Segment-routing adjacency SID information.' ;
+          key 'type local-router-id local-ip remote-router-id remote-ip sid-index' ;
+          leaf type {
+            description 'The type of adjacency SID.' ;
+            type ADJ-TYPE ;
+
+          }
+
+          leaf local-router-id {
+            description 'The local router ID.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf local-ip {
+            description 'The local IP address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf remote-router-id {
+            description 'The remote router ID.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf remote-ip {
+            description 'The remote IP address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf sid-index {
+            description 'The SID index in IP-pair.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf sid-label {
+            description 'The label of adjacency SID.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf weight {
+            description 'The weight of adjacency SID.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf local-id {
+            status obsolete {
+              ncd:revise-date 2019-09-07 ;
+            }
+
+            description 'The local ID.' ;
+            type uint32 ;
+
+            ncd:revise-date 2019-06-10 ;
+          }
+
+          leaf remote-id {
+            status obsolete {
+              ncd:revise-date 2019-09-07 ;
+            }
+
+            description 'The remote ID.' ;
+            type int32 ;
+
+            ncd:revise-date 2019-06-10 ;
+          }
+
+          leaf local-interface {
+            status obsolete {
+              ncd:revise-date 2019-09-07 ;
+            }
+
+            description 'The local interface.' ;
+            type ncd:string-all ;
+
+            ncd:revise-date 2019-06-10 ;
+          }
+
+          ncd:select type ;
+          ncd:select "type local-router-id local-ip remote-router-id remote-ip" ;
+        }
+
+      }
+
+      container local-prefix-sid {
+        description 'The query node for segment-routing local prefix SID information.' ;
+        list information {
+          description 'Segment-routing local prefix SID information.' ;
+          key 'dest-addr mask-addr' ;
+          leaf dest-addr {
+            description 'The destination address of local prefix sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf mask-addr {
+            description 'The mask address of local prefix sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf index {
+            description 'The index value of local prefix sid.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf node-flag {
+            description 'The node-flag of local prefix sid.' ;
+            type LOCAL-PREFIX-NODE-FLAG ;
+
+            default FALSE ;
+          }
+
+          leaf php-flag {
+            description 'The label operation of penultimate hop.' ;
+            type LOCAL-PREFIX-PHP-FLAG ;
+
+            default NULL ;
+          }
+
+          leaf aii {
+            if-feature network-slice ;
+
+            description 'The segment-routing slice identifier.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+            ncd:revise-date 2019-11-15 ;
+          }
+
+          leaf fa-id {
+            description 'The node for segment-routing Flex-Algorithm identifier.' ;
+            type uint32 {
+              range 0..255 ;
+
+            }
+
+            ncd:revise-date 2019-11-15 ;
+          }
+
+          ncd:select "dest-addr mask-addr" ;
+          ncd:select aii ;
+          ncd:select fa-id ;
+          ncd:select "dest-addr mask-addr aii" ;
+          ncd:select "dest-addr mask-addr fa-id" ;
+        }
+
+      }
+
+      container remote-prefix-sid {
+        description 'The query node for segment-routing remote prefix SID information.' ;
+        list information {
+          description 'Segment-routing remote prefix SID information.' ;
+          key 'dest-addr mask-addr nexthop-index' ;
+          leaf dest-addr {
+            description 'The destination address of remote prefix sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf mask-addr {
+            description 'The mask address of remote prefix sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf nexthop-index {
+            description 'The index value of nexthop.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf prefix-sid {
+            description 'The index value of remote prefix sid.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf prefix-flag {
+            description 'The flag of remote prefix sid flag.' ;
+            type REMOTE-PREFIX-FLAG ;
+
+            default NULL ;
+          }
+
+          leaf router-id {
+            description 'The router ID.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf nexthop {
+            description 'The nexthop address of remote prefix sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf nexthop-sid {
+            description 'The sid value of nexthop.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf nexthop-flag {
+            description 'The flag of nexthop sid flag.' ;
+            type REMOTE-PREFIX-FLAG ;
+
+            default NULL ;
+          }
+
+          leaf aii {
+            if-feature network-slice ;
+
+            description 'The segment-routing slice identifier.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+            ncd:revise-date 2019-11-15 ;
+          }
+
+          leaf fa-id {
+            description 'The node for segment-routing Flex-Algorithm identifier.' ;
+            type uint32 {
+              range 0..255 ;
+
+            }
+
+            default 0 ;
+            ncd:revise-date 2019-11-15 ;
+          }
+
+          ncd:select "dest-addr mask-addr" ;
+          ncd:select aii ;
+          ncd:select fa-id ;
+          ncd:select "dest-addr mask-addr aii" ;
+          ncd:select "dest-addr mask-addr fa-id" ;
+        }
+
+      }
+
+      container local-srgb {
+        description 'The query node for segment-routing local srgb information.' ;
+        leaf label-begin {
+          description 'The start label.' ;
+          type uint32 {
+            range 0..4294967295 ;
+
+          }
+
+          default 0 ;
+        }
+
+        leaf label-end {
+          description 'The end label.' ;
+          type uint32 {
+            range 0..4294967295 ;
+
+          }
+
+          default 0 ;
+        }
+
+      }
+
+      container remote-srgb {
+        status obsolete {
+          ncd:revise-date 2018-05-29 ;
+        }
+
+        description 'The query node for segment-routing remote srgb information.' ;
+        list information {
+          status obsolete {
+            ncd:revise-date 2018-05-29 ;
+          }
+
+          description 'Segment-routing remote srgb information.' ;
+          key 'router-id range-index' ;
+          leaf router-id {
+            description 'Router ID' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf range-index {
+            description 'The range index.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf label-begin {
+            description 'The start label.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf label-end {
+            description 'The end label.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+        }
+
+      }
+
+      container remote-srgbs {
+        description 'The query node for segment-routing remote srgb information.' ;
+        list information {
+          description 'Segment-routing remote srgb information.' ;
+          key 'router-id address-family range-index' ;
+          leaf router-id {
+            description 'Router ID' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf address-family {
+            description 'Address family.' ;
+            type enumeration {
+              enum ipv4 {
+                value 1 ;
+              }
+
+              enum ipv6 {
+                value 2 ;
+              }
+
+            }
+
+          }
+
+          leaf range-index {
+            description 'The range index.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf label-begin {
+            description 'The start label.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf label-end {
+            description 'The end label.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+        }
+
+        ncd:revise-date 2018-05-29 ;
+      }
+
+      container prefix-sid-map {
+        if-feature mapping-server ;
+
+        description 'The query node for segment-routing mapping-server ipv4 prefix-sid-map information.' ;
+        list information {
+          description 'Segment-routing mapping-server ipv4 prefix-sid-map information.' ;
+          key 'first-dest-addr first-mask-addr' ;
+          leaf first-dest-addr {
+            description 'The destination address of the first prefix sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf first-mask-addr {
+            description 'The mask address of the first prefix sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf first-sid {
+            description 'The sid value of the first prefix sid.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf range {
+            description 'The quantity of maps of prefix and sid.' ;
+            type uint32 ;
+
+            default 0 ;
+          }
+
+          leaf last-dest-addr {
+            description 'The destination address of the last prefix sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf last-mask-addr {
+            description 'The mask address of the last prefix sid.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf last-sid {
+            description 'The sid value of the last prefix sid.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+        }
+
+        ncd:revise-date 2018-09-19 ;
+      }
+
+      container adjacency-sid-new {
+        status obsolete {
+          ncd:revise-date 2020-04-18 ;
+        }
+
+        description 'The query node for segment-routing adjacency SID information.' ;
+        list information {
+          description 'Segment-routing adjacency SID information.' ;
+          key 'type local-router-id local-ip remote-router-id remote-ip sid-index local-id remote-id' ;
+          leaf type {
+            description 'The type of adjacency SID.' ;
+            type ADJ-TYPE ;
+
+          }
+
+          leaf local-router-id {
+            description 'The local router ID.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf local-ip {
+            description 'The local IP address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf remote-router-id {
+            description 'The remote router ID.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf remote-ip {
+            description 'The remote IP address.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf sid-index {
+            description 'The SID index in IP-pair.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf sid-label {
+            description 'The label of adjacency SID.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf weight {
+            description 'The weight of adjacency SID.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf local-id {
+            description 'The local ID.' ;
+            type uint32 ;
+
+          }
+
+          leaf remote-id {
+            description 'The remote ID.' ;
+            type int32 ;
+
+          }
+
+          leaf local-interface {
+            description 'The local interface.' ;
+            type ncd:string-all ;
+
+          }
+
+          leaf aii {
+            if-feature network-slice ;
+
+            description 'The segment-routing slice identifier.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+            ncd:revise-date 2020-01-15 ;
+          }
+
+          ncd:select type ;
+          ncd:select "type local-router-id local-ip remote-router-id remote-ip" ;
+          ncd:select "type local-router-id remote-router-id local-id remote-id" ;
+          ncd:select "type aii" ;
+          ncd:select "type local-router-id local-ip remote-router-id remote-ip aii" ;
+          ncd:select "type local-router-id remote-router-id local-id remote-id aii" ;
+        }
+
+        ncd:revise-date 2019-09-07 ;
+      }
+
+    }
+
+    container ipv6 {
+      description 'The query node for IPv6 segment-routing information.' ;
+      container global-status {
+        description 'The query node for segment-routing global status information.' ;
+        leaf status {
+          description 'The query node for segment-routing global status information.' ;
+          type GLOBAL-STATUS ;
+
+          default ENABLE ;
+        }
+
+      }
+
+      container local-prefix-sid {
+        description 'The query node for segment-routing local prefix SID information.' ;
+        list information {
+          description 'Segment-routing local prefix SID information.' ;
+          key 'prefix prefix-length' ;
+          leaf prefix {
+            description 'The destination address of local prefix sid.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf prefix-length {
+            description 'The prefix length of local prefix sid.' ;
+            type uint8 {
+              range 0..128 ;
+
+            }
+
+          }
+
+          leaf index {
+            description 'The index value of local prefix sid.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf node-flag {
+            description 'The node-flag of local prefix sid.' ;
+            type LOCAL-PREFIX-NODE-FLAG ;
+
+            default FALSE ;
+          }
+
+          leaf php-flag {
+            description 'The label operation of penultimate hop.' ;
+            type LOCAL-PREFIX-PHP-FLAG ;
+
+            default NULL ;
+          }
+
+          ncd:select "prefix prefix-length" ;
+        }
+
+      }
+
+      container remote-prefix-sid {
+        description 'The query node for segment-routing remote prefix SID information.' ;
+        list information {
+          description 'Segment-routing remote prefix SID information.' ;
+          key 'prefix prefix-length nexthop-index' ;
+          leaf prefix {
+            description 'The destination address of remote prefix sid.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf prefix-length {
+            description 'The prefix length of remote prefix sid.' ;
+            type uint8 {
+              range 0..128 ;
+
+            }
+
+          }
+
+          leaf nexthop-index {
+            description 'The index value of nexthop.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf prefix-sid {
+            description 'The index value of remote prefix sid.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf prefix-flag {
+            description 'The flag of remote prefix sid flag.' ;
+            type REMOTE-PREFIX-FLAG ;
+
+            default NULL ;
+          }
+
+          leaf router-id {
+            status obsolete {
+              ncd:revise-date 2019-05-31 ;
+            }
+
+            description 'The router ID.' ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf nexthop {
+            description 'The nexthop address of remote prefix sid.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf nexthop-sid {
+            description 'The sid value of nexthop.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf nexthop-flag {
+            description 'The flag of nexthop sid flag.' ;
+            type REMOTE-PREFIX-FLAG ;
+
+            default NULL ;
+          }
+
+          leaf router-id-str {
+            description 'The router ID.' ;
+            type string ;
+
+            ncd:revise-date 2019-05-31 ;
+          }
+
+          ncd:select "prefix prefix-length" ;
+        }
+
+      }
+
+      container prefix-sid-map {
+        if-feature mapping-server ;
+
+        description 'The query node for segment-routing mapping-server ipv6 prefix-sid-map information.' ;
+        list information {
+          description 'Segment-routing mapping-server ipv6 prefix-sid-map information.' ;
+          key 'first-prefix first-prefix-len' ;
+          leaf first-prefix {
+            description 'The destination address of the first prefix sid.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf first-prefix-len {
+            description 'The prefix length of the first prefix sid.' ;
+            type uint8 {
+              range 1..128 ;
+
+            }
+
+          }
+
+          leaf first-sid {
+            description 'The sid value of the first prefix sid.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+          leaf range {
+            description 'The quantity of maps of prefix and sid.' ;
+            type uint32 {
+              range 1..65535 ;
+
+            }
+
+          }
+
+          leaf last-prefix {
+            description 'The destination address of the last prefix sid.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf last-prefix-len {
+            description 'The prefix length of the last prefix sid.' ;
+            type uint8 {
+              range 1..128 ;
+
+            }
+
+          }
+
+          leaf last-sid {
+            description 'The sid value of the last prefix sid.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            default 0 ;
+          }
+
+        }
+
+        ncd:revise-date 2018-09-19 ;
+      }
+
+      container adjacency-sid {
+        status obsolete {
+          ncd:revise-date 2020-04-18 ;
+        }
+
+        description 'The query node for ipv6 segment-routing adjacency SID information.' ;
+        list information {
+          status deprecated ;
+
+          description 'Segment-routing adjacency SID information.' ;
+          key 'type local-router-id local-ipv6 remote-router-id remote-ipv6 sid-index' ;
+          leaf type {
+            description 'The type of adjacency SID.' ;
+            type ADJ-TYPE ;
+
+          }
+
+          leaf local-router-id {
+            description 'The local router ID.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf local-ipv6 {
+            description 'The local IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf remote-router-id {
+            description 'The remote router ID.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf remote-ipv6 {
+            description 'The remote IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf sid-index {
+            description 'The SID index in IP-pair.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf sid-label {
+            description 'The label of adjacency SID.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf weight {
+            description 'The weight of adjacency SID.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf local-id {
+            status obsolete {
+              ncd:revise-date 2019-09-07 ;
+            }
+
+            description 'The local ID.' ;
+            type uint32 ;
+
+            ncd:revise-date 2019-06-10 ;
+          }
+
+          leaf remote-id {
+            status obsolete {
+              ncd:revise-date 2019-09-07 ;
+            }
+
+            description 'The remote ID.' ;
+            type int32 ;
+
+            ncd:revise-date 2019-06-10 ;
+          }
+
+          leaf local-interface {
+            status obsolete {
+              ncd:revise-date 2019-09-07 ;
+            }
+
+            description 'The local interface.' ;
+            type ncd:string-all ;
+
+            ncd:revise-date 2019-06-10 ;
+          }
+
+          ncd:select type ;
+          ncd:select "type local-router-id local-ipv6 remote-router-id remote-ipv6" ;
+        }
+
+        ncd:revise-date 2019-02-13 ;
+      }
+
+      container adjacency-sid-new {
+        status obsolete {
+          ncd:revise-date 2020-04-18 ;
+        }
+
+        description 'The query node for ipv6 segment-routing adjacency SID information.' ;
+        list information {
+          description 'Segment-routing adjacency SID information.' ;
+          key 'type local-router-id local-ipv6 remote-router-id remote-ipv6 sid-index local-id remote-id' ;
+          leaf type {
+            description 'The type of adjacency SID.' ;
+            type ADJ-TYPE ;
+
+          }
+
+          leaf local-router-id {
+            description 'The local router ID.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf local-ipv6 {
+            description 'The local IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf remote-router-id {
+            description 'The remote router ID.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf remote-ipv6 {
+            description 'The remote IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf sid-index {
+            description 'The SID index in IP-pair.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf sid-label {
+            description 'The label of adjacency SID.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf weight {
+            description 'The weight of adjacency SID.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf local-id {
+            description 'The local ID.' ;
+            type uint32 ;
+
+          }
+
+          leaf remote-id {
+            description 'The remote ID.' ;
+            type int32 ;
+
+          }
+
+          leaf local-interface {
+            description 'The local interface.' ;
+            type ncd:string-all ;
+
+          }
+
+          ncd:select type ;
+          ncd:select "type local-router-id local-ipv6 remote-router-id remote-ipv6" ;
+          ncd:select "type local-router-id remote-router-id local-id remote-id" ;
+        }
+
+        ncd:revise-date 2019-09-07 ;
+      }
+
+      ncd:revise-date 2017-08-21 ;
+    }
+
+    container srv6 {
+      leaf global-status {
+        description 'Show the SRv6 global switch status.' ;
+        type GLOBAL-STATUS ;
+
+      }
+
+      container srv6-sids {
+        status obsolete {
+          ncd:revise-date 2020-09-22 ;
+        }
+
+        description 'The SRv6 SID information.' ;
+        list srv6-sid {
+          key type ;
+          leaf type {
+            description 'The type of SRv6 SID (local or remote).' ;
+            type enumeration {
+              enum local {
+                value 1 ;
+              }
+
+              enum remote {
+                value 2 ;
+              }
+
+            }
+
+          }
+
+          leaf sid-prefix {
+            description 'The prefix of SID.' ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf sid-length {
+            description 'The prefix length of SID.' ;
+            type ncd:ipv6-mask-length ;
+
+          }
+
+          leaf function-type {
+            description 'Function type of SID.' ;
+            type string ;
+
+          }
+
+          leaf flavor {
+            description 'Flavor of SID.' ;
+            type string ;
+
+          }
+
+          leaf nexthop {
+            description 'Nexthop address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf interface {
+            description 'Output interface.' ;
+            type string ;
+
+          }
+
+        }
+
+      }
+
+      container srv6-sid-range {
+        status obsolete {
+          ncd:revise-date 2020-06-06 ;
+        }
+
+        description 'The SRv6 SID range information.' ;
+        list sid-range {
+          key type ;
+          leaf type {
+            description 'The type of SID range.' ;
+            type string ;
+
+          }
+
+          leaf range-prefix {
+            description 'The SID range.' ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+        }
+
+      }
+
+      container locators {
+        description 'The SRv6 locator information.' ;
+        list locator {
+          description 'The SRv6 locator information.' ;
+          key locator-name ;
+          leaf locator-name {
+            description "The locator's name.The max length of locator-name is 31." ;
+            type string ;
+
+          }
+
+          leaf range-prefix {
+            description 'The locator SID range.' ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf is-default {
+            status obsolete {
+              ncd:revise-date 2020-07-25 ;
+            }
+
+            description "The locator's default attribute." ;
+            type boolean ;
+
+          }
+
+          leaf static-length {
+            description "The locator's static opcode length." ;
+            type uint8 ;
+
+          }
+
+          leaf auto-sid-begin {
+            description "The begin of the locator's auto SID range." ;
+            type string ;
+
+          }
+
+          leaf auto-sid-end {
+            description "The end of the locator's auto SID range." ;
+            type string ;
+
+          }
+
+          leaf args-length {
+            description "The locator's arguments opcode length." ;
+            type uint8 ;
+
+          }
+
+          leaf compress-target {
+            description "The locator's compress target." ;
+            type uint8 ;
+
+          }
+
+          leaf block-length {
+            description "The locator's compress block length." ;
+            type uint8 ;
+
+          }
+
+          leaf node-length {
+            description "The locator's compress node length." ;
+            type uint8 ;
+
+          }
+
+          leaf function-length {
+            description "The locator's compress function length." ;
+            type uint8 ;
+
+          }
+
+          leaf fa-id {
+            description "The node for SRv6 locator's Flex-Algorithm identifier." ;
+            type uint32 ;
+
+            ncd:revise-date 2020-09-06 ;
+          }
+
+          leaf dynamic-length {
+            description "The locator's dynamic opcode length. The length is calculated by static length,and cannot represent the actual number of dynamic SID resources." ;
+            type uint8 {
+              range 0..128 ;
+
+            }
+
+            ncd:revise-date 2021-06-17 ;
+          }
+
+          leaf reserved-start {
+            description 'Specify the start of reserved opcode.' ;
+            type string {
+              length 0..40 ;
+
+            }
+
+            ncd:revise-date 2021-06-17 ;
+          }
+
+          leaf reserved-count {
+            description 'Specify the count of reserved opcode.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            ncd:revise-date 2021-06-17 ;
+          }
+
+          leaf block-length-normal {
+            description "The locator's block length." ;
+            type uint8 {
+              range 0..128 ;
+
+            }
+
+            ncd:revise-date 2021-07-26 ;
+          }
+
+          leaf node-length-normal {
+            description "The locator's node length." ;
+            type uint8 {
+              range 0..128 ;
+
+            }
+
+            ncd:revise-date 2021-07-26 ;
+          }
+
+          leaf function-length-normal {
+            description "The locator's function length." ;
+            type uint8 {
+              range 0..128 ;
+
+            }
+
+            ncd:revise-date 2021-07-26 ;
+          }
+
+          leaf static-length-compress {
+            description "The locator's compressed static opcode length." ;
+            type uint8 {
+              range 0..32 ;
+
+            }
+
+            ncd:revise-date 2022-03-09 ;
+          }
+
+          leaf auto-sid-begin-compress {
+            description "The begin of the locator's compressed auto SID range." ;
+            type string ;
+
+            ncd:revise-date 2022-03-09 ;
+          }
+
+          leaf auto-sid-end-compress {
+            description "The end of the locator's auto SID range." ;
+            type string ;
+
+            ncd:revise-date 2022-03-09 ;
+          }
+
+          leaf anycast {
+            type boolean ;
+
+            description "The locator's anycast attribute." ;
+            ncd:revise-date 2024-03-25 ;
+          }
+
+        }
+
+        ncd:revise-date 2020-06-06 ;
+      }
+
+      container local-sids {
+        description 'The SRv6 local SID information.' ;
+        list local-sid {
+          description 'The SRv6 local SID information.' ;
+          key sid ;
+          leaf sid {
+            description 'The SRv6 local SID.' ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf locator-name {
+            description 'The locator name of SID.' ;
+            type string ;
+
+          }
+
+          leaf vrf-name {
+            description 'The vrf name of SID.' ;
+            type ncd:string-quesiton-mark ;
+
+          }
+
+          leaf function-type {
+            type SRV6-LOCAL-SID-FUNCTYPE ;
+
+            status deprecated ;
+
+            description 'Old version type of SID function. It is recommended that you view the value of “function-type-standard”.' ;
+
+            ncd:revise-date 2023-11-03 ;
+          }
+
+          leaf owner {
+            description 'Owner of SID.' ;
+            type string ;
+
+          }
+
+          leaf block-length {
+            description "The SID's block length." ;
+            type uint8 ;
+
+          }
+
+          leaf node-length {
+            description "The SID's node length." ;
+            type uint8 ;
+
+          }
+
+          leaf function-length {
+            description "The SID's function length." ;
+            type uint8 ;
+
+          }
+
+          leaf flavor {
+            description 'Flavor of SID.' ;
+            type string ;
+
+          }
+
+          leaf nexthop {
+            description 'Nexthop address for SID with single nexthop. If the SID has multiple nexthops, view them in the "multi-nexthops".' ;
+            type string ;
+
+          }
+
+          leaf out-interface {
+            description 'Output interface for SID with single nexthop. If the SID has multiple nexthops, view them in the "multi-nexthops".' ;
+            type string ;
+
+          }
+
+          leaf color {
+            description "The SID's color." ;
+            type uint32 ;
+
+          }
+
+          leaf end-point {
+            description "SID's end-point." ;
+            type string ;
+
+          }
+
+          leaf vpls-name {
+            description 'The VPLS name of SID.' ;
+            type string ;
+
+            ncd:revise-date 2020-10-29 ;
+          }
+
+          leaf fa-id {
+            description "The node for SRv6 local SID's Flex-Algorithm identifier." ;
+            type uint8 ;
+
+            ncd:revise-date 2020-10-29 ;
+          }
+
+          leaf service-programming-name {
+            description 'The service programming name of SID.' ;
+            type string ;
+
+            ncd:revise-date 2021-09-18 ;
+          }
+
+          leaf usid-length {
+            description "The SID's uSID length." ;
+            type uint8 ;
+
+            ncd:revise-date 2022-02-10 ;
+          }
+
+          leaf slice-id {
+            description 'The slice ID of slice End.X SID.' ;
+            type uint32 ;
+
+            ncd:revise-date 2022-08-06 ;
+          }
+
+          container multi-nexthops {
+            description 'The multiple nexthops information of SRv6 local SID. If the SID has only single nexthop, view them in the leaf "local-sid/nexthop".' ;
+            list multi-nexthop {
+              description 'The multiple nexthops information of SRv6 local SID' ;
+              key index ;
+              leaf index {
+                description 'Index of multiple nexthops.' ;
+                type uint32 {
+                  range 1..4294967295 ;
+
+                }
+
+              }
+
+              leaf nexthop {
+                description 'Nexthop address.' ;
+                type ncd:ipv6-address ;
+
+              }
+
+              leaf out-interface {
+                description 'Output interface.' ;
+                type string ;
+
+              }
+
+            }
+
+            ncd:revise-date 2023-01-13 ;
+          }
+
+          leaf l2-bundle-member {
+            description 'Member of output interface for SID.' ;
+            type string ;
+
+            ncd:revise-date 2023-03-06 ;
+          }
+
+          leaf segment-list-id {
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+            description 'The segment list ID' ;
+            ncd:revise-date 2023-07-17 ;
+          }
+
+          leaf function-type-standard {
+            description 'The standard type of SRv6 SID function from RFCs.' ;
+            type string ;
+
+            ncd:revise-date 2023-11-03 ;
+          }
+
+          ncd:select locator-name ;
+          ncd:select function-type ;
+          ncd:select sid ;
+          ncd:select fa-id ;
+          ncd:select function-type-standard ;
+        }
+
+        ncd:revise-date 2020-09-22 ;
+      }
+
+      container local-sid-summary {
+        status deprecated ;
+
+        description 'Old querying of SRv6 local SID statistics. It is recommended that you view the value of “local-sid-statistics”.' ;
+        leaf total {
+          status deprecated ;
+
+          description 'The total of all SRv6 local SID.' ;
+          type uint32 ;
+
+        }
+
+        list statistics {
+          status deprecated ;
+
+          description 'The querying of SRv6 local SID statistics by function type.' ;
+          key function-type ;
+          leaf function-type {
+            status deprecated ;
+
+            description 'The function type of SRv6 local SID.' ;
+            type SRV6-LOCAL-SID-FUNCTYPE ;
+
+          }
+
+          leaf count {
+            status deprecated ;
+
+            description 'The statistics of SRv6 local SID in special function type.' ;
+            type uint32 ;
+
+          }
+
+        }
+
+        ncd:revise-date 2023-11-03 ;
+      }
+
+      container usid-locators {
+        description 'The SRv6 uSID locator information.' ;
+        list usid-locator {
+          description 'The SRv6 uSID locator information.' ;
+          key locator-name ;
+          leaf locator-name {
+            description "The uSID locator's name.The max length of locator-name is 31." ;
+            type string ;
+
+          }
+
+          leaf ipv6-prefix {
+            description "The uSID locator's SID range." ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf block-length {
+            description "The uSID locator's block length." ;
+            type uint8 ;
+
+          }
+
+          leaf usid-length {
+            description "The uSID locator's uSID length." ;
+            type uint8 ;
+
+          }
+
+          leaf static-length {
+            description "The uSID locator's static length." ;
+            type uint8 ;
+
+          }
+
+          leaf args-length {
+            description "The uSID locator's arguments length." ;
+            type uint8 ;
+
+          }
+
+          leaf flavor {
+            description "The uSID locator's flavor." ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf fa-id {
+            description "The node for SRv6 uSID locator's Flex-Algorithm identifier." ;
+            type uint32 ;
+
+          }
+
+          leaf dynamic-sid-begin-1 {
+            description "The begin of the uSID locator's dynamic SID range with highest byte E (hexa) ." ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf dynamic-sid-end-1 {
+            description "The end of the uSID locator's dynamic SID range with highest byte E (hexa) ." ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf dynamic-sid-begin-2 {
+            description "The begin of the uSID locator's dynamic SID range with highest byte F (hexa) ." ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf dynamic-sid-end-2 {
+            description "The end of the uSID locator's dynamic SID range with highest byte F (hexa) ." ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf static-sid-begin-1 {
+            description "The begin of the uSID locator's static SID range with highest byte E (hexa) ." ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf static-sid-end-1 {
+            description "The end of the uSID locator's static SID range with highest byte E (hexa) ." ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf static-sid-begin-2 {
+            description "The begin of the uSID locator's static SID range with highest byte F (hexa) ." ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf static-sid-end-2 {
+            description "The end of the uSID locator's static SID range with highest byte F (hexa) ." ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf anycast {
+            type boolean ;
+
+            description "The locator's anycast attribute." ;
+            ncd:revise-date 2024-03-25 ;
+          }
+
+          leaf lookup-termination {
+            type boolean ;
+
+            description "The locator's local-usid lookup termination attribute." ;
+            ncd:revise-date 2024-07-04 ;
+          }
+
+        }
+
+        ncd:revise-date 2022-02-10 ;
+      }
+
+      container slice-end-x-infos {
+        if-feature slice-end-x ;
+
+        description 'The SRv6 slice End.X information.' ;
+        list slice-end-x-info {
+          description 'The SRv6 slice End.X information.' ;
+          key 'locator-name out-interface nexthop slice-id compress encapsulation-type psp usp usd' ;
+          leaf locator-name {
+            description "The locator's name." ;
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          leaf out-interface {
+            description 'Interface name on which the packet sent to the slice End.X.' ;
+            type string ;
+
+          }
+
+          leaf nexthop {
+            description 'Nexthop address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf slice-id {
+            description 'Slice ID.' ;
+            type uint32 {
+              range 1..4294967295 ;
+
+            }
+
+          }
+
+          leaf compress {
+            description 'The compress attribute of slice End.X SID. When the value is enable, it means the SID has the compression attribute.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+
+              enum disable {
+                value 0 ;
+              }
+
+            }
+
+          }
+
+          leaf encapsulation-type {
+            description 'The encapsulation type attribute of Slice End.X SID.The value uet-32 indicates that the next SID is 32-bit compression.' ;
+            type enumeration {
+              enum uet-32 {
+                value 1 ;
+              }
+
+              enum uet-128 {
+                value 0 ;
+              }
+
+            }
+
+          }
+
+          leaf psp {
+            description 'The PSP attribute of slice End.X SID.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+
+              enum disable {
+                value 0 ;
+              }
+
+            }
+
+          }
+
+          leaf usp {
+            description 'The USP attribute of slice End.X SID.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+
+              enum disable {
+                value 0 ;
+              }
+
+            }
+
+          }
+
+          leaf usd {
+            description 'The USD attribute of slice End.X SID.' ;
+            type enumeration {
+              enum enable {
+                value 1 ;
+              }
+
+              enum disable {
+                value 0 ;
+              }
+
+            }
+
+          }
+
+          leaf state {
+            description 'The status of slice End.X. Value: valid or invalid.' ;
+            type enumeration {
+              enum valid {
+                value 1 ;
+              }
+
+              enum invalid {
+                value 0 ;
+              }
+
+            }
+
+          }
+
+          leaf sid {
+            description 'The SRv6 local slice End.X SID.If the SID is not applied for, this node has no information.' ;
+            type ncd:ipv6-prefix ;
+
+          }
+
+          leaf block-length {
+            description "The SID's block length.If the SID is not applied for, this node has no information." ;
+            type uint8 ;
+
+          }
+
+          leaf node-length {
+            description "The SID's node length. If the SID is not applied for, this node has no information." ;
+            type uint8 ;
+
+          }
+
+          leaf function-length {
+            description "The SID's function length. If the SID is not applied for, this node has no information." ;
+            type uint8 ;
+
+          }
+
+          leaf args-length {
+            description "The locator's arguments opcode length. If the SID is not applied for, this node has no information." ;
+            type uint8 ;
+
+          }
+
+          ncd:select "locator-name out-interface nexthop slice-id" ;
+          ncd:select "locator-name out-interface nexthop slice-id compress encapsulation-type psp usp usd" ;
+        }
+
+        ncd:revise-date 2022-08-06 ;
+      }
+
+      container local-sid-statistics {
+        leaf total {
+          type uint32 ;
+
+          description 'The total of all SRv6 local SID.' ;
+        }
+
+        list statistics {
+          leaf function-type {
+            description 'The type of local SRv6 SID function.' ;
+            type string ;
+
+          }
+
+          leaf count {
+            type uint32 ;
+
+            description 'The statistics of local SRv6 SID in special function type.' ;
+          }
+
+          key function-type ;
+          description 'The querying of SRv6 local SID statistics by function type.' ;
+        }
+
+        description 'The querying of local SRv6 SID statistics by function type.' ;
+	
+        ncd:revise-date 2023-11-03 ;
+      }
+
+      ncd:revise-date 2020-02-16 ;
+    }
+
+  }
+
+}

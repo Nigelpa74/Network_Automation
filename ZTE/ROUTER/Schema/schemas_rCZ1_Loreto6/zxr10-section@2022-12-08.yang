@@ -1,0 +1,176 @@
+module zxr10-section {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/section'
+            ;
+  prefix section ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the section.'+"\n"
+            + 'Netconfig can get and set section config info,which include sect'
+            + 'ionid ,localport,peerip,sd status,by config module.'+"\n"
+            + 'section state info also can be get by state module.'
+              ;
+  revision 2022-12-08 {
+    description 'Modify the description of peer-ip and peer-ipv6 and add the de'
+              + 'scription of local port length'
+                ;
+  }
+  revision 2022-11-03 {
+    description 'Modify the project label'
+                ;
+  }
+  revision 2019-05-09 {
+    description '1 add /configuration/sections/section/peeripv6'
+                ;
+  }
+  revision 2016-11-18 {
+    description '1,Change the maxmum value of /configuration/sections/section/s'
+              + 'ection-id from 4000 to performance ID 67305544.'+"\n"
+              + '2,Change the maxmum value of /state/sections/section/section-i'
+              + 'd from 4000 to performance ID 67305544.'
+                ;
+  }
+  revision 2013-12-02 {
+    description '1,add /configuration/sections/section/localport/local-port if '
+              + 'filter.'
+                ;
+  }
+  revision 2013-10-27 {
+    description '1,add /configuration/sections/section/localport'+"\n"
+              + '2,add /configuration/sections/section/peerip'+"\n"
+              + '3,move /configuration/sections/section/local-port to /configur'
+              + 'ation/sections/section/localport/local-port'+"\n"
+              + '4,move  /configuration/sections/section/peer-ip to  /configura'
+              + 'tion/sections/section/peerip/peer-ip'
+                ;
+  }
+  revision 2013-08-27 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model information of section.'
+                ;
+    container sections {
+      description 'The configuration information of section.'
+                  ;
+      list section {
+        description 'The configration table in the instance of section'
+                    ;
+        key section-id ;
+        leaf section-id {
+          description 'Sectionid used to identify the section entity'
+                      ;
+          type uint32 {
+            range 1..4000 ;
+          }
+        }
+        leaf sd-status {
+          description 'Section layer sd enable flag:0 disable,1 enable,default '
+                    + 'value is disable.'
+                      ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 0:disable ;
+            }
+            enum enable {
+              value 1 ;
+              description 1:enable ;
+            }
+          }
+          default disable ;
+        }
+        container localport {
+          description 'Configure local port.'
+                      ;
+          presence 'Configure local port'
+                   ;
+          leaf local-port {
+            description 'Local port bind the section'
+                        ;
+            type ncd:ifname {
+              length 1..31 ;
+            }
+            mandatory true ;
+          }
+        }
+        container peerip {
+          description 'Configure peer IP.'
+                      ;
+          presence 'Configure peer IP'
+                   ;
+          leaf peer-ip {
+            description 'Configure peer-ip of the section.'
+                        ;
+            type ncd:ipv4-address ;
+            mandatory true ;
+          }
+        }
+        container peeripv6 {
+          description 'Configure peer IPv6.'
+                      ;
+          presence 'Configure peer IPv6'
+                   ;
+          leaf peer-ipv6 {
+            description 'Configure peer-ipv6 of the section.'
+                        ;
+            type ncd:ipv6-address ;
+            mandatory true ;
+          }
+          ncd:revise-date 2019-05-09 ;
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model information of section.'
+                ;
+    container sections {
+      description 'State data of section.'
+                  ;
+      list section {
+        description 'The state table of the instance of section'
+                    ;
+        key section-id ;
+        leaf section-id {
+          description 'Sectionid used to identify the section entity'
+                      ;
+          type uint32 {
+            range 1..4000 ;
+          }
+        }
+        leaf section-state {
+          description 'the state of section'
+                      ;
+          type enumeration {
+            enum OK {
+              value 0 ;
+              description 'section state is ok'
+                          ;
+            }
+            enum SF {
+              value 1 ;
+              description 'section state is sf'
+                          ;
+            }
+            enum SD {
+              value 2 ;
+              description 'section state is sd'
+                          ;
+            }
+          }
+        }
+      }
+    }
+  }
+}

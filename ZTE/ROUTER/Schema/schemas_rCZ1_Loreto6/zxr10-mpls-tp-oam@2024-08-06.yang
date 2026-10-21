@@ -1,0 +1,3483 @@
+module zxr10-mpls-tp-oam {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/mpls-tp-oam" ;
+  prefix mpls-tp-oam ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe MPLS-TP OAM' ;
+  revision 2024-08-06 {
+    description 'Modify or add description of following nodes:
+1. configuration/mpls-tp-oam/global/statistic-time;
+2. configuration/mpls-tp-oam/global/ais-period;
+3. configuration/mpls-tp-oam/megs/meg/pw-name;
+4. configuration/mpls-tp-oam/megs/meg/meg-id;
+5. configuration/mpls-tp-oam/megs/meg/status;
+6. configuration/mpls-tp-oam/megs/meg/mep/cc-status;
+7. configuration/mpls-tp-oam/megs/meg/mep/cv-status;
+8. configuration/mpls-tp-oam/megs/meg/mep/cv-phb;
+9. configuration/mpls-tp-oam/megs/meg/mep/proactive-lm-enable;
+10. configuration/mpls-tp-oam/megs/meg/mep/proactive-dm-enable;
+11. configuration/mpls-tp-oam/megs/meg/mep/proactive-dm-phb;
+12. configuration/mpls-tp-oam/megs/meg/mep/sd-status;
+13. configuration/mpls-tp-oam/megs/meg/mep/lck-status;
+14. configuration/mpls-tp-oam/megs/meg/mep/csf-status;
+15. configuration/mpls-tp-oam/megs/meg/mep/csf-phb;
+16. configuration/mpls-tp-oam/megs/meg/mep/ccm-sd-status;
+17. configuration/mpls-tp-oam/megs/meg/mep/pro-lmmlmr-enable;
+18. configuration/mpls-tp-oam/megs/meg/mep/pro-lmmlmr-phb-ex;
+19. configuration/mpls-tp-oam/megs/meg/mep/oam-packet-statistics;
+20. state/mpls-tp-oam/lm-and-dm-results/lm-and-dm-result/one-way-delay;
+21. state/mpls-tp-oam/lm-and-dm-results/lm-and-dm-result/one-way-delay-variation;
+22. state/mpls-tp-oam/lm-and-dm-results/lm-and-dm-result/two-way-delay;
+23. state/mpls-tp-oam/lm-and-dm-results/lm-and-dm-result/two-way-delay-variation;
+24. state/mpls-tp-oam/lm-and-dm-results/lm-and-dm-result/local-discard-pkt-ratio;
+25. state/mpls-tp-oam/lm-and-dm-results/lm-and-dm-result/remote-discard-pkt-ratio;
+26. operation/mpls-tp-oam/lbs/lb/mep-or-mip/if-number;
+27. operation/mpls-tp-oam/lbs/lb/phb;
+28. operation/mpls-tp-oam/lbs/lb/mode;
+29. operation/mpls-tp-oam/lbs/lb/report-interval;
+30. operation/mpls-tp-oam/lts/lt/phb;
+31. operation/mpls-tp-oam/tests/test/report-interval;
+32. operation/mpls-tp-oam/lms/lm/report-interval;
+33. operation/mpls-tp-oam/dms/dm/report-interval.
+Add units of following nodes:
+1. configuration/mpls-tp-oam/global/statistic-time;
+2. configuration/mpls-tp-oam/megs/meg/mep/proactive-dm-tlv-size;
+3. configuration/mpls-tp-oam/megs/meg/mep/icc-length;
+4. state/mpls-tp-oam/lm-and-dm-results/lm-and-dm-result/one-way-delay;
+5. state/mpls-tp-oam/lm-and-dm-results/lm-and-dm-result/one-way-delay-variation;
+6. state/mpls-tp-oam/lm-and-dm-results/lm-and-dm-result/two-way-delay;
+7. state/mpls-tp-oam/lm-and-dm-results/lm-and-dm-result/two-way-delay-variation;
+8. operation/mpls-tp-oam/lts/lt/time-out;
+9. operation/mpls-tp-oam/lbs/lb/time-out.
+Add presence of following nodes:
+1. configuration/mpls-tp-oam/megs/meg/section;
+2. configuration/mpls-tp-oam/megs/meg/sta-tunnel;
+3. configuration/mpls-tp-oam/megs/meg/dyn-tunnel;
+4. configuration/mpls-tp-oam/megs/meg/pw-name;
+5. configuration/mpls-tp-oam/megs/meg/sta-mtunnel;
+6. configuration/mpls-tp-oam/megs/meg/mep;
+7. configuration/mpls-tp-oam/megs/meg/mip.' ;
+  }
+
+  revision 2023-06-12 {
+    description 'change the range of  operation/mpls-tp-oam/tests/test/status/enable/speed for 1-10000 to 1-200000.' ;
+  }
+
+  revision 2020-07-16 {
+    description '1 Obsolete table of state/mpls-tp-oam/lm-dm-results.
+2 Add table of state/mpls-tp-oam/lm-and-dm-results.' ;
+  }
+
+  revision 2019-11-08 {
+    description '1 Add leaf node of configuration/mpls-tp-oam/megs/meg/mep-or-mip/mep/mep/statistics-interval in megs table.
+2 Add table of state/mpls-tp-oam/lm-dm-results.
+3 Modify leaf node of lb-event/lb-result/format-error-count.' ;
+  }
+
+  revision 2019-07-23 {
+    description '1 Add leaf node of lb-event/lb-result/format-error-count.
+2 Add leaf node of state/mpls-tp-oam/lb-results/lb-result/format-error-count.
+3 Add leaf node of operation/mpls-tp-oam/lbs/lb/status/enable/pattern.' ;
+  }
+
+  revision 2018-06-27 {
+    description '1 modify the description and range of ondemand-lm-event/lm-result/meg-index.
+2 modify the description and range of ondemand-dm-event/dm-result/meg-index.
+3 modify the description and range of lb-event/lb-result/meg-index.
+4 modify the description and range of lt-event/lt-result/meg-index.
+5 modify the description and range of test-event/test-result/meg-index.
+6 modify the description and range of configuration/mpls-tp-oam/megs/meg/meg-index.
+7 modify the description and range of state/mpls-tp-oam/lb-results/lb-result/meg-index.
+8 modify the description and range of state/mpls-tp-oam/lt-results/lt-result/meg-index.
+9 modify the description and range of state/mpls-tp-oam/test-results/test-result/meg-index.
+10 modify the description and range of state/mpls-tp-oam/lm-results/lm-result/meg-index.
+11 modify the description and range of state/mpls-tp-oam/dm-results/dm-result/meg-index.
+12 modify the description and range of state/mpls-tp-oam/megids-query/megid-query/meg-index.
+13 modify the description and range of operation/mpls-tp-oam/lbs/lb/meg-index.
+14 modify the description and range of operation/mpls-tp-oam/lts/lt/meg-index.
+15 modify the description and range of operation/mpls-tp-oam/tests/test/meg-index.
+16 modify the description and range of operation/mpls-tp-oam/lms/lm/meg-index.
+17 modify the description and range of operation/mpls-tp-oam/dms/dm/meg-index.' ;
+  }
+
+  revision 2018-05-04 {
+    description '1 Add type define node of phb-all.
+2 Add feature node of function-ccm-stop.
+3 Add feature node of function-rdi.
+4 Add feature node of function-oam-statistics.
+5 Add feature node of delay.
+6 Modify feature node of function-lmmlmr, and support the 6700 product. Obsolete the node of configuration/mpls-tp-oam/megs/mep/pro-lmmlmr-phb, and add the node of configuration/mpls-tp-oam/megs/mep/pro-lmmlmr-phb-ex.
+7 Add leaf node of configuration/mpls-tp-oam/global/delay.
+8 Add leaf node of configuration/mpls-tp-oam/megs/mep/oammapping-use-ccmstop.
+9 Add leaf node of configuration/mpls-tp-oam/megs/mep/oammapping-use-rdi.
+10 Add leaf node of configuration/mpls-tp-oam/megs/mep/oam-packet-statistics.
+11 Add leaf node of operation/mpls-tp-oam/tests/test/mep-id,and operation/mpls-tp-oam/tests/test/service-type.
+12 Add leaf node of operation/mpls-tp-oam/lbs/lb/mep-or-mip/if-number.' ;
+  }
+
+  revision 2017-08-17 {
+    description '1 Support the ASR,ZSRV2 and ZSRV2-GM product.' ;
+  }
+
+  revision 2017-08-07 {
+    description '1 Add feature node of instance-mtunnel.
+2 Add feature node of function-lmmlmr.
+3 Add feature node of function-test.
+4 Add leaf node of configuration/mpls-tp-oam/global/node-id in global table.
+5 Add case node of configuration/mpls-tp-oam/megs/sta-mtunnel, and it contains leaf nodes of mtunnel-id and lsp-id.
+6 Add leaf node of configuration/mpls-tp-oam/megs/mep/ccm-sd-status.
+7 Add leaf node of configuration/mpls-tp-oam/megs/mep/icc-length.
+8 Add leaf nodes of configuration/mpls-tp-oam/megs/mep/pro-lmmlmr-enable, pro-lmmlmr-phb, pro-lmmlmr-period and pro-lmmlmr-type.
+9 Add case node of mip-node, and it contains leaf nodes of operation/mpls-tp-oam/lbs/lb/mep-or-mip/node-id and node-ttl.
+10 Add case node of mip-none, and it contains leaf nodes of operation/mpls-tp-oam/lbs/lb/mep-or-mip/none-flag and none-ttl.
+11 Add leaf node of operation/mpls-tp-oam/tests/test/out-seg.
+12 Modify the revision node of 2016-09-18.' ;
+  }
+
+  revision 2016-09-18 {
+    description '1 delete the default value of configuration/mpls-tp-oam/global/rdi-to-sf in global table.
+2 Add default perf-code of configuration/mpls-tp-oam/global/rdi-to-sf in global table.' ;
+  }
+
+  revision 2015-09-01 {
+    description '1 add the description and range of operation/mpls-tp-oam/lbs/lb/status/report-interval and operation/mpls-tp-oam/tests/test/status/report-interval.
+2 create new table of lb results upsending table, which including information about megindex,serial number,local mepid,sending packets,receiving packets,lossing packets and so on.
+3 create new table of lt results upsending table, which including information about megindex,serial number,local mepid,linking result,successful hops of LT,failed hop and so on.
+4 create new table of test results upsending table, which including information about megindex,local mepid,receiving TST packets,losing TST packets,bandwidth and so on.
+5 modify the description of state/mpls-tp-oam/test-results/test-result/discard-count and state/mpls-tp-oam/lb-results/lb-result/discard-count.' ;
+  }
+
+  revision 2015-04-28 {
+    description '1 Del leaf node of configuration/mpls-tp-oam/megs/meg/mep-or-mip/mep/mep/ais-status in megs table.
+2 Del leaf node of configuration/mpls-tp-oam/megs/meg/mep-or-mip/mep/mep/ais-phb in megs table.
+3 del leaf node of configuration/mpls-tp-oam/megs/meg/mep-or-mip/mip/mip/ais-status in megs table.
+4 Del leaf node of configuration/mpls-tp-oam/megs/meg/mep-or-mip/mip/mip/ais-phb in megs table.
+5 Add feature node of fei-period.
+6 Add leaf node of configuration/mpls-tp-oam/global/fei-period in global table.' ;
+  }
+
+  revision 2015-02-06 {
+    description '1 add leaf node of configuration/mpls-tp-oam/global/ais-period in global table.
+2 add table of state/mpls-tp-oam/megids-query.
+3 change mandatory from false to true of configuration/mpls-tp-oam/megs/meg/mep-or-mip/mep/local-mep-id and configuration/mpls-tp-oam/megs/meg/mep-or-mip/mip/mip-id.
+4 modify the description and range of operation/mpls-tp-oam/lms/lm/status/report-interval and operation/mpls-tp-oam/dms/dm/status/report-interval.' ;
+  }
+
+  revision 2014-11-24 {
+    description '1 add report-interval node in lm-operation table.
+2 add report-interval node in dm-operation table.
+3 create new table of on-demand lm results upsending table, which including information about megindex,local mepid,local/peer sending packets,local/peer receiving packets,local/peer lossing packets,the ratio(*1000000) of local/peer lossing packets and so on.
+4 create new table of on-demand dm results upsending table, which including information about megindex,local mepid,local/peer sending packets,local/peer receiving packets,local/peer lossing packets,the ratio(*1000000) of local/peer lossing packets and so on.' ;
+  }
+
+  revision 2014-02-20 {
+    description '1 Correcting the global node name of channel-type.
+2 Adding the limit for operation of mandatory.
+3 The type of pw-name is changed from string to ncd:ifname.
+4 The upper limit of tunnel id depend on the device.' ;
+  }
+
+  revision 2013-12-01 {
+    description '1 Add the global node of statistic-time.
+2 Add default values for the global nodes of ais-speed and csf-speed.
+3 The type of mip-interface is changed from string to ncd:ifname.
+4 0 indicates unknown changed to 3 indicates unknown in the node of type in dm-result table.
+5 Changing the testing structure of operation type:delete original node of status;change the node of choice to the node of status;change the node of case to the node of enable or disable.' ;
+  }
+
+  revision 2013-11-25 {
+    description 'Modify the description of the hop-sequence.' ;
+  }
+
+  revision 2013-09-12 {
+    description 'Initial version.' ;
+  }
+
+  feature ais-speed {
+    description 'AIS fast or slow packets config.' ;
+  }
+
+  feature csf-speed {
+    description 'CSF fast or slow packets config.' ;
+  }
+
+  feature mip-up-or-down {
+    description 'The type of MIP, including down MIP and up MIP(default: down).' ;
+  }
+
+  feature mip-interface {
+    description 'MIP interface. This parameter is not necessary. It must be physical interface if the interface is configured.' ;
+  }
+
+  feature fei-period {
+    description 'FEI packet period config.' ;
+  }
+
+  feature instance-mtunnel {
+    description 'Support the instance of static P2MP tunnel.' ;
+  }
+
+  feature function-lmmlmr {
+    description 'Support the function of proactive LMMLMR.' ;
+  }
+
+  feature function-test {
+    description 'Support the out-seg ID configure of TEST.' ;
+  }
+
+  feature function-ccm-stop {
+    description 'Support the function of CCM-STOP.' ;
+  }
+
+  feature function-rdi {
+    description 'Support the function of oammapping RDI.' ;
+  }
+
+  feature function-oam-statistics {
+    description 'Support the function of packet statistics.' ;
+  }
+
+  feature delay {
+    description 'Support the delay time configure.' ;
+  }
+
+  feature statistics-interval {
+    description 'Support the statistics interval.' ;
+  }
+
+  typedef mep-type {
+    type enumeration {
+      enum source {
+        value 1 ;
+        description 'Source MEP.' ;
+      }
+
+      enum destination {
+        value 2 ;
+        description 'Destination MEP.' ;
+      }
+
+      enum bidirection {
+        value 3 ;
+        description 'Bidirection MEP.' ;
+      }
+
+    }
+
+    description 'The type of MEP, including source MEP, destination MEP and bidirection MEP.' ;
+  }
+
+  typedef phb {
+    type enumeration {
+      enum be {
+        value 1 ;
+        description 'Best effort.' ;
+      }
+
+      enum af11 {
+        value 2 ;
+        description 'Assured forwarding 11.' ;
+      }
+
+      enum af12 {
+        value 3 ;
+        description 'Assured forwarding 12.' ;
+      }
+
+      enum af21 {
+        value 4 ;
+        description 'Assured forwarding 21.' ;
+      }
+
+      enum af22 {
+        value 5 ;
+        description 'Assured forwarding 22.' ;
+      }
+
+      enum af31 {
+        value 6 ;
+        description 'Assured forwarding 31.' ;
+      }
+
+      enum af32 {
+        value 7 ;
+        description 'Assured forwarding 32.' ;
+      }
+
+      enum af41 {
+        value 8 ;
+        description 'Assured forwarding 41.' ;
+      }
+
+      enum af42 {
+        value 9 ;
+        description 'Assured forwarding 42.' ;
+      }
+
+      enum cs6 {
+        value 10 ;
+        description 'Class selector 6.' ;
+      }
+
+      enum cs7 {
+        value 11 ;
+        description 'Class selector 7.' ;
+      }
+
+      enum ef {
+        value 12 ;
+        description 'Expedited forwarding.' ;
+      }
+
+    }
+
+    description 'The PHB value carried in packets.' ;
+  }
+
+  typedef phb-all {
+    type enumeration {
+      enum be {
+        value 1 ;
+        description 'Best effort.' ;
+      }
+
+      enum af11 {
+        value 2 ;
+        description 'Assured forwarding 11.' ;
+      }
+
+      enum af12 {
+        value 3 ;
+        description 'Assured forwarding 12.' ;
+      }
+
+      enum af21 {
+        value 4 ;
+        description 'Assured forwarding 21.' ;
+      }
+
+      enum af22 {
+        value 5 ;
+        description 'Assured forwarding 22.' ;
+      }
+
+      enum af31 {
+        value 6 ;
+        description 'Assured forwarding 31.' ;
+      }
+
+      enum af32 {
+        value 7 ;
+        description 'Assured forwarding 32.' ;
+      }
+
+      enum af41 {
+        value 8 ;
+        description 'Assured forwarding 41.' ;
+      }
+
+      enum af42 {
+        value 9 ;
+        description 'Assured forwarding 42.' ;
+      }
+
+      enum cs6 {
+        value 10 ;
+        description 'Class selector 6.' ;
+      }
+
+      enum cs7 {
+        value 11 ;
+        description 'Class selector 7.' ;
+      }
+
+      enum ef {
+        value 12 ;
+        description 'Expedited forwarding.' ;
+      }
+
+      enum all {
+        value 13 ;
+        description 'All EXP forwarding.' ;
+      }
+
+    }
+
+    description 'The PHB value carried in packets(include all).' ;
+  }
+
+  container configuration {
+    description 'Configuration model info.' ;
+    container mpls-tp-oam {
+      description 'MPLS-TP OAM instances configuration' ;
+      container global {
+        description 'Configure MPLS-TP OAM of global info.' ;
+        leaf status {
+          description 'The switch for turning on or off MPLS-TP OAM function(default: enable).' ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Turn off MPLS-TP OAM function.' ;
+            }
+
+            enum enable {
+              value 1 ;
+              description 'Turn on MPLS-TP OAM function.' ;
+            }
+
+          }
+
+          default enable ;
+        }
+
+        leaf mel {
+          description 'The value of MEL field in OAM packets, ranges from 0 to 7(default: 7).' ;
+          type uint8 {
+            range 0..7 {
+              description 'The value of MEL.' ;
+            }
+
+          }
+
+          default 7 ;
+        }
+
+        leaf channel-type {
+          description 'The identify of Y.1731 packet in G-ACH Label, ranges from 1 to 65535(default: 32762).' ;
+          type uint16 {
+            range 1..65535 {
+              description 'The value of channel type.' ;
+            }
+
+          }
+
+          default 32762 ;
+        }
+
+        leaf tc {
+          description 'The value of TC field in the label of GAL, ranges from 0 to 7(default: 7).' ;
+          type uint8 {
+            range 0..7 {
+              description 'The value of GAL TC.' ;
+            }
+
+          }
+
+          default 7 ;
+        }
+
+        leaf rdi-to-sf {
+          description 'This switch used to transform the RDI alarm to SF alarm.' ;
+          type enumeration {
+            enum disable {
+              value 0 ;
+              description 'Turn off RDI to SF function.' ;
+            }
+
+            enum enable {
+              value 1 ;
+              description 'Turn on RDI to SF function.' ;
+            }
+
+          }
+
+        }
+
+        leaf statistic-time {
+          description 'The value of reporting interval of statistic functionality, ranges from 5 to 60(units:s, default: 5).' ;
+          units s ;
+          type uint8 {
+            range 5..60 {
+              description 'The value of reporting interval of statistic functionality.' ;
+            }
+
+          }
+
+          default 5 ;
+        }
+
+        leaf ais-speed {
+          if-feature ais-speed ;
+
+          description 'AIS fast or slow packets config.' ;
+          type enumeration {
+            enum fast {
+              value 1 ;
+              description 'Fast packets.' ;
+            }
+
+            enum slow {
+              value 2 ;
+              description 'Slow packets.' ;
+            }
+
+          }
+
+        }
+
+        leaf csf-speed {
+          if-feature csf-speed ;
+
+          description 'CSF fast or slow packets config.' ;
+          type enumeration {
+            enum fast {
+              value 1 ;
+              description 'Fast packets' ;
+            }
+
+            enum slow {
+              value 2 ;
+              description 'Slow packets' ;
+            }
+
+          }
+
+        }
+
+        leaf ais-period {
+          description 'The period carried in the AIS frame,including 1s and 1min (default: 1s).' ;
+          type enumeration {
+            enum 1s {
+              value 0 ;
+              description '1 second, it means 1 packet per second.' ;
+            }
+
+            enum 1min {
+              value 1 ;
+              description '1 minute, it means 1 packet per minute.' ;
+            }
+
+          }
+
+          default 1s ;
+        }
+
+        leaf fei-period {
+          if-feature fei-period ;
+
+          description 'The sending period of FEI packets, ranges from 1 to 5(units:s, default: 1).' ;
+          type uint8 {
+            range 1..5 {
+              description 'FEI packet send period' ;
+            }
+
+          }
+
+          units s ;
+          default 1 ;
+        }
+
+        leaf node-id {
+          description 'The node ID is used to identify the MIP.' ;
+          type ncd:ipv4-address ;
+
+          ncd:revise-date 2017-08-07 ;
+        }
+
+        leaf delay {
+          if-feature delay ;
+
+          description 'The delay time, ranges from 0 to 60(units:min, default: 0).' ;
+          type uint8 {
+            range 0..60 {
+              description 'The value of delay time.' ;
+            }
+
+          }
+
+          default 0 ;
+          ncd:revise-date 2018-05-04 ;
+        }
+
+      }
+
+      container megs {
+        description 'Configure MEG parameters.' ;
+        list meg {
+          description 'Configure MEG parameters.' ;
+          key meg-index ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.'
+                            ;
+              }
+
+            }
+
+          }
+
+          choice instance-type {
+            description 'Configure Instance type.' ;
+            mandatory true ;
+            case section {
+              description 'Configure MPLS-TP OAM of section.' ;
+              container section {
+                description 'Configure MPLS-TP OAM of section.' ;
+                presence section ;
+                leaf section-id {
+                  description 'Section ID used to identify the section entity.' ;
+                  type uint32 {
+                    range 1..4000 {
+                      description 'The value of section ID.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case sta-tunnel {
+              description 'Configure MPLS-TP OAM of static tunnel.' ;
+              container sta-tunnel {
+                description 'Configure MPLS-TP OAM of static tunnel.' ;
+                presence sta-tunnel ;
+                leaf tunnel-id {
+                  description 'The identity of static tunnel,the upper limit of this parameter depend on the device.' ;
+                  type uint32 {
+                    range 1..4294967295 {
+                      description 'The value of static tunnel number,and the upper limit of this parameter depend on the device.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf lsp-id {
+                  description 'The identity of the static LSP.' ;
+                  type uint16 {
+                    range 1..65535 {
+                      description 'The value of LSP ID.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case dyn-tunnel {
+              description 'Configure MPLS-TP OAM of dynamic tunnel.' ;
+              container dyn-tunnel {
+                description 'Configure MPLS-TP OAM of dynamic tunnel.' ;
+                presence dyn-tunnel ;
+                leaf lsp-role {
+                  description 'The LSP role of dynamic tunnel, including master LSP and slave LSP.' ;
+                  type enumeration {
+                    enum master {
+                      value 1 ;
+                      description 'Master LSP.' ;
+                    }
+
+                    enum slave {
+                      value 2 ;
+                      description 'Slave LSP.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf tunnel-num {
+                  description 'The identity of dynamic tunnel,the upper limit of this parameter depend on the device.' ;
+                  type uint32 {
+                    range 1..4294967295 {
+                      description 'The value of dynamic tunnel number,and the upper limit of this parameter depend on the device.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case pw {
+              description 'Configure MPLS-TP OAM of PW.' ;
+              container pw-name {
+                description 'Configure MPLS-TP OAM of PW.' ;
+                leaf pw-name {
+                  description 'The name of PW.' ;
+                  type ncd:ifname {
+                    length 1..31 {
+                      description 'The length of pw name.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                presence pw ;
+              }
+
+            }
+
+            case sta-mtunnel {
+              if-feature instance-mtunnel ;
+
+              description 'Configure MPLS-TP OAM of static P2MP tunnel.' ;
+              container sta-mtunnel {
+                if-feature instance-mtunnel ;
+
+                description 'Configure MPLS-TP OAM of static P2MP tunnel.' ;
+                presence sta-mtunnel ;
+                leaf mtunnel-id {
+                  if-feature instance-mtunnel ;
+
+                  description 'The identity of static P2MP tunnel.' ;
+                  type uint32 {
+                    range 1..4294967294 {
+                      description 'The value of static tunnel number,and the upper limit of this parameter depend on the device.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf lsp-id {
+                  if-feature instance-mtunnel ;
+
+                  description 'The identity of the static P2MP LSP.' ;
+                  type uint16 {
+                    range 1 {
+                      description 'The value of LSP ID.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              ncd:revise-date 2017-08-07 ;
+            }
+
+          }
+
+          leaf meg-id {
+            description 'MEG identity name, ranges from 0 to 13 characters. If MEG ID is not configured, the length of string is 0.' ;
+            type string {
+              length 0..13 {
+                description 'The value of MEG ID.' ;
+              }
+
+            }
+
+          }
+
+          leaf status {
+            description 'The switch for turning on or off MEG function(default: disable).' ;
+            type enumeration {
+              enum disable {
+                value 0 ;
+                description 'Turn off MEG function.' ;
+              }
+
+              enum enable {
+                value 1 ;
+                description 'Turn on MEG function.' ;
+              }
+
+            }
+
+            default disable ;
+          }
+
+          choice mep-or-mip {
+            description 'Configure MEP or MIP parameters of MEG.' ;
+            case mep {
+              description 'Configure MEP parameters.' ;
+              container mep {
+                description 'Configure MEP parameters.' ;
+                presence mep ;
+                leaf local-mep-type {
+                  description 'The type of local MEP, including source MEP, destination MEP and bidirection MEP(default:bidirection MEP).' ;
+                  type mep-type ;
+
+                  default bidirection ;
+                }
+
+                leaf local-mep-id {
+                  description 'The identity of local MEP, ranges from 1 to 8191.' ;
+                  type uint16 {
+                    range 1..8191 {
+                      description 'The value of local MEP ID.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf peer-mep-type {
+                  description 'The type of peer MEP, including source MEP, destination MEP and bidirection MEP(default: bidirection MEP).' ;
+                  type mep-type ;
+
+                  default bidirection ;
+                }
+
+                leaf peer-mep-id {
+                  description 'The identity of peer MEP, ranges from 1 to 8191.' ;
+                  type uint16 {
+                    range 1..8191 {
+                      description 'The value of peer MEP ID.' ;
+                    }
+
+                  }
+
+                }
+
+                leaf cc-status {
+                  description 'The switch for turning on or off CC function(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off CC function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on CC function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf cv-status {
+                  description 'The switch for turning on or off CV function(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off CV function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on CV function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf cv-phb {
+                  description 'The PHB value carried in CCM packets, including be, af11, af12, af21, af22, af31, af32, af41, af42, cs6, cs7 and ef(default: cs7).' ;
+                  type phb ;
+
+                  default cs7 ;
+                }
+
+                leaf cv-period {
+                  description 'The period carried in the CCM frame,including 3.33ms,10ms,100ms,1s,10s,1min and 10min(default: 3.33ms).' ;
+                  type enumeration {
+                    enum 3.33ms {
+                      value 1 ;
+                      description '3.33 microseconds, it means 300 packets per second.' ;
+                    }
+
+                    enum 10ms {
+                      value 2 ;
+                      description '10 microseconds, it means 100 packets per second.' ;
+                    }
+
+                    enum 100ms {
+                      value 3 ;
+                      description '100 microseconds, it means 10 packets per second.' ;
+                    }
+
+                    enum 1s {
+                      value 4 ;
+                      description '1 second, it means 1 packet per second.' ;
+                    }
+
+                    enum 10s {
+                      value 5 ;
+                      description '10 seconds, it means 6 packets per minute.' ;
+                    }
+
+                    enum 1min {
+                      value 6 ;
+                      description '1 minute, it means 1 packet per minute.' ;
+                    }
+
+                    enum 10min {
+                      value 7 ;
+                      description '10 minutes, it means 6 packets per hour.' ;
+                    }
+
+                  }
+
+                  default 3.33ms ;
+                }
+
+                leaf proactive-lm-enable {
+                  description 'The switch for turning on or off proactive LM function(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off proactive LM function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on proactive LM function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf proactive-lm-type {
+                  description 'The proactive LM type, including G.8114 and Y.1731. G.8114, counting the data packets; Y.1731, counting the data packets and OAM packets(default: G.8114).' ;
+                  type enumeration {
+                    enum G.8114 {
+                      value 1 ;
+                      description 'Counting the data packets.' ;
+                    }
+
+                    enum Y.1731 {
+                      value 2 ;
+                      description 'Counting the data packets and OAM packets.' ;
+                    }
+
+                  }
+
+                  default G.8114 ;
+                }
+
+                leaf proactive-dm-enable {
+                  description 'The switch for turning on or off proactive DM function(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off proactive DM function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on proactive DM function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf proactive-dm-type {
+                  description 'Proactive DM type, including one-way and two-way(default: one-way).' ;
+                  type enumeration {
+                    enum one-way {
+                      value 1 ;
+                      description 'One-way DM.' ;
+                    }
+
+                    enum two-way {
+                      value 2 ;
+                      description 'Two-way DM.' ;
+                    }
+
+                  }
+
+                  default one-way ;
+                }
+
+                leaf proactive-dm-send-interval {
+                  description 'The sending period of proactive DM packets, ranges from 1 to 100(units:100ms, default: 10).' ;
+                  type uint8 {
+                    range 1..100 {
+                      description 'The value of sending interval.' ;
+                    }
+
+                  }
+
+                  units "100 microseconds" ;
+                  default 10 ;
+                }
+
+                leaf proactive-dm-phb {
+                  description 'The PHB value carried in DM packets, including be, af11, af12, af21, af22, af31, af32, af41, af42, cs6, cs7 and ef(default: cs7).' ;
+                  type phb ;
+
+                  default cs7 ;
+                }
+
+                leaf proactive-dm-tlv-size {
+                  description 'The TLV size of Proactive DM packets, ranges from 0 to 400(units:byte, default: 0).' ;
+                  units byte ;
+                  type uint32 {
+                    range 0..400 {
+                      description 'The value of TLV size.' ;
+                    }
+
+                  }
+
+                  default 0 ;
+                }
+
+                leaf sd-status {
+                  description 'The switch for turning on or off SD function(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off SD function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on SD function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf loss-pkt-threshold-mantissa {
+                  description 'The configuration of loss ratio threshold(This field displays the mantissa in E-notation,default: 5).' ;
+                  type uint8 {
+                    range 1..9 {
+                      description 'The value of mantissa.' ;
+                    }
+
+                  }
+
+                  default 5 ;
+                }
+
+                leaf loss-pkt-threshold-exponent {
+                  description 'The configuration of loss ratio threshold(This field displays the exponent in E-notation, default: 5).' ;
+                  type uint8 {
+                    range 2..6 {
+                      description 'The value of exponent.' ;
+                    }
+
+                  }
+
+                  default 5 ;
+                }
+
+                leaf lck-status {
+                  description 'The switch for turning on or off LCK function(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off LCK function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on LCK function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf csf-status {
+                  description 'The switch for turning on or off CSF function(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off CSF function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on CSF function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                }
+
+                leaf csf-phb {
+                  description 'The PHB value carried in CSF packets, including be, af11, af12, af21, af22, af31, af32, af41, af42, cs6, cs7 and ef(default: cs7).' ;
+                  type phb ;
+
+                  default cs7 ;
+                }
+
+                leaf icc-length {
+                  description 'The value of ICC length, ranges from 1 to 6(units:byte, default: 6).' ;
+                  units byte ;
+                  type uint8 {
+                    range 1..6 {
+                      description 'The value of ICC length, ranges from 1 to 6(units:byte, default: 6).' ;
+                    }
+
+                  }
+
+                  default 6 ;
+                  ncd:revise-date 2017-08-07 ;
+                }
+
+                leaf ccm-sd-status {
+                  description 'The switch for turning on or off CCMSD function(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off CCMSD function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on CCMSD function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                  ncd:revise-date 2017-08-07 ;
+                }
+
+                leaf pro-lmmlmr-enable {
+                  if-feature function-lmmlmr ;
+
+                  description 'The switch for turning on or off proactive LMMLMR function(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off proactive LMMLMR function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on proactive LMMLMR function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                  ncd:revise-date 2017-08-07 ;
+                }
+
+                leaf pro-lmmlmr-phb {
+                  if-feature function-lmmlmr ;
+
+                  status obsolete {
+                    ncd:revise-date 2018-05-04 ;
+                  }
+
+                  description 'The PHB value carried in LMMLMR packets, including be, af11, af12, af21, af22, af31, af32, af41, af42, cs6, cs7 and ef(default: cs7).' ;
+                  type phb ;
+
+                  default cs7 ;
+                  ncd:revise-date 2017-08-07 ;
+                }
+
+                leaf pro-lmmlmr-phb-ex {
+                  if-feature function-lmmlmr ;
+
+                  description 'The PHB value carried in LMMLMR packets, including be, af11, af12, af21, af22, af31, af32, af41, af42, cs6, cs7, ef and all(default: cs7).' ;
+                  type phb-all ;
+
+                  default cs7 ;
+                  ncd:revise-date 2018-05-04 ;
+                }
+
+                leaf pro-lmmlmr-period {
+                  if-feature function-lmmlmr ;
+
+                  description 'The sending period of proactive LMMLMR packets, ranges from 1 to 100(units:100ms, default: 10).' ;
+                  type uint8 {
+                    range 1..100 {
+                      description 'The value of sending period, ranges from 1 to 100(units:100ms, default: 10).' ;
+                    }
+
+                  }
+
+                  default 10 ;
+                  ncd:revise-date 2017-08-07 ;
+                }
+
+                leaf pro-lmmlmr-type {
+                  if-feature function-lmmlmr ;
+
+                  description 'The proactive LMMLMR type, including G.8114 and Y.1731. G.8114, counting the data packets; Y.1731, counting the data packets and OAM packets(default: G.8114).' ;
+                  type enumeration {
+                    enum G.8114 {
+                      value 1 ;
+                      description 'Counting the data packets.' ;
+                    }
+
+                    enum Y.1731 {
+                      value 2 ;
+                      description 'Counting the data packets and OAM packets.' ;
+                    }
+
+                  }
+
+                  default G.8114 ;
+                  ncd:revise-date 2017-08-07 ;
+                }
+
+                leaf oammapping-use-ccmstop {
+                  if-feature function-ccm-stop ;
+
+                  description 'The CCM-STOP function is applied to the scene of local fault delivery(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off the function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on the function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                  ncd:revise-date 2018-05-04 ;
+                }
+
+                leaf oammapping-use-rdi {
+                  if-feature function-rdi ;
+
+                  description 'This function is used to send RDI packet in the scene of local fault delivery(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off the function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on the function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                  ncd:revise-date 2018-05-04 ;
+                }
+
+                leaf oam-packet-statistics {
+                  if-feature function-oam-statistics ;
+
+                  description 'The switch for turning on or off fast OAM packet statistics function(default: disable).' ;
+                  type enumeration {
+                    enum disable {
+                      value 0 ;
+                      description 'Turn off the function.' ;
+                    }
+
+                    enum enable {
+                      value 1 ;
+                      description 'Turn on the function.' ;
+                    }
+
+                  }
+
+                  default disable ;
+                  ncd:revise-date 2018-05-04 ;
+                }
+
+                leaf statistics-interval {
+                  if-feature statistics-interval ;
+
+                  description 'The statistics interval,ranges from 5 to 60(units:s, default:15).' ;
+                  type uint32 {
+                    range 5..60 {
+                      description 'The statistics interval,ranges from 5 to 60(units:s, default:15).' ;
+                    }
+
+                  }
+
+                  units seconds ;
+                  default 15 ;
+                  ncd:revise-date 2019-11-08 ;
+                }
+
+              }
+
+            }
+
+            case mip {
+              container mip {
+                description 'Configure MIP parameters.' ;
+                presence mip ;
+                leaf mip-id {
+                  description 'The identity of MIP, ranges from 1 to 8191.' ;
+                  type uint16 {
+                    range 1..8191 {
+                      description 'The value of MIP ID.' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf mip-up-or-down {
+                  if-feature mip-up-or-down ;
+
+                  description 'The type of MIP, including down MIP and up MIP(default: down).' ;
+                  type enumeration {
+                    enum down {
+                      value 0 ;
+                      description 'Down MIP.' ;
+                    }
+
+                    enum up {
+                      value 1 ;
+                      description 'Up MIP.' ;
+                    }
+
+                  }
+
+                  default down ;
+                }
+
+                leaf mip-interface {
+                  if-feature mip-interface ;
+
+                  description 'MIP interface. This parameter is not necessary. It must be physical interface if the interface is configured.' ;
+                  type ncd:ifname ;
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'MPLS-TP OAM state models.' ;
+    container mpls-tp-oam {
+      description 'MPLS-TP OAM state parameters.' ;
+      container lb-results {
+        description 'The detail result information of LB function.' ;
+        list lb-result {
+          description 'The detail result information of LB function.' ;
+          key 'meg-index serial-number' ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          leaf serial-number {
+            description 'Detecting instance serial number sending by network management by netconf.' ;
+            type ncd:terminal-based-uint32 ;
+
+          }
+
+          leaf local-mep {
+            description 'The identity of local MEP.' ;
+            type uint32 {
+              range 1..8191 {
+                description 'The value of local MEP ID.' ;
+              }
+
+            }
+
+          }
+
+          leaf dest-mep {
+            description 'The identity of destination MEP.' ;
+            type uint32 {
+              range 1..8191 {
+                description 'The value of destination MEP ID.' ;
+              }
+
+            }
+
+          }
+
+          leaf dest-mip {
+            description 'The identity of destination MIP.' ;
+            type uint32 {
+              range 1..8191 {
+                description 'The value of destination MIP ID.' ;
+              }
+
+            }
+
+          }
+
+          leaf send-count {
+            description 'The count of sending LB packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of sending packets.' ;
+              }
+
+            }
+
+          }
+
+          leaf recv-count {
+            description 'The count of receiving LB packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of receiving packets.' ;
+              }
+
+            }
+
+          }
+
+          leaf discard-count {
+            description 'The count of lossing LB packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of lossing packets.' ;
+              }
+
+            }
+
+          }
+
+          leaf result-status {
+            description 'The status of LB function, including not-ready, running and finished.' ;
+            type enumeration {
+              enum not-ready {
+                value 0 ;
+                description 'The LB function is not ready.' ;
+              }
+
+              enum running {
+                value 1 ;
+                description 'The LB function is running.' ;
+              }
+
+              enum finished {
+                value 2 ;
+                description 'The LB function is finished.' ;
+              }
+
+            }
+
+          }
+
+          leaf format-error-count {
+            description 'The count of receiving format error LB packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of receiving format error packets.' ;
+              }
+
+            }
+
+            ncd:revise-date 2019-07-23 ;
+          }
+
+          ncd:select "meg-index serial-number" ;
+        }
+
+      }
+
+      container lt-results {
+        description 'The detail result information of LT function.' ;
+        list lt-result {
+          description 'The detail result information of LT function.' ;
+          key 'meg-index serial-number' ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          leaf serial-number {
+            description 'Detecting instance serial number sending by network management by netconf.' ;
+            type ncd:terminal-based-uint32 ;
+
+          }
+
+          leaf local-mep {
+            description 'The identity of local MEP.' ;
+            type uint32 {
+              range 1..8191 {
+                description 'The value of local MEP ID.' ;
+              }
+
+            }
+
+          }
+
+          leaf if-success {
+            description 'The result of Link trace for MEP, failed or success.' ;
+            type enumeration {
+              enum fail {
+                value 0 ;
+                description 'LT MEP failed.' ;
+              }
+
+              enum success {
+                value 1 ;
+                description 'LT MEP success.' ;
+              }
+
+            }
+
+          }
+
+          leaf success-hop-count {
+            description 'Successful hops of LT, it used to analysis MIP ID sequence.' ;
+            type uint16 {
+              range 0..255 {
+                description 'The value of successful hops.' ;
+              }
+
+            }
+
+          }
+
+          leaf hop-sequence {
+            description 'Comma-separated list of string for successful MIP ID.' ;
+            type string {
+              length 0..512 {
+                description 'The value of MIP ID sequence.' ;
+              }
+
+            }
+
+          }
+
+          leaf fail-hop {
+            description 'Failed hop.' ;
+            type uint16 {
+              range 0..255 {
+                description 'The value of failed hop.' ;
+              }
+
+            }
+
+          }
+
+          leaf result-status {
+            description 'The status of LT function, including not-ready, running and finished.' ;
+            type enumeration {
+              enum not-ready {
+                value 0 ;
+                description 'The LT function is not ready.' ;
+              }
+
+              enum runnning {
+                value 1 ;
+                description 'The LT function is running.' ;
+              }
+
+              enum finished {
+                value 2 ;
+                description 'The LT function is finished.' ;
+              }
+
+            }
+
+          }
+
+          ncd:select "meg-index serial-number" ;
+        }
+
+      }
+
+      container test-results {
+        description 'The detail result information of TST function.' ;
+        list test-result {
+          description 'The detail result information of TST function.' ;
+          key meg-index ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          leaf local-mep {
+            description 'The identity of local MEP.' ;
+            type uint32 {
+              range 1..8191 {
+                description 'The value of local MEP ID.' ;
+              }
+
+            }
+
+          }
+
+          leaf rcv-count {
+            description 'The count of receiving TST packets.' ;
+            type uint32 {
+              range 0..4294967295 ;
+
+            }
+
+          }
+
+          leaf discard-count {
+            description 'The count of lossing TST packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of lossing packets.' ;
+              }
+
+            }
+
+          }
+
+          leaf band-width {
+            description 'The bandwidth from source MEP to destination MEP, that the TST function detected.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of bandwidth.' ;
+              }
+
+            }
+
+            units bps ;
+          }
+
+          leaf result-status {
+            description 'The status of TST function, including not-ready, running and finished.' ;
+            type enumeration {
+              enum not-ready {
+                value 0 ;
+                description 'The TST function is not ready.' ;
+              }
+
+              enum running {
+                value 1 ;
+                description 'The TST function is running.' ;
+              }
+
+              enum finished {
+                value 2 ;
+                description 'The TST function is finished.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container lm-results {
+        description 'The detail result information of on-demand LM function.' ;
+        list lm-result {
+          description 'The detail result information of on-demand LM function.' ;
+          key meg-index ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          leaf local-mep {
+            description 'The identity of local MEP.' ;
+            type uint32 {
+              range 1..8191 {
+                description 'The value of local MEP ID.' ;
+              }
+
+            }
+
+          }
+
+          leaf local-send-pkt-count {
+            description 'The count of local sending packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of local sending packets.' ;
+              }
+
+            }
+
+          }
+
+          leaf local-recv-pkt-count {
+            description 'The count of local receiving packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of local receiving packets.' ;
+              }
+
+            }
+
+          }
+
+          leaf local-discard-pkt-count {
+            description 'The count of local lossing packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of local lossing packets.' ;
+              }
+
+            }
+
+          }
+
+          leaf local-discard-pkt-ratio {
+            description 'The ratio(*1000000) of local lossing packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The ratio of local lossing packets.' ;
+              }
+
+            }
+
+            units "1/1000000" ;
+          }
+
+          leaf remote-send-pkt-count {
+            description 'The count of remote sending packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of remote sending packets.' ;
+              }
+
+            }
+
+          }
+
+          leaf remote-recv-pkt-count {
+            description 'The count of remote receiving packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of remote receiving packets.' ;
+              }
+
+            }
+
+          }
+
+          leaf remote-discard-pkt-count {
+            description 'The count of remote lossing packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The value of remote lossing packets.' ;
+              }
+
+            }
+
+          }
+
+          leaf remote-discard-pkt-ratio {
+            description 'The ratio(*1000000) of remote lossing packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The ratio of remote lossing packets.' ;
+              }
+
+            }
+
+            units "1/1000000" ;
+          }
+
+          leaf result-status {
+            description 'The status of on-demand LM function, including not-ready, running and finished.' ;
+            type enumeration {
+              enum not-ready {
+                value 0 ;
+                description 'The on-demand LM function is not ready.' ;
+              }
+
+              enum running {
+                value 1 ;
+                description 'The on-demand LM function is running.' ;
+              }
+
+              enum finished {
+                value 2 ;
+                description 'The on-demand LM function is finished.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container dm-results {
+        description 'The detail result information of on-demand DM function.' ;
+        list dm-result {
+          description 'The detail result information of on-demand DM function.' ;
+          key meg-index ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          leaf type {
+            description 'DM type, including unknown(0), one-way(1) and two way(2). If on-demand DM is not configured, DM type is unknown.' ;
+            type enumeration {
+              enum one-way {
+                value 1 ;
+                description 'One-way DM.' ;
+              }
+
+              enum two-way {
+                value 2 ;
+                description 'Two-way DM.' ;
+              }
+
+              enum unknown {
+                value 3 ;
+                description 'Unknown DM.' ;
+              }
+
+            }
+
+          }
+
+          leaf local-mep {
+            description 'The identity of local MEP.' ;
+            type uint32 {
+              range 1..8191 {
+                description 'The value of local MEP ID.' ;
+              }
+
+            }
+
+          }
+
+          leaf delay {
+            description 'Frame delay(units: ns).' ;
+            type uint64 ;
+
+            units ns ;
+          }
+
+          leaf delay-variation {
+            description 'Frame delay variation(units: ns).' ;
+            type uint64 ;
+
+            units ns ;
+          }
+
+          leaf delay-variation-ratio {
+            description 'The ratio of delay variation(units: 1/1000000).' ;
+            type uint64 ;
+
+            units "1/1000000" ;
+          }
+
+          leaf avg-delay {
+            description 'Average frame delay(units: ns).' ;
+            type uint64 ;
+
+            units ns ;
+          }
+
+          leaf avg-delay-variation {
+            description 'Average frame delay variation(units: ns).' ;
+            type uint64 ;
+
+            units ns ;
+          }
+
+          leaf avg-delay-variation-ratio {
+            description 'The ratio of average delay variation(units: 1/1000000).' ;
+            type uint64 ;
+
+            units "1/1000000" ;
+          }
+
+          leaf result-status {
+            description 'The status of on-demand DM function, including not-ready, running and finished.' ;
+            type enumeration {
+              enum not-ready {
+                value 0 ;
+                description 'The on-demand DM function is not ready.' ;
+              }
+
+              enum running {
+                value 1 ;
+                description 'The on-demand DM function is running.' ;
+              }
+
+              enum finished {
+                value 2 ;
+                description 'The on-demand DM function is finished.' ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container megids-query {
+        description 'The MEG ID information when querying by MEG INDEX.' ;
+        list megid-query {
+          description 'The MEG ID information when querying by MEG INDEX.' ;
+          key meg-index ;
+          leaf meg-index {
+            description 'The value of the specified MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          leaf meg-id {
+            description 'The specified MEG identity name, ranges from 0 to 13 characters. If MEG ID is not configured, the length of string is 0.' ;
+            type string {
+              length 0..13 {
+                description 'The value of MEG ID.' ;
+              }
+
+            }
+
+          }
+
+          ncd:select meg-index ;
+        }
+
+      }
+
+      container lm-dm-results {
+        if-feature statistics-interval ;
+
+        status obsolete {
+          ncd:revise-date 2020-07-16 ;
+        }
+
+        description 'The detail result information of LM and DM function.' ;
+        list lm-dm-result {
+          description 'The detail result information of LM and DM function.' ;
+          key meg-index ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          leaf one-way-delay {
+            description 'One way frame delay(units: ns).' ;
+            units ns ;
+            type uint64 ;
+
+          }
+
+          leaf one-way-delay-variation {
+            description 'One way frame delay variation(units: ns).' ;
+            units ns ;
+            type uint64 ;
+
+          }
+
+          leaf two-way-delay {
+            description 'two way frame delay(units: ns).' ;
+            units ns ;
+            type uint64 ;
+
+          }
+
+          leaf two-way-delay-variation {
+            description 'Two way frame delay variation(units: ns).' ;
+            units ns ;
+            type uint64 ;
+
+          }
+
+          leaf local-discard-pkt-ratio {
+            description 'The ratio(*1000000) of local lossing packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The ratio of local lossing packets.' ;
+              }
+
+            }
+
+            units "1/1000000" ;
+          }
+
+          leaf remote-discard-pkt-ratio {
+            description 'The ratio(*1000000) of remote lossing packets.' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The ratio of remote lossing packets.' ;
+              }
+
+            }
+
+            units "1/1000000" ;
+          }
+
+          ncd:select meg-index ;
+        }
+
+        ncd:revise-date 2019-11-08 ;
+      }
+
+      container lm-and-dm-results {
+        if-feature statistics-interval ;
+
+        description 'The detail result information of LM and DM function.' ;
+        list lm-and-dm-result {
+          description 'The detail result information of LM and DM function.' ;
+          key meg-index ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          leaf one-way-delay {
+            description 'One way frame delay(units: ns).' ;
+            units ns ;
+            type uint64 ;
+
+          }
+
+          leaf one-way-delay-variation {
+            description 'One way frame delay variation(units: ns).' ;
+            units ns ;
+            type uint64 ;
+
+          }
+
+          leaf two-way-delay {
+            description 'two way frame delay(units: ns).' ;
+            units ns ;
+            type uint64 ;
+
+          }
+
+          leaf two-way-delay-variation {
+            description 'Two way frame delay variation(units: ns).' ;
+            units ns ;
+            type uint64 ;
+
+          }
+
+          leaf local-discard-pkt-ratio {
+            description 'The local packet loss rate(units: 1/1000000).' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The ratio of local lossing packets.' ;
+              }
+
+            }
+
+            units "1/1000000" ;
+          }
+
+          leaf remote-discard-pkt-ratio {
+            description 'The remote packet loss rate(units: 1/1000000).' ;
+            type uint32 {
+              range 0..4294967295 {
+                description 'The ratio of remote lossing packets.' ;
+              }
+
+            }
+
+            units "1/1000000" ;
+          }
+
+          ncd:select meg-index ;
+        }
+
+        ncd:revise-date 2020-07-16 ;
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'MPLS-TP OAM operations' ;
+    container mpls-tp-oam {
+      description 'MPLS-TP OAM operation parameters.' ;
+      container lbs {
+        description 'The operation of LB function.' ;
+        list lb {
+          description 'The operation of LB function.' ;
+          key 'meg-index serial-number' ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          leaf serial-number {
+            description 'Detecting instance serial number sending by network management by netconf.' ;
+            type ncd:terminal-based-uint32 ;
+
+          }
+
+          choice status {
+            description 'The switch for turning on or off LB function.' ;
+            mandatory true ;
+            case enable {
+              description 'Turn on LB function.' ;
+              leaf enable {
+                description 'Turn on LB function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+              container mep-or-mip {
+                description 'Configure MEP or MIP parameters of LB.' ;
+                choice mep-or-mip {
+                  description 'Configure MEP or MIP parameters of LB.' ;
+                  mandatory true ;
+                  case mep {
+                    description 'Configure MEP parameters.' ;
+                    leaf mep-id {
+                      description 'The identity of destination MEP, ranges from 1 to 8191.' ;
+                      type uint16 {
+                        range 1..8191 {
+                          description 'The value of destination MEP ID.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                  case mip {
+                    description 'Configure MIP parameters.' ;
+                    leaf mip-id {
+                      description 'The identity of destination MIP, ranges from 1 to 8191.' ;
+                      type uint16 {
+                        range 1..8191 {
+                          description 'The value of destination MIP ID.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                    leaf mip-ttl {
+                      description 'TTL value of the destination MIP ID in the function of LB.' ;
+                      type uint8 {
+                        range 1..255 {
+                          description 'The value of TTL for destination MIP.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                  case mip-node {
+                    description 'Configure node ID information of MIP.' ;
+                    leaf node-id {
+                      description 'The peer node ID is only applicable to standard mode.' ;
+                      type ncd:ipv4-address ;
+
+                      mandatory true ;
+                    }
+
+                    leaf node-ttl {
+                      description 'TTL value of the destination MIP ID in the function of LB.' ;
+                      type uint8 {
+                        range 1..255 {
+                          description 'The value of TTL for destination MIP.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                    leaf if-number {
+                      description 'The interface index value of the destination MIP ID.' ;
+                      type uint32 {
+                        range 0..4294967295 {
+                          description 'The value of if-number.' ;
+                        }
+
+                      }
+
+                      ncd:revise-date 2018-05-04 ;
+                    }
+
+                    ncd:revise-date 2017-08-07 ;
+                  }
+
+                  case mip-none {
+                    description 'Configure none flag information of MIP.' ;
+                    leaf none-flag {
+                      description 'The none flag which means having not taken with MIP ID is only applicable to standard mode.' ;
+                      type empty ;
+
+                      mandatory true ;
+                    }
+
+                    leaf none-ttl {
+                      description 'TTL value of the destination MIP ID in the function of LB.' ;
+                      type uint8 {
+                        range 1..255 {
+                          description 'The value of TTL for destination MIP.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                    ncd:revise-date 2017-08-07 ;
+                  }
+
+                }
+
+              }
+
+              leaf time-out {
+                description 'Timeout value of waiting responding packets, ranges from 5 to 10(units:s, default: 5).' ;
+                units s ;
+                type uint8 {
+                  range 5..10 {
+                    description 'The value of time-out.' ;
+                  }
+
+                }
+
+                default 5 ;
+              }
+
+              leaf send-time {
+                description 'Duration time in the function of LB. It ranges from 10s to 24h with the configuration of permanence detecting. If this node assigned 0, it means permanence detecting unless mannual stopping. If assigned 10-86400, it means detecting lasting time.' ;
+                type uint32 {
+                  range "0 | 10..86400" {
+                    description '0: running all time unless mannual stopping; 10-86400: the value of running time.' ;
+                  }
+
+                }
+
+                units s ;
+                default 0 ;
+              }
+
+              leaf tlv-size {
+                description 'The TLV size of LB function, ranges from 0 to 400(default: 0).If TLV size is 0, it means LB packets will not carry TLV.' ;
+                type uint32 {
+                  range 0..400 {
+                    description 'The value of TLV size.' ;
+                  }
+
+                }
+
+                default 0 ;
+              }
+
+              leaf phb {
+                description 'The PHB value carried in LB packets, including be, af11, af12, af21, af22, af31, af32, af41, af42, cs6, cs7 and ef(default: cs7).' ;
+                type phb ;
+
+                default cs7 ;
+              }
+
+              leaf mode {
+                description 'The LB working model, including standard model and private model of ZTE(default: ztemode).' ;
+                type enumeration {
+                  enum ztemode {
+                    value 0 ;
+                    description 'Private model of ZTE.' ;
+                  }
+
+                  enum standard {
+                    value 1 ;
+                    description 'Standard model.' ;
+                  }
+
+                }
+
+                default ztemode ;
+              }
+
+              leaf send-limit-flag {
+                description 'The limit of sending speed in the function of LB, ranges from 1 to 10(default: 10). If this parameter is not configured, it means to send 10 packets per second.' ;
+                type uint8 {
+                  range 1..10 {
+                    description 'The value of sending frequency.' ;
+                  }
+
+                }
+
+                default 10 ;
+              }
+
+              leaf report-interval {
+                description 'The time for periodic reporting in the function of LB, when it ranges from 1s to 86400s, it means periodic reporting the results;
+If this node assigned 4294967295, it means not reporting the results unless manually stopped;
+The default value is 0,it means not reporting the results.' ;
+                type uint32 {
+                  range "0 | 1..86400 | 4294967295" ;
+
+                }
+
+                units s ;
+                default 0 ;
+                ncd:revise-date 2015-09-01 ;
+              }
+
+              leaf pattern {
+                description 'The TLV value of LB function,from <0-9>,<a-f>or<A-F>.' ;
+                type string {
+                  length 4 {
+                    description 'The pattern string.' ;
+                  }
+
+                }
+
+                ncd:revise-date 2019-07-23 ;
+              }
+
+            }
+
+            case disable {
+              description 'Turn off LB function.' ;
+              leaf disable {
+                description 'Turn off LB function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          ncd:select "meg-index serial-number" ;
+        }
+
+      }
+
+      container lts {
+        description 'The operation of LT function.' ;
+        list lt {
+          description 'The operation of LT function.' ;
+          key 'meg-index serial-number' ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          leaf serial-number {
+            description 'Detecting instance serial number sending by network management by netconf.' ;
+            type ncd:terminal-based-uint32 ;
+
+          }
+
+          choice status {
+            description 'The switch for turning on or off LT function.' ;
+            mandatory true ;
+            case enable {
+              description 'Turn off LT function.' ;
+              leaf enable {
+                description 'Turn off LT function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+              container mep-or-ttl {
+                choice mep-or-ttl {
+                  description 'Configure MEP or TTL parameters of LT.' ;
+                  mandatory true ;
+                  case mep {
+                    description 'Configure MEP parameters.' ;
+                    leaf mep-id {
+                      description 'The identity of destination MEP, ranges from 1 to 8191.' ;
+                      type uint16 {
+                        range 1..8191 {
+                          description 'The value of destination MEP ID.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                  case ttl {
+                    description 'Configure ttl parameters.' ;
+                    leaf max-hop {
+                      description 'Max hops in the function of LT, ranges from 1 to 255. This parameter indicates the max hops of LT function.' ;
+                      type uint8 {
+                        range 1..255 {
+                          description 'The value of max hops.' ;
+                        }
+
+                      }
+
+                      mandatory true ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+              leaf time-out {
+                description 'Timeout value of waiting responding packets, ranges from 5 to 10(units:s, default: 5).' ;
+                units s ;
+                type uint8 {
+                  range 5..10 {
+                    description 'The value of time-out.' ;
+                  }
+
+                }
+
+                default 5 ;
+              }
+
+              leaf tlv-size {
+                description 'The TLV size of LT function, ranges from 0 to 400(default: 0).If TLV size is 0, it means LT packets will not carry TLV.' ;
+                type uint32 {
+                  range 0..400 {
+                    description 'The value of TLV size.' ;
+                  }
+
+                }
+
+                default 0 ;
+              }
+
+              leaf phb {
+                description 'The PHB value carried in LT packets, including be, af11, af12, af21, af22, af31, af32, af41, af42, cs6, cs7 and ef(default: cs7).' ;
+                type phb ;
+
+                default cs7 ;
+              }
+
+              leaf mode {
+                description 'The LT working model:standard model and private model of ZTE(default: ztemode).' ;
+                type enumeration {
+                  enum ztemode {
+                    value 0 ;
+                    description 'Private model of ZTE.' ;
+                  }
+
+                  enum standard {
+                    value 1 ;
+                    description 'Standard model.' ;
+                  }
+
+                }
+
+                default ztemode ;
+              }
+
+            }
+
+            case disable {
+              description 'Turn off LT function.' ;
+              leaf disable {
+                description 'Turn off LT function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          ncd:select "meg-index serial-number" ;
+        }
+
+      }
+
+      container tests {
+        description 'The operation of TST function.' ;
+        list test {
+          description 'The operation of TST function.' ;
+          key meg-index ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 ;
+
+            }
+
+          }
+
+          choice status {
+            description 'The switch for turning on or off TST function.' ;
+            mandatory true ;
+            case enable {
+              description 'Turn off TST function.' ;
+              leaf enable {
+                description 'Turn off TST function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+              leaf type {
+                description 'The type of the TST function, including one-way-source and one-way-destination.' ;
+                type enumeration {
+                  enum one-way-source {
+                    value 1 ;
+                    description 'The Source point of one way TST function.' ;
+                  }
+
+                  enum one-way-dest {
+                    value 2 ;
+                    description 'The destination point of one way TST function.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf mep-id {
+                description 'The identity of destination MEP, ranges from 1 to 8191.' ;
+                type uint16 {
+                  range 1..8191 {
+                    description 'The value of destination MEP ID.' ;
+                  }
+
+                }
+
+                ncd:revise-date 2018-05-04 ;
+              }
+
+              leaf send-time {
+                description 'Duration time in the function of TST. It ranges from 10s to 24h with the configuration of permanence detecting. If this node assigned 0, it means permanence detecting unless mannual stopping. If assigned 10-86400, it means detecting lasting time.' ;
+                type uint32 {
+                  range "0 | 10..86400" {
+                    description '0: running all time unless mannual stopping; 10-86400: the value of running time.' ;
+                  }
+
+                }
+
+                units s ;
+              }
+
+              leaf tlv-size {
+                description 'The TLV size of TST function, ranges from 0 to 1400(default: 0).If TLV size is 0, it means TST packets will not carry TLV.' ;
+                type uint32 {
+                  range 0..1400 {
+                    description 'The value of TLV size.' ;
+                  }
+
+                }
+
+                default 0 ;
+              }
+
+              leaf phb {
+                description 'The PHB value carried in TST packets, including be, af11, af12, af21, af22, af31, af32, af41, af42, cs6, cs7 and ef(default: cs7).' ;
+                type phb ;
+
+                default cs7 ;
+              }
+
+              leaf speed {
+                description 'The TST packet sending speed, ranges from 1 to 200000(units: kbps, default: 10000).' ;
+                type uint32 {
+                  range 1..200000 {
+                    description 'The value of speed.' ;
+                  }
+
+                }
+
+                units kbps ;
+                default 10000 ;
+              }
+
+              leaf code-type {
+                description 'The type of TST TLV value, including all0 and all1(default: all0).' ;
+                type enumeration {
+                  enum all0 {
+                    value 0 ;
+                    description 'The TST TLV value is all 0.' ;
+                  }
+
+                  enum all1 {
+                    value 1 ;
+                    description 'The TST TLV value is all 1.' ;
+                  }
+
+                }
+
+                default all0 ;
+              }
+
+              leaf report-interval {
+                description 'The time for periodic reporting in the function of TST, when it ranges from 1s to 86400s, it means periodic reporting the results;  
+If this node assigned 4294967295, it means not reporting the results unless manually stopped;
+The default value is 0,it means not reporting the results.' ;
+                type uint32 {
+                  range "0 | 1..86400 | 4294967295" ;
+
+                }
+
+                units s ;
+                default 0 ;
+                ncd:revise-date 2015-09-01 ;
+              }
+
+              leaf out-seg {
+                if-feature function-test ;
+
+                description 'The out-seg ID of TST which has associated with the instance of P2MP ranges from 1 to 32.' ;
+                type uint16 {
+                  range 1..32 {
+                    description 'The value of out seg ID.' ;
+                  }
+
+                }
+
+                ncd:revise-date 2017-08-07 ;
+              }
+
+              leaf service-type {
+                description 'The service type of TST, including in-service and out-of-service(default:in-service).' ;
+                type enumeration {
+                  enum in-service {
+                    value 0 ;
+                    description 'in service' ;
+                  }
+
+                  enum out-of-service {
+                    value 1 ;
+                    description 'out of service' ;
+                  }
+
+                }
+
+                default in-service ;
+                ncd:revise-date 2018-05-04 ;
+              }
+
+            }
+
+            case disable {
+              description 'Turn off TST function.' ;
+              leaf disable {
+                description 'Turn off TST function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container lms {
+        description 'The operation of on-demand LM function.' ;
+        list lm {
+          description 'The operation of on-demand LM function.' ;
+          key meg-index ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          choice status {
+            description 'The switch for turning on or off LM function.' ;
+            mandatory true ;
+            case enable {
+              description 'Turn off LM function.' ;
+              leaf enable {
+                description 'Turn off LM function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+              leaf phb {
+                description 'The PHB value carried in LM packets, including be, af11, af12, af21, af22, af31, af32, af41, af42, cs6, cs7 and ef(default: cs7).' ;
+                type phb ;
+
+                default cs7 ;
+              }
+
+              leaf send-time {
+                description 'Duration time in the function of on-demand LM. It ranges from 10s to 24h with the configuration of permanence detecting. If this node assigned 0, it means permanence detecting unless mannual stopping. If assigned 10-86400, it means detecting lasting time.' ;
+                type uint32 {
+                  range "0 | 10..86400" {
+                    description '0: running all time unless mannual stopping; 10-86400: the value of running time.' ;
+                  }
+
+                }
+
+                units s ;
+                default 0 ;
+              }
+
+              leaf send-interval {
+                description 'The sending period of on-demand LM packets, ranges from 1 to 100(units:100ms, default: 10).' ;
+                type uint8 {
+                  range 1..100 {
+                    description 'The value of sending interval.' ;
+                  }
+
+                }
+
+                units 100ms ;
+                default 10 ;
+              }
+
+              leaf type {
+                description 'The on-demand LM type, including G.8114 and Y.1731. G.8114, counting the data packets; Y.1731, counting the data packets and OAM packets(default: G.8114).' ;
+                type enumeration {
+                  enum g8114 {
+                    value 1 ;
+                    description 'Counting the data packets.' ;
+                  }
+
+                  enum y1731 {
+                    value 2 ;
+                    description 'Counting the data packets and OAM packets.' ;
+                  }
+
+                }
+
+                default g8114 ;
+              }
+
+              leaf report-interval {
+                description 'The time for periodic reporting in the function of LM, when it ranges from 1s to 86400s, it means periodic reporting the results;  
+If this node assigned 4294967295, it means not reporting the results unless manually stopped;
+The default value is 0,it means not reporting the results.' ;
+                type uint32 {
+                  range "0 | 1..86400 | 4294967295" ;
+
+                }
+
+                units s ;
+                default 0 ;
+              }
+
+            }
+
+            case disable {
+              description 'Turn off LM function.' ;
+              leaf disable {
+                description 'Turn off LM function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container dms {
+        description 'The operation of on-demand DM function.' ;
+        list dm {
+          description 'The operation of on-demand DM function.' ;
+          key meg-index ;
+          leaf meg-index {
+            description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'The value of MEG index.' ;
+              }
+
+            }
+
+          }
+
+          choice status {
+            description 'The switch for turning on or off DM function.' ;
+            mandatory true ;
+            case enable {
+              description 'Turn off DM function.' ;
+              leaf enable {
+                description 'Turn off DM function.' ;
+                type empty ;
+
+                mandatory true ;
+              }
+
+              leaf type {
+                description 'On-demand DM type, including one-way and two-way.' ;
+                type enumeration {
+                  enum one-way {
+                    value 1 ;
+                    description 'One-way DM.' ;
+                  }
+
+                  enum two-way {
+                    value 2 ;
+                    description 'Two-way DM.' ;
+                  }
+
+                }
+
+                mandatory true ;
+              }
+
+              leaf phb {
+                description 'The PHB value carried in DM packets, including be, af11, af12, af21, af22, af31, af32, af41, af42, cs6, cs7 and ef(default: cs7).' ;
+                type phb ;
+
+                default cs7 ;
+              }
+
+              leaf send-time {
+                description 'Duration time in the function of on-demand DM. It ranges from 10s to 24h with the configuration of permanence detecting. If this node assigned 0, it means permanence detecting unless mannual stopping. If assigned 10-86400, it means detecting lasting time.' ;
+                type uint32 {
+                  range "0 | 10..86400" {
+                    description '0: running all time unless mannual stopping; 10-86400: the value of running time.' ;
+                  }
+
+                }
+
+                units s ;
+                default 0 ;
+              }
+
+              leaf send-interval {
+                description 'The sending period of on-demand DM packets, ranges from 1 to 100(units:100ms, default: 10).' ;
+                type uint8 {
+                  range 1..100 {
+                    description 'The value of sending interval.' ;
+                  }
+
+                }
+
+                units 100ms ;
+                default 10 ;
+              }
+
+              leaf tlv-size {
+                description 'The TLV size of on-demand DM function, ranges from 0 to 400(default: 0).If TLV size is 0, it means DM packets will not carry TLV.' ;
+                type uint32 {
+                  range 0..400 {
+                    description 'The value of TLV size.' ;
+                  }
+
+                }
+
+                default 0 ;
+              }
+
+              leaf report-interval {
+                description 'The time for periodic reporting in the function of DM, when it ranges from 1s to 86400s, it means periodic reporting the results;  
+If this node assigned 4294967295, it means not reporting the results unless manually stopped.
+The default value is 0,it means not reporting the results.' ;
+                type uint32 {
+                  range "0 | 1..86400 | 4294967295" ;
+
+                }
+
+                units s ;
+                default 0 ;
+              }
+
+            }
+
+            case disable {
+              description 'Turn off DM function.' ;
+              leaf disable {
+                description 'Turn off DM function.' ;
+                type empty ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  notification ondemand-lm-event {
+    description 'The detail result information of on-demand LM function.' ;
+    list lm-result {
+      description 'The detail result information of on-demand LM function.' ;
+      key meg-index ;
+      leaf meg-index {
+        config false ;
+        description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+        type uint32 {
+          range 1..4294967295 {
+            description 'The value of MEG index.' ;
+          }
+
+        }
+
+      }
+
+      leaf local-mep {
+        config false ;
+        description 'The identity of local MEP.' ;
+        type uint32 {
+          range 1..8191 {
+            description 'The value of local MEP ID.' ;
+          }
+
+        }
+
+      }
+
+      leaf local-send-pkt-count {
+        config false ;
+        description 'The count of local sending packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of local sending packets.' ;
+          }
+
+        }
+
+      }
+
+      leaf local-recv-pkt-count {
+        config false ;
+        description 'The count of local receiving packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of local receiving packets.' ;
+          }
+
+        }
+
+      }
+
+      leaf local-discard-pkt-count {
+        config false ;
+        description 'The count of local lossing packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of local lossing packets.' ;
+          }
+
+        }
+
+      }
+
+      leaf local-discard-pkt-ratio {
+        config false ;
+        description 'The ratio(*1000000) of local lossing packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The ratio of local lossing packets.' ;
+          }
+
+        }
+
+        units "1/1000000" ;
+      }
+
+      leaf remote-send-pkt-count {
+        config false ;
+        description 'The count of remote sending packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of remote sending packets.' ;
+          }
+
+        }
+
+      }
+
+      leaf remote-recv-pkt-count {
+        config false ;
+        description 'The count of remote receiving packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of remote receiving packets.' ;
+          }
+
+        }
+
+      }
+
+      leaf remote-discard-pkt-count {
+        config false ;
+        description 'The count of remote lossing packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of remote lossing packets.' ;
+          }
+
+        }
+
+      }
+
+      leaf remote-discard-pkt-ratio {
+        config false ;
+        description 'The ratio(*1000000) of remote lossing packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The ratio of remote lossing packets.' ;
+          }
+
+        }
+
+        units "1/1000000" ;
+      }
+
+    }
+
+  }
+
+  notification ondemand-dm-event {
+    description 'The detail result information of on-demand DM function.' ;
+    list dm-result {
+      description 'The detail result information of on-demand DM function.' ;
+      key meg-index ;
+      leaf meg-index {
+        config false ;
+        description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+        type uint32 {
+          range 1..4294967295 {
+            description 'The value of MEG index.' ;
+          }
+
+        }
+
+      }
+
+      leaf local-mep {
+        config false ;
+        description 'The identity of local MEP.' ;
+        type uint32 {
+          range 1..8191 {
+            description 'The value of local MEP ID.' ;
+          }
+
+        }
+
+      }
+
+      leaf delay {
+        config false ;
+        description 'Frame delay(units: ns).' ;
+        type uint64 ;
+
+        units ns ;
+      }
+
+      leaf delay-variation {
+        config false ;
+        description 'Frame delay variation(units: ns).' ;
+        type uint64 ;
+
+        units ns ;
+      }
+
+      leaf delay-variation-ratio {
+        config false ;
+        description 'The ratio of delay variation(units: 1/1000000).' ;
+        type uint64 ;
+
+        units "1/1000000" ;
+      }
+
+      leaf avg-delay {
+        config false ;
+        description 'Average frame delay(units: ns).' ;
+        type uint64 ;
+
+        units ns ;
+      }
+
+      leaf avg-delay-variation {
+        config false ;
+        description 'Average frame delay variation(units: ns).' ;
+        type uint64 ;
+
+        units ns ;
+      }
+
+      leaf avg-delay-variation-ratio {
+        config false ;
+        description 'The ratio of average delay variation(units: 1/1000000).' ;
+        type uint64 ;
+
+        units "1/1000000" ;
+      }
+
+    }
+
+  }
+
+  notification lb-event {
+    description 'The detail result information of LB function.' ;
+    list lb-result {
+      description 'The detail result information of LB function.' ;
+      key 'meg-index serial-number' ;
+      leaf meg-index {
+        config false ;
+        description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+        type uint32 {
+          range 1..4294967295 {
+            description 'The value of MEG index.' ;
+          }
+
+        }
+
+      }
+
+      leaf serial-number {
+        config false ;
+        description 'Detecting instance serial number sending by network management by netconf.' ;
+        type ncd:terminal-based-uint32 ;
+
+      }
+
+      leaf local-mep {
+        config false ;
+        description 'The identity of local MEP.' ;
+        type uint32 {
+          range 1..8191 {
+            description 'The value of local MEP ID.' ;
+          }
+
+        }
+
+      }
+
+      leaf dest-mep {
+        config false ;
+        description 'The identity of destination MEP.' ;
+        type uint32 {
+          range 0..8191 {
+            description 'The value of destination MEP ID.' ;
+          }
+
+        }
+
+      }
+
+      leaf dest-mip {
+        config false ;
+        description 'The identity of destination MIP.' ;
+        type uint32 {
+          range 0..8191 {
+            description 'The value of destination MIP ID.' ;
+          }
+
+        }
+
+      }
+
+      leaf send-count {
+        config false ;
+        description 'The count of sending LB packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of sending packets.' ;
+          }
+
+        }
+
+      }
+
+      leaf recv-count {
+        config false ;
+        description 'The count of receiving LB packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of receiving packets.' ;
+          }
+
+        }
+
+      }
+
+      leaf discard-count {
+        config false ;
+        description 'The count of lossing LB packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of lossing packets.' ;
+          }
+
+        }
+
+      }
+
+      leaf format-error-count {
+        config false ;
+        description 'The count of receiving format error LB packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of receiving format error packets.' ;
+          }
+
+        }
+
+        ncd:revise-date 2019-07-23 ;
+      }
+
+      ncd:select "meg-index serial-number" ;
+    }
+
+    ncd:revise-date 2015-09-01 ;
+  }
+
+  notification lt-event {
+    description 'The detail result information of LT function.' ;
+    list lt-result {
+      config false ;
+      description 'The detail result information of LT function.' ;
+      key 'meg-index serial-number' ;
+      leaf meg-index {
+        description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+        type uint32 {
+          range 1..4294967295 {
+            description 'The value of MEG index.' ;
+          }
+
+        }
+
+      }
+
+      leaf serial-number {
+        description 'Detecting instance serial number sending by network management by netconf.' ;
+        type ncd:terminal-based-uint32 ;
+
+      }
+
+      leaf local-mep {
+        description 'The identity of local MEP.' ;
+        type uint32 {
+          range 1..8191 {
+            description 'The value of local MEP ID.' ;
+          }
+
+        }
+
+      }
+
+      leaf if-success {
+        description 'The result of Link trace for MEP, failed or success.' ;
+        type enumeration {
+          enum fail {
+            value 0 ;
+            description 'LT MEP failed.' ;
+          }
+
+          enum success {
+            value 1 ;
+            description 'LT MEP success.' ;
+          }
+
+        }
+
+      }
+
+      leaf success-hop-count {
+        description 'Successful hops of LT, it used to analysis MIP ID sequence.' ;
+        type uint16 {
+          range 0..255 {
+            description 'The value of successful hops.' ;
+          }
+
+        }
+
+      }
+
+      leaf hop-sequence {
+        description 'Comma-separated list of string for successful MIP ID.' ;
+        type string {
+          length 0..512 {
+            description 'The value of MIP ID sequence.' ;
+          }
+
+        }
+
+      }
+
+      leaf fail-hop {
+        description 'Failed hop.' ;
+        type uint16 {
+          range 0..255 {
+            description 'The value of failed hop.' ;
+          }
+
+        }
+
+      }
+
+      ncd:select "meg-index serial-number" ;
+    }
+
+    ncd:revise-date 2015-09-01 ;
+  }
+
+  notification test-event {
+    description 'The detail result information of TST function.' ;
+    list test-result {
+      config false ;
+      description 'The detail result information of TST function.' ;
+      key meg-index ;
+      leaf meg-index {
+        description 'The value of MEG index,the upper limit of this parameter depends on the device.' ;
+        type uint32 {
+          range 1..4294967295 {
+            description 'The value of MEG index.' ;
+          }
+
+        }
+
+      }
+
+      leaf local-mep {
+        description 'The identity of local MEP.' ;
+        type uint32 {
+          range 1..8191 {
+            description 'The value of local MEP ID.' ;
+          }
+
+        }
+
+      }
+
+      leaf rcv-count {
+        description 'The count of receiving TST packets.' ;
+        type uint32 {
+          range 0..4294967295 ;
+
+        }
+
+      }
+
+      leaf discard-count {
+        description 'The count of lossing TST packets.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of lossing packets.' ;
+          }
+
+        }
+
+      }
+
+      leaf band-width {
+        description 'The bandwidth from source MEP to destination MEP, that the TST function detected.' ;
+        type uint32 {
+          range 0..4294967295 {
+            description 'The value of bandwidth.' ;
+          }
+
+        }
+
+        units bps ;
+      }
+
+    }
+
+    ncd:revise-date 2015-09-01 ;
+  }
+
+}

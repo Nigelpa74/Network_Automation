@@ -1,0 +1,2729 @@
+module zxr10-igmp {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/igmp'
+            ;
+  prefix igmp ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe IGMP.'
+              ;
+  revision 2023-05-10 {
+    description 'Modify the maximum range of the leaves: /configuration/router-igmp/igmps/group-intf-nums/num/intf-num and /configuration/router-igmp/igmp-vrf/igmp/group-intf-nums/num/intf-num.' ;
+  }
+  revision 2023-03-31 {
+    description '1.Modify the maximum capacity of the lists: /configuration/rou'
+              + 'ter-igmp/igmps/interfaces/interface and /configuration/router-'
+              + 'igmp/igmp-vrf/igmp/interfaces/interface.'+"\n"
+              + '2.Modify the description of the container: /configuration/rout'
+              + 'er-igmp/igmp-vrf/igmp/interfaces.'+"\n"
+              + '3.Delete the maximum capacity of the list: /configuration/rout'
+              + 'er-igmp/igmp-vrf/igmp.'
+                ;
+  }
+  revision 2022-10-12 {
+    description '1.Add sibtp-instance-id leaf nodes to /configuration/router-ig'
+              + 'mp/igmps/interfaces/interface and /configuration/router-igmp/i'
+              + 'gmp-vrf/igmp/interfaces/interface.'
+                ;
+  }
+  revision 2021-08-16 {
+    description '1.Modify the type of the leaves: '+"\n"
+              + '/state/igmp/public/interfaces/interface/if-addr'+"\n"
+              + '/state/igmp/public/interfaces/interface/querier'+"\n"
+              + '/state/igmp/public/groups/group/last-reporter '+"\n"
+              + '/state/igmp/public/group-details/group/last-reporter'+"\n"
+              + '/state/igmp/private/interfaces/interface/if-addr'+"\n"
+              + '/state/igmp/private/interfaces/interface/querier'+"\n"
+              + '/state/igmp/private/groups/group/last-reporter'+"\n"
+              + '/state/igmp/private/group-details/group/last-reporter'
+                ;
+  }
+  revision 2021-07-14 {
+    description 'Add igmpv3-exclude-record leaf nodes to /configuration/router-'
+              + 'igmp/igmps/global and /configuration/router-igmp/igmp-vrf/igmp'
+              + '.'
+                ;
+  }
+  revision 2021-04-24 {
+    description '1.Add sibtp-service leaf nodes to /configuration/router-igmp/i'
+              + 'gmps/interfaces/interface and /configuration/router-igmp/igmp-'
+              + 'vrf/igmp/interfaces/interface.'+"\n"
+              + '2.Modify the description of the leaves: /state/igmp/public/gro'
+              + 'up-details/group/group-flags and /state/igmp/private/group-det'
+              + 'ails/group/group-flags,/state/igmp/public/group-details/group/'
+              + 'sources/source/source-flag and /state/igmp/private/group-detai'
+              + 'ls/group/sources/source/source-flag.'
+                ;
+  }
+  revision 2019-07-15 {
+    description 'Add access-ip-source,specific-query-ignore,startup-query-count'
+              + ' and startup-query-interval leaf nodes to /configuration/route'
+              + 'r-igmp/igmps/interfaces/interface and /configuration/router-ig'
+              + 'mp/igmp-vrf/igmp/interfaces/interface.'
+                ;
+  }
+  revision 2016-01-20 {
+    description 'modify the description of the leaves: /state/igmp/public/inter'
+              + 'faces/interface/old-router and /state/igmp/private/interfaces/'
+              + 'interface/old-router.'
+                ;
+  }
+  revision 2015-09-02 {
+    description 'modify the default value and the range of the leaf: /configura'
+              + 'tion/router-igmp/igmps/interfaces/interface/static-group/group'
+              + 's/count and /configuration/router-igmp/igmp-vrf/igmp/interface'
+              + 's/interface/static-group/groups/count'
+                ;
+  }
+  revision 2015-08-25 {
+    description 'modify the length of the leaf:/configuration/router-igmp/igmps'
+              + '/ssm-maps/acls/acl/acl-name, /configuration/router-igmp/igmps/'
+              + 'interfaces/interface/access-group, /configuration/router-igmp/'
+              + 'igmps/interfaces/interface/immediate-leaves/immediate-leave/ac'
+              + 'ls/acl, /configuration/router-igmp/igmp-vrf/igmp/ssm-maps/acls'
+              + '/acl/acl-name, /configuration/router-igmp/igmp-vrf/igmp/interf'
+              + 'aces/interface/access-group, /configuration/router-igmp/igmp-v'
+              + 'rf/igmp/interfaces/interface/immediate-leaves/immediate-leave/'
+              + 'acls/acl'
+                ;
+  }
+  revision 2015-08-04 {
+    description 'Remove the config of operation'
+                ;
+  }
+  revision 2015-07-01 {
+    description '1.obsolete the container nodes static-groups :/configuration/r'
+              + 'outer-igmp/igmps/interfaces/interface/static-groups and /confi'
+              + 'guration/router-igmp/igmp-vrf/igmp/interfaces/interface/static'
+              + '-groups'+"\n"
+              + '2.add the container nodes static-groups :/configuration/router'
+              + '-igmp/igmps/interfaces/interface/static-group and /configurati'
+              + 'on/router-igmp/igmp-vrf/igmp/interfaces/interface/static-group'
+              + ''+"\n"
+              + '3.modify the default value of leaf node report-interval from 1'
+              + '0 to 1:/configuration/router-igmp/igmps/interfaces/interface/r'
+              + 'eport-interval and /configuration/router-igmp/igmp-vrf/igmp/in'
+              + 'terfaces/interface/report-interval'+"\n"
+              + '4.modify the length of leaf node immediate-leave from 31 to 36'
+              + ':/state/igmp/private/interfaces/interface/intf/immediate-leave'
+              + ' and /state/igmp/public/interfaces/interface/intf/immediate-le'
+              + 'ave'
+                ;
+  }
+  revision 2015-06-03 {
+    description '1.remove two leaf nodes vrf-name from :/state/igmp/private/gro'
+              + 'up-summary/intfs/intf/vrf-name and /state/igmp/private/group-s'
+              + 'ummary/all-intfs/vrf-name to one leaf to:/state/igmp/private/g'
+              + 'roup-summary/summary/vrf-name.'+"\n"
+              + '2. remove two leaf nodes vrf-name from :/state/igmp/private/pa'
+              + 'ckets/intfs/intf/vrf-name and /state/igmp/private/packets/all-'
+              + 'intfs/vrf-name to one leaf to:/state/igmp/private/packets/pack'
+              + 'et/vrf-name.'+"\n"
+              + '3.modify the description of leaf nodes sent-spec-src-query :/s'
+              + 'tate/igmp/private/packets/packet/intf/sent-spec-src-query ,/st'
+              + 'ate/igmp/private/packets/packet/all-intf/sent-spec-src-query ,'
+              + '/state/igmp/public/packet/all-intf/sent-spec-src-query ,/state'
+              + '/igmp/public/packet/intfs/intf/sent-spec-src-query.'+"\n"
+              + '4.delete the unit of leaf node old-router:/state/igmp/public/i'
+              + 'nterfaces/interface/old-router and /state/igmp/private/interfa'
+              + 'ces/interface/old-router.'+"\n"
+              + '5.modify the name of leaf node last-report:/state/igmp/public/'
+              + 'groups/group/last-report and :/state/igmp/private/groups/group'
+              + '/last-report  to last-reporter:/state/igmp/public/groups/group'
+              + '/last-reporter and  :/state/igmp/private/groups/group/last-rep'
+              + 'orter'
+                ;
+  }
+  revision 2015-03-31 {
+    description '1. add state model :/state/.'+"\n"
+              + '2. add operation model :/operation/.'
+                ;
+  }
+  revision 2015-02-06 {
+    description '1.add container node igmp-enable :/configuration/router-igmp/i'
+              + 'gmps.'+"\n"
+              + '2.remove a leaf node enable-igmp from :/configuration/router-i'
+              + 'gmp/igmps/global to:/configuration/router-igmp/igmps/igmp-enab'
+              + 'le.'+"\n"
+              + '3.remove the container node global after igmp-enable.'
+                ;
+  }
+  revision 2014-11-19 {
+    description '1.add a leaf node enable-igmp :/configuration/router-igmp/igmp'
+              + 's/global.'+"\n"
+              + '2.add the presence of the container global :/configuration/rou'
+              + 'ter-igmp/igmps/global.'
+                ;
+  }
+  revision 2014-04-10 {
+    description 'Modify the range of vrf-name from (1..31) to (1..32).'
+                ;
+  }
+  revision 2014-03-19 {
+    description 'Modify the default value of immediate-leaves and the range of '
+              + 'acl from(1..31) to (0..31).'
+                ;
+  }
+  revision 2014-03-11 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model.'
+                ;
+    container router-igmp {
+      description 'Router igmp'
+                  ;
+      container igmps {
+        description 'Configure IGMP parameters.'
+                    ;
+        container igmp-enable {
+          description 'Enable IGMP'
+                      ;
+          presence igmp ;
+          leaf enable-igmp {
+            description 'Enable IGMP.'
+                        ;
+            type empty ;
+            mandatory true ;
+          }
+        }
+        container global {
+          description 'Configure IGMP instance.'
+                      ;
+          leaf shaping-num {
+            description 'Shaping commands'
+                        ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'Shaping packets number'
+                            ;
+              }
+            }
+          }
+          leaf proxy-enable {
+            description 'Enable IGMP proxy'
+                        ;
+            type empty ;
+          }
+          leaf require-alert-options {
+            description 'Require IGMP message with router alert options'
+                        ;
+            type empty ;
+          }
+          leaf igmpv3-exclude-record {
+            description 'Process IGMPv3 group records of MODE_IS_EXCLUDE and CH'
+                      + 'ANGE_TO_EXCLUDE_MODE for SSM address'
+                        ;
+            type empty ;
+            ncd:revise-date 2021-07-14 ;
+          }
+        }
+        container group-intf-nums {
+          description 'Max host limit commands'
+                      ;
+          list num {
+            description 'Max host limit commands'
+                        ;
+            max-elements 2048 ;
+            key group-addr ;
+            leaf group-addr {
+              description 'Group address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf intf-num {
+              description 'Limit interface number'
+                          ;
+              type uint32 {
+                range 1..64 {
+                  description 'Interface number'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+        container ssm-maps {
+          description 'SSM mapping commands'
+                      ;
+          container acls {
+            description 'SSM group'
+                        ;
+            list acl {
+              description 'SSM group'
+                          ;
+              max-elements 1000 ;
+              key 'acl-name src-addr'
+                  ;
+              leaf acl-name {
+                description 'SSM group named access list (1-31 characters)'
+                            ;
+                type string {
+                  length 1..31 {
+                    description 'Access list to specify groups'
+                                ;
+                  }
+                }
+              }
+              leaf src-addr {
+                description 'SSM source address'
+                            ;
+                type ncd:ipv4-address ;
+              }
+            }
+          }
+          container defaults {
+            description 'SSM mapping commands'
+                        ;
+            list default {
+              description 'SSM mapping commands'
+                          ;
+              max-elements 1000 ;
+              key 'src-addr default'
+                  ;
+              leaf src-addr {
+                description 'SSM source address'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf default {
+                description 'Default SSM group'
+                            ;
+                type uint8 {
+                  range 1 {
+                    description 'Default SSM group'
+                                ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        container interfaces {
+          description 'Select an interface to configure'
+                      ;
+          list interface {
+            description 'Select an interface to configure'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name'
+                              ;
+                }
+              }
+            }
+            leaf access-group {
+              description 'IGMP access group'
+                          ;
+              type string {
+                length 1..31 {
+                  description 'Access list name'
+                              ;
+                }
+              }
+            }
+            leaf last-member-query-interval {
+              description 'IGMP last member query interval'
+                          ;
+              type uint32 {
+                range 1..25 {
+                  description 'Last member query interval(second)'
+                              ;
+                }
+              }
+              units second ;
+              default 1 ;
+            }
+            leaf maximum-joins {
+              description 'IGMP maximum joins'
+                          ;
+              type uint32 {
+                range 1..40000 {
+                  description 'Max allowed joins on this interface'
+                              ;
+                }
+              }
+            }
+            leaf querier-timeout {
+              description 'IGMP previous querier timeout'
+                          ;
+              type uint32 {
+                range 60..300 {
+                  description 'Timeout value(second)'
+                              ;
+                }
+              }
+              units second ;
+              default 255 ;
+            }
+            leaf query-interval {
+              description 'IGMP host query interval'
+                          ;
+              type uint32 {
+                range 1..65535 {
+                  description 'Query interval(second)'
+                              ;
+                }
+              }
+              units second ;
+              default 125 ;
+            }
+            leaf query-max-response-time {
+              description 'IGMP max query response value'
+                          ;
+              type uint32 {
+                range 1..25 {
+                  description 'Query response value(second)'
+                              ;
+                }
+              }
+              units second ;
+              default 10 ;
+            }
+            leaf robustness-count {
+              description 'IGMP robustness count'
+                          ;
+              type uint32 {
+                range 2..7 {
+                  description 'Robustness count'
+                              ;
+                }
+              }
+              default 2 ;
+            }
+            leaf shaping-packets-number {
+              description 'IGMP shaping'
+                          ;
+              type uint32 {
+                range 1..4294967295 {
+                  description 'Max allowed packets on this interface'
+                              ;
+                }
+              }
+            }
+            leaf version {
+              description 'IGMP version'
+                          ;
+              type uint32 {
+                range 1..3 {
+                  description '1  Version 1
+2  Version 2
+3  Version 3'
+                              ;
+                }
+              }
+              default 2 ;
+            }
+            leaf proxy-service {
+              description 'IGMP proxy service'
+                          ;
+              type empty ;
+            }
+            leaf old-querier-present {
+              description 'IGMP older version querier present timeout'
+                          ;
+              type uint32 {
+                range 60..32000 {
+                  description 'Older version querier present(second)'
+                              ;
+                }
+              }
+              units second ;
+              default 400 ;
+            }
+            leaf report-interval {
+              description 'IGMP unsolicited report interval'
+                          ;
+              type uint32 {
+                range 1..25 {
+                  description 'Unsolicited report interval(second)'
+                              ;
+                }
+              }
+              units second ;
+              default 1 ;
+            }
+            leaf ip-source-check {
+              description 'IGMP check ip source address'
+                          ;
+              type empty ;
+            }
+            leaf access-ip-source {
+              description 'Access ip source filter.'
+                          ;
+              type string {
+                length 1..31 ;
+              }
+              ncd:revise-date 2019-07-15 ;
+            }
+            leaf specific-query-ignore {
+              description 'Specific query ignore.'
+                          ;
+              type empty ;
+              ncd:revise-date 2019-07-15 ;
+            }
+            leaf startup-query-interval {
+              description 'Startup query interval.'
+                          ;
+              type uint32 {
+                range 1..18000 ;
+              }
+              units second ;
+              default 31 ;
+              ncd:revise-date 2019-07-15 ;
+            }
+            leaf startup-query-count {
+              description 'Startup query count.'
+                          ;
+              type uint32 {
+                range 1..10 ;
+              }
+              default 2 ;
+              ncd:revise-date 2019-07-15 ;
+            }
+            leaf sibtp-service {
+              description 'IGMP enable SIBTP service'
+                          ;
+              type empty ;
+              ncd:revise-date 2021-04-24 ;
+            }
+            leaf sibtp-instance-id {
+              description 'IGMP SIBTP instance ID.'
+                          ;
+              type uint32 {
+                range 1..16 ;
+              }
+              ncd:revise-date 2022-10-12 ;
+            }
+            container igmp-proxy {
+              description 'IGMP proxy interface'
+                          ;
+              presence 'up if name'
+                       ;
+              leaf up-if-name {
+                description 'Up interface name'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Interface name'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+            container mroute-proxy {
+              description 'Mroute proxy interface'
+                          ;
+              presence 'up if name'
+                       ;
+              leaf up-if-name {
+                description 'Up interface name'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Interface name'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+            container static-groups {
+              status obsolete {
+                ncd:revise-date 2015-07-01 ;
+              }
+              description 'IGMP static multicast group'
+                          ;
+              list static-group {
+                description 'IGMP multicast group'
+                            ;
+                max-elements 65535 ;
+                key 'group source ssm-map static-flag'
+                    ;
+                leaf group {
+                  description 'IP group address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf source {
+                  description 'IP source address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf ssm-map {
+                  description 'Get source via SSM mapping'
+                              ;
+                  type uint32 {
+                    range 0..1 ;
+                  }
+                }
+                leaf static-flag {
+                  description 'Static group'
+                              ;
+                  type uint32 {
+                    range 1..2 {
+                      description '1 static-group
+2 join-group'
+                                  ;
+                    }
+                  }
+                }
+                leaf filter-mode {
+                  description '0 No filter mode
+3 Include
+4 Exclude'
+                              ;
+                  type uint32 {
+                    range 0..4 {
+                      description '0 no filter mode
+3 include
+4 exclude'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+            container immediate-leaves {
+              description 'Leave groups immediately'
+                          ;
+              choice immediate-leave {
+                description 'Leave groups immediately'
+                            ;
+                case acls {
+                  description 'Leave groups immediately without sending last me'
+                            + 'mber query'
+                              ;
+                  leaf acl {
+                    description 'Leave groups immediately without sending last '
+                              + 'member query'
+                                ;
+                    type string {
+                      length 1..31 {
+                        description 'Immediate acl'
+                                    ;
+                      }
+                    }
+                  }
+                }
+                case alls {
+                  description 'Leave All groups immediately'
+                              ;
+                  leaf all {
+                    description 'Leave All groups immediately'
+                                ;
+                    type empty ;
+                  }
+                }
+              }
+            }
+            container querier-elections {
+              description 'IGMP querier election'
+                          ;
+              choice querier-election {
+                description 'IGMP querier election'
+                            ;
+                case disables {
+                  description 'IGMP querier election disable'
+                              ;
+                  leaf disable {
+                    description 'IGMP querier election disable'
+                                ;
+                    type empty ;
+                  }
+                }
+                case connects {
+                  description 'IGMP querier election in the same lan'
+                              ;
+                  leaf connect {
+                    description 'IGMP querier election in the same lan'
+                                ;
+                    type empty ;
+                  }
+                }
+              }
+            }
+            container static-group {
+              description 'IGMP static multicast group'
+                          ;
+              list groups {
+                description 'IGMP multicast group'
+                            ;
+                max-elements 65535 ;
+                key 'group source ssm-map static-flag inc-mask'
+                    ;
+                leaf group {
+                  description 'IP group address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf source {
+                  description 'IP source address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf ssm-map {
+                  description 'Get source via SSM mapping'
+                              ;
+                  type uint32 {
+                    range 0..1 {
+                      description 'SSM static group to source mapping'
+                                  ;
+                    }
+                  }
+                }
+                leaf static-flag {
+                  description 'IGMP static multicast group or join multicast gr'
+                            + 'oup'
+                              ;
+                  type enumeration {
+                    enum static-group {
+                      value 1 ;
+                    }
+                    enum join-group {
+                      value 2 ;
+                    }
+                  }
+                }
+                leaf inc-mask {
+                  description 'Increment mask for group address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf filter-mode {
+                  description 'Filter mode'
+                              ;
+                  type enumeration {
+                    enum no-mode {
+                      value 0 ;
+                    }
+                    enum include {
+                      value 3 ;
+                    }
+                    enum exclude {
+                      value 4 ;
+                    }
+                  }
+                }
+                leaf count {
+                  description 'Number of group addresses to join'
+                              ;
+                  type uint32 {
+                    range 1..512 ;
+                  }
+                }
+              }
+              ncd:revise-date 2015-07-01 ;
+            }
+          }
+        }
+      }
+      container igmp-vrf {
+        description 'Configure IGMP VRF parameters.'
+                    ;
+        list igmp {
+          description 'Configure IGMP parameters.'
+                      ;
+          key vrf-name ;
+          leaf vrf-name {
+            description 'Vrf name'
+                        ;
+            type string {
+              length 1..32 {
+                description 'Vrf name'
+                            ;
+              }
+            }
+          }
+          leaf shaping-num {
+            description 'Shaping commands'
+                        ;
+            type uint32 {
+              range 1..4294967295 {
+                description 'Shaping packets number'
+                            ;
+              }
+            }
+          }
+          leaf proxy-enable {
+            description 'Enable IGMP proxy'
+                        ;
+            type empty ;
+          }
+          leaf require-alert-options {
+            description 'Require IGMP message with router alert options'
+                        ;
+            type empty ;
+          }
+          leaf igmpv3-exclude-record {
+            description 'Process IGMPv3 group records of MODE_IS_EXCLUDE and CH'
+                      + 'ANGE_TO_EXCLUDE_MODE for SSM address'
+                        ;
+            type empty ;
+            ncd:revise-date 2021-07-14 ;
+          }
+          container group-intf-nums {
+            description 'Max host limit commands'
+                        ;
+            list num {
+              description 'Max host limit commands'
+                          ;
+              max-elements 2048 ;
+              key group-addr ;
+              leaf group-addr {
+                description 'Group address'
+                            ;
+                type ncd:ipv4-address ;
+              }
+              leaf intf-num {
+                description 'Limit interface number'
+                            ;
+                type uint32 {
+                  range 1..64 {
+                    description 'Interface number'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+          }
+          container ssm-maps {
+            description 'SSM mapping commands'
+                        ;
+            container acls {
+              description 'SSM group'
+                          ;
+              list acl {
+                description 'SSM mapping commands'
+                            ;
+                max-elements 1000 ;
+                key 'acl-name src-addr'
+                    ;
+                leaf acl-name {
+                  description 'SSM group named access list (1-31 characters)'
+                              ;
+                  type string {
+                    length 1..31 {
+                      description 'Access list to specify groups'
+                                  ;
+                    }
+                  }
+                }
+                leaf src-addr {
+                  description 'SSM source address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+              }
+            }
+            container defaults {
+              description 'SSM group'
+                          ;
+              list default {
+                description 'SSM mapping commands'
+                            ;
+                max-elements 1000 ;
+                key 'src-addr default'
+                    ;
+                leaf src-addr {
+                  description 'SSM source address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf default {
+                  description 'Default SSM group'
+                              ;
+                  type uint8 {
+                    range 1 {
+                      description 'Default SSM group'
+                                  ;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          container interfaces {
+            description 'Select an interface to configure'
+                        ;
+            list interface {
+              description 'Select an interface to configure'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'Interface name'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Interface name'
+                                ;
+                  }
+                }
+              }
+              leaf access-group {
+                description 'IGMP access group'
+                            ;
+                type string {
+                  length 1..31 {
+                    description 'Access list name'
+                                ;
+                  }
+                }
+              }
+              leaf last-member-query-interval {
+                description 'IGMP last member query interval'
+                            ;
+                type uint32 {
+                  range 1..25 {
+                    description 'Last member query interval(second)'
+                                ;
+                  }
+                }
+                units second ;
+                default 1 ;
+              }
+              leaf maximum-joins {
+                description 'IGMP maximum joins'
+                            ;
+                type uint32 {
+                  range 1..40000 {
+                    description 'Max allowed joins on this interface'
+                                ;
+                  }
+                }
+              }
+              leaf querier-timeout {
+                description 'IGMP previous querier timeout'
+                            ;
+                type uint32 {
+                  range 60..300 {
+                    description 'Timeout value(second)'
+                                ;
+                  }
+                }
+                units second ;
+                default 255 ;
+              }
+              leaf query-interval {
+                description 'IGMP host query interval'
+                            ;
+                type uint32 {
+                  range 1..65535 {
+                    description 'Query interval(second)'
+                                ;
+                  }
+                }
+                units second ;
+                default 125 ;
+              }
+              leaf query-max-response-time {
+                description 'IGMP max query response value'
+                            ;
+                type uint32 {
+                  range 1..25 {
+                    description 'Query response value(second)'
+                                ;
+                  }
+                }
+                units second ;
+                default 10 ;
+              }
+              leaf robustness-count {
+                description 'IGMP robustness count'
+                            ;
+                type uint32 {
+                  range 2..7 {
+                    description 'Robustness count'
+                                ;
+                  }
+                }
+                default 2 ;
+              }
+              leaf shaping-packets-number {
+                description 'IGMP shaping'
+                            ;
+                type uint32 {
+                  range 1..4294967295 {
+                    description 'Max allowed packets on this interface'
+                                ;
+                  }
+                }
+              }
+              leaf version {
+                description 'IGMP version'
+                            ;
+                type uint32 {
+                  range 1..3 {
+                    description '1  Version 1
+2  Version 2
+3  Version 3'
+                                ;
+                  }
+                }
+                default 2 ;
+              }
+              leaf proxy-service {
+                description 'IGMP proxy service'
+                            ;
+                type empty ;
+              }
+              leaf old-querier-present {
+                description 'IGMP older version querier present timeout'
+                            ;
+                type uint32 {
+                  range 60..32000 {
+                    description 'Older version querier present(second)'
+                                ;
+                  }
+                }
+                units second ;
+                default 400 ;
+              }
+              leaf report-interval {
+                description 'IGMP unsolicited report interval'
+                            ;
+                type uint32 {
+                  range 1..25 {
+                    description 'Unsolicited report interval(second)'
+                                ;
+                  }
+                }
+                units second ;
+                default 1 ;
+              }
+              leaf ip-source-check {
+                description 'IGMP check ip source address'
+                            ;
+                type empty ;
+              }
+              leaf access-ip-source {
+                description 'Access ip source filter.'
+                            ;
+                type string {
+                  length 1..31 ;
+                }
+                ncd:revise-date 2019-07-15 ;
+              }
+              leaf specific-query-ignore {
+                description 'Specific query ignore.'
+                            ;
+                type empty ;
+                ncd:revise-date 2019-07-15 ;
+              }
+              leaf startup-query-interval {
+                description 'Startup query interval.'
+                            ;
+                type uint32 {
+                  range 1..18000 ;
+                }
+                units second ;
+                default 31 ;
+                ncd:revise-date 2019-07-15 ;
+              }
+              leaf startup-query-count {
+                description 'Startup query count.'
+                            ;
+                type uint32 {
+                  range 1..10 ;
+                }
+                default 2 ;
+                ncd:revise-date 2019-07-15 ;
+              }
+              leaf sibtp-service {
+                description 'IGMP enable SIBTP service'
+                            ;
+                type empty ;
+                ncd:revise-date 2021-04-24 ;
+              }
+              leaf sibtp-instance-id {
+                description 'IGMP SIBTP instance ID.'
+                            ;
+                type uint32 {
+                  range 1..16 ;
+                }
+                ncd:revise-date 2022-10-12 ;
+              }
+              container igmp-proxy {
+                description 'IGMP proxy interface'
+                            ;
+                presence 'up if name'
+                         ;
+                leaf up-if-name {
+                  description 'Up interface name'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 {
+                      description 'Interface name'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+              container mroute-proxy {
+                description 'Mroute proxy interface'
+                            ;
+                presence 'up if name'
+                         ;
+                leaf up-if-name {
+                  description 'Up interface name'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 {
+                      description 'Interface name'
+                                  ;
+                    }
+                  }
+                  mandatory true ;
+                }
+              }
+              container static-groups {
+                status obsolete {
+                  ncd:revise-date 2015-07-01 ;
+                }
+                description 'IGMP static multicast group'
+                            ;
+                list static-group {
+                  description 'IGMP multicast group'
+                              ;
+                  max-elements 65535 ;
+                  key 'group source ssm-map static-flag'
+                      ;
+                  leaf group {
+                    description 'IP group address'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                  leaf source {
+                    description 'IP source address'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                  leaf ssm-map {
+                    description 'Get source via SSM mapping'
+                                ;
+                    type uint32 {
+                      range 0..1 ;
+                    }
+                  }
+                  leaf static-flag {
+                    description 'Static group'
+                                ;
+                    type uint32 {
+                      range 1..2 {
+                        description '1 static-group
+1 join-group'
+                                    ;
+                      }
+                    }
+                  }
+                  leaf filter-mode {
+                    description '0 No filter mode
+3 Include
+4 Exclude'
+                                ;
+                    type uint32 {
+                      range 0..4 {
+                        description '0 no filter mode
+3 include
+4 exclude'
+                                    ;
+                      }
+                    }
+                  }
+                }
+              }
+              container immediate-leaves {
+                description 'Leave groups immediately'
+                            ;
+                choice immediate-leave {
+                  description 'Leave groups immediately'
+                              ;
+                  case acls {
+                    description 'Leave groups immediately without sending last '
+                              + 'member query'
+                                ;
+                    leaf acl {
+                      description 'Leave groups immediately without sending las'
+                                + 't member query'
+                                  ;
+                      type string {
+                        length 1..31 {
+                          description 'immediate acl'
+                                      ;
+                        }
+                      }
+                    }
+                  }
+                  case alls {
+                    description 'Leave All groups immediately'
+                                ;
+                    leaf all {
+                      description 'Leave All groups immediately'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+              }
+              container querier-elections {
+                description 'IGMP querier election'
+                            ;
+                choice querier-election {
+                  description 'IGMP querier election'
+                              ;
+                  case disables {
+                    description 'IGMP querier election disable'
+                                ;
+                    leaf disable {
+                      description 'IGMP querier election disable'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                  case connects {
+                    description 'IGMP querier election in the same lan'
+                                ;
+                    leaf connect {
+                      description 'IGMP querier election in the same lan'
+                                  ;
+                      type empty ;
+                    }
+                  }
+                }
+              }
+              container static-group {
+                description 'IGMP static multicast group'
+                            ;
+                list groups {
+                  description 'IGMP multicast group'
+                              ;
+                  max-elements 65535 ;
+                  key 'group source ssm-map static-flag inc-mask'
+                      ;
+                  leaf group {
+                    description 'IP group address'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                  leaf source {
+                    description 'IP source address'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                  leaf ssm-map {
+                    description 'Get source via SSM mapping'
+                                ;
+                    type uint32 {
+                      range 0..1 {
+                        description 'SSM static group to source mapping'
+                                    ;
+                      }
+                    }
+                  }
+                  leaf static-flag {
+                    description 'IGMP static multicast group or join multicast '
+                              + 'group'
+                                ;
+                    type enumeration {
+                      enum static-group {
+                        value 1 ;
+                      }
+                      enum join-group {
+                        value 2 ;
+                      }
+                    }
+                  }
+                  leaf inc-mask {
+                    description 'Increment mask for group address'
+                                ;
+                    type ncd:ipv4-address ;
+                  }
+                  leaf filter-mode {
+                    description 'Filter mode'
+                                ;
+                    type enumeration {
+                      enum no-mode {
+                        value 0 ;
+                      }
+                      enum include {
+                        value 3 ;
+                      }
+                      enum exclude {
+                        value 4 ;
+                      }
+                    }
+                  }
+                  leaf count {
+                    description 'Number of group addresses to join'
+                                ;
+                    type uint32 {
+                      range 1..512 ;
+                    }
+                  }
+                }
+                ncd:revise-date 2015-07-01 ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model.'
+                ;
+    container igmp {
+      description 'IGMP state model.'
+                  ;
+      container public {
+        description 'Show IGMP information.'
+                    ;
+        container proxy-groups {
+          description 'IGMP proxy information.'
+                      ;
+          list proxy-group {
+            description 'IGMP proxy information.'
+                        ;
+            key 'intf-name group-address'
+                ;
+            leaf intf-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 ;
+              }
+            }
+            leaf group-address {
+              description 'IGMP group membership information.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf uptime {
+              description 'Proxy group uptime.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            ncd:select 'intf-name group-address'
+                       ;
+            ncd:select intf-name ;
+            ncd:select group-address ;
+          }
+        }
+        container group-summary {
+          description 'IGMP groups summary.'
+                      ;
+          container all-intf {
+            description 'IGMP groups summary.'
+                        ;
+            leaf static {
+              description 'Static group summary.'
+                          ;
+              type uint32 ;
+            }
+            leaf join {
+              description 'Dynamic join group summary.'
+                          ;
+              type uint32 ;
+            }
+            leaf total {
+              description 'Show all group summary.'
+                          ;
+              type uint32 ;
+            }
+          }
+          container intfs {
+            description 'Show interface summary.'
+                        ;
+            list intf {
+              description 'Show interface summary.'
+                          ;
+              key intf-name ;
+              leaf intf-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Interface name.'
+                                ;
+                  }
+                }
+              }
+              leaf static {
+                description 'Static group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf join {
+                description 'Dynamic join group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf total {
+                description 'Show all group summary.'
+                            ;
+                type uint32 ;
+              }
+            }
+          }
+        }
+        container group-details {
+          description 'IGMP group membership information.'
+                      ;
+          list group {
+            description 'IGMP group membership information.'
+                        ;
+            key 'intf-name group-addr'
+                ;
+            leaf intf-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name.'
+                              ;
+                }
+              }
+            }
+            leaf group-addr {
+              description 'Group address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf last-reporter {
+              description 'Last reporter.'
+                          ;
+              type string {
+                length 0..39 ;
+              }
+            }
+            leaf uptime {
+              description 'Group membership uptime.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf expire {
+              description 'If the version is IGMPv2 or IGMPv1, this leaf is the'
+                        + ' expire time of group membership,'+"\n"
+                        + 'else it is the expire time of group exclude model.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf group-flags {
+              description 'Group flags.S-static group,SSM-SSM group,M-MDT group'
+                        + ',R-report group,B-SIBTP group.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf group-mode {
+              description 'Group mode.EXCLUDE-exclude mode,INCLUDE-include mode.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            container sources {
+              description 'Source information.'
+                          ;
+              list source {
+                description 'Source information.'
+                            ;
+                key source-addr ;
+                leaf source-addr {
+                  description 'Source address.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf source-present {
+                  description 'Source present time.'
+                              ;
+                  type ncd:string-all {
+                    length 0..15 ;
+                  }
+                }
+                leaf source-expire {
+                  description 'Source expire time.'
+                              ;
+                  type ncd:string-all {
+                    length 0..15 ;
+                  }
+                }
+                leaf fwd {
+                  description 'Forward flag.YES-forward,NO-not forward.'
+                              ;
+                  type ncd:string-all {
+                    length 0..7 ;
+                  }
+                }
+                leaf source-flag {
+                  description 'Source flag.S-Static source,M-Mapping source,R-R'
+                            + 'eport source,B-SIBTP source.'
+                              ;
+                  type ncd:string-all {
+                    length 0..7 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+        container groups {
+          description 'IGMP group membership information.'
+                      ;
+          list group {
+            description 'IGMP group membership information.'
+                        ;
+            key 'intf-name group-addr'
+                ;
+            leaf intf-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name.'
+                              ;
+                }
+              }
+            }
+            leaf group-addr {
+              description 'Group address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf last-reporter {
+              description 'Last reporter.'
+                          ;
+              type string {
+                length 0..39 ;
+              }
+              ncd:revise-date 2015-06-03 ;
+            }
+            leaf present {
+              description 'Group membership uptime.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf expire {
+              description 'If the version is IGMPv2 or IGMPv1, this leaf is the'
+                        + ' expire time of group membership,'+"\n"
+                        + 'else it is the expire time of group exclude model.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            ncd:select 'intf-name group-addr'
+                       ;
+            ncd:select intf-name ;
+            ncd:select group-addr ;
+          }
+        }
+        container interfaces {
+          description 'IGMP interface information.'
+                      ;
+          list interface {
+            description 'IGMP interface information.'
+                        ;
+            key if-name ;
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name.'
+                              ;
+                }
+              }
+            }
+            leaf if-addr {
+              description 'Interface address.'
+                          ;
+              type string {
+                length 0..39 ;
+              }
+            }
+            leaf mask-len {
+              description 'Mask length.'
+                          ;
+              type uint32 {
+                range 0..32 ;
+              }
+            }
+            leaf igmp-flag {
+              description 'IGMP enable.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf version {
+              description Version. ;
+              type uint32 {
+                range 1..3 ;
+              }
+            }
+            leaf older-querier-timeout {
+              description 'IGMP older version querier timeout.'
+                          ;
+              type uint32 {
+                range 60..32000 ;
+              }
+              units second ;
+            }
+            leaf unsolicited-report {
+              description 'IGMP unsolicited report interval.'
+                          ;
+              type uint32 {
+                range 1..25 ;
+              }
+              units second ;
+            }
+            leaf query-interval {
+              description 'IGMP query interval.'
+                          ;
+              type uint32 {
+                range 1..65535 ;
+              }
+              units second ;
+            }
+            leaf old-router {
+              description 'The version of the old router.'+"\n"
+                        + 'v1:When the IGMP version of the interface is 3 or 2 '
+                        + 'and an IGMPv1 membership query is received, the valu'
+                        + 'e of the node is v1.'+"\n"
+                        + 'v2:When the IGMP version of the interface is 3 and a'
+                        + 'n IGMPv2 rather than IGMPv1 membership query is rece'
+                        + 'ived, the value of the node is v2.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf querier-phase {
+              description 'Router in startup phase.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf last-member-query {
+              description 'IGMP last member query interval.'
+                          ;
+              type uint32 {
+                range 1..25 ;
+              }
+              units second ;
+            }
+            leaf query-max-response {
+              description 'IGMP query max response time.'
+                          ;
+              type uint32 {
+                range 1..25 ;
+              }
+              units second ;
+            }
+            leaf querier-timeout {
+              description 'IGMP querier timeout period.'
+                          ;
+              type uint32 ;
+              units second ;
+            }
+            leaf robustness-variable {
+              description 'IGMP robustness variable.'
+                          ;
+              type uint32 {
+                range 2..7 ;
+              }
+            }
+            leaf querier {
+              description 'IGMP querier.'
+                          ;
+              type string {
+                length 0..39 ;
+              }
+            }
+            leaf expire {
+              description 'Other querier timeout.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf acl-name {
+              description 'Inbound IGMP access group.'
+                          ;
+              type ncd:string-all {
+                length 0..31 ;
+              }
+            }
+            leaf immediate-leave {
+              description 'IGMP immediate leave.'
+                          ;
+              type ncd:string-all {
+                length 0..36 ;
+              }
+            }
+            leaf shaping-value {
+              description 'IGMP shaping packets number.'
+                          ;
+              type uint32 {
+                range 1..4294967295 ;
+              }
+            }
+            leaf maximum-joins {
+              description 'IGMP maximum joins.'
+                          ;
+              type uint32 {
+                range 1..40000 ;
+              }
+            }
+          }
+        }
+        container packet {
+          description 'IGMP received or sent protocol packet.'
+                      ;
+          container all-intf {
+            description 'IGMP received or sent protocol packet.'
+                        ;
+            leaf rec-query {
+              description 'Received query counts'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-query {
+              description 'Sent query counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-leave {
+              description 'Received leave counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-leave {
+              description 'Sent leave counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-reportv1 {
+              description 'Received reportV1 counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-reportv1 {
+              description 'Sent reportV1 counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-reportv2 {
+              description 'Received reportV2 counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-reportv2 {
+              description 'Sent reportV2 counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-reportv3 {
+              description 'Received reportV3 counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-reportv3 {
+              description 'Sent reportV3 counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-spec-query {
+              description 'Sent special query counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-spec-src-query {
+              description 'Sent special source query counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-dropped {
+              description 'Received dropped counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-invalid {
+              description 'Received invalid counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf rec-total {
+              description 'Received total counts.'
+                          ;
+              type uint32 ;
+            }
+            leaf sent-total {
+              description 'Sent total counts.'
+                          ;
+              type uint32 ;
+            }
+          }
+          container intfs {
+            description 'IGMP receive or sent protocol packet in one interface.'
+                        ;
+            list intf {
+              description 'IGMP received or sent protocol packet in one interfa'
+                        + 'ce.'
+                          ;
+              key if-name ;
+              leaf if-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Interface name.'
+                                ;
+                  }
+                }
+              }
+              leaf rec-query {
+                description 'Received query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-query {
+                description 'Sent query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-leave {
+                description 'Received leave counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-leave {
+                description 'Sent leave counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv1 {
+                description 'Received reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv1 {
+                description 'Sent reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv2 {
+                description 'Received reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv2 {
+                description 'Sent reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv3 {
+                description 'Received reportV3 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv3 {
+                description 'Sent reportV3 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-query {
+                description 'Sent special query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-src-query {
+                description 'Sent special source query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-dropped {
+                description 'Received dropped counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-invalid {
+                description 'Received invalid counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-total {
+                description 'Received total counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-total {
+                description 'Sent total counts.'
+                            ;
+                type uint32 ;
+              }
+            }
+          }
+        }
+      }
+      container private {
+        description 'Show IGMP VRF information.'
+                    ;
+        container proxy-groups {
+          description 'IGMP proxy information.'
+                      ;
+          list proxy-group {
+            description 'IGMP proxy information.'
+                        ;
+            key 'vrf-name if-name group-address'
+                ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'VRF name.'
+                              ;
+                }
+              }
+            }
+            leaf if-name {
+              description 'IGMP interface information.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name.'
+                              ;
+                }
+              }
+            }
+            leaf group-address {
+              description 'IGMP group membership information.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf uptime {
+              description 'Proxy group uptime.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+          }
+        }
+        container group-summary {
+          description 'IGMP groups summary.'
+                      ;
+          list summary {
+            description 'IGMP groups summary.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'VRF name.'
+                              ;
+                }
+              }
+            }
+            container all-intfs {
+              description 'IGMP groups summary.'
+                          ;
+              leaf static {
+                description 'Static group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf join {
+                description 'Dynamic join group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf total {
+                description 'show all group summary.'
+                            ;
+                type uint32 ;
+              }
+            }
+            list interface {
+              description 'Show interface summary.'
+                          ;
+              key intf-name ;
+              leaf intf-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Interface name.'
+                                ;
+                  }
+                }
+              }
+              leaf static {
+                description 'Static group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf join {
+                description 'Dynamic join group summary.'
+                            ;
+                type uint32 ;
+              }
+              leaf total {
+                description 'show all group summary.'
+                            ;
+                type uint32 ;
+              }
+            }
+            ncd:revise-date 2015-06-03 ;
+          }
+        }
+        container groups {
+          description 'IGMP group membership information.'
+                      ;
+          list group {
+            description 'IGMP group membership information.'
+                        ;
+            key 'vrf-name intf-name group-addr'
+                ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'VRF name.'
+                              ;
+                }
+              }
+            }
+            leaf intf-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name.'
+                              ;
+                }
+              }
+            }
+            leaf group-addr {
+              description 'Group address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf last-reporter {
+              description 'Last reporter.'
+                          ;
+              type string {
+                length 0..39 ;
+              }
+              ncd:revise-date 2015-06-03 ;
+            }
+            leaf present {
+              description 'Group membership uptime.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf expire {
+              description 'If the version is IGMPv2 or IGMPv1, this leaf is the'
+                        + ' expire time of group membership,'+"\n"
+                        + 'else it is the expire time of group exclude model.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+          }
+        }
+        container interfaces {
+          description 'IGMP interface information.'
+                      ;
+          list interface {
+            description 'IGMP interface information.'
+                        ;
+            key 'vrf-name if-name'
+                ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'VRF name.'
+                              ;
+                }
+              }
+            }
+            leaf if-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name.'
+                              ;
+                }
+              }
+            }
+            leaf if-addr {
+              description 'Interface address.'
+                          ;
+              type string {
+                length 0..39 ;
+              }
+            }
+            leaf mask-len {
+              description 'Mask length.'
+                          ;
+              type uint32 {
+                range 0..32 ;
+              }
+            }
+            leaf igmp-flag {
+              description 'IGMP enable.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf version {
+              description Version ;
+              type uint32 {
+                range 1..3 ;
+              }
+            }
+            leaf older-querier-timeout {
+              description 'IGMP older version querier timeout.'
+                          ;
+              type uint32 {
+                range 60..32000 ;
+              }
+              units second ;
+            }
+            leaf unsolicited-report {
+              description 'IGMP unsolicited report interval.'
+                          ;
+              type uint32 {
+                range 1..25 ;
+              }
+              units second ;
+            }
+            leaf query-interval {
+              description 'IGMP query interval.'
+                          ;
+              type uint32 {
+                range 1..65535 ;
+              }
+              units second ;
+            }
+            leaf old-router {
+              description 'The version of the old router.'+"\n"
+                        + 'v1:When the IGMP version of the interface is 3 or 2 '
+                        + 'and an IGMPv1 membership query is received, the valu'
+                        + 'e of the node is v1.'+"\n"
+                        + 'v2:When the IGMP version of the interface is 3 and a'
+                        + 'n IGMPv2 rather than IGMPv1 membership query is rece'
+                        + 'ived, the value of the node is v2.'
+                          ;
+              type ncd:string-all ;
+            }
+            leaf querier-phase {
+              description 'Router in startup phase.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf last-member-query {
+              description 'IGMP last member query interval.'
+                          ;
+              type uint32 {
+                range 1..25 ;
+              }
+              units second ;
+            }
+            leaf query-max-response {
+              description 'IGMP query max response time.'
+                          ;
+              type uint32 {
+                range 1..25 ;
+              }
+              units second ;
+            }
+            leaf querier-timeout {
+              description 'IGMP querier timeout period.'
+                          ;
+              type uint32 ;
+              units second ;
+            }
+            leaf robustness-variable {
+              description 'IGMP robustness variable.'
+                          ;
+              type uint32 {
+                range 2..7 ;
+              }
+            }
+            leaf querier {
+              description 'IGMP querier.'
+                          ;
+              type string {
+                length 0..39 ;
+              }
+            }
+            leaf expire {
+              description 'Other querier timeout.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf acl-name {
+              description 'Inbound IGMP access group.'
+                          ;
+              type ncd:string-all {
+                length 0..31 ;
+              }
+            }
+            leaf immediate-leave {
+              description 'IGMP immediate leave.'
+                          ;
+              type ncd:string-all {
+                length 0..36 ;
+              }
+            }
+            leaf shaping-value {
+              description 'IGMP shaping packets number.'
+                          ;
+              type uint32 {
+                range 1..4294967295 ;
+              }
+            }
+            leaf maximum-joins {
+              description 'IGMP maximum joins.'
+                          ;
+              type uint32 {
+                range 1..40000 ;
+              }
+            }
+          }
+        }
+        container packets {
+          description 'IGMP received or sent protocol packet.'
+                      ;
+          list packet {
+            description 'IGMP received or sent protocol packet.'
+                        ;
+            key vrf-name ;
+            leaf vrf-name {
+              description 'VRF name'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'Vrf name'
+                              ;
+                }
+              }
+            }
+            container all-intf {
+              description 'IGMP received or sent protocol packet.'
+                          ;
+              leaf rec-query {
+                description 'Received query counts'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-query {
+                description 'Sent query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-leave {
+                description 'Received leave counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-leave {
+                description 'Sent leave counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv1 {
+                description 'Received reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv1 {
+                description 'Sent reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv2 {
+                description 'Received reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv2 {
+                description 'Sent reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv3 {
+                description 'Received reportV3 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv3 {
+                description 'Sent reportV3 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-query {
+                description 'Sent special query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-src-query {
+                description 'Sent special source query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-dropped {
+                description 'Received dropped counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-invalid {
+                description 'Received invalid counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-total {
+                description 'Received total counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-total {
+                description 'Sent total counts.'
+                            ;
+                type uint32 ;
+              }
+            }
+            list intf {
+              description 'IGMP received or sent protocol packet in one interfa'
+                        + 'ce.'
+                          ;
+              key intf-name ;
+              leaf intf-name {
+                description 'Interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Interface name.'
+                                ;
+                  }
+                }
+              }
+              leaf rec-query {
+                description 'Received query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-query {
+                description 'Sent query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-leave {
+                description 'Received leave counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-leave {
+                description 'Sent leave counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv1 {
+                description 'Received reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv1 {
+                description 'Sent reportV1 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv2 {
+                description 'Received reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv2 {
+                description 'Sent reportV2 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-reportv3 {
+                description 'Received reportV3 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-reportv3 {
+                description 'Sent reportV3 counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-query {
+                description 'Sent special query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-spec-src-query {
+                description 'Sent special source query counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-dropped {
+                description 'Received dropped counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-invalid {
+                description 'Received invalid counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf rec-total {
+                description 'Received total counts.'
+                            ;
+                type uint32 ;
+              }
+              leaf sent-total {
+                description 'Sent total counts.'
+                            ;
+                type uint32 ;
+              }
+            }
+          }
+          ncd:revise-date 2015-06-03 ;
+        }
+        container group-details {
+          description 'IGMP group membership information.'
+                      ;
+          list group {
+            description 'IGMP group membership information.'
+                        ;
+            key 'vrf-name intf-name group-addr'
+                ;
+            leaf vrf-name {
+              description 'VRF name.'
+                          ;
+              type string {
+                length 1..32 {
+                  description 'VRF name.'
+                              ;
+                }
+              }
+            }
+            leaf intf-name {
+              description 'Interface name.'
+                          ;
+              type ncd:ifname {
+                length 1..31 {
+                  description 'Interface name.'
+                              ;
+                }
+              }
+            }
+            leaf group-addr {
+              description 'Group address.'
+                          ;
+              type ncd:ipv4-address ;
+            }
+            leaf last-reporter {
+              description 'Last reporter.'
+                          ;
+              type string {
+                length 0..39 ;
+              }
+            }
+            leaf uptime {
+              description 'Group membership uptime.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf expire {
+              description 'If the version is IGMPv2 or IGMPv1, this leaf is the'
+                        + ' expire time of group membership,'+"\n"
+                        + 'else it is the expire time of group exclude model.'
+                          ;
+              type ncd:string-all {
+                length 0..15 ;
+              }
+            }
+            leaf group-flags {
+              description 'Group flags.S-static group,SSM-SSM group,M-MDT group'
+                        + ',R-report group,B-SIBTP group.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            leaf group-mode {
+              description 'Group mode.EXCLUDE-exclude mode,INCLUDE-include mode.'
+                          ;
+              type ncd:string-all {
+                length 0..7 ;
+              }
+            }
+            container sources {
+              description 'Source information.'
+                          ;
+              list source {
+                description 'Source information.'
+                            ;
+                key source-addr ;
+                leaf source-addr {
+                  description 'Source address.'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+                leaf source-present {
+                  description 'Source present time.'
+                              ;
+                  type ncd:string-all {
+                    length 0..15 ;
+                  }
+                }
+                leaf source-expire {
+                  description 'Source expire time.'
+                              ;
+                  type ncd:string-all {
+                    length 0..15 ;
+                  }
+                }
+                leaf fwd {
+                  description 'Forward flag.YES-forward,NO-not forward.'
+                              ;
+                  type ncd:string-all {
+                    length 0..7 ;
+                  }
+                }
+                leaf source-flag {
+                  description 'Source flag.S-Static source,M-Mapping source,R-R'
+                            + 'eport source,B-SIBTP source.'
+                              ;
+                  type ncd:string-all {
+                    length 0..7 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    ncd:revise-date 2015-03-31 ;
+  }
+  container operation {
+    config false ;
+    description 'Operation state.'
+                ;
+    container igmp {
+      description 'IGMP operation model.'
+                  ;
+      container clear {
+        description 'Delete operation.'
+                    ;
+        container public {
+          description 'Delete IGMP information.'
+                      ;
+          container packet-counts {
+            description 'Delete IGMP packet counts.'
+                        ;
+            container intf {
+              description 'Delete IGMP packet in one interface.'
+                          ;
+              list interface {
+                description 'Delete IGMP packet in one interface.'
+                            ;
+                key intf-name ;
+                leaf intf-name {
+                  description 'Interface name.'
+                              ;
+                  type ncd:ifname ;
+                }
+              }
+            }
+            container all-intf {
+              description 'Delete all IGMP packet counts.'
+                          ;
+              leaf cmd-index {
+                description 'Command index.'
+                            ;
+                type empty ;
+              }
+            }
+          }
+          container groups {
+            description 'Delete IGMP group counts entries.'
+                        ;
+            container intf {
+              description 'Delete IGMP group counts in one interface.'
+                          ;
+              list interface {
+                description 'Delete IGMP group counts in one interface.'
+                            ;
+                key intf-name ;
+                leaf intf-name {
+                  description 'Interface name.'
+                              ;
+                  type ncd:ifname ;
+                }
+              }
+            }
+            container all-intf {
+              description 'Delete all IGMP group counts.'
+                          ;
+              leaf cmd-index {
+                description 'Command index.'
+                            ;
+                type empty ;
+              }
+            }
+          }
+        }
+        container private {
+          description 'Delete IGMP VRF information.'
+                      ;
+          container packet-counts {
+            description 'Delete IGMP packet counts.'
+                        ;
+            container intf {
+              description 'Delete IGMP packet in one interface.'
+                          ;
+              list interface {
+                description 'Delete IGMP packet in one interface.'
+                            ;
+                key 'vrf-name intf-name'
+                    ;
+                leaf vrf-name {
+                  description 'VRF name'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                leaf intf-name {
+                  description 'Interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                ncd:select 'vrf-name intf-name'
+                           ;
+              }
+            }
+            container all-intf {
+              description 'Delete all IGMP packet counts.'
+                          ;
+              list all {
+                description 'Delete all IGMP packet counts in one vrf.'
+                            ;
+                key vrf-name ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+              }
+            }
+          }
+          container groups {
+            description 'Delete IGMP group cache entries.'
+                        ;
+            container intf {
+              description 'Delete IGMP group cache in one interface.'
+                          ;
+              list interface {
+                description 'Delete IGMP group cache in one interface.'
+                            ;
+                key 'vrf-name intf-name'
+                    ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+                leaf intf-name {
+                  description 'Interface name.'
+                              ;
+                  type ncd:ifname {
+                    length 1..31 ;
+                  }
+                }
+                ncd:select 'vrf-name intf-name'
+                           ;
+              }
+            }
+            container all-intf {
+              description 'Delete all IGMP group counts.'
+                          ;
+              list all {
+                description 'Delete all IGMP group counts.'
+                            ;
+                key vrf-name ;
+                leaf vrf-name {
+                  description 'VRF name.'
+                              ;
+                  type string {
+                    length 1..32 ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    ncd:revise-date 2015-03-31 ;
+  }
+}

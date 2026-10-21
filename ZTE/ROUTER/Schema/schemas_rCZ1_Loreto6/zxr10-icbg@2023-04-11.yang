@@ -1,0 +1,366 @@
+module zxr10-icbg {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/icbg" ;
+  prefix icbg ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation  
+     Nanjing Institute of ZTE Corporation 
+     No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China 
+     Tel: +86-25-52870000" ;
+  description 'The netconf module to describe the ICBG(Inter-Chassis Backup Group).' ;
+  revision 2023-04-11 {
+    description 'Delete the default value of the leaf configuration/icbg/icbg-instances/icbg-instance/sibtp, and modify its description' ;
+  }
+
+  revision 2022-10-20 {
+    description 'Add leaf /configuration/icbg/icbg-instances/icbg-instance/sibtp-instances/instance-id/instance-id' ;
+  }
+
+  revision 2021-07-01 {
+    description "Modify the status of'configuration/icbg/icbg-groups/icbg-group/slave-port' as obsolete
+    Add leaf /configuration/icbg/icbg-groups/icbg-group/sync-mode" ;
+  }
+
+  revision 2020-06-24 {
+    description 'Add /configuration/icbg/icbg-groups' ;
+  }
+
+  revision 2020-05-08 {
+    description 'Add leaf /configuration/icbg/icbg-instances/icbg-instance/sibtp
+Add leaf /configuration/icbg/icbg-instances/icbg-instance/icbg-dscp' ;
+  }
+
+  revision 2020-04-08 {
+    description 'Add container /configuration/icbg/icbg-instances/icbg-instance/slave-port and feature:slave-interface.' ;
+  }
+
+  revision 2019-12-17 {
+    description 'Add container /configuration/icbg/icbg-instances/icbg-instance/share-port and feature:share-interface.' ;
+  }
+
+  revision 2015-02-09 {
+    description "Modify the mandatory of'configuration/icbg/icbg-instances/icbg-instance/track-name' as false" ;
+  }
+
+  revision 2013-11-12 {
+    description 'Initial version' ;
+  }
+
+  feature share-interface {
+    description 'Share interface configuration.' ;
+  }
+
+  feature slave-interface {
+    description 'Slave interface configuration.' ;
+  }
+
+  feature icbg-group {
+    description 'ICBG-group configuration.' ;
+  }
+
+  typedef bind-type {
+    description 'Bind type.0:unbound,1:bound.' ;
+    type enumeration {
+      enum unbound {
+        value 0 ;
+      }
+
+      enum bound {
+        value 1 ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'Configuration model info.' ;
+    container icbg {
+      description 'ICBG(Inter-Chassis Backup Group) module.' ;
+      container icbg-instances {
+        description 'The ICBG instances.' ;
+        list icbg-instance {
+          description 'The ICBG instance.' ;
+          key "icbg-name" ;
+          leaf icbg-name {
+            description 'The name of ICBG.' ;
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          leaf rg-id {
+            description 'The ID of redundancy group.' ;
+            type uint32 {
+              range 1..4294967295 ;
+
+            }
+
+          }
+
+          leaf interval {
+            description 'The interval of backup(minute).' ;
+            type uint32 {
+              range 5..1440 ;
+
+            }
+
+            units miniute ;
+            default 10 ;
+          }
+
+          leaf track-name {
+            description 'The name of track instance.' ;
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          leaf sibtp {
+            description 'Select SIBTP.  Its default value which is between [unbound, bound] and generally unbound, depends on product specification.' ;
+            type bind-type ;
+            ncd:revise-date 2020-05-08 ;
+          }
+
+          leaf icbg-dscp {
+            description 'The description of the ICBG instance.' ;
+            type ncd:string-with-blank {
+              length 1..63 {
+                description 'The length of ICBG instance description.' ;
+              }
+
+            }
+
+            ncd:revise-date 2020-05-08 ;
+          }
+
+          container port {
+            description 'ICBG bind interface.' ;
+            presence tt ;
+            leaf if-name {
+              description 'The interface name of ICBG.' ;
+              type ncd:ifname ;
+
+              mandatory true ;
+            }
+
+          }
+
+          container share-port {
+            if-feature share-interface ;
+
+            description 'ICBG bind share-interface.' ;
+            presence share-interface ;
+            leaf if-name {
+              description 'Share-interface name.' ;
+              type ncd:ifname ;
+
+              mandatory true ;
+            }
+
+            ncd:revise-date 2019-12-17 ;
+          }
+
+          container slave-port {
+            if-feature slave-interface ;
+
+            description 'ICBG bind slave-interface.' ;
+            presence slave-interface ;
+            leaf if-name {
+              description 'Slave-interface name.' ;
+              type ncd:ifname ;
+
+              mandatory true ;
+            }
+
+            ncd:revise-date 2020-04-08 ;
+          }
+
+          container sibtp-instances {
+            description 'Select sibtp instances ID.' ;
+            list sibtp-instance {
+              description 'sibtp instances ID.' ;
+              key "instance-id" ;
+              leaf instance-id {
+                description 'sibtp instance ID.' ;
+                type uint32 {
+                  range 1..16 ;
+
+                }
+
+              }
+
+            }
+
+            ncd:revise-date 2022-10-20 ;
+          }
+
+        }
+
+      }
+
+      container icbg-groups {
+        if-feature icbg-group ;
+
+        description 'The ICBG groups.' ;
+        list icbg-group {
+          description 'The ICBG group.' ;
+          key "icbg-group-name" ;
+          leaf icbg-group-name {
+            description 'The name of the ICBG group.' ;
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          leaf icbg-group-dscp {
+            description 'The description of the ICBG group.' ;
+            type ncd:string-with-blank {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf sync-mode {
+            description 'Configure icbg sync-mode type' ;
+            type enumeration {
+              enum bind-interface {
+                value 1 ;
+                description 'Select bind-interface mode' ;
+              }
+
+              enum peerlink-interface {
+                value 2 ;
+                description 'Select peerlink-interface mode' ;
+              }
+
+            }
+
+            ncd:revise-date 2021-07-01 ;
+          }
+
+          container ports {
+            description 'ICBG group bind interfaces.' ;
+            list port {
+              description 'ICBG group bind interface.' ;
+              key "if-name" ;
+              leaf if-name {
+                description 'The interface name.' ;
+                type ncd:ifname ;
+
+              }
+
+            }
+
+          }
+
+          container slave-port {
+            if-feature slave-interface ;
+
+            status obsolete {
+              ncd:revise-date 2021-07-01 ;
+            }
+
+            description 'ICBG group bind slave-interface.' ;
+            presence slave-interface ;
+            leaf if-name {
+              description 'The slave-interface name.' ;
+              type ncd:ifname ;
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2020-06-24 ;
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'Operation model info.' ;
+    container icbg {
+      description 'ICBG(Inter-Chassis Backup Group) module.' ;
+      list notify {
+        description 'notify ICBG backup.' ;
+        key "icbg-name" ;
+        leaf icbg-name {
+          description 'The name of ICBG.' ;
+          type string {
+            length 1..31 ;
+
+          }
+
+        }
+
+        leaf group-backup-immediately {
+          description 'Notify ICBG backup immediately.' ;
+          type empty ;
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State model info.' ;
+    container icbg {
+      description 'ICBG(Inter-Chassis Backup Group) module.' ;
+      list states {
+        description 'master or slave status of ICBG.' ;
+        key "icbg-name" ;
+        leaf icbg-name {
+          description 'The name of ICBG.' ;
+          type string {
+            length 1..31 ;
+
+          }
+
+        }
+
+        leaf status {
+          description 'The status of ICBG, master or slave.' ;
+          type enumeration {
+            enum master {
+              value 0 ;
+              description 'The master status' ;
+            }
+
+            enum slave {
+              value 1 ;
+              description 'The slave status' ;
+            }
+
+          }
+
+          mandatory true ;
+        }
+
+      }
+
+    }
+
+  }
+
+}

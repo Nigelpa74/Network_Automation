@@ -1,0 +1,481 @@
+module zxr10-clockmgr {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/clockmgr'
+            ;
+  prefix clockmgr ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe clock mgr.'
+              ;
+  revision 2019-05-20 {
+    description 'Add rpc:set-system-time.'
+                ;
+  }
+  revision 2017-10-23 {
+    description 'Add clockmgr:/operation/clock/clock-time-set/utc;'+"\n"
+              + 'Add clockmgr:/state/clock-utc-time-get.'
+                ;
+  }
+  revision 2015-04-01 {
+    description 'Add leaf:/clockmgr:/configuration/clock/summer-time/offset-sign'
+                ;
+  }
+  revision 2015-02-10 {
+    description 'Modify the timezone and summer-time-lists from list to contain'
+              + 'er.'
+                ;
+  }
+  revision 2014-05-07 {
+    description 'Modify the descriptions for these containers lists and leafs:'+"\n"
+              + '/clockmgr:configuration/clockmgr:clock/clockmgr:timezone-lists'
+              + ';'+"\n"
+              + '/clockmgr:configuration/clockmgr:clock/clockmgr:summer-time-li'
+              + 'sts;'+"\n"
+              + '/clockmgr:configuration/clockmgr:clock/clockmgr:summer-time-li'
+              + 'sts/clockmgr:summer-time/clockmgr:mode/clockmgr:abs-day/clockm'
+              + 'gr:time-start;'+"\n"
+              + '/clockmgr:configuration/clockmgr:clock/clockmgr:summer-time-li'
+              + 'sts/clockmgr:summer-time/clockmgr:mode/clockmgr:rec-week/clock'
+              + 'mgr:week-start;'+"\n"
+              + '/clockmgr:configuration/clockmgr:clock/clockmgr:summer-time-li'
+              + 'sts/clockmgr:summer-time/clockmgr:mode/clockmgr:rec-week/clock'
+              + 'mgr:weekday-start;'+"\n"
+              + '/clockmgr:configuration/clockmgr:clock/clockmgr:summer-time-li'
+              + 'sts/clockmgr:summer-time/clockmgr:mode/clockmgr:rec-week/clock'
+              + 'mgr:time-start;'+"\n"
+              + '/clockmgr:configuration/clockmgr:clock/clockmgr:summer-time-li'
+              + 'sts/clockmgr:summer-time/clockmgr:mode/clockmgr:rec-week/clock'
+              + 'mgr:week-end;'+"\n"
+              + '/clockmgr:configuration/clockmgr:clock/clockmgr:summer-time-li'
+              + 'sts/clockmgr:summer-time/clockmgr:mode/clockmgr:rec-week/clock'
+              + 'mgr:weekday-end;'+"\n"
+              + '/clockmgr:configuration/clockmgr:clock/clockmgr:summer-time-li'
+              + 'sts/clockmgr:summer-time/clockmgr:mode/clockmgr:rec-day/clockm'
+              + 'gr:time-start;'+"\n"
+              + '/clockmgr:operation/clockmgr:clock.'
+                ;
+  }
+  revision 2014-04-17 {
+    description 'Modify the length for the name of timezone and the name of sum'
+              + 'mer-time.'
+                ;
+  }
+  revision 2014-04-03 {
+    description 'Add units for max-threshold and offset of summer-time.'
+                ;
+  }
+  revision 2014-03-10 {
+    description 'Initial version.'
+                ;
+  }
+  container configuration {
+    description 'The configuration of clock.'
+                ;
+    container clock {
+      description 'The node of clock.'
+                  ;
+      container global {
+        description 'The node of clock global configuration.'
+                    ;
+        leaf ntp-priority {
+          description 'NTP priority,the range is 1-10.'
+                      ;
+          type uint8 {
+            range 1..10 ;
+          }
+          default 9 ;
+        }
+        leaf ptp-priority {
+          description 'PTP priority,the range is 1-10.'
+                      ;
+          type uint8 {
+            range 1..10 ;
+          }
+          default 10 ;
+        }
+        leaf max-threshold {
+          description 'Maximum threshold of sync-clock offset.'
+                      ;
+          type uint32 {
+            range 500..86400000 ;
+          }
+          units ms ;
+        }
+      }
+      container timezone {
+        description 'The configuration of time zone.'
+                    ;
+        presence timezone ;
+        leaf name {
+          description 'Name of time zone.'
+                      ;
+          type string {
+            length 1..32 ;
+          }
+          mandatory true ;
+        }
+        leaf hour {
+          description 'Hours offset from UTC.'
+                      ;
+          type int32 {
+            range -12..14 ;
+          }
+          default 0 ;
+        }
+        leaf minute {
+          description 'Minutes offset from UTC.'
+                      ;
+          type int32 {
+            range 0..59 ;
+          }
+          default 0 ;
+        }
+      }
+      container summer-time {
+        description 'The configuration of summer time.'
+                    ;
+        presence summertime ;
+        leaf name {
+          description 'Name of summer time.'
+                      ;
+          type string {
+            length 1..9 ;
+          }
+          mandatory true ;
+        }
+        leaf offset {
+          description 'Offset to add in minutes.'
+                      ;
+          type uint16 {
+            range 1..240 ;
+          }
+          units minute ;
+          default 60 ;
+        }
+        leaf offset-sign {
+          description 'Offset sign.'
+                      ;
+          type enumeration {
+            enum positive {
+              value 0 ;
+              description 'The offset sign is positive.'
+                          ;
+            }
+            enum negative {
+              value 1 ;
+              description 'The offset sign is negative.'
+                          ;
+            }
+          }
+          default positive ;
+          ncd:revise-date 2015-04-01 ;
+        }
+        choice mode {
+          description 'The mode of summer time configuration.'
+                      ;
+          case abs-day {
+            description 'The mode of absolute date:Year-Month-Day-Time.'
+                        ;
+            container abs-day {
+              description 'The mode of absolute date:Year-Month-Day-Time.'
+                          ;
+              leaf year-start {
+                description 'Year to start.'
+                            ;
+                type uint16 {
+                  range 2000..2037 ;
+                }
+              }
+              leaf month-start {
+                description 'Month to start.'
+                            ;
+                type uint8 {
+                  range 1..12 ;
+                }
+              }
+              leaf day-start {
+                description 'Day to start.'
+                            ;
+                type uint8 {
+                  range 1..31 ;
+                }
+              }
+              leaf time-start {
+                description 'Time to start.'
+                            ;
+                type ncd:summer-clock ;
+              }
+              leaf year-end {
+                description 'Year to end.'
+                            ;
+                type uint16 {
+                  range 2000..2037 ;
+                }
+              }
+              leaf month-end {
+                description 'Month to end.'
+                            ;
+                type uint8 {
+                  range 1..12 ;
+                }
+              }
+              leaf day-end {
+                description 'Day to end.'
+                            ;
+                type uint8 {
+                  range 1..31 ;
+                }
+              }
+              leaf time-end {
+                description 'Time to end.'
+                            ;
+                type ncd:summer-clock ;
+              }
+            }
+          }
+          case rec-week {
+            description 'The mode of recurring date:Month-Week-WeekDay-Time.'
+                        ;
+            container rec-week {
+              description 'The mode of recurring date:Month-Week-WeekDay-Time.'
+                          ;
+              leaf month-start {
+                description 'Month to start.'
+                            ;
+                type uint8 {
+                  range 1..12 ;
+                }
+              }
+              leaf week-start {
+                description 'Week to start.'
+                            ;
+                type enumeration {
+                  enum 1 {
+                    value 1 ;
+                  }
+                  enum 2 {
+                    value 2 ;
+                  }
+                  enum 3 {
+                    value 3 ;
+                  }
+                  enum 4 {
+                    value 4 ;
+                  }
+                  enum 5 {
+                    value 5 ;
+                  }
+                  enum first {
+                    value 11 ;
+                  }
+                  enum last {
+                    value 15 ;
+                  }
+                }
+              }
+              leaf weekday-start {
+                description 'Weekday to start.'
+                            ;
+                type uint8 {
+                  range 1..7 ;
+                }
+              }
+              leaf time-start {
+                description 'Time to start.'
+                            ;
+                type ncd:summer-clock ;
+              }
+              leaf month-end {
+                description 'Month to end.'
+                            ;
+                type uint8 {
+                  range 1..12 ;
+                }
+              }
+              leaf week-end {
+                description 'Week to end.'
+                            ;
+                type enumeration {
+                  enum 1 {
+                    value 1 ;
+                  }
+                  enum 2 {
+                    value 2 ;
+                  }
+                  enum 3 {
+                    value 3 ;
+                  }
+                  enum 4 {
+                    value 4 ;
+                  }
+                  enum 5 {
+                    value 5 ;
+                  }
+                  enum first {
+                    value 11 ;
+                  }
+                  enum last {
+                    value 15 ;
+                  }
+                }
+              }
+              leaf weekday-end {
+                description 'Weekday to end.'
+                            ;
+                type uint8 {
+                  range 1..7 ;
+                }
+              }
+              leaf time-end {
+                description 'Time to end.'
+                            ;
+                type ncd:summer-clock ;
+              }
+            }
+          }
+          case rec-day {
+            description 'The mode of recurring date:Month-Day-Time.'
+                        ;
+            container rec-day {
+              description 'The mode of recurring date:Month-Day-Time.'
+                          ;
+              leaf month-start {
+                description 'Month to start.'
+                            ;
+                type uint8 {
+                  range 1..12 ;
+                }
+              }
+              leaf day-start {
+                description 'Day to start.'
+                            ;
+                type uint8 {
+                  range 1..31 ;
+                }
+              }
+              leaf time-start {
+                description 'Time to start.'
+                            ;
+                type ncd:summer-clock ;
+              }
+              leaf month-end {
+                description 'Month to end.'
+                            ;
+                type uint8 {
+                  range 1..12 ;
+                }
+              }
+              leaf day-end {
+                description 'Day to end.'
+                            ;
+                type uint8 {
+                  range 1..31 ;
+                }
+              }
+              leaf time-end {
+                description 'Time to end.'
+                            ;
+                type ncd:summer-clock ;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container operation {
+    config false ;
+    description 'The operation of clock.'
+                ;
+    container clock {
+      description 'The node of clock.'
+                  ;
+      leaf sync-threshold-switch {
+        description 'The switch for sync-clock threshold.'
+                    ;
+        type uint8 {
+          range 0 ;
+        }
+      }
+      container clock-time-set {
+        description 'Set system time.'
+                    ;
+        presence false ;
+        leaf date {
+          description 'Current date.'
+                      ;
+          type ncd:date ;
+          mandatory true ;
+        }
+        leaf time {
+          description 'Current time.'
+                      ;
+          type ncd:time ;
+          mandatory true ;
+        }
+        leaf utc {
+          description 'UTC flag.'
+                      ;
+          type uint8 {
+            range 0..1 ;
+          }
+          default 0 ;
+          ncd:revise-date 2017-10-23 ;
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'The state of clock.'
+                ;
+    container clock-utc-time-get {
+      description 'Get system UTC time.'
+                  ;
+      leaf date {
+        description 'Current date.'
+                    ;
+        type ncd:date ;
+      }
+      leaf time {
+        description 'Current time.'
+                    ;
+        type ncd:time ;
+      }
+      ncd:revise-date 2017-10-23 ;
+    }
+    container clock-time-get {
+      description 'Get system time.'
+                  ;
+      leaf date {
+        description 'Current date.'
+                    ;
+        type ncd:date ;
+      }
+      leaf time {
+        description 'Current time.'
+                    ;
+        type ncd:time ;
+      }
+    }
+  }
+  rpc set-system-time {
+    input {
+      leaf new-time {
+        config false ;
+        description date-and-time. ;
+        type string ;
+        mandatory true ;
+      }
+    }
+  }
+}

@@ -1,0 +1,910 @@
+module zxr10-atm {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/atm'
+            ;
+  prefix atm ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe Asynchronous Transfer Mode(ATM)'
+              ;
+  revision 2018-10-25 {
+    description 'Change the range of leaf node configuration/atm/pvc-correlatio'
+              + 'n/pvc-instance/pvc/pvcgroup/pvcgroup-id from 1-32 to 1-256.'
+                ;
+  }
+  revision 2018-05-01 {
+    description 'Add select query criteria(key :ifname + pvcno + vpi + vci) for'
+              + ' port list.'
+                ;
+  }
+  revision 2017-10-01 {
+    description 'Add node "cc","multicast","pvcgroup" in /configuration/atm/pvc'
+              + '-correlation'+"\n"
+              + 'Add node "pvcgroup-correlation" in /configuration/atm/'+"\n"
+              + 'Add list "pvcgroup-status" in /state/atm/pvc-status-instance'
+                ;
+  }
+  revision 2015-04-23 {
+    description '1 Reconstruct ATM netconf. Such as Move the node "map","encaps'
+              + 'ulation","oam-manage","oam-retry","pvc-to-vlan","pvc-to-qinq",'
+              + '"ulei","qos" to the below of the node pvc.'+"\n"
+              + '2 Modify the structure of the node "qos".'
+                ;
+  }
+  revision 2013-11-05 {
+    description 'The initial version'
+                ;
+  }
+  container configuration {
+    description 'Describe the configuration of ATM'
+                ;
+    container atm {
+      description 'Configuration data of ATM'
+                  ;
+      container pvc-correlation {
+        description 'PVC correlation configuration'
+                    ;
+        container pvc-instance {
+          description 'Configure ATM PVC parameters'
+                      ;
+          list pvc {
+            description 'Configure ATM PVC parameters'
+                        ;
+            key 'ifname pvcno vpi vci'
+                ;
+            leaf ifname {
+              description 'This value identifies the atm interface name.This at'
+                        + 'tribute is created by Interface Management'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf pvcno {
+              description 'PVCNO. value' ;
+              type uint16 {
+                range 1..4000 {
+                  description 'The range of PVCNO from 1 to 4000'
+                              ;
+                }
+              }
+            }
+            leaf vpi {
+              description 'Virtual Path Identifier'
+                          ;
+              type uint16 {
+                range 0..255 {
+                  description 'The range of VPI from 0 to 255'
+                              ;
+                }
+              }
+            }
+            leaf vci {
+              description 'Virtual Channel Identifier'
+                          ;
+              type uint16 {
+                range 32..65535 {
+                  description 'The range of VCI from 32 to 65535'
+                              ;
+                }
+              }
+            }
+            container map {
+              description 'Map IPv4 address to PVC'
+                          ;
+              list map-list {
+                description 'Map IPv4 address to PVC'
+                            ;
+                key ipaddress ;
+                leaf ipaddress {
+                  description 'IPv4 address'
+                              ;
+                  type ncd:ipv4-address ;
+                }
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+            container encapsulation {
+              description 'Set PVC encapsulation' ;
+              leaf encapsulation {
+                description 'Select ATM encapsulation for PVC'
+                            ;
+                type enumeration {
+                  enum aal5snap {
+                    value 0 ;
+                    description 'AAL5+LLC/SNAP Encapsulation'
+                                ;
+                  }
+                  enum aal5nlpid {
+                    value 1 ;
+                    description 'AAL5+NLPID Encapsulation'
+                                ;
+                  }
+                }
+                default aal5snap ;
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+            container oam-manage {
+              description 'Enable PVC loopback function'
+                          ;
+              leaf frequency {
+                description 'OAM loopback frequency'
+                            ;
+                type uint16 {
+                  range 1..600 ;
+                }
+                units sec ;
+                default 5 ;
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+            container oam-retry {
+              description 'Configure OAM retry parameters'
+                          ;
+              leaf upcounts {
+                description 'OAM retry count before declaring a PVC is up'
+                            ;
+                type uint16 {
+                  range 1..600 ;
+                }
+                default 3 ;
+              }
+              leaf downcounts {
+                description 'OAM retry count before declaring a PVC is down'
+                            ;
+                type uint16 {
+                  range 1..600 ;
+                }
+                default 5 ;
+              }
+              leaf refrequency {
+                description 'OAM retry polling frequency'
+                            ;
+                type uint16 {
+                  range 1..1000 ;
+                }
+                units sec ;
+                default 1 ;
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+            container pvc-to-vlan {
+              description 'Set PVC to VLAN for PVC'
+                          ;
+              presence pvc-to-vlan ;
+              leaf vlanid {
+                description 'IEEE 802.1Q VLAN ID'
+                            ;
+                type uint16 {
+                  range 1..4094 ;
+                }
+                mandatory true ;
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+            container pvc-to-qinq {
+              description 'Set PVC to QinQ for PVC'
+                          ;
+              presence pvc-to-qinq ;
+              leaf exvlanid {
+                description 'QinQ external-VLAN ID'
+                            ;
+                type uint16 {
+                  range 1..4094 ;
+                }
+                mandatory true ;
+              }
+              leaf invlanid {
+                description 'QinQ internal-VLAN ID'
+                            ;
+                type uint16 {
+                  range 1..4094 ;
+                }
+                mandatory true ;
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+            container ulei {
+              description 'Map this interface to a ulei interface'
+                          ;
+              presence ulei ;
+              leaf ulei-ifname {
+                description 'Ulei interface'
+                            ;
+                type ncd:ifname ;
+                mandatory true ;
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+            container qos {
+              description 'Set QoS policy for PVC'
+                          ;
+              choice qos-type {
+                description 'Set QoS type'
+                            ;
+                default ubr ;
+                case ubr {
+                  description 'Set UBR for PVC'
+                              ;
+                  leaf ubr-bandwidth {
+                    description 'Set QoS bandwidth'
+                                ;
+                    type uint32 {
+                      range 8..622000 ;
+                    }
+                    units kbps ;
+                    default 2000 ;
+                  }
+                  leaf priority {
+                    description 'Set QoS priority'
+                                ;
+                    type uint8 {
+                      range 0..15 ;
+                    }
+                    default 0 ;
+                  }
+                }
+                case cbr {
+                  description 'Set CBR for PVC'
+                              ;
+                  leaf cbr-bandwidth {
+                    description 'Set QoS bandwidth'
+                                ;
+                    type uint32 {
+                      range 8..622000 ;
+                    }
+                    units kbps ;
+                    default 2000 ;
+                  }
+                }
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+            container cc {
+              description 'Set OAM CC function'
+                          ;
+              leaf switch {
+                description 'Enable or Disable OAM CC function'
+                            ;
+                type enumeration {
+                  enum disable {
+                    value 0 ;
+                    description 'Disable OAM CC function'
+                                ;
+                  }
+                  enum enable {
+                    value 1 ;
+                    description 'Enable OAM CC function'
+                                ;
+                  }
+                }
+                default disable ;
+              }
+              leaf frequency {
+                description 'Set OAM CC frequency'
+                            ;
+                type uint16 {
+                  range 1..15 ;
+                }
+                units sec ;
+                default 1 ;
+              }
+              leaf timeout {
+                description 'Set OAM CC overtime period'
+                            ;
+                type uint16 {
+                  range 2..20 ;
+                }
+                units sec ;
+                default 3 ;
+              }
+              ncd:revise-date 2017-10-01 ;
+            }
+            container multicast {
+              description 'Set multicast for PVC'
+                          ;
+              leaf multicast-id {
+                description 'Set multicast ID for PVC'
+                            ;
+                type uint16 {
+                  range 1..128 ;
+                }
+              }
+              ncd:revise-date 2017-10-01 ;
+            }
+            container pvcgroup {
+              description 'Bind PVC to pvcgroup'
+                          ;
+              leaf pvcgroup-id {
+                description 'Set ID for pvcgroup. Its maximum value depends on '
+                          + 'the performance parameters.'
+                            ;
+                type uint32 {
+                  range 1..256 {
+                    description 'The maximum value depends on the performance p'
+                              + 'arameters.'
+                                ;
+                  }
+                }
+              }
+              ncd:revise-date 2017-10-01 ;
+            }
+          }
+        }
+      }
+      container cell-transport-correlation {
+        description 'Cell transport correlation configuration'
+                    ;
+        container mode-instance {
+          description 'Set ATM cell transport mode'
+                      ;
+          list mode {
+            description 'Set ATM cell transport mode'
+                        ;
+            key ifname ;
+            leaf ifname {
+              description 'This value identifies the ATM interface name.This at'
+                        + 'tribute is created by Interface Management'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf mode {
+              description 'Set ATM cell transport mode'
+                          ;
+              type enumeration {
+                enum transparent {
+                  value 1 ;
+                  description 'Transparent transport mode'
+                              ;
+                }
+                enum vcc {
+                  value 2 ;
+                  description '1:1 PVC transport mode'
+                              ;
+                }
+                enum vcc-group {
+                  value 3 ;
+                  description 'N:1 PVC transport mode'
+                              ;
+                }
+                enum vpc {
+                  value 4 ;
+                  description '1:1 PVP transport mode'
+                              ;
+                }
+                enum vpc-group {
+                  value 5 ;
+                  description 'N:1 PVP transport mode'
+                              ;
+                }
+              }
+              mandatory true ;
+            }
+          }
+        }
+        container vcc-instance {
+          description 'Set 1:1 PVC transport mode parameters'
+                      ;
+          list vcc {
+            description 'Set 1:1 PVC transport mode parameters'
+                        ;
+            key ifname ;
+            leaf ifname {
+              description 'This value identifies the ATM interface name. This a'
+                        + 'ttribute is created by Interface Management'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf pvcno {
+              description 'PVCNO. value' ;
+              type uint16 {
+                range 1..4000 ;
+              }
+              mandatory true ;
+            }
+            leaf vpi {
+              description 'Virtual Path Identifier'
+                          ;
+              type uint16 {
+                range 0..255 ;
+              }
+              mandatory true ;
+            }
+            leaf vci {
+              description 'Virtual Channel Identifier'
+                          ;
+              type uint16 {
+                range 0..65535 ;
+              }
+              mandatory true ;
+            }
+            container translation {
+              description 'Set VPI/VCI translation parameters of 1:1 PVC transp'
+                        + 'ort mode'
+                          ;
+              presence translation ;
+              leaf remote-vpi {
+                description 'VPI translation value'
+                            ;
+                type uint16 {
+                  range 0..255 ;
+                }
+                mandatory true ;
+              }
+              leaf remote-vci {
+                description 'VCI translation value'
+                            ;
+                type uint16 {
+                  range 0..65535 ;
+                }
+                mandatory true ;
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+            container qos {
+              description 'Set PVC Qos parameters of 1:1 PVC transport mode'
+                          ;
+              choice qos-type {
+                description 'Set QoS type'
+                            ;
+                default ubr ;
+                case ubr {
+                  description 'Set UBR for PVC'
+                              ;
+                  leaf ubr-bandwidth {
+                    description 'Set QoS bandwidth'
+                                ;
+                    type uint32 {
+                      range 8..622000 ;
+                    }
+                    units kbps ;
+                    default 2000 ;
+                  }
+                  leaf priority {
+                    description 'Set QoS priority'
+                                ;
+                    type uint8 {
+                      range 0..15 ;
+                    }
+                    default 0 ;
+                  }
+                }
+                case cbr {
+                  description 'Set CBR for PVC'
+                              ;
+                  leaf cbr-bandwidth {
+                    description 'Set QoS bandwidth'
+                                ;
+                    type uint32 {
+                      range 8..622000 ;
+                    }
+                    units kbps ;
+                    default 2000 ;
+                  }
+                }
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+          }
+        }
+        container vpc-instance {
+          description 'Set 1:1 PVP transport mode parameters'
+                      ;
+          list vpc {
+            description 'Set 1:1 PVP transport mode parameters'
+                        ;
+            key ifname ;
+            leaf ifname {
+              description 'This value identifies the ATM interface name. This a'
+                        + 'ttribute is created by Interface Management'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf vpi {
+              description 'Virtual Path Identifier'
+                          ;
+              type uint16 {
+                range 0..255 ;
+              }
+              mandatory true ;
+            }
+            container translation {
+              description 'Set VPI translation parameters of 1:1 PVP transport '
+                        + 'mode'
+                          ;
+              presence translation ;
+              leaf remote-vpi {
+                description 'VPI translation value'
+                            ;
+                type uint16 {
+                  range 0..255 ;
+                }
+                mandatory true ;
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+            container qos {
+              description 'Set PVP Qos parameters of 1:1 PVP transport mode'
+                          ;
+              choice qos-type {
+                description 'Set QoS type'
+                            ;
+                default ubr ;
+                case ubr {
+                  description 'Set UBR for PVC'
+                              ;
+                  leaf ubr-bandwidth {
+                    description 'Set QoS bandwidth'
+                                ;
+                    type uint32 {
+                      range 8..622000 ;
+                    }
+                    units kbps ;
+                    default 2000 ;
+                  }
+                  leaf priority {
+                    description 'Set QoS priority'
+                                ;
+                    type uint8 {
+                      range 0..15 ;
+                    }
+                    default 0 ;
+                  }
+                }
+                case cbr {
+                  description 'Set CBR for PVC'
+                              ;
+                  leaf cbr-bandwidth {
+                    description 'Set QoS bandwidth'
+                                ;
+                    type uint32 {
+                      range 8..622000 ;
+                    }
+                    units kbps ;
+                    default 2000 ;
+                  }
+                }
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+          }
+        }
+        container vcc-group-instance {
+          description 'Set N:1 PVC transport mode parameters'
+                      ;
+          list vcc-group {
+            description 'Set N:1 PVC transport mode parameters'
+                        ;
+            key 'ifname pvcno vpi vci'
+                ;
+            leaf ifname {
+              description 'This value identifies the ATM interface name. This a'
+                        + 'ttribute is created by Interface Management'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf pvcno {
+              description 'PVCNO. value' ;
+              type uint16 {
+                range 1..4000 ;
+              }
+            }
+            leaf vpi {
+              description 'Virtual Path Identifier'
+                          ;
+              type uint16 {
+                range 0..255 ;
+              }
+            }
+            leaf vci {
+              description 'Virtual Channel Identifier'
+                          ;
+              type uint16 {
+                range 0..65535 ;
+              }
+            }
+            container translation {
+              description 'Set VPI translation parameters of N:1 PVC transport '
+                        + 'mode'
+                          ;
+              presence translation ;
+              leaf remote-vpi {
+                description 'VPI translation value'
+                            ;
+                type uint16 {
+                  range 0..255 ;
+                }
+                mandatory true ;
+              }
+              leaf remote-vci {
+                description 'VCI translation value'
+                            ;
+                type uint16 {
+                  range 0..65535 ;
+                }
+                mandatory true ;
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+            container qos {
+              description 'Set PVC Qos parameters of N:1 PVC transport mode'
+                          ;
+              choice qos-type {
+                description 'Set QoS type'
+                            ;
+                default ubr ;
+                case ubr {
+                  description 'Set UBR for PVC'
+                              ;
+                  leaf ubr-bandwidth {
+                    description 'Set QoS bandwidth'
+                                ;
+                    type uint32 {
+                      range 8..622000 ;
+                    }
+                    units kbps ;
+                    default 2000 ;
+                  }
+                  leaf priority {
+                    description 'Set QoS priority'
+                                ;
+                    type uint8 {
+                      range 0..15 ;
+                    }
+                    default 0 ;
+                  }
+                }
+                case cbr {
+                  description 'Set CBR for PVC'
+                              ;
+                  leaf cbr-bandwidth {
+                    description 'Set QoS bandwidth'
+                                ;
+                    type uint32 {
+                      range 8..622000 ;
+                    }
+                    units kbps ;
+                    default 2000 ;
+                  }
+                }
+              }
+              ncd:revise-date 2015-04-23 ;
+            }
+          }
+        }
+        container vpc-group-instance {
+          description 'Set N:1 PVP transport mode parameters'
+                      ;
+          list vpc-group {
+            description 'Set N:1 PVP transport mode parameters'
+                        ;
+            key 'ifname vpi'
+                ;
+            leaf ifname {
+              description 'This value identifies the ATM interface name. This a'
+                        + 'ttribute is created by Interface Management'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf vpi {
+              description 'Virtual Path Identifier'
+                          ;
+              type uint16 {
+                range 0..255 ;
+              }
+            }
+            container translation {
+              description 'Set VPI translation parameters of N:1 PVP transport '
+                        + 'mode'
+                          ;
+              presence translation ;
+              leaf remote-vpi {
+                description 'VPI translation value'
+                            ;
+                type uint16 {
+                  range 0..255 ;
+                }
+                mandatory true ;
+              }
+            }
+            container qos {
+              description 'Set PVP Qos parameters of N:1 PVP transport mode'
+                          ;
+              choice qos-type {
+                description 'Set QoS type'
+                            ;
+                default ubr ;
+                case ubr {
+                  description 'Set UBR for PVC'
+                              ;
+                  leaf ubr-bandwidth {
+                    description 'Set QoS bandwidth'
+                                ;
+                    type uint32 {
+                      range 8..622000 ;
+                    }
+                    units kbps ;
+                    default 2000 ;
+                  }
+                  leaf priority {
+                    description 'Set QoS priority'
+                                ;
+                    type uint8 {
+                      range 0..15 ;
+                    }
+                    default 0 ;
+                  }
+                }
+                case cbr {
+                  description 'Set CBR for PVC'
+                              ;
+                  leaf cbr-bandwidth {
+                    description 'Set QoS bandwidth'
+                                ;
+                    type uint32 {
+                      range 8..622000 ;
+                    }
+                    units kbps ;
+                    default 2000 ;
+                  }
+                }
+              }
+            }
+            ncd:revise-date 2015-04-23 ;
+          }
+        }
+      }
+      container pvcgroup-correlation {
+        container pvcgroup-instance {
+          list pvcgroup {
+            key ifname ;
+            leaf ifname {
+              description 'This value identifies the PVC group interface name.T'
+                        + 'his attribute is created by Interface Management'
+                          ;
+              type ncd:ifname ;
+            }
+            leaf ipaddress {
+              description 'Set peer address'
+                          ;
+              type ncd:ipv4-address ;
+            }
+          }
+        }
+        ncd:revise-date 2017-10-01 ;
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'Describe the state of ATM'
+                ;
+    container atm {
+      description 'State data of ATM'
+                  ;
+      container pvc-status-instance {
+        description 'Describe PVC status'
+                    ;
+        list pvc-status {
+          description 'Describe PVC status'
+                      ;
+          key 'ifname pvcno vpi vci'
+              ;
+          leaf ifname {
+            description 'This value identifies the ATM interface name. This att'
+                      + 'ribute is created by Interface Management'
+                        ;
+            type ncd:ifname ;
+          }
+          leaf pvcno {
+            description 'PVCNO. value' ;
+            type uint16 {
+              range 1..4000 ;
+            }
+          }
+          leaf vpi {
+            description 'Virtual Path Identifier'
+                        ;
+            type uint16 {
+              range 0..255 ;
+            }
+          }
+          leaf vci {
+            description 'Virtual Channel Identifier'
+                        ;
+            type uint16 {
+              range 32..65535 ;
+            }
+          }
+          leaf status {
+            description 'PVC status'
+                        ;
+            type enumeration {
+              enum inactive {
+                value 0 ;
+              }
+              enum active {
+                value 1 ;
+              }
+            }
+          }
+          ncd:select ifname ;
+          ncd:select 'pvcno vpi vci'
+                     ;
+          ncd:select 'ifname pvcno vpi vci'
+                     ;
+        }
+        list pvcgroup-status {
+          description 'Describe PVC group status'
+                      ;
+          key pvcgroup-name ;
+          leaf pvcgroup-name {
+            description 'This value identifies the PVC group interface name.Thi'
+                      + 's attribute is created by Interface Management'
+                        ;
+            type ncd:ifname ;
+          }
+          container ports {
+            description 'Describe the information of member port.'
+                        ;
+            list port {
+              description 'Describe the information of member port.'
+                          ;
+              key 'ifname pvcno vpi vci'
+                  ;
+              leaf ifname {
+                description 'This value identifies the ATM interface name. This'
+                          + ' attribute is created by Interface Management'
+                            ;
+                type ncd:ifname ;
+              }
+              leaf pvcno {
+                description 'PVCNO. value' ;
+                type uint16 {
+                  range 1..4000 ;
+                }
+              }
+              leaf vpi {
+                description 'Virtual Path Identifier'
+                            ;
+                type uint16 {
+                  range 0..255 ;
+                }
+              }
+              leaf vci {
+                description 'Virtual Channel Identifier'
+                            ;
+                type uint16 {
+                  range 32..65535 ;
+                }
+              }
+              leaf status {
+                description 'PVC status'
+                            ;
+                type enumeration {
+                  enum inactive {
+                    value 0 ;
+                  }
+                  enum active {
+                    value 1 ;
+                  }
+                }
+              }
+              ncd:select 'ifname pvcno vpi vci'
+                         ;
+            }
+          }
+          ncd:revise-date 2017-10-01 ;
+        }
+      }
+    }
+  }
+}

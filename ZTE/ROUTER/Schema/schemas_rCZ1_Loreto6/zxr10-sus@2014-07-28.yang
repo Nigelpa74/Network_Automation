@@ -1,0 +1,207 @@
+module zxr10-sus {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/sus'
+            ;
+  prefix sus ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf model to describe service unit selection.'
+              ;
+  revision 2014-07-28 {
+    description 'Change config attribute of state container from TRUE to FALSE.'
+                ;
+  }
+  revision 2013-09-17 {
+    description 'Initial version.'
+                ;
+  }
+  typedef service-type {
+    type enumeration {
+      enum DHCP {
+        value 1 ;
+        description 'Service type is DHCP.'
+                    ;
+      }
+      enum MCSNOOPING {
+        value 2 ;
+        description 'Service type is MCSNOOPING.'
+                    ;
+      }
+      enum common {
+        value 3 ;
+        description 'Service type is common.'
+                    ;
+      }
+    }
+    description 'Service type.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model info.'
+                ;
+    container service-unit-selects {
+      description 'Configure service unit selection parameters.'
+                  ;
+      container dhcps {
+        description 'Configure DHCP service unit selection parameters.'
+                    ;
+        list dhcp {
+          description 'Configure DHCP service unit selection parameters.'
+                      ;
+          key virtual-if-name ;
+          leaf virtual-if-name {
+            description 'Virtual interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'Virtual interface name.'
+                            ;
+              }
+            }
+          }
+          choice service-unit {
+            description 'Configured service unit.'
+                        ;
+            mandatory true ;
+            case global {
+              description 'Global unit.'
+                          ;
+              leaf global {
+                description 'Global unit.'
+                            ;
+                type empty ;
+                mandatory true ;
+              }
+            }
+            case physical-if-name {
+              description 'Physical interface name.'
+                          ;
+              leaf physical-if-name {
+                description 'Physical interface name.'
+                            ;
+                type ncd:ifname {
+                  length 1..31 {
+                    description 'Physical interface name.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+            }
+          }
+        }
+      }
+      container mcsnoopings {
+        description 'Configure MCSNOOPING service unit selection parameters.'
+                    ;
+        list mcsnooping {
+          description 'Configure MCSNOOPING service unit selection parameters.'
+                      ;
+          key virtual-if-name ;
+          leaf virtual-if-name {
+            description 'Virtual interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'Virtual interface name.'
+                            ;
+              }
+            }
+          }
+          leaf physical-if-name {
+            description 'Physical interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'Physical interface name.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+      }
+      container commons {
+        description 'Configure common service unit selection parameters.'
+                    ;
+        list common {
+          description 'Configure common service unit selection parameters.'
+                      ;
+          key virtual-if-name ;
+          leaf virtual-if-name {
+            description 'Virtual interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'Virtual interface name.'
+                            ;
+              }
+            }
+          }
+          leaf physical-if-name {
+            description 'Physical interface name.'
+                        ;
+            type ncd:ifname {
+              length 1..31 {
+                description 'Physical interface name.'
+                            ;
+              }
+            }
+            mandatory true ;
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model info.'
+                ;
+    container service-unit-selects {
+      description 'Service unit selection state information.'
+                  ;
+      list service-unit-select {
+        description 'The state information of service unit selection.'
+                    ;
+        key 'service-type virtual-if-name'
+            ;
+        leaf service-type {
+          description 'Service type.'
+                      ;
+          type service-type ;
+        }
+        leaf virtual-if-name {
+          description 'Virtual interface name.'
+                      ;
+          type string {
+            length 1..31 {
+              description 'Virtual interface name.'
+                          ;
+            }
+          }
+        }
+        leaf dynamic-if-name {
+          description 'The interface name of dynamically selected service unit.'
+                      ;
+          type string {
+            length 0..31 {
+              description 'The interface name of dynamically selected service u'
+                        + 'nit.'
+                          ;
+            }
+          }
+          mandatory true ;
+        }
+      }
+    }
+  }
+}

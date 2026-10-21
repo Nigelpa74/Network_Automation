@@ -1,0 +1,1435 @@
+module zxr10-pwe3 {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/pwe3" ;
+  prefix pwe3 ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe PW info, such as interface parameters,signal status and PW labels.' ;
+  revision 2023-12-11 {
+    description '1.Add the enum value of  service-type node which in state/pwe3/pws/pw' ;
+  }
+
+  revision 2023-09-09 {
+    description '1.Add the configuration container.
+2.Add the pwe3-signal-session rpc.' ;
+  }
+
+  revision 2021-09-10 {
+    description '1.Add the enums of service-type node which in state/pwe3/pws/pw.' ;
+  }
+
+  revision 2016-11-29 {
+    description '1.Add the attachment-circuit and flow-label nodes in state/pwe3/pws/pw.
+2.Add the flow-label node in state/pwe3/pws/pw/local-params.
+3.Add the flow-label node in state/pwe3/pws/pw/remote-params.' ;
+  }
+
+  revision 2014-12-05 {
+    description '1. Add the received-spe-tlv-info container in state/pwe3/pws/pw for SPE TLV function.' ;
+  }
+
+  revision 2013-12-11 {
+    description 'Initial version.' ;
+  }
+
+  typedef pw-signal-mode {
+    type enumeration {
+      enum UNKNOWN {
+        value 0 ;
+        description 'The signal mode of PW is unknown.' ;
+      }
+
+      enum MARTINI {
+        value 1 ;
+        description 'The signal mode of PW is Martini.' ;
+      }
+
+      enum PWE3 {
+        value 2 ;
+        description 'The signal mode of PW is PWE3.' ;
+      }
+
+    }
+
+    description 'The signal mode of PW.
+UNKNOWN   0
+MARTINI   1
+PWE3      2' ;
+  }
+
+  typedef pw-standby-flag {
+    type enumeration {
+      enum UNKNOWN {
+        value 0 ;
+        description 'The standby flag of PW is unknown.' ;
+      }
+
+      enum ACTIVE {
+        value 1 ;
+        description 'The standby flag of PW is active.' ;
+      }
+
+      enum STANDBY {
+        value 2 ;
+        description 'The standby flag of PW is standby.' ;
+      }
+
+    }
+
+    description 'The standby flag of PW which indicates the forward status.
+UNKNOWN     0
+ACTIVE      1
+STANDBY     2' ;
+  }
+
+  typedef pw-cword {
+    type enumeration {
+      enum NotPreferred {
+        value 0 ;
+        description 'The cword of the PW is not preferred.' ;
+      }
+
+      enum Preferred {
+        value 1 ;
+        description 'The cword of the PW is preferred.' ;
+      }
+
+      enum UNKNOWN {
+        value 2 ;
+        description 'The cword of the PW is unknown.' ;
+      }
+
+    }
+
+    description 'The cword of the PW.
+NotPreferred :    0
+Preferred    :    1
+UNKNOWN      :    2' ;
+  }
+
+  typedef pw-rtp-flag {
+    type enumeration {
+      enum UNUSE {
+        value 0 ;
+        description 'Not use the RTP header.' ;
+      }
+
+      enum USE {
+        value 1 ;
+        description 'Use the RTP header.' ;
+      }
+
+      enum UNKNOWN {
+        value 3 ;
+        description 'The usage of the RTP header is unknown.' ;
+      }
+
+    }
+
+    description 'The use flag of RTP header.' ;
+  }
+
+  typedef pw-timestamp-mode {
+    type enumeration {
+      enum Absolute {
+        value 0 ;
+        description 'The timestamp mode is absolute.' ;
+      }
+
+      enum Differential {
+        value 1 ;
+        description 'The timestamp mode is differential .' ;
+      }
+
+      enum UNKNOWN {
+        value 3 ;
+        description 'The timestamp mode is unknown.' ;
+      }
+
+    }
+
+    description 'The timestamp mode of TDM service.' ;
+  }
+
+  container state {
+    config false ;
+    description 'PWE3 module state info.' ;
+    container pwe3 {
+      description 'PWE3 module query root node.It contains PW signal info.' ;
+      container pws {
+        description 'PW query info. It contains the PW list info.' ;
+        list pw {
+          description 'PW query info. It contains the following attributes: pw-name,peer-address,pw-type,fec-type,service-type,instance-id,instance-name,ldp-session-status,signal-status,signal-mode,standby-flag,local-label,remote-label,local-status,remote-status,interface parameters. PW supports only carrying the name as a query, or not carrying search criteria.' ;
+          key pw-name ;
+          leaf pw-name {
+            description 'The name of the PW.' ;
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          leaf peer-address {
+            description "The remote peer's IP address of the PW." ;
+            type ncd:ipv4-address ;
+
+          }
+
+          leaf pw-type {
+            description 'L2VPN PW Type. Assigned values are specified in IANA Allocations for Pseudowire Edge to Edge Emulation (PWE3).' ;
+            type enumeration {
+              enum UNKNOWN {
+                value 0 ;
+                description 'The PW type is unknown.' ;
+              }
+
+              enum DLCI_old {
+                value 1 ;
+                description 'The PW type is FR-DLCI old.' ;
+              }
+
+              enum ATM_SDU {
+                value 2 ;
+                description 'The PW type is ATM-AAL5-SDU.' ;
+              }
+
+              enum ATM_cell {
+                value 3 ;
+                description 'The PW type is ATM-CELL.' ;
+              }
+
+              enum VLAN {
+                value 4 ;
+                description 'The PW type is VLAN.' ;
+              }
+
+              enum Ethernet {
+                value 5 ;
+                description 'The PW type is ethernet.' ;
+              }
+
+              enum HDLC {
+                value 6 ;
+                description 'The PW type is HDLC.' ;
+              }
+
+              enum PPP {
+                value 7 ;
+                description 'The PW type is PPP.' ;
+              }
+
+              enum SDH_CESoM {
+                value 8 ;
+                description 'The PW type is SONET/SDH Circuit Emulation Service over MPLS.' ;
+              }
+
+              enum ATM_VCCn {
+                value 9 ;
+                description 'The PW type is ATM n-to-one VCC.' ;
+              }
+
+              enum ATM_VPCn {
+                value 10 ;
+                description 'The PW type is ATM n-to-one VPC.' ;
+              }
+
+              enum IP_L2 {
+                value 11 ;
+                description 'The PW type is IP-L2.' ;
+              }
+
+              enum ATM_VCC1 {
+                value 12 ;
+                description 'The PW type is ATM one-to-one VCC.' ;
+              }
+
+              enum ATM_VPC1 {
+                value 13 ;
+                description 'The PW type is ATM one-to-one VPC.' ;
+              }
+
+              enum ATM_PDU {
+                value 14 ;
+                description 'The PW type is ATM AAL5 PDU VCC.' ;
+              }
+
+              enum FR_PORT {
+                value 15 ;
+                description 'The PW type is FR port.' ;
+              }
+
+              enum SDH_CEoP {
+                value 16 ;
+                description 'The PW type is SONET/SDH Circuit Emulation over Packet.' ;
+              }
+
+              enum SAToP_E1 {
+                value 17 ;
+                description 'The PW type is Structure-agnostic E1 over Packet.' ;
+              }
+
+              enum SAToP_T1 {
+                value 18 ;
+                description 'The PW type is Structure-agnostic T1 (DS1) over Packet.' ;
+              }
+
+              enum SAToP_E3 {
+                value 19 ;
+                description 'The PW type is Structure-agnostic E3 over Packet.' ;
+              }
+
+              enum SAToP_T3 {
+                value 20 ;
+                description 'The PW type is Structure-agnostic T3 (DS3) over Packet.' ;
+              }
+
+              enum CESoPSN_B {
+                value 21 ;
+                description 'The PW type is CESoPSN basic.' ;
+              }
+
+              enum TDM_AAL1 {
+                value 22 ;
+                description 'The PW type is TDMoIP AAL1.' ;
+              }
+
+              enum CESoPSN_C {
+                value 23 ;
+                description 'The PW type is CESoPSN TDM with CAS.' ;
+              }
+
+              enum TDM_AAL2 {
+                value 24 ;
+                description 'The PW type is TDMoIP AAL2.' ;
+              }
+
+              enum DLCI_new {
+                value 25 ;
+                description 'The PW type is FR-DLCI.' ;
+              }
+
+            }
+
+          }
+
+          choice fec-type {
+            description 'The FEC type of the PW. It contains 128 type and 129 type.' ;
+            case fec128 {
+              description 'The FEC type is 128.' ;
+              leaf vcid {
+                description 'The VCID of the PW.' ;
+                type uint32 ;
+
+              }
+
+            }
+
+            case fec129 {
+              description 'The FEC type is 129.' ;
+              leaf agi {
+                description 'The attachment group identifier.' ;
+                type string {
+                  length 0..20 ;
+
+                }
+
+              }
+
+              leaf local-taii {
+                description 'The local target attachment individual identifier.' ;
+                type uint32 ;
+
+              }
+
+              leaf remote-taii {
+                description 'The remote target attachment individual identifier.' ;
+                type uint32 ;
+
+              }
+
+              leaf local-saii {
+                description 'The local source attachment individual identifier.' ;
+                type uint32 ;
+
+              }
+
+              leaf remote-saii {
+                description 'The remote source attachment individual identifier.' ;
+                type uint32 ;
+
+              }
+
+            }
+
+          }
+
+          leaf service-type {
+            description 'The service type of L2VPN instance which the PW belonged to.' ;
+            type enumeration {
+              enum UNKNOWN {
+                value 0 ;
+                description 'The service type is unknown.' ;
+              }
+
+              enum VPWS {
+                value 1 ;
+                description 'The service type is VPWS.' ;
+              }
+
+              enum VPLS {
+                value 2 ;
+                description 'The service type is VPLS.' ;
+              }
+
+              enum MSPW {
+                value 3 ;
+                description 'The service type is MSPW.' ;
+              }
+
+              enum VPWS-EVPN {
+                value 4 ;
+                description 'The service type is VPWS-EVPN.' ;
+              }
+
+              enum VPWS-MONITOR {
+                value 5 ;
+                description 'The service type is VPWS-MONITOR.' ;
+              }
+
+              enum VLSS {
+                value 6 ;
+                description 'The service type is VLSS.' ;
+              }
+
+            }
+
+          }
+
+          leaf instance-id {
+            description 'The instance ID of L2VPN instance which the PW belonged to.' ;
+            type uint32 ;
+
+          }
+
+          leaf instance-name {
+            description 'The instance name of L2VPN instance which the PW belonged to.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf ldp-session-status {
+            description "The state of LDP session,NON,DOWN,UP,GR1 or GR2.
+            NON : The LDP session is absent.
+            DOWN: The LDP session is DOWN, not UP(or NON,or GR1,or GR2).
+            UP  : The LDP session is OPERATIONAL.
+            GR1 : The LDP session is reconnecting.
+            GR2 : TheLDP session's remote mappings are recovering." ;
+            type enumeration {
+              enum NON {
+                value 0 ;
+                description 'The LDP session is absent.' ;
+              }
+
+              enum DOWN {
+                value 1 ;
+                description 'The LDP session is DOWN, not UP(or NON,or GR1,or GR2).' ;
+              }
+
+              enum UP {
+                value 2 ;
+                description 'The LDP session is OPERATIONAL.' ;
+              }
+
+              enum GR1 {
+                value 3 ;
+                description 'The LDP session is reconnecting.' ;
+              }
+
+              enum GR2 {
+                value 4 ;
+                description "The LDP session's remote mappings are recovering." ;
+              }
+
+            }
+
+          }
+
+          leaf signal-status {
+            description 'The signal status of the PW, UP or DOWN.' ;
+            type enumeration {
+              enum UP {
+                value 1 ;
+                description 'The signal state of PW is UP.' ;
+              }
+
+              enum DOWN {
+                value 2 ;
+                description 'The signal state of PW is DOWN.' ;
+              }
+
+            }
+
+          }
+
+          leaf signal-mode {
+            description 'The negotiated signal mode of the PW, MARTINI,PWE3 or UNKNOWN.' ;
+            type pw-signal-mode ;
+
+          }
+
+          leaf standby-flag {
+            description 'The negotiated standby flag of the PW, ACTIVE,STANDBY or UNKNOWN.' ;
+            type pw-standby-flag ;
+
+          }
+
+          leaf local-label {
+            description 'The local label of the PW. The value 0 represents the local label absent.' ;
+            type uint32 {
+              range "0 | 16..1048575" ;
+
+            }
+
+          }
+
+          leaf remote-label {
+            description 'The remote label of the PW. The value 0 represents the remote label absent.' ;
+            type uint32 {
+              range "0 | 16..1048575" ;
+
+            }
+
+          }
+
+          leaf local-status {
+            description 'The local status of the PW. Contain:ALLOK,PWNF,AR,AT,PSNR,PSNT.
+ALLOK - Pseudo Wire Forwarding
+PWNF  - Pseudo Wire Not Forwarding
+AR    - Local AC (ingress) Receive Fault
+AT    - Local AC (egress) Transmit Fault
+PSNR  - Local PSN-facing PW (ingress) Receive Fault
+PSNT  - Local PSN-facing PW (egress) Transmit Fault' ;
+            type string {
+              length 0..20 ;
+
+            }
+
+          }
+
+          leaf remote-status {
+            description 'The remote status of the PW. Contain:ALLOK,PWNF,AR,AT,PSNR,PSNT.
+ALLOK - Pseudo Wire Forwarding
+PWNF  - Pseudo Wire Not Forwarding
+AR    - Local AC (ingress) Receive Fault
+AT    - Local AC (egress) Transmit Fault
+PSNR  - Local PSN-facing PW (ingress) Receive Fault
+PSNT  - Local PSN-facing PW (egress) Transmit Fault' ;
+            type string {
+              length 0..20 ;
+
+            }
+
+          }
+
+          leaf cword {
+            description 'The negotiated cword of the PW.' ;
+            type pw-cword ;
+
+          }
+
+          leaf mtu {
+            description 'The negotiated MTU of the PW.' ;
+            type uint16 ;
+
+          }
+
+          leaf vccv {
+            description 'The negotiated vccv of the PW, it contains CV type and CC type. According to the protocol, CV type contains :LSP,ICMP,BFD_BASIC_HEAD,BFD_STATUS_HEAD,BFD_BASIC_RAW and BFD_STATUS_RAW; CC type contains : ALERT,CW and TTL.' ;
+            type string {
+              length 0..50 ;
+
+            }
+
+          }
+
+          leaf fcs-retention-indicator {
+            description 'The negotiated fcs retention indicator of the PW.' ;
+            type uint16 ;
+
+          }
+
+          leaf attachment-circuit {
+            description 'Attachment circuit information.' ;
+            type string {
+              length 0..31 {
+                description 'The length of attachment circuit information.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-11-29 ;
+          }
+
+          leaf flow-label {
+            description 'Flow label capability.' ;
+            type enumeration {
+              enum none {
+                value 0 ;
+                description 'Flow label capability is not available.' ;
+              }
+
+              enum push {
+                value 1 ;
+                description 'Transmit capability is available.' ;
+              }
+
+              enum pop {
+                value 2 ;
+                description 'Receive capability is available.' ;
+              }
+
+              enum push-pop {
+                value 3 ;
+                description 'Transmit and receive capability is available.' ;
+              }
+
+            }
+
+            ncd:revise-date 2016-11-29 ;
+          }
+
+          choice pw-emu-type {
+            description 'The emulation type of the PW. It could be tdm, fr and atm. There are different interface parameters for different emulation types.' ;
+            case tdm {
+              description 'The emulation type of the PW is tdm.' ;
+              leaf bit-rate {
+                description 'The negotiated bit rate of the PW. It is meaningful only when the PW type is the  following value: SDH_CESoM(8),SDH_CEoP(16),SAToP_E1(17),SAToP_T1(18),SAToP_E3(19),SAToP_T3(20),CESoPSN_B(21),TDM_AAL1(22),CESoPSN_C(23),TDM_AAL2(24).' ;
+                type uint32 ;
+
+              }
+
+              leaf payload-bytes {
+                description 'The negotiated payload bytes of the PW. It is meaningful only when the PW type is the  following value: SDH_CESoM(8),SDH_CEoP(16),SAToP_E1(17),SAToP_T1(18),SAToP_E3(19),SAToP_T3(20),CESoPSN_B(21),CESoPSN_C(23).' ;
+                type uint16 ;
+
+              }
+
+              leaf cells-per-packet {
+                description 'The negotiated TDMoIP AAL1 cells per packet of the PW. It is meaningful only when the PW type is TDM_AAL1(22).' ;
+                type uint16 ;
+
+              }
+
+              leaf tdmoip-aal1-mode {
+                description 'The negotiated tdmoip aal1 mode of the PW. It is meaningful only when the PW type is TDM_AAL1(22).' ;
+                type uint16 ;
+
+              }
+
+              container tdmoip-options {
+                description 'The TDMoIP AAL2 Options parameter of the PW. It contains vad,encoding,duration. It is meaningful only when the PW type is TDM_AAL2(24).' ;
+                leaf vad {
+                  description 'The negotiated vad of TDMoIP AAL2 Options parameter of the PW.' ;
+                  type uint16 ;
+
+                }
+
+                leaf encoding {
+                  description 'The negotiated encoding of TDMoIP AAL2 Options parameter of the PW.' ;
+                  type uint16 ;
+
+                }
+
+                leaf duration {
+                  description 'The negotiated duration of TDMoIP AAL2 Options parameter of the PW.' ;
+                  type uint32 ;
+
+                }
+
+              }
+
+              container tdm-options {
+                description 'The TDM Options parameter of the PW. It contains rtp, timestamp-mode, frequency, ssrc, payload-type, cas and sp. It is meaningful only when the PW type is the following value: SAToP_E1(17),SAToP_T1(18),SAToP_E3(19),SAToP_T3(20),CESoPSN_B(21),TDM_AAL1(22),CESoPSN_C(23),TDM_AAL2(24).' ;
+                leaf rtp {
+                  description 'The negotiated RTP header usage.' ;
+                  type pw-rtp-flag ;
+
+                }
+
+                leaf timestamp-mode {
+                  description 'The negotiated timestamp mode. It could be absolute mode or differential mode.' ;
+                  type pw-timestamp-mode ;
+
+                }
+
+                leaf frequency {
+                  description 'The negotiated frequency of timestamping clock.' ;
+                  type uint16 ;
+
+                }
+
+                leaf ssrc {
+                  description 'The negotiated value of the Synchronization source ID.' ;
+                  type uint32 ;
+
+                }
+
+                leaf payload-type {
+                  description 'The negotiated payload type in the RTP header expected by the PW endpoint distributing
+this FEC.' ;
+                  type uint8 ;
+
+                }
+
+                leaf cas {
+                  description 'The negotiated cas of the PW, it is meaningful only when the PW type is CESoPSN_C(23).' ;
+                  type uint8 ;
+
+                }
+
+                leaf sp {
+                  description 'The negotiated sp of the PW, which encodes support for the CESoPSN signaling packets.' ;
+                  type uint8 ;
+
+                }
+
+              }
+
+              container cep-option {
+                description 'The CEP Options parameter of the PW. It contains ais, une, rtp, ebm, async-t3, async-e3, cep-type. It is meaningful only when the PW type is the following value: SDH_CESoM(8),SDH_CEoP(16).' ;
+                leaf ais {
+                  description 'The negotiated ais of CEP Options parameter of the PW.' ;
+                  type uint8 ;
+
+                }
+
+                leaf une {
+                  description 'The negotiated une of CEP Options parameter of the PW.' ;
+                  type uint8 ;
+
+                }
+
+                leaf rtp {
+                  description 'The negotiated RTP of CEP Options parameter of the PW.' ;
+                  type uint8 ;
+
+                }
+
+                leaf ebm {
+                  description 'The negotiated EBM of CEP Options parameter of the PW.' ;
+                  type uint8 ;
+
+                }
+
+                leaf async-t3 {
+                  description 'The negotiated async-t3 of CEP Options parameter of the PW.' ;
+                  type uint8 ;
+
+                }
+
+                leaf async-e3 {
+                  description 'The negotiated async-e3 of CEP Options parameter of the PW.' ;
+                  type uint8 ;
+
+                }
+
+                leaf cep-type {
+                  description 'The negotiated CEP type of CEP Options parameter of the PW.' ;
+                  type uint16 ;
+
+                }
+
+              }
+
+            }
+
+            case fr {
+              description 'The emulation type of the PW is fr.' ;
+              leaf fr-dlci-len {
+                description 'The negotiated fr dlci length of the PW. It is meaningful only when the PW type is the  following value: DLCI_old(1),FR_PORT(15,DLCI_new(25).' ;
+                type uint16 ;
+
+              }
+
+            }
+
+            case atm {
+              description 'The emulation type of the PW is atm.' ;
+              leaf max-atm-cells {
+                description 'The negotiated max atm cells of the PW.' ;
+                type uint16 ;
+
+              }
+
+            }
+
+          }
+
+          container local-params {
+            description 'The local parameters of the PW.' ;
+            leaf signal-mode {
+              description 'The local signal mode of the PW, MARTINI,PWE3 or UNKNOWN.' ;
+              type pw-signal-mode ;
+
+            }
+
+            leaf standby-flag {
+              description 'The local standby flag of the PW, ACTIVE,STANDBY or UNKNOWN.' ;
+              type pw-standby-flag ;
+
+            }
+
+            leaf cword {
+              description 'The local cword of the PW.' ;
+              type pw-cword ;
+
+            }
+
+            leaf mtu {
+              description 'The local mtu of the PW.' ;
+              type uint16 ;
+
+            }
+
+            leaf vccv {
+              description 'The local vccv of the PW, it contains CV type and CC type. According to the protocol, CV type contains :LSP,ICMP,BFD_BASIC_HEAD,BFD_STATUS_HEAD,BFD_BASIC_RAW and BFD_STATUS_RAW; CC type contains : ALERT,CW and TTL.' ;
+              type string {
+                length 0..50 ;
+
+              }
+
+            }
+
+            leaf requested-vlan-id {
+              description 'The local requested VLAN ID of the PW.' ;
+              type uint16 ;
+
+            }
+
+            leaf frag-indicator {
+              description 'The local fragmentation indicator of the PW.' ;
+              type uint16 ;
+
+            }
+
+            leaf fcs-retention-indicator {
+              description 'The local fcs retention indicator of the PW.' ;
+              type uint16 ;
+
+            }
+
+            leaf interface-description {
+              description 'The local interface description of the PW.' ;
+              type string {
+                length 0..81 ;
+
+              }
+
+            }
+
+            choice pw-emu-type {
+              description 'The emulation type of the PW. It could be tdm, fr and atm. There are different interface parameters for different emulation types.' ;
+              case tdm {
+                description 'The emulation type of the PW is tdm.' ;
+                leaf bit-rate {
+                  description 'The local bit rate of the PW. It is meaningful only when the PW type is the  following value: SDH_CESoM(8),SDH_CEoP(16),SAToP_E1(17),SAToP_T1(18),SAToP_E3(19),SAToP_T3(20),CESoPSN_B(21),TDM_AAL1(22),CESoPSN_C(23),TDM_AAL2(24).' ;
+                  type uint32 ;
+
+                }
+
+                leaf payload-bytes {
+                  description 'The local payload bytes of the PW. It is meaningful only when the PW type is the  following value: SDH_CESoM(8),SDH_CEoP(16),SAToP_E1(17),SAToP_T1(18),SAToP_E3(19),SAToP_T3(20),CESoPSN_B(21),CESoPSN_C(23).' ;
+                  type uint16 ;
+
+                }
+
+                leaf cells-per-packet {
+                  description 'The local TDMoIP AAL1 cells per packet of the PW. It is meaningful only when the PW type is TDM_AAL1(22).' ;
+                  type uint16 ;
+
+                }
+
+                leaf tdmoip-aal1-mode {
+                  description 'The local tdmoip aal1 mode of the PW. It is meaningful only when the PW type is TDM_AAL1(22).' ;
+                  type uint16 ;
+
+                }
+
+                container tdmoip-options {
+                  description 'The TDMoIP AAL2 Options parameter of the PW. It contains vad,encoding,duration. It is meaningful only when the PW type is TDM_AAL2(24).' ;
+                  leaf vad {
+                    description 'The local vad of TDMoIP AAL2 Options parameter of the PW.' ;
+                    type uint16 ;
+
+                  }
+
+                  leaf encoding {
+                    description 'The local encoding of TDMoIP AAL2 Options parameter of the PW.' ;
+                    type uint16 ;
+
+                  }
+
+                  leaf duration {
+                    description 'The local duration of TDMoIP AAL2 Options parameter of the PW.' ;
+                    type uint32 ;
+
+                  }
+
+                }
+
+                container tdm-options {
+                  description 'The TDM Options parameter of the PW. It contains rtp, timestamp-mode, frequency, ssrc, payload-type, cas and sp. It is meaningful only when the pw type is the following value: SAToP_E1(17),SAToP_T1(18),SAToP_E3(19),SAToP_T3(20),CESoPSN_B(21),TDM_AAL1(22),CESoPSN_C(23),TDM_AAL2(24).' ;
+                  leaf rtp {
+                    description 'The local RTP header usage.' ;
+                    type pw-rtp-flag ;
+
+                  }
+
+                  leaf timestamp-mode {
+                    description 'The local timestamp mode. It could be absolute mode or differential mode.' ;
+                    type pw-timestamp-mode ;
+
+                  }
+
+                  leaf frequency {
+                    description 'The local frequency of timestamping clock.' ;
+                    type uint16 ;
+
+                  }
+
+                  leaf ssrc {
+                    description 'The local value of the Synchronization source ID.' ;
+                    type uint32 ;
+
+                  }
+
+                  leaf payload-type {
+                    description 'The local payload type in the RTP header expected by the PW endpoint distributing
+this FEC.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf cas {
+                    description 'The local cas of the PW, it is meaningful only when the PW type is CESoPSN_C(23).' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf sp {
+                    description 'The local sp of the PW, which encodes support for the CESoPSN signaling packets.' ;
+                    type uint8 ;
+
+                  }
+
+                }
+
+                container cep-option {
+                  description 'The CEP Options parameter of the PW. It contains ais, une, rtp, ebm, async-t3, async-e3, cep-type. It is meaningful only when the PW type is the following value: SDH_CESoM(8),SDH_CEoP(16).' ;
+                  leaf ais {
+                    description 'The local ais of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf une {
+                    description 'The local une of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf rtp {
+                    description 'The local RTP of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf ebm {
+                    description 'The local EBM of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf async-t3 {
+                    description 'The local async-t3 of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf async-e3 {
+                    description 'The local async-e3 of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf cep-type {
+                    description 'The local CEP type of CEP Options parameter of the PW.' ;
+                    type uint16 ;
+
+                  }
+
+                }
+
+              }
+
+              case fr {
+                description 'The emulation type of the PW is fr.' ;
+                leaf fr-dlci-len {
+                  description 'The local fr dlci length of the PW. It is meaningful only when the PW type is the  following value: DLCI_old(1),FR_PORT(15,DLCI_new(25).' ;
+                  type uint16 ;
+
+                }
+
+              }
+
+              case atm {
+                description 'The emulation type of the PW is atm.' ;
+                leaf max-atm-cells {
+                  description 'The local max atm cells of the PW.' ;
+                  type uint16 ;
+
+                }
+
+              }
+
+            }
+
+            leaf flow-label {
+              description 'Flow label capability.' ;
+              type enumeration {
+                enum none {
+                  value 0 ;
+                  description 'Flow label capability is not available.' ;
+                }
+
+                enum push {
+                  value 1 ;
+                  description 'Transmit capability is available.' ;
+                }
+
+                enum pop {
+                  value 2 ;
+                  description 'Receive capability is available.' ;
+                }
+
+                enum push-pop {
+                  value 3 ;
+                  description 'Transmit and receive capability is available.' ;
+                }
+
+              }
+
+              ncd:revise-date 2016-11-29 ;
+            }
+
+          }
+
+          container remote-params {
+            description 'The remote parameters of the PW.' ;
+            leaf signal-mode {
+              description 'The remote signal mode of the PW, MARTINI,PWE3 or UNKNOWN.' ;
+              type pw-signal-mode ;
+
+            }
+
+            leaf standby-flag {
+              description 'The remote standby flag of the PW, ACTIVE,STANDBY or UNKNOWN.' ;
+              type pw-standby-flag ;
+
+            }
+
+            leaf cword {
+              description 'The remote cword of the PW.' ;
+              type pw-cword ;
+
+            }
+
+            leaf mtu {
+              description 'The remote mtu of the PW.' ;
+              type uint16 ;
+
+            }
+
+            leaf vccv {
+              description 'The remote vccv of the PW, it contains CV type and CC type. According to the protocol, CV type contains :LSP,ICMP,BFD_BASIC_HEAD,BFD_STATUS_HEAD,BFD_BASIC_RAW and BFD_STATUS_RAW; CC type contains : ALERT,CW and TTL.' ;
+              type string {
+                length 0..50 ;
+
+              }
+
+            }
+
+            leaf requested-vlan-id {
+              description 'The remote requested VLAN ID of the PW.' ;
+              type uint16 ;
+
+            }
+
+            leaf frag-indicator {
+              description 'The remote fragmentation indicator of the PW.' ;
+              type uint16 ;
+
+            }
+
+            leaf fcs-retention-indicator {
+              description 'The remote fcs retention indicator of the PW.' ;
+              type uint16 ;
+
+            }
+
+            leaf interface-description {
+              description 'The remote interface description of the PW.' ;
+              type string {
+                length 0..81 ;
+
+              }
+
+            }
+
+            choice pw-emu-type {
+              description 'The emulation type of the PW. It could be tdm, fr and atm. There are different interface parameters for different emulation types.' ;
+              case tdm {
+                description 'The emulation type of the PW is tdm.' ;
+                leaf bit-rate {
+                  description 'The remote bit rate of the PW. It is meaningful only when the PW type is the  following value: SDH_CESoM(8),SDH_CEoP(16),SAToP_E1(17),SAToP_T1(18),SAToP_E3(19),SAToP_T3(20),CESoPSN_B(21),TDM_AAL1(22),CESoPSN_C(23),TDM_AAL2(24).' ;
+                  type uint32 ;
+
+                }
+
+                leaf payload-bytes {
+                  description 'The remote payload bytes of the PW. It is meaningful only when the PW type is the  following value: SDH_CESoM(8),SDH_CEoP(16),SAToP_E1(17),SAToP_T1(18),SAToP_E3(19),SAToP_T3(20),CESoPSN_B(21),CESoPSN_C(23).' ;
+                  type uint16 ;
+
+                }
+
+                leaf cells-per-packet {
+                  description 'The remote TDMoIP AAL1 cells per packet of the PW. It is meaningful only when the PW type is TDM_AAL1(22).' ;
+                  type uint16 ;
+
+                }
+
+                leaf tdmoip-aal1-mode {
+                  description 'The remote tdmoip aal1 mode of the PW. It is meaningful only when the PW type is TDM_AAL1(22).' ;
+                  type uint16 ;
+
+                }
+
+                container tdmoip-options {
+                  description 'The TDMoIP AAL2 Options parameter of the PW. It contains vad,encoding,duration. It is meaningful only when the PW type is TDM_AAL2(24).' ;
+                  leaf vad {
+                    description 'The remote vad of TDMoIP AAL2 Options parameter of the PW.' ;
+                    type uint16 ;
+
+                  }
+
+                  leaf encoding {
+                    description 'The remote encoding of TDMoIP AAL2 Options parameter of the PW.' ;
+                    type uint16 ;
+
+                  }
+
+                  leaf duration {
+                    description 'The remote duration of TDMoIP AAL2 Options parameter of the PW.' ;
+                    type uint32 ;
+
+                  }
+
+                }
+
+                container tdm-options {
+                  description 'The TDM Options parameter of the PW. It contains rtp, timestamp-mode, frequency, ssrc, payload-type, cas and sp. It is meaningful only when the pw type is the following value: SAToP_E1(17),SAToP_T1(18),SAToP_E3(19),SAToP_T3(20),CESoPSN_B(21),TDM_AAL1(22),CESoPSN_C(23),TDM_AAL2(24).' ;
+                  leaf rtp {
+                    description 'The remote RTP header usage.' ;
+                    type pw-rtp-flag ;
+
+                  }
+
+                  leaf timestamp-mode {
+                    description 'The remote timestamp mode. It could be absolute mode or differential mode.' ;
+                    type pw-timestamp-mode ;
+
+                  }
+
+                  leaf frequency {
+                    description 'The remote frequency of timestamping clock.' ;
+                    type uint16 ;
+
+                  }
+
+                  leaf ssrc {
+                    description 'The remote value of the Synchronization source ID.' ;
+                    type uint32 ;
+
+                  }
+
+                  leaf payload-type {
+                    description 'The remote payload type in the RTP header expected by the PW endpoint distributing
+this FEC.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf cas {
+                    description 'The remote cas of the PW, it is meaningful only when the PW type is CESoPSN_C(23).' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf sp {
+                    description 'The remote sp of the PW, which encodes support for the CESoPSN signaling packets.' ;
+                    type uint8 ;
+
+                  }
+
+                }
+
+                container cep-option {
+                  description 'The CEP Options parameter of the PW. It contains ais, une, rtp, ebm, async-t3, async-e3, cep-type. It is meaningful only when the PW type is the following value: SDH_CESoM(8),SDH_CEoP(16).' ;
+                  leaf ais {
+                    description 'The remote ais of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf une {
+                    description 'The remote une of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf rtp {
+                    description 'The remote RTP of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf ebm {
+                    description 'The remote EBM of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf async-t3 {
+                    description 'The remote async-t3 of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf async-e3 {
+                    description 'The remote async-e3 of CEP Options parameter of the PW.' ;
+                    type uint8 ;
+
+                  }
+
+                  leaf cep-type {
+                    description 'The remote CEP type of CEP Options parameter of the PW.' ;
+                    type uint16 ;
+
+                  }
+
+                }
+
+              }
+
+              case fr {
+                description 'The emulation type of the PW is fr.' ;
+                leaf fr-dlci-len {
+                  description 'The remote fr dlci length of the PW. It is meaningful only when the PW type is the  following value: DLCI_old(1),FR_PORT(15,DLCI_new(25).' ;
+                  type uint16 ;
+
+                }
+
+              }
+
+              case atm {
+                description 'The emulation type of the PW is atm.' ;
+                leaf max-atm-cells {
+                  description 'The remote max atm cells of the PW.' ;
+                  type uint16 ;
+
+                }
+
+              }
+
+            }
+
+            leaf flow-label {
+              description 'Flow label capability.' ;
+              type enumeration {
+                enum none {
+                  value 0 ;
+                  description 'Flow label capability is not available.' ;
+                }
+
+                enum push {
+                  value 1 ;
+                  description 'Transmit capability is available.' ;
+                }
+
+                enum pop {
+                  value 2 ;
+                  description 'Receive capability is available.' ;
+                }
+
+                enum push-pop {
+                  value 3 ;
+                  description 'Transmit and receive capability is available.' ;
+                }
+
+              }
+
+              ncd:revise-date 2016-11-29 ;
+            }
+
+          }
+
+          container received-spe-tlv-info {
+            description 'Received SPE TLV information.' ;
+            list spe-tlv-list {
+              description 'The SPE TLV info,TLV information is in order.The order is determined by the distance number,distance to the SPE node closer the number is smaller.' ;
+              key distance ;
+              leaf distance {
+                description 'Distance hop to SPE node.' ;
+                type uint8 {
+                  range 1..16 {
+                    description 'The distance value from SPE.' ;
+                  }
+
+                }
+
+              }
+
+              leaf lsr-id {
+                description 'PW Switching Point local identification.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+              leaf last-pw-peer {
+                description 'The last PW peer address.' ;
+                type ncd:ipv4-address ;
+
+              }
+
+              leaf last-pw-vcid {
+                description 'The last PW identification.' ;
+                type uint32 {
+                  range 1..4294967295 {
+                    description 'The range of last PW identification.' ;
+                  }
+
+                }
+
+              }
+
+              leaf lsr-description {
+                description 'PW Switching Point description string, an optional description string of text up to 80 characters long.' ;
+                type string {
+                  length 0..80 {
+                    description 'The length of lsr description.' ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'PWE3 module configuration info.' ;
+    container pwe3 {
+      description 'PWE3 module configure root node.' ;
+      container global-session-selectors {
+        description 'The global session selector.' ;
+        leaf global-session-selector {
+          description 'The global session selector.' ;
+          type enumeration {
+            enum target-session-only {
+              value 1 ;
+              description 'The global session selector is target-session-only.' ;
+            }
+
+          }
+
+        }
+
+      }
+
+      container specify-session-selectors {
+        description 'Specify the session selector.' ;
+        list specify-session-selector {
+          description 'Specify the session selector.' ;
+          key peer ;
+          leaf peer {
+            description 'Specify the session peer address.' ;
+            type ncd:ipv4-address-none-zero ;
+
+          }
+
+          leaf local-router-id {
+            description 'Specify the session local router ID.' ;
+            type ncd:ipv4-address-none-zero ;
+
+            mandatory true ;
+          }
+
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2023-09-09 ;
+  }
+
+  rpc pwe3-signal-session {
+    description 'PWE3 signal session info.' ;
+    input {
+      container pwe3-sessions {
+        description 'PWE3 sessions info.' ;
+        list pwe3-session {
+          description 'PWE3 session info.' ;
+          key 'peer local-router-id' ;
+          leaf peer {
+            description 'Specify the session peer address.' ;
+            type ncd:ipv4-address-none-zero ;
+
+          }
+
+          leaf local-router-id {
+            description 'Specify the session local router ID.' ;
+            type ncd:ipv4-address-none-zero ;
+
+          }
+
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2023-09-09 ;
+  }
+
+}

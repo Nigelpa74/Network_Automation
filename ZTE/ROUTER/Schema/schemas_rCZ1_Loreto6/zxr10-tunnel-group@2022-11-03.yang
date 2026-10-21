@@ -1,0 +1,358 @@
+module zxr10-tunnel-group {
+  namespace 'http://www.zte.com.cn/zxr10/netconf/schema/rosng/tunnel-group'
+            ;
+  prefix tunnel-group ;
+  yang-version 1 ;
+  organization 'ZTE Corporation'
+               ;
+  contact 'ZTE Corporation  '+"\n"
+        + '   Nanjing Institute of ZTE Corporation '+"\n"
+        + '   No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China '+"\n"
+        + '   Tel: +86-25-52870000'
+          ;
+  description 'The netconf module to describe the tunnel group.'
+              ;
+  revision 2022-11-03 {
+    description 'Modify the project label'
+                ;
+  }
+  revision 2016-11-18 {
+    description '1,Change the maxmum value of /configuration/tunnel-group/tunne'
+              + 'l-group-configuration/type/ring-protection/ring-configuration/'
+              + 'protect-section from 4000 to performance ID 67305544.'
+                ;
+  }
+  revision 2016-07-22 {
+    description "Expand the maxmum value of '/state/tunnel-group-state/group-id"
+              + "' from performance ID 67305513 to 4294967295."
+                ;
+  }
+  revision 2015-07-28 {
+    description 'Change config attribute of state container from TRUE to FALSE.'
+                ;
+  }
+  revision 2013-11-04 {
+    description '1.Remove if-feature clause on container of linear-configuratio'
+              + 'n and ring-configuration.'+"\n"
+              + '2.Remove if-feature clause on leaf of protect-type\protect-der'
+              + 'ection\protect-receiver\working-tunnel\protect-tunnel\protect-'
+              + 'strategy\protect-section.'+"\n"
+              + '3.Add if-feature clause on all case clause.'+"\n"
+              + '4.Add if-feature clause on leaf of working-tunnel-tail-aps-id.'
+                ;
+  }
+  revision 2013-09-04 {
+    description 'Initial version.'
+                ;
+  }
+  feature linear-protection {
+    description 'Linear tunnel protection.'
+                ;
+  }
+  feature ring-protection {
+    description 'Ring protection.'
+                ;
+  }
+  feature ring-cross-protection {
+    description 'Ring cross protection.'
+                ;
+  }
+  typedef protect-type {
+    type enumeration {
+      enum 1:1 {
+        value 1 ;
+        description '1:1 protection.'
+                    ;
+      }
+      enum 1+1 {
+        value 2 ;
+        description '1+1 protection.'
+                    ;
+      }
+    }
+    description 'Protection type of tunnel group.'
+                ;
+  }
+  typedef protect-direction {
+    type enumeration {
+      enum unidirectional {
+        value 1 ;
+        description 'Unidirectional switching.'
+                    ;
+      }
+      enum bidirectional {
+        value 2 ;
+        description 'Bidirectional switching.'
+                    ;
+      }
+    }
+    description 'Protection switching type of tunnel group.'
+                ;
+  }
+  typedef protect-receiver {
+    type enumeration {
+      enum selective {
+        value 1 ;
+        description 'Selective receiving.'
+                    ;
+      }
+      enum both {
+        value 2 ;
+        description 'Both receiving.'
+                    ;
+      }
+    }
+    description 'Protection receiving type of tunnel group.'
+                ;
+  }
+  typedef protect-strategy {
+    type enumeration {
+      enum aps {
+        value 1 ;
+        description 'Automatic protection switching.'
+                    ;
+      }
+    }
+    description 'Protection strategy of tunnel group.'
+                ;
+  }
+  typedef switch-state {
+    type enumeration {
+      enum unknown {
+        value 0 ;
+        description 'Unknown switching state.'
+                    ;
+      }
+      enum switch {
+        value 1 ;
+        description 'Switch to protection entity.'
+                    ;
+      }
+      enum unswitch {
+        value 2 ;
+        description 'Working entity is active.'
+                    ;
+      }
+    }
+    description 'Protection switching state of tunnel group.'
+                ;
+  }
+  typedef tunnel-state {
+    type enumeration {
+      enum OK {
+        value 0 ;
+        description 'Signal OK.'
+                    ;
+      }
+      enum SF {
+        value 1 ;
+        description 'Signal Fail.'
+                    ;
+      }
+      enum SD {
+        value 2 ;
+        description 'Signal degrade.'
+                    ;
+      }
+    }
+    description 'Tunnel state.'
+                ;
+  }
+  container configuration {
+    description 'Configuration model information of tunnel group.'
+                ;
+    container tunnel-group {
+      description 'The configuration information of tunnel group.'
+                  ;
+      list tunnel-group-configuration {
+        description 'Configure tunnel group parameters.'
+                    ;
+        key group-id ;
+        leaf group-id {
+          description 'Configure ID of tunnel group.It is between [1,32768].'
+                      ;
+          type uint32 {
+            range 1..32768 {
+              description 'Tunnel group ID.'
+                          ;
+            }
+          }
+        }
+        choice type {
+          description 'You can configure ring tunnel group or linear tunnel gro'
+                    + 'up.'
+                      ;
+          case linear-protection {
+            if-feature linear-protection ;
+            description 'Configure linear tunnel group.'
+                        ;
+            container linear-configuration {
+              description 'Configure linear tunnel group parameters.'
+                          ;
+              leaf protect-type {
+                description 'Configure protection type of linear tunnel group.'
+                            ;
+                type protect-type ;
+                mandatory true ;
+              }
+              leaf protect-direction {
+                description 'Configure protection switching type of linear tunn'
+                          + 'el group.'
+                            ;
+                type protect-direction ;
+                mandatory true ;
+              }
+              leaf protect-receiver {
+                description 'Configure protection receiving type of linear tunn'
+                          + 'el group.'
+                            ;
+                type protect-receiver ;
+                mandatory true ;
+              }
+              leaf working-tunnel {
+                description 'Configure working tunnel of linear tunnel group.No'
+                          + ' default value, must configure.'
+                            ;
+                type uint32 {
+                  range 1..131072 {
+                    description 'Working tunnel ID of linear tunnel group.0 is '
+                              + 'invalid value.'
+                                ;
+                  }
+                }
+              }
+              leaf protect-tunnel {
+                description 'Configure protection tunnel of linear tunnel group'
+                          + '.No default value, must configure.'
+                            ;
+                type uint32 {
+                  range 1..131072 {
+                    description 'Protection tunnel ID of linear tunnel group.0 '
+                              + 'is invalid value.'
+                                ;
+                  }
+                }
+              }
+              leaf protect-strategy {
+                description 'Configure protection switching strategy of linear '
+                          + 'tunnel group.No default value, must configure.'
+                            ;
+                type protect-strategy ;
+              }
+            }
+          }
+          case ring-protection {
+            if-feature ring-protection ;
+            description 'Configure ring tunnel group.'
+                        ;
+            container ring-configuration {
+              description 'Configure ring tunnel group parameters.'
+                          ;
+              leaf protect-type {
+                description 'Configure protection type of ring tunnel group.You'
+                          + ' can only configure protection type as "ring".'
+                            ;
+                type enumeration {
+                  enum ring {
+                    value 3 ;
+                    description 'Ring protection.'
+                                ;
+                  }
+                }
+                mandatory true ;
+              }
+              leaf working-tunnel {
+                description 'Configure working tunnel of ring tunnel group.No d'
+                          + 'efault value, must configure.'
+                            ;
+                type uint32 {
+                  range 1..131072 {
+                    description 'Working tunnel ID of ring tunnel group.'
+                                ;
+                  }
+                }
+              }
+              leaf protect-tunnel {
+                description 'Configure ring protection tunnel of ring tunnel gr'
+                          + 'oup.The tunnel must be ring tunnel.No default valu'
+                          + 'e, must configure.'
+                            ;
+                type uint32 {
+                  range 1..131072 {
+                    description 'Protection tunnel ID of ring tunnel group.'
+                                ;
+                  }
+                }
+              }
+              leaf protect-section {
+                description 'Configure protection section of ring tunnel group.'
+                          + 'No default value, must configure.'
+                            ;
+                type uint32 {
+                  range 1..4000 {
+                    description 'Protecion section ID of ring tunnel group.'
+                                ;
+                  }
+                }
+              }
+              leaf working-tunnel-tail-aps-id {
+                if-feature ring-cross-protection ;
+                if-feature ring-protection ;
+                description 'Configure APS ID of working tunnel tail node in ri'
+                          + 'ng tunnel group.No default value, must configure.'
+                            ;
+                type uint8 {
+                  range 1..127 {
+                    description 'APS ID of Working tunnel tail node.'
+                                ;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  container state {
+    config false ;
+    description 'State model information of tunnel group.'
+                ;
+    container tunnel-group {
+      description 'State data of tunnel group.'
+                  ;
+      list tunnel-group-state {
+        description 'Query tunnel group status information, the group ID is bet'
+                  + 'ween [1,4294967295].Support queries without conditions and'
+                  + ' at protection group ID query.'
+                    ;
+        key group-id ;
+        leaf group-id {
+          description 'ID of tunnel group.'
+                      ;
+          type uint32 {
+            range 1..4294967295 {
+              description 'ID of tunnel group.'
+                          ;
+            }
+          }
+        }
+        leaf working-tunnel-state {
+          description 'State of working tunnel.'
+                      ;
+          type tunnel-state ;
+        }
+        leaf protect-tunnel-state {
+          description 'State of protection tunnel.'
+                      ;
+          type tunnel-state ;
+        }
+        leaf switch-state {
+          description 'Protection switching state.'
+                      ;
+          type switch-state ;
+        }
+      }
+    }
+  }
+}

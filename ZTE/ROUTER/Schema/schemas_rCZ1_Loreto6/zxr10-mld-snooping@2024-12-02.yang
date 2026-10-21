@@ -1,0 +1,3151 @@
+module zxr10-mld-snooping {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/mld-snooping" ;
+  prefix mlds ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2013-11-22 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe MLD snooping.' ;
+  revision 2024-12-02 {
+    description 'Add ssm-mapping' ;
+  }
+
+  revision 2023-06-05 {
+    description 'Change the Type of leaf node /mlds:state/mlds:mld-snooping/mlds:evpn-vpls/mlds:member/mlds:interface-name from ncd:ifname to string, range: 1-59.' ;
+  }
+
+  revision 2022-12-22 {
+    description 'add leaf node
+/mlds:configuration/mlds:mld-snooping/mlds:evpn-vpls/mlds:evpn-vpls-configs/mlds:evpn-vpls-config/mlds:mapping-host-to-multicast' ;
+  }
+
+  revision 2022-10-13 {
+    description 'add leaf node
+/mlds:configuration/mlds:mld-snooping/mlds:vlan/mlds:vlan-configs/mlds:vlan-config/mlds:mapping-host-to-multicast' ;
+  }
+
+  revision 2022-10-10 {
+    description 'add leaf node
+/mlds:configuration/mlds:mld-snooping/mlds:evpn-vpls/mlds:evpn-vpls-configs/mlds:evpn-vpls-config/mlds:learning-peer-link' ;
+  }
+
+  revision 2022-08-22 {
+    description 'Add path:
+/mlds:configuration/mlds:mld-snooping/evpn-vpls
+/mlds:state/mlds:mld-snooping/mlds:evpn-vpls
+/mlds:operation/mlds:mld-snooping/mlds:clear/mlds:group/mlds:instance/mlds:evpn-vpls/mlds:evpn-vpls-name/
+/mlds:operation/mlds:mld-snooping/mlds:clear/mlds:groups/mlds:type/mlds:evpn-vpls/mlds:evpn-vpls-name/
+Add feature:evpn-vpls.' ;
+  }
+
+  revision 2022-02-09 {
+    description 'Add container:
+/mlds:configuration/mlds:mld-snooping/vlan/mvlan/
+/mlds:configuration/mlds:mld-snooping/vlan/mvlan/default/
+add leaf node
+/mlds:configuration/mlds:mld-snooping/mlds:vlan/mlds:mvlan/mlds:default/mlds:default/mlds:m-vlan-id.
+/mlds:configuration/mlds:mld-snooping/mlds:vlan/mlds:mvlan/mlds:default/mlds:default/mlds:u-vlan-id.
+add feature mvlan' ;
+  }
+
+  revision 2020-07-15 {
+    description 'Add default value for leaf node:
+/mlds:configuration/mlds:mld-snooping/mlds:global/mlds:host-aging-closedown' ;
+  }
+
+  revision 2019-12-12 {
+    description 'add leaf node:
+/mlds:configuration/mlds:mld-snooping/mlds:global/mlds:host-aging-closedown
+add feature:
+host-aging-closedown general-state-mrouter' ;
+  }
+
+  revision 2018-04-02 {
+    description 'Add leaf nodes:
+/mlds:configuration/mlds:mld-snooping/mlds:vpls/mlds:vpls-configs/mlds:vpls-config/mlds:ndl-enable
+/mlds:configuration/mlds:mld-snooping/mlds:vlan/mlds:vlan-configs/mlds:vlan-config/mlds:ndl-enable
+/mlds:configuration/mlds:mld-snooping/mlds:ring-tree/mlds:ring-tree-configs/mlds:ring-tree-config/mlds:ndl-enable
+add container nodes:
+/mlds:configuration/mlds:mld-snooping/mlds:vpls/mlds:ndls
+/mlds:configuration/mlds:mld-snooping/mlds:vpls/mlds:interfaces
+/mlds:configuration/mlds:mld-snooping/mlds:vlan/mlds:ndls
+/mlds:configuration/mlds:mld-snooping/mlds:ring-tree/mlds:ndls
+/mlds:configuration/mlds:mld-snooping/mlds:ring-tree/mlds:interfaces' ;
+  }
+
+  revision 2017-12-08 {
+    description 'Add leaf nodes:
+/mlds:operation/mlds:mld-snooping/mlds:clear/mlds:group/mlds:instance/mlds:vrf/mlds:vrf-name
+/mlds:operation/mlds:mld-snooping/mlds:clear/mlds:groups/mlds:type/mlds:vrf/mlds:vrf-name' ;
+  }
+
+  revision 2017-11-20 {
+    description 'Add path:
+/mlds:configuration/mlds:mld-snooping/mlds:vpls/mlds:prejoins
+/mlds:configuration/mlds:mld-snooping/mlds:vlan/mlds:prejoins
+/mlds:configuration/mlds:mld-snooping/mlds:ring-tree/mlds:prejoins' ;
+  }
+
+  revision 2017-11-02 {
+    description 'Add path:
+/mlds:configuration/mlds:mld-snooping/mlds:ring-tree,
+/mlds:state/mlds:mld-snooping/mlds:ring-tree,
+/mlds:operation/mlds:mld-snooping/mlds:clear/mlds:group/mlds:instance/mlds:ring-tree,
+/mlds:operation/mlds:mld-snooping/mlds:clear/mlds:groups/mlds:type/mlds:ring-tree.
+Add feature:vpls,vlan,vbui,ip-global,vrf and ring-tree.' ;
+  }
+
+  revision 2016-11-08 {
+    description "Add path:/state/mld-snooping/mrouter's query term: vlan-id+interface-name,vpls-name+interface-name" ;
+  }
+
+  revision 2015-09-15 {
+    description 'Modify leaf node type, node path: /operation/mld-snooping/clear/groups/type/ip-global/ip-global, /operation/mld-snooping/clear/groups/type/all/all-groups, /operation/mld-snooping/clear/group/instance/ip-global/ip-global.' ;
+  }
+
+  revision 2015-06-05 {
+    description 'Modify /configuration/mld-snooping/vpls/vpls-configs/vpls-config/acl-name and /configuration/mld-snooping/vlan/vlan-configs/vlan-config/acl-name length range (1..31 to 0..31)' ;
+  }
+
+  revision 2015-03-02 {
+    description 'Add clear operation and global summary show.' ;
+  }
+
+  revision 2015-02-12 {
+    description 'Change proper noun, such as vpls,vlan,id etc, from lowercase into capital.' ;
+  }
+
+  revision 2014-04-28 {
+    description 'Initial version.' ;
+  }
+
+  feature vpls {
+    description 'MLD snooping over VPLS.' ;
+  }
+
+  feature vlan {
+    description 'MLD snooping over VLAN.' ;
+  }
+
+  feature ring-tree {
+    description 'MLD snooping over Ring Tree.' ;
+  }
+
+  feature vbui {
+    description 'MLD snooping over VBUI.' ;
+  }
+
+  feature ip-global {
+    description 'MLD snooping over IP-global.' ;
+  }
+
+  feature vrf {
+    description 'MLD snooping over VRF.' ;
+  }
+
+  feature host-aging-closedown {
+    description 'MLD snooping support host-aging-closedown.' ;
+  }
+
+  feature general-state-mrouter {
+    description 'MLD snooping support general state mrouter.' ;
+  }
+
+  feature mvlan {
+    description 'MLD snooping support mvlan.' ;
+    ncd:revise-date 2022-02-09 ;
+  }
+
+  feature evpn-vpls {
+    description 'MLD snooping over EVPN-VPLS.' ;
+    ncd:revise-date 2022-08-22 ;
+  }
+
+  typedef switch-type {
+    description 'Type of switch status.' ;
+    type enumeration {
+      enum disable {
+        value 0 ;
+        description 'Disable this switch.' ;
+      }
+
+      enum enable {
+        value 1 ;
+        description 'Enable this switch.' ;
+      }
+
+    }
+
+  }
+
+  typedef work-mode-type {
+    description 'Type of work mode.' ;
+    type enumeration {
+      enum proxy {
+        value 0 ;
+        description 'Proxy mode.' ;
+      }
+
+      enum route {
+        value 1 ;
+        description 'Route mode.' ;
+      }
+
+      enum transparent {
+        value 2 ;
+        description 'Transparent mode.' ;
+      }
+
+    }
+
+  }
+
+  typedef version-type {
+    description 'The version of MLD.' ;
+    type enumeration {
+      enum v1 {
+        value 1 ;
+        description 'MLD version1.' ;
+      }
+
+      enum v2 {
+        value 2 ;
+        description 'MLD version2.' ;
+      }
+
+    }
+
+  }
+
+  typedef mode-type {
+    description 'Type of mode. include dynamic mode and static mode.' ;
+    type enumeration {
+      enum dynamic {
+        value 0 ;
+        description 'Dynamic mode.' ;
+      }
+
+      enum static {
+        value 1 ;
+        description 'Static mode.' ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'Configuration model.' ;
+    container mld-snooping {
+      description 'Configure MLD snooping parameters.' ;
+      container global {
+        description 'MLD snooping global configure.' ;
+        leaf global-enable {
+          description 'Enable/disable MLD snooping in this device.Its default value depends on the product.' ;
+          type switch-type ;
+
+          default disable ;
+        }
+
+        leaf global-query-enable {
+          description 'Enable/disable MLD queries in this device.' ;
+          type switch-type ;
+
+          default disable ;
+        }
+
+        leaf query-interval {
+          description 'Configure query interval.The query interval is the interval between general queries sent by the querier.' ;
+          type uint16 {
+            range 30..65535 ;
+
+          }
+
+          units second ;
+          default 125 ;
+        }
+
+        leaf query-rsp-interval {
+          description 'Configure query response interval. The response interval inserted into the periodic general queries.' ;
+          type uint8 {
+            range 1..255 ;
+
+          }
+
+          units "tick (1 tick = 100ms)" ;
+          default 100 ;
+        }
+
+        leaf host-aging-closedown {
+          description 'Configure host aging closedown.' ;
+          type switch-type ;
+
+          default disable ;
+          ncd:revise-date 2019-12-12 ;
+        }
+
+      }
+
+      container vpls {
+        if-feature vpls ;
+
+        description "MLD snooping VPLS configure.User can't config MLD snooping in VPLS if the VPLS instance not exist.If MLD snooping configuration exist in VPLS,the VPLS instance can't be deleted." ;
+        container vpls-configs {
+          description 'The config of instance VPLS.' ;
+          list vpls-config {
+            description 'The config of instance VPLS.' ;
+            key vpls-name ;
+            leaf vpls-name {
+              description 'Submode instance name of VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf snooping-switch {
+              description 'Enable/disable MLD snooping in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf member-fast-leave {
+              description 'Enable/disable group membership fast leave in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf acl-name {
+              description 'Configure an ACL rule in this instance.' ;
+              type string {
+                length 0..31 ;
+
+              }
+
+            }
+
+            leaf member-time-out {
+              description 'Member aging time in this instance.' ;
+              type uint16 {
+                range 30..65535 ;
+
+              }
+
+              units second ;
+              default 260 ;
+            }
+
+            leaf mrouter-time-out {
+              description 'Multicast router port aging time in this instance.' ;
+              type uint16 {
+                range 30..65535 ;
+
+              }
+
+              units second ;
+              default 260 ;
+            }
+
+            leaf work-mode {
+              description 'Work mode in this instance: proxy, transparent or router.' ;
+              type work-mode-type ;
+
+              default proxy ;
+            }
+
+            leaf max-group-num {
+              description 'Max number of multicast group can access in this instance.Its default value and maximum value depends on the product.' ;
+              type uint32 {
+                range 1..4294967295 ;
+
+              }
+
+            }
+
+            leaf last-mem-qry-interval {
+              description 'The last member query interval is the max response time inserted into group-specific queries sent in response to leave group messages, and is also the amount of time between group-specific query messages.' ;
+              type uint16 {
+                range 1..25 ;
+
+              }
+
+              units second ;
+              default 1 ;
+            }
+
+            leaf query-version {
+              description 'Querier version: V1 or V2.' ;
+              type version-type ;
+
+              default v1 ;
+            }
+
+            leaf query-enable {
+              description 'Enable/disable querier in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf ndl-enable {
+              description 'Enable/disable all ports are not allowed to learn dynamic mrouter port(s).' ;
+              type switch-type ;
+
+              default disable ;
+              ncd:revise-date 2018-04-02 ;
+            }
+
+          }
+
+        }
+
+        container drops {
+          description 'The config of group with drop in instance VPLS.' ;
+          list drop {
+            description 'The config of group with drop in instance VPLS.The max-elements depends on the product.' ;
+            key 'group-ip vpls-name' ;
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf vpls-name {
+              description 'Submode instance name of VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container max-member-nums {
+          description 'The config of group with max-member-num in instance VPLS.' ;
+          list max-member-num {
+            description 'The config of group with max-member-num in instance VPLS.The max-elements depends on the product.' ;
+            key 'group-ip vpls-name' ;
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf vpls-name {
+              description 'Submode instance name of VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf max-member-num {
+              description 'Max number of MLD member can access to this group.Its default value and maximum value depends on the product.' ;
+              type uint32 {
+                range 1..4000 ;
+
+              }
+
+              default 4000 ;
+            }
+
+          }
+
+        }
+
+        container members {
+          description 'The config of static member in instance VPLS.' ;
+          list member {
+            description 'The config of static member in instance VPLS.The max-elements depends on the product.' ;
+            key 'interface-name group-ip vpls-name' ;
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf vpls-name {
+              description 'Submode instance name of VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container mrouters {
+          description 'The config of static mrouter in instance VPLS.' ;
+          list mrouter {
+            description 'The config of static mrouter in instance VPLS.The max-elements depends on the product.' ;
+            key 'interface-name vpls-name' ;
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf vpls-name {
+              description 'Submode instance name of VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container m-vpls {
+          description 'The config of multicast VPLS in instance VPLS.The max-elements depends on the product.' ;
+          container defaults {
+            description 'The config of default multicast VPLS in instance VPLS.' ;
+            list default {
+              description 'The config of default multicast VPLS in instance VPLS.' ;
+              key u-vpls-name ;
+              leaf u-vpls-name {
+                description 'User VPLS name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf m-vpls-name {
+                description 'Multicast VPLS name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          container groups {
+            description 'The specific group of multicast VPLS in instance VPLS.' ;
+            list group {
+              description 'The specific group of multicast VPLS in instance VPLS.' ;
+              key 'u-vpls-name group-ip' ;
+              leaf u-vpls-name {
+                description 'User VPLS name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              leaf group-ip {
+                description 'Group IPv6 address.' ;
+                type ncd:ipv6-address ;
+
+              }
+
+              leaf m-vpls-name {
+                description 'Multicast VPLS name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+        }
+
+        container prejoins {
+          description 'The config of group with prejoin in instance VPLS.' ;
+          list prejoin {
+            description 'The config of group with prejoin in instance VPLS.The max-elements depends on the product.' ;
+            key 'group-ip vpls-name' ;
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf vpls-name {
+              description 'Submode instance name of VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2017-11-20 ;
+        }
+
+        container ndls {
+          description 'The config of port not allowed to learn dynamic mrouter in instance VPLS.' ;
+          list ndl {
+            description 'The config of port not allowed to learn dynamic mrouter in instance VPLS.' ;
+            key 'interface-name vpls-name' ;
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf vpls-name {
+              description 'Submode instance name of VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2018-04-02 ;
+        }
+
+        container interfaces {
+          description 'The config of interface in instance VPLS.' ;
+          list interface {
+            description 'The config of interface in instance VPLS.' ;
+            key 'interface-name vpls-name' ;
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf vpls-name {
+              description 'Submode instance name of VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf mrouter-guard {
+              description 'Interface multicast router guard function is enabled.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+          }
+
+          ncd:revise-date 2018-04-02 ;
+        }
+
+      }
+
+      container vlan {
+        if-feature vlan ;
+
+        description "MLD snooping VLAN configure.Can't config MLD snooping in VLAN if the VLAN instance not exist.If MLD snooping configuration exist in VLAN,the VLAN instance can't be deleted." ;
+        container vlan-configs {
+          description 'The config of instance VLAN.' ;
+          list vlan-config {
+            description 'The config of instance VLAN.' ;
+            key id ;
+            leaf id {
+              description 'Submode instance ID of VLAN.' ;
+              type uint16 {
+                range 1..4094 ;
+
+              }
+
+            }
+
+            leaf snooping-switch {
+              description 'Enable/disable MLD snooping in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf member-fast-leave {
+              description 'Enable/disable group membership fast leave in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf acl-name {
+              description 'Configure an ACL rule in this instance.' ;
+              type string {
+                length 0..31 ;
+
+              }
+
+            }
+
+            leaf member-time-out {
+              description 'Member aging time in this instance.' ;
+              type uint16 {
+                range 30..65535 ;
+
+              }
+
+              units second ;
+              default 260 ;
+            }
+
+            leaf mrouter-time-out {
+              description 'Multicast router port aging time in this instance.' ;
+              type uint16 {
+                range 30..65535 ;
+
+              }
+
+              units second ;
+              default 260 ;
+            }
+
+            leaf work-mode {
+              description 'Work mode in this instance: proxy, transparent or router.' ;
+              type work-mode-type ;
+
+              default proxy ;
+            }
+
+            leaf max-group-num {
+              description 'Max number of multicast group can access in this instance.Its default value and maximum value depends on the product.' ;
+              type uint32 {
+                range 1..4294967295 ;
+
+              }
+
+              default 1000 ;
+            }
+
+            leaf last-mem-qry-interval {
+              description 'The last member query interval is the max response time inserted into group-specific queries sent in response to leave group messages, and is also the amount of time between group-specific query messages.' ;
+              type uint16 {
+                range 1..25 ;
+
+              }
+
+              units second ;
+              default 1 ;
+            }
+
+            leaf query-version {
+              description 'Querier version: V1, V2.' ;
+              type version-type ;
+
+              default v1 ;
+            }
+
+            leaf query-enable {
+              description 'Enable/disable querier in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf ndl-enable {
+              description 'Enable/disable all ports are not allowed to learn dynamic mrouter port(s).' ;
+              type switch-type ;
+
+              default disable ;
+              ncd:revise-date 2018-04-02 ;
+            }
+
+            leaf mapping-host-to-multicast {
+              description 'Enable/disable mapping host to multicast.' ;
+              type switch-type ;
+
+              default disable ;
+              ncd:revise-date 2022-10-13 ;
+            }
+
+            leaf ssm-enable {
+              type switch-type ;
+
+              description 'SSM mapping enable' ;
+              default disable ;
+              ncd:revise-date 2024-12-02 ;
+            }
+
+            container ssm-ranges {
+              description 'SSM mapping range' ;
+              choice ssm-range {
+                description 'SSM mapping range' ;
+                case range-default {
+                  description 'Use FF3X::/32 group range for SSM' ;
+                  leaf default {
+                    type empty ;
+
+                    description 'Use FF3X::/32 group range for SSM' ;
+                  }
+
+                }
+
+                case range-acl {
+                  description 'ACL for group range to be used for SSM' ;
+                  leaf acl {
+                    type string ;
+
+                    description 'ACL for group range to be used for SSM' ;
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2024-12-02 ;
+            }
+
+          }
+
+        }
+
+        container drops {
+          description 'The config of group with drop in instance VLAN.' ;
+          list drop {
+            description 'The config of group with drop in instance VLAN.The max-elements depends on the product.' ;
+            key 'vlan-id group-ip' ;
+            leaf vlan-id {
+              description 'Submode instance ID of VLAN.' ;
+              type uint16 {
+                range 1..4094 ;
+
+              }
+
+            }
+
+            leaf group-ip {
+              description 'Group IP address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+          }
+
+        }
+
+        container max-member-nums {
+          description 'The config of group with max-member-num in instance VLAN.' ;
+          list max-member-num {
+            description 'The config of group with max-member-num in instance VLAN.The max-elements depends on the product.' ;
+            key 'vlan-id group-ip' ;
+            leaf vlan-id {
+              description 'Submode instance ID of VLAN.' ;
+              type uint16 {
+                range 1..4094 ;
+
+              }
+
+            }
+
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf max-member-num {
+              description 'Max number of MLD member can access to this group.Its default value and maximum value depends on the product.' ;
+              type uint32 {
+                range 1..4000 ;
+
+              }
+
+              default 4000 ;
+            }
+
+          }
+
+        }
+
+        container members {
+          description 'The config of static member in instance VLAN.' ;
+          list member {
+            description 'The config of static member in instance VLAN.The max-elements depends on the product.' ;
+            key 'vlan-id interface-name group-ip' ;
+            leaf vlan-id {
+              description 'Submode instance ID of VLAN.' ;
+              type uint16 {
+                range 1..4094 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+          }
+
+        }
+
+        container interfaces {
+          description 'The config of interface in instance VLAN.' ;
+          list interface {
+            description 'The config of interface in instance VLAN.' ;
+            key 'vlan-id interface-name' ;
+            leaf vlan-id {
+              description 'Submode instance ID of VLAN.' ;
+              type uint16 {
+                range 1..4094 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf mrouter-guard {
+              description 'Interface multicast router guard function is enabled.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+          }
+
+        }
+
+        container mrouters {
+          description 'The config of static mrouter in instance VLAN.' ;
+          list mrouter {
+            description 'The config of static mrouter in instance VLAN.The max-elements depends on the product.' ;
+            key 'vlan-id interface-name' ;
+            leaf vlan-id {
+              description 'Submode instance ID of VLAN.' ;
+              type uint16 {
+                range 1..4094 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+          }
+
+        }
+
+        container prejoins {
+          description 'The config of group with prejoin in instance VLAN.' ;
+          list prejoin {
+            description 'The config of group with prejoin in instance VLAN.The max-elements depends on the product.' ;
+            key 'vlan-id group-ip' ;
+            leaf vlan-id {
+              description 'Submode instance ID of VLAN.' ;
+              type uint16 {
+                range 1..4094 ;
+
+              }
+
+            }
+
+            leaf group-ip {
+              description 'Group IP address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+          }
+
+          ncd:revise-date 2017-11-20 ;
+        }
+
+        container ndls {
+          description 'The config of port not allowed to learn dynamic mrouter in instance VLAN.' ;
+          list ndl {
+            description 'The config of port not allowed to learn dynamic mrouter in instance VLAN.' ;
+            key 'vlan-id interface-name' ;
+            leaf vlan-id {
+              description 'Submode instance ID of VLAN.' ;
+              type uint16 {
+                range 1..4094 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+          }
+
+          ncd:revise-date 2018-04-02 ;
+        }
+
+        container mvlan {
+          if-feature mvlan ;
+
+          description 'The config of multicast VLAN in instance VLAN.The max-elements depends on the product.' ;
+          container defaults {
+            description 'The config of default multicast VLAN in instance VLAN.' ;
+            list default {
+              description 'The config of default multicast VLAN in instance VLAN.' ;
+              key u-vlan-id ;
+              leaf u-vlan-id {
+                description 'User VLAN instance ID.' ;
+                type uint16 {
+                  range 1..4094 ;
+
+                }
+
+              }
+
+              leaf m-vlan-id {
+                description 'Multicast VLAN instance ID.' ;
+                type uint16 {
+                  range 1..4094 ;
+
+                }
+
+                mandatory true ;
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2022-02-09 ;
+        }
+
+        container ssm-maps {
+          description 'SSM mapping static function' ;
+          container acls {
+            description 'SSM group' ;
+            list acl {
+              description 'SSM group' ;
+              key 'vlan-id acl-name src-addr' ;
+              leaf vlan-id {
+                type uint16 ;
+
+                description 'Submode instance ID of VLAN.' ;
+              }
+
+              leaf acl-name {
+                type string ;
+
+                description 'SSM group named access list (1-31 characters)' ;
+              }
+
+              leaf src-addr {
+                type ncd:ipv6-address ;
+
+                description 'SSM source address' ;
+              }
+
+            }
+
+          }
+
+          container defaults {
+            description 'SSM default group ' ;
+            list default {
+              description 'SSM default group ' ;
+              key 'vlan-id src-addr' ;
+              leaf vlan-id {
+                type uint16 ;
+
+                description 'Submode instance ID of VLAN.' ;
+              }
+
+              leaf src-addr {
+                type ncd:ipv6-address ;
+
+                description 'SSM source address' ;
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2024-12-02 ;
+        }
+
+      }
+
+      container ring-tree {
+        if-feature ring-tree ;
+
+        description "MLD snooping Ring Tree configure.User can't config MLD snooping in Ring Tree if the Ring Tree instance not exist.If MLD snooping configuration exist in Ring Tree,the Ring Tree instance can't be deleted." ;
+        container ring-tree-configs {
+          description 'The config of instance Ring Tree.' ;
+          list ring-tree-config {
+            description 'The config of instance Ring Tree.' ;
+            key ring-tree-name ;
+            leaf ring-tree-name {
+              description 'Submode instance name of Ring Tree.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf snooping-switch {
+              description 'Enable/disable MLD snooping in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf member-fast-leave {
+              description 'Enable/disable group membership fast leave in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf acl-name {
+              description 'Configure an ACL rule in this instance.' ;
+              type string {
+                length 0..31 ;
+
+              }
+
+            }
+
+            leaf member-time-out {
+              description 'Member aging time in this instance.' ;
+              type uint16 {
+                range 30..65535 ;
+
+              }
+
+              units second ;
+              default 260 ;
+            }
+
+            leaf mrouter-time-out {
+              description 'Multicast router port aging time in this instance.' ;
+              type uint16 {
+                range 30..65535 ;
+
+              }
+
+              units second ;
+              default 260 ;
+            }
+
+            leaf work-mode {
+              description 'Work mode in this instance: proxy, transparent or router.' ;
+              type work-mode-type ;
+
+              default proxy ;
+            }
+
+            leaf max-group-num {
+              description 'Max number of multicast group can access in this instance.Its default value and maximum value depends on the product.' ;
+              type uint32 {
+                range 1..4294967295 ;
+
+              }
+
+            }
+
+            leaf last-mem-qry-interval {
+              description 'The last member query interval is the max response time inserted into group-specific queries sent in response to leave group messages, and is also the amount of time between group-specific query messages.' ;
+              type uint16 {
+                range 1..25 ;
+
+              }
+
+              units second ;
+              default 1 ;
+            }
+
+            leaf query-version {
+              description 'Querier version: V1 or V2.' ;
+              type version-type ;
+
+              default v1 ;
+            }
+
+            leaf query-enable {
+              description 'Enable/disable querier in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf ndl-enable {
+              description 'Enable/disable all ports are not allowed to learn dynamic mrouter port(s).' ;
+              type switch-type ;
+
+              default disable ;
+              ncd:revise-date 2018-04-02 ;
+            }
+
+          }
+
+        }
+
+        container drops {
+          description 'The config of group with drop in instance Ring Tree.' ;
+          list drop {
+            description 'The config of group with drop in instance Ring Tree.The max-elements depends on the product.' ;
+            key 'group-ip ring-tree-name' ;
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ring-tree-name {
+              description 'Submode instance name of Ring Tree.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container max-member-nums {
+          description 'The config of group with max-member-num in instance Ring Tree.' ;
+          list max-member-num {
+            description 'The config of group with max-member-num in instance Ring Tree.The max-elements depends on the product.' ;
+            key 'group-ip ring-tree-name' ;
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ring-tree-name {
+              description 'Submode instance name of Ring Tree.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf max-member-num {
+              description 'Max number of MLD member can access to this group.Its default value and maximum value depends on the product.' ;
+              type uint32 {
+                range 1..4000 ;
+
+              }
+
+              default 4000 ;
+            }
+
+          }
+
+        }
+
+        container members {
+          description 'The config of static member in instance Ring Tree.' ;
+          list member {
+            description 'The config of static member in instance Ring Tree.The max-elements depends on the product.' ;
+            key 'interface-name group-ip ring-tree-name' ;
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ring-tree-name {
+              description 'Submode instance name of Ring Tree.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container mrouters {
+          description 'The config of static mrouter in instance Ring Tree.' ;
+          list mrouter {
+            description 'The config of static mrouter in instance Ring Tree.The max-elements depends on the product.' ;
+            key 'interface-name ring-tree-name' ;
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf ring-tree-name {
+              description 'Submode instance name of Ring Tree.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container prejoins {
+          description 'The config of group with prejoin in instance Ring Tree.' ;
+          list prejoin {
+            description 'The config of group with prejoin in instance Ring Tree.The max-elements depends on the product.' ;
+            key 'group-ip ring-tree-name' ;
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf ring-tree-name {
+              description 'Submode instance name of Ring Tree.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2017-11-20 ;
+        }
+
+        container ndls {
+          description 'The config of port not allowed to learn dynamic mrouter in instance Ring Tree.' ;
+          list ndl {
+            description 'The config of port not allowed to learn dynamic mrouter in instance Ring Tree.' ;
+            key 'interface-name ring-tree-name' ;
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf ring-tree-name {
+              description 'Submode instance name of Ring Tree.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+          ncd:revise-date 2018-04-02 ;
+        }
+
+        container interfaces {
+          description 'The config of interface in instance Ring Tree.' ;
+          list interface {
+            description 'The config of interface in instance Ring Tree.' ;
+            key 'interface-name ring-tree-name' ;
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf ring-tree-name {
+              description 'Submode instance name of Ring Tree.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf mrouter-guard {
+              description 'Interface multicast router guard function is enabled.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+          }
+
+          ncd:revise-date 2018-04-02 ;
+        }
+
+        ncd:revise-date 2017-11-02 ;
+      }
+
+      container evpn-vpls {
+        if-feature evpn-vpls ;
+
+        description "MLD snooping EVPN VPLS configure.User can't config MLD snooping in EVPN VPLS if the EVPN VPLS instance not exist.If MLD snooping configuration exist in EVPN VPLS,the EVPN VPLS instance can't be deleted." ;
+        container evpn-vpls-configs {
+          description 'The config of instance EVPN VPLS.' ;
+          list evpn-vpls-config {
+            description 'The config of instance EVPN VPLS.' ;
+            key evpn-vpls-name ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf snooping-switch {
+              description 'Enable/disable MLD snooping in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf member-fast-leave {
+              description 'Enable/disable group membership fast leave in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf acl-name {
+              description 'Configure an ACL rule in this instance.' ;
+              type string {
+                length 0..31 ;
+
+              }
+
+            }
+
+            leaf member-time-out {
+              description 'Member aging time in this instance.' ;
+              type uint16 {
+                range 30..65535 ;
+
+              }
+
+              units second ;
+              default 260 ;
+            }
+
+            leaf mrouter-time-out {
+              description 'Multicast router port aging time in this instance.' ;
+              type uint16 {
+                range 30..65535 ;
+
+              }
+
+              units second ;
+              default 260 ;
+            }
+
+            leaf work-mode {
+              description 'Work mode in this instance: proxy, transparent or router.' ;
+              type work-mode-type ;
+
+              default proxy ;
+            }
+
+            leaf max-group-num {
+              description 'Max number of multicast group can access in this instance.Its default value and maximum value depends on the product.' ;
+              type uint32 {
+                range 1..4294967295 ;
+
+              }
+
+            }
+
+            leaf last-mem-qry-interval {
+              description 'The last member query interval is the max response time inserted into group-specific queries sent in response to leave group messages, and is also the amount of time between group-specific query messages.' ;
+              type uint16 {
+                range 1..25 ;
+
+              }
+
+              units second ;
+              default 1 ;
+            }
+
+            leaf query-version {
+              description 'Querier version: V1 or V2.' ;
+              type version-type ;
+
+              default v1 ;
+            }
+
+            leaf query-enable {
+              description 'Enable/disable querier in this instance.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf ndl-enable {
+              description 'Enable/disable all ports are not allowed to learn dynamic mrouter port(s).' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf learning-vxlan-evpn-tunnel {
+              description 'Learning vxlan-evpn-tunnel.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+            leaf learning-peer-link {
+              description 'Learning peer-link.' ;
+              type switch-type ;
+
+              default disable ;
+              ncd:revise-date 2022-10-10 ;
+            }
+
+            leaf mapping-host-to-multicast {
+              description 'Enable/disable mapping host to multicast.' ;
+              type switch-type ;
+
+              default disable ;
+              ncd:revise-date 2022-12-22 ;
+            }
+
+          }
+
+        }
+
+        container drops {
+          description 'The config of group with drop in instance EVPN VPLS.' ;
+          list drop {
+            description 'The config of group with drop in instance EVPN VPLS.The max-elements depends on the product.' ;
+            key 'group-ip evpn-vpls-name' ;
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container ndls {
+          description 'The config of port not allowed to learn dynamic mrouter in instance EVPN VPLS.' ;
+          list interface {
+            description 'The config of port not allowed to learn dynamic mrouter in instance EVPN VPLS, support interfaces except vlan-interface and static-tunnel.' ;
+            key 'interface-name evpn-vpls-name untag' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf untag {
+              description 'Untag interface' ;
+              type switch-type ;
+
+            }
+
+          }
+
+          list vlan-interface {
+            description 'The config of port not allowed to learn dynamic mrouter in instance EVPN VPLS, when with VLAN interface.' ;
+            key 'interface-name vlan-interface-name evpn-vpls-name' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf vlan-interface-name {
+              description 'VLAN interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+          }
+
+          list static-tunnel {
+            description 'The config of port not allowed to learn dynamic mrouter in instance EVPN VPLS, when with static tunnel.' ;
+            key 'evpn-vpls-name interface-name vni' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf vni {
+              description 'VXLAN network ID.' ;
+              type uint32 {
+                range 1..16777215 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container max-member-nums {
+          description 'The config of group with max-member-num in instance EVPN VPLS.' ;
+          list max-member-num {
+            description 'The config of group with max-member-num in instance EVPN VPLS.The max-elements depends on the product.' ;
+            key 'group-ip evpn-vpls-name' ;
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf max-member-num {
+              description 'Max number of MLD member can access to this group.Its default value and maximum value depends on the product.' ;
+              type uint32 {
+                range 1..4000 ;
+
+              }
+
+              default 4000 ;
+            }
+
+          }
+
+        }
+
+        container mrouters {
+          description 'The config of static mrouter in instance EVPN VPLS.' ;
+          list interface {
+            description 'The config of static mrouter in instance EVPN VPLS, support interfaces except vlan-interface and static-tunnel.' ;
+            key 'interface-name evpn-vpls-name untag' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf untag {
+              description 'Untag interface' ;
+              type switch-type ;
+
+            }
+
+            leaf version {
+              description 'Mrouter port version:V1 or V2.' ;
+              type version-type ;
+
+              default v1 ;
+            }
+
+          }
+
+          list vlan-interface {
+            description 'The config of static mrouter in instance EVPN VPLS, when with VLAN interface.' ;
+            key 'interface-name vlan-interface-name evpn-vpls-name' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf vlan-interface-name {
+              description 'VLAN interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf version {
+              description 'Mrouter port version:V1 or V2.' ;
+              type version-type ;
+
+              default v1 ;
+            }
+
+          }
+
+          list static-tunnel {
+            description 'The config of static mrouter in instance EVPN VPLS, when with static tunnel.' ;
+            key 'evpn-vpls-name interface-name vni' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf vni {
+              description 'VXLAN network ID.' ;
+              type uint32 {
+                range 1..16777215 ;
+
+              }
+
+            }
+
+            leaf version {
+              description 'Mrouter port version:V1 or V2.' ;
+              type version-type ;
+
+              default v1 ;
+            }
+
+          }
+
+        }
+
+        container members {
+          description 'The config of static member in instance EVPN VPLS.The max-elements depends on the product.' ;
+          list interface {
+            description 'The config of static member in instance EVPN VPLS, support interfaces except vlan-interface and static-tunnel.' ;
+            key 'evpn-vpls-name interface-name untag group-ip' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf untag {
+              description 'Untag interface' ;
+              type switch-type ;
+
+            }
+
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+          }
+
+          list vlan-interface {
+            description 'The config of static member in instance EVPN VPLS, when with VLAN interface.' ;
+            key 'evpn-vpls-name interface-name vlan-interface-name group-ip' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf vlan-interface-name {
+              description 'VLAN interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+          }
+
+          list static-tunnel {
+            description 'The config of static member in instance EVPN VPLS, when with static tunnel.' ;
+            key 'evpn-vpls-name interface-name vni group-ip' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf vni {
+              description 'VXLAN network ID.' ;
+              type uint32 {
+                range 1..16777215 ;
+
+              }
+
+            }
+
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+          }
+
+        }
+
+        container prejoins {
+          description 'The config of group with prejoin in instance EVPN VPLS.' ;
+          list prejoin {
+            description 'The config of group with prejoin in instance EVPN VPLS.The max-elements depends on the product.' ;
+            key 'group-ip evpn-vpls-name' ;
+            leaf group-ip {
+              description 'Group IPv6 address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+          }
+
+        }
+
+        container ports {
+          description 'The config of port in instance EVPN VPLS.' ;
+          list interface {
+            description 'The config of port in instance EVPN VPLS, support interfaces except vlan-interface and static-tunnel.' ;
+            key 'interface-name evpn-vpls-name untag' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf untag {
+              description 'Untag interface' ;
+              type switch-type ;
+
+            }
+
+            leaf mrouter-guard {
+              description 'Interface multicast router guard function is enabled.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+          }
+
+          list vlan-interface {
+            description 'The config of port in instance EVPN VPLS, when the port is VLAN interface.' ;
+            key 'interface-name vlan-interface-name evpn-vpls-name' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf vlan-interface-name {
+              description 'VLAN interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf mrouter-guard {
+              description 'Interface multicast router guard function is enabled.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+          }
+
+          list static-tunnel {
+            description 'The config of port in instance EVPN VPLS, when the port is static tunnel.' ;
+            key 'evpn-vpls-name interface-name vni' ;
+            leaf evpn-vpls-name {
+              description 'Submode instance name of EVPN VPLS.' ;
+              type string {
+                length 1..32 ;
+
+              }
+
+            }
+
+            leaf interface-name {
+              description 'Interface name.' ;
+              type ncd:ifname ;
+
+            }
+
+            leaf vni {
+              description 'VXLAN network ID.' ;
+              type uint32 {
+                range 1..16777215 ;
+
+              }
+
+            }
+
+            leaf mrouter-guard {
+              description 'Interface multicast router guard function is enabled.' ;
+              type switch-type ;
+
+              default disable ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2022-08-22 ;
+      }
+
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State model.' ;
+    container mld-snooping {
+      description 'MLD snooping state parameters.' ;
+      container vpls {
+        if-feature vpls ;
+
+        description 'MLD snooping VPLS information.' ;
+        list member {
+          description 'The information of member in instance VPLS.' ;
+          key 'vpls-name group-ip source-ip interface-name' ;
+          leaf vpls-name {
+            description 'Submode instance Name of VPLS.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf group-ip {
+            description 'Group IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf instance-id {
+            description 'Submode instance ID of VPLS.' ;
+            type uint32 {
+              range 1..8000 ;
+
+            }
+
+          }
+
+          leaf state {
+            description 'State of this member.' ;
+            type version-type ;
+
+          }
+
+          leaf mode {
+            description 'Mode of this member.' ;
+            type mode-type ;
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type string {
+              length 1..10 ;
+
+            }
+
+          }
+
+          ncd:select vpls-name ;
+          ncd:select "vpls-name group-ip source-ip" ;
+          ncd:select "vpls-name group-ip source-ip interface-name" ;
+        }
+
+      }
+
+      container vlan {
+        if-feature vlan ;
+
+        description 'MLD snooping VLAN information.' ;
+        list member {
+          description 'The information of member in instance VLAN.' ;
+          key 'vlan-id group-ip source-ip interface-name' ;
+          leaf vlan-id {
+            description 'Submode instance ID of VLAN.' ;
+            type uint32 {
+              range 1..4094 ;
+
+            }
+
+          }
+
+          leaf group-ip {
+            description 'Group IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf state {
+            description 'State of this member.' ;
+            type version-type ;
+
+          }
+
+          leaf mode {
+            description 'Mode of this member.' ;
+            type mode-type ;
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type string {
+              length 1..10 ;
+
+            }
+
+          }
+
+          ncd:select vlan-id ;
+          ncd:select "vlan-id group-ip source-ip" ;
+          ncd:select "vlan-id group-ip source-ip interface-name" ;
+        }
+
+      }
+
+      container vbui {
+        if-feature vbui ;
+
+        description 'MLD snooping VBUI information.' ;
+        list member {
+          description 'The information of member in instance VBUI.' ;
+          key 'vbui-name group-ip source-ip interface-name' ;
+          leaf vbui-name {
+            description 'Submode instance Name of VBUI.' ;
+            type string {
+              length 1..31 ;
+
+            }
+
+          }
+
+          leaf group-ip {
+            description 'Group IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf instance-id {
+            description 'Submode instance ID of VBUI.' ;
+            type uint32 ;
+
+          }
+
+          leaf state {
+            description 'State of this member.' ;
+            type version-type ;
+
+          }
+
+          leaf mode {
+            description 'Mode of this member.' ;
+            type mode-type ;
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type string {
+              length 1..10 ;
+
+            }
+
+          }
+
+          ncd:select vbui-name ;
+          ncd:select "vbui-name group-ip source-ip" ;
+          ncd:select "vbui-name group-ip source-ip interface-name" ;
+        }
+
+      }
+
+      container vrf {
+        if-feature vrf ;
+
+        description 'MLD snooping VRF information.' ;
+        list member {
+          description 'The information of member in instance VRF.' ;
+          key 'vrf-name group-ip source-ip external-vlan-id internal-vlan-id interface-name phy-interface-name' ;
+          leaf vrf-name {
+            description 'Submode instance Name of VRF.' ;
+            type string {
+              length 0..32 ;
+
+            }
+
+          }
+
+          leaf group-ip {
+            description 'Group IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf external-vlan-id {
+            description 'External VLAN ID of this member.' ;
+            type uint32 {
+              range 0..4094 ;
+
+            }
+
+          }
+
+          leaf internal-vlan-id {
+            description 'Internal VLAN ID of this member.' ;
+            type uint32 {
+              range 0..4094 ;
+
+            }
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf phy-interface-name {
+            description 'Physical interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf instance-id {
+            description 'Submode instance ID of VRF.' ;
+            type uint32 ;
+
+          }
+
+          leaf state {
+            description 'State of this member.' ;
+            type version-type ;
+
+          }
+
+          leaf mode {
+            description 'Mode of this member.' ;
+            type mode-type ;
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type string {
+              length 0..10 ;
+
+            }
+
+          }
+
+          ncd:select vrf-name ;
+          ncd:select "vrf-name group-ip source-ip" ;
+          ncd:select "vrf-name group-ip source-ip interface-name" ;
+        }
+
+      }
+
+      container ip-global {
+        if-feature ip-global ;
+
+        description 'MLD snooping IP-GLOBAL information.' ;
+        list member {
+          description 'The information of member in instance IP-GLOBAL.' ;
+          key 'group-ip source-ip external-vlan-id internal-vlan-id interface-name phy-interface-name' ;
+          leaf group-ip {
+            description 'Group IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf external-vlan-id {
+            description 'External VLAN ID of this member.' ;
+            type uint32 {
+              range 0..4094 ;
+
+            }
+
+          }
+
+          leaf internal-vlan-id {
+            description 'Internal VLAN ID of this member.' ;
+            type uint32 {
+              range 0..4094 ;
+
+            }
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf phy-interface-name {
+            description 'Physical interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf state {
+            description 'State of this member.' ;
+            type version-type ;
+
+          }
+
+          leaf mode {
+            description 'Mode of this member.' ;
+            type mode-type ;
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type string {
+              length 0..10 ;
+
+            }
+
+          }
+
+          ncd:select "group-ip source-ip" ;
+          ncd:select "group-ip source-ip interface-name" ;
+        }
+
+      }
+
+      list mrouter {
+        if-feature general-state-mrouter ;
+
+        description 'The information of MLD multicast router.' ;
+        key 'vlan-id vpls-name interface-name' ;
+        leaf vlan-id {
+          description 'Submode instance ID of VLAN.' ;
+          type uint32 {
+            range 0..4094 ;
+
+          }
+
+        }
+
+        leaf vpls-name {
+          description 'Submode instance Name of VPLS.' ;
+          type string {
+            length 0..32 ;
+
+          }
+
+        }
+
+        leaf interface-name {
+          description 'Interface name of this mrouter.' ;
+          type ncd:ifname ;
+
+        }
+
+        leaf vpn-id {
+          description 'Submode instance ID of VPLS.' ;
+          type uint32 {
+            range 0..8000 ;
+
+          }
+
+        }
+
+        leaf state {
+          description 'State of this mrouter.' ;
+          type mode-type ;
+
+        }
+
+        leaf version {
+          description 'Version state of this mrouter.' ;
+          type version-type ;
+
+        }
+
+        leaf remain-time {
+          description 'Remain time of this mrouter.' ;
+          type uint32 {
+            range 0..65535 ;
+
+          }
+
+          units second ;
+        }
+
+        ncd:select "vlan-id interface-name" ;
+        ncd:select "vpls-name interface-name" ;
+      }
+
+      container summary {
+        description 'Show summary info of groups, members and routers.' ;
+        container group {
+          description 'Show summary info of groups.' ;
+          container global {
+            description 'Show global summary info of groups.' ;
+            leaf total {
+              description 'Total groups number.' ;
+              type uint32 ;
+
+            }
+
+            leaf exist-host {
+              description 'Groups Number with host.' ;
+              type uint32 ;
+
+            }
+
+            leaf cfg-drop {
+              description 'Groups number configured as drop.' ;
+              type uint32 ;
+
+            }
+
+            leaf cfg-prejoin {
+              description 'Groups number configured as prejoin.' ;
+              type uint32 ;
+
+            }
+
+            leaf cfg-max-host {
+              description 'Groups number with max hosts limited.' ;
+              type uint32 ;
+
+            }
+
+            leaf source-specific {
+              description 'Source-specific groups number.' ;
+              type uint32 ;
+
+            }
+
+            leaf anycast-specific {
+              description 'Anycast-specific groups number.' ;
+              type uint32 ;
+
+            }
+
+          }
+
+        }
+
+        container member {
+          description 'Show summary info of members.' ;
+          container global {
+            description 'Show global summary info of members.' ;
+            leaf total {
+              description 'Total members number.' ;
+              type uint32 ;
+
+            }
+
+            leaf dynamic {
+              description 'Dynamic members number.' ;
+              type uint32 ;
+
+            }
+
+            leaf static {
+              description 'Static members number.' ;
+              type uint32 ;
+
+            }
+
+          }
+
+        }
+
+        container mrouter {
+          description 'Show summary info of routers.' ;
+          container global {
+            description 'Show global summary info of routers.' ;
+            leaf total {
+              description 'Total mrouter ports number.' ;
+              type uint32 ;
+
+            }
+
+            leaf dynamic {
+              description 'Dynamic mrouter ports number.' ;
+              type uint32 ;
+
+            }
+
+            leaf static {
+              description 'Static mrouter ports number.' ;
+              type uint32 ;
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container ring-tree {
+        if-feature ring-tree ;
+
+        description 'MLD snooping Ring Tree information.' ;
+        list member {
+          description 'The information of member in instance Ring Tree.' ;
+          key 'ring-tree-name group-ip source-ip interface-name' ;
+          leaf ring-tree-name {
+            description 'Submode instance name of Ring Tree.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf group-ip {
+            description 'Group IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf instance-id {
+            description 'Submode instance ID of Ring Tree.' ;
+            type uint32 {
+              range 1..65535 ;
+
+            }
+
+          }
+
+          leaf state {
+            description 'State of this member.' ;
+            type version-type ;
+
+          }
+
+          leaf mode {
+            description 'Mode of this member.' ;
+            type mode-type ;
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type string {
+              length 1..10 ;
+
+            }
+
+          }
+
+          ncd:select "ring-tree-name group-ip source-ip" ;
+          ncd:select ring-tree-name ;
+          ncd:select "ring-tree-name group-ip source-ip interface-name" ;
+        }
+
+        list mrouter {
+          description 'The information of MLD multicast router.' ;
+          key 'ring-tree-name interface-name' ;
+          leaf ring-tree-name {
+            description 'Submode instance name of Ring Tree.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this mrouter.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf instance-id {
+            description 'Submode instance ID of Ring Tree.' ;
+            type uint32 {
+              range 1..65535 ;
+
+            }
+
+          }
+
+          leaf state {
+            description 'State of this mrouter.' ;
+            type mode-type ;
+
+          }
+
+          leaf version {
+            description 'Version state of this mrouter.' ;
+            type version-type ;
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this mrouter.' ;
+            type uint32 {
+              range 0..65535 ;
+
+            }
+
+            units second ;
+          }
+
+          ncd:select "ring-tree-name interface-name" ;
+        }
+
+        ncd:revise-date 2017-11-02 ;
+      }
+
+      container evpn-vpls {
+        if-feature evpn-vpls ;
+
+        description 'MLD snooping EVPN VPLS information.' ;
+        list member {
+          description 'The information of member in instance EVPN VPLS.' ;
+          key 'evpn-vpls-name group-ip source-ip interface-name vni external-vlan-id internal-vlan-id' ;
+          leaf evpn-vpls-name {
+            description 'Submode instance name of EVPN VPLS.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf group-ip {
+            description 'Group IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf source-ip {
+            description 'Source IPv6 address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this member.' ;
+            type string {
+              length 1..59 ;
+
+            }
+
+          }
+
+          leaf vni {
+            description 'VXLAN network ID.' ;
+            type uint32 {
+              range 0..16777215 ;
+
+            }
+
+          }
+
+          leaf external-vlan-id {
+            description 'External VLAN ID of this member.' ;
+            type uint32 {
+              range 0..4096 ;
+
+            }
+
+          }
+
+          leaf internal-vlan-id {
+            description 'Internal VLAN ID of this member.' ;
+            type uint32 {
+              range 0..4096 ;
+
+            }
+
+          }
+
+          leaf state {
+            description 'State of this member.' ;
+            type version-type ;
+
+          }
+
+          leaf mode {
+            description 'Mode of this member.' ;
+            type mode-type ;
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this member.' ;
+            type string {
+              length 1..10 ;
+
+            }
+
+          }
+
+          leaf present-time {
+            description 'Present time of this member.' ;
+            type string {
+              length 1..10 ;
+
+            }
+
+          }
+
+          ncd:select evpn-vpls-name ;
+          ncd:select "evpn-vpls-name group-ip source-ip" ;
+          ncd:select "evpn-vpls-name group-ip source-ip interface-name" ;
+        }
+
+        list mrouter {
+          description 'The information of MLD multicast router.' ;
+          key 'evpn-vpls-name interface-name vni external-vlan-id internal-vlan-id' ;
+          leaf evpn-vpls-name {
+            description 'Submode instance name of EVPN VPLS.' ;
+            type string {
+              length 1..32 ;
+
+            }
+
+          }
+
+          leaf interface-name {
+            description 'Interface name of this mrouter.' ;
+            type ncd:ifname ;
+
+          }
+
+          leaf vni {
+            description 'VXLAN network ID.' ;
+            type uint32 {
+              range 0..16777215 ;
+
+            }
+
+          }
+
+          leaf external-vlan-id {
+            description 'External VLAN ID of this mrouter.' ;
+            type uint32 {
+              range 0..4096 ;
+
+            }
+
+          }
+
+          leaf internal-vlan-id {
+            description 'Internal VLAN ID of this mrouter.' ;
+            type uint32 {
+              range 0..4096 ;
+
+            }
+
+          }
+
+          leaf state {
+            description 'State of this mrouter.' ;
+            type mode-type ;
+
+          }
+
+          leaf version {
+            description 'Version state of this mrouter.' ;
+            type version-type ;
+
+          }
+
+          leaf querier-ip {
+            description 'Querier IP address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          leaf remain-time {
+            description 'Remain time of this mrouter.' ;
+            type uint32 {
+              range 0..65535 ;
+
+            }
+
+            units second ;
+          }
+
+          leaf present-time {
+            description 'Present time of this mrouter.' ;
+            type string {
+              length 1..10 ;
+
+            }
+
+          }
+
+          ncd:select "evpn-vpls-name interface-name" ;
+        }
+
+        ncd:revise-date 2022-08-22 ;
+      }
+
+    }
+
+  }
+
+  container operation {
+    config false ;
+    description 'Command of MLD snooping clear.' ;
+    container mld-snooping {
+      description 'Clear MLD snooping groups.' ;
+      container clear {
+        description 'Clear MLD snooping groups.' ;
+        container group {
+          description 'Clear the specific group of the specific instance.' ;
+          presence group ;
+          leaf group-ip {
+            description 'Multicast group IP address.' ;
+            type ncd:ipv6-address ;
+
+            mandatory true ;
+          }
+
+          leaf source-ip {
+            description 'Source IP address.' ;
+            type ncd:ipv6-address ;
+
+          }
+
+          choice instance {
+            description 'Instance.' ;
+            mandatory true ;
+            case vlan {
+              if-feature vlan ;
+
+              description 'Clear all groups of the specific VLAN instance.' ;
+              leaf vlan-id {
+                description 'VLAN ID.' ;
+                type uint16 {
+                  range 1..4094 ;
+
+                }
+
+              }
+
+            }
+
+            case vpls {
+              if-feature vpls ;
+
+              description 'Clear all groups of the specific VPLS instance.' ;
+              leaf vpls-name {
+                description 'VPLS name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+            case ip-global {
+              if-feature ip-global ;
+
+              description 'Clear all groups of the specific IP-global instance.' ;
+              leaf ip-global {
+                description 'IP-global.' ;
+                type empty ;
+
+              }
+
+            }
+
+            case ring-tree {
+              if-feature ring-tree ;
+
+              description 'Clear all groups of the specific Ring Tree instance.' ;
+              leaf ring-tree-name {
+                description 'Ring Tree name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              ncd:revise-date 2017-11-02 ;
+            }
+
+            case vrf {
+              if-feature vrf ;
+
+              description 'Clear all groups of the specific VRF instance.' ;
+              leaf vrf-name {
+                description 'VRF name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              ncd:revise-date 2017-12-08 ;
+            }
+
+            case evpn-vpls {
+              if-feature evpn-vpls ;
+
+              description 'Clear all groups of the specific EVPN VPLS instance.' ;
+              leaf evpn-vpls-name {
+                description 'Submode instance name of EVPN VPLS.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              ncd:revise-date 2022-08-22 ;
+            }
+
+          }
+
+        }
+
+        container groups {
+          description 'Clear all groups of the specific instance.' ;
+          choice type {
+            description 'Clear all groups of the specific instance.' ;
+            case vlan {
+              if-feature vlan ;
+
+              description 'Clear all groups of the specific VLAN instance.' ;
+              leaf vlan-id {
+                description 'VLAN ID.' ;
+                type uint16 {
+                  range 1..4094 ;
+
+                }
+
+              }
+
+            }
+
+            case vpls {
+              if-feature vpls ;
+
+              description 'Clear all groups of the specific VPLS instance.' ;
+              leaf vpls-name {
+                description 'VPLS name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+            }
+
+            case ip-global {
+              if-feature ip-global ;
+
+              description 'Clear all groups of the specific IP-global instance.' ;
+              leaf ip-global {
+                description 'IP-global.' ;
+                type empty ;
+
+              }
+
+            }
+
+            case ring-tree {
+              if-feature ring-tree ;
+
+              description 'Clear all groups of the specific Ring Tree instance.' ;
+              leaf ring-tree-name {
+                description 'Ring Tree name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              ncd:revise-date 2017-11-02 ;
+            }
+
+            case vrf {
+              if-feature vrf ;
+
+              description 'Clear all groups of the specific VRF instance.' ;
+              leaf vrf-name {
+                description 'VRF name.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              ncd:revise-date 2017-12-08 ;
+            }
+
+            case all {
+              description 'Clear all groups.' ;
+              leaf all-groups {
+                description 'All groups.' ;
+                type empty ;
+
+              }
+
+            }
+
+            case evpn-vpls {
+              if-feature evpn-vpls ;
+
+              description 'Clear all groups of the specific EVPN VPLS instance.' ;
+              leaf evpn-vpls-name {
+                description 'Submode instance name of EVPN VPLS.' ;
+                type string {
+                  length 1..32 ;
+
+                }
+
+              }
+
+              ncd:revise-date 2022-08-22 ;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

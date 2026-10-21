@@ -1,0 +1,1529 @@
+module zxr10-tunnel-policy {
+  namespace "http://www.zte.com.cn/zxr10/netconf/schema/rosng/tscm" ;
+  prefix tscm ;
+  yang-version 1 ;
+  import zxr10-netconf-defs {
+    prefix ncd ;
+    revision-date 2015-11-09 ;
+  }
+
+  organization "ZTE Corporation" ;
+  contact "ZTE Corporation
+  Nanjing Institute of ZTE Corporation
+  No.68 Zijinghua Rd. Yuhuatai District, Nanjing, China
+  Tel: +86-25-52870000" ;
+  description 'The netconf module to describe tunnel policy configuration. Tunnel policy is used to select outer forwarding tunnel for L2VPN or L3VPN business. Outer tunnel could be TE lsp or LDP lsp. Configuration include a instance and its several attributes.' ;
+  revision 2025-06-24 {
+    description '1.Add leaf "fifth-seq-lsp-type" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:select-policy/tscm:lsp-sequence/tscm:lsp-sequence' ;
+  }
+
+  revision 2024-08-22 {
+    description '1.Add leaf "fourth-seq-lsp-type" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:select-policy/tscm:lsp-sequence/tscm:lsp-sequence' ;
+  }
+
+  revision 2024-04-11 {
+    description '1.Add a case named "interface" in choice of select-policy, add contain "interface" in the case and leaf "interface-name" in the contain. Support policy configuration gre tunnel.
+2.The corresponding modify Description and Reference for choice of select-policy.' ;
+  }
+
+  revision 2023-04-12 {
+    description '1.Add "range 1..4294967295" for /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:srv6-te/tscm:srv6-te-id.' ;
+  }
+
+  revision 2021-12-24 {
+    description 'The length attribute of leaf "/tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:route-map-name" is modified from 0..31 to 0..200' ;
+  }
+
+  revision 2021-11-19 {
+    description '1.Add choice "extend-attributes" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:preferred
+2.Add case "select-seq-attr" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:preferred/extend-attributes
+3.Add case "second-te-attr" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:preferred/extend-attributes
+4.Add leaf "second-teif-name" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:preferred/extend-attributes/second-te-attr
+5.Add leaf "disable-switch-sd" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:preferred/extend-attributes/second-te-attr
+6.Move leaf "fallback" from /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:preferred/fallback to /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:preferred/extend-attributes/select-seq-attr/fallback' ;
+  }
+
+  revision 2021-06-03 {
+    description '1.Add "load-balance-number" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:lsp-sequence
+2.Add "disable-mix" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:lsp-sequence' ;
+  }
+
+  revision 2020-10-12 {
+    description 'Adding contain named state in "/tscm:state".' ;
+  }
+
+  revision 2020-09-23 {
+    description 'Modify the range of leaf "/tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:te-ecmp/tscm:te-ecmp-id" from range 1..128 to range 1..65535.' ;
+  }
+
+  revision 2020-06-20 {
+    description 'Adding contain named bier in "/tscm:configuration/tscm:tunnel-selection".' ;
+  }
+
+  revision 2020-05-20 {
+    description '1.Add "binding-policy" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:bind-peer-sets/tscm:ipv4-peer-sets/tscm:ipv4-peer
+1.Add "binding-policy" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:bind-peer-sets/tscm:ipv6-peer-sets/tscm:ipv6-peer' ;
+  }
+
+  revision 2020-03-20 {
+    description 'Adding contain named unicast-route in "/tscm:configuration/tscm:tunnel-selection".' ;
+  }
+
+  revision 2020-03-12 {
+    description '1.Add contain in "/tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:bind-peer-sets/tscm:ipv4-peer-sets/tscm:ipv4-peer" to config SRv6 TE
+2.Add contain "/tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:bind-peer-sets/tscm:ipv6-peer-sets/tscm:ipv6-peer" to config SRv6 TE' ;
+  }
+
+  revision 2020-02-17 {
+    description '1. Add leaf /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:te-ecmp/tscm:down-switch;
+2. Add leaf /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:te-ecmp/tscm:select-seq;
+3. Add leaf /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:te-ecmp/tscm:third-seq-lsp;' ;
+  }
+
+  revision 2019-05-08 {
+    description '1.Add a case named "empty" in choice of select-policy.
+2.Add a case named "lsp-sequence" in choice of select-policy.
+3.Add a case named "binding" in choice of select-policy.' ;
+  }
+
+  revision 2019-03-14 {
+    description '1.Add contain bgp-vpnv4 in /tscm:configuration/tscm:tunnel-selection.
+2.Add contain bgp-vpnv6 in /tscm:configuration/tscm:tunnel-selection.' ;
+  }
+
+  revision 2018-06-27 {
+    description '1.Add global typedef "select-lsp-type";
+2.Add leaf "third-seq-lsp-type" in /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:select-policy/tscm:auto/tscm:auto and /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:select-policy/tscm:preferred/tscm:preferred;
+3.Expand typedef for leaf/tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:select-policy/tscm:auto/tscm:auto/tscm:select-seq and /tscm:configuration/tscm:tunnel-policy/tscm:policies/tscm:instance/tscm:select-policy/tscm:preferred/tscm:preferred/tscm:select-seq' ;
+  }
+
+  revision 2018-06-04 {
+    description 'Add contain named "tunnel-selection" in the configuration.' ;
+  }
+
+  revision 2018-05-10 {
+    description 'Add a case named "srv6-te" in the choice of select-policy, add contain "srv6-te" in this case and leaf "srv6-te-id" in the contain. Support policy configuration srv6 tunnel.' ;
+  }
+
+  revision 2018-02-12 {
+    description 'Add the leaf node named "ldp-lsp-pref" in "configuration/tunnel-policy/policies/instance/select-policy/auto" and "configuration/tunnel-policy/policies/instance/select-policy/prefferred", Which supports multi-type label selection in LDP overlay TE scene.' ;
+  }
+
+  revision 2016-10-16 {
+    description '1.Add a case named "gre" in choice of select-policy, add contain "gre" in the case and leaf "gre-intf-name" in the contain. Support policy configuration gre tunnel.
+2.The corresponding modify Description and Reference for choice of select-policy.' ;
+  }
+
+  revision 2014-04-23 {
+    description 'Add "default auto" clause in choice "select-policy", for selecting a branch when all the attibutes are defult values.' ;
+  }
+
+  revision 2013-12-12 {
+    description 'Leaf named "route-map-name",change attribute of "mandatory" from "true" to "false",and add default value "null",change min range from 1 to 0; Container named "preferred",remove presence being assigned "Preferred strategy.",Container named "enforce",remove presence being assigned "Inforced strategy.",Container named "auto",remove presence being assigned "Automatically strategy."; Leaf named "te-ecmp-id",add range: min is 1, max is 128.' ;
+  }
+
+  revision 2013-11-06 {
+    description 'Tunnel policy add a type, named te-ecmp. Users can specify a rsvp-te-ecmp-id to tunnel policy, L2vpn or L3vpn can use the rsvp-te-ecmp via this type tunnel policy. Accordingly, module add a select case named "te-ecmp", add a container "te-ecmp" in the case, add a leaf "te-ecmp-id" in the container. Besides, module add a leaf of "route-map-name" in the list of "instance", If tunnel policy select a tuunel by route, matching by the route map. Third,move the leaf "te-intf-name" front of leaf "fallback-flag" in the container "preferred".' ;
+  }
+
+  revision 2013-07-25 {
+    description 'Initial version' ;
+  }
+
+  typedef select-lsp-type {
+    type enumeration {
+      enum te-lsp {
+        value 3 ;
+      }
+
+      enum ldp-lsp {
+        value 2 ;
+      }
+
+      enum sr-be {
+        value 1 ;
+      }
+
+      enum invalid {
+        value 0 ;
+      }
+
+    }
+
+  }
+
+  typedef result-lsp-type {
+    type enumeration {
+      enum te-tunnel {
+        value 1 ;
+        description 'The select result is TE tunnel.' ;
+      }
+
+      enum ldp-lsp {
+        value 2 ;
+        description 'The select result is LDP-LSP' ;
+      }
+
+      enum te-ecmp {
+        value 3 ;
+        description 'The select result is te-ecmp-group.' ;
+      }
+
+      enum gre-tunnel {
+        value 4 ;
+        description 'The select result is gre tunnel.' ;
+      }
+
+      enum srv6-tunnel {
+        value 5 ;
+        description 'The select result is srv6 tunnel.' ;
+      }
+
+      enum sr-be {
+        value 6 ;
+        description 'The select result is SR-BE.' ;
+      }
+
+      enum te-ldsh {
+        value 7 ;
+        description 'The select result multi tunnel load-sharing, the destination is IPv4.' ;
+      }
+
+      enum te-ldsh6 {
+        value 8 ;
+        description 'The select result multi tunnel load-sharing, the destination is IPv6.' ;
+      }
+
+      enum sr-policy {
+        value 9 ;
+        description 'The select result is sr-policy.' ;
+      }
+
+      enum color-lsp {
+        value 10 ;
+        description 'The select result is BGP color LSP.' ;
+      }
+
+      enum sr-policy-group {
+        value 11 ;
+        description 'The select result is sr policy group.' ;
+      }
+
+      enum invalid {
+        value 0 ;
+        description 'The select result is invalid.' ;
+      }
+
+      enum interface {
+        value 13 ;
+        description 'The select result is interface.' ;
+      }
+
+    }
+
+    description 'Select result lsp type.' ;
+  }
+
+  typedef address-family-type {
+    type enumeration {
+      enum Share {
+        value 0 ;
+        description 'The select result shared by IPv4 and IPv6 address family routes. The configuration command that produces this result is peer <ip-address> tunnel policy <policy-name> in address-family ipv4 or address-family ipv6.' ;
+      }
+
+      enum IPv4 {
+        value 1 ;
+        description 'The select result used by the IPv4 address family routing. The configuration command that produces this result is tunnel policy <policy-name> in address-family ipv4.' ;
+      }
+
+      enum IPv6 {
+        value 2 ;
+        description 'The select result used by the IPv6 address family routing. The configuration command that produces this result is tunnel policy <policy-name> in address-family ipv6.' ;
+      }
+
+    }
+
+    description 'Select result address family type.' ;
+  }
+
+  typedef result-fwd-state {
+    type enumeration {
+      enum OK {
+        value 0 ;
+        description 'Select result forwarding status is up.' ;
+      }
+
+      enum SF {
+        value 1 ;
+        description 'Select result forwarding status is down.' ;
+      }
+
+      enum SD {
+        value 2 ;
+        description 'Select result forwarding status is SD.' ;
+      }
+
+    }
+
+    description 'Select result forwarding state.' ;
+  }
+
+  typedef selecting-lsp-type {
+    type enumeration {
+      enum bgp {
+        value 7 ;
+      }
+
+      enum be {
+        value 6 ;
+      }
+
+      enum sr-te {
+        value 5 ;
+      }
+
+      enum rsvp-te {
+        value 4 ;
+      }
+
+      enum te-lsp {
+        value 3 ;
+      }
+
+      enum ldp-lsp {
+        value 2 ;
+      }
+
+      enum sr-be {
+        value 1 ;
+      }
+
+      enum invalid {
+        value 0 ;
+      }
+
+    }
+
+  }
+
+  container configuration {
+    description 'Configuration model info.' ;
+    container tunnel-policy {
+      description 'Tunnel policy configuration info.' ;
+      container policies {
+        description 'Tunnel policy configure parameters info.' ;
+        list instance {
+          description "Configure tunnel policy instance parameters. If L2VPN or L3VPN use a tunnel policy, it must be existent. Tunnel policy can't be deleted or modified when it's used." ;
+          max-elements 65536 ;
+          key name ;
+          leaf name {
+            description 'Tunnel policy instance name, Unique key of the object, length is 1 to 63 chars.' ;
+            type string {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf route-map-name {
+            description 'Tunnel policy instance config route map name. If tunnel policy select a tuunel by route, matching by the route map , if not config route map,try best match.' ;
+            type string {
+              length 0..200 ;
+
+            }
+
+            default '' ;
+          }
+
+          choice select-policy {
+            description 'Tunnel policy instance select policy configuration. Tunnel policy has five types, preferred, enforce, auto, te-ecmp and gre. Preferred has three attributes, fallback-flag, select-seq and TE interface name; enforce has only one attribute of TE interface name; auto also has only one attribute of select-seq, te-ecmp has only one attribute of te-ecmp-id; GRE has only one attribute of gre interface name.' ;
+            default auto ;
+            case preferred {
+              description '"Preferred" type tunnel policy related attribute configuration' ;
+              container preferred {
+                description '"Preferred" type tunnel policy related attribute configuration parameters' ;
+                leaf te-intf-name {
+                  description "Tunnel policy instance preferred TE interface name. The tunnel can't be using as a back tunnel in a tunnel group, accordingly, a back tunnel in tunnel group can't be used in tunnel policy." ;
+                  type string {
+                    length 1..31 {
+                      description 'tunnel policy instance config tunnel name' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+                choice extend-attributes {
+                  description 'Configuration parameters of the extended attributes of the "preferred" type tunnel policy.' ;
+                  default fall-back-attr ;
+                  case fall-back-attr {
+                    description 'LSP selection sequence attribute configuration.' ;
+                    leaf fallback-flag {
+                      description 'Tunnel policy instance fallback attribute flag. Allowed fallback is 0, forbidden is 1. Only preferred policy use the attribute, default is Allow fallback.' ;
+                      type enumeration {
+                        enum allowed {
+                          value 0 ;
+                          description 'allowed fallback' ;
+                        }
+
+                        enum forbidden {
+                          value 1 ;
+                          description 'forbidden fallback' ;
+                        }
+
+                      }
+
+                      default allowed ;
+                    }
+
+                  }
+
+                  case second-te-attr {
+                    description 'Secondary tunnel attribute configuration.' ;
+                    container second-te-attrs {
+                      description 'Secondary tunnel attributes configuration.' ;
+                      presence second-te-attrs ;
+                      leaf second-teif-name {
+                        description 'Secondary TE interface name of prefer tunnel policy instance. If you configure a secondary tunnel, the selection result is only between the preferred tunnel and the secondary tunnel.' ;
+                        type string {
+                          length 1..31 {
+                            description 'tunnel policy instance config secondary tunnel name' ;
+                          }
+
+                        }
+
+                        mandatory true ;
+                      }
+
+                      leaf disable-switch-sd {
+                        description 'If this flag is enabled, the secondary tunnel is selected, and the SD status will not be transmitted to the client. SD status will be transmitted by default.' ;
+                        type boolean ;
+
+                        default false ;
+                      }
+
+                    }
+
+                  }
+
+                  ncd:revise-date 2021-11-19 ;
+                }
+
+                leaf select-seq {
+                  description 'Tunnel policy instance select sequence attribute flag. TE lsp first and LDP second is 0, LDP first and TE second is 1,SR-BE fisrt and LDP second is 2, LDP first and SR-BE second is 3, SR-BE first and TE lsp second is 4, TE lsp first and SR-BE second is 5.Default is TE first and LDP second.' ;
+                  type enumeration {
+                    enum te-first {
+                      value 0 ;
+                      description 'te first ldp second sequence' ;
+                    }
+
+                    enum ldp-first {
+                      value 1 ;
+                      description 'ldp first te second sequence' ;
+                    }
+
+                    enum sr-ldp-seq {
+                      value 2 ;
+                      description 'sr-be first ldp lsp second sequence' ;
+                    }
+
+                    enum ldp-sr-seq {
+                      value 3 ;
+                      description 'ldp lsp first sr-te second sequence' ;
+                    }
+
+                    enum sr-te-seq {
+                      value 4 ;
+                      description 'sr-be first te lsp second sequence' ;
+                    }
+
+                    enum te-sr-seq {
+                      value 5 ;
+                      description 'te lsp first sr-be second  sequence' ;
+                    }
+
+                  }
+
+                  default te-first ;
+                }
+
+                leaf ldp-lsp-pref {
+                  description 'When a route contains the next hop of the LDP overlay TE and other next hops with only the LDP label are exported, you can enable L2vpn or L3vpn to preempt the LDP over TE or go directly to the TE or take the next hop of pure LDP.' ;
+                  type enumeration {
+                    enum best-routing {
+                      value 0 ;
+                      description 'Enable L2vpn or L3vpn to preempt the LDP over TE next hop,this is the default configuration.' ;
+                    }
+
+                    enum ldp-only {
+                      value 1 ;
+                      description 'Enable L2vpn or L3vpn to preempt the next hop of pure LDP labels.' ;
+                    }
+
+                    enum te-alone {
+                      value 2 ;
+                      description 'Enable L2vpn or L3vpn to go directly to the TE first.' ;
+                    }
+
+                  }
+
+                  default best-routing ;
+                  ncd:revise-date 2018-02-12 ;
+                }
+
+                leaf third-seq-lsp-type {
+                  description 'Third selecting LSP type.TE LSP is 3,LDP LSP is 2,SR-BE is 1,invalid is 0.' ;
+                  type select-lsp-type ;
+
+                  default invalid ;
+                  ncd:revise-date 2018-06-27 ;
+                }
+
+              }
+
+            }
+
+            case enforce {
+              description '"Enforce" type tunnel policy related attribute configuration' ;
+              container enforce {
+                description '"Enforce" type tunnel policy related attribute configuration parameters' ;
+                leaf te-intf-name {
+                  description "Tunnel policy instance specify TE interface name. The tunnel can't be using as a back tunnel in a tunnel group, accordingly,a back tunnel in tunnel group can't be used in tunnel policy." ;
+                  type string {
+                    length 1..31 {
+                      description 'tunnel policy instance config tunnel name' ;
+                    }
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case auto {
+              description '"Auto" type tunnel policy related attribute configuration' ;
+              container auto {
+                description '"Auto" type tunnel policy related attribute configuration parameters' ;
+                leaf select-seq {
+                  description 'Tunnel policy instance select sequence attribute flag. TE lsp first and LDP second is 0, LDP first and TE second is 1,SR-BE fisrt and LDP second is 2, LDP first and SR-BE second is 3, SR-BE first and TE lsp second is 4, TE lsp first and SR-BE second is 5.Default is TE first and LDP second.' ;
+                  type enumeration {
+                    enum te-first {
+                      value 0 ;
+                      description 'te first ldp second sequence' ;
+                    }
+
+                    enum ldp-first {
+                      value 1 ;
+                      description 'ldp first te second sequence' ;
+                    }
+
+                    enum sr-ldp-seq {
+                      value 2 ;
+                      description 'sr-be first ldp lsp second sequence' ;
+                    }
+
+                    enum ldp-sr-seq {
+                      value 3 ;
+                      description 'ldp lsp first sr-te second sequence' ;
+                    }
+
+                    enum sr-te-seq {
+                      value 4 ;
+                      description 'sr-be first te lsp second sequence' ;
+                    }
+
+                    enum te-sr-seq {
+                      value 5 ;
+                      description 'te lsp first sr-be second  sequence' ;
+                    }
+
+                  }
+
+                  default te-first ;
+                }
+
+                leaf ldp-lsp-pref {
+                  description 'When a route contains the next hop of the LDP overlay TE and other next hops with only the LDP label are exported, you can enable L2vpn or L3vpn to preempt the LDP over TE or go directly to the TE or take the next hop of pure LDP.' ;
+                  type enumeration {
+                    enum best-routing {
+                      value 0 ;
+                      description 'Enable L2vpn or L3vpn to preempt the LDP over TE next hop,this is the default configuration.' ;
+                    }
+
+                    enum ldp-only {
+                      value 1 ;
+                      description 'Enable L2vpn or L3vpn to preempt the next hop of pure LDP labels.' ;
+                    }
+
+                    enum te-alone {
+                      value 2 ;
+                      description 'Enable L2vpn or L3vpn to go directly to the TE first.' ;
+                    }
+
+                  }
+
+                  default best-routing ;
+                  ncd:revise-date 2018-02-12 ;
+                }
+
+                leaf third-seq-lsp-type {
+                  description 'Third selecting LSP type.TE LSP is 3,LDP LSP is 2,SR-BE is 1,invalid is 0.' ;
+                  type select-lsp-type ;
+
+                  default invalid ;
+                  ncd:revise-date 2018-06-27 ;
+                }
+
+              }
+
+            }
+
+            case te-ecmp {
+              description '"TE-ecmp" type tunnel policy related attribute configuration' ;
+              container te-ecmp {
+                description '"te-ecmp" type tunnel policy related attribute configuration parameters' ;
+                leaf te-ecmp-id {
+                  description 'Tunnel policy instance specify RSVP-TE-ECMP-ID.' ;
+                  type uint32 {
+                    range 1..65535 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+                leaf down-switch {
+                  description 'After the option is enable, if the TE ECMP are unavailable, policy will select LDP lSP or SR BE.' ;
+                  type boolean ;
+
+                  default false ;
+                  ncd:revise-date 2020-02-17 ;
+                }
+
+                leaf select-seq {
+                  description 'Tunnel policy instance select sequence attribute flag. TE lsp first and LDP second is 0, LDP first and TE second is 1,SR-BE fisrt and LDP second is 2, LDP first and SR-BE second is 3, SR-BE first and TE lsp second is 4, TE lsp first and SR-BE second is 5.Default is TE first and LDP second.' ;
+                  type enumeration {
+                    enum te-first {
+                      value 0 ;
+                      description 'te first ldp second sequence' ;
+                    }
+
+                    enum ldp-first {
+                      value 1 ;
+                      description 'ldp first te second sequence' ;
+                    }
+
+                    enum sr-ldp-seq {
+                      value 2 ;
+                      description 'sr-be first ldp lsp second sequence' ;
+                    }
+
+                    enum ldp-sr-seq {
+                      value 3 ;
+                      description 'ldp lsp first sr-te second sequence' ;
+                    }
+
+                    enum sr-te-seq {
+                      value 4 ;
+                      description 'sr-be first te lsp second sequence' ;
+                    }
+
+                    enum te-sr-seq {
+                      value 5 ;
+                      description 'te lsp first sr-be second  sequence' ;
+                    }
+
+                  }
+
+                  default te-first ;
+                  ncd:revise-date 2020-02-17 ;
+                }
+
+                leaf third-seq-lsp-type {
+                  description 'Third selecting LSP type.TE LSP is 3,LDP LSP is 2,SR-BE is 1,invalid is 0.' ;
+                  type select-lsp-type ;
+
+                  default invalid ;
+                  ncd:revise-date 2020-02-17 ;
+                }
+
+              }
+
+            }
+
+            case gre {
+              description '"Gre" type tunnel policy related attribute configuration' ;
+              container gre {
+                description '"Gre" type tunnel policy related attribute configuration parameters' ;
+                leaf gre-intf-name {
+                  description 'Tunnel policy instance specify Gre interface name.' ;
+                  type ncd:ifname ;
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+            case srv6-te {
+              description 'Tunnel policy configuration of "SRv6" type.' ;
+              container srv6-te {
+                description '"SRv6" type tunnel policy related attribute configuration.' ;
+                leaf srv6-te-id {
+                  description 'Tunnel policy instance specify SRv6 tunnel ID.' ;
+                  type uint32 {
+                    range 1..4294967295 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              ncd:revise-date 2018-05-10 ;
+            }
+
+            case empty {
+              description '"Empty" type tunnel policy related attribute configuration.' ;
+              container empty {
+                description '"Empty" type tunnel policy.' ;
+                leaf empty-tag {
+                  description '"empty" type tunnel policy tag.' ;
+                  type empty ;
+
+                }
+
+              }
+
+              ncd:revise-date 2019-05-08 ;
+            }
+
+            case lsp-sequence {
+              description '"Lsp-sequence" type tunnel policy related attribute configuration.' ;
+              container lsp-sequence {
+                description 'LSP selection order configuration of the Tunnel policy.' ;
+                leaf lsp-seq-tag {
+                  description '"Lsp-sequence" type tunnel policy tag.' ;
+                  type empty ;
+
+                }
+
+                leaf first-sel-type {
+                  description 'First selecting LSP type.BGP is 7,BE is 6,SR TE is 5,RSVP TE is 4,TE LSP is 3,LDP LSP is 2,SR-BE is 1,invalid is 0.' ;
+                  default invalid ;
+                  type selecting-lsp-type ;
+
+                }
+
+                leaf second-sel-type {
+                  type selecting-lsp-type ;
+
+                  description 'Second selecting LSP type.BGP is 7,BE is 6,SR TE is 5,RSVP TE is 4,TE LSP is 3,LDP LSP is 2,SR-BE is 1,invalid is 0.' ;
+                  default invalid ;
+                }
+
+                leaf third-sel-type {
+                  type selecting-lsp-type ;
+
+                  description 'Third selecting LSP type.BGP is 7,BE is 6,SR TE is 5,RSVP TE is 4,TE LSP is 3,LDP LSP is 2,SR-BE is 1,invalid is 0.' ;
+                  default invalid ;
+                }
+
+                leaf fourth-sel-type {
+                  type selecting-lsp-type ;
+
+                  description 'Fourth selecting LSP type.BGP is 7,BE is 6,SR TE is 5,RSVP TE is 4,TE LSP is 3,LDP LSP is 2,SR-BE is 1,invalid is 0.' ;
+                  default invalid ;
+                  ncd:revise-date 2024-08-22 ;
+                }
+
+                leaf fifth-sel-type {
+                  type selecting-lsp-type ;
+
+                  description 'Fifth selecting LSP type.BGP is 7,BE is 6,SR TE is 5,RSVP TE is 4,TE LSP is 3,LDP LSP is 2,SR-BE is 1,invalid is 0.' ;
+                  default invalid ;
+                  ncd:revise-date 2025-06-24 ;
+                }
+
+                leaf load-balance-number {
+                  description 'Configure the maximum load balance number.' ;
+                  type uint8 {
+                    range 1..64 ;
+
+                  }
+
+                  default 1 ;
+                  ncd:revise-date 2021-06-03 ;
+                }
+
+                leaf disable-mix {
+                  description 'Disable mixed LSP flag.
+true, disable
+false,enable' ;
+                  type boolean ;
+
+                  default false ;
+                  ncd:revise-date 2021-06-03 ;
+                }
+
+              }
+
+              ncd:revise-date 2019-05-08 ;
+            }
+
+            case binding {
+              description '"Binding" type tunnel policy related attribute configuration.' ;
+              container bind-peer-sets {
+                description 'Lists of peers and tunnel binding configurations.' ;
+                leaf binding-tag {
+                  description '"Binding" type tunnel policy tag.' ;
+                  type empty ;
+
+                }
+
+                container ipv4-peer-sets {
+                  description 'IPv4 peer and tunnel binding information.' ;
+                  list ipv4-peer {
+                    description 'IPv4 peer and tunnel binding list.' ;
+                    key peer-address ;
+                    leaf peer-address {
+                      description 'IPv4 peer address.' ;
+                      type ncd:ipv4-address ;
+
+                    }
+
+                    leaf down-switch {
+                      description 'After this option is selected, if the bound tunnels are unavailable, policy will select LDP lsp.' ;
+                      type boolean ;
+
+                      default false ;
+                    }
+
+                    leaf ignore-dest-check {
+                      description 'After this option is selected, not check whether the destination of the tunnels matches the specified peer.' ;
+                      type boolean ;
+
+                      default false ;
+                    }
+
+                    container binding-srv6-tunnels {
+                      description 'Binding SRv6 TE information.' ;
+                      list srv6-tunnels {
+                        description 'Binding SRv6 TE ID list.' ;
+                        key srv6-te-id ;
+                        leaf srv6-te-id {
+                          description 'SRv6 tunnel ID.' ;
+                          type uint32 {
+                            range 1..4294967295 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                      ncd:revise-date 2020-03-12 ;
+                    }
+
+                    container binding-tunnels {
+                      description 'Binding TE information.' ;
+                      list tunnels {
+                        description 'Binding TE interface list.' ;
+                        key te-intf-name ;
+                        leaf te-intf-name {
+                          description 'TE interface name.' ;
+                          type string {
+                            length 1..31 {
+                              description 'tunnel policy instance config tunnel name' ;
+                            }
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    container binding-policy {
+                      description 'Binding policy information.' ;
+                      container policy-group {
+                        description 'Binding policy group.' ;
+                        presence policy-group ;
+                        leaf policy-group-id {
+                          description 'Policy group ID.' ;
+                          type uint32 {
+                            range 1..65535 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                      ncd:revise-date 2020-05-20 ;
+                    }
+
+                  }
+
+                }
+
+                container ipv6-peer-sets {
+                  description 'IPv6 peer and tunnel binding information.' ;
+                  list ipv6-peer {
+                    description 'IPv6 peer and tunnel binding list.' ;
+                    key peer-address ;
+                    leaf peer-address {
+                      description 'IPv6 peer address.' ;
+                      type ncd:ipv6-address ;
+
+                    }
+
+                    leaf down-switch {
+                      description 'After this option is selected, if the bound tunnels are unavailable, policy will select LDP lsp.' ;
+                      type boolean ;
+
+                      default false ;
+                    }
+
+                    leaf ignore-dest-check {
+                      description 'After this option is selected, not check whether the destination of the tunnels matches the specified peer.' ;
+                      type boolean ;
+
+                      default false ;
+                    }
+
+                    container binding-srv6-tunnels {
+                      description 'Binding SRv6 TE information.' ;
+                      list srv6-tunnels {
+                        description 'Binding SRv6 TE ID list.' ;
+                        key srv6-te-id ;
+                        leaf srv6-te-id {
+                          description 'SRv6 tunnel ID.' ;
+                          type uint32 {
+                            range 1..4294967295 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                      ncd:revise-date 2020-03-12 ;
+                    }
+
+                    container binding-tunnels {
+                      description 'Binding TE information.' ;
+                      list tunnels {
+                        description 'Binding TE interface list.' ;
+                        key te-intf-name ;
+                        leaf te-intf-name {
+                          description 'TE interface name.' ;
+                          type string {
+                            length 1..31 {
+                              description 'tunnel policy instance config tunnel name' ;
+                            }
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                    }
+
+                    container binding-policy {
+                      description 'Binding policy information.' ;
+                      container policy-group {
+                        description 'Binding policy group.' ;
+                        presence policy-group ;
+                        leaf policy-group-id {
+                          description 'Policy group ID.' ;
+                          type uint32 {
+                            range 1..65535 ;
+
+                          }
+
+                          mandatory true ;
+                        }
+
+                      }
+
+                      ncd:revise-date 2020-05-20 ;
+                    }
+
+                  }
+
+                }
+
+              }
+
+              ncd:revise-date 2019-05-08 ;
+            }
+
+            case interface {
+              description '"Interface" type tunnel policy related attribute configuration' ;
+              container interface {
+                description '"Interface" type tunnel policy related attribute configuration parameters' ;
+                leaf interface-name {
+                  description 'Tunnel policy instance specify interface name.' ;
+                  mandatory true ;
+                  type ncd:ifname ;
+
+                }
+
+              }
+
+              if-feature tunnel-selecting-interface {
+                ncd:revise-date 2024-04-11 ;
+              }
+
+            }
+
+            ncd:revise-date 2024-04-11 ;
+          }
+
+        }
+
+      }
+
+    }
+
+    container tunnel-selection {
+      description 'Tunnel-selection parameters.' ;
+      presence tunnel-selection ;
+      container bgp-label-unicast {
+        description 'BGP label-unicast tunnel selection configuration.' ;
+        presence bgp-label-unicast ;
+        container peer-sets {
+          description 'Peer parameters configuration.' ;
+          list ipv4-peer {
+            description 'IPv4 peer parameters list.' ;
+            key peer-address ;
+            leaf peer-address {
+              description 'IPv4 peer address.' ;
+              type ncd:ipv4-address ;
+
+            }
+
+            leaf policy-name {
+              description 'Tunnel policy name.' ;
+              type string {
+                length 1..63 ;
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          list ipv6-peer {
+            description 'IPv6 peer parameters list.' ;
+            key peer-address ;
+            leaf peer-address {
+              description 'IPv6 peer address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf policy-name {
+              description 'Tunnel policy name.' ;
+              type string {
+                length 1..63 ;
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2019-03-14 ;
+      }
+
+      container bgp-l2vpn-evpn {
+        description 'BGP L2VPN-EVPN tunnel selection configuration.' ;
+        presence bgp-l2vpn-evpn ;
+        container rd-peer-sets {
+          description 'RD and peer parameters configuration.' ;
+          list rd-peer-set {
+            description 'RD parameters list.' ;
+            key rd-value ;
+            leaf rd-value {
+              description 'Specify route distinguisher value,There are thress input format:<0-65535>:<0-4294967265> or <1-65535>.<0-65535>:<0-65535> or <0-255>.<0-255>.<0-255>.<0-255>:<0-65535>.' ;
+              type union {
+                type ncd:asn-nn ;
+
+                type ncd:asnd-nn ;
+
+                type ncd:ipadd-nn ;
+
+              }
+
+            }
+
+            leaf rd-description {
+              description 'RD description string' ;
+              type string {
+                length 1..63 ;
+
+              }
+
+            }
+
+            container peer-sets {
+              description 'Peer parameters configuration.' ;
+              list ipv4-peer {
+                description 'IPv4 peer parameters list.' ;
+                key peer-address ;
+                leaf peer-address {
+                  description 'IPv4 peer address.' ;
+                  type ncd:ipv4-address ;
+
+                }
+
+                leaf policy-name {
+                  description 'Tunnel policy name.' ;
+                  type string {
+                    length 1..63 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+              list ipv6-peer {
+                description 'IPv6 peer parameters list.' ;
+                key peer-address ;
+                leaf peer-address {
+                  description 'IPv6 peer address.' ;
+                  type ncd:ipv6-address ;
+
+                }
+
+                leaf policy-name {
+                  description 'Tunnel policy name.' ;
+                  type string {
+                    length 1..63 ;
+
+                  }
+
+                  mandatory true ;
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+      container bgp-vpnv4 {
+        description 'BGP VPNv4 route tunnel selection configuration.' ;
+        presence bgp-vpnv4 ;
+        container rd-peer-sets {
+          description 'RD and peer list configuration.' ;
+          list rd-peer-set {
+            description 'RD parameters list.' ;
+            key rd-value ;
+            leaf rd-value {
+              description 'Specify route distinguisher value,There are thress input format:<0-65535>:<0-4294967265> or <1-65535>.<0-65535>:<0-65535> or <0-255>.<0-255>.<0-255>.<0-255>:<0-65535>.' ;
+              type union {
+                type ncd:asn-nn ;
+
+                type ncd:asnd-nn ;
+
+                type ncd:ipadd-nn ;
+
+              }
+
+            }
+
+            leaf rd-description {
+              description 'RD description string' ;
+              type string {
+                length 1..63 ;
+
+              }
+
+            }
+
+            container peer-sets {
+              description 'Peer parameters configuration.' ;
+              container ipv4-peers {
+                description 'IPv4 peer configuration.' ;
+                list ipv4-peer {
+                  description 'IPv4 peer parameters list.' ;
+                  key peer-address ;
+                  leaf peer-address {
+                    description 'IPv4 peer address.' ;
+                    type ncd:ipv4-address ;
+
+                  }
+
+                  leaf policy-name {
+                    description 'Tunnel policy name.' ;
+                    type string {
+                      length 1..63 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              container ipv6-peers {
+                description 'IPv6 peer configuration.' ;
+                list ipv6-peer {
+                  description 'IPv6 peer parameters list.' ;
+                  key peer-address ;
+                  leaf peer-address {
+                    description 'IPv6 peer address.' ;
+                    type ncd:ipv6-address ;
+
+                  }
+
+                  leaf policy-name {
+                    description 'Tunnel policy name.' ;
+                    type string {
+                      length 1..63 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2019-03-14 ;
+      }
+
+      container bgp-vpnv6 {
+        description 'BGP VPNv6 route tunnel selection configuration.' ;
+        presence bgp-vpnv6 ;
+        container rd-peer-sets {
+          description 'RD and peer list configuration.' ;
+          list rd-peer-set {
+            description 'RD parameters list.' ;
+            key rd-value ;
+            leaf rd-value {
+              description 'Specify route distinguisher value,There are thress input format:<0-65535>:<0-4294967265> or <1-65535>.<0-65535>:<0-65535> or <0-255>.<0-255>.<0-255>.<0-255>:<0-65535>.' ;
+              type union {
+                type ncd:asn-nn ;
+
+                type ncd:asnd-nn ;
+
+                type ncd:ipadd-nn ;
+
+              }
+
+            }
+
+            leaf rd-description {
+              description 'RD description string' ;
+              type string {
+                length 1..63 ;
+
+              }
+
+            }
+
+            container peer-sets {
+              description 'Peer parameters configuration.' ;
+              container ipv4-peers {
+                description 'IPv4 peer configuration.' ;
+                list ipv4-peer {
+                  description 'IPv4 peer parameters list.' ;
+                  key peer-address ;
+                  leaf peer-address {
+                    description 'IPv4 peer address.' ;
+                    type ncd:ipv4-address ;
+
+                  }
+
+                  leaf policy-name {
+                    description 'Tunnel policy name.' ;
+                    type string {
+                      length 1..63 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+              container ipv6-peers {
+                description 'IPv6 peer configuration.' ;
+                list ipv6-peer {
+                  description 'IPv6 peer parameters list.' ;
+                  key peer-address ;
+                  leaf peer-address {
+                    description 'IPv6 peer address.' ;
+                    type ncd:ipv6-address ;
+
+                  }
+
+                  leaf policy-name {
+                    description 'Tunnel policy name.' ;
+                    type string {
+                      length 1..63 ;
+
+                    }
+
+                    mandatory true ;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2019-03-14 ;
+      }
+
+      container unicast-route {
+        description "Unicast route's tunnel selection configuration." ;
+        presence unicast ;
+        container peer-sets {
+          description 'Peer parameters configuration.' ;
+          list ipv4-peer {
+            description 'IPv4 peer parameters list.' ;
+            key peer-address ;
+            leaf peer-address {
+              description 'IPv4 peer address.' ;
+              type ncd:ipv4-address ;
+
+            }
+
+            leaf policy-name {
+              description 'Tunnel policy name.' ;
+              type string {
+                length 1..63 ;
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+          list ipv6-peer {
+            description 'IPv6 peer parameters list.' ;
+            key peer-address ;
+            leaf peer-address {
+              description 'IPv6 peer address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf policy-name {
+              description 'Tunnel policy name.' ;
+              type string {
+                length 1..63 ;
+
+              }
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2020-03-20 ;
+      }
+
+      container bier {
+        description 'Bier tunnel selection configuration.' ;
+        presence bier ;
+        container peer-sets {
+          description 'Peer parameters configuration.' ;
+          list ipv6-peer {
+            description 'IPv6 peer parameters list.' ;
+            key peer-address ;
+            leaf peer-address {
+              description 'IPv6 peer address.' ;
+              type ncd:ipv6-address ;
+
+            }
+
+            leaf mapping-nexthop {
+              description 'Mapping nexthop IP address.' ;
+              type ncd:ipv4-address ;
+
+              mandatory true ;
+            }
+
+          }
+
+        }
+
+        ncd:revise-date 2020-06-20 ;
+      }
+
+      ncd:revise-date 2018-06-04 ;
+    }
+
+  }
+
+  container state {
+    config false ;
+    description 'State model info.' ;
+    container select-result {
+      description 'Tunnel-policy select result.' ;
+      container vrf-peer-select {
+        description 'VRF select result.' ;
+        list vrf-peers {
+          description 'VRF and peer-address selct result list.' ;
+          key 'vrf-name peer-ipaddr vrf-afi-type' ;
+          leaf vrf-name {
+            description 'VRF name.' ;
+            type string {
+              length 1..35 ;
+
+            }
+
+          }
+
+          leaf peer-ipaddr {
+            description 'Peer IPv4/IPv6 address.' ;
+            type string {
+              length 1..47 ;
+
+            }
+
+          }
+
+          leaf vrf-afi-type {
+            description 'Address-family type.' ;
+            type address-family-type ;
+
+          }
+
+          leaf select-lsp-type {
+            description 'Select result LSP type.' ;
+            type result-lsp-type ;
+
+          }
+
+          leaf select-te-id {
+            description 'Select result TE ID.' ;
+            type uint32 ;
+
+          }
+
+          leaf select-fwd-state {
+            description 'Select result forward state.' ;
+            type result-fwd-state ;
+
+          }
+
+          leaf policy-name {
+            description 'Policy name.' ;
+            type string {
+              length 1..63 ;
+
+            }
+
+          }
+
+          ncd:select vrf-name ;
+          ncd:select "vrf-name peer-ipaddr" ;
+        }
+
+      }
+
+      container policy-peer-select {
+        description 'Policy peer group select result.' ;
+        list policy-peers {
+          description 'Policy and peer-address group list.' ;
+          key 'policy-name peer-ipaddr' ;
+          leaf policy-name {
+            description 'Policy name.' ;
+            type string {
+              length 1..63 ;
+
+            }
+
+          }
+
+          leaf peer-ipaddr {
+            description 'Peer IPv4/IPv6 address.' ;
+            type string {
+              length 1..47 ;
+
+            }
+
+          }
+
+          leaf select-lsp-type {
+            description 'Select result LSP type.' ;
+            type result-lsp-type ;
+
+          }
+
+          leaf select-te-id {
+            description 'Select result TE ID.' ;
+            type uint32 ;
+
+          }
+
+          leaf select-fwd-state {
+            description 'Select result Forward state.' ;
+            type result-fwd-state ;
+
+          }
+
+          ncd:select "policy-name peer-ipaddr" ;
+        }
+
+      }
+
+    }
+
+    ncd:revise-date 2020-10-12 ;
+  }
+
+  feature tunnel-selecting-interface {
+    ncd:revise-date 2024-04-11 ;
+  }
+
+}
