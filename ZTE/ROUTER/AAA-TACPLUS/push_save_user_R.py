@@ -31,11 +31,12 @@ CONFIG_XML = """
           <hosts>
             <host xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="delete">
               <ip-address>172.17.10.15</ip-address>
+              <port>49</port>
             </host>
             <host xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" nc:operation="create">
               <ip-address>172.17.10.20</ip-address>
               <port>49</port>
-              <key>Nexus@NOK-ZTE-HUA&amp;2026#TACACS</key>
+              <key>Accessus@nodi-parvi&amp;2026#TACACS</key>
             </host>
           </hosts>
         </hostv4>
@@ -288,7 +289,7 @@ def aplicar_push_y_guardar(r):
                 print(f"[{nombre}] 🔄 Cambio cancelado; la OLT revierte al estado anterior.")
 
 
-def cargar_inventario(archivo="inventario-m.yml"):
+def cargar_inventario(archivo="inventario-ac.yml"):
     with open(archivo, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)["routers"]
 

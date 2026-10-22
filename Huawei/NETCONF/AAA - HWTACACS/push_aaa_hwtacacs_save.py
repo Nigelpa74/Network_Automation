@@ -75,7 +75,7 @@ CONFIG_XML = """
           <name>TACACS_NG</name>
           <response-timeout>5</response-timeout>
           <quiet-time>5</quiet-time>
-          <shared-key>%+%##!!!!!!!!!&quot;!!!!&quot;!!!!*!!!!7LTnVOK_g:)8T4D:|65DjJ&gt;k~hPFR,^SXY)!!!!!2jp5!!!!!!I!!!!Y*FxAga:R+IHl:*MLE&amp;H&amp;{ao%;_x:YXSb9MBb}!&quot;QTHO/&lt;_nKX!!!!!!!!!!%+%#</shared-key>
+          <shared-key>Accessus@nodi-parvi&amp;2026#TACACS</shared-key>
           <interface-name>LoopBack1</interface-name>
           <domain-mode>original</domain-mode>
           <traffic-unit>byte</traffic-unit>
