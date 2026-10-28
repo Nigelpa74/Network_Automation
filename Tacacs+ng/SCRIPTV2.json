@@ -53,11 +53,21 @@ id = tac_plus-ng {
         # welcome banner = "Welcome, you're coming from ${client.address}\n"
         key = "Societatis@mikronics¿999#TACACS"
     }
+    device fortigay{
+        address = 45.5.59.24
+        # welcome banner = "Welcome, you're coming from ${client.address}\n"
+        key = "Securita@fortinet¿999#TACACS"
+    }
 
     # 2. PERFILES (PROFILES)
     profile admin_profile {
         enable 15 = login
         script {
+            if (service == fortigate) {
+                set memberof = FGT_access
+                set admin_prof = super_admin
+                permit
+            }
             if (service == shell || service == hwtacacs || service == exec) {
                 if (cmd == "") {
                     set priv-lvl = 15
@@ -71,6 +81,11 @@ id = tac_plus-ng {
     profile operator_readonly_profile {
         enable 15 = login
         script {
+            if (service == fortigate) {
+                set memberof = FGT_access
+                set admin_prof = read_only
+                permit
+            }
             if (service == hwtacacs || service == exec || service == shell) {
                 if (cmd == "") {
                     set priv-lvl = 1
@@ -109,6 +124,8 @@ id = tac_plus-ng {
         group dirigit_corpos{}
         group servus_corpos{}
     }
+    group dirigit_gay{}
+    group servus_gay{}
 
     user nigelx3d {
         password login = clear "N163lR0j45#2026"
@@ -346,16 +363,12 @@ id = tac_plus-ng {
         member = dirigit_educatio
         member = dirigit_corpos
     }
-    # user npinas {
-    #     password login = clear "123456789"
-    #     enable = login
-    #     password pap = login
-    #     member = dirigit_nexus
-    #     member = dirigit_accessus
-    #     member = dirigit_opticae
-    #     member = dirigit_educatio
-    #     member = dirigit_corpos
-    # }
+    user npinas {
+        password login = clear "123456789"
+        enable = login
+        password pap = login
+        member = servus_gay
+    }
     user jpena {
         password login = clear "Jef4dm1n.gf"
         enable = login
@@ -433,7 +446,7 @@ id = tac_plus-ng {
         rule acceso_admin {
             enabled = yes
             script {
-                if (device == nexus || device == accessus || device == opticae || device == educatio || device == corpos) {
+                if (device == nexus || device == accessus || device == opticae || device == educatio || device == corpos || device == fortigay) {
                     # Los administradores entran a todo
                     if (member == grp_dominus_absolutus) {
                         profile = admin_profile
@@ -512,6 +525,22 @@ id = tac_plus-ng {
                         permit
                     }
                     if (member == servus_corpos) {
+                        profile = operator_readonly_profile
+                        permit
+                    }
+                }
+            }
+        }
+
+        rule fortigay {
+            enabled = yes
+            script {
+                if (device == fortigay) {
+                    if (member == dirigit_gay) {
+                        profile = admin_profile
+                        permit
+                    }
+                    if (member == servus_gay) {
                         profile = operator_readonly_profile
                         permit
                     }

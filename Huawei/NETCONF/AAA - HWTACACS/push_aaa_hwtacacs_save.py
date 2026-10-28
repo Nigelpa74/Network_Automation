@@ -207,7 +207,7 @@ def push_aaa(router, dry_run=False):
         print(f"[{nombre}] ❌ Error: {e}")
         return (nombre, "FALLO")
 
-def cargar_inventario(archivo="inventario-m.yml"):
+def cargar_inventario(archivo="inventario-c.yml"):
     with open(archivo) as f:
         data = yaml.safe_load(f)
     return data["routers"]
@@ -224,7 +224,7 @@ def escribir_csv(resultados, archivo):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Aplica AAA por NETCONF en colegios MINEDU")
-    parser.add_argument("--inventario", default="inventario-m.yml", help="Archivo YAML de inventario")
+    parser.add_argument("--inventario", default="inventario-c.yml", help="Archivo YAML de inventario")
     parser.add_argument("--dry-run", action="store_true",
                          help="Solo conecta y lee current-cfg-file, no aplica ni guarda nada")
     parser.add_argument("--limit", type=int, default=None,
