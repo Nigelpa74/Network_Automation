@@ -64,8 +64,6 @@ CONFIG_XML = """
           <acct-scheme-name>TACACS_ACCO</acct-scheme-name>
           <hwtacacs-server-template>TACACS_NG</hwtacacs-server-template>
           <state>active</state>
-          <account-separate>false</account-separate>
-          <statistics-enable>false</statistics-enable>
         </domain>
       </domains>
     </aaa>
@@ -73,13 +71,8 @@ CONFIG_XML = """
       <templates>
         <template>
           <name>TACACS_NG</name>
-          <response-timeout>5</response-timeout>
-          <quiet-time>5</quiet-time>
           <shared-key>Accessus@nodi-parvi&amp;2026#TACACS</shared-key>
-          <interface-name>LoopBack1</interface-name>
-          <domain-mode>original</domain-mode>
-          <traffic-unit>byte</traffic-unit>
-          <encode-name-flag>false</encode-name-flag>
+          <interface-name>LoopBack0</interface-name>
           <server-hosts>
             <server-host>
               <type>accounting</type>

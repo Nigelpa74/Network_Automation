@@ -11,18 +11,42 @@ FILTER = """
         <position/>
         <admin-state/>
         <optical-module xmlns="urn:huawei:yang:huawei-pic">
-          <vendor-pn/>
           <wavelength/>
           <transmission-distance/>
-          <manufacture-date/>
-          <serial-number/>
-          <description/>
+          <channels>
+            <channel>
+              <tx-power/>
+              <rx-power/>
+              <bias/>
+            </channel>
+          </channels>
         </optical-module>
       </port>
     </ports>
   </devm>
 </filter>
 """
+
+# FILTER = """
+# <filter type="subtree">
+#   <devm xmlns="urn:huawei:yang:huawei-devm">
+#     <ports>
+#       <port>
+#         <position/>
+#         <admin-state/>
+#         <optical-module xmlns="urn:huawei:yang:huawei-pic">
+#           <vendor-pn/>
+#           <wavelength/>
+#           <transmission-distance/>
+#           <manufacture-date/>
+#           <serial-number/>
+#           <description/>
+#         </optical-module>
+#       </port>
+#     </ports>
+#   </devm>
+# </filter>
+# """
 
 
 def huawei_connect(router):

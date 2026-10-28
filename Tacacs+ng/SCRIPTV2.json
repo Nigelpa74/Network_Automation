@@ -1,0 +1,522 @@
+id = spawnd {
+    background = yes
+    listen { port = 49 }
+    spawn {
+        instances min = 1
+        instances max = 10
+    }
+}
+
+id = tac_plus-ng {
+
+    log autho {
+        destination = "/var/log/tac_plus-ng/%Y/%m/%d_authorization.log"
+    }
+    log authen {
+        destination = "/var/log/tac_plus-ng/%Y/%m/%d_authentication.log"
+    }
+    log account {
+        destination = "/var/log/tac_plus-ng/%Y/%m/%d_accounting.log"
+        # destination = "/var/log/tac_plus-ng-accounting.log"
+    }
+    
+    authentication log = authen
+    authorization log = autho
+    accounting log = account
+
+    # 1. DISPOSITIVOS
+
+    device nexus{
+        address = 172.18.3.0/24
+        # welcome banner = "Welcome, you're coming from ${client.address}\n"
+        key = "Nexus@NOK-ZTE-HUA&2026#TACACS"
+    }
+    device accessus{
+        address = 172.18.6.0/24
+        address = 172.18.51.0/24
+        address = 172.18.7.0/24
+        # welcome banner = "Welcome, you're coming from ${client.address}\n"
+        key = "Accessus@nodi-parvi&2026#TACACS"
+    }
+    device opticae{
+        address = 172.18.11.0/24
+        # welcome banner = "Welcome, you're coming from ${client.address}\n"
+        key = "Opticae@qui-celer-est&2026#TACACS"
+    }
+    device educatio{
+        address = 10.139.50.0/23
+        # welcome banner = "Welcome, you're coming from ${client.address}\n"
+        key = "Educatio@minedu%500#TACACS"
+    }
+    device corpos{
+        address = 10.139.11.0/24
+        # welcome banner = "Welcome, you're coming from ${client.address}\n"
+        key = "Societatis@mikronics¿999#TACACS"
+    }
+
+    # 2. PERFILES (PROFILES)
+    profile admin_profile {
+        enable 15 = login
+        script {
+            if (service == shell || service == hwtacacs || service == exec) {
+                if (cmd == "") {
+                    set priv-lvl = 15
+                    permit
+                }
+                permit
+            }  
+        }
+    }
+
+    profile operator_readonly_profile {
+        enable 15 = login
+        script {
+            if (service == hwtacacs || service == exec || service == shell) {
+                if (cmd == "") {
+                    set priv-lvl = 1
+                    permit
+                }
+                if (cmd =~ "^ping" || cmd =~ "^tracert" || cmd =~ "^enable" || cmd =~ "^show" || cmd =~ "^traceroute" || cmd =~ "^display") {
+                    permit
+                }
+                deny
+            }
+            permit
+        }
+    }
+
+    # 3. GRUPOS Y USUARIOS - FULL
+    group grp_dominus_absolutus {}
+
+    # GRUPOS OPs
+    group nexus {
+        group dirigit_nexus{}
+        group servus_nexus{}
+    }
+    group accessus {
+        group dirigit_accessus{}
+        group servus_accessus{}
+    }
+    group opticae {
+        group dirigit_opticae{}
+        group servus_opticae{}
+    }
+    group educatio {
+        group dirigit_educatio{}
+        group servus_educatio{}
+    }
+    group corpos {
+        group dirigit_corpos{}
+        group servus_corpos{}
+    }
+
+    user nigelx3d {
+        password login = clear "N163lR0j45#2026"
+        enable = login
+        alias = Nigelpa74
+        password pap = login
+        hushlogin = yes
+        member = grp_dominus_absolutus
+    }
+
+
+    user Admin {
+        password login = clear "L3l1tv.20!9"
+        enable = login
+        password pap = login
+        member = dirigit_nexus
+        member = dirigit_accessus
+        member = dirigit_opticae
+    }
+    user jgallardo {
+        password login = clear "Iam@d0Bo"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = dirigit_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+        member = dirigit_corpos
+    }
+    user aoncebay {
+        password login = clear "urPyUFqYA"
+        enable = login
+        password pap = login
+        member = servus_accessus
+        member = servus_opticae
+        member = dirigit_educatio
+    }
+    user jbeltran {
+        password login = clear "69brjFoE1"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = dirigit_accessus
+        member = dirigit_opticae
+        member = servus_educatio
+        member = dirigit_corpos
+    }
+    user cmatos {
+        password login = clear "6Dgi31Pq8"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = dirigit_accessus
+        member = dirigit_opticae
+        member = servus_educatio
+        member = dirigit_corpos
+    }
+    user sartica {
+        password login = clear "U6q1oJ481"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = servus_accessus
+        member = servus_opticae
+        member = servus_educatio
+        member = servus_corpos
+    }
+    user rsanchez {
+        password login = clear "L9qdR1CK5"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = dirigit_accessus
+        member = servus_opticae
+        member = servus_educatio
+        member = dirigit_corpos
+    }
+    user evasquez {
+        password login = clear "Gz3X3imf0"
+        enable = login
+        password pap = login
+        member = servus_accessus
+        member = servus_opticae
+        member = servus_educatio
+    }
+    user operador.global {
+        password login = clear "VZ65dY76X"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = servus_accessus
+        member = servus_opticae
+        member = servus_educatio
+        member = servus_corpos
+    }
+    user operador.minedu {
+        password login = clear "MQN2x5J0f"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = servus_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+        member = servus_corpos
+    }
+    user wjesus {
+        password login = clear "R64L1ifoA"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = servus_accessus
+        member = servus_opticae
+        member = servus_educatio
+        member = servus_corpos
+    }
+    user jhuaman {
+        password login = clear "i2J00byt6"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = servus_accessus
+        member = servus_opticae
+        member = servus_educatio
+        member = servus_corpos
+    }
+    user jmoreno {
+        password login = clear "5xJco1tu4"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = servus_accessus
+        member = servus_opticae
+        member = servus_educatio
+        member = servus_corpos
+    }
+    user yhuatuco {
+        password login = clear "SX8M69sgC"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = servus_accessus
+        member = servus_opticae
+        member = servus_educatio
+        member = servus_corpos
+    }
+    user ehuaman {
+        password login = clear "t20721TFC"
+        enable = login
+        password pap = login
+        member = servus_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+    }
+    user jrosales {
+        password login = clear "K9i1yV24b"
+        enable = login
+        password pap = login
+        member = servus_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+    }
+    user jmalpartida {
+        password login = clear "uZo341SmU"
+        enable = login
+        password pap = login
+        member = servus_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+    }
+    user ldelgado {
+        password login = clear "4a4GH9L5a"
+        enable = login
+        password pap = login
+        member = servus_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+    }
+    user pquispe {
+        password login = clear "K9#mX2$vP8qW"
+        enable = login
+        password pap = login
+        member = servus_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+    }
+    user ggalindo {
+        password login = clear "b7!R4%zG9qL2"
+        enable = login
+        password pap = login
+        member = servus_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+    }
+    user smancilla {
+        password login = clear "T3$wP8&mY1kX"
+        enable = login
+        password pap = login
+        member = servus_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+    }
+    user mineduadmin {
+        password login = clear "u2o34!$mU"
+        enable = login
+        password pap = login
+        member = servus_educatio
+    }
+    user gcahuana {
+        password login = clear "Gc@hU4nAA.26"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = servus_accessus
+        member = servus_opticae
+        member = servus_educatio
+        member = servus_corpos
+    }
+    user fhuincho {
+        password login = clear "fHu1ncH@.26"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = dirigit_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+        member = dirigit_corpos
+    }
+    user yflores {
+        password login = clear "yFl0r3Z.!26"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = dirigit_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+        member = dirigit_corpos
+    }
+    # user npinas {
+    #     password login = clear "123456789"
+    #     enable = login
+    #     password pap = login
+    #     member = dirigit_nexus
+    #     member = dirigit_accessus
+    #     member = dirigit_opticae
+    #     member = dirigit_educatio
+    #     member = dirigit_corpos
+    # }
+    user jpena {
+        password login = clear "Jef4dm1n.gf"
+        enable = login
+        password pap = login
+        member = dirigit_nexus
+        member = dirigit_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+        member = dirigit_corpos
+    }
+    user lmunico {
+        password login = clear "lMvn1c0o.26"
+        enable = login
+        password pap = login
+        member = dirigit_nexus
+        member = dirigit_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+        member = dirigit_corpos
+    }
+    user amendez {
+        password login = clear "A@mend3Z!!"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = servus_accessus
+        member = servus_opticae
+        member = servus_educatio
+        member = servus_corpos
+    }
+    user eavila {
+        password login = clear "L3l1tv.20!9"
+        enable = login
+        password pap = login
+        member = dirigit_nexus
+        member = dirigit_accessus
+        member = dirigit_opticae
+        member = dirigit_educatio
+        member = dirigit_corpos
+    }
+    user acuba {
+        password login = clear "aCub@.26"
+        enable = login
+        password pap = login
+        member = servus_nexus
+        member = servus_accessus
+        member = servus_opticae
+        member = servus_educatio
+        member = servus_corpos
+    }
+    user erp_user {
+        password login = clear "Y4g58&nDn20"
+        enable = login
+        password pap = login
+        member = dirigit_opticae
+    }
+    user usernms {
+        password login = clear "$atel1tal.!24"
+        enable = login
+        password pap = login
+        member = dirigit_nexus
+        member = dirigit_accessus
+        member = dirigit_opticae
+    }
+    user satelital_nfmp {
+        password login = clear "S4t3l1t4lp4ss"
+        enable = login
+        password pap = login
+        member = dirigit_nexus
+        member = dirigit_accessus
+    }
+
+    # 4. REGLAS CENTRALIZADAS (RULESET)
+    ruleset {
+        rule acceso_admin {
+            enabled = yes
+            script {
+                if (device == nexus || device == accessus || device == opticae || device == educatio || device == corpos) {
+                    # Los administradores entran a todo
+                    if (member == grp_dominus_absolutus) {
+                        profile = admin_profile
+                        permit
+                    }
+                }
+            }
+        }
+
+        rule regulus_nexus {
+            enabled = yes
+            script {
+                if (device == nexus) {
+                    if (member == dirigit_nexus) {
+                        profile = admin_profile
+                        permit
+                    }
+                    if (member == servus_nexus) {
+                        profile = operator_readonly_profile
+                        permit
+                    }
+                }
+            }
+        }
+        rule regulus_accessus {
+            enabled = yes
+            script {
+                if (device == accessus) {
+                    if (member == dirigit_accessus) {
+                        profile = admin_profile
+                        permit
+                    }
+                    if (member == servus_accessus) {
+                        profile = operator_readonly_profile
+                        permit
+                    }
+                }
+            }
+        }
+        rule regulus_opticae {
+            enabled = yes
+            script {
+                if (device == opticae) {
+                    if (member == dirigit_opticae) {
+                        profile = admin_profile
+                        permit
+                    }
+                    if (member == servus_opticae) {
+                        profile = operator_readonly_profile
+                        permit
+                    }
+                }
+            }
+        }
+        rule regulus_educatio {
+            enabled = yes
+            script {
+                if (device == educatio) {
+                    if (member == dirigit_educatio) {
+                        profile = admin_profile
+                        permit
+                    }
+                    if (member == servus_educatio) {
+                        profile = operator_readonly_profile
+                        permit
+                    }
+                }
+            }
+        }
+        rule regulus_corpos {
+            enabled = yes
+            script {
+                if (device == corpos) {
+                    if (member == dirigit_corpos) {
+                        profile = admin_profile
+                        permit
+                    }
+                    if (member == servus_corpos) {
+                        profile = operator_readonly_profile
+                        permit
+                    }
+                }
+            }
+        }
+    }
+}
